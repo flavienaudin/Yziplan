@@ -8,13 +8,23 @@
         {% block meta_data %}{% endblock %}
 
         <title>{% block title %}Prototype 2!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap.css") }}">
+            <link rel="stylesheet" href="{{ asset("bundles/app/css/font-awesome.min.css") }}">
+            <link rel="stylesheet" href="{{ asset("bundles/app/css/animate.css") }}">
+
+        {% endblock %}
 
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+
+        {% block javascripts %}
+            <script src="{{ asset("bundles/app/js/jquery-2.2.3.js") }}"></script>
+            <script src="{{ asset("bundles/app/js/jquery-ui.js") }}"></script>
+            <script src="{{ asset("bundles/app/js/bootstrap.js") }}"></script>
+        {% endblock %}
     </body>
 </html>

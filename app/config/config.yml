@@ -40,6 +40,12 @@ twig:
         locale: "%locale%"
         base_template: "base.html.twig"
 
+# Assetic Configuration
+assetic:
+    debug: "%kernel.debug%"
+    use_controller: false
+    bundles: [ 'AppBundle' ]
+
 # Doctrine Configuration
 doctrine:
     dbal:
