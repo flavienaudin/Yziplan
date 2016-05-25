@@ -1,0 +1,9 @@
+# messages.fr.yml
+# traduction francaise globale "app"
+
+base:
+  page:
+    meta_title: Prototype 2
+
+navbar:
+  brand: Prototype 2!

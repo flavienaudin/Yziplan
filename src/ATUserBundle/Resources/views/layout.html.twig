@@ -6,19 +6,20 @@
 {% endblock %}
 
 {% block content_body %}
-    {% if app.request.hasPreviousSession %}
-        {% for type, messages in app.session.flashbag.all() %}
-            {% for message in messages %}
-                <div class="flash-{{ type }}">
-                    {{ message }}
-                </div>
+    {% if app.request.hasPreviousSession and app.session.flashBag.peekall()|length>0 %}
+        <div class="row">
+            {% for type, messages in app.session.flashbag.all() %}
+                {% for message in messages %}
+                    <div class="flash-{{ type }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
+        </div>
     {% endif %}
 
-    <div>
-        {% block fos_user_content %}{% endblock fos_user_content %}
-    </div>
+    {% block fos_user_content %}{% endblock fos_user_content %}
+
 {% endblock %}
 
 {% block javascripts %}

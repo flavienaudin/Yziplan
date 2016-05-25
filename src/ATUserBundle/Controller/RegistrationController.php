@@ -25,7 +25,6 @@ class RegistrationController extends BaseController
 
     public function registerAction(Request $request)
     {
-
         $formFactory = $this->get('fos_user.registration.form.factory');
         $userManager = $this->get('at.manager.user_manager');
         $dispatcher = $this->get('event_dispatcher');

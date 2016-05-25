@@ -41,7 +41,7 @@ twig:
         locale: "%locale%"
         base_template: "base.html.twig"
     form_themes:
-        - 'Form/at_forms_layout.html'
+        - 'Form/at_forms_layout.html.twig'
 
 # Assetic Configuration
 assetic:
