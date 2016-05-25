@@ -12,14 +12,29 @@
             <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap.css") }}">
             <link rel="stylesheet" href="{{ asset("bundles/app/css/font-awesome.min.css") }}">
             <link rel="stylesheet" href="{{ asset("bundles/app/css/animate.css") }}">
-
         {% endblock %}
 
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-
     </head>
     <body>
-        {% block body %}{% endblock %}
+
+        {% block header_body %}
+            <div>
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+                    <a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a>
+                {% else %}
+                    <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+                {% endif %}
+            </div>
+        {% endblock %}
+
+        <!-- CONTENT -->
+        {% block content_body %}{% endblock %}
+
+        {% block footer %}
+        {% endblock %}
+
 
         {% block javascripts %}
             <script src="{{ asset("bundles/app/js/jquery-2.2.3.js") }}"></script>

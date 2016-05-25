@@ -30,6 +30,13 @@ monolog:
         #    type:   chromephp
         #    level:  info
 
+fos_user:
+    use_flash_notifications: true
+
+hwi_oauth:
+    http_client:
+        verify_peer: false
+
 swiftmailer:
 #    disable_delivery: true
     delivery_address: '%dev_delivery_address%'
