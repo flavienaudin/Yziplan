@@ -1,13 +1,11 @@
 {% extends base_template %}
 
-{% block body %}
-    <div id="wrapper">
-        <div id="container">
-            <div>
-                <h1><span>bonjour</span> Symfony {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</h1>
-            </div>
-        </div>
-    </div>
+{% block stylesheets %}
+    {{ parent() }}
 {% endblock %}
 
-{% block stylesheets %}{% endblock %}
+{% block content_body %}
+    <h1><span>Bonjour</span> Symfony {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</h1>
+{% endblock %}
+
+

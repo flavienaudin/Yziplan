@@ -20,6 +20,12 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            CestUnTokenSecretPlusBesoinDeLeChanger
 
+    # Oauth configuration
+    oauth.google.id: ~
+    oauth.google.secret: ~
+    oauth.facebook.id: ~
+    oauth.facebook.secret: ~
+
     # DEV
     dev_delivery_address: ~
 

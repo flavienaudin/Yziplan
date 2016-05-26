@@ -1,13 +1,18 @@
 # Learn more about services, parameters and containers at
 # http://symfony.com/doc/current/book/service_container.html
 parameters:
-#    parameter_name: value
+    at.service.gentoken.class: AppBundle\Manager\GenerateursToken
     at.manager.mangopay.class: AppBundle\Manager\MangoPayManager
 
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+# Services & Managers
+    at.service.gentoken:
+        class: '%at.service.gentoken.class%'
+
     at.manager.mangopay:
         class: %at.manager.mangopay.class%
         arguments: ['%mangopay.client.id%', "%mangopay.client.password%", "%mangopay.temporary.folder%", "%mangopay.base.url%"]
+
+# Autres
+    fos_user.doctrine_registry:
+        alias: doctrine # Fix Bug with Symphony 3

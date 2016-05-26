@@ -1,0 +1,100 @@
+{% extends '@ATUser/layout.html.twig' %}
+
+{% form_theme form with [_self,':Form:at_forms_layout.html.twig'] %}
+
+{% block meta_title %}
+    {% spaceless %}{{ parent() }} - {{ "register.page.meta_title"|trans }}{% endspaceless %}
+{% endblock %}
+
+{% block fos_user_content %}
+    <div class="row">
+        <div class="col-xs-12 col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class=ibox>
+                <div class="ibox-title text-center">
+                    <h1>{{ "register.page.title"|trans }}</h1>
+                </div>
+                <div class="ibox-content text-center">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-10 col-sm-offset-1 text-center">
+                            <p><i>{{ 'texte.social_network_connexion'|trans }}</i></p>
+                        </div>
+                        <div class="col-xs-6 col-sm-5 col-sm-offset-1">
+                            <a href="{{ path('hwi_oauth_service_redirect',{'service':'google'}) }}" class="btn btn-lg btn-block btn-danger btn-google-plus"><i class="fa
+                                fa-google-plus-square"></i> <span class="hidden-xs">{{ 'texte.social_network.google'|trans }}</span> </a>
+                        </div>
+                        <div class="col-xs-6 col-sm-5">
+                            <a href="{{ path('hwi_oauth_service_redirect',{'service':'facebook'}) }}" class="btn btn-lg btn-block btn-primary btn-facebook"><i class="fa
+                                fa-facebook-official"></i> <span class="hidden-xs">{{ 'texte.social_network.facebook'|trans }}</span> </a>
+                        </div>
+                    </div>
+                </div>
+
+                {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
+                <div class="ibox-title text-center">
+                    <h3>{{ "register.sous_titre.champs_obligatoires"|trans }}</h3>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-group {% if (not form.email.vars.compound or form.email.vars.force_error|default(false)) and not form.email.vars.valid %} has-error{% endif %}">
+                        {{ form_label(form.email, null,{'label_attr': {'class':'sr-only hidden'}} ) }}
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-at"></i></span>
+                                {{ form_widget(form.email, {"attr": {"placeholder": "form.email"|trans({}, 'FOSUserBundle') }}) }}
+                            </div>
+                            {{ form_errors(form.email) }}
+                        </div>
+                    </div>
+
+                    {% for passwordField in form.plainPassword %}
+                        <div class="form-group  {% if (not passwordField.vars.compound or passwordField.vars.force_error|default(false)) and not passwordField.vars.valid %} has-error{% endif %}">
+                            {% if loop.index == 1 %}
+                                {% set label_pass = "form.password"|trans({}, 'FOSUserBundle') %}
+                            {% else %}
+                                {% set label_pass = "form.password_confirmation"|trans({}, 'FOSUserBundle') %}
+                            {% endif %}
+                            {{ form_label(passwordField, label_pass ,{'label_attr': {'class':'sr-only hidden'}} ) }}
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <div class="input-group requis">
+                                    <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                    {% if loop.index == 1 %}
+                                        {% set placeholder = "form.password"|trans({}, 'FOSUserBundle') %}
+                                    {% else %}
+                                        {% set placeholder = "form.password_confirmation"|trans({}, 'FOSUserBundle') %}
+                                    {% endif %}
+                                    {{ form_widget(passwordField, {"attr": {"placeholder": placeholder }}) }}
+                                </div>
+                                {{ form_errors(passwordField) }}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-group">
+                        <div class=" col-sm-10 col-sm-offset-1">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                {{ form_widget(form.pseudo, {"attr": {"placeholder": "form.nom_public"|trans }}) }}
+                            </div>
+                            {{ form_errors(form.pseudo) }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ibox-content">
+                    <div class="form-group">
+                        <div class=" col-sm-10 col-sm-offset-1">
+                            <input type="submit" class="input-control btn btn-success btn-lg btn-block" value="{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}">
+
+                            <div class="text-center m-t-md">
+                                <p><i>{{ "register.texte.deja_un_compte"|trans }}</i></p>
+                                <a href="{{ path('fos_user_security_login') }}" class="btn btn-default">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{ form_rest(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock fos_user_content %}
