@@ -1,0 +1,18 @@
+{% extends base_template %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="container">
+            <div>
+                <h1><span>bonjour</span> Symfony {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</h1>
+                {{ user.PersonType }}
+                {{ user.FirstName }}
+                {{ user.LastName }}
+                {{ user.Birthday }}
+                {{ user.Email }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}{% endblock %}

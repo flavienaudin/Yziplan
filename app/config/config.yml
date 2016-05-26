@@ -75,3 +75,10 @@ swiftmailer:
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# MangoPay Configuration
+#mangopay:
+ #   client.id:        "%mangopay.client.id%"
+  #  client.password:  "%mangopay.client.password%"
+   # temporary.folder: "%mangopay.temporary.folder%"
+    #base.url:         "%mangopay.base.url%"
