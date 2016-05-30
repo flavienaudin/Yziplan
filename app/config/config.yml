@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: "@ATUserBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
@@ -39,12 +40,14 @@ twig:
     globals:
         locale: "%locale%"
         base_template: "base.html.twig"
+    form_themes:
+        - 'Form/at_forms_layout.html.twig'
 
 # Assetic Configuration
 assetic:
     debug: "%kernel.debug%"
     use_controller: false
-    bundles: [ 'AppBundle' ]
+    bundles: [ 'AppBundle', 'ATUserBundle' ]
 
 # Doctrine Configuration
 doctrine:
@@ -68,10 +71,89 @@ doctrine:
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
 
+stof_doctrine_extensions:
+    default_locale: fr_FR
+    orm:
+        default:
+            timestampable: true
+
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
+    encryption: "%mailer_encryption%"
     host:      "%mailer_host%"
+    port:      "%mailer_port%"
     username:  "%mailer_user%"
     password:  "%mailer_password%"
     spool:     { type: memory }
+
+# FOS_User
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: ATUserBundle\Entity\User
+    use_flash_notifications: false
+    service:
+        mailer: fos_user.mailer.twig_swift
+    from_email:
+        address:  "%mailer_user%"
+        sender_name:  "ArdGanisateur"
+    registration:
+        confirmation:
+            enabled:  true
+            from_email:
+                address:  "%mailer_user%"
+                sender_name:  "Inscription ArdGanisateur"
+            #template: Emails/inscription.email.twig
+        form:
+            type: ATUserBundle\Form\InscriptionType
+    profile:
+        form:
+            type: ATUserBundle\Form\UserProfileType
+
+hwi_oauth:
+    firewall_names: [main]
+    # optional target_path_parameter to provide an explicit return URL
+    #target_path_parameter: accueil
+    # ne pas utiliser le referer sinon redirection vers le formulaire de login
+    use_referer: false
+    connect:
+        account_connector: at.provider.user
+    resource_owners:
+        google:
+            type:           google
+            client_id:      '%oauth.google.id%'
+            client_secret:  '%oauth.google.secret%'
+            scope:          "email profile"
+            options:
+                csrf: true
+        facebook:
+            type:           facebook
+            client_id:      '%oauth.facebook.id%'
+            client_secret:  '%oauth.facebook.secret%'
+            scope:          "email"
+            infos_url:      "https://graph.facebook.com/me?fields=id,name,email,picture.type(square)"
+            paths:
+                email:          email
+                profilepicture: picture.data.url
+            options:
+                csrf: true
+
+    fosub:
+        # try 30 times to check if a username is available (foo, foo1, foo2 etc)
+        username_iterations: 10
+        # mapping between resource owners (see below) and properties
+        properties:
+            google: googleId
+            facebook: facebookId
+
+# Services configurations
+services:
+    twig.extension.intl:
+        class: Twig_Extensions_Extension_Intl
+        tags:
+            - { name: twig.extension }
+
+
+
+

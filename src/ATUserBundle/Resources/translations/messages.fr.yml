@@ -1,0 +1,29 @@
+# messages.fr.yml
+# traduction francaise du bundle ATUserBundle
+
+security:
+  page:
+    meta_title: Connexion
+    title: Connexion
+  texte:
+    pas_de_compte: Pas de compte
+  form:
+    mot_de_passe_oublie: Mot de passe oublié
+
+register:
+  page:
+    meta_title: Inscription
+    title: Inscription
+  sous_titre:
+    champs_obligatoires: Champs Obligatoires
+  texte:
+    deja_un_compte: Déjà un compte ?
+
+# Global messages
+texte:
+  social_network_connexion: 'Connectez-vous via les réseaux sociaux'
+  social_network:
+    google: Google
+    facebook: Facebook
+form:
+  nom_public: Nom public
