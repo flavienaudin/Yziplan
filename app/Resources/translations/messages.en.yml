@@ -4,6 +4,27 @@
 base:
   page:
     meta_title: Prototype 2
+  ie_warning:
+    browser:
+      chrome: Chrome
+      firefox: Firefox
+      opera: Opera
+      safari: Safari
+      ie: IE (New)
+    text1: You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.
+    text2: Sorry for the inconvenience!
+  footer:
+    home: Home
 
 navbar:
-  brand: Prototype 2!
+  brand: Plany
+  subtitle: Version beta 2
+  search:
+    placeholder: Search for contact, event...
+
+main_menu:
+  home: Home
+
+# Globals
+global:
+  event: Event

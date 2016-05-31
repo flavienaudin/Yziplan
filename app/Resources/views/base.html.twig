@@ -1,59 +1,294 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <meta name="viewport" content="{% block meta_viewport %}width=device-width, initial-scale=1{% endblock %}">
-        <meta name="author" content="ArdTeam">
-        {% block meta_data %}{% endblock %}
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="{% block meta_viewport %}width=device-width, initial-scale=1{% endblock %}">
+    <meta name="author" content="ArdTeam">
+    {% block meta_data %}{% endblock %}
 
-        <title>{% block title %}{{ 'base.page.meta_title'|trans }}{% endblock %}</title>
+    <title>{% block title %}{{ 'base.page.meta_title'|trans }}{% endblock %}</title>
 
-        {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap.css") }}">
-            <link rel="stylesheet" href="{{ asset("bundles/app/css/font-awesome.min.css") }}">
-            <link rel="stylesheet" href="{{ asset("bundles/app/css/animate.css") }}">
-        {% endblock %}
+    {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/animate.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/waves.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/material-design-iconic-font.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.mCustomScrollbar.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/palette.css") }}">
 
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block header_body %}
-            <nav class="navbar navbar-static-top">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="fa fa-bars"></span>
-                        </button>
-                        <a class="navbar-brand" href="{{ path('accueil') }}">{{ 'navbar.brand'|trans }}</a>
-                    </div>
-                    <div id="navbar" class="collapse navbar-collapse ">
-                        <ul class="nav navbar-nav navbar-right">
-                            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                                <li><a href="#">{{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}</a></li>
-                                <li><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
-                            {% else %}
-                                <li><a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
-                                <li><a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></li>
-                            {% endif %}
-                        </ul>
-                    </div><!--/.nav-collapse -->
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/app.min.1.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/app.min.2.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/style.css") }}">
+    {% endblock %}
+
+
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
+</head>
+<body data-ma-header="teal">
+{% block header_body %}
+    <header id="header" class="media">
+        <div class="pull-left h-logo">
+            <a href="{{ path('accueil') }}" class="hidden-xs">
+                {{ "navbar.brand"|trans }}
+                <small>{{ "navbar.subtitle"|trans }}</small>
+            </a>
+
+            <div class="menu-collapse" data-ma-action="sidebar-open" data-ma-target="main-menu">
+                <div class="mc-wrap">
+                    <div class="mcw-line top palette-White bg"></div>
+                    <div class="mcw-line center palette-White bg"></div>
+                    <div class="mcw-line bottom palette-White bg"></div>
                 </div>
-            </nav>
-        {% endblock %}
-
-        <!-- CONTENT -->
-        <div class="{% block wrapper_class %}container {% endblock %}">
-            {% block content_body %}{% endblock %}
+            </div>
         </div>
 
-        {% block footer %}{% endblock %}
+        <ul class="pull-right h-menu">
+            <li class="hm-search-trigger">
+                {# Icone ouvrant la zone de recherche pour les petits écrans (<992px) #}
+                <a href="#" data-ma-action="search-open">
+                    <i class="hm-icon zmdi zmdi-search"></i>
+                </a>
+            </li>
+            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                <li class="hm-alerts" data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                    <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
+                </li>
+                <li class="dropdown hm-profile">
+                    {# TODO : style : alignement vertical #}
+                    <a data-toggle="dropdown" href="#">{{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}</a>
+                    <ul class="dropdown-menu pull-right dm-icon">
+                        <li><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
+                    </ul>
+                </li>
+            {% else %}
+                <li><a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
+                <li><a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></li>
 
-        {% block javascripts %}
-            <script src="{{ asset("bundles/app/js/jquery-2.2.3.js") }}"></script>
-            <script src="{{ asset("bundles/app/js/jquery-ui.js") }}"></script>
-            <script src="{{ asset("bundles/app/js/bootstrap.js") }}"></script>
-        {% endblock %}
-    </body>
+                {# TODO : définir le menu déroulant de l'utilisateur connecté : profil, déconnexion, ...
+                <li class="dropdown hm-profile">
+                    <a data-toggle="dropdown" href="#">
+                        <i class="hm-icon zmdi zmdi-account-circle"></i>
+                    </a>
+
+
+                    <ul class="dropdown-menu pull-right dm-icon">
+                        <li>
+                            <a href="#"><i class="zmdi zmdi-account"></i> View Profile</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="zmdi zmdi-input-antenna"></i> Privacy Settings</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="zmdi zmdi-settings"></i> Settings</a>
+                        </li>
+                        <li>
+                            <a href="#"><i class="zmdi zmdi-time-restore"></i> Logout</a>
+                        </li>
+                    </ul>
+                </li>#}
+            {% endif %}
+        </ul>
+
+        <div class="media-body h-search">
+            <form class="p-relative">
+                <input type="text" class="hs-input" placeholder="{{ "navbar.search.placeholder"|trans }}">
+                <i class="zmdi zmdi-search hs-reset" data-ma-action="search-clear"></i>
+            </form>
+        </div>
+
+    </header>
+{% endblock %}
+
+<!-- CONTENT -->
+{% block content_wrapper %}
+    <section id="main">
+
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            <aside id="s-user-alerts" class="sidebar">
+                {# Menus "utilisateur" ouverts via le menu "smm-alerts" (icones Enveloppe, Alertes, Listes)#}
+                <ul class="tab-nav tn-justified tn-icon m-t-10" data-tab-color="teal">
+                    <li><a class="sua-messages" href="#sua-messages" data-toggle="tab"><i class="zmdi zmdi-email"></i></a></li>
+                    <li><a class="sua-notifications" href="#sua-notifications" data-toggle="tab"><i class="zmdi zmdi-notifications"></i></a></li>
+                    <li><a class="sua-tasks" href="#sua-tasks" data-toggle="tab"><i class="zmdi zmdi-view-list-alt"></i></a></li>
+                </ul>
+
+                <div class="tab-content">
+                    <div class="tab-pane fade" id="sua-messages">
+                        <ul class="sua-menu list-inline list-unstyled palette-Light-Blue bg">
+                            <li><a href="" data-ma-action="sidebar-close"><i class="zmdi zmdi-close"></i> Close</a></li>
+                        </ul>
+                        {# TODO Messages de l'utilisateur à afficher #}
+                    </div>
+                    <div class="tab-pane fade" id="sua-notifications">
+                        <ul class="sua-menu list-inline list-unstyled palette-Orange bg">
+                            <li><a href="" data-ma-action="sidebar-close"><i class="zmdi zmdi-close"></i> Close</a></li>
+                        </ul>
+                        {# TODO Notifications à afficher #}
+                    </div>
+                    <div class="tab-pane fade" id="sua-tasks">
+                        <ul class="sua-menu list-inline list-unstyled palette-Green-400 bg">
+                            <li><a href="" data-ma-action="sidebar-close"><i class="zmdi zmdi-close"></i> Close</a></li>
+                        </ul>
+                        {# TODO Taches à afficher #}
+                    </div>
+                </div>
+            </aside>
+        {% endif %}
+
+        <aside id="s-main-menu" class="sidebar">
+            {# Menu principal latéral #}
+            {% block s_main_menu %}
+                {# En-tête du menu quand il est replié (largeur < 1280px) #}
+                <div class="smm-header">
+                    <i class="zmdi zmdi-long-arrow-left" data-ma-action="sidebar-close"></i>
+                </div>
+
+                <ul class="smm-alerts">
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        {# Menu d'utilisateurs : icone pour ouvrir #}
+                        <li data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                            <i class="zmdi zmdi-email"></i>
+                        </li>
+                        <li data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                            <i class="zmdi zmdi-notifications"></i>
+                        </li>
+                        <li data-user-alert="sua-tasks" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                            <i class="zmdi zmdi-view-list-alt"></i>
+                        </li>
+                    {% else %}
+                        {# TODO quoi mettre pour les non-connectés ?#}
+                        <li></li>
+                    {% endif %}
+                </ul>
+
+                <ul class="main-menu">
+                    <li class="active"><a href="{{ path('accueil') }}">{{ "main_menu.home"|trans }}</a></li>
+                    <li><a href="{{ path('event') }}">{{ "global.event"|trans }}</a></li>
+                    {#<li class="sub-menu">
+                        <a href="#" data-ma-action="submenu-toggle">
+                            <i class="zmdi zmdi-collection-item"></i> SubMenu example</a>
+                        <ul>
+                            <li><a href="#">SubMenu 1</a></li>
+                            <li><a href="#">SubMenu 2</a></li>
+                        </ul>
+                    </li>#}
+                </ul>
+
+            {% endblock s_main_menu %}
+        </aside>
+
+
+        <section id="content">
+            <div class="{% block content_class %}container{% endblock %}">
+                {% block content_body %}{% endblock %}
+            </div>
+        </section>
+
+
+
+        <footer id="footer">
+            {% block footer %}
+                Copyright &copy; 2016 Plany by ArdTeam
+
+                <ul class="f-menu">
+                    <li><a href="{{ path('accueil') }}">{{ "base.footer.home"|trans }}</a></li>
+                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            {% endblock footer %}
+        </footer>
+    </section>
+{% endblock content_wrapper%}
+
+<!-- Header Color Picker -->
+<div class="header-colors hidden-xs">
+    <div class="hc-trigger"><i class="zmdi zmdi-palette animated infinite wobble"></i></div>
+
+    <div class="hc-item palette-Teal bg selected" data-ma-header-value="teal"></div>
+    <div class="hc-item palette-Blue bg" data-ma-header-value="blue"></div>
+    <div class="hc-item palette-Cyan bg" data-ma-header-value="cyan-600"></div>
+    <div class="hc-item palette-Green bg" data-ma-header-value="green"></div>
+    <div class="hc-item palette-Light-Green bg" data-ma-header-value="lightgreen"></div>
+    <div class="hc-item palette-Blue-Grey bg" data-ma-header-value="bluegrey"></div>
+    <div class="hc-item palette-Orange bg" data-ma-header-value="orange"></div>
+    <div class="hc-item palette-Purple-400 bg" data-ma-header-value="purple-400"></div>
+    <div class="hc-item palette-Red-400 bg" data-ma-header-value="red-400"></div>
+    <div class="hc-item palette-Pink-400 bg" data-ma-header-value="pink-400"></div>
+    <div class="hc-item palette-Brown bg" data-ma-header-value="brown"></div>
+    <div class="hc-item palette-Grey-600 bg" data-ma-header-value="grey-600"></div>
+</div>
+
+<!-- Older IE warning message --><!--[if lt IE 9]>
+<div class="ie-warning">
+    <h1 class="c-white">Warning!!</h1>
+    <p>{{ "base.ie_warning.text1"|trans|raw }}</p>
+    <div class="iew-container">
+        <ul class="iew-download">
+            <li>
+                <a href="http://www.google.com/chrome/"> <img src="{{ asset('bundles/app/img/browsers/chrome.png') }}" alt="Chrome">
+                    <div>{{ "base.ie_warning.browser.chrome"|trans }}</div>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.mozilla.org/en-US/firefox/new/"> <img src="{{ asset('bundles/app/img/browsers/firefox.png') }}" alt="Firefox">
+                    <div>{{ "base.ie_warning.browser.firefox"|trans }}</div>
+                </a>
+            </li>
+            <li>
+                <a href="http://www.opera.com"> <img src="{{ asset('bundles/app/img/browsers/opera.png') }}" alt="Opera">
+                    <div>{{ "base.ie_warning.browser.opera"|trans }}</div>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.apple.com/safari/"> <img src="{{ asset('bundles/app/img/browsers/safari.png') }}" alt="Safari">
+                    <div>{{ "base.ie_warning.browser.safari"|trans }}</div>
+                </a>
+            </li>
+            <li>
+                <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie"> <img src="{{ asset('bundles/app/img/browsers/ie.png') }}" alt="Internet Explorer">
+                    <div>{{ "base.ie_warning.browser.ie"|trans }}</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <p>{{ "base.ie_warning.text2"|trans }}</p>
+</div><![endif]-->
+
+{% block javascripts %}
+    <script src="{{ asset("bundles/app/js/jquery.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/waves.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/salvattore.js") }}"></script>
+
+    <!-- Placeholder for IE9 --><!--[if IE 9 ]>
+    <script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->
+
+    <script src="{{ asset("bundles/app/js/functions.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/actions.js") }}"></script>
+
+    <script>
+        $(document).ready(function () {
+            /*--------------------------------------
+             Header Color
+             ---------------------------------------*/
+            $('body').on('click', '.hc-trigger', function () {
+                $(this).parent().toggleClass('toggled');
+            });
+
+            $('body').on('click', '.hc-item', function () {
+                var v = $(this).data('ma-header-value');
+
+                $('.hc-item').removeClass('selected');
+                $(this).addClass('selected');
+
+
+                $('body').attr('data-ma-header', v);
+            });
+        });
+    </script>
+
+{% endblock %}
+</body>
 </html>

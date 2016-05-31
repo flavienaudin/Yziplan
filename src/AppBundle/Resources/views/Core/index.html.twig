@@ -5,7 +5,22 @@
 {% endblock %}
 
 {% block content_body %}
-    <h1><span>Bonjour</span> Symfony {{ constant('Symfony\\Component\\HttpKernel\\Kernel::VERSION') }}</h1>
+
+    <div class="c-header">
+        <h2>Exemple de titre de page en dehors d'une Card</h2>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h1>Bonjour
+                <small>Et bienvenue sur Plany</small>
+            </h1>
+        </div>
+        <div class="card-body card-padding-sm">
+            C'est le contenu d'une carte
+        </div>
+    </div>
+
 {% endblock %}
 
 

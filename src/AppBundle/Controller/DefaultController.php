@@ -15,5 +15,13 @@ class DefaultController extends Controller
     {
         return $this->render('AppBundle:Core:index.html.twig');
     }
-    
+
+
+    /**
+     * @Route("/{_locale}/evenement", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="event")
+     */
+    public function eventAction(Request $request)
+    {
+        return $this->render('AppBundle:Core:evenement.html.twig');
+    }
 }

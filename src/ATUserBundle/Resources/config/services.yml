@@ -1,16 +1,7 @@
-parameters:
-    at.manager.user_manager.class: ATUserBundle\Manager\UtilisateurManager
-    at.provider.user.class: ATUserBundle\Security\ATUserProvider
-    at.event_listener.inscription.class: ATUserBundle\EventListener\InscriptionListener
-    at.event_listener.resetting.class: ATUserBundle\EventListener\ResettingListener
-    at.form_type.user_profile.class: ATUserBundle\Form\UserProfileType
-    at.form_type.inscription.class: ATUserBundle\Form\InscriptionType
-    at.checker.user.class: ATUserBundle\Security\UserChecker
-
 services:
 # Services & Managers
     at.manager.user_manager:
-        class: '%at.manager.user_manager.class%'
+        class: ATUserBundle\Manager\UtilisateurManager
         arguments: ['@security.encoder_factory', '@fos_user.util.username_canonicalizer', '@fos_user.util.email_canonicalizer', '@fos_user.object_manager', '%fos_user.model.user.class%' ]
         calls:
             - [ setTokenGenerateur, ['@at.service.gentoken'] ]
@@ -18,33 +9,33 @@ services:
 
 # Provider
     at.provider.user:
-        class: '%at.provider.user.class%'
+        class: ATUserBundle\Security\ATUserProvider
         arguments: ['@fos_user.user_manager.default',{facebook: facebookId, google: googleId}]
         calls:
             - [ setTokenGenerateur, ['@at.service.gentoken'] ]
 # EventListeners
     at.event_listener.inscription:
-        class: '%at.event_listener.inscription.class%'
+        class: ATUserBundle\EventListener\InscriptionListener
         tags:
             - { name: kernel.event_subscriber }
     at.event_listener.resetting:
-        class: '%at.event_listener.resetting.class%'
+        class: ATUserBundle\EventListener\ResettingListener
         tags:
             - { name: kernel.event_subscriber }
 
 # FormTypes
     at.form_type.user_profile:
-        class: '%at.form_type.user_profile.class%'
+        class: ATUserBundle\Form\UserProfileType
         tags:
             - { name: form.type, alias: user_user_profile}
 
     at.form_type.inscription:
-        class: '%at.form_type.inscription.class%'
+        class: ATUserBundle\Form\InscriptionType
         tags:
             - { name: form.type, alias: at_user_registration }
 
 # UserChecker
     at.user_checker:
-        class: '%at.checker.user.class%'
+        class: ATUserBundle\Security\UserChecker
 
 # Voters
