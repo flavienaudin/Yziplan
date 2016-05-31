@@ -81,6 +81,6 @@ class MangoPayManager
         $wallet1->Balance = 10;
         $wallet1->Owners = array($mangoUser1);
 
-        return $mangoUser;
+        return $mangoUser1;
     }
 }
