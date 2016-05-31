@@ -37,6 +37,9 @@ hwi_oauth:
     http_client:
         verify_peer: false
 
+assetic:
+    use_controller: false
+
 swiftmailer:
 #    disable_delivery: true
     delivery_address: '%dev_delivery_address%'

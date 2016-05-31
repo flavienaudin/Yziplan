@@ -4,6 +4,27 @@
 base:
   page:
     meta_title: Prototype 2
+  ie_warning:
+    browser:
+      chrome: Chrome
+      firefox: Firefox
+      opera: Opera
+      safari: Safari
+      ie: IE (Nouveau)
+    text1: Vous utilisez une ancienne version d'Internet Explorer, veuillez le mettre à jour<br/> ou installer l'un des navigateur suivants pour profiter pleinement de ce site internet.
+    text2: Désolé pour le dérangement!
+  footer:
+    home: Accueil
 
 navbar:
-  brand: Prototype 2!
+  brand: Plany
+  subtitle: Version beta 2
+  search:
+    placeholder: Rechercher un contact, un événement...
+
+main_menu:
+  home: Accueil
+
+# Globals
+global:
+  event: événement
