@@ -1,11 +1,10 @@
-    at.manager.mangopay.class: AppBundle\Manager\MangoPayManager
 services:
 # Services & Managers
     at.service.gentoken:
         class: AppBundle\Manager\GenerateursToken
 
     at.manager.mangopay:
-        class: %at.manager.mangopay.class%
+        class: AppBundle\Manager\MangoPayManager
         arguments: ['%mangopay.client.id%', "%mangopay.client.password%", "%mangopay.temporary.folder%", "%mangopay.base.url%"]
 
 # Autres

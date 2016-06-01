@@ -7,6 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PaymentModule
  *
+ * 
+ *
+ *
  * @ORM\Table(name="payment_module")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PaymentModuleRepository")
  */
