@@ -23,7 +23,27 @@ navbar:
     placeholder: Rechercher un contact, un événement...
 
 main_menu:
-  home: Accueil
+
+landing_page:
+  carousel:
+    button:
+      new_event: C'est par ici
+    after_work:
+      alt: An after work
+      title: Un After Work ?
+      text: Envie de savoir qui est dispo et où aller pour boire un verre ?
+    meeting:
+      alt: réunion
+      title: Une réunion ?
+      text: Besoin de choisir un créneau pour une réunion afin d'avoir le maximum de personne ?
+    party:
+      alt: soirée
+      title: Une soirée ?
+      text: Envie d'organiser la prochaine soirée avec vos amis ?
+    holiday:
+      alt: vacances
+      title: Retrouvailles entre amis ?
+      text: Organisez-vous avec vos amis pour savoir où et quand partir en week-end ou vacances !
 
 # Globals
 global:

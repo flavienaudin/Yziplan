@@ -1,16 +1,9 @@
-{% extends base_template %}
+{% extends "AppBundle:Event:layout.html.twig" %}
 
 {% block title %}{{ parent() }} - {{ "global.event"|trans }}{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-{% endblock %}
-
 {% block content_body %}
-
-    {#<div class="c-header">
-        <h2>Evenement de test <small>Sous-titre ou description brève</small></h2>
-    </div>#}
+    {{ parent() }}
 
     <div class="card">
         <div class="card-header">
@@ -25,7 +18,7 @@
 
     <div class="row">
         <div class="col-md-8">
-            {{ include("@App/Core/module/whoPaidWhatModule.html.twig")}}
+            {{ include("@App/Event/module/whoPaidWhatModule.html.twig")}}
         </div>
         <div class="col-md-4">
             <div class="card c-dark palette-Grey bg recent-signups">
@@ -224,7 +217,6 @@
             </div>
         </div>
     </div>
-
 
     <div class="modal fade" id="addPayment" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">

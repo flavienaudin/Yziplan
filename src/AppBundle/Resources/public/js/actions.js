@@ -25,6 +25,10 @@ $(document).ready(function () {
                 if (target == 'user-alerts') {
                     $('#s-user-alerts').addClass('toggled');
                 }
+                if (target == 'event-alerts') {
+                    $('#s-event-alerts').addClass('toggled');
+                }
+
 
                 $('body').addClass('o-hidden');
                 
