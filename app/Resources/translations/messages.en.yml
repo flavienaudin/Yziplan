@@ -23,7 +23,25 @@ navbar:
     placeholder: Search for contact, event...
 
 main_menu:
-  home: Home
+
+landing_page:
+  carousel:
+    after_work:
+      alt: after work
+      title: An After Work ?
+      text: Want to know who is available and where to go for a drink ?
+    meeting:
+      alt: professional meeting
+      title: A professional meeting ?
+      text: Need to choose a slot for a meeting in order to have the maximum of person ?
+    party:
+      alt: party
+      title: A Party ?
+      text: Want to organize the next party with your friends ?
+    holiday:
+      alt: holidays
+      title: Vacation between friends ?
+      text: Organize yourself with your friends to know where and when to go on weekends or holidays !
 
 # Globals
 global:

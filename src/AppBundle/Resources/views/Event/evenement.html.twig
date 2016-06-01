@@ -1,0 +1,48 @@
+{% extends "AppBundle:Event:layout.html.twig" %}
+
+{% block title %}{{ parent() }} - {{ "global.event"|trans }}{% endblock %}
+
+{% block content_body %}
+    {{ parent() }}
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Evenement de test
+                <small>Sous-titre ou description brève</small>
+            </h2>
+        </div>
+        <div class="card-body card-padding-sm">
+            C'est la page d'un événement à compléter.
+        </div>
+    </div>
+
+
+    <div id="c-grid" class="clearfix" data-columns>
+        <div class="card c-dark palette-Green bg">
+            <div class="card-header">
+                <h2>Module 1</h2>
+            </div>
+            <div class="card-body card-padding">
+                <p>Contenu du module 1</p>
+            </div>
+        </div>
+
+        <div class="card c-dark palette-Indigo bg">
+            <div class="card-header">
+                <h2>Module 2</h2>
+            </div>
+            <div class="card-body card-padding">
+                <p>Contenu du module 2</p>
+            </div>
+        </div>
+
+        <div class="card c-dark palette-Blue bg">
+            <div class="card-header">
+                <h2>Module 3</h2>
+            </div>
+            <div class="card-body card-padding">
+                <p>Contenu du module 3</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
