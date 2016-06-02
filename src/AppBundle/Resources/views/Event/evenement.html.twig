@@ -2,6 +2,11 @@
 
 {% block title %}{{ parent() }} - {{ "global.event"|trans }}{% endblock %}
 
+{% block mainMenu_listItems %}
+    <li class="active"><a href="#">Description</a></li>
+    <li><a href="#">Module Quand</a></li>
+{% endblock mainMenu_listItems %}
+
 {% block content_body %}
     {{ parent() }}
 

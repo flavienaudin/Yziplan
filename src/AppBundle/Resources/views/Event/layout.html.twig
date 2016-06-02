@@ -1,10 +1,8 @@
 {% extends "::base.html.twig" %}
 
-{# On garde l'icone pour afficher le menu quand il est replié #}
-{% block sidebar_collapse_cmd %}{{ parent() }}{% endblock %}
+{# LAYOUT : Menu latéral + une colonne pour le contenu #}
 
-{# On définit le menu latéral#}
-{% block s_main_menu %}
+{% block alerts_tabs %}
     <aside id="s-event-alerts" class="sidebar">
         <ul class="tab-nav tn-justified tn-icon m-t-10" data-tab-color="teal">
             <li><a class="sua-event-messages" href="#sua-event-messages" data-toggle="tab"><i class="zmdi zmdi-email"></i></a></li>
@@ -28,35 +26,26 @@
             </div>
         </div>
     </aside>
+{% endblock alerts_tabs %}
 
-    <aside id="s-main-menu" class="sidebar">
-        {# En-tête du menu quand il est replié (largeur < 1280px) #}
-        <div class="smm-header">
-            <i class="zmdi zmdi-long-arrow-left" data-ma-action="sidebar-close"></i>
-        </div>
-
-        <ul class="smm-alerts">
-            {# Menu de notifications d'un événément : icones pour ouvrir #}
-            <li data-user-alert="sua-event-messages" data-ma-action="sidebar-open" data-ma-target="event-alerts">
-                <i class="zmdi zmdi-email"></i>
-            </li>
-            <li data-user-alert="sua-event-notifications" data-ma-action="sidebar-open" data-ma-target="event-alerts">
-                <i class="zmdi zmdi-notifications"></i>
-            </li>
-        </ul>
-
-        <ul class="main-menu">
-            {% block main_menu_items %}{% endblock main_menu_items %}
-        </ul>
-    </aside>
-{% endblock s_main_menu %}
+{% block alerts_menu %}
+    <ul class="smm-alerts">
+        {# Menu de notifications d'un événément : icones pour ouvrir #}
+        <li data-user-alert="sua-event-messages" data-ma-action="sidebar-open" data-ma-target="event-alerts">
+            <i class="zmdi zmdi-email"></i>
+        </li>
+        <li data-user-alert="sua-event-notifications" data-ma-action="sidebar-open" data-ma-target="event-alerts">
+            <i class="zmdi zmdi-notifications"></i>
+        </li>
+    </ul>
+{% endblock alerts_menu %}
 
 {% block content_body %}
     {# TODO ajouter la comande d'ouverture des notifications de l'événement (si menu latéral plié) #}
 {% endblock content_body %}
 
 
-{%  block javascripts %}
+{% block javascripts %}
     {{ parent() }}
     {#<script>
         $('body').on('click', '[data-user-alert]', function(e) {
@@ -67,4 +56,3 @@
         });
     </script>#}
 {% endblock %}
-

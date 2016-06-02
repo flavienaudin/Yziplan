@@ -45,21 +45,22 @@
 
         <ul class="pull-right h-menu">
             <li class="hm-search-trigger">
-                {# Icone ouvrant la zone de recherche pour les petits écrans (<992px) #}
+                {# Commande d'ouverture de la zone de recherche pour les petits écrans (<992px) #}
                 <a href="#" data-ma-action="search-open"> <i class="hm-icon zmdi zmdi-search"></i> </a>
             </li>
             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                {# Notifications de l'utilisateur connecté #}
+                {# Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
                 <li data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
                     <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
                 </li>
+                {# Menu dropwdown du profil Utilisateur #}
                 <li class="dropdown hm-profile">
                     {# TODO : style : alignement vertical : hm-profile #}
                     <a data-toggle="dropdown" href="#">
                         {# TODO : mettre l'avatar de l'utilisateur #}
                         <i class="hm-icon zmdi zmdi-account-circle"></i> </a>
                     <ul class="dropdown-menu pull-right dm-icon" role="menu">
-                        <li role="presentation"><a>{{ app.user.username }}</a></li>
+                        <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ app.user.username }}</a></li>
                         <li role="separator" class="divider"></li>
                         {# TODO : définir le menu déroulant de l'utilisateur connecté : profil, déconnexion, ... #}
                         <li role="presentation"><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
@@ -80,10 +81,12 @@
 {% endblock %}
 
 <!-- CONTENT -->
-
+{# Pour avoir une page AVEC un menu latéral : conserver section#main et redéfinir le block "s_main_menu" #}
+{# Pour avoir une page SANS menu latéral : redfinir le block "main_section_id" et définir les blocks "s_main_menu" et "sidebar_collapse_cmd" vides #}
 <section id="{% block main_section_id %}main{% endblock %}">
+
     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-        {# Menus "Notifications de l'utilisateur" ouverts via l'icone menu "smm-alerts" (icones Enveloppe, Alertes)#}
+        {# Panneaux d'affichage des "Notifications utilisateur" ouverts via l'icone #}
         <aside id="s-user-alerts" class="sidebar">
             <ul class="tab-nav tn-justified tn-icon m-t-10" data-tab-color="teal">
                 <li><a class="sua-messages" href="#sua-messages" data-toggle="tab"><i class="zmdi zmdi-email"></i></a></li>
@@ -109,23 +112,40 @@
         </aside>
     {% endif %}
 
-    {# Menu principal latéral #}
-    {% block s_main_menu %}{% endblock s_main_menu %}
 
+    <!-- SIDEBAR -->
+    {# Menu principal latéral #}
+    {% block s_main_menu %}
+        {# Alerts tab : panneaux d'affichage commandés par le block "alerts_menu" #}
+        {% block alerts_tabs %}{% endblock %}
+
+        <aside id="s-main-menu" class="sidebar">
+            {# En-tête du menu quand il est replié (largeur < 1280px) #}
+            <div class="smm-header">
+                <i class="zmdi zmdi-long-arrow-left" data-ma-action="sidebar-close"></i>
+            </div>
+
+            {# Alerts menu : commandes des panneaux d'affichage (block "alerts_tabs" #}
+            {% block alerts_menu %}{% endblock %}
+
+            <ul class="main-menu">
+                {% block mainMenu_listItems %}{% endblock %}
+            </ul>
+        </aside>
+    {% endblock s_main_menu %}
+
+    <!-- CONTENT -->
+    {# Block du contenu des pages #}
     <section id="content">
         <div class="{% block main_content_class %}container{% endblock %}">
             {% block content_body %}{% endblock %}
         </div>
     </section>
 
+    <!-- FOOTER -->
     <footer id="footer">
         {% block footer %}
-            Copyright &copy; 2016 Plany by ArdTeam
-            <ul class="f-menu">
-                <li><a href="{{ path('accueil') }}">{{ "base.footer.home"|trans }}</a></li>
-                <li><a href="#">Mentions Légales</a></li>
-                <li><a href="#">Contact</a></li>
-            </ul>
+            {{ include(':partials:footer.html.twig') }}
         {% endblock footer %}
     </footer>
 </section>
