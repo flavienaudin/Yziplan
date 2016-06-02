@@ -28,3 +28,10 @@ parameters:
 
     # DEV
     dev_delivery_address: ~
+
+    # MangoPay Configuration
+    mangopay.client.id:        "ardteam"
+    mangopay.client.password:  "TeF1qEdnAuYeBnHQvzgc9fhL7aqZaE7Otp5YhgT2Z3TZAWN5xv"
+    mangopay.temporary.folder: "%kernel.root_dir%/var/tmp/"
+    # Default is SandBox, for production : https://api.sandbox.mangopay.com
+    mangopay.base.url:         ""
