@@ -22,7 +22,7 @@ class Module
     private $id;
 
     /**
-     * @OneToOne(targetEntity="PaymentModule", mappedBy="module")
+     * @ORM\OneToOne(targetEntity="PaymentModule", mappedBy="module")
      * 
      * @var PaymentModule
      */

@@ -25,8 +25,8 @@ class PaymentModule
     private $id;
 
     /**
-     * @OneToOne(targetEntity="Module", inversedBy="paymentModule")
-     * @JoinColumn(name="module_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="Module", inversedBy="paymentModule")
+     * @ORM\JoinColumn(name="module_id", referencedColumnName="id")
      *
      * @var Module
      */
