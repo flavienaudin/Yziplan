@@ -13,6 +13,12 @@ services:
         arguments: ['@fos_user.user_manager.default',{facebook: facebookId, google: googleId}]
         calls:
             - [ setTokenGenerateur, ['@at.service.gentoken'] ]
+
+# Security services
+    at.security.ajax_authentication_handler:
+        class: ATUserBundle\Security\AjaxAuthenticationHandler
+        arguments: ['@router',"@session"]
+
 # EventListeners
     at.event_listener.inscription:
         class: ATUserBundle\EventListener\InscriptionListener

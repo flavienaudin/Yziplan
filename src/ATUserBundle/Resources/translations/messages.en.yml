@@ -6,7 +6,7 @@ security:
     meta_title: Log In
     title: Log In
   texte:
-    pas_de_compte: Do not have an account
+    pas_de_compte: Do not have an account yet
   form:
     mot_de_passe_oublie: Forgot your password
 
@@ -18,6 +18,16 @@ register:
     champs_obligatoires: Mandatory fields
   texte:
     deja_un_compte: Already have an account?
+
+profile:
+  show:
+    page:
+      meta_title: Profile
+      title: Profile
+  edit:
+    page:
+      meta_title: Profile edition
+      title: Profile edition
 
 # Global messages
 texte:

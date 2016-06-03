@@ -6,7 +6,7 @@ security:
     meta_title: Connexion
     title: Connexion
   texte:
-    pas_de_compte: Pas de compte
+    pas_de_compte: Pas encore de compte
   form:
     mot_de_passe_oublie: Mot de passe oublié
 
@@ -18,6 +18,16 @@ register:
     champs_obligatoires: Champs Obligatoires
   texte:
     deja_un_compte: Déjà un compte ?
+
+profile:
+  show:
+    page:
+      meta_title: Profil
+      title: Profil
+  edit:
+    page:
+      meta_title: Edition du profil
+      title: Edition du profil
 
 # Global messages
 texte:

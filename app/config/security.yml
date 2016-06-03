@@ -27,6 +27,8 @@ security:
             form_login:
                 login_path:   fos_user_security_login
                 check_path:   fos_user_security_check
+                success_handler: at.security.ajax_authentication_handler
+                failure_handler: at.security.ajax_authentication_handler
                 use_referer: true
                 default_target_path: accueil
                 csrf_token_generator: security.csrf.token_manager
