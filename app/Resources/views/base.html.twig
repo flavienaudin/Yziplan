@@ -67,8 +67,7 @@
                     </ul>
                 </li>
             {% else %}
-                <li><a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
-                <li><a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></li>
+                <li><a data-toggle="modal" href="#modalLogin">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
             {% endif %}
         </ul>
 
@@ -78,8 +77,8 @@
             </form>
         </div>
     </header>
+    {{ render(controller('ATUserBundle:Security:login', {"display":"modale"})) }}
 {% endblock %}
-
 <!-- CONTENT -->
 {# Pour avoir une page AVEC un menu latéral : conserver section#main et redéfinir le block "s_main_menu" #}
 {# Pour avoir une page SANS menu latéral : redfinir le block "main_section_id" et définir les blocks "s_main_menu" et "sidebar_collapse_cmd" vides #}
@@ -194,6 +193,7 @@
     <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
     <script src="{{ asset("bundles/app/js/salvattore.js") }}"></script>
     <script src="{{ asset("bundles/app/js/autosize.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
 
     <!-- Placeholder for IE9 --><!--[if IE 9 ]>
     <script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->

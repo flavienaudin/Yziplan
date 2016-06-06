@@ -1,0 +1,17 @@
+{% extends "FOSUserBundle::layout.html.twig" %}
+
+{% block fos_user_content %}
+    <div class="card">
+        <div class="card-header palette-Blue bg">
+            <h2>{{ "profile.show.page.title"|trans }}</h2>
+
+            <a href="{{ path('fos_user_profile_edit') }}" class="btn palette-Cyan bg btn-float waves-effect waves-circle waves-float">
+                <i class="zmdi zmdi-edit"></i>
+            </a>
+
+        </div>
+        <div class="card-body card-padding">
+            {% include "FOSUserBundle:Profile:show_content.html.twig" %}
+        </div>
+    </div>
+{% endblock fos_user_content %}

@@ -1,4 +1,4 @@
-{% extends base_template %}
+{% extends "::base.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -6,7 +6,7 @@
 
 
 {% block alerts_menu %}
-    {# TODO : trouver un moyen de faire descendre le menu gauche ou de vider cette zone #}
+     {# TODO : trouver un moyen de faire descendre le menu gauche ou de vider cette zone #}
     <ul class="smm-alerts">
         <li></li>
     </ul>
@@ -15,31 +15,23 @@
 
 {% block mainMenu_listItems %}
     <li class="active"><a href="{{ path("fos_user_profile_show") }}">Profil</a></li>
-    <li><a href="#">autres</a></li>
+    <li><a href="#">Préférences</a></li>
 {% endblock mainMenu_listItems %}
 
 {% block content_body %}
-    <div class="card">
-        <div class="card-header">
-            <h1>Profil</h1>
-        </div>
-        <div class="card-body card-padding">
-            {% if app.request.hasPreviousSession and app.session.flashBag.peekall()|length>0 %}
-                <div class="row">
-                    {% for type, messages in app.session.flashbag.all() %}
-                        {% for message in messages %}
-                            <div class="flash-{{ type }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
+    {% block fos_user_content %}
+        {% if app.request.hasPreviousSession and app.session.flashBag.peekall()|length>0 %}
+            <div class="row">
+                {% for type, messages in app.session.flashbag.all() %}
+                    {% for message in messages %}
+                        <div class="flash-{{ type }}">
+                            {{ message }}
+                        </div>
                     {% endfor %}
-                </div>
-            {% endif %}
-
-            {% block fos_user_content %}{% endblock fos_user_content %}
-        </div>
-    </div>
-
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endblock fos_user_content %}
 {% endblock %}
 
 {% block javascripts %}
