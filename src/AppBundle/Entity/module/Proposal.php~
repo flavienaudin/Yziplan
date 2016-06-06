@@ -21,7 +21,13 @@ class Proposal
      */
     private $id;
 
-
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ProposalElement", mappedBy="proposal")
+     */
+    private $proposalElements;
+    
     /**
      * Get id
      *
@@ -32,4 +38,3 @@ class Proposal
         return $this->id;
     }
 }
-
