@@ -1,0 +1,15 @@
+<div class="modal fade" id="modalRegistration" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header palette-Teal bg text-center">
+                <h1 class="c-white"><i class="zmdi zmdi-account-circle"></i> {{ "register.page.title"|trans }}</h1>
+            </div>
+
+            <div class="modal-body">
+                {{ include('@ATUser/Registration/partials/registration_form.html.twig') }}
+
+                {{ include('@ATUser/Security/partials/social_networks_connexion.html.twig', { "indication" : true}) }}
+            </div>
+        </div>
+    </div>
+</div>

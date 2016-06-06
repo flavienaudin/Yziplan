@@ -1,0 +1,53 @@
+{{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register')}) }}
+
+<div class="input-group m-t-25 m-b-25 fg-float {% if (not form.email.vars.compound or form.email.vars.force_error|default(false)) and not form.email.vars.valid %} has-error{% endif %}">
+    <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
+    <div class="fg-line">
+        {{ form_widget(form.email, {"attr":{"class":"input-lg"}}) }}
+        {{ form_label(form.email, null,  {"label_attr":{"class":"fg-label"}}) }}
+    </div>
+    {{ form_errors(form.email) }}
+</div>
+
+{% for passwordField in form.plainPassword %}
+    <div class="input-group m-b-25 fg-float {% if (not passwordField.vars.compound or passwordField.vars.force_error|default(false)) and not passwordField.vars.valid %} has-error{% endif %}">
+        {% if loop.index == 1 %}
+            <span class="input-group-addon"><i class="zmdi zmdi-lock"></i></span>
+            {% set password_label = "form.password"|trans({}, 'FOSUserBundle') %}
+        {% else %}
+            <span class="input-group-addon"><i class="zmdi zmdi-lock-outline"></i></span>
+            {% set password_label = "form.password_confirmation"|trans({}, 'FOSUserBundle') %}
+        {% endif %}
+        <div class="fg-line">
+            {{ form_widget(passwordField, {"attr":{"class":"input-lg"}}) }}
+            {{ form_label(passwordField, null,  {"label_attr":{"class":"fg-label"}}) }}
+        </div>
+        {{ form_errors(passwordField) }}
+    </div>
+{% endfor %}
+
+<div class="input-group m-b-25 fg-float">
+    <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
+    <div class="fg-line">
+        {{ form_widget(form.pseudo, {"attr":{"class":"input-lg"}}) }}
+        {{ form_label(form.pseudo, null, {"label_attr":{"class":"fg-label"}}) }}
+    </div>
+
+    {{ form_errors(form.pseudo) }}
+</div>
+
+<div class="row">
+    <div class="col-xs-12 m-b-30">
+        <button type="submit" class="btn btn-block btn-lg palette-Teal bg waves-effect">
+            {{ 'registration.submit'|trans({}, 'FOSUserBundle') }}
+        </button>
+    </div>
+</div>
+
+<div class="text-center m-b-25">
+    <em><a {% if modal is defined and modal %}data-toggle="modal" href="#modalLogin"{% else %}href="{{ path('fos_user_security_login') }}{% endif %}">{{ "register.text.already_an_account"|trans
+            }}</a></em>
+</div>
+
+{{ form_rest(form) }}
+{{ form_end(form) }}

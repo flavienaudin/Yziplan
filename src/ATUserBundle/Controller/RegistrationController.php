@@ -23,7 +23,7 @@ use Symfony\Component\Validator\Constraints\Email;
 class RegistrationController extends BaseController
 {
 
-    public function registerAction(Request $request)
+    public function registerAction(Request $request, $display=null)
     {
         $formFactory = $this->get('fos_user.registration.form.factory');
         $userManager = $this->get('at.manager.user_manager');
@@ -49,7 +49,7 @@ class RegistrationController extends BaseController
                 $utilisateur = $userManager->findUserByEmail($form['email']->getData());
                 if ($utilisateur != null && $utilisateur->isEnabled()) {
                     // Un utilisateur activé avec l'email utilisée existe déjà en base : on refuse l'inscription
-                    $form->get('email')->addError(new FormError($this->get("translator.default")->trans("inscription.erreur.email_utilise")));
+                    $form->get('email')->addError(new FormError($this->get("translator.default")->trans("register.validation.email_already_used")));
                     return $this->render('FOSUserBundle:Registration:register.html.twig', array('form' => $form->createView()));
                 }
 
@@ -77,8 +77,16 @@ class RegistrationController extends BaseController
             }
         }
 
-        return $this->render('FOSUserBundle:Registration:register.html.twig', array(
-            'form' => $form->createView(),
-        ));
+        if($display=="modal") {
+            return $this->render('@ATUser/Registration/partials/modal_registration_form.html.twig', array(
+                'form' => $form->createView(),
+                'modal' => true
+            ));
+        }else{
+            return $this->render('FOSUserBundle:Registration:register.html.twig', array(
+                'form' => $form->createView(),
+                'modal' => false
+            ));
+        }
     }
 }
