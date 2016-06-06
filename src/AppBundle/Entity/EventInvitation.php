@@ -21,6 +21,13 @@ class EventInvitation
      */
     private $id;
 
+    /**
+     * @var Event
+     *
+     * @ORM\ManyToOne(targetEntity="Event", inversedBy="eventInvitations")
+     * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
+     */
+    private $event;
 
     /**
      * Get id
@@ -31,5 +38,28 @@ class EventInvitation
     {
         return $this->id;
     }
-}
 
+    /**
+     * Set event
+     *
+     * @param \AppBundle\Entity\Event $event
+     *
+     * @return EventInvitation
+     */
+    public function setEvent(\AppBundle\Entity\Event $event = null)
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
+    /**
+     * Get event
+     *
+     * @return \AppBundle\Entity\Event
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+}
