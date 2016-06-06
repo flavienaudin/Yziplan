@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity\enum;
 
+use SplEnum;
 /**
  * Définie les niveau d'accès pour un evenement ou un module
  *
