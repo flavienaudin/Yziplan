@@ -8,7 +8,7 @@
 
 namespace AppBundle\Entity\enum;
 
-use SplEnum;
+
 /**
  * Définie les niveau d'accès pour un evenement ou un module
  *
@@ -19,7 +19,7 @@ use SplEnum;
  * Class ModuleAccessType
  * @package AppBundle\Entity\enum
  */
-class ModuleAccessType extends SplEnum
+class ModuleAccessType
 {
     const PUBLIC_ACCESS = "PUBLIC";
     const PRIVATE_ACCESS = "PRIVATE";

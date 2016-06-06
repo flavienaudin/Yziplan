@@ -8,9 +8,8 @@
 
 namespace AppBundle\Entity\enum;
 
-use SplEnum;
 
-class ProposalElementType extends SplEnum
+class ProposalElementType
 {
     const Boolean = "Boolean";
     const String = "String";
