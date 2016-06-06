@@ -5,19 +5,22 @@ security:
   page:
     meta_title: Log In
     title: Log In
-  texte:
-    pas_de_compte: Do not have an account yet
+  text:
+    no_account_yet: Do not have an account yet
   form:
-    mot_de_passe_oublie: Forgot your password
+    forgot_password: Forgot your password
 
 register:
   page:
     meta_title: Registration
     title: Registration
-  sous_titre:
-    champs_obligatoires: Mandatory fields
-  texte:
-    deja_un_compte: Already have an account?
+    subtitle_email: Register with Email
+    subtitle_social_network: Register with social networks
+  text:
+    #email_register: Register with Email
+    already_an_account: Already have an account?
+  validation:
+    email_already_used: This email is already registered
 
 profile:
   show:
@@ -30,11 +33,11 @@ profile:
       title: Profile edition
 
 # Global messages
-texte:
+text:
   social_network_connexion: 'Log in via your social network account'
   social_network:
     google: Google
     facebook: Facebook
 
 form:
-  nom_public: Public name
+  public_name: Public name

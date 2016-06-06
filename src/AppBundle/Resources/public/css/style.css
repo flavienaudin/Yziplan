@@ -132,3 +132,12 @@
     color: #4C646F;
 }
 /** end Colored Header SELECTOR **/
+
+
+/** Formulaires */
+/* Pas de couleur de fond ni de bordure sur l'icone en cas d'erreur */
+.has-error .input-group-addon {
+    color: #f6675d;
+    border-color: transparent;
+    background-color: transparent;
+}

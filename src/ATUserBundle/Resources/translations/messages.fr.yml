@@ -5,19 +5,22 @@ security:
   page:
     meta_title: Connexion
     title: Connexion
-  texte:
-    pas_de_compte: Pas encore de compte
+  text:
+    no_account_yet: Pas encore de compte
   form:
-    mot_de_passe_oublie: Mot de passe oublié
+    forgot_password: Mot de passe oublié
 
 register:
   page:
     meta_title: Inscription
     title: Inscription
-  sous_titre:
-    champs_obligatoires: Champs Obligatoires
-  texte:
-    deja_un_compte: Déjà un compte ?
+    subtitle_email: Inscription avec un e-mail
+    subtitle_social_network: Inscription via les réseaux sociaux
+  text:
+    #email_register: Inscription avec un e-mail
+    already_an_account: Déjà un compte ?
+  validation:
+    email_already_used: Cet adresse e-mail est déjà utilisée
 
 profile:
   show:
@@ -30,10 +33,11 @@ profile:
       title: Edition du profil
 
 # Global messages
-texte:
+text:
   social_network_connexion: 'Connectez-vous via les réseaux sociaux'
   social_network:
     google: Google
     facebook: Facebook
+
 form:
-  nom_public: Nom public
+  public_name: Nom public

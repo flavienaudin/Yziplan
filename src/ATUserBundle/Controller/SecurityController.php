@@ -56,17 +56,19 @@ class SecurityController extends Controller
                 : null;
         }
 
-        if($display=="modale"){
-            return $this->renderModaleLogin(array(
+        if($display=="modal"){
+            return $this->renderModalLogin(array(
                 'last_username' => $lastUsername,
                 'error' => $error,
                 'csrf_token' => $csrfToken,
+                'modal' => true
             ));
         }else {
             return $this->renderLogin(array(
                 'last_username' => $lastUsername,
                 'error' => $error,
                 'csrf_token' => $csrfToken,
+                'modal' => false
             ));
         }
     }
@@ -85,9 +87,9 @@ class SecurityController extends Controller
     }
 
 
-    protected function renderModaleLogin(array $data)
+    protected function renderModalLogin(array $data)
     {
-        return $this->render('@ATUser/Security/partials/ajax_login_form.html.twig', $data);
+        return $this->render('@ATUser/Security/partials/modal_login_form.html.twig', $data);
     }
 
     public function checkAction()
