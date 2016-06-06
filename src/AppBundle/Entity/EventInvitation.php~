@@ -5,12 +5,12 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Transaction
+ * EventInvitation
  *
- * @ORM\Table(name="transaction")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TransactionRepository")
+ * @ORM\Table(name="event_invitation")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\EventInvitationRepository")
  */
-class Transaction
+class EventInvitation
 {
     /**
      * @var int
@@ -21,6 +21,13 @@ class Transaction
      */
     private $id;
 
+    /**
+     * @var Event
+     *
+     * @ORM\ManyToOne(targetEntity="Event", inversedBy="eventInvitations")
+     * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
+     */
+    private $event;
 
     /**
      * Get id
@@ -32,3 +39,4 @@ class Transaction
         return $this->id;
     }
 }
+

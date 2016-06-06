@@ -1,16 +1,16 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\module;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Transaction
+ * PollModule
  *
- * @ORM\Table(name="transaction")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TransactionRepository")
+ * @ORM\Table(name="poll_module")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\module\PollModuleRepository")
  */
-class Transaction
+class PollModule
 {
     /**
      * @var int
@@ -32,3 +32,4 @@ class Transaction
         return $this->id;
     }
 }
+

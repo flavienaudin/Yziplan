@@ -1,16 +1,16 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\module;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Transaction
+ * Proposal
  *
- * @ORM\Table(name="transaction")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\TransactionRepository")
+ * @ORM\Table(name="proposal")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\module\ProposalRepository")
  */
-class Transaction
+class Proposal
 {
     /**
      * @var int
