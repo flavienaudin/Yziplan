@@ -1,0 +1,8 @@
+{% extends "ATUserBundle::layout.html.twig" %}
+
+{# Vidage du menu latéral #}
+{% block sidebar_collapse_cmd %}{% endblock %}
+{% block s_main_menu %}{% endblock s_main_menu %}
+
+{% block main_section_id %}{% endblock %}
+{% block main_content_class %}{{ parent() }} c-boxed{% endblock %}

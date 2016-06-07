@@ -1,4 +1,8 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
+{% extends "ATUserBundle::layout.html.twig" %}
+
+{% block meta_title %}
+    {% spaceless %}{{ parent() }} - {{ "profile.edit.page.meta_title"|trans }}{% endspaceless %}
+{% endblock %}
 
 {% block fos_user_content %}
     <div class="card">
@@ -7,7 +11,7 @@
 
         </div>
         <div class="card-body card-padding">
-            {% include "FOSUserBundle:Profile:edit_content.html.twig" %}
+            {% include "ATUserBundle:Profile:edit_content.html.twig" %}
         </div>
     </div>
 {% endblock fos_user_content %}

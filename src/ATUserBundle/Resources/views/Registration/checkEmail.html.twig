@@ -1,0 +1,17 @@
+{% extends 'ATUserBundle::layout_cboxed.html.twig' %}
+
+{% block meta_title %}
+    {% spaceless %}{{ parent() }} - {{ "check_email.page.meta_title"|trans }}{% endspaceless %}
+{% endblock %}
+
+{% block fos_user_content %}
+    <div class="card">
+        <div class="card-header">
+            <h1>{{ "check_email.page.title"|trans }}</h1>
+        </div>
+        <div class="card-body card-padding">
+            {{ parent() }}
+            <p>{{ 'registration.check_email'|trans({'%email%': user.email}, 'FOSUserBundle') }}</p>
+        </div>
+    </div>
+{% endblock fos_user_content %}

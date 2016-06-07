@@ -1,17 +1,10 @@
-{% extends '@ATUser/layout.html.twig' %}
+{% extends '@ATUser/layout_cboxed.html.twig' %}
 
 {% form_theme form with [_self,':Form:at_forms_layout.html.twig'] %}
 
 {% block meta_title %}
     {% spaceless %}{{ parent() }} - {{ "register.page.meta_title"|trans }}{% endspaceless %}
 {% endblock %}
-
-{# Vidage du menu latéral #}
-{% block sidebar_collapse_cmd %}{% endblock %}
-{% block s_main_menu %}{% endblock s_main_menu %}
-
-{% block main_section_id %}{% endblock %}
-{% block main_content_class %}{{ parent() }} c-boxed{% endblock %}
 
 {% block fos_user_content %}
     <div class="col-xs-12 col-sm-6">
