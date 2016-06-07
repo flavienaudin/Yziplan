@@ -43,14 +43,26 @@ class Module
      */
     private $paymentModule;
 
-    /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-}
+    /*******************************************************************************************************
+     *                                Type de module
+     ********************************************************************************************************/
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\module\PollModule", mappedBy="module")
+     */
+    private $pollModules;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\module\ExpenseModule", mappedBy="module")
+     */
+    private $expenseModules;
+
+    /*******************************************************************************************************
+     *                                Getter and Setter
+     ********************************************************************************************************/
+    
+}

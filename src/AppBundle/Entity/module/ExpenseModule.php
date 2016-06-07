@@ -1,18 +1,17 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\module;
 
+use AppBundle\Entity\Module as Module;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PaymentModule
+ * ExpenseModule
  *
- * Contient tous les element relatif aux paiement dans un module.
- *
- * @ORM\Table(name="payment_module")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\PaymentModuleRepository")
+ * @ORM\Table(name="expense_module")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\module\ExpenseModuleRepository")
  */
-class PaymentModule
+class ExpenseModule
 {
     /**
      * @var int
@@ -24,31 +23,20 @@ class PaymentModule
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="Module", inversedBy="paymentModule")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Module", inversedBy="expenseModules")
      * @ORM\JoinColumn(name="module_id", referencedColumnName="id")
      *
      * @var Module
      */
     private $module;
+    
 
-    /**
-     * Emetteurs des paiements
-     *
-     * @var
-     */
-    private $emitter;
-
-    /**
-     * Destinataires des paiements
-     *
-     * @var
-     */
-    private $recipient;
+   
 
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -60,7 +48,7 @@ class PaymentModule
      *
      * @param \AppBundle\Entity\Module $module
      *
-     * @return PaymentModule
+     * @return ExpenseModule
      */
     public function setModule(\AppBundle\Entity\Module $module = null)
     {
