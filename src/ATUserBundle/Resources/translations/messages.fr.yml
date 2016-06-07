@@ -22,11 +22,21 @@ register:
   validation:
     email_already_used: Cet adresse e-mail est déjà utilisée
 
+check_email:
+  page:
+    meta_title: E-mail envoyé
+    title: E-mail envoyé
+
+confirmed:
+  page:
+    meta_title: Confirmation
+    title: Confirmation
+
 profile:
   show:
     page:
-      meta_title: Profil
-      title: Profil
+      meta_title: Votre profil
+      title: Votre profil
   edit:
     page:
       meta_title: Edition du profil
