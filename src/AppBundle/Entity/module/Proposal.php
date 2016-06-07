@@ -22,6 +22,14 @@ class Proposal
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="PollModule", inversedBy="proposals")
+     * @ORM\JoinColumn(name="poll_module_id", referencedColumnName="id")
+     *
+     * @var PollModule
+     */
+    private $pollModule;
+    
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ProposalElement", mappedBy="proposal")
@@ -29,20 +37,45 @@ class Proposal
     private $proposalElements;
     
     /**
-     * Get id
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-    /**
      * Constructor
      */
     public function __construct()
     {
         $this->proposalElements = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set pollModule
+     *
+     * @param \AppBundle\Entity\module\PollModule $pollModule
+     *
+     * @return Proposal
+     */
+    public function setPollModule(\AppBundle\Entity\module\PollModule $pollModule = null)
+    {
+        $this->pollModule = $pollModule;
+
+        return $this;
+    }
+
+    /**
+     * Get pollModule
+     *
+     * @return \AppBundle\Entity\module\PollModule
+     */
+    public function getPollModule()
+    {
+        return $this->pollModule;
     }
 
     /**

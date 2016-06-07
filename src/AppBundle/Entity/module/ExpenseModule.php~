@@ -6,12 +6,12 @@ use AppBundle\Entity\Module as Module;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * PollModule
+ * ExpenseModule
  *
- * @ORM\Table(name="poll_module")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\module\PollModuleRepository")
+ * @ORM\Table(name="expense_module")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\modle\ExpenseModuleRepository")
  */
-class PollModule
+class ExpenseModule
 {
     /**
      * @var int
@@ -23,17 +23,13 @@ class PollModule
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Module", inversedBy="pollModules")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Module", inversedBy="expenseModules")
      * @ORM\JoinColumn(name="module_id", referencedColumnName="id")
      *
      * @var Module
      */
     private $module;
+    
 
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Proposal", mappedBy="pollModule")
-     */
-    private $proposals;
+   
 }
