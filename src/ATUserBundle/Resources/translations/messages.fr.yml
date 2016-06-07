@@ -37,6 +37,7 @@ profile:
     page:
       meta_title: Votre profil
       title: Votre profil
+      avatar_update: Mettre à jour votre avatar
   edit:
     page:
       meta_title: Edition du profil

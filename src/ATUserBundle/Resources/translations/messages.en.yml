@@ -37,6 +37,7 @@ profile:
     page:
       meta_title: Your profile
       title: Your profile
+      avatar_update: Update Profile Picture
   edit:
     page:
       meta_title: Profile edition
