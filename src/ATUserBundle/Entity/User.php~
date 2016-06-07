@@ -270,28 +270,4 @@ class User extends FosUser
         return $this->passwordKnown;
     }
     
-
-    /**
-     * Set appUser
-     *
-     * @param \AppBundle\Entity\AppUser $appUser
-     *
-     * @return User
-     */
-    public function setAppUser(\AppBundle\Entity\AppUser $appUser = null)
-    {
-        $this->appUser = $appUser;
-
-        return $this;
-    }
-
-    /**
-     * Get appUser
-     *
-     * @return \AppBundle\Entity\AppUser
-     */
-    public function getAppUser()
-    {
-        return $this->appUser;
-    }
 }

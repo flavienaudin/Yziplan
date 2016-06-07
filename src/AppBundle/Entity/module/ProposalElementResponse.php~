@@ -45,6 +45,10 @@ class ProposalElementResponse
      */
     private $proposalElement;
 
+    /***********************************************************************
+     *                      Getters and Setters
+     ***********************************************************************/
+    
     /**
      * Get id
      *
@@ -103,7 +107,17 @@ class ProposalElementResponse
     {
         return $this->value;
     }
-
+    
+    /**
+     * Get info1
+     *
+     * @return string
+     */
+    public function getInfo1()
+    {
+        return $this->info1;
+    }
+    
     /**
      * Set info1
      *
@@ -117,4 +131,6 @@ class ProposalElementResponse
 
         return $this;
     }
+
+    
 }

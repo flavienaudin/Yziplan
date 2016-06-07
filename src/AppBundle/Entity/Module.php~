@@ -22,6 +22,50 @@ class Module
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=128, unique=true)
+     */
+    private $token;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token_edition", type="string", length=128, unique=true)
+     */
+    private $tokenEdition;
+
+    /**
+     * @var string
+     * @ORM\Column(name="status", type="string", length=64)
+     */
+    private $status;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="response_end_date", type="datetime", unique=false, nullable=true)
+     */
+    private $ResponseEndDate;
+
+    /***********************************************************************
+     *                      Jointures
+     ***********************************************************************/
+    
+    /**
      * @var Event
      *
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="modules")
@@ -62,7 +106,176 @@ class Module
     private $expenseModules;
 
     /*******************************************************************************************************
-     *                                Getter and Setter
+     *                                Getters and Setters
      ********************************************************************************************************/
     
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->moduleInvitations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->pollModules = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->expenseModules = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set event
+     *
+     * @param \AppBundle\Entity\Event $event
+     *
+     * @return Module
+     */
+    public function setEvent(\AppBundle\Entity\Event $event = null)
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
+    /**
+     * Get event
+     *
+     * @return \AppBundle\Entity\Event
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
+     * Add moduleInvitation
+     *
+     * @param \AppBundle\Entity\ModuleInvitation $moduleInvitation
+     *
+     * @return Module
+     */
+    public function addModuleInvitation(\AppBundle\Entity\ModuleInvitation $moduleInvitation)
+    {
+        $this->moduleInvitations[] = $moduleInvitation;
+
+        return $this;
+    }
+
+    /**
+     * Remove moduleInvitation
+     *
+     * @param \AppBundle\Entity\ModuleInvitation $moduleInvitation
+     */
+    public function removeModuleInvitation(\AppBundle\Entity\ModuleInvitation $moduleInvitation)
+    {
+        $this->moduleInvitations->removeElement($moduleInvitation);
+    }
+
+    /**
+     * Get moduleInvitations
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getModuleInvitations()
+    {
+        return $this->moduleInvitations;
+    }
+
+    /**
+     * Set paymentModule
+     *
+     * @param \AppBundle\Entity\PaymentModule $paymentModule
+     *
+     * @return Module
+     */
+    public function setPaymentModule(\AppBundle\Entity\PaymentModule $paymentModule = null)
+    {
+        $this->paymentModule = $paymentModule;
+
+        return $this;
+    }
+
+    /**
+     * Get paymentModule
+     *
+     * @return \AppBundle\Entity\PaymentModule
+     */
+    public function getPaymentModule()
+    {
+        return $this->paymentModule;
+    }
+
+    /**
+     * Add pollModule
+     *
+     * @param \AppBundle\Entity\module\PollModule $pollModule
+     *
+     * @return Module
+     */
+    public function addPollModule(\AppBundle\Entity\module\PollModule $pollModule)
+    {
+        $this->pollModules[] = $pollModule;
+
+        return $this;
+    }
+
+    /**
+     * Remove pollModule
+     *
+     * @param \AppBundle\Entity\module\PollModule $pollModule
+     */
+    public function removePollModule(\AppBundle\Entity\module\PollModule $pollModule)
+    {
+        $this->pollModules->removeElement($pollModule);
+    }
+
+    /**
+     * Get pollModules
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPollModules()
+    {
+        return $this->pollModules;
+    }
+
+    /**
+     * Add expenseModule
+     *
+     * @param \AppBundle\Entity\module\ExpenseModule $expenseModule
+     *
+     * @return Module
+     */
+    public function addExpenseModule(\AppBundle\Entity\module\ExpenseModule $expenseModule)
+    {
+        $this->expenseModules[] = $expenseModule;
+
+        return $this;
+    }
+
+    /**
+     * Remove expenseModule
+     *
+     * @param \AppBundle\Entity\module\ExpenseModule $expenseModule
+     */
+    public function removeExpenseModule(\AppBundle\Entity\module\ExpenseModule $expenseModule)
+    {
+        $this->expenseModules->removeElement($expenseModule);
+    }
+
+    /**
+     * Get expenseModules
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getExpenseModules()
+    {
+        return $this->expenseModules;
+    }
 }

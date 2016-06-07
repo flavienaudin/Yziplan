@@ -47,6 +47,10 @@ class ProposalElement
      */
     private $type;
 
+    /***********************************************************************
+     *                      Getters and Setters
+     ***********************************************************************/
+    
     /**
      * @var Proposal
      *
@@ -79,4 +83,134 @@ class ProposalElement
         $this->proposalElementResponses = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return ProposalElement
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set order
+     *
+     * @param integer $order
+     *
+     * @return ProposalElement
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+
+        return $this;
+    }
+
+    /**
+     * Get order
+     *
+     * @return integer
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return ProposalElement
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set proposal
+     *
+     * @param \AppBundle\Entity\module\Proposal $proposal
+     *
+     * @return ProposalElement
+     */
+    public function setProposal(\AppBundle\Entity\module\Proposal $proposal = null)
+    {
+        $this->proposal = $proposal;
+
+        return $this;
+    }
+
+    /**
+     * Get proposal
+     *
+     * @return \AppBundle\Entity\module\Proposal
+     */
+    public function getProposal()
+    {
+        return $this->proposal;
+    }
+
+    /**
+     * Add proposalElementResponse
+     *
+     * @param \AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse
+     *
+     * @return ProposalElement
+     */
+    public function addProposalElementResponse(\AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse)
+    {
+        $this->proposalElementResponses[] = $proposalElementResponse;
+
+        return $this;
+    }
+
+    /**
+     * Remove proposalElementResponse
+     *
+     * @param \AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse
+     */
+    public function removeProposalElementResponse(\AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse)
+    {
+        $this->proposalElementResponses->removeElement($proposalElementResponse);
+    }
+
+    /**
+     * Get proposalElementResponses
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProposalElementResponses()
+    {
+        return $this->proposalElementResponses;
+    }
 }

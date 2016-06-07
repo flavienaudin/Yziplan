@@ -22,6 +22,50 @@ class Module
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=128, unique=true)
+     */
+    private $token;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token_edition", type="string", length=128, unique=true)
+     */
+    private $tokenEdition;
+
+    /**
+     * @var string
+     * @ORM\Column(name="status", type="string", length=64)
+     */
+    private $status;
+
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="response_end_date", type="datetime", unique=false, nullable=true)
+     */
+    private $ResponseEndDate;
+
+    /***********************************************************************
+     *                      Jointures
+     ***********************************************************************/
+    
+    /**
      * @var Event
      *
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="modules")
@@ -62,7 +106,7 @@ class Module
     private $expenseModules;
 
     /*******************************************************************************************************
-     *                                Getter and Setter
+     *                                Getters and Setters
      ********************************************************************************************************/
     
     /**
@@ -233,5 +277,149 @@ class Module
     public function getExpenseModules()
     {
         return $this->expenseModules;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Module
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Module
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set token
+     *
+     * @param string $token
+     *
+     * @return Module
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+
+        return $this;
+    }
+
+    /**
+     * Get token
+     *
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * Set tokenEdition
+     *
+     * @param string $tokenEdition
+     *
+     * @return Module
+     */
+    public function setTokenEdition($tokenEdition)
+    {
+        $this->tokenEdition = $tokenEdition;
+
+        return $this;
+    }
+
+    /**
+     * Get tokenEdition
+     *
+     * @return string
+     */
+    public function getTokenEdition()
+    {
+        return $this->tokenEdition;
+    }
+
+    /**
+     * Set status
+     *
+     * @param string $status
+     *
+     * @return Module
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * Set responseEndDate
+     *
+     * @param \DateTime $responseEndDate
+     *
+     * @return Module
+     */
+    public function setResponseEndDate($responseEndDate)
+    {
+        $this->ResponseEndDate = $responseEndDate;
+
+        return $this;
+    }
+
+    /**
+     * Get responseEndDate
+     *
+     * @return \DateTime
+     */
+    public function getResponseEndDate()
+    {
+        return $this->ResponseEndDate;
     }
 }

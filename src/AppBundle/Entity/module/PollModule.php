@@ -44,6 +44,10 @@ class PollModule
         $this->proposals = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    /***********************************************************************
+     *                      Getters and Setters
+     ***********************************************************************/
+    
     /**
      * Get id
      *
