@@ -11,11 +11,11 @@ namespace ATUserBundle\Manager;
 use AppBundle\Manager\GenerateursToken;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\Doctrine\UserManager as BaseController;
+use FOS\UserBundle\Doctrine\UserManager as BaseManager;
 use FOS\UserBundle\Util\CanonicalizerInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
-class UtilisateurManager extends BaseController
+class UtilisateurManager extends BaseManager
 {
     /** @var GenerateursToken */
     protected $tokenGenerateur;

@@ -37,10 +37,17 @@ profile:
     page:
       meta_title: Your profile
       title: Your profile
+      avatar_update: Update Profile Picture
+    about:
+      biography: Biography
   edit:
     page:
       meta_title: Profile edition
       title: Profile edition
+  message:
+    update:
+      success: Information updated
+      error: An error occured while updated information
 
 # Global messages
 text:

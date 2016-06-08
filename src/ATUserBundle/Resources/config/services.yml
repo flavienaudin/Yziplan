@@ -6,6 +6,9 @@ services:
         calls:
             - [ setTokenGenerateur, ['@at.service.gentoken'] ]
             - [ setEntityManager, ['@doctrine.orm.entity_manager'] ]
+    at.manager.user_about_manager:
+        class: ATUserBundle\Manager\UserAboutManager
+        arguments: ['@doctrine.orm.entity_manager']
 
 # Provider
     at.provider.user:

@@ -48,3 +48,10 @@ landing_page:
 # Globals
 global:
   event: événement
+  button:
+    valid: Valider
+    cancel: Annuler
+    submit: Soumettre
+    save: Sauver
+  error:
+    not_ajax_request: Vous agissez suspectement, on vous garde à l'oeil!
