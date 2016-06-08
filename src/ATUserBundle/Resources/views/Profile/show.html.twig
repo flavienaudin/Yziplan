@@ -7,7 +7,7 @@
 {% block fos_user_content %}
 
     <div class="c-header">
-        <h2>{{ app.user.username }}
+        <h2>{{ app.user }}
             <small>{{ app.user.email }}</small>
         </h2>
     </div>
@@ -31,7 +31,7 @@
                     Total Invitations
                 </div>
 
-                <div class="pmo-block pmo-contact hidden-xs">
+                {#<div class="pmo-block pmo-contact hidden-xs">
                     <h2>Contact</h2>
 
                     <ul>
@@ -46,7 +46,7 @@
                             </address>
                         </li>
                     </ul>
-                </div>
+                </div>#}
             </div>
         </div>
 
@@ -77,4 +77,5 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/app/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('bundles/atuser/js/profile/about.js') }}"></script>
 {% endblock javascripts %}

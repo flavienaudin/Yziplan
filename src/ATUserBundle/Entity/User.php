@@ -230,7 +230,7 @@ class User extends FosUser
     }
 
     /**
-     * @return mixed
+     * @return UserAbout
      */
     public function getUserAbout()
     {
@@ -238,10 +238,10 @@ class User extends FosUser
     }
 
     /**
-     * @param mixed $userAbout
+     * @param UserAbout $userAbout
      * @return User
      */
-    public function setUserAbout($userAbout)
+    public function setUserAbout(UserAbout $userAbout)
     {
         $this->userAbout = $userAbout;
         return $this;

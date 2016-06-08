@@ -44,6 +44,10 @@ profile:
     page:
       meta_title: Profile edition
       title: Profile edition
+  message:
+    update:
+      success: Information updated
+      error: An error occured while updated information
 
 # Global messages
 text:

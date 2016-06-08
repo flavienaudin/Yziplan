@@ -46,3 +46,10 @@ landing_page:
 # Globals
 global:
   event: Event
+  button:
+    valid: Validate
+    cancel: Cancel
+    submit: Submit
+    save: Save
+  error:
+    not_ajax_request: Your behavior is suspect, big brother is watching you!

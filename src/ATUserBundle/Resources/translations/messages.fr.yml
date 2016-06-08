@@ -44,6 +44,10 @@ profile:
     page:
       meta_title: Edition du profil
       title: Edition du profil
+  message:
+    update:
+      success: Informations mises à jour
+      error: Une erreur est survenue lors de la mise à jour de vos informations
 
 # Global messages
 text:

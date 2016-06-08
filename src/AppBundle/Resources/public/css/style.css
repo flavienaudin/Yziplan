@@ -1,5 +1,11 @@
 /** Prototype 2 CSS */
 
+/*---------------------------------
+    TOASTR
+----------------------------------*/
+#toast-container {
+    top: 12px;
+}
 
 /*---------------------------------
     Carousel
@@ -67,8 +73,8 @@
 [data-ma-header="orange"] .smm-header {
     background: #ff9800;
 }
-/** end Colored Header **/
 
+/** end Colored Header **/
 
 /*---------------------------------
     Colored Header SELECTOR
@@ -131,8 +137,8 @@
     box-shadow: -2px 2px 5px rgba(0, 0, 0, 0.2);
     color: #4C646F;
 }
-/** end Colored Header SELECTOR **/
 
+/** end Colored Header SELECTOR **/
 
 /** Formulaires */
 /* Pas de couleur de fond ni de bordure sur l'icone en cas d'erreur */

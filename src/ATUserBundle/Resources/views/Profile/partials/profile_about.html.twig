@@ -1,43 +1,31 @@
-<div class="pmb-block">
+<div class="pmb-block" id="pmb-biography">
     <div class="pmbb-header">
         <h2><i class="zmdi zmdi-face m-r-5"></i> {{ "profile.show.about.biography"|trans }}</h2>
         <ul class="actions">
-            <li class="dropdown">
-                <a href="#" data-toggle="dropdown"> <i class="zmdi zmdi-more-vert"></i> </a>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li><a data-pmb-action="edit" href="">Edit</a></li>
-                </ul>
-            </li>
+            <li><a data-profile-action="edit" data-profile-action-target="#pmb-biography" href="#"><i class="zmdi zmdi-edit"></i></a></li>
         </ul>
     </div>
     <div class="pmbb-body p-l-30">
-        <div class="pmbb-view">{{ app.user.userAbout is defined ? app.user.userAbout.biography }}</div>
+        <div class="pmbb-view" id="pmb-view-biography">{{ app.user.userAbout is defined ? app.user.userAbout.biography }}</div>
 
-        <div class="pmbb-edit">
-            <div class="fg-line">
-                <textarea class="form-control" rows="5" placeholder="Little about you...">{{ app.user.userAbout is defined ? app.user.userAbout.biography }}</textarea>
-            </div>
-            <div class="m-t-10">
-                <button class="btn btn-primary btn-sm">Save</button>
-                <button data-pmb-action="reset" class="btn btn-default btn-sm">Cancel</button>
-            </div>
+            <div class="pmbb-edit">
+            <form id="userBiography" action="{{ path('updateUserBiographyAjax') }}" method="post" data-profile-pmb-block-target="#pmb-biography">
+                <div class="fg-line">
+                    <textarea name="biography" class="form-control" rows="5" placeholder="Little about you...">{{ app.user.userAbout is defined ? app.user.userAbout.biography }}</textarea>
+                </div>
+                <div class="m-t-10">
+                    <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
+                    <button data-profile-action="reset" data-profile-action-target="#pmb-biography" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-<div class="pmb-block">
+<div class="pmb-block" id="basic_information">
     <div class="pmbb-header">
         <h2><i class="zmdi zmdi-account m-r-5"></i> Basic Information</h2>
-
         <ul class="actions">
-            <li class="dropdown">
-                <a href="" data-toggle="dropdown"> <i class="zmdi zmdi-more-vert"></i> </a>
-
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                        <a data-pmb-action="edit" href="">Edit</a>
-                    </li>
-                </ul>
-            </li>
+            <li><a data-profile-action="edit" data-profile-action-target="#basic_information" href="#"><i class="zmdi zmdi-edit"></i></a></li>
         </ul>
     </div>
 
@@ -106,27 +94,19 @@
 
             <div class="m-t-30">
                 <button class="btn btn-primary btn-sm">Save</button>
-                <button data-pmb-action="reset" class="btn btn-link btn-sm">Cancel</button>
+                <button data-profile-action="reset" data-profile-action-target="#basic_information" class="btn btn-link btn-sm">Cancel</button>
             </div>
         </div>
     </div>
 </div>
 
 
-<div class="pmb-block">
+<div class="pmb-block" id="contact_info">
     <div class="pmbb-header">
         <h2><i class="zmdi zmdi-phone m-r-5"></i> Contact Information</h2>
 
         <ul class="actions">
-            <li class="dropdown">
-                <a href="" data-toggle="dropdown"> <i class="zmdi zmdi-more-vert"></i> </a>
-
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                        <a data-pmb-action="edit" href="">Edit</a>
-                    </li>
-                </ul>
-            </li>
+            <li><a data-profile-action="edit" data-profile-action-target="#contact_info" href="#"><i class="zmdi zmdi-edit"></i></a></li>
         </ul>
     </div>
     <div class="pmbb-body p-l-30">
@@ -185,7 +165,7 @@
 
             <div class="m-t-30">
                 <button class="btn btn-primary btn-sm">Save</button>
-                <button data-pmb-action="reset" class="btn btn-link btn-sm">Cancel</button>
+                <button data-profile-action="reset" data-profile-action-target="#contact_info" class="btn btn-link btn-sm">Cancel</button>
             </div>
         </div>
     </div>
