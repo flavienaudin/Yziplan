@@ -78,10 +78,10 @@ class Event
      ***********************************************************************/
 
     /**
-     * @var UserInfos
+     * @var AppUser
      *
      * @ORM\ManyToOne(targetEntity="AppUser", inversedBy="createdEvent")
-     * @ORM\JoinColumn(name="user_info_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="app_user_id", referencedColumnName="id")
      */
     private $creator;
     
