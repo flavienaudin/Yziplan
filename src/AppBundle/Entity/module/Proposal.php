@@ -22,6 +22,24 @@ class Proposal
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255)
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /***********************************************************************
+     *                      Jointures
+     ***********************************************************************/
+    
+    /**
      * @ORM\ManyToOne(targetEntity="PollModule", inversedBy="proposals")
      * @ORM\JoinColumn(name="poll_module_id", referencedColumnName="id")
      *
@@ -35,6 +53,10 @@ class Proposal
      * @ORM\OneToMany(targetEntity="ProposalElement", mappedBy="proposal")
      */
     private $proposalElements;
+
+    /***********************************************************************
+     *                      Getters and Setters
+     ***********************************************************************/
     
     /**
      * Constructor
@@ -110,5 +132,53 @@ class Proposal
     public function getProposalElements()
     {
         return $this->proposalElements;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return Proposal
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     *
+     * @return Proposal
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 }

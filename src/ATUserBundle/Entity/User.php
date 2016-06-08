@@ -2,6 +2,7 @@
 
 namespace ATUserBundle\Entity;
 
+use AppBundle\Entity\AppUser;
 use FOS\UserBundle\Model\User as FosUser;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -86,6 +87,13 @@ class User extends FosUser
     private $passwordKnown = false;
 
     /**
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\AppUser", mappedBy="user")
+     *
+     * @var AppUser
+     */
+    private $appUser;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -94,7 +102,6 @@ class User extends FosUser
         $this->userAbout = new UserAbout();
         $this->userAbout->setUser($this);
     }
-
 
     public function __toString()
     {
@@ -288,5 +295,39 @@ class User extends FosUser
         $this->passwordKnown = $passwordKnown;
         return $this;
     }
-}
 
+    /**
+     * Get passwordKnown
+     *
+     * @return boolean
+     */
+    public function getPasswordKnown()
+    {
+        return $this->passwordKnown;
+    }
+    
+
+    /**
+     * Set appUser
+     *
+     * @param \AppBundle\Entity\AppUser $appUser
+     *
+     * @return User
+     */
+    public function setAppUser(\AppBundle\Entity\AppUser $appUser = null)
+    {
+        $this->appUser = $appUser;
+
+        return $this;
+    }
+
+    /**
+     * Get appUser
+     *
+     * @return \AppBundle\Entity\AppUser
+     */
+    public function getAppUser()
+    {
+        return $this->appUser;
+    }
+}
