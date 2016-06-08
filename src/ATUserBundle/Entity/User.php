@@ -64,6 +64,14 @@ class User extends FosUser
     private $facebookAccessToken;
 
     /**
+     * @var UserAbout
+     *
+     * @ORM\OneToOne(targetEntity="ATUserBundle\Entity\UserAbout", inversedBy="user", cascade={"persist", "remove"}, orphanRemoval=true )
+     * @ORM\JoinColumn(name="user_about_id", referencedColumnName="id")
+     */
+    private $userAbout;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="pseudo", type="string", length=255, nullable=true)
@@ -76,6 +84,17 @@ class User extends FosUser
      * @ORM\Column(name="password_known", type="boolean")
      */
     private $passwordKnown = false;
+
+    /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->userAbout = new UserAbout();
+        $this->userAbout->setUser($this);
+    }
+
 
     public function __toString()
     {
@@ -208,6 +227,24 @@ class User extends FosUser
     public function getFacebookAccessToken()
     {
         return $this->facebookAccessToken;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUserAbout()
+    {
+        return $this->userAbout;
+    }
+
+    /**
+     * @param mixed $userAbout
+     * @return User
+     */
+    public function setUserAbout($userAbout)
+    {
+        $this->userAbout = $userAbout;
+        return $this;
     }
 
     /**

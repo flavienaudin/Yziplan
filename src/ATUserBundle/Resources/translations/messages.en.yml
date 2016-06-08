@@ -38,6 +38,8 @@ profile:
       meta_title: Your profile
       title: Your profile
       avatar_update: Update Profile Picture
+    about:
+      biography: Biography
   edit:
     page:
       meta_title: Profile edition
