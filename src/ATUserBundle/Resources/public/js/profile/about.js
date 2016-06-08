@@ -38,7 +38,7 @@ $('form').on("submit", function (e) {
             }
             // update form's inputs
             for(inputTarget in data.data){
-                $('#pmb-view-'+inputTarget).html(data.data[inputTarget]);
+                $('#pmb-view-'+inputTarget).text((data.data[inputTarget]));
             }
             // close edition block
             var t = $form.data('profile-pmb-block-target');
