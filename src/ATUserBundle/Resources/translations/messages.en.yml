@@ -39,8 +39,27 @@ profile:
       title: Your profile
       avatar_update: Update Profile Picture
     about:
+      mandatory_information:
+        title: Mandatory Fields
+        username:
+          title: Username
+          label: Username
+          placeholder: Username
+        email:
+          title: Email
+          label: Email
+          placeholder: Email
+        pseudo:
+          title: Pseudo
+          label: Pseudo
+          placeholder: Pseudo
+        password:
+          title: Password
+          change: Change your password
+          init: Initialize your password
       biography:
         title: Biography
+        label: Biography
         placeholder: A little about you...
         empty: You didn't fill your biography yet
       basic_information:
@@ -57,10 +76,10 @@ profile:
           title: Birthday
           label: Birthday
           placeholder: Click here...
-  edit:
+  change_password:
     page:
-      meta_title: Profile edition
-      title: Profile edition
+      meta_title: Password edition
+      title: Password edition
   message:
     update:
       success: Information updated

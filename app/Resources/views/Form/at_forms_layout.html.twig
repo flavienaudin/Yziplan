@@ -2,7 +2,7 @@
 
 {% block form_widget_simple %}
     {# Désactiver de la touche entrée #}
-    {% set attr = attr|merge({onkeypress: (attr.onkeypress|default('') ~ ' refuserToucheEntree(event);')|trim}) -%}
+    {#{% set attr = attr|merge({onkeypress: (attr.onkeypress|default('') ~ ' refuserToucheEntree(event);')|trim}) -%}#}
     {{ parent() }}
 {% endblock %}
 
