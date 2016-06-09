@@ -30,6 +30,13 @@ class UserAbout
     /**
      * @var string
      *
+     * @ORM\Column(name="fullname", type="string", length=127, nullable=true)
+     */
+    private $fullname;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="biography", type="string", length=511, nullable=true)
      */
     private $biography;
@@ -92,6 +99,24 @@ class UserAbout
     }
 
     /**
+     * @return string
+     */
+    public function getFullname()
+    {
+        return $this->fullname;
+    }
+
+    /**
+     * @param string $fullname
+     * @return UserAbout
+     */
+    public function setFullname($fullname)
+    {
+        $this->fullname = $fullname;
+        return $this;
+    }
+
+    /**
      * Set biography
      *
      * @param string $biography
@@ -142,11 +167,11 @@ class UserAbout
     /**
      * Set birthday
      *
-     * @param \DateTime $birthday
+     * @param \DateTime|null $birthday
      *
      * @return UserAbout
      */
-    public function setBirthday($birthday)
+    public function setBirthday(\DateTime $birthday=null)
     {
         $this->birthday = $birthday;
 

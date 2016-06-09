@@ -19,9 +19,9 @@
                     {# TODO : user avatar #}
                     <a href="#"> <img class="img-responsive" src="{{ asset('bundles/atuser/profile/avatar_default.png') }}" alt="AVATAR"> </a>
 
-                    <div class="dropdown pmop-message">
+                    {#<div class="pmop-message">
                         <a href="{{ path("fos_user_profile_edit") }}" class="btn palette-White bg btn-float z-depth-1"><i class="zmdi zmdi-edit"></i></a>
-                    </div>
+                    </div>#}
 
                     <a href="#" class="pmop-edit"> <i class="zmdi zmdi-camera"></i> <span class="hidden-xs">{{ "profile.show.page.avatar_update"|trans }}</span> </a>
                 </div>
@@ -74,8 +74,15 @@
     </div>
 {% endblock fos_user_content %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select.css") }}">
+{% endblock stylesheets %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/app/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('bundles/app/js/bootstrap-select.min.js') }}"></script>
     <script src="{{ asset('bundles/atuser/js/profile/about.js') }}"></script>
 {% endblock javascripts %}

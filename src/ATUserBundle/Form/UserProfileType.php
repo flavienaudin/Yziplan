@@ -19,8 +19,7 @@ class UserProfileType extends AbstractType
     {
         $builder
             ->add("pseudo", TextType::class, array(
-                "label" => "Nom public",
-                'required' => false
+                'required' => true
             ))
             // Suppression du mot de passe pour pouvoir modifier son profil (pour les compte ReseauSoc notamment)
             ->remove("current_password");

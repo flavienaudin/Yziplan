@@ -43,6 +43,16 @@ services:
         tags:
             - { name: form.type, alias: at_user_registration }
 
+    at.form_type.userabout_biography:
+        class: ATUserBundle\Form\UserAboutBiographyType
+        tags:
+            - { name: form.type, alias: userabout_biography}
+
+    at.form_type.userabout_basicinformation:
+        class: ATUserBundle\Form\UserAboutBasicInformationType
+        tags:
+            - { name: form.type, alias: userabout_basicinformation}
+
 # UserChecker
     at.user_checker:
         class: ATUserBundle\Security\UserChecker

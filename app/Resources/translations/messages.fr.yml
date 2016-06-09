@@ -48,6 +48,11 @@ landing_page:
 # Globals
 global:
   event: événement
+  gender:
+    0: "-"
+    1: Homme
+    2: Femme
+    3: Autre
   button:
     valid: Valider
     cancel: Annuler

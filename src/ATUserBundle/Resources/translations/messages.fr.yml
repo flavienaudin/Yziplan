@@ -39,11 +39,47 @@ profile:
       title: Votre profil
       avatar_update: Mettre à jour votre avatar
     about:
-      biography: Biographie
-  edit:
+      mandatory_information:
+        title: Champs Obligatoires
+        username:
+          title: Nom d'utilisateur
+          label: Nom d'utilisateur
+          placeholder: Nom d'utilisateur
+        email:
+          title: E-mail
+          label: E-mail
+          placeholder: E-mail
+        pseudo:
+          title: Pseudo
+          label: Pseudo
+          placeholder: Pseudo
+        password:
+          title: Mot de passe
+          change: Modifier votre mot de passe
+          init: Initialiser votre mot de passe
+      biography:
+        title: Biographie
+        label: Biographie
+        placeholder: Quelques mots à propos de vous ...
+        empty: Vous n'avez pas encore renseignée votre biographie
+      basic_information:
+        title: Informations Personnelles
+        fullname:
+          title: Nom
+          label: Nom
+          placeholder: Nom
+        gender:
+          title: Sexe
+          label: Sexe
+          placeholder: Sexe
+        birthday:
+          title: Anniversaire
+          label: Anniversaire
+          placeholder: Cliquez ici...
+  change_password:
     page:
-      meta_title: Edition du profil
-      title: Edition du profil
+      meta_title: Modification du mot de passe
+      title: Modifier votre mot de passe
   message:
     update:
       success: Informations mises à jour

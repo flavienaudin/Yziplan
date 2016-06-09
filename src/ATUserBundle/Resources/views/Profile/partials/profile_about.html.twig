@@ -1,29 +1,72 @@
-<div class="pmb-block" id="pmb-biography">
+<div class="pmb-block" id="mandatory_information">
     <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-face m-r-5"></i> {{ "profile.show.about.biography"|trans }}</h2>
+        <h2><i class="zmdi zmdi-account m-r-5"></i> {{ "profile.show.about.mandatory_information.title"|trans }}</h2>
         <ul class="actions">
-            <li><a data-profile-action="edit" data-profile-action-target="#pmb-biography" href="#"><i class="zmdi zmdi-edit"></i></a></li>
+            <li><a data-profile-action="edit" data-profile-action-target="#mandatory_information" href="#"><i class="zmdi zmdi-edit"></i></a></li>
         </ul>
     </div>
-    <div class="pmbb-body p-l-30">
-        <div class="pmbb-view" id="pmb-view-biography">{{ app.user.userAbout is defined ? app.user.userAbout.biography }}</div>
 
-            <div class="pmbb-edit">
-            <form id="userBiography" action="{{ path('updateUserBiographyAjax') }}" method="post" data-profile-pmb-block-target="#pmb-biography">
-                <div class="fg-line">
-                    <textarea name="biography" class="form-control" rows="5" placeholder="Little about you...">{{ app.user.userAbout is defined ? app.user.userAbout.biography }}</textarea>
-                </div>
-                <div class="m-t-10">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
-                    <button data-profile-action="reset" data-profile-action-target="#pmb-biography" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
-                </div>
-            </form>
+    <div class="pmbb-body p-l-30">
+        <div class="pmbb-view">
+            <dl class="dl-horizontal">
+                <dt>{{ "profile.show.about.mandatory_information.username.title"|trans }}</dt>
+                <dd id="pmb-view-username">{{ app.user.username }}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>{{ "profile.show.about.mandatory_information.email.title"|trans }}</dt>
+                <dd id="pmb-view-email">{{ app.user.email }}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>{{ "profile.show.about.mandatory_information.pseudo.title"|trans }}</dt>
+                <dd id="pmb-view-pseduo">{{ app.user.pseudo }}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>{{ "profile.show.about.mandatory_information.password.title"|trans }}</dt>
+                <dd><a href="{{ path('fos_user_change_password') }}" >{{ "profile.show.about.mandatory_information.password.change"|trans }}</a></dd>
+            </dl>
+        </div>
+
+        <div class="pmbb-edit">
+            {{ form_start(form_mandatory_information, {'method': 'post', 'action': path('updateUserProfileAjax'), 'attr':{'id':'userMandatoryInformation',
+                'data-profile-pmb-block-target':'#mandatory_information'} }) }}
+            <dl class="dl-horizontal">
+                <dt class="p-t-10">{{ form_label(form_mandatory_information.username, "profile.show.about.mandatory_information.username.label"|trans) }}</dt>
+                <dd>
+                    <div class="fg-line">
+                        {{ form_widget(form_mandatory_information.username, {'attr':{'placeholder': "profile.show.about.mandatory_information.username.placeholder"|trans}}) }}
+                    </div>
+                </dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt class="p-t-10">{{ form_label(form_mandatory_information.email, 'profile.show.about.mandatory_information.email.label'|trans) }}</dt>
+                <dd>
+                    <div class="fg-line">
+                        {{ form_widget(form_mandatory_information.email, {'attr':{'placeholder':'profile.show.about.mandatory_information.email.placeholder'|trans}}) }}
+                    </div>
+                </dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt class="p-t-10">{{ form_label(form_mandatory_information.pseudo, 'profile.show.about.mandatory_information.pseudo.label'|trans) }}</dt>
+                <dd>
+                    <div class="fg-line">
+                        {{ form_widget(form_mandatory_information.pseudo, {'attr':{'placeholder':"profile.show.about.mandatory_information.pseudo.placeholder"|trans}}) }}
+                    </div>
+                </dd>
+            </dl>
+
+            <div class="m-t-30">
+                <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
+                <button data-profile-action="reset" data-profile-action-target="#mandatory_information" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
+            </div>
+            {{ form_rest(form_mandatory_information) }}
+            {{ form_end(form_mandatory_information) }}
         </div>
     </div>
 </div>
+
 <div class="pmb-block" id="basic_information">
     <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-account m-r-5"></i> Basic Information</h2>
+        <h2><i class="zmdi zmdi-account m-r-5"></i> {{ "profile.show.about.basic_information.title"|trans }}</h2>
         <ul class="actions">
             <li><a data-profile-action="edit" data-profile-action-target="#basic_information" href="#"><i class="zmdi zmdi-edit"></i></a></li>
         </ul>
@@ -32,76 +75,86 @@
     <div class="pmbb-body p-l-30">
         <div class="pmbb-view">
             <dl class="dl-horizontal">
-                <dt>Full Name</dt>
-                <dd>Mallinda Hollaway</dd>
+                <dt>{{ "profile.show.about.basic_information.fullname.title"|trans }}</dt>
+                <dd id="pmb-view-fullname">{{ app.user.userAbout.fullname is not empty ? app.user.userAbout.fullname : "-" }}</dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt>Gender</dt>
-                <dd>Female</dd>
+                <dt>{{ "profile.show.about.basic_information.gender.title"|trans }}</dt>
+                <dd id="pmb-view-gender">{{ app.user.userAbout.gender is not empty ? ("global.gender."~app.user.userAbout.gender)|trans():"-" }}</dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt>Birthday</dt>
-                <dd>June 23, 1990</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>Martial Status</dt>
-                <dd>Single</dd>
+                <dt>{{ "profile.show.about.basic_information.birthday.title"|trans }}</dt>
+                <dd id="pmb-view-birthday">{{ app.user.userAbout.birthday is not null?app.user.userAbout.birthday|localizeddate('short', 'none'):"-" }}</dd>
             </dl>
         </div>
 
         <div class="pmbb-edit">
+            {{ form_start(form_basic_information, {'method': 'post', 'action': path('updateUserBasicInformationAjax'), 'attr':{'id':'userBasicInformation',
+                'data-profile-pmb-block-target':'#basic_information'} }) }}
             <dl class="dl-horizontal">
-                <dt class="p-t-10">Full Name</dt>
+                <dt class="p-t-10">{{ form_label(form_basic_information.fullname, "profile.show.about.basic_information.fullname.label") }}</dt>
                 <dd>
                     <div class="fg-line">
-                        <input type="text" class="form-control" placeholder="eg. Mallinda Hollaway">
-                    </div>
-
-                </dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt class="p-t-10">Gender</dt>
-                <dd>
-                    <div class="fg-line">
-                        <select class="form-control">
-                            <option>Male</option>
-                            <option>Female</option>
-                            <option>Other</option>
-                        </select>
+                        {{ form_widget(form_basic_information.fullname, {'attr':{'placeholder': "profile.show.about.basic_information.fullname.placeholder"|trans}} ) }}
                     </div>
                 </dd>
             </dl>
             <dl class="dl-horizontal">
-                <dt class="p-t-10">Birthday</dt>
+                <dt class="p-t-10">{{ form_label(form_basic_information.gender, 'profile.show.about.basic_information.gender.label'|trans) }}</dt>
+                <dd>
+                    <div class="fg-line">
+                        {{ form_widget(form_basic_information.gender, {'attr':{'class':'selectpicker', 'placeholder':'profile.show.about.basic_information.gender.placeholder'|trans}}) }}
+                    </div>
+                </dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt class="p-t-10">{{ form_label(form_basic_information.birthday, 'profile.show.about.basic_information.birthday.title'|trans) }}</dt>
                 <dd>
                     <div class="dtp-container dropdown fg-line">
-                        <input type='text' class="form-control date-picker" data-toggle="dropdown" placeholder="Click here...">
-                    </div>
-                </dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt class="p-t-10">Martial Status</dt>
-                <dd>
-                    <div class="fg-line">
-                        <select class="form-control">
-                            <option>Single</option>
-                            <option>Married</option>
-                            <option>Other</option>
-                        </select>
+                        {{ form_widget(form_basic_information.birthday, {'attr':{'class':'date-picker', 'placeholder':'profile.show.about.basic_information.birthday.placeholder'}}) }}
                     </div>
                 </dd>
             </dl>
 
             <div class="m-t-30">
-                <button class="btn btn-primary btn-sm">Save</button>
-                <button data-profile-action="reset" data-profile-action-target="#basic_information" class="btn btn-link btn-sm">Cancel</button>
+                <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
+                <button data-profile-action="reset" data-profile-action-target="#basic_information" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
             </div>
+            {{ form_rest(form_basic_information) }}
+            {{ form_end(form_basic_information) }}
         </div>
     </div>
 </div>
 
+<div class="pmb-block" id="pmb-biography">
+    <div class="pmbb-header">
+        <h2><i class="zmdi zmdi-face m-r-5"></i> {{ "profile.show.about.biography.title"|trans }}</h2>
+        <ul class="actions">
+            <li><a data-profile-action="edit" data-profile-action-target="#pmb-biography" href="#"><i class="zmdi zmdi-edit"></i></a></li>
+        </ul>
+    </div>
+    <div class="pmbb-body p-l-30">
+        <div class="pmbb-view" id="pmb-view-biography">
+            {{ app.user.userAbout.biography is not empty?app.user.userAbout.biography:"profile.show.about.biography.empty"|trans }}
+        </div>
 
-<div class="pmb-block" id="contact_info">
+        <div class="pmbb-edit">
+            {{ form_start(form_biography, {'method': 'post', 'action': path('updateUserBiographyAjax'), 'attr': {'id':'userBiography','data-profile-pmb-block-target':'#pmb-biography'} }) }}
+            <div class="fg-line">
+                {{ form_label(form_biography.biography, 'profile.show.about.biography.label', {'label_attr':{'class':'sr-only'}} ) }}
+                {{ form_widget(form_biography.biography, {'attr':{'rows':5,'placeholder':'profile.show.about.biography.placeholder'|trans}} ) }}
+            </div>
+            <div class="m-t-10">
+                <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
+                <button data-profile-action="reset" data-profile-action-target="#pmb-biography" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
+            </div>
+            {{ form_rest(form_biography) }}
+            {{ form_end(form_biography) }}
+        </div>
+    </div>
+</div>
+
+{#<div class="pmb-block" id="contact_info">
     <div class="pmbb-header">
         <h2><i class="zmdi zmdi-phone m-r-5"></i> Contact Information</h2>
 
@@ -169,4 +222,4 @@
             </div>
         </div>
     </div>
-</div>
+</div>#}
