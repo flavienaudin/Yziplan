@@ -8,11 +8,9 @@
 
 namespace ATUserBundle\Manager;
 
-
 use ATUserBundle\Entity\User;
 use ATUserBundle\Entity\UserAbout;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\Request;
 
 class UserAboutManager
 {
@@ -21,26 +19,29 @@ class UserAboutManager
 
     public function __construct(EntityManager $em)
     {
-        $this->entityManager=$em;
+        $this->entityManager = $em;
     }
 
     /**
-     * @param User $user Utilisateur à mettre à jour
-     * @param string $biography La biography de l'utilisateur
+     * @param UserAbout $userAbout Infoirmation utilisateur à mettre à jour en base de données
      * @return bool
      */
-    public function updateBiography(User $user, $biography){
-        $userAbout = $this->getUserAbout($user);
-        $userAbout->setBiography($biography);
+    public function updateUserAbout(UserAbout $userAbout)
+    {
         $this->entityManager->persist($userAbout);
         $this->entityManager->flush();
         return true;
     }
 
-
-    private function getUserAbout(User $user){
+    /**
+     * Get the UserAbout and create it if null
+     * @param User $user
+     * @return UserAbout
+     */
+    public function getUserAbout(User $user)
+    {
         $userAbout = $user->getUserAbout();
-        if($userAbout == null){
+        if ($userAbout == null) {
             $userAbout = new UserAbout();
             $user->setUserAbout($userAbout);
             $this->entityManager->persist($user);

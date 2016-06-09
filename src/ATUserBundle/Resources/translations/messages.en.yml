@@ -39,7 +39,24 @@ profile:
       title: Your profile
       avatar_update: Update Profile Picture
     about:
-      biography: Biography
+      biography:
+        title: Biography
+        placeholder: A little about you...
+        empty: You didn't fill your biography yet
+      basic_information:
+        title: Basic Information
+        fullname:
+          title: Full Name
+          label: Full Name
+          placeholder: Full Name
+        gender:
+          title: Gender
+          label: Gender
+          placeholder: Gender
+        birthday:
+          title: Birthday
+          label: Birthday
+          placeholder: Click here...
   edit:
     page:
       meta_title: Profile edition

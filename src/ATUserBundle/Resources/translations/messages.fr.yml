@@ -39,7 +39,24 @@ profile:
       title: Votre profil
       avatar_update: Mettre à jour votre avatar
     about:
-      biography: Biographie
+      biography:
+        title: Biographie
+        placeholder: Quelques mots à propos de vous ...
+        empty: Vous n'avez pas encore renseignée votre biographie
+      basic_information:
+        title: Informations Personnelles
+        fullname:
+          title: Nom
+          label: Nom
+          placeholder: Nom
+        gender:
+          title: Sexe
+          label: Sexe
+          placeholder: Sexe
+        birthday:
+          title: Anniversaire
+          label: Anniversaire
+          placeholder: Cliquez ici...
   edit:
     page:
       meta_title: Edition du profil

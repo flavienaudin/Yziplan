@@ -26,6 +26,8 @@ main_menu:
 
 landing_page:
   carousel:
+    button:
+      new_event: Let's go!
     after_work:
       alt: after work
       title: An After Work ?
@@ -46,6 +48,11 @@ landing_page:
 # Globals
 global:
   event: Event
+  gender:
+    0: "-"
+    1: Male
+    2: Female
+    3: Other
   button:
     valid: Validate
     cancel: Cancel

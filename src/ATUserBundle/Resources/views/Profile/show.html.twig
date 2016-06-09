@@ -74,8 +74,15 @@
     </div>
 {% endblock fos_user_content %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select.css") }}">
+{% endblock stylesheets %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/app/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset('bundles/app/js/bootstrap-select.min.js') }}"></script>
     <script src="{{ asset('bundles/atuser/js/profile/about.js') }}"></script>
 {% endblock javascripts %}
