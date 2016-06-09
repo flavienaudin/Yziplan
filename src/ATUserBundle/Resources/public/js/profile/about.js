@@ -25,6 +25,10 @@ $(document).ready(function () {
 $('form').on("submit", function (e) {
     e.preventDefault();
     var $form = $(this);
+    $('.has-error').each(function () {
+        $(this).find("small.help-block").remove();
+        $(this).removeClass("has-error");
+    });
     $.ajax({
         url: $form.attr('action'),
         type: $form.attr('method'),

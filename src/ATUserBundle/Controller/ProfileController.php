@@ -112,7 +112,7 @@ class ProfileController extends BaseController
                     $data["data"] = array(
                         'fullname' => $userAbout->getFullname(),
                         'gender' => $this->get('translator')->trans("global.gender." . $userAbout->getGender()),
-                        'birthday' => $userAbout->getBirthday()->format("d/m/Y")
+                        'birthday' => ($userAbout->getBirthday()!=null?$userAbout->getBirthday()->format("d/m/Y"):null)
                     );
                 } else {
                     $data["error"] = array();
