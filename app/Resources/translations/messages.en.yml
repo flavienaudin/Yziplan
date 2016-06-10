@@ -60,3 +60,4 @@ global:
     save: Save
   error:
     not_ajax_request: Your behavior is suspect, big brother is watching you!
+    unauthorized_access: You haven't access to this section.

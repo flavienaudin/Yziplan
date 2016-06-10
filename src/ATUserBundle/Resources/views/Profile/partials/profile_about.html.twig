@@ -22,7 +22,13 @@
             </dl>
             <dl class="dl-horizontal">
                 <dt>{{ "profile.show.about.mandatory_information.password.title"|trans }}</dt>
-                <dd><a href="{{ path('fos_user_change_password') }}" >{{ "profile.show.about.mandatory_information.password.change"|trans }}</a></dd>
+                <dd>
+                    {% if app.user.passwordKnown %}
+                        <a href="{{ path('fos_user_change_password') }}" >{{ "profile.show.about.mandatory_information.password.change"|trans }}</a>
+                    {% else %}
+                        <a href="{{ path('initializePassword') }}" >{{ "profile.show.about.mandatory_information.password.init"|trans }}</a>
+                    {% endif %}
+                </dd>
             </dl>
             <dl class="dl-horizontal">
                 <dt>{{ "profile.show.about.mandatory_information.social_network.title"|trans }}</dt>

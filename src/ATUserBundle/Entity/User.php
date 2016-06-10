@@ -113,6 +113,16 @@ class User extends FosUser
     }
 
     /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @return \DateTime
      */
     public function getEnabledAt()
@@ -131,13 +141,10 @@ class User extends FosUser
     }
 
     /**
-     * Get id
-     *
-     * @return int
+     * @return bool true si au moins un des ID de ResSoc est renseigné
      */
-    public function getId()
-    {
-        return $this->id;
+    public function isSocialNetworkConnected(){
+        return !(empty($this->googleId) && empty($this->facebookId));
     }
 
     /**

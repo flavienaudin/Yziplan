@@ -60,3 +60,4 @@ global:
     save: Sauver
   error:
     not_ajax_request: Vous agissez suspectement, on vous garde à l'oeil!
+    unauthorized_access: Vous n'êtes pas autorisés à accéder à cette section.
