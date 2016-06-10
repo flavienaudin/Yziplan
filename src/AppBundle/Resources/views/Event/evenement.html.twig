@@ -24,13 +24,13 @@
 
     <div class="row">
         <div class="col-md-8">
-            {{ include("@App/Event/module/addModule.html.twig")}}
-        </div>
-        <div class="col-md-4">
-            {{ include("@App/Event/module/who.html.twig")}}
+            {{ include("@App/Event/module/addModule.html.twig") }}
         </div>
         <div class="col-md-8">
-            {{ include("@App/Event/module/whoPaidWhatModule.html.twig")}}
+            {{ include("@App/Event/module/expenseModule.html.twig") }}
+        </div>
+        <div class="col-md-4">
+            {{ include("@App/Event/module/who.html.twig") }}
         </div>
     </div>
 
@@ -62,4 +62,49 @@
             </div>
         </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Basic Example
+            $("#data-table-basic").bootgrid({
+                css: {
+                    icon: 'zmdi icon',
+                    iconColumns: 'zmdi-view-module',
+                    iconDown: 'zmdi-expand-more',
+                    iconRefresh: 'zmdi-refresh',
+                    iconUp: 'zmdi-expand-less'
+                },
+                formatters: {
+                    "image": function (column, row) {
+                        /**
+                         * format requis du Json
+                         * avatars:
+                         *     avatar:
+                         *
+                         */
+                        /*var jsonData = JSON.parse(row[column.id]);
+                         for (var i = 0; i < jsonData.counters.length; i++) {
+                         var counter = jsonData.counters[i];
+                         console.log(counter.counter_name);
+                         }*/
+                        var resultat = ""
+                        try {
+                            var jsonData = JSON.parse(row[column.id]);
+                            if (jsonData.hasOwnProperty("avatars")) {
+                                for (var i = 0; i < jsonData.avatars.length; i++) {
+                                    if (jsonData.avatars[i].hasOwnProperty("avatarSrc")) {
+                                        resultat = resultat + "<img class='table-img' src='" + jsonData.avatars[i].avatarSrc + "' />";
+                                    }
+                                }
+                            }
+                        }catch(error){}
+                        return resultat;
+                    },
+                },
+            });
+        });
+    </script>
 {% endblock %}

@@ -19,3 +19,4 @@
 .idea/
 var/SymfonyRequirements.php
 composer.lock
+*.php~
