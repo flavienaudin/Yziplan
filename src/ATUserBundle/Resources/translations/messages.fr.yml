@@ -57,6 +57,8 @@ profile:
           title: Mot de passe
           change: Modifier votre mot de passe
           init: Initialiser votre mot de passe
+        social_network:
+          title: Réseaux sociaux
       biography:
         title: Biographie
         label: Biographie

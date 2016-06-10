@@ -57,6 +57,8 @@ profile:
           title: Password
           change: Change your password
           init: Initialize your password
+        social_network:
+          title: Social networks
       biography:
         title: Biography
         label: Biography
