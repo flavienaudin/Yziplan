@@ -25,7 +25,7 @@ class AppUser
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="\ATUserBundle\Entity\User", inversedBy="userInfo")
+     * @ORM\OneToOne(targetEntity="\ATUserBundle\Entity\User", inversedBy="appUser")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      *
      * @var User

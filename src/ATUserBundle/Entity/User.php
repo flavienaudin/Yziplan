@@ -92,7 +92,7 @@ class User extends FosUser
      * @var AppUser
      */
     private $appUser;
-
+    
     /**
      * User constructor.
      */
