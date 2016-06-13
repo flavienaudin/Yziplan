@@ -134,7 +134,7 @@ class ProfileController extends BaseController
             return new JsonResponse($data, $reponseStatus);
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("global.error.not_ajax_request"));
-            return $this->redirectToRoute('accueil');
+            return $this->redirectToRoute('home');
         }
     }
 
@@ -175,7 +175,7 @@ class ProfileController extends BaseController
             return new JsonResponse($data, $reponseStatus);
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("global.error.not_ajax_request"));
-            return $this->redirectToRoute('accueil');
+            return $this->redirectToRoute('home');
         }
     }
 
@@ -220,7 +220,7 @@ class ProfileController extends BaseController
             return new JsonResponse($data, $reponseStatus);
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("global.error.not_ajax_request"));
-            return $this->redirectToRoute('accueil');
+            return $this->redirectToRoute('home');
         }
     }
 }

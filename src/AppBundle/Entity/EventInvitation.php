@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * EventInvitation
@@ -12,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventInvitation
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *

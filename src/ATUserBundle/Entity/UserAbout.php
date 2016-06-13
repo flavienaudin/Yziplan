@@ -3,6 +3,7 @@
 namespace ATUserBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * UserAbout
@@ -12,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class UserAbout
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *

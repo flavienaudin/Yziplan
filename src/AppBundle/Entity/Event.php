@@ -2,9 +2,9 @@
 
 namespace AppBundle\Entity;
 
-use ATUserBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Event
@@ -14,15 +14,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Event
 {
-    const ETAT_EN_ORGANISATION="en-organisation";
-    const ETAT_EN_ATTENTE_VALIDATION="en-attente-validation";
-    const ETAT_VALIDE="valide";
-    const ETAT_ARCHIVE="archive";
-    const ETAT_DEPROGRAMME="deprogramme";
-    
-    /** @var array Liste des états possibles pour un événement */
-    private $statusList=array(self::ETAT_EN_ORGANISATION, self::ETAT_EN_ATTENTE_VALIDATION,
-        self::ETAT_VALIDE, self::ETAT_ARCHIVE, self::ETAT_DEPROGRAMME);
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
 
     /**
      * @var int
@@ -69,9 +62,9 @@ class Event
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="response_end_date", type="datetime", unique=false, nullable=true)
+     * @ORM\Column(name="response_deadline", type="datetime", unique=false, nullable=true)
      */
-    private $ResponseEndDate;
+    private $responseDeadline;
 
     /***********************************************************************
      *                      Jointures
@@ -117,18 +110,18 @@ class Event
      */
     public function __construct()
     {
-        $this->modules = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->eventInvitations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->modules = new ArrayCollection();
+        $this->eventInvitations = new ArrayCollection();
     }
 
     /**
      * Add module
      *
-     * @param \AppBundle\Entity\Module $module
+     * @param Module $module
      *
      * @return Event
      */
-    public function addModule(\AppBundle\Entity\Module $module)
+    public function addModule(Module $module)
     {
         $this->modules[] = $module;
 
@@ -138,9 +131,9 @@ class Event
     /**
      * Remove module
      *
-     * @param \AppBundle\Entity\Module $module
+     * @param Module $module
      */
-    public function removeModule(\AppBundle\Entity\Module $module)
+    public function removeModule(Module $module)
     {
         $this->modules->removeElement($module);
     }
@@ -158,11 +151,11 @@ class Event
     /**
      * Add eventInvitation
      *
-     * @param \AppBundle\Entity\EventInvitation $eventInvitation
+     * @param EventInvitation $eventInvitation
      *
      * @return Event
      */
-    public function addEventInvitation(\AppBundle\Entity\EventInvitation $eventInvitation)
+    public function addEventInvitation(EventInvitation $eventInvitation)
     {
         $this->eventInvitations[] = $eventInvitation;
 
@@ -172,9 +165,9 @@ class Event
     /**
      * Remove eventInvitation
      *
-     * @param \AppBundle\Entity\EventInvitation $eventInvitation
+     * @param EventInvitation $eventInvitation
      */
-    public function removeEventInvitation(\AppBundle\Entity\EventInvitation $eventInvitation)
+    public function removeEventInvitation(EventInvitation $eventInvitation)
     {
         $this->eventInvitations->removeElement($eventInvitation);
     }
@@ -182,7 +175,7 @@ class Event
     /**
      * Get eventInvitations
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
     public function getEventInvitations()
     {
@@ -310,38 +303,38 @@ class Event
     }
 
     /**
-     * Set responseEndDate
+     * Set responseDeadline
      *
-     * @param \DateTime $responseEndDate
+     * @param \DateTime $responseDeadline
      *
      * @return Event
      */
-    public function setResponseEndDate($responseEndDate)
+    public function setResponseDeadline($responseDeadline)
     {
-        $this->ResponseEndDate = $responseEndDate;
+        $this->responseDeadline = $responseDeadline;
 
         return $this;
     }
 
     /**
-     * Get responseEndDate
+     * Get responseDeadline
      *
      * @return \DateTime
      */
-    public function getResponseEndDate()
+    public function getResponseDeadline()
     {
-        return $this->ResponseEndDate;
+        return $this->responseDeadline;
     }
     
 
     /**
      * Set creator
      *
-     * @param \AppBundle\Entity\AppUser $creator
+     * @param AppUser $creator
      *
      * @return Event
      */
-    public function setCreator(\AppBundle\Entity\AppUser $creator = null)
+    public function setCreator(AppUser $creator = null)
     {
         $this->creator = $creator;
 
@@ -351,7 +344,7 @@ class Event
     /**
      * Get creator
      *
-     * @return \AppBundle\Entity\AppUser
+     * @return AppUser
      */
     public function getCreator()
     {

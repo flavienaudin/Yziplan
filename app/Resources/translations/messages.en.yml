@@ -45,6 +45,10 @@ landing_page:
       title: Vacation between friends ?
       text: Organize yourself with your friends to know where and when to go on weekends or holidays !
 
+event:
+  error.message:
+      unauthorized_access: You have no right to access this event.
+
 # Globals
 global:
   event: Event
@@ -61,3 +65,10 @@ global:
   error:
     not_ajax_request: Your behavior is suspect, big brother is watching you!
     unauthorized_access: You haven't access to this section.
+
+status:
+  in_organization: Being organized
+  awaiting_validation: Awaiting validation
+  validated: Validated
+  archived: Archived
+  deprogrammed: Deprogrammed

@@ -1,0 +1,12 @@
+services:
+# Services & Managers
+  at.service.gentoken:
+    class: AppBundle\Manager\GenerateursToken
+
+  at.manager.mangopay:
+    class: AppBundle\Manager\MangoPayManager
+    arguments: ['%mangopay.client.id%', "%mangopay.client.password%", "%mangopay.temporary.folder%", "%mangopay.base.url%"]
+
+  at.manager.event:
+    class: AppBundle\Manager\EventManager
+    arguments: ['@doctrine.orm.entity_manager']

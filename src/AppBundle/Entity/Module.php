@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * Module
@@ -12,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Module
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *
@@ -57,9 +62,9 @@ class Module
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="response_end_date", type="datetime", unique=false, nullable=true)
+     * @ORM\Column(name="response_deadline", type="datetime", unique=false, nullable=true)
      */
-    private $ResponseEndDate;
+    private $responseDeadline;
 
     /***********************************************************************
      *                      Jointures
@@ -92,9 +97,11 @@ class Module
      ********************************************************************************************************/
 
     /**
+     * Sondages du module
+     *
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\module\PollModule", mappedBy="module")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\module\PollModule", mappedBy="module")
      */
     private $pollModules;
 
@@ -400,26 +407,26 @@ class Module
     }
 
     /**
-     * Set responseEndDate
+     * Set responseDeadline
      *
-     * @param \DateTime $responseEndDate
+     * @param \DateTime $responseDeadline
      *
      * @return Module
      */
-    public function setResponseEndDate($responseEndDate)
+    public function setResponseDeadline($responseDeadline)
     {
-        $this->ResponseEndDate = $responseEndDate;
+        $this->responseDeadline = $responseDeadline;
 
         return $this;
     }
 
     /**
-     * Get responseEndDate
+     * Get responseDeadline
      *
      * @return \DateTime
      */
-    public function getResponseEndDate()
+    public function getResponseDeadline()
     {
-        return $this->ResponseEndDate;
+        return $this->responseDeadline;
     }
 }

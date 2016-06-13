@@ -5,6 +5,7 @@ namespace AppBundle\Entity\module;
 use AppBundle\Entity\AppUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * ExpenseProposal
@@ -14,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ExpenseProposal
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *

@@ -3,7 +3,9 @@
 namespace AppBundle\Entity;
 
 use ATUserBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * AppUser
@@ -15,6 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AppUser
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *
@@ -23,9 +28,9 @@ class AppUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
+    
     /**
-     * @ORM\OneToOne(targetEntity="\ATUserBundle\Entity\User", inversedBy="userInfo")
+     * @ORM\OneToOne(targetEntity="ATUserBundle\Entity\User", inversedBy="appUser")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      *
      * @var User

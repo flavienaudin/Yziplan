@@ -2,7 +2,10 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\module\ProposalElementResponse;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * ModuleInvitation
@@ -12,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ModuleInvitation
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *
@@ -28,6 +34,10 @@ class ModuleInvitation
      */
     private $name;
 
+    /***********************************************************************
+     *                      Jointures
+     ***********************************************************************/
+
     /**
      * @var Module
      *
@@ -35,6 +45,19 @@ class ModuleInvitation
      * @ORM\JoinColumn(name="module_id", referencedColumnName="id")
      */
     private $module;
+
+    /**
+     * @var ProposalElementResponse
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\module\ProposalElementResponse", mappedBy="moduleInvitation")
+     */
+    private $proposalElementResponse;
+
+
+    public function __construct()
+    {
+        $this->proposalElementResponse = new ArrayCollection();
+    }
 
     /***********************************************************************
      *                      Getters and Setters
@@ -97,4 +120,23 @@ class ModuleInvitation
     {
         return $this->module;
     }
+
+    /**
+     * @return ProposalElementResponse
+     */
+    public function getProposalElementResponse()
+    {
+        return $this->proposalElementResponse;
+    }
+
+    /**
+     * @param ProposalElementResponse $proposalElementResponse
+     * @return ModuleInvitation
+     */
+    public function setProposalElementResponse($proposalElementResponse)
+    {
+        $this->proposalElementResponse = $proposalElementResponse;
+        return $this;
+    }
+
 }
