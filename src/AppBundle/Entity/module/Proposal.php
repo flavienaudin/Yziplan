@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity\module;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * Proposal
@@ -12,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Proposal
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+    
     /**
      * @var int
      *

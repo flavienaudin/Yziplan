@@ -3,7 +3,9 @@
 namespace AppBundle\Entity\module;
 
 use AppBundle\Entity\Module as Module;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * PollModule
@@ -13,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class PollModule
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *
@@ -36,18 +41,19 @@ class PollModule
      * @ORM\OneToMany(targetEntity="Proposal", mappedBy="pollModule")
      */
     private $proposals;
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->proposals = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->proposals = new ArrayCollection();
     }
 
     /***********************************************************************
      *                      Getters and Setters
      ***********************************************************************/
-    
+
     /**
      * Get id
      *

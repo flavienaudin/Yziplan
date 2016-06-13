@@ -21,16 +21,38 @@ register:
     already_an_account: Déjà un compte ?
   validation:
     email_already_used: Cet adresse e-mail est déjà utilisée
-
-check_email:
-  page:
-    meta_title: E-mail envoyé
-    title: E-mail envoyé
+  check_email:
+    page:
+      meta_title: E-mail envoyé
+      title: E-mail envoyé
 
 confirmed:
   page:
     meta_title: Confirmation
     title: Confirmation
+
+change_password:
+  page:
+    meta_title: Modification du mot de passe
+    title: Modifier votre mot de passe
+
+resetting:
+  check_email:
+    page:
+      meta_title: E-mail envoyé
+      title: E-mail envoyé
+  password_already_requested:
+    page:
+      meta_title: Mot de passe déjà requis
+      title: Mot de passe déjà requis
+  reset:
+    page:
+      meta_title: Initialisation de votre mot de passe
+      title: Initialisation de votre mot de passe
+  request:
+    page:
+      meta_title: Mot de passe oublié
+      title: Mot de passe oublié
 
 profile:
   show:
@@ -57,6 +79,8 @@ profile:
           title: Mot de passe
           change: Modifier votre mot de passe
           init: Initialiser votre mot de passe
+        social_network:
+          title: Réseaux sociaux
       biography:
         title: Biographie
         label: Biographie
@@ -76,14 +100,12 @@ profile:
           title: Anniversaire
           label: Anniversaire
           placeholder: Cliquez ici...
-  change_password:
-    page:
-      meta_title: Modification du mot de passe
-      title: Modifier votre mot de passe
   message:
     update:
       success: Informations mises à jour
       error: Une erreur est survenue lors de la mise à jour de vos informations
+    init_password:
+      already_init: Cette action est interdite car vous devriez déjà connaître votre mot de passe.
 
 # Global messages
 text:

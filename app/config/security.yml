@@ -30,11 +30,11 @@ security:
                 success_handler: at.security.ajax_authentication_handler
                 failure_handler: at.security.ajax_authentication_handler
                 use_referer: true
-                default_target_path: accueil
+                default_target_path: home
                 csrf_token_generator: security.csrf.token_manager
             logout:
                 path:   fos_user_security_logout
-                target: accueil
+                target: home
             remember_me:
                 secret:     '%secret%'
                 lifetime:   604800
@@ -43,7 +43,7 @@ security:
                 login_path:   fos_user_security_login
                 use_forward:  true
                 failure_path: fos_user_security_login
-                default_target_path: accueil
+                default_target_path: home
                 resource_owners:
                     google:   "/login-oauth/check-google"
                     facebook: "/login-oauth/check-facebook"

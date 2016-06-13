@@ -4,6 +4,7 @@ namespace AppBundle\Entity\module;
 
 use AppBundle\Entity\Module as Module;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * ExpenseModule
@@ -13,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ExpenseModule
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *

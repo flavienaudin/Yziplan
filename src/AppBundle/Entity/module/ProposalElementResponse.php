@@ -2,7 +2,9 @@
 
 namespace AppBundle\Entity\module;
 
+use AppBundle\Entity\ModuleInvitation;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * ProposalElementResponse
@@ -12,6 +14,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProposalElementResponse
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *
@@ -37,18 +42,31 @@ class ProposalElementResponse
      */
     private $info1;
 
+
+    /***********************************************************************
+     *                      Jointures
+     ***********************************************************************/
+
     /**
      * @var ProposalElement
      *
-     * @ORM\ManyToOne(targetEntity="ProposalElement", inversedBy="proposalElementresponses")
+     * @ORM\ManyToOne(targetEntity="ProposalElement", inversedBy="proposalElementResponses")
      * @ORM\JoinColumn(name="proposal_element_id", referencedColumnName="id")
      */
     private $proposalElement;
 
+    /**
+     * @var ModuleInvitation
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\ModuleInvitation", inversedBy="proposalElementResponse")
+     * @ORM\JoinColumn(name="module_invitation_id", referencedColumnName="id")
+     */
+    private $moduleInvitation;
+
     /***********************************************************************
      *                      Getters and Setters
      ***********************************************************************/
-    
+
     /**
      * Get id
      *
@@ -58,7 +76,54 @@ class ProposalElementResponse
     {
         return $this->id;
     }
-    
+
+    /**
+     * Set value
+     *
+     * @param string $value
+     *
+     * @return ProposalElementResponse
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string
+     */
+    public function getValue()
+    {
+        return $this->value;
+    }
+
+    /**
+     * Get info1
+     *
+     * @return string
+     */
+    public function getInfo1()
+    {
+        return $this->info1;
+    }
+
+    /**
+     * Set info1
+     *
+     * @param string $info1
+     *
+     * @return ProposalElementResponse
+     */
+    public function setInfo1($info1)
+    {
+        $this->info1 = $info1;
+
+        return $this;
+    }
 
     /**
      * Set proposalElement
@@ -85,52 +150,20 @@ class ProposalElementResponse
     }
 
     /**
-     * Set value
-     *
-     * @param string $value
-     *
+     * @return mixed
+     */
+    public function getModuleInvitation()
+    {
+        return $this->moduleInvitation;
+    }
+
+    /**
+     * @param mixed $moduleInvitation
      * @return ProposalElementResponse
      */
-    public function setValue($value)
+    public function setModuleInvitation($moduleInvitation)
     {
-        $this->value = $value;
-
+        $this->moduleInvitation = $moduleInvitation;
         return $this;
     }
-
-    /**
-     * Get value
-     *
-     * @return string
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-    
-    /**
-     * Get info1
-     *
-     * @return string
-     */
-    public function getInfo1()
-    {
-        return $this->info1;
-    }
-    
-    /**
-     * Set info1
-     *
-     * @param string $info1
-     *
-     * @return ProposalElementResponse
-     */
-    public function setInfo1($info1)
-    {
-        $this->info1 = $info1;
-
-        return $this;
-    }
-
-    
 }

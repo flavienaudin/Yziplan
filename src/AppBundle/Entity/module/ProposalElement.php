@@ -3,7 +3,9 @@
 namespace AppBundle\Entity\module;
 
 use AppBundle\Entity\enum\ProposalElementType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * ProposalElement
@@ -13,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ProposalElement
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *
@@ -31,16 +36,16 @@ class ProposalElement
 
     /**
      * Numéro de placement dans l'ordonancement des elements lors de l'affichage
-     * 
+     *
      * @var integer
      *
      * @ORM\Column(name="order", type="integer", length=2, nullable=true)
      */
     private $order;
-    
+
     /**
      * Type de la valeur de la réponse
-     * 
+     *
      * @var ProposalElementType
      *
      * @ORM\Column(name="type", type="string", length=255, nullable=true)
@@ -50,7 +55,7 @@ class ProposalElement
     /***********************************************************************
      *                      Getters and Setters
      ***********************************************************************/
-    
+
     /**
      * @var Proposal
      *
@@ -65,7 +70,7 @@ class ProposalElement
      * @ORM\OneToMany(targetEntity="ProposalElementResponse", mappedBy="ProposalElement")
      */
     private $proposalElementResponses;
-    
+
     /**
      * Get id
      *
@@ -75,12 +80,13 @@ class ProposalElement
     {
         return $this->id;
     }
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->proposalElementResponses = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->proposalElementResponses = new ArrayCollection();
     }
 
 
@@ -163,7 +169,7 @@ class ProposalElement
      *
      * @return ProposalElement
      */
-    public function setProposal(\AppBundle\Entity\module\Proposal $proposal = null)
+    public function setProposal(Proposal $proposal = null)
     {
         $this->proposal = $proposal;
 
@@ -183,11 +189,11 @@ class ProposalElement
     /**
      * Add proposalElementResponse
      *
-     * @param \AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse
+     * @param ProposalElementResponse $proposalElementResponse
      *
      * @return ProposalElement
      */
-    public function addProposalElementResponse(\AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse)
+    public function addProposalElementResponse(ProposalElementResponse $proposalElementResponse)
     {
         $this->proposalElementResponses[] = $proposalElementResponse;
 
@@ -197,9 +203,9 @@ class ProposalElement
     /**
      * Remove proposalElementResponse
      *
-     * @param \AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse
+     * @param ProposalElementResponse $proposalElementResponse
      */
-    public function removeProposalElementResponse(\AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse)
+    public function removeProposalElementResponse(ProposalElementResponse $proposalElementResponse)
     {
         $this->proposalElementResponses->removeElement($proposalElementResponse);
     }

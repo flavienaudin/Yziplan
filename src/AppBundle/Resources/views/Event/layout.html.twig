@@ -1,7 +1,6 @@
 {% extends "::base.html.twig" %}
 
 {# LAYOUT : Menu latéral + une colonne pour le contenu #}
-
 {% block alerts_tabs %}
     <aside id="s-event-alerts" class="sidebar">
         <ul class="tab-nav tn-justified tn-icon m-t-10" data-tab-color="teal">
@@ -42,6 +41,7 @@
 
 {% block content_body %}
     {# TODO ajouter la comande d'ouverture des notifications de l'événement (si menu latéral plié) #}
+    {% block event_content %}{% endblock %}
 {% endblock content_body %}
 
 

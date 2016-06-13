@@ -45,6 +45,10 @@ landing_page:
       title: Retrouvailles entre amis ?
       text: Organisez-vous avec vos amis pour savoir où et quand partir en week-end ou vacances !
 
+event:
+  error.message:
+      unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
+
 # Globals
 global:
   event: événement
@@ -60,3 +64,11 @@ global:
     save: Sauver
   error:
     not_ajax_request: Vous agissez suspectement, on vous garde à l'oeil!
+    unauthorized_access: Vous n'êtes pas autorisés à accéder à cette section.
+
+status:
+  in_organization: En cours d'organisation
+  awaiting_validation: En attente de validation
+  validated: Validé
+  archived: Archivé
+  deprogrammed: Déprogrammé

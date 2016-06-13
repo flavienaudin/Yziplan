@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
+    - { resource: "@AppBundle/Resources/config/services.yml" }
     - { resource: "@ATUserBundle/Resources/config/services.yml" }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
@@ -114,7 +115,7 @@ fos_user:
 hwi_oauth:
     firewall_names: [main]
     # optional target_path_parameter to provide an explicit return URL
-    #target_path_parameter: accueil
+    #target_path_parameter: home
     # ne pas utiliser le referer sinon redirection vers le formulaire de login
     use_referer: false
     connect:

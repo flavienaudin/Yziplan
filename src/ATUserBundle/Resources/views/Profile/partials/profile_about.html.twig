@@ -22,7 +22,24 @@
             </dl>
             <dl class="dl-horizontal">
                 <dt>{{ "profile.show.about.mandatory_information.password.title"|trans }}</dt>
-                <dd><a href="{{ path('fos_user_change_password') }}" >{{ "profile.show.about.mandatory_information.password.change"|trans }}</a></dd>
+                <dd>
+                    {% if app.user.passwordKnown %}
+                        <a href="{{ path('fos_user_change_password') }}" >{{ "profile.show.about.mandatory_information.password.change"|trans }}</a>
+                    {% else %}
+                        <a href="{{ path('initializePassword') }}" >{{ "profile.show.about.mandatory_information.password.init"|trans }}</a>
+                    {% endif %}
+                </dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>{{ "profile.show.about.mandatory_information.social_network.title"|trans }}</dt>
+                <dd>
+                    {% if app.user.googleId is not empty %}
+                        <i class="zmdi zmdi-google-plus-box zmdi-hc-2x palette-Red text"></i>
+                    {% endif %}
+                    {% if app.user.facebookId is not empty %}
+                        <i class="zmdi zmdi-facebook-box zmdi-hc-2x  palette-Blue-A700 text"></i>
+                    {% endif %}
+                </dd>
             </dl>
         </div>
 

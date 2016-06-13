@@ -1,16 +1,16 @@
 {% extends "ATUserBundle::layout_cboxed.html.twig" %}
 
 {% block title %}
-    {% spaceless %}{{ parent() }} - {{ "change_password.page.meta_title"|trans }}{% endspaceless %}
+    {% spaceless %}{{ parent() }} - {{ "resetting.request.page.meta_title"|trans }}{% endspaceless %}
 {% endblock %}
 
 {% block fos_user_content %}
     <div class="card">
         <div class="card-header">
-            <h1>{{ "change_password.page.title"|trans }}</h1>
+            <h1>{{ "resetting.request.page.title"|trans }}</h1>
         </div>
         <div class="card-body card-padding">
-            {% include "ATUserBundle:ChangePassword:changePassword_content.html.twig" %}
+            {% include "FOSUserBundle:Resetting:request_content.html.twig" %}
         </div>
     </div>
 {% endblock fos_user_content %}

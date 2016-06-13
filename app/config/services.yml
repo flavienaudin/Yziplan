@@ -1,12 +1,3 @@
 services:
-# Services & Managers
-    at.service.gentoken:
-        class: AppBundle\Manager\GenerateursToken
-
-    at.manager.mangopay:
-        class: AppBundle\Manager\MangoPayManager
-        arguments: ['%mangopay.client.id%', "%mangopay.client.password%", "%mangopay.temporary.folder%", "%mangopay.base.url%"]
-
-# Autres
-    fos_user.doctrine_registry:
-        alias: doctrine # Fix Bug with Symphony 3
+  fos_user.doctrine_registry:
+    alias: doctrine # Fix Bug with Symphony 3

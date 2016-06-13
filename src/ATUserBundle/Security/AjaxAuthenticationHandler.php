@@ -58,7 +58,7 @@ class AjaxAuthenticationHandler implements AuthenticationSuccessHandlerInterface
             if ($this->session->get('_security.main.target_path')) {
                 $url = $this->session->get('_security.main.target_path');
             } else {
-                $url = $this->router->generate('accueil');
+                $url = $this->router->generate('home');
             }
             return new RedirectResponse($url);
         }
