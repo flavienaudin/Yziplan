@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-header ch-img" style="background-image: url({{ asset('bundles/app/img/module-head/05.jpg') }}); height: 150px;">
         <div class="pull-left m-r-10">
-            <img class="avatar-img a-lg" src="img/profile-pics/1.jpg" alt="">
+            <img class="avatar-img a-lg" src="{{ asset("bundles/app/img/test/contact/1.jpg") }}" alt="">
         </div>
         <h2>Recent Posts
             <small>Venenatis Sollicitudin Ipsum</small>
@@ -21,44 +21,29 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="displayExpense">
                     <div class="table-responsive">
-                        <table id="data-table-basic" class="table bootgrid-table" aria-busy="false">
+                        <table id="event-data-table-expense-1" class="table bootgrid-table table-condensed" aria-busy="false">
                             <thead>
                             <tr>
-                                <th data-column-id="Qui" data-formatter="image" class="text-left p-5" style="">
-                                    <a href="javascript:void(0);" class="column-header-anchor sortable"><span class="text">Qui</span><span class="zmdi icon"></span></a>
-                                </th>
-                                <th data-column-id="Quoi" class="text-left p-5" style="">
-                                    <a href="javascript:void(0);" class="column-header-anchor sortable"><span class="text">Quoi</span><span class="zmdi icon "></span></a>
-                                </th>
-                                <th data-column-id="Combien" class="text-left p-5" style="">
-                                    <a href="javascript:void(0);" class="column-header-anchor sortable"><span class="text">Combien</span><span class="zmdi icon "></span></a>
-                                </th>
-                                <th data-column-id="Pour vous" class="text-left p-5" style="">
-                                    <a href="javascript:void(0);" class="column-header-anchor sortable"><span class="text">Pour Vous</span><span class="zmdi icon "></span></a>
-                                </th>
-                                <th data-column-id="Quand" class="text-left p-5" style="">
-                                    <a href="javascript:void(0);" class="column-header-anchor sortable"><span class="text">Quand</span><span class="zmdi icon "></span></a>
-                                </th>
-{#                                <th data-column-id="imagePourQui" data-identifier="true" data-type="string" data-visible="false">Img src</th>#}
-                                <th data-column-id="Pour Qui" data-formatter="image" class="text-left p-5" style="">
-                                    <a href="javascript:void(0);" class="column-header-anchor sortable"><span class="text">Pour Qui</span><span
-                                                class="zmdi icon zmdi-expand-more"></span></a>
-                                </th>
-                                <th></th>
-
+                                <th data-column-id="Qui" data-formatter="image">Qui</th>
+                                <th data-column-id="Quoi">Quoi</th>
+                                <th data-column-id="Combien">Combien</th>
+                                <th data-column-id="PourVous">Pour Vous</th>
+                                <th data-column-id="Quand">Quand</th>
+                                <th data-column-id="PourQui" data-formatter="image">Pour Qui</th>
+                                <th data-column-id="Info">Info</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr data-row-id="0">
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}] }
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }
                                 </td>
                                 <td class="text-left p-5" style="">Un truc</td>
                                 <td class="text-left p-5" style="">59,50</td>
                                 <td class="text-left p-5" style="">{{ 5000|number_format(2, ',', '') }}</td>
                                 <td class="text-left p-5" style="">28/10/2016</td>
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}] }
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }
                                 </td>
                                 <td class="p-5">
                                     <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -71,106 +56,128 @@
                                 <td class="text-left p-5" colspan="5">Ceci est un test pour dire que c'est pour payer des saussices</td>
                             </tr>#}
                             <tr data-row-id="1">
-                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}] }</td>
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }</td>
                                 <td class="text-left p-5" style="">Un truc</td>
                                 <td class="text-left p-5" style="">59,50</td>
                                 <td class="text-left p-5" style="">5,50</td>
                                 <td class="text-left p-5" style="">28.10.2016</td>
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}] }
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }
                                 </td>
                             </tr>
                             <tr data-row-id="2">
-                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}] }</td>
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }</td>
                                 <td class="text-left p-5" style="">Un truc</td>
                                 <td class="text-left p-5" style="">59,50</td>
                                 <td class="text-left p-5" style="">5,50</td>
                                 <td class="text-left p-5" style="">28.10.2016</td>
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"}
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/10.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/2.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/3.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/7.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/16.jpg") }}"}
                                     ] }
                                 </td>
                             </tr>
                             <tr data-row-id="3">
-                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}] }</td>
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/12.jpg") }}"}] }</td>
                                 <td class="text-left p-5" style="">Un truc</td>
                                 <td class="text-left p-5" style="">59,50</td>
                                 <td class="text-left p-5" style="">5,50</td>
                                 <td class="text-left p-5" style="">28.10.2016</td>
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}] }
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/10.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/15.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/8.jpg") }}"}] }
                                 </td>
                             </tr>
                             <tr data-row-id="4">
-                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}] }</td>
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/12.jpg") }}"}] }</td>
                                 <td class="text-left p-5" style="">Un truc de ouf qu'est trop de la balle!</td>
                                 <td class="text-left p-5" style="">59,50</td>
                                 <td class="text-left p-5" style="">5,50</td>
                                 <td class="text-left p-5" style="">28.10.2016</td>
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"}] }
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/13.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/15.jpg") }}"}] }
                                 </td>
                             </tr>
                             <tr data-row-id="5">
-                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}] }</td>
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/.41.jpg") }}"}] }</td>
                                 <td class="text-left p-5" style="">Un truc</td>
                                 <td class="text-left p-5" style="">59,50</td>
                                 <td class="text-left p-5" style="">5,50</td>
                                 <td class="text-left p-5" style="">28.10.2016</td>
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"}] }
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/16.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/2.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/6.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/8.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/7.jpg") }}"}] }
                                 </td>
                             </tr>
                             <tr data-row-id="6">
-                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}] }</td>
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }</td>
                                 <td class="text-left p-5" style="">Un truc</td>
                                 <td class="text-left p-5" style="">59,50</td>
                                 <td class="text-left p-5" style="">5,50</td>
                                 <td class="text-left p-5" style="">28.10.2016</td>
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}] }
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }
                                 </td>
                             </tr>
                             <tr data-row-id="7">
-                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}] }</td>
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }</td>
                                 <td class="text-left p-5" style="">Un truc</td>
                                 <td class="text-left p-5" style="">59,50</td>
                                 <td class="text-left p-5" style="">5,50</td>
                                 <td class="text-left p-5" style="">28.10.2016</td>
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}
-                                    ,{"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}] }
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }
                                 </td>
                             </tr>
                             <tr data-row-id="8">
-                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}] }</td>
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }</td>
                                 <td class="text-left p-5" style="">Un truc</td>
                                 <td class="text-left p-5" style="">59,50</td>
                                 <td class="text-left p-5" style="">5,50</td>
                                 <td class="text-left p-5" style="">28.10.2016</td>
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}] }
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }
                                 </td>
                             </tr>
                             <tr data-row-id="9">
-                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"}] }</td>
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }</td>
                                 <td class="text-left p-5" style="">Un truc</td>
                                 <td class="text-left p-5" style="">59,50</td>
                                 <td class="text-left p-5" style="">5,50</td>
                                 <td class="text-left p-5" style="">28.10.2016</td>
                                 <td class="text-left p-5" style="">
-                                    {"avatars" : [ {"avatarSrc" : "img/profile-pics/1.jpg"},{"avatarSrc" : "img/profile-pics/1.jpg"}] }
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }
+                                </td>
+                            </tr>
+                            <tr data-row-id="3">
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/12.jpg") }}"}] }</td>
+                                <td class="text-left p-5" style="">Un truc</td>
+                                <td class="text-left p-5" style="">59,50</td>
+                                <td class="text-left p-5" style="">5,50</td>
+                                <td class="text-left p-5" style="">28.10.2016</td>
+                                <td class="text-left p-5" style="">
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/10.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/15.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/8.jpg") }}"}] }
+                                </td>
+                            </tr>
+                            <tr data-row-id="4">
+                                <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/12.jpg") }}"}] }</td>
+                                <td class="text-left p-5" style="">Un truc de ouf qu'est trop de la balle!</td>
+                                <td class="text-left p-5" style="">59,50</td>
+                                <td class="text-left p-5" style="">5,50</td>
+                                <td class="text-left p-5" style="">28.10.2016</td>
+                                <td class="text-left p-5" style="">
+                                    {"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/13.jpg") }}"},{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}
+                                    ,{"avatarSrc" : "{{ asset("bundles/app/img/test/contact/15.jpg") }}"}] }
                                 </td>
                             </tr>
                             </tbody>
@@ -204,7 +211,7 @@
 <div class="card popular-post">
     <div class="card-header ch-img" style="background-image: url({{ asset('bundles/app/img/module-head/05.jpg') }}); height: 150px;">
         <div class="pull-left m-r-10">
-            <img class="avatar-img a-lg" src="img/profile-pics/1.jpg" alt="">
+            <img class="avatar-img" src="{{ asset("bundles/app/img/test/contact/1.jpg") }}" alt="">
         </div>
         <h2>Recent Posts
             <small>Venenatis Sollicitudin Ipsum</small>
@@ -221,7 +228,7 @@
             </li>#}
 
             <li class="wa-users">
-                <a href=""><img src="img/profile-pics/1.jpg" alt=""></a>
+                <a href=""><img src="{{ asset("bundles/app/img/test/contact/1.jpg") }}" alt=""></a>
                 <a href=""><img src="img/profile-pics/2.jpg" alt=""></a>
                 <a href=""><img src="img/profile-pics/3.jpg" alt=""></a>
                 <a href=""><img src="img/profile-pics/5.jpg" alt=""></a>
@@ -230,7 +237,7 @@
         <div class="list-group lg-alt">
             <a href="" class="list-group-item media">
                 <div class="pull-left">
-                    <img class="avatar-img" src="img/profile-pics/1.jpg" alt="">
+                    <img class="avatar-img" src="{{ asset("bundles/app/img/test/contact/1.jpg") }}" alt="">
                 </div>
 
                 <div class="media-body">
@@ -331,8 +338,9 @@
                 <div class="clearfix"></div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-info waves-effect">Submit</button>
-                <button class="btn btn-link waves-effect">Cancel</button>
+                <button class="btn btn-info waves-effect">Valider</button>
+                <button class="btn btn-info waves-effect">Valider et ajouter une autre dépense</button>
+                <button class="btn btn-link waves-effect">Annuler</button>
             </div>
         </div>
     </div>
