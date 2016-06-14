@@ -28,8 +28,8 @@ class PollModule
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Module", inversedBy="pollModules")
-     * @ORM\JoinColumn(name="module_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Module", inversedBy="pollModule")
+     * @ORM\JoinColumn(name="module_id", referencedColumnName="id", nullable=true)
      *
      * @var Module
      */

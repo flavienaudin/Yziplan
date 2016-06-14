@@ -28,8 +28,8 @@ class ExpenseModule
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\Module", inversedBy="expenseModules")
-     * @ORM\JoinColumn(name="module_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Module", inversedBy="expenseModule")
+     * @ORM\JoinColumn(name="module_id", referencedColumnName="id", nullable=true)
      *
      * @var Module
      */

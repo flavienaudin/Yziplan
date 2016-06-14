@@ -74,7 +74,7 @@ class Event
      * @var EventInvitation
      *
      * @ORM\OneToOne(targetEntity="EventInvitation", inversedBy="createdEvent")
-     * @ORM\JoinColumn(name="event_invitation_id", referencedColumnName="id",  nullable=true)
+     * @ORM\JoinColumn(name="creator_event_invitation_id", referencedColumnName="id",  nullable=true)
      */
     private $creator;
     

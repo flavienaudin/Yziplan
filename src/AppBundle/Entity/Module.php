@@ -101,16 +101,16 @@ class Module
      *
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\module\PollModule", mappedBy="module")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\module\PollModule", mappedBy="module")
      */
-    private $pollModules;
+    private $pollModule;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\module\ExpenseModule", mappedBy="module")
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\module\ExpenseModule", mappedBy="module")
      */
-    private $expenseModules;
+    private $expenseModule;
 
     /*******************************************************************************************************
      *                                Getters and Setters
@@ -122,8 +122,6 @@ class Module
     public function __construct()
     {
         $this->moduleInvitations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->pollModules = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->expenseModules = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -216,74 +214,6 @@ class Module
     public function getPaymentModule()
     {
         return $this->paymentModule;
-    }
-
-    /**
-     * Add pollModule
-     *
-     * @param \AppBundle\Entity\module\PollModule $pollModule
-     *
-     * @return Module
-     */
-    public function addPollModule(\AppBundle\Entity\module\PollModule $pollModule)
-    {
-        $this->pollModules[] = $pollModule;
-
-        return $this;
-    }
-
-    /**
-     * Remove pollModule
-     *
-     * @param \AppBundle\Entity\module\PollModule $pollModule
-     */
-    public function removePollModule(\AppBundle\Entity\module\PollModule $pollModule)
-    {
-        $this->pollModules->removeElement($pollModule);
-    }
-
-    /**
-     * Get pollModules
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getPollModules()
-    {
-        return $this->pollModules;
-    }
-
-    /**
-     * Add expenseModule
-     *
-     * @param \AppBundle\Entity\module\ExpenseModule $expenseModule
-     *
-     * @return Module
-     */
-    public function addExpenseModule(\AppBundle\Entity\module\ExpenseModule $expenseModule)
-    {
-        $this->expenseModules[] = $expenseModule;
-
-        return $this;
-    }
-
-    /**
-     * Remove expenseModule
-     *
-     * @param \AppBundle\Entity\module\ExpenseModule $expenseModule
-     */
-    public function removeExpenseModule(\AppBundle\Entity\module\ExpenseModule $expenseModule)
-    {
-        $this->expenseModules->removeElement($expenseModule);
-    }
-
-    /**
-     * Get expenseModules
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getExpenseModules()
-    {
-        return $this->expenseModules;
     }
 
     /**
@@ -428,5 +358,53 @@ class Module
     public function getResponseDeadline()
     {
         return $this->responseDeadline;
+    }
+
+    /**
+     * Set pollModule
+     *
+     * @param \AppBundle\Entity\module\PollModule $pollModule
+     *
+     * @return Module
+     */
+    public function setPollModule(\AppBundle\Entity\module\PollModule $pollModule = null)
+    {
+        $this->pollModule = $pollModule;
+
+        return $this;
+    }
+
+    /**
+     * Get pollModule
+     *
+     * @return \AppBundle\Entity\module\PollModule
+     */
+    public function getPollModule()
+    {
+        return $this->pollModule;
+    }
+
+    /**
+     * Set expenseModule
+     *
+     * @param \AppBundle\Entity\module\ExpenseModule $expenseModule
+     *
+     * @return Module
+     */
+    public function setExpenseModule(\AppBundle\Entity\module\ExpenseModule $expenseModule = null)
+    {
+        $this->expenseModule = $expenseModule;
+
+        return $this;
+    }
+
+    /**
+     * Get expenseModule
+     *
+     * @return \AppBundle\Entity\module\ExpenseModule
+     */
+    public function getExpenseModule()
+    {
+        return $this->expenseModule;
     }
 }
