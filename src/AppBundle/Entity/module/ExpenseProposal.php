@@ -107,7 +107,7 @@ class ExpenseProposal
     private $listOfParticipants;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\ExpenseModule", inversedBy="expenseProposal")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\module\ExpenseModule", inversedBy="expenseProposal")
      * @ORM\JoinColumn(name="expense_module_id", referencedColumnName="id")
      *
      * @var ExpenseModule
@@ -362,11 +362,11 @@ class ExpenseProposal
     /**
      * Set expenseModule
      *
-     * @param \AppBundle\Entity\ExpenseModule $expenseModule
+     * @param \AppBundle\Entity\module\ExpenseModule $expenseModule
      *
      * @return ExpenseProposal
      */
-    public function setExpenseModule(\AppBundle\Entity\ExpenseModule $expenseModule = null)
+    public function setExpenseModule(\AppBundle\Entity\module\ExpenseModule $expenseModule = null)
     {
         $this->expenseModule = $expenseModule;
 
@@ -376,7 +376,7 @@ class ExpenseProposal
     /**
      * Get expenseModule
      *
-     * @return \AppBundle\Entity\ExpenseModule
+     * @return \AppBundle\Entity\module\ExpenseModule
      */
     public function getExpenseModule()
     {
