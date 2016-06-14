@@ -46,18 +46,6 @@ class ModuleInvitation
      */
     private $module;
 
-    /**
-     * @var ProposalElementResponse
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\module\ProposalElementResponse", mappedBy="moduleInvitation")
-     */
-    private $proposalElementResponse;
-
-
-    public function __construct()
-    {
-        $this->proposalElementResponse = new ArrayCollection();
-    }
 
     /***********************************************************************
      *                      Getters and Setters
@@ -120,23 +108,4 @@ class ModuleInvitation
     {
         return $this->module;
     }
-
-    /**
-     * @return ProposalElementResponse
-     */
-    public function getProposalElementResponse()
-    {
-        return $this->proposalElementResponse;
-    }
-
-    /**
-     * @param ProposalElementResponse $proposalElementResponse
-     * @return ModuleInvitation
-     */
-    public function setProposalElementResponse($proposalElementResponse)
-    {
-        $this->proposalElementResponse = $proposalElementResponse;
-        return $this;
-    }
-
 }

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\module;
 
 use AppBundle\Entity\AppUser;
+use AppBundle\Entity\EventInvitation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -76,9 +77,9 @@ class ExpenseProposal
     /**
      * Personne ayant ajouté la depense
      *
-     * @var AppUser
+     * @var EventInvitation
      *
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\AppUser")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\EventInvitation")
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
      *
      */
@@ -87,9 +88,9 @@ class ExpenseProposal
     /**
      * Personne ayant payé
      *
-     * @var AppUser
+     * @var EventInvitation
      *
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\AppUser")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\EventInvitation")
      * @ORM\JoinColumn(name="payer_id", referencedColumnName="id")
      */
     private $payer;
@@ -97,13 +98,22 @@ class ExpenseProposal
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\AppUser")
-     * @ORM\JoinTable(name="appuser_expenseparticipant",
+     * @ORM\ManyToMany(targetEntity="\AppBundle\Entity\EventInvitation")
+     * @ORM\JoinTable(name="eventinvitation_expenseparticipant",
      *      joinColumns={@ORM\JoinColumn(name="expenseparticipant_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="appuser_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="event_invitation_id", referencedColumnName="id")}
      *      )
      */
     private $listOfParticipants;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\module\ExpenseModule", inversedBy="expenseProposal")
+     * @ORM\JoinColumn(name="expense_module_id", referencedColumnName="id")
+     *
+     * @var ExpenseModule
+     */
+    private $expenseModule;
+    
     
     /**
      * Constructor
@@ -270,11 +280,11 @@ class ExpenseProposal
     /**
      * Set creator
      *
-     * @param \AppBundle\Entity\AppUser $creator
+     * @param \AppBundle\Entity\EventInvitation $creator
      *
      * @return ExpenseProposal
      */
-    public function setCreator(\AppBundle\Entity\AppUser $creator = null)
+    public function setCreator(\AppBundle\Entity\EventInvitation $creator = null)
     {
         $this->creator = $creator;
 
@@ -284,7 +294,7 @@ class ExpenseProposal
     /**
      * Get creator
      *
-     * @return \AppBundle\Entity\AppUser
+     * @return \AppBundle\Entity\EventInvitation
      */
     public function getCreator()
     {
@@ -294,11 +304,11 @@ class ExpenseProposal
     /**
      * Set payer
      *
-     * @param \AppBundle\Entity\AppUser $payer
+     * @param \AppBundle\Entity\EventInvitation $payer
      *
      * @return ExpenseProposal
      */
-    public function setPayer(\AppBundle\Entity\AppUser $payer = null)
+    public function setPayer(\AppBundle\Entity\EventInvitation $payer = null)
     {
         $this->payer = $payer;
 
@@ -308,7 +318,7 @@ class ExpenseProposal
     /**
      * Get payer
      *
-     * @return \AppBundle\Entity\AppUser
+     * @return \AppBundle\Entity\EventInvitation
      */
     public function getPayer()
     {
@@ -318,11 +328,11 @@ class ExpenseProposal
     /**
      * Add listOfParticipant
      *
-     * @param \AppBundle\Entity\AppUser $listOfParticipant
+     * @param \AppBundle\Entity\EventInvitation $listOfParticipant
      *
      * @return ExpenseProposal
      */
-    public function addListOfParticipant(\AppBundle\Entity\AppUser $listOfParticipant)
+    public function addListOfParticipant(\AppBundle\Entity\EventInvitation $listOfParticipant)
     {
         $this->listOfParticipants[] = $listOfParticipant;
 
@@ -332,9 +342,9 @@ class ExpenseProposal
     /**
      * Remove listOfParticipant
      *
-     * @param \AppBundle\Entity\AppUser $listOfParticipant
+     * @param \AppBundle\Entity\EventInvitation $listOfParticipant
      */
-    public function removeListOfParticipant(\AppBundle\Entity\AppUser $listOfParticipant)
+    public function removeListOfParticipant(\AppBundle\Entity\EventInvitation $listOfParticipant)
     {
         $this->listOfParticipants->removeElement($listOfParticipant);
     }
@@ -347,5 +357,29 @@ class ExpenseProposal
     public function getListOfParticipants()
     {
         return $this->listOfParticipants;
+    }
+
+    /**
+     * Set expenseModule
+     *
+     * @param \AppBundle\Entity\module\ExpenseModule $expenseModule
+     *
+     * @return ExpenseProposal
+     */
+    public function setExpenseModule(\AppBundle\Entity\module\ExpenseModule $expenseModule = null)
+    {
+        $this->expenseModule = $expenseModule;
+
+        return $this;
+    }
+
+    /**
+     * Get expenseModule
+     *
+     * @return \AppBundle\Entity\module\ExpenseModule
+     */
+    public function getExpenseModule()
+    {
+        return $this->expenseModule;
     }
 }

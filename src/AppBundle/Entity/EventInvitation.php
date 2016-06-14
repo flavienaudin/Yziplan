@@ -34,6 +34,16 @@ class EventInvitation
     private $event;
 
     /***********************************************************************
+     *                      Jointures
+     ***********************************************************************/
+    
+    /**
+     * @var ProposalElementResponse
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\module\ProposalElementResponse", mappedBy="eventInvitation")
+     */
+    private $proposalElementResponse;
+    /***********************************************************************
      *                      Getters and Setters
      ***********************************************************************/
     
@@ -69,5 +79,46 @@ class EventInvitation
     public function getEvent()
     {
         return $this->event;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->proposalElementResponse = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add proposalElementResponse
+     *
+     * @param \AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse
+     *
+     * @return EventInvitation
+     */
+    public function addProposalElementResponse(\AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse)
+    {
+        $this->proposalElementResponse[] = $proposalElementResponse;
+
+        return $this;
+    }
+
+    /**
+     * Remove proposalElementResponse
+     *
+     * @param \AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse
+     */
+    public function removeProposalElementResponse(\AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse)
+    {
+        $this->proposalElementResponse->removeElement($proposalElementResponse);
+    }
+
+    /**
+     * Get proposalElementResponse
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProposalElementResponse()
+    {
+        return $this->proposalElementResponse;
     }
 }

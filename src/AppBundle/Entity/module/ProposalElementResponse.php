@@ -58,10 +58,10 @@ class ProposalElementResponse
     /**
      * @var ModuleInvitation
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\ModuleInvitation", inversedBy="proposalElementResponse")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EventInvitation", inversedBy="proposalElementResponse")
      * @ORM\JoinColumn(name="module_invitation_id", referencedColumnName="id")
      */
-    private $moduleInvitation;
+    private $eventInvitation;
 
     /***********************************************************************
      *                      Getters and Setters
@@ -165,5 +165,29 @@ class ProposalElementResponse
     {
         $this->moduleInvitation = $moduleInvitation;
         return $this;
+    }
+
+    /**
+     * Set eventInvitation
+     *
+     * @param \AppBundle\Entity\EventInvitation $eventInvitation
+     *
+     * @return ProposalElementResponse
+     */
+    public function setEventInvitation(\AppBundle\Entity\EventInvitation $eventInvitation = null)
+    {
+        $this->eventInvitation = $eventInvitation;
+
+        return $this;
+    }
+
+    /**
+     * Get eventInvitation
+     *
+     * @return \AppBundle\Entity\EventInvitation
+     */
+    public function getEventInvitation()
+    {
+        return $this->eventInvitation;
     }
 }
