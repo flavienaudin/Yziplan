@@ -107,7 +107,7 @@ class ExpenseProposal
     private $listOfParticipants;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\module\ExpenseModule", inversedBy="expenseProposal")
+     * @ORM\ManyToOne(targetEntity="\AppBundle\Entity\module\ExpenseModule", inversedBy="expenseProposals")
      * @ORM\JoinColumn(name="expense_module_id", referencedColumnName="id")
      *
      * @var ExpenseModule

@@ -9,7 +9,9 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\AppUser;
 use AppBundle\Utils\FlashBagTypes;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,7 +34,7 @@ class EventController extends Controller
     {
         $eventManager = $this->get('at.manager.event');
 
-        if($eventManager->retrieveEvent($token)){
+        if ($eventManager->retrieveEvent($token)) {
             $currentEvent = $eventManager->getEvent();
             return $this->render('AppBundle:Event:event.html.twig', array(
                 'event' => $currentEvent
@@ -40,6 +42,17 @@ class EventController extends Controller
         }
         $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator.default')->trans("event.error.message.unauthorized_access"));
         return $this->redirectToRoute('home');
+    }
 
+    /**
+     * @Route("/{_locale)/app-user/{appUserId}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="appUser")
+     * @ParamConverter("appUser", class="AppBundle:AppUser", options={"id":"appUserId"})
+     * @ Security(is_granted('APPUSER_SHOW', appUser)") // TODO definir AppUserAuthorizationVoter
+     */
+    public function displayAppUserPartialAction(AppUser $appUser, Request $request)
+    {
+        return $this->render("@App/Event/partials/appUserCard.html.twig",[
+            "appUser" => $appUser
+        ]);
     }
 }
