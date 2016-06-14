@@ -32,7 +32,7 @@ class EventController extends Controller
     {
         $eventManager = $this->get('at.manager.event');
 
-        if($eventManager->retrieveEvent($token)){
+        if ($eventManager->retrieveEvent($token)) {
             $currentEvent = $eventManager->getEvent();
             return $this->render('AppBundle:Event:event.html.twig', array(
                 'event' => $currentEvent
@@ -40,6 +40,5 @@ class EventController extends Controller
         }
         $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator.default')->trans("event.error.message.unauthorized_access"));
         return $this->redirectToRoute('home');
-
     }
 }
