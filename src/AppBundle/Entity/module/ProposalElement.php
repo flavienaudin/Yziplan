@@ -67,7 +67,7 @@ class ProposalElement
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ProposalElementResponse", mappedBy="ProposalElement")
+     * @ORM\OneToMany(targetEntity="ProposalElementResponse", mappedBy="proposalElement")
      */
     private $proposalElementResponses;
 
