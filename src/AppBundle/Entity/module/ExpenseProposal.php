@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity\module;
 
-use AppBundle\Entity\AppUser;
 use AppBundle\Entity\EventInvitation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -113,8 +112,8 @@ class ExpenseProposal
      * @var ExpenseModule
      */
     private $expenseModule;
-    
-    
+
+
     /**
      * Constructor
      */
