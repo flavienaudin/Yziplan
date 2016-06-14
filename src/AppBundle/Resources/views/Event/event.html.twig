@@ -27,13 +27,13 @@
                     kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk
                     beaize akjzeb ialz eaz eeae, azelaze anzk e aze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize
                 </div>
-                <div class="card-footer">
-                </div>
+                <div class="card-footer"></div>
             </div>
 
             <div class="card" id="module2">
                 <div class="card-header">
-                    <h2>Module 2<small><a href="#">Top</a></small>
+                    <h2>Module 2
+                        <small><a href="#">Top</a></small>
                     </h2>
                 </div>
                 <div class="card-body card-padding">
@@ -46,20 +46,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-4">
-            <div class="card" id="bottom-1">
-                <div class="card-header">
-                    <h1>Organisateur</h1>
-                </div>
-                <div class="card-body card-padding">
-                    ae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae,
-                    azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze
-                    anzk eaze kazel azk b eaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk
-                    eaze kazel azk beaize akjzeb i alz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze
-                </div>
-                <div class="card-footer">
-
-                </div>
-            </div>
+            {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.id})) }}
 
             <div class="card" id="bottom">
                 <div class="card-header">
