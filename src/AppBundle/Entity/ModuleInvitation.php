@@ -46,6 +46,14 @@ class ModuleInvitation
      */
     private $module;
 
+    /**
+     * @var EventInvitation
+     *
+     * @ORM\ManyToOne(targetEntity="EventInvitation", inversedBy="modulesInvitations")
+     * @ORM\JoinColumn(name="event_invitation_id", referencedColumnName="id")
+     */
+    private $eventInvitation;
+
 
     /***********************************************************************
      *                      Getters and Setters
@@ -107,5 +115,29 @@ class ModuleInvitation
     public function getModule()
     {
         return $this->module;
+    }
+
+    /**
+     * Set eventInvitation
+     *
+     * @param \AppBundle\Entity\EventInvitation $eventInvitation
+     *
+     * @return ModuleInvitation
+     */
+    public function setEventInvitation(\AppBundle\Entity\EventInvitation $eventInvitation = null)
+    {
+        $this->eventInvitation = $eventInvitation;
+
+        return $this;
+    }
+
+    /**
+     * Get eventInvitation
+     *
+     * @return \AppBundle\Entity\EventInvitation
+     */
+    public function getEventInvitation()
+    {
+        return $this->eventInvitation;
     }
 }

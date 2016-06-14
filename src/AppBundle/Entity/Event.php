@@ -71,10 +71,10 @@ class Event
      ***********************************************************************/
 
     /**
-     * @var AppUser
+     * @var EventInvitation
      *
-     * @ORM\ManyToOne(targetEntity="AppUser", inversedBy="createdEvent")
-     * @ORM\JoinColumn(name="app_user_id", referencedColumnName="id")
+     * @ORM\OneToOne(targetEntity="EventInvitation", inversedBy="createdEvent")
+     * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
      */
     private $creator;
     
@@ -325,16 +325,15 @@ class Event
     {
         return $this->responseDeadline;
     }
-    
 
     /**
      * Set creator
      *
-     * @param AppUser $creator
+     * @param \AppBundle\Entity\EventInvitation $creator
      *
      * @return Event
      */
-    public function setCreator(AppUser $creator = null)
+    public function setCreator(\AppBundle\Entity\EventInvitation $creator = null)
     {
         $this->creator = $creator;
 
@@ -344,7 +343,7 @@ class Event
     /**
      * Get creator
      *
-     * @return AppUser
+     * @return \AppBundle\Entity\EventInvitation
      */
     public function getCreator()
     {

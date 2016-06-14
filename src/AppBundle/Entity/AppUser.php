@@ -40,17 +40,9 @@ class AppUser
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Event", mappedBy="creator")
+     * @ORM\OneToMany(targetEntity="EventInvitation", mappedBy="appUser")
      */
-    private $createdEvent;
-    
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->createdEvent = new \Doctrine\Common\Collections\ArrayCollection();
-    }
+    private $eventInvitations;
 
     /**
      * Get id
@@ -85,38 +77,45 @@ class AppUser
     {
         return $this->user;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->eventInvitations = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
-     * Add createdEvent
+     * Add eventInvitation
      *
-     * @param \AppBundle\Entity\Event $createdEvent
+     * @param \AppBundle\Entity\EventInvitation $eventInvitation
      *
      * @return AppUser
      */
-    public function addCreatedEvent(\AppBundle\Entity\Event $createdEvent)
+    public function addEventInvitation(\AppBundle\Entity\EventInvitation $eventInvitation)
     {
-        $this->createdEvent[] = $createdEvent;
+        $this->eventInvitations[] = $eventInvitation;
 
         return $this;
     }
 
     /**
-     * Remove createdEvent
+     * Remove eventInvitation
      *
-     * @param \AppBundle\Entity\Event $createdEvent
+     * @param \AppBundle\Entity\EventInvitation $eventInvitation
      */
-    public function removeCreatedEvent(\AppBundle\Entity\Event $createdEvent)
+    public function removeEventInvitation(\AppBundle\Entity\EventInvitation $eventInvitation)
     {
-        $this->createdEvent->removeElement($createdEvent);
+        $this->eventInvitations->removeElement($eventInvitation);
     }
 
     /**
-     * Get createdEvent
+     * Get eventInvitations
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getCreatedEvent()
+    public function getEventInvitations()
     {
-        return $this->createdEvent;
+        return $this->eventInvitations;
     }
 }

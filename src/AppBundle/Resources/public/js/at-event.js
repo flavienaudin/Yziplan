@@ -19,9 +19,15 @@ $(document).ready(function () {
                     var jsonData = JSON.parse(row[column.id]);
                     if (jsonData.hasOwnProperty("avatars")) {
                         for (var i = 0; i < jsonData.avatars.length; i++) {
+                            var avatarSrc = "";
+                            var pseudo = "";
                             if (jsonData.avatars[i].hasOwnProperty("avatarSrc")) {
-                                resultat = resultat + "<img class='avatar-img' src='" + jsonData.avatars[i].avatarSrc + "' />";
+                                avatarSrc = jsonData.avatars[i].avatarSrc
                             }
+                            if (jsonData.avatars[i].hasOwnProperty("pseudo")) {
+                                pseudo = jsonData.avatars[i].pseudo
+                            }
+                            resultat = resultat + "<img class='avatar-img' src='" + avatarSrc + "' alt='" + pseudo + "'  />";
                         }
                     }
                 } catch (error) {
