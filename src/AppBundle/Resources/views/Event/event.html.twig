@@ -6,30 +6,18 @@
 {% endblock mainMenu_listItems %}
 
 {% block event_content %}
-
-    <div class="c-header">
-        <h2>{{ event.name }}
-            <small>{{ event.description }}</small>
-        </h2>
+    <div class="card" id="module1">
+        <div class="card-header ch-img" style="background-image: url({{ asset("uploads/events/default/evt-img1.jpg") }}); height: 250px;">
+            <h2>{{ event.name }}</h2>
+        </div>
+        <div class="card-body card-padding"><p>{{ event.description }}</p></div>
+        <div class="card-footer"></div>
     </div>
+
+
+
     <div class="row">
         <div class="col-xs-12 col-sm-8">
-            <div class="card" id="module1">
-                <div class="card-header">
-                    <h2>Module 1</h2>
-                </div>
-                <div class="card-body card-padding">
-
-                    ae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae,
-                    azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze
-                    anzk eaze kazel azk b eaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk
-                    eaze kazel azk beaize akjzeb i alz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze
-                    kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk
-                    beaize akjzeb ialz eaz eeae, azelaze anzk e aze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize
-                </div>
-                <div class="card-footer"></div>
-            </div>
-
             <div class="card" id="module2">
                 <div class="card-header">
                     <h2>Module 2
@@ -46,7 +34,9 @@
         </div>
 
         <div class="col-xs-12 col-sm-4">
-            {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.id})) }}
+            {% if event.creator is not null %}
+                {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.id})) }}
+            {% endif %}
 
             <div class="card" id="bottom">
                 <div class="card-header">

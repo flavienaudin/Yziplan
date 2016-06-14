@@ -67,7 +67,7 @@ class User extends FosUser
     /**
      * @var UserAbout
      *
-     * @ORM\OneToOne(targetEntity="ATUserBundle\Entity\UserAbout", inversedBy="user", cascade={"persist", "remove"}, orphanRemoval=true )
+     * @ORM\OneToOne(targetEntity="ATUserBundle\Entity\UserAbout", inversedBy="user", cascade={"persist"})
      * @ORM\JoinColumn(name="user_about_id", referencedColumnName="id")
      */
     private $userAbout;
@@ -87,7 +87,7 @@ class User extends FosUser
     private $passwordKnown = false;
 
     /**
-     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\AppUser", mappedBy="user")
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\AppUser", mappedBy="user", cascade={"persist"})
      *
      * @var AppUser
      */
@@ -101,6 +101,8 @@ class User extends FosUser
         parent::__construct();
         $this->userAbout = new UserAbout();
         $this->userAbout->setUser($this);
+        $this->appUser = new AppUser();
+        $this->appUser->setUser($this);
     }
 
     public function __toString()
