@@ -86,4 +86,41 @@ class PaymentModule
     {
         return $this->module;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getEmitter()
+    {
+        return $this->emitter;
+    }
+
+    /**
+     * @param mixed $emitter
+     * @return PaymentModule
+     */
+    public function setEmitter($emitter)
+    {
+        $this->emitter = $emitter;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRecipient()
+    {
+        return $this->recipient;
+    }
+
+    /**
+     * @param mixed $recipient
+     * @return PaymentModule
+     */
+    public function setRecipient($recipient)
+    {
+        $this->recipient = $recipient;
+        return $this;
+    }
+
 }

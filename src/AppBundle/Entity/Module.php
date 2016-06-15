@@ -87,7 +87,7 @@ class Module
 
     /**
      * @ORM\OneToOne(targetEntity="PaymentModule", mappedBy="module")
-     * 
+     *
      * @var PaymentModule
      */
     private $paymentModule;
@@ -101,14 +101,14 @@ class Module
      *
      * @var ArrayCollection
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\module\PollModule", mappedBy="module")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\module\PollModule", mappedBy="module", cascade={"persist"})
      */
     private $pollModule;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\module\ExpenseModule", mappedBy="module")
+     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\module\ExpenseModule", mappedBy="module", cascade={"persist"})
      */
     private $expenseModule;
 
@@ -137,11 +137,11 @@ class Module
     /**
      * Set event
      *
-     * @param \AppBundle\Entity\Event $event
+     * @param Event $event
      *
      * @return Module
      */
-    public function setEvent(\AppBundle\Entity\Event $event = null)
+    public function setEvent(Event $event = null)
     {
         $this->event = $event;
 
@@ -370,6 +370,7 @@ class Module
     public function setPollModule(\AppBundle\Entity\module\PollModule $pollModule = null)
     {
         $this->pollModule = $pollModule;
+        $pollModule->setModule($this);
 
         return $this;
     }
@@ -394,6 +395,7 @@ class Module
     public function setExpenseModule(\AppBundle\Entity\module\ExpenseModule $expenseModule = null)
     {
         $this->expenseModule = $expenseModule;
+        $expenseModule->setModule($this);
 
         return $this;
     }

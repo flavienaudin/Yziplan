@@ -16,6 +16,8 @@ use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\ExpenseModule;
 use AppBundle\Entity\module\ExpenseProposal;
+use AppBundle\Entity\module\PollModule;
+use AppBundle\Entity\module\Proposal;
 use AppBundle\Manager\GenerateursToken;
 use ATUserBundle\Entity\User;
 use ATUserBundle\Manager\UtilisateurManager;
@@ -55,7 +57,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $userprincipal->setPlainPassword('user1');
         $userprincipal->setPasswordKnown(true);
         $userprincipal->setEnabled(true);
-        // Update the user
+        // Update the user for password
         $userManager->updateUser($userprincipal, true);
 
 
@@ -66,10 +68,10 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $userInvite->setPlainPassword('user2');
         $userInvite->setPasswordKnown(true);
         $userInvite->setEnabled(true);
-        // Update the user
+        // Update the user for password
         $userManager->updateUser($userInvite, true);
 
-
+        
         //Event
         $event = new Event();
         $event->setName("Test d'evenement");
@@ -78,32 +80,20 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $event->setStatus(EventStatus::IN_ORGANIZATION);
         $event->setDescription("Nouvel événément super cool de test. C'est donc sa description");
 
-        $manager->persist($event);
-        $manager->flush();
-
         //EventInvitation Creator
         $eventInvitationCreator = new EventInvitation();
-        $eventInvitationCreator->setAppUser($userprincipal->getAppUser());
-
-        $eventInvitationCreator->setEvent($event);
-        $eventInvitationCreator->setCreatedEvent($event);
-        $event->setCreator($eventInvitationCreator);
+        $userprincipal->getAppUser()->addEventInvitation($eventInvitationCreator);
         $event->addEventInvitation($eventInvitationCreator);
+        $event->setCreator($eventInvitationCreator);
 
-        //EventInvitation Creator
+        //EventInvitation Invite
         $eventInvitation = new EventInvitation();
-        $eventInvitation->setAppUser($userInvite->getAppUser());
-        $eventInvitation->setCreatedEvent($event);
+        $userInvite->getAppUser()->addEventInvitation($eventInvitation);
         $event->addEventInvitation($eventInvitation);
-
-        $manager->persist($eventInvitationCreator);
-        $manager->persist($eventInvitation);
-        $manager->merge($event);
-        $manager->flush();
-
 
         //Module
         $module = new Module();
+        $event->addModule($module);
         $module->setName("Test Expense Module");
         $module->setDescription("Ceci est une super description.
 
@@ -111,21 +101,11 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $module->setToken("12345");
         $module->setTokenEdition("543221");
         $module->setStatus(EventStatus::IN_ORGANIZATION);
-        $module->setEvent($event);
-        $event->addModule($module);
-
-        $manager->persist($module);
-        $manager->flush();
 
        //Module specifique pour les depenses
         $expenseModule = new ExpenseModule();
-        $expenseModule->setModule();
-        $expenseModule->setModule($module);
         $module->setExpenseModule($expenseModule);
-
-        $manager->persist($expenseModule);
-        $manager->flush();
-
+        
         $expenseProposal = new ExpenseProposal();
         $expenseProposal->setName("Restaurant");
         $expenseProposal->setAmount(12);
@@ -134,11 +114,8 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $expenseProposal->setPayer($eventInvitationCreator);
         $expenseProposal->addListOfParticipant($eventInvitationCreator);
         $expenseProposal->addListOfParticipant($eventInvitation);
-        $expenseProposal->setExpenseModule($expenseModule);
-
-        $manager->persist($expenseProposal);
-        $manager->flush();
-
+        $expenseModule->addExpenseProposal($expenseProposal);
+        
         $expenseProposal2 = new ExpenseProposal();
         $expenseProposal2->setName("Restaurant2");
         $expenseProposal2->setAmount(36);
@@ -147,10 +124,26 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $expenseProposal2->setPayer($eventInvitation);
         $expenseProposal2->addListOfParticipant($eventInvitationCreator);
         $expenseProposal2->addListOfParticipant($eventInvitation);
-        $expenseProposal2->setExpenseModule($expenseModule);
+        $expenseModule->addExpenseProposal($expenseProposal2);
 
-        $manager->persist($expenseProposal2);
+        // Module Poll
+        $modulePoll = new Module();
+        $event->addModule($modulePoll);
+        $modulePoll->setName("Module Quand");
+        $modulePoll->setDescription("C'est un chouette module");
+        $modulePoll->setToken("quand123");
+        $modulePoll->setTokenEdition("quand321");
+        $modulePoll->setStatus(EventStatus::IN_ORGANIZATION);
+
+        $pollModule = new PollModule();
+        $modulePoll->setPollModule($pollModule);
+
+        $pollProposal = new Proposal();
+        $pollProposal->setName("PollModuleProposal Nom");
+        $pollProposal->setDescription("PollModule Proposal description");
+        $pollModule->addProposal($pollProposal);
+
+        $manager->persist($event);
         $manager->flush();
-
     }
 }

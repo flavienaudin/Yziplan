@@ -57,11 +57,11 @@ class AppUser
     /**
      * Set user
      *
-     * @param \ATUserBundle\Entity\User $user
+     * @param User $user
      *
      * @return AppUser
      */
-    public function setUser(\ATUserBundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 
@@ -71,7 +71,7 @@ class AppUser
     /**
      * Get user
      *
-     * @return \ATUserBundle\Entity\User
+     * @return User
      */
     public function getUser()
     {
@@ -82,19 +82,20 @@ class AppUser
      */
     public function __construct()
     {
-        $this->eventInvitations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->eventInvitations = new ArrayCollection();
     }
 
     /**
      * Add eventInvitation
      *
-     * @param \AppBundle\Entity\EventInvitation $eventInvitation
+     * @param EventInvitation $eventInvitation
      *
      * @return AppUser
      */
-    public function addEventInvitation(\AppBundle\Entity\EventInvitation $eventInvitation)
+    public function addEventInvitation(EventInvitation $eventInvitation)
     {
         $this->eventInvitations[] = $eventInvitation;
+        $eventInvitation->setAppUser($this);
 
         return $this;
     }
@@ -102,9 +103,9 @@ class AppUser
     /**
      * Remove eventInvitation
      *
-     * @param \AppBundle\Entity\EventInvitation $eventInvitation
+     * @param EventInvitation $eventInvitation
      */
-    public function removeEventInvitation(\AppBundle\Entity\EventInvitation $eventInvitation)
+    public function removeEventInvitation(EventInvitation $eventInvitation)
     {
         $this->eventInvitations->removeElement($eventInvitation);
     }

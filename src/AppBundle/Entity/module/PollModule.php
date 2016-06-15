@@ -29,7 +29,7 @@ class PollModule
 
     /**
      * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Module", inversedBy="pollModule")
-     * @ORM\JoinColumn(name="module_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="module_id", referencedColumnName="id")
      *
      * @var Module
      */
@@ -38,7 +38,7 @@ class PollModule
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Proposal", mappedBy="pollModule")
+     * @ORM\OneToMany(targetEntity="Proposal", mappedBy="pollModule", cascade={"persist"})
      */
     private $proposals;
 
@@ -67,11 +67,11 @@ class PollModule
     /**
      * Set module
      *
-     * @param \AppBundle\Entity\Module $module
+     * @param Module $module
      *
      * @return PollModule
      */
-    public function setModule(\AppBundle\Entity\Module $module = null)
+    public function setModule(Module $module = null)
     {
         $this->module = $module;
 
@@ -81,7 +81,7 @@ class PollModule
     /**
      * Get module
      *
-     * @return \AppBundle\Entity\Module
+     * @return Module
      */
     public function getModule()
     {
@@ -91,13 +91,14 @@ class PollModule
     /**
      * Add proposal
      *
-     * @param \AppBundle\Entity\module\Proposal $proposal
+     * @param Proposal $proposal
      *
      * @return PollModule
      */
-    public function addProposal(\AppBundle\Entity\module\Proposal $proposal)
+    public function addProposal(Proposal $proposal)
     {
         $this->proposals[] = $proposal;
+        $proposal->setPollModule($this);
 
         return $this;
     }
@@ -105,9 +106,9 @@ class PollModule
     /**
      * Remove proposal
      *
-     * @param \AppBundle\Entity\module\Proposal $proposal
+     * @param Proposal $proposal
      */
-    public function removeProposal(\AppBundle\Entity\module\Proposal $proposal)
+    public function removeProposal(Proposal $proposal)
     {
         $this->proposals->removeElement($proposal);
     }
@@ -115,7 +116,7 @@ class PollModule
     /**
      * Get proposals
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
     public function getProposals()
     {

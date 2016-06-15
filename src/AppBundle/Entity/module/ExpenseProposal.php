@@ -119,7 +119,7 @@ class ExpenseProposal
      */
     public function __construct()
     {
-        $this->listOfParticipants = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->listOfParticipants = new ArrayCollection();
     }
 
     /**
@@ -279,11 +279,11 @@ class ExpenseProposal
     /**
      * Set creator
      *
-     * @param \AppBundle\Entity\EventInvitation $creator
+     * @param EventInvitation $creator
      *
      * @return ExpenseProposal
      */
-    public function setCreator(\AppBundle\Entity\EventInvitation $creator = null)
+    public function setCreator(EventInvitation $creator = null)
     {
         $this->creator = $creator;
 
@@ -293,7 +293,7 @@ class ExpenseProposal
     /**
      * Get creator
      *
-     * @return \AppBundle\Entity\EventInvitation
+     * @return EventInvitation
      */
     public function getCreator()
     {
@@ -303,11 +303,11 @@ class ExpenseProposal
     /**
      * Set payer
      *
-     * @param \AppBundle\Entity\EventInvitation $payer
+     * @param EventInvitation $payer
      *
      * @return ExpenseProposal
      */
-    public function setPayer(\AppBundle\Entity\EventInvitation $payer = null)
+    public function setPayer(EventInvitation $payer = null)
     {
         $this->payer = $payer;
 
@@ -317,7 +317,7 @@ class ExpenseProposal
     /**
      * Get payer
      *
-     * @return \AppBundle\Entity\EventInvitation
+     * @return EventInvitation
      */
     public function getPayer()
     {
@@ -327,11 +327,11 @@ class ExpenseProposal
     /**
      * Add listOfParticipant
      *
-     * @param \AppBundle\Entity\EventInvitation $listOfParticipant
+     * @param EventInvitation $listOfParticipant
      *
      * @return ExpenseProposal
      */
-    public function addListOfParticipant(\AppBundle\Entity\EventInvitation $listOfParticipant)
+    public function addListOfParticipant(EventInvitation $listOfParticipant)
     {
         $this->listOfParticipants[] = $listOfParticipant;
 
@@ -341,9 +341,9 @@ class ExpenseProposal
     /**
      * Remove listOfParticipant
      *
-     * @param \AppBundle\Entity\EventInvitation $listOfParticipant
+     * @param EventInvitation $listOfParticipant
      */
-    public function removeListOfParticipant(\AppBundle\Entity\EventInvitation $listOfParticipant)
+    public function removeListOfParticipant(EventInvitation $listOfParticipant)
     {
         $this->listOfParticipants->removeElement($listOfParticipant);
     }
@@ -351,7 +351,7 @@ class ExpenseProposal
     /**
      * Get listOfParticipants
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
     public function getListOfParticipants()
     {
@@ -361,11 +361,11 @@ class ExpenseProposal
     /**
      * Set expenseModule
      *
-     * @param \AppBundle\Entity\module\ExpenseModule $expenseModule
+     * @param ExpenseModule $expenseModule
      *
      * @return ExpenseProposal
      */
-    public function setExpenseModule(\AppBundle\Entity\module\ExpenseModule $expenseModule = null)
+    public function setExpenseModule(ExpenseModule $expenseModule = null)
     {
         $this->expenseModule = $expenseModule;
 
@@ -375,7 +375,7 @@ class ExpenseProposal
     /**
      * Get expenseModule
      *
-     * @return \AppBundle\Entity\module\ExpenseModule
+     * @return ExpenseModule
      */
     public function getExpenseModule()
     {

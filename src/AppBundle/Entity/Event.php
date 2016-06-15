@@ -73,7 +73,7 @@ class Event
     /**
      * @var EventInvitation
      *
-     * @ORM\OneToOne(targetEntity="EventInvitation", inversedBy="createdEvent")
+     * @ORM\OneToOne(targetEntity="EventInvitation", inversedBy="createdEvent", cascade={"persist"})
      * @ORM\JoinColumn(name="creator_event_invitation_id", referencedColumnName="id", nullable=true)
      */
     private $creator;
@@ -81,14 +81,14 @@ class Event
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Module", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="Module", mappedBy="event", cascade={"persist"})
      */
     private $modules;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="EventInvitation", mappedBy="event")
+     * @ORM\OneToMany(targetEntity="EventInvitation", mappedBy="event", cascade={"persist"})
      */
     private $eventInvitations;
 
@@ -124,6 +124,7 @@ class Event
     public function addModule(Module $module)
     {
         $this->modules[] = $module;
+        $module->setEvent($this);
 
         return $this;
     }
@@ -158,6 +159,7 @@ class Event
     public function addEventInvitation(EventInvitation $eventInvitation)
     {
         $this->eventInvitations[] = $eventInvitation;
+        $eventInvitation->setEvent($this);
 
         return $this;
     }
@@ -329,13 +331,16 @@ class Event
     /**
      * Set creator
      *
-     * @param \AppBundle\Entity\EventInvitation $creator
+     * @param EventInvitation $creator
      *
      * @return Event
      */
-    public function setCreator(\AppBundle\Entity\EventInvitation $creator = null)
+    public function setCreator(EventInvitation $creator = null)
     {
         $this->creator = $creator;
+        if($creator!=null) {
+            $creator->setCreatedEvent($this);
+        }
 
         return $this;
     }
@@ -343,7 +348,7 @@ class Event
     /**
      * Get creator
      *
-     * @return \AppBundle\Entity\EventInvitation
+     * @return EventInvitation
      */
     public function getCreator()
     {

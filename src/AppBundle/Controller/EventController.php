@@ -10,6 +10,7 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\AppUser;
+use AppBundle\Entity\Module;
 use AppBundle\Utils\FlashBagTypes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -51,8 +52,30 @@ class EventController extends Controller
      */
     public function displayAppUserPartialAction(AppUser $appUser, Request $request)
     {
-        return $this->render("@App/Event/partials/appUserCard.html.twig",[
+        return $this->render("@App/Event/partials/appUserCard.html.twig", [
             "appUser" => $appUser
         ]);
+    }
+
+    /**
+     * @Route("/{_locale)/module/{moduleId}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayModule")
+     * @ParamConverter("module", class="AppBundle:Module", options={"id":"moduleId"})
+     * @ Security(is_granted('MODULE_SHOW', module)") // TODO definir ModuleAuthorizationVoter
+     */
+    public function displayModulePartialAction(Module $module, Request $request)
+    {
+        if ($module->getPollModule() != null) {
+            return $this->render("@App/Event/module/displayPollModule.html.twig", [
+                "module" => $module
+            ]);
+        } elseif ($module->getExpenseModule() != null) {
+            return $this->render("@App/Event/module/displayExpenseModule.html.twig", [
+                "module" => $module
+            ]);
+        }else{
+            return $this->render("@App/Event/module/displayModule.html.twig", [
+                "module" => $module
+            ]);
+        }
     }
 }

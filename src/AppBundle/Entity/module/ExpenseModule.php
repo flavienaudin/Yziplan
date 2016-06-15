@@ -29,7 +29,7 @@ class ExpenseModule
 
     /**
      * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Module", inversedBy="expenseModule")
-     * @ORM\JoinColumn(name="module_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="module_id", referencedColumnName="id")
      *
      * @var Module
      */
@@ -38,7 +38,7 @@ class ExpenseModule
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\module\ExpenseProposal", mappedBy="expenseModule")
+     * @ORM\OneToMany(targetEntity="\AppBundle\Entity\module\ExpenseProposal", mappedBy="expenseModule", cascade={"persist"})
      */
     private $expenseProposals;
 
@@ -97,6 +97,7 @@ class ExpenseModule
     public function addExpenseProposal(\AppBundle\Entity\module\ExpenseProposal $expenseProposal)
     {
         $this->expenseProposals[] = $expenseProposal;
+        $expenseProposal->setExpenseModule($this);
 
         return $this;
     }

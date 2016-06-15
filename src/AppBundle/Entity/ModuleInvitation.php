@@ -49,7 +49,7 @@ class ModuleInvitation
     /**
      * @var EventInvitation
      *
-     * @ORM\ManyToOne(targetEntity="EventInvitation", inversedBy="modulesInvitations")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EventInvitation", inversedBy="moduleInvitations")
      * @ORM\JoinColumn(name="event_invitation_id", referencedColumnName="id")
      */
     private $eventInvitation;

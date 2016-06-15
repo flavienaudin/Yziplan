@@ -1,0 +1,30 @@
+<div class="card {% block moduleCardClass %}{% endblock %}" id="{{ module.name|replace(' ',"_") }}">
+    <div class="card-header {% block moduleHeaderClass %}{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
+        {% block moduleHeader %}
+            <h2>{{ module.name }}
+                <small><a href="#">Top</a></small>
+            </h2>
+        {% endblock moduleHeader %}
+    </div>
+    <div class="card-body card-padding {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
+        {% block moduleBody %}
+            <dl>
+                <dt>Description</dt>
+                <dd>{{ module.description|nl2br|raw }}</dd>
+            </dl>
+            <dl class="dl-horizontal">
+                <dt>Status</dt>
+                <dd>{{ module.status|trans }}</dd>
+            </dl>
+
+            {% if module.paymentModule is not null %}
+                {#{{ include("@App/Event/module/displayPaymentModule.html.twig", {"module":module}) }}#}
+            {% endif %}
+
+        {% endblock moduleBody %}
+    </div>
+    <div class="card-footer">
+        {% block moduleFooter %}
+        {% endblock moduleFooter %}
+    </div>
+</div>

@@ -56,7 +56,7 @@ class EventInvitation
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ModuleInvitation", mappedBy="module")
+     * @ORM\OneToMany(targetEntity="ModuleInvitation", mappedBy="eventInvitation")
      */
     private $moduleInvitations;
     

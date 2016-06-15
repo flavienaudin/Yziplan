@@ -196,6 +196,7 @@ class ProposalElement
     public function addProposalElementResponse(ProposalElementResponse $proposalElementResponse)
     {
         $this->proposalElementResponses[] = $proposalElementResponse;
+        $proposalElementResponse->setProposalElement($this);
 
         return $this;
     }

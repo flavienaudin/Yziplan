@@ -115,6 +115,7 @@ class Proposal
     public function addProposalElement(\AppBundle\Entity\module\ProposalElement $proposalElement)
     {
         $this->proposalElements[] = $proposalElement;
+        $proposalElement->setProposal($this);
 
         return $this;
     }

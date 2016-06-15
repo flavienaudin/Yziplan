@@ -1,41 +1,71 @@
 {% extends "@App/Event/layout.html.twig" %}
 
 {% block mainMenu_listItems %}
-    <li><a href="#module1">Module 1</a></li>
-    <li><a href="#module2">Module 2</a></li>
+    {% for module in event.modules %}
+        <li><a href="#{{ module.name|replace(' ','_') }}">{{ module.name|capitalize }}</a></li>
+    {% endfor %}
 {% endblock mainMenu_listItems %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock stylesheets %}
 
 {% block event_content %}
     <div class="card" id="module1">
         <div class="card-header ch-img" style="background-image: url({{ asset("uploads/events/default/evt-img1.jpg") }}); height: 250px;">
             <h2>{{ event.name }}</h2>
+            <div class="dropdown add-module-menu">
+                <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
+                <ul class="dropdown-menu pull-right">
+                    <li>
+                        <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i>
+                            <small>Sondage Quand ?</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Teal bg zmdi zmdi-map"></i>
+                            <small>Sondage Où ?</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help"></i>
+                            <small>Sondage Quoi ?</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Yellow-900 bg zmdi zmdi-money-box"></i>
+                            <small>Cagnotte</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Green bg zmdi zmdi-format-list-bulleted"></i>
+                            <small>Qui apporte quoi ?</small>
+                        </a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Purple bg zmdi zmdi-balance-wallet"></i>
+                            <small>Comptes entre amis</small>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="card-body card-padding"><p>{{ event.description }}</p></div>
+        <div class="card-body card-padding">
+            <p>{{ event.description }}</p>
+        </div>
         <div class="card-footer"></div>
     </div>
 
-
-
     <div class="row">
         <div class="col-xs-12 col-sm-8">
-            <div class="card" id="module2">
-                <div class="card-header">
-                    <h2>Module 2
-                        <small><a href="#">Top</a></small>
-                    </h2>
-                </div>
-                <div class="card-body card-padding">
-                    kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ia lz eaz eeae, azelaze anzk eaze kazel
-                    azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk
-                    beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz ee
-                </div>
-                <div class="card-footer"></div>
-            </div>
+            {% for module in event.modules %}
+                {{ render(controller("AppBundle:Event:displayModulePartial", {"moduleId":module.id} )) }}
+            {% endfor %}
         </div>
 
         <div class="col-xs-12 col-sm-4">
             {% if event.creator is not null %}
-                {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.id})) }}
+                {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.appUser.id})) }}
             {% endif %}
 
             <div class="card" id="bottom">
@@ -54,3 +84,8 @@
         </div>
     </div>
 {% endblock event_content %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
+{% endblock %}
