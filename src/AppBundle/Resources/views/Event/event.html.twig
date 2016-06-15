@@ -14,41 +14,43 @@
     <div class="card" id="module1">
         <div class="card-header ch-img" style="background-image: url({{ asset("uploads/events/default/evt-img1.jpg") }}); height: 250px;">
             <h2>{{ event.name }}</h2>
-            <div class="dropdown add-module-menu">
-                <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
-                <ul class="dropdown-menu pull-right">
-                    <li>
-                        <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i>
-                            <small>Sondage Quand ?</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Teal bg zmdi zmdi-map"></i>
-                            <small>Sondage Où ?</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help"></i>
-                            <small>Sondage Quoi ?</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Yellow-900 bg zmdi zmdi-money-box"></i>
-                            <small>Cagnotte</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Green bg zmdi zmdi-format-list-bulleted"></i>
-                            <small>Qui apporte quoi ?</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Purple bg zmdi zmdi-balance-wallet"></i>
-                            <small>Comptes entre amis</small>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            {% if allowEdit %}
+                <div class="dropdown add-module-menu">
+                    <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                            <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i>
+                                <small>Sondage Quand ?</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Teal bg zmdi zmdi-map"></i>
+                                <small>Sondage Où ?</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help"></i>
+                                <small>Sondage Quoi ?</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Yellow-900 bg zmdi zmdi-money-box"></i>
+                                <small>Cagnotte</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Green bg zmdi zmdi-format-list-bulleted"></i>
+                                <small>Qui apporte quoi ?</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Purple bg zmdi zmdi-balance-wallet"></i>
+                                <small>Comptes entre amis</small>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            {% endif %}
         </div>
         <div class="card-body card-padding">
             <p>{{ event.description }}</p>
@@ -67,20 +69,6 @@
             {% if event.creator is not null %}
                 {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.appUser.id})) }}
             {% endif %}
-
-            <div class="card" id="bottom">
-                <div class="card-header">
-                    <h1>Infos</h1>
-                </div>
-                <div class="card-body card-padding">
-                    ae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae,
-                    azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze
-                    anzk eaze kazel azk b eaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk eaze kazel azk beaize akjzeb ialz eaz eeae, azelaze anzk
-                </div>
-                <div class="card-footer">
-
-                </div>
-            </div>
         </div>
     </div>
 {% endblock event_content %}

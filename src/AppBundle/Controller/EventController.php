@@ -11,6 +11,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\AppUser;
 use AppBundle\Entity\Module;
+use AppBundle\Form\EventFormType;
+use AppBundle\Security\EventVoter;
 use AppBundle\Utils\FlashBagTypes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,16 +31,30 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/{_locale}/evenement/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEvent")
+     * @Route("/{_locale}/evenement/{token}/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEvent")
      */
-    public function displayEventAction($token, Request $request)
+    public function displayEventAction($token, $tokenEdition = null, Request $request)
     {
         $eventManager = $this->get('at.manager.event');
 
         if ($eventManager->retrieveEvent($token)) {
             $currentEvent = $eventManager->getEvent();
+
+            $allowEdit = (($tokenEdition == $currentEvent->getTokenEdition()) && $this->isGranted(EventVoter::EDITER, $currentEvent))
+                || (($tokenEdition == null) && $this->isGranted(EventVoter::EDITER, $currentEvent));
+
+            if($allowEdit){
+                $eventForm=$this->createForm(EventFormType::class, $currentEvent);
+                $eventForm->handleRequest($request);
+                if($eventForm->isValid()){
+                    // TODO
+                }
+            }
+
+
             return $this->render('AppBundle:Event:event.html.twig', array(
-                'event' => $currentEvent
+                'event' => $currentEvent,
+                'allowEdit' => $allowEdit
             ));
         }
         $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator.default')->trans("event.error.message.unauthorized_access"));
@@ -72,7 +88,7 @@ class EventController extends Controller
             return $this->render("@App/Event/module/displayExpenseModule.html.twig", [
                 "module" => $module
             ]);
-        }else{
+        } else {
             return $this->render("@App/Event/module/displayModule.html.twig", [
                 "module" => $module
             ]);

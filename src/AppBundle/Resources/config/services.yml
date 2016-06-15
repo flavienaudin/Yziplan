@@ -10,3 +10,17 @@ services:
   at.manager.event:
     class: AppBundle\Manager\EventManager
     arguments: ['@doctrine.orm.entity_manager']
+
+
+# Voters
+  at.voter.event:
+    class: AppBundle\Security\EventVoter
+    public: false
+    tags:
+      - { name: security.voter }
+
+  at.voter.eventInvitation:
+    class: AppBundle\Security\EventInvitationVoter
+    public: false
+    tags:
+      - { name: security.voter }
