@@ -8,18 +8,162 @@
     <div class="pull-left m-r-10">
         <img class="avatar-img a-lg" src="{{ asset("bundles/app/img/test/contact/1.jpg") }}" alt="">
     </div>
-    <h2>{{ module.name }}
-        <small>{{ module.description|nl2br|raw }}</small>
-    </h2>
+    <h2>{{ module.name }} </h2>
     <a data-toggle="modal" href="#addPayment">
         <button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
     </a>
 {% endblock moduleHeader %}
 
+{% block moduleInformationClass %}m-t-20{% endblock %}
+{% block moduleInformationAttributs %}{% endblock %}
 
 {% block moduleBodyClass %}m-t-20{% endblock %}
 {% block moduleBodyAttributs %}{% endblock %}
+
+{% block moduleInformation %}
+    {{ parent() }}
+{% endblock moduleInformation %}
+
 {% block moduleBody %}
+    {{ parent() }}
+    <div role="tabpanel">
+        <ul class="tab-nav" role="tablist">
+            <li class="active"><a href="#displayExpense" aria-controls="displayExpense" role="tab" data-toggle="tab" aria-expanded="false">Dépenses</a></li>
+            <li class=""><a href="#balanceExpense" aria-controls="profile11" role="tab" data-toggle="tab" aria-expanded="true">Equilibre</a></li>
+            <li class=""><a href="#preferenceExpense" aria-controls="preferenceExpense" role="tab" data-toggle="tab" aria-expanded="false">Paramètre</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="displayExpense">
+                <div class="table-responsive">
+                    <table id="event-data-table-expense-1" class="table bootgrid-table table-condensed" aria-busy="false">
+                        <thead>
+                        <tr>
+                            <th data-column-id="Qui" data-formatter="image">Qui</th>
+                            <th data-column-id="Quoi">Quoi</th>
+                            <th data-column-id="Combien">Combien</th>
+                            <th data-column-id="PourVous">Pour Vous</th>
+                            <th data-column-id="Quand">Quand</th>
+                            <th data-column-id="PourQui" data-formatter="image">Pour Qui</th>
+                            <th data-column-id="Info">Info</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for proposal in module.expenseModule.expenseProposals %}
+                            <tr data-row-id="{{ proposal.id }}">
+                                <td>
+                                    {% if proposal.creator.appUser.user.avatar is defined
+                                    and proposal.creator.appUser.user.avatar is not null %}
+                                        {"avatars" : [{"avatarSrc" : "{{ asset(proposal.creator.appUser.user.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}] }
+                                    {% else %}
+                                        {"avatars" : [{"pseudo" : "{{ proposal.creator.name }}"}] }
+                                    {% endif %}
+                                </td>
+                                <td>{{ proposal.name }}</td>
+                                <td>{{ proposal.amount|number_format(2, ',', '') }}</td>
+                                <td>To define</td>
+                                <td>{{ proposal.expenseDate|date("d/m/Y") }}</td>
+                                <td>
+                                     {#Construction du Json avec la liste des participants#}
+                                    {"avatars" : [
+                                    {% set firstElt = true %}
+                                    {% for participant in proposal.listOfParticipants %}
+                                        {% if firstElt %}
+                                            {% set firstElt = false %}
+                                        {% else %}
+                                            ,
+                                        {% endif %}
+                                        {% if participant.appUser.user.avatar is defined
+                                                    and participant.appUser.user.avatar is not null %}
+                                            {"avatarSrc" : "{{ asset(proposal.creator.appUser.user.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}
+                                        {% else %}
+                                            {"pseudo" : "{{ participant.name }}"}
+                                        {% endif %}
+                                    {% endfor %}
+                                    ]}
+                                </td>
+                                <td class="p-5">
+                                    Ajouter information et édition
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="balanceExpense">
+                <p>Morbi mattis ullamcorper velit. Etiam rhoncus. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Cras id dui. Curabitur turpis. Etiam ut purus mattis mauris sodales
+                    aliquam. Aenean viverra rhoncus pede. Nulla sit amet est. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Praesent ac sem eget est egestas volutpat. Cras varius.
+                    Morbi mollis tellus ac sapien. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Fusce vel dui.</p>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="preferenceExpense">
+                <p>Etiam rhoncus. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Cras id dui. Curabitur turpis. Etiam ut purus mattis mauris sodales aliquam. Aenean viverra rhoncus
+                    pede. Nulla sit amet est. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Praesent ac sem eget est egestas volutpat. Cras varius. Morbi mollis tellus ac sapien.
+                    In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Fusce vel dui.Morbi mattis ullamcorper velit.
+                    Etiam rhoncus. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Cras id dui. Curabitur turpis. Etiam ut purus mattis mauris sodales aliquam. Aenean viverra rhoncus
+                    pede. Nulla sit amet est. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Praesent ac sem eget est egestas volutpat. Cras varius. Morbi mollis tellus ac sapien.
+                    In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Fusce vel dui.</p>
+            </div>
+        </div>
+    </div>
+
+    {#</div>#}
+
+
+    <div class="modal fade" id="addPayment" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Ajouter un paiement</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group fg-float m-b-30">
+                        <div class="fg-line">
+                            <input class="form-control input-sm" type="email"> <label class="fg-label">Payeur</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group fg-float m-b-30">
+                        <div class="fg-line">
+                            <input class="form-control input-sm" type="email"> <label class="fg-label">Pour</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group fg-float m-b-30">
+                        <div class="fg-line">
+                            <input class="form-control input-sm" type="email"> <label class="fg-label">Montant</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group fg-float m-b-30">
+                        <div class="fg-line">
+                            <input class="form-control input-sm" type="email"> <label class="fg-label">Raison</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group fg-float">
+                        <div class="fg-line">
+                            <textarea style="overflow: hidden; word-wrap: break-word; height: 43px;" data-autosize-on="true" class="form-control auto-size input-sm"></textarea> <label
+                                    class="fg-label">Message</label>
+                        </div>
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-info waves-effect">Valider</button>
+                    <button class="btn btn-info waves-effect">Valider et ajouter une autre dépense</button>
+                    <button class="btn btn-link waves-effect">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock moduleBody %}
+
+    {% block moduleFooter %}{% endblock moduleFooter %}
+
+{#{% block moduleBody %}
+    {{ parent() }}
     <div role="tabpanel">
         <ul class="tab-nav" role="tablist">
             <li class="active"><a href="#displayExpense" aria-controls="displayExpense" role="tab" data-toggle="tab" aria-expanded="false">Dépenses</a></li>
@@ -59,10 +203,10 @@
                                             class="zmdi icon zmdi-info zmdi-hc-2x"></span> </a>
                             </td>
                         </tr>
-                        {#<tr aria-expanded="false" style="height: 0px;" id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+                        #}{#<tr aria-expanded="false" style="height: 0px;" id="collapseTwo" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
                             <td class="text-left p-5"><i class="zmdi zmdi-arrow-right"></i></td>
                             <td class="text-left p-5" colspan="5">Ceci est un test pour dire que c'est pour payer des saussices</td>
-                        </tr>#}
+                        </tr>#}{#
                         <tr data-row-id="1">
                             <td class="text-left p-5" style="">{"avatars" : [ {"avatarSrc" : "{{ asset("bundles/app/img/test/contact/1.jpg") }}"}] }</td>
                             <td class="text-left p-5" style="">Un truc</td>
@@ -204,7 +348,7 @@
         </div>
     </div>
 
-    {#</div>#}
+    #}{#</div>#}{#
 
 
     <div class="modal fade" id="addPayment" tabindex="-1" role="dialog" aria-hidden="true">
@@ -255,11 +399,10 @@
             </div>
         </div>
     </div>
-{% endblock moduleBody %}
-
-    {% block moduleFooter %}{% endblock moduleFooter %}
+{% endblock moduleBody %}#}
 
     {#
+
     <div class="card popular-post">
         <div class="card-header ch-img" style="background-image: url({{ asset('bundles/app/img/module-head/05.jpg') }}); height: 150px;">
             <div class="pull-left m-r-10">
