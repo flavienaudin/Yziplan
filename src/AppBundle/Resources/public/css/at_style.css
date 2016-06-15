@@ -30,12 +30,12 @@
     width: 95px;
     margin-right: -4px;
     margin-bottom: 5px;
+    vertical-align: top;
 }
 
 .add-module-menu .dropdown-menu > li > a {
     display: block;
     text-align: center;
-    vertical-align: top;
 }
 
 .add-module-menu .dropdown-menu > li > a > small,
