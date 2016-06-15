@@ -82,12 +82,14 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
 
         //EventInvitation Creator
         $eventInvitationCreator = new EventInvitation();
+        $eventInvitationCreator->setName("Jacky");
         $userprincipal->getAppUser()->addEventInvitation($eventInvitationCreator);
         $event->addEventInvitation($eventInvitationCreator);
         $event->setCreator($eventInvitationCreator);
 
         //EventInvitation Invite
         $eventInvitation = new EventInvitation();
+        $eventInvitation->setName("Raymond");
         $userInvite->getAppUser()->addEventInvitation($eventInvitation);
         $event->addEventInvitation($eventInvitation);
 

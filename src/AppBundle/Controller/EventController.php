@@ -27,7 +27,7 @@ class EventController extends Controller
      */
     public function eventTestAction(Request $request)
     {
-        return $this->render('AppBundle:Event:evenement.html.twig');
+        return $this->render('AppBundle:Event/proto:test-event.html.twig');
     }
 
     /**

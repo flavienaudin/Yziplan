@@ -6,8 +6,8 @@
             </h2>
         {% endblock moduleHeader %}
     </div>
-    <div class="card-body card-padding {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
-        {% block moduleBody %}
+    <div class="card-body card-padding {% block moduleInformationClass %}{% endblock %}" {% block moduleInformationAttributs %}{% endblock %}>
+        {% block moduleInformation %}
             <dl>
                 <dt>Description</dt>
                 <dd>{{ module.description|nl2br|raw }}</dd>
@@ -21,6 +21,10 @@
                 {#{{ include("@App/Event/module/displayPaymentModule.html.twig", {"module":module}) }}#}
             {% endif %}
 
+        {% endblock moduleInformation %}
+    </div>
+    <div class="card-body card-padding {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
+        {% block moduleBody %}
         {% endblock moduleBody %}
     </div>
     <div class="card-footer">

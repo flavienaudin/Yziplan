@@ -28,6 +28,13 @@ class EventInvitation
     private $id;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     */
+    private $name;
+
+    /**
      * @var Event
      *
      * @ORM\ManyToOne(targetEntity="Event", inversedBy="eventInvitations")
@@ -226,4 +233,22 @@ class EventInvitation
     {
         return $this->moduleInvitations;
     }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+    
+    
 }

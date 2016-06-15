@@ -5,6 +5,7 @@
 $(document).ready(function () {
     //Basic Example
     $("[id^='event-data-table']").bootgrid({
+        caseSensitive: false,
         css: {
             icon: 'zmdi icon',
             iconColumns: 'zmdi-view-module',
@@ -21,13 +22,19 @@ $(document).ready(function () {
                         for (var i = 0; i < jsonData.avatars.length; i++) {
                             var avatarSrc = "";
                             var pseudo = "";
+                            // S'il y a un avatar
                             if (jsonData.avatars[i].hasOwnProperty("avatarSrc")) {
-                                avatarSrc = jsonData.avatars[i].avatarSrc
+                                if (jsonData.avatars[i].hasOwnProperty("pseudo")) {
+                                    pseudo = jsonData.avatars[i].pseudo
+                                }
+                                avatarSrc = jsonData.avatars[i].avatarSrc;
+                                resultat = resultat + "<img class='avatar-img' src='" + avatarSrc + "' alt='" + pseudo + "'  />";
                             }
-                            if (jsonData.avatars[i].hasOwnProperty("pseudo")) {
-                                pseudo = jsonData.avatars[i].pseudo
+                            // S'il n'y en a pas on indique la première lettre du pseudo
+                            else if (jsonData.avatars[i].hasOwnProperty("pseudo")) {
+                                pseudo = jsonData.avatars[i].pseudo;
+                                resultat = resultat + "<div class='avatar-char palette-Cyan-200 bg' name='" + pseudo + "'>" + pseudo.charAt(0).toUpperCase() + "</div>";
                             }
-                            resultat = resultat + "<img class='avatar-img' src='" + avatarSrc + "' alt='" + pseudo + "'  />";
                         }
                     }
                 } catch (error) {
