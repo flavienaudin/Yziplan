@@ -12,6 +12,7 @@ namespace AppBundle\DataFixtures\ORM;
 use AppBundle\Entity\AppUser;
 use AppBundle\Entity\enum\EventStatus;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\ExpenseModule;
 use AppBundle\Entity\module\ExpenseProposal;
@@ -57,6 +58,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         // Update the user
         $userManager->updateUser($userprincipal, true);
 
+
         /** @var $userInvite User */
         $userInvite = $userManager->createUser();
         $userInvite->setUsername('user2@at.fr');
@@ -66,6 +68,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $userInvite->setEnabled(true);
         // Update the user
         $userManager->updateUser($userInvite, true);
+
 
         //Event
         $event = new Event();
@@ -78,27 +81,76 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $manager->persist($event);
         $manager->flush();
 
+        //EventInvitation Creator
+        $eventInvitationCreator = new EventInvitation();
+        $eventInvitationCreator->setAppUser($userprincipal->getAppUser());
+
+        $eventInvitationCreator->setEvent($event);
+        $eventInvitationCreator->setCreatedEvent($event);
+        $event->setCreator($eventInvitationCreator);
+        $event->addEventInvitation($eventInvitationCreator);
+
+        //EventInvitation Creator
+        $eventInvitation = new EventInvitation();
+        $eventInvitation->setAppUser($userInvite->getAppUser());
+        $eventInvitation->setCreatedEvent($event);
+        $event->addEventInvitation($eventInvitation);
+
+        $manager->persist($eventInvitationCreator);
+        $manager->persist($eventInvitation);
+        $manager->merge($event);
+        $manager->flush();
+
+
         //Module
-//        $module = new Module();
-//        $module->setName("Test Expense Module");
-//        $module->setDescription("Ceci est une super description.
-//
-//        Avec un saut à la ligne!");
-//        $module->setEvent($event);
-//        $event->addModule($module);
+        $module = new Module();
+        $module->setName("Test Expense Module");
+        $module->setDescription("Ceci est une super description.
 
-        //Module specifique pour les depenses
-//        $expenseModule = new ExpenseModule();
-//        $expenseModule->setModule();
-//        $expenseModule->setModule($module);
-//        $module->setExpenseModule($expenseModule);
+        Avec un saut à la ligne!");
+        $module->setToken("12345");
+        $module->setTokenEdition("543221");
+        $module->setStatus(EventStatus::IN_ORGANIZATION);
+        $module->setEvent($event);
+        $event->addModule($module);
 
-//        $expenseProposal = new ExpenseProposal();
-//        $expenseProposal->setName("Restaurant");
-//        $expenseProposal->setAmount(12);
-//        $expenseProposal->setExpenseDate(new \DateTime());
-//        $expenseProposal->setCreator($userprincipal->getAppUser());
-//        $expenseProposal->setPayer($userprincipal->getAppUser());
+        $manager->persist($module);
+        $manager->flush();
+
+       //Module specifique pour les depenses
+        $expenseModule = new ExpenseModule();
+        $expenseModule->setModule();
+        $expenseModule->setModule($module);
+        $module->setExpenseModule($expenseModule);
+
+        $manager->persist($expenseModule);
+        $manager->flush();
+
+        $expenseProposal = new ExpenseProposal();
+        $expenseProposal->setName("Restaurant");
+        $expenseProposal->setAmount(12);
+        $expenseProposal->setExpenseDate(new \DateTime());
+        $expenseProposal->setCreator($eventInvitationCreator);
+        $expenseProposal->setPayer($eventInvitationCreator);
+        $expenseProposal->addListOfParticipant($eventInvitationCreator);
+        $expenseProposal->addListOfParticipant($eventInvitation);
+        $expenseProposal->setExpenseModule($expenseModule);
+
+        $manager->persist($expenseProposal);
+        $manager->flush();
+
+        $expenseProposal2 = new ExpenseProposal();
+        $expenseProposal2->setName("Restaurant2");
+        $expenseProposal2->setAmount(36);
+        $expenseProposal2->setExpenseDate(new \DateTime());
+        $expenseProposal2->setCreator($eventInvitation);
+        $expenseProposal2->setPayer($eventInvitation);
+        $expenseProposal2->addListOfParticipant($eventInvitationCreator);
+        $expenseProposal2->addListOfParticipant($eventInvitation);
+        $expenseProposal2->setExpenseModule($expenseModule);
+
+        $manager->persist($expenseProposal2);
+        $manager->flush();
 
     }
 }
