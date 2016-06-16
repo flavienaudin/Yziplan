@@ -9,13 +9,17 @@
 namespace AppBundle\Manager;
 
 
+use AppBundle\Entity\AppUser;
 use AppBundle\Entity\enum\EventStatus;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\EventInvitation;
 use AppBundle\Form\EventFormType;
+use ATUserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 class EventManager
 {
@@ -69,19 +73,31 @@ class EventManager
      */
     public function retrieveEvent($token)
     {
-        $eventRep = $this->entityManager->getRepository("AppBundle:Event");
-        $this->event = $eventRep->findOneBy(array('token' => $token));
+        if ($token == null) {
+            $this->event = new Event();
+        } else {
+            $eventRep = $this->entityManager->getRepository("AppBundle:Event");
+            $this->event = $eventRep->findOneBy(array('token' => $token));
+        }
         return ($this->event instanceof Event);
     }
 
 
     /**
+     * @param $user User|string Utilisateur connecté
      * @return Form Formulaire de création/édition d'un événement
      */
-    public function initEventForm()
+    public function initEventForm($user)
     {
         if ($this->event->getStatus() == null) {
             $this->event->setStatus(EventStatus::IN_ORGANIZATION);
+        }
+        if ( $this->event->getCreator()==null && $this->authorizationChecker->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED) && $user instanceof User ) {
+            $creatorInvitation = new EventInvitation();
+            $creatorInvitation->setAppUser($user->getAppUser());
+            $creatorInvitation->setEvent($this->event);
+            $this->event->setCreator($creatorInvitation);
+            $this->event->addEventInvitation($creatorInvitation);
         }
 
         return $this->formFactory->create(EventFormType::class, $this->event);

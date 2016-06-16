@@ -33,23 +33,25 @@ class EventController extends Controller
     /**
      * @Route("/{_locale}/evenement/{token}/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEvent")
      */
-    public function displayEventAction($token, $tokenEdition = null, Request $request)
+    public function displayEventAction($token=null, $tokenEdition=null, Request $request)
     {
         $eventManager = $this->get('at.manager.event');
 
         if ($eventManager->retrieveEvent($token)) {
             $currentEvent = $eventManager->getEvent();
-
+            
             $allowEdit = (($tokenEdition == $currentEvent->getTokenEdition()) && $this->isGranted(EventVoter::EDITER, $currentEvent))
                 || (($tokenEdition == null) && $this->isGranted(EventVoter::EDITER, $currentEvent));
 
             $eventForm = null;
             if ($allowEdit) {
-                $eventForm = $eventManager->initEventForm();
+                $eventForm = $eventManager->initEventForm($this->getUser());
+                dump($eventForm);
                 $eventForm->handleRequest($request);
                 if ($eventForm->isValid()) {
                     $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
                     $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator.default')->trans("event.success.message.creation"));
+                    return $this->redirectToRoute("displayEvent", array('token' => $currentEvent->getToken()));
                 }
             }
 

@@ -33,12 +33,13 @@
 
 {%- block button_label -%}{%- endblock -%}
 
-{#{% block date_widget -%}
+{% block date_widget -%}
     {% if widget == 'single_text' %}
-        <div class="input-group date ag-date-picker" data-provide="datepicker">
+        <div class="input-group date ag-date-picker datepicker">
             <span class="input-group-addon">
-                <span class="fa fa-calendar"></span>
+                <span class="zmdi zmdi-calendar"></span>
             </span>
+            {% set attr = attr|merge({class: (attr.class|default('') ~ ' datepicker')|trim}) -%}
             {{- block('form_widget_simple') -}}
         </div>
     {% else -%}
@@ -55,31 +56,29 @@
             </div>
         {%- endif -%}
     {% endif %}
-{%- endblock date_widget %}#}
+{%- endblock date_widget %}
 
 
-{#{% block time_widget -%}#}
-    {#{% if widget == 'single_text' %}#}
-        {#{%- set type = 'text' -%}#}
-        {#<div class="input-group ag-time-picker clockpicker" data-autoclose="true">#}
-            {#<span class="input-group-addon">#}
-                {#<span class="fa fa-clock-o"></span>#}
-            {#</span>#}
-            {# {%- set attr = attr|merge({value: (attr.value|default('') ~ ' 19:00')|trim}) -%}#}
-
-            {#{{- block('form_widget_simple') -}}#}
-        {#</div>#}
-    {#{% else -%}#}
-        {#{% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}#}
-        {#{% if datetime is not defined or false == datetime -%}#}
-            {#<div {{ block('widget_container_attributes') -}}>#}
-        {#{%- endif -%}#}
-        {#{{- form_widget(form.hour) }}{% if with_minutes %}:{{ form_widget(form.minute) }}{% endif %}{% if with_seconds %}:{{ form_widget(form.second) }}{% endif %}#}
-        {#{% if datetime is not defined or false == datetime -%}#}
-            {#</div>#}
-        {#{%- endif -%}#}
-    {#{% endif %}#}
-{#{%- endblock time_widget %}#}
+{% block time_widget -%}
+    {% if widget == 'single_text' %}
+        {%- set type = 'text' -%}
+        <div class="input-group ag-time-picker clockpicker" data-autoclose="true">
+            <span class="input-group-addon">
+                <span class="zmdi zmdi-time"></span>
+            </span>
+            {{- block('form_widget_simple') -}}
+        </div>
+    {% else -%}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        {% if datetime is not defined or false == datetime -%}
+            <div {{ block('widget_container_attributes') -}}>
+        {%- endif -%}
+        {{- form_widget(form.hour) }}{% if with_minutes %}:{{ form_widget(form.minute) }}{% endif %}{% if with_seconds %}:{{ form_widget(form.second) }}{% endif %}
+        {% if datetime is not defined or false == datetime -%}
+            </div>
+        {%- endif -%}
+    {% endif %}
+{%- endblock time_widget %}
 
 {% block choice_widget_expanded -%}
     {% if '-inline' in label_attr.class|default('') -%}
