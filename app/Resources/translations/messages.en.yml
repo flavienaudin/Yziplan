@@ -46,8 +46,22 @@ landing_page:
       text: Organize yourself with your friends to know where and when to go on weekends or holidays !
 
 event:
+  form:
+    name:
+      label: Title
+      placeholder: Event title
+    image:
+      label: Change the picture
+    description:
+      label: Description
+      placeholder: Description
+    responseDeadline:
+      label: Response deadline
+      placeholder: Response deadline
   error.message:
-      unauthorized_access: You have no right to access this event.
+    unauthorized_access: You have no right to access this event.
+  success.message:
+    creation: Event created successfully.
 
 # Globals
 global:

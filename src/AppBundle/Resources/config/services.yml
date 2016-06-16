@@ -9,7 +9,7 @@ services:
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
-    arguments: ['@doctrine.orm.entity_manager']
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken']
 
 
 # Voters

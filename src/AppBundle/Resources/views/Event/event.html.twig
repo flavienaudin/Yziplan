@@ -1,19 +1,34 @@
 {% extends "@App/Event/layout.html.twig" %}
 
+{% form_theme eventForm with [_self,':Form:at_forms_layout.html.twig'] %}
+
 {% block mainMenu_listItems %}
     {% for module in event.modules %}
         <li><a href="#{{ module.name|replace(' ','_') }}">{{ module.name|capitalize }}</a></li>
     {% endfor %}
 {% endblock mainMenu_listItems %}
 
-{% block stylesheets %}
-    {{ parent() }}
-{% endblock stylesheets %}
-
 {% block event_content %}
     <div class="card" id="module1">
+
+        {% if eventForm is not null %}
+            {{ form_start(eventForm) }}
+        {% endif %}
         <div class="card-header ch-img" style="background-image: url({{ asset("uploads/events/default/evt-img1.jpg") }}); height: 250px;">
-            <h2>{{ event.name }}</h2>
+            {% if eventForm is not null %}
+
+                <div class="form-group">
+                    {{ form_label(eventForm.name, 'event.form.name.label' ,{'label_attr':{"class":"sr-only"}}) }}
+                    <div class="fg-line bg-transparent">
+                        {{ form_widget(eventForm.name, {'attr':{"class":"palette-Blue-50 bg"}}) }}
+                        {{ form_errors(eventForm.name) }}
+                    </div>
+                </div>
+                <a class="c-white"> <span class="zmdi-hc-stack zmdi-hc-2x"><i class="zmdi zmdi-square-o zmdi-hc-stack-2x"></i><i class="zmdi zmdi-camera-add zmdi-hc-stack-1x"></i></span>
+                    {{ 'event.form.image.label'|trans }}</a>
+            {% else %}
+                <h2>{{ event.name }}</h2>
+            {% endif %}
             {% if allowEdit %}
                 <div class="dropdown add-module-menu">
                     <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
@@ -52,10 +67,49 @@
                 </div>
             {% endif %}
         </div>
-        <div class="card-body card-padding">
-            <p>{{ event.description }}</p>
+        <div class="card-body card-padding p-t-25">
+            {% if eventForm is not null %}
+                <div class="form-group">
+                    {{ form_label(eventForm.description, 'event.form.description.label', {'label_attr':{'class':'sr-only'}}) }}
+                    <div class="fg-line">
+                        {{ form_widget(eventForm.description, {'attr':{'rows':3,'placeholder':'event.form.description.placeholder'|trans}}) }}
+                        {{ form_errors(eventForm.description) }}
+                    </div>
+                </div>
+
+                <div class="">
+                    {#{{ form_row(eventForm.responseDeadline, {
+                        'label':'event.form.responseDeadline.label',
+                        'label_attr':{'class':'sr-only'},
+                        'attr':{'placeholder':'event.form.responseDeadline.placeholder'}} ) }}#}
+
+                    {{ form_label(eventForm.responseDeadline, 'event.form.responseDeadline.label',{'label_attr':{'class':'sr-only'}}) }}
+                    <div class="form-inline fg-line">
+                        {{ form_widget(eventForm.responseDeadline.date, {'attr':{'class':'datepicker', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}
+                        {{ form_widget(eventForm.responseDeadline.time, {'attr':{'class':'clockpicker', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}
+                    </div>
+                    {{ form_errors(eventForm.responseDeadline) }}
+                </div>
+            {% else %}
+                <dl class="dl-horizontal">
+                    <dt>{{ "event.form.description.label"|trans }}</dt>
+                    <dd>{{ event.description }}</dd>
+                    <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
+                    <dd>{{ event.responseDeadline }}</dd>
+                </dl>
+            {% endif %}
         </div>
-        <div class="card-footer"></div>
+        <div class="card-footer card-padding-sm">
+            {% if eventForm is not null %}
+                <div class="text-right">
+                    <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if eventForm is not null %}
+            {{ form_end(eventForm) }}
+        {% endif %}
     </div>
 
     <div class="row">
@@ -73,7 +127,27 @@
     </div>
 {% endblock event_content %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.css") }}">
+
+    <style>
+        .bg-transparent {
+            opacity: 0.4;
+        }
+
+        .bg-transparent > input {
+            opacity: 1;
+        }
+
+    </style>
+{% endblock stylesheets %}
+
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('bundles/app/js/bootstrap-datetimepicker.min.js') }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.js") }}"></script>
+
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
 {% endblock %}

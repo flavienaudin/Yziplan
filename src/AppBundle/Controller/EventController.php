@@ -43,18 +43,20 @@ class EventController extends Controller
             $allowEdit = (($tokenEdition == $currentEvent->getTokenEdition()) && $this->isGranted(EventVoter::EDITER, $currentEvent))
                 || (($tokenEdition == null) && $this->isGranted(EventVoter::EDITER, $currentEvent));
 
-            if($allowEdit){
-                $eventForm=$this->createForm(EventFormType::class, $currentEvent);
+            $eventForm = null;
+            if ($allowEdit) {
+                $eventForm = $eventManager->initEventForm();
                 $eventForm->handleRequest($request);
-                if($eventForm->isValid()){
-                    // TODO
+                if ($eventForm->isValid()) {
+                    $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator.default')->trans("event.success.message.creation"));
                 }
             }
 
-
             return $this->render('AppBundle:Event:event.html.twig', array(
                 'event' => $currentEvent,
-                'allowEdit' => $allowEdit
+                'allowEdit' => $allowEdit,
+                'eventForm' => ($eventForm!=null?$eventForm->createView():null)
             ));
         }
         $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator.default')->trans("event.error.message.unauthorized_access"));

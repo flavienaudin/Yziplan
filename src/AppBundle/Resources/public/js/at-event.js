@@ -3,6 +3,14 @@
  */
 
 $(document).ready(function () {
+
+    autosize($('textarea'));
+
+    $('.clockpicker').clockpicker();
+    $('.datepicker').datetimepicker({
+        format: 'DD/MM/YYYY'
+    });
+
     //Basic Example
     $("[id^='event-data-table']").bootgrid({
         caseSensitive: false,

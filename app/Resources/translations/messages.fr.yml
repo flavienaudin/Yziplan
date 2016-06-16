@@ -46,8 +46,22 @@ landing_page:
       text: Organisez-vous avec vos amis pour savoir où et quand partir en week-end ou vacances !
 
 event:
+  form:
+    name:
+      label: Titre
+      placeholder: Titre de l'événement
+    image:
+      label: Changer l'image
+    description:
+      label: Description
+      placeholder: Description
+    responseDeadline:
+      label: Date limite de réponse
+      placeholder: Date limite de réponse
   error.message:
-      unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
+    unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
+  success.message:
+    creation: Evénement créé avec succès.
 
 # Globals
 global:

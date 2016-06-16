@@ -15,6 +15,17 @@
     background-color: #777;
 }
 
+/*-----------------------------------
+
+-----------------------------------*/
+
+.card-footer.card-padding {
+    padding: 30px 33px;
+}
+
+.card-footer.card-padding-sm {
+    padding: 15px;
+}
 
 /*----------------------------------
     Add Module
@@ -214,3 +225,5 @@
     border-color: transparent;
     background-color: transparent;
 }
+
+
