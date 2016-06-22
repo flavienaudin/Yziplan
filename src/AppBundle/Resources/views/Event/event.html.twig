@@ -6,7 +6,7 @@
 
 {% block mainMenu_listItems %}
     {% for module in event.modules %}
-        <li><a href="#{{ module.name|replace(' ','_') }}">{{ module.name|capitalize }}</a></li>
+        <li><a href="#{{ module.name|replace({' ':'_'}) }}">{{ module.name|capitalize }}</a></li>
     {% endfor %}
 {% endblock mainMenu_listItems %}
 

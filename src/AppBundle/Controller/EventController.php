@@ -46,7 +46,6 @@ class EventController extends Controller
             $eventForm = null;
             if ($allowEdit) {
                 $eventForm = $eventManager->initEventForm($this->getUser());
-                dump($eventForm);
                 $eventForm->handleRequest($request);
                 if ($eventForm->isValid()) {
                     $currentEvent = $eventManager->treatEventFormSubmission($eventForm);

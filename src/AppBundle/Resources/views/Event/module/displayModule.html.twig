@@ -1,4 +1,4 @@
-<div class="card {% block moduleCardClass %}{% endblock %}" id="{{ module.name|replace(' ',"_") }}">
+<div class="card {% block moduleCardClass %}{% endblock %}" id="{{ module.name|replace({' ':'_'}) }}">
     <div class="card-header {% block moduleHeaderClass %}{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
         {% block moduleHeader %}
             <h2>{{ module.name }}
