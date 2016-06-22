@@ -26,6 +26,8 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
 <body data-ma-header="teal">
+<script src="{{ asset("bundles/app/js/jquery.js") }}"></script>
+<script src="{{ asset("bundles/app/js/bootstrap.js") }}"></script>
 {% block header_body %}
     <header id="header" class="media">
         <div class="pull-left h-logo">
@@ -190,8 +192,6 @@
 </div><![endif]-->
 
 {% block javascripts %}
-    <script src="{{ asset("bundles/app/js/jquery.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/waves.js") }}"></script>
     <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>

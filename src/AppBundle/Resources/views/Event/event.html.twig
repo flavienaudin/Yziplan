@@ -1,120 +1,14 @@
 {% extends "@App/Event/layout.html.twig" %}
 
-{% if eventForm is not null %}
-    {% form_theme eventForm with [_self,':Form:at_forms_layout.html.twig'] %}
-{% endif %}
-
 {% block mainMenu_listItems %}
+    <li><a href="#event-header-card">{{ "global.event"|trans|capitalize }}</a></li>
     {% for module in event.modules %}
         <li><a href="#{{ module.name|replace({' ':'_'}) }}">{{ module.name|capitalize }}</a></li>
     {% endfor %}
 {% endblock mainMenu_listItems %}
 
 {% block event_content %}
-    <div class="card" id="module1">
-
-        {% if eventForm is not null %}
-            {{ form_start(eventForm) }}
-        {% endif %}
-        <div class="card-header ch-img" style="background-image: url({{ asset("uploads/events/default/evt-img1.jpg") }}); height: 250px;">
-            {% if eventForm is not null %}
-                <a class="c-white"> <span class="zmdi-hc-stack zmdi-hc-2x"><i class="zmdi zmdi-square-o zmdi-hc-stack-2x"></i><i class="zmdi zmdi-camera-add zmdi-hc-stack-1x"></i></span>
-                    {{ 'event.form.image.label'|trans }}</a>
-            {% else %}
-                <h2>{{ event.name }}</h2>
-            {% endif %}
-            {% if allowEdit %}
-                <div class="dropdown add-module-menu">
-                    <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
-                    <ul class="dropdown-menu pull-right">
-                        <li>
-                            <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i>
-                                <small>Sondage Quand ?</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Teal bg zmdi zmdi-map"></i>
-                                <small>Sondage Où ?</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help"></i>
-                                <small>Sondage Quoi ?</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Yellow-900 bg zmdi zmdi-money-box"></i>
-                                <small>Cagnotte</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a data-toggle="modal" href="#" class=""><i class="waves-effect palette-Green bg zmdi zmdi-format-list-bulleted"></i>
-                                <small>Qui apporte quoi ?</small>
-                            </a>
-                        </li>
-                        <li>
-                            <a data-toggle="modal" href="#" class=""> <i class="waves-effect palette-Purple bg zmdi zmdi-balance-wallet"></i>
-                                <small>Comptes entre amis</small>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            {% endif %}
-        </div>
-        <div class="card-body card-padding p-t-25">
-            {% if eventForm is not null %}
-                <div class="row">
-                    <div class="col-sm-7">
-                        <div class="form-group">
-                            {{ form_label(eventForm.name, 'event.form.name.label') }}
-                            <div class="fg-line">
-                                {{ form_widget(eventForm.name, {'attr':{"placeholder":"event.form.name.placeholder"}}) }}
-                                {{ form_errors(eventForm.name) }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-5">
-                        {#{{ form_row(eventForm.responseDeadline, {'attr':{'class':'', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}#}
-                        <div class="form-group">
-                            {{ form_label(eventForm.responseDeadline, 'event.form.responseDeadline.label') }}
-                            <div class="form-inline fg-line">
-                                {{ form_widget(eventForm.responseDeadline, {'attr':{'class':'', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}
-                                {#{{ form_widget(eventForm.responseDeadline.date, {'attr':{'class':'', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}
-                                {{ form_widget(eventForm.responseDeadline.time, {'attr':{'class':'', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}#}
-                            </div>
-                            {{ form_errors(eventForm.responseDeadline) }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    {{ form_label(eventForm.description, 'event.form.description.label') }}
-                    <div class="fg-line">
-                        {{ form_widget(eventForm.description, {'attr':{'rows':3,'placeholder':'event.form.description.placeholder'}}) }}
-                        {{ form_errors(eventForm.description) }}
-                    </div>
-                </div>
-            {% else %}
-                <dl class="dl-horizontal">
-                    <dt>{{ "event.form.description.label"|trans }}</dt>
-                    <dd>{{ event.description }}</dd>
-                    <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
-                    <dd>{{ event.responseDeadline|localizeddate }}</dd>
-                </dl>
-            {% endif %}
-        </div>
-        <div class="card-footer card-padding-sm">
-            {% if eventForm is not null %}
-                <div class="text-right">
-                    <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
-                </div>
-            {% endif %}
-        </div>
-
-        {% if eventForm is not null %}
-            {{ form_end(eventForm) }}
-        {% endif %}
-    </div>
+    {{ render(controller("AppBundle:Event:displayEventHeaderCard", {'event':event} )) }}
 
     <div class="row">
         <div class="col-xs-12 col-sm-8">
@@ -143,4 +37,5 @@
     <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.js") }}"></script>
 
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
+
 {% endblock %}

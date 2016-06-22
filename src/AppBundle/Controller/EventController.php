@@ -10,13 +10,20 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\AppUser;
+use AppBundle\Entity\Event;
 use AppBundle\Entity\Module;
 use AppBundle\Form\EventFormType;
+use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventVoter;
 use AppBundle\Utils\FlashBagTypes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormView;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class EventController extends Controller
@@ -33,36 +40,62 @@ class EventController extends Controller
     /**
      * @Route("/{_locale}/evenement/{token}/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEvent")
      */
-    public function displayEventAction($token=null, $tokenEdition=null, Request $request)
+    public function displayEventAction($token = null, $tokenEdition = null, Request $request)
     {
         $eventManager = $this->get('at.manager.event');
 
         if ($eventManager->retrieveEvent($token)) {
             $currentEvent = $eventManager->getEvent();
-            
-            $allowEdit = (($tokenEdition == $currentEvent->getTokenEdition()) && $this->isGranted(EventVoter::EDITER, $currentEvent))
-                || (($tokenEdition == null) && $this->isGranted(EventVoter::EDITER, $currentEvent));
 
-            $eventForm = null;
-            if ($allowEdit) {
-                $eventForm = $eventManager->initEventForm($this->getUser());
-                $eventForm->handleRequest($request);
-                if ($eventForm->isValid()) {
-                    $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
-                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator.default')->trans("event.success.message.creation"));
-                    return $this->redirectToRoute("displayEvent", array('token' => $currentEvent->getToken()));
-                }
+            if (!empty($tokenEdition)) {
+                /** @var SessionInterface $userSession */
+                $request->getSession()->set("tokenEdition", $tokenEdition);
+            } else {
+                $request->getSession()->remove("tokenEdition");
             }
 
             return $this->render('AppBundle:Event:event.html.twig', array(
-                'event' => $currentEvent,
-                'allowEdit' => $allowEdit,
-                'eventForm' => ($eventForm!=null?$eventForm->createView():null)
+                'event' => $currentEvent
             ));
         }
         $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator.default')->trans("event.error.message.unauthorized_access"));
         return $this->redirectToRoute('home');
     }
+
+
+    /**
+     * @Route("/{_locale)/event-header-card", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEventHeaderCard")
+     * @ Security(is_granted('APPUSER_SHOW', appUser)") // TODO definir AppUserAuthorizationVoter
+     */
+    public function displayEventHeaderCardAction(Event $event = null, Request $request)
+    {
+        /** @var EventManager $eventManager */
+        $eventManager = $this->get('at.manager.event');
+        if ($event == null) {
+            $event = new Event();
+        }
+        $eventManager->setEvent($event);
+        $allowEdit = false;
+        $eventForm = null;
+        if ($request->hasSession()) {
+            $tokenEdition = $request->getSession()->get("tokenEdition");
+            $allowEdit = $this->isGranted(EventVoter::EDITER, $event) && ($tokenEdition === $event->getTokenEdition() || $tokenEdition === null);
+
+            if ($allowEdit) {
+                /** @var Form $eventForm */
+                $eventForm = $eventManager->initEventForm($this->getUser());
+                $eventForm->handleRequest($request);
+                if ($eventForm->isValid()) {
+                    $event = $eventManager->treatEventFormSubmission($eventForm);
+                    return $this->redirectToRoute('displayEvent', array('token' => $event->getToken(), 'tokenEdition' => $event->getTokenEdition()));
+                }
+            }
+        }
+        return $this->render("@App/Event/partials/eventHeaderCard.html.twig", ["event" => $event,
+            "allowEdit" => $allowEdit,
+            'eventForm' => ($eventForm != null ? $eventForm->createView() : null)]);
+    }
+
 
     /**
      * @Route("/{_locale)/app-user/{appUserId}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="appUser")
