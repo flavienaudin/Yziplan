@@ -8,7 +8,7 @@
 {% endblock mainMenu_listItems %}
 
 {% block event_content %}
-    {{ render(controller("AppBundle:Event:displayEventHeaderCard", {'event':event} )) }}
+    {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'allowEdit':allowEdit, 'eventForm':eventForm}) }}
 
     <div class="row">
         <div class="col-xs-12 col-sm-8">
@@ -37,5 +37,4 @@
     <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.js") }}"></script>
 
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
-
 {% endblock %}

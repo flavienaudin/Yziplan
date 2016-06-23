@@ -4,16 +4,61 @@
 
 <div class="card" id="event-header-card">
     {% if eventForm is not null %}
-        {{ form_start(eventForm, {'action':path('displayEventHeaderCard', {'event':event}), 'attr':{'id':'eventHeader'}}) }}
+        {% if event.token is empty %}
+            {{ form_start(eventForm, {'action':path('displayEvent'), 'attr':{'id':'eventHeader'}}) }}
+        {% else %}
+            {{ form_start(eventForm, {'action':path('displayEvent',{'token':event.token,'tokenEdition':event.tokenEdition}), 'attr':{'id':'eventHeader'}}) }}
+            <script>
+                $('form#eventHeader').on("submit", function (e) {
+                    e.preventDefault();
+                    var $form = $(this);
+                    $('.has-error').each(function () {
+                        $(this).find("small.help-block").remove();
+                        $(this).removeClass("has-error");
+                    });
+                    $.ajax({
+                        url: $form.attr('action'),
+                        type: $form.attr('method'),
+                        data: $form.serialize()
+                    }).done(function (data) {
+                        console.log('Form done');
+                        if(data['html']) {
+                            $('#event-header-card').replaceWith(data['html']);
+                        }
+                        var successMessages = data['{{ constant('AppBundle\\Utils\\FlashBagTypes::SUCCESS_TYPE') }}'];
+                        successMessages.forEach(function(message) {
+                            toastr['{{ constant('AppBundle\\Utils\\FlashBagTypes::SUCCESS_TYPE') }}'](message);
+                        });
+                        autosize($('textarea'));
+                        $('.clockpicker').clockpicker();
+                        $('.datepicker').datetimepicker({
+                            format: "DD/MM/YYYY",
+                            locale: "fr",
+                            widgetPositioning: {
+                                horizontal: 'auto',
+                                vertical: 'bottom'
+                            }
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        var responseJSON = jqXHR.responseJSON;
+                        for (fieldErrorName in responseJSON.error) {
+                            var inputField = $('input[name*=' + fieldErrorName + ']');
+                            inputField.parent().addClass("has-error");
+                            inputField.after('<small class="help-block">' + responseJSON.error[fieldErrorName] + '</small>')
+                        }
+                    });
+                });
+            </script>
+        {% endif %}
     {% endif %}
-    <div class="card-header ch-img" style="background-image: url({{ asset("uploads/events/default/evt-img1.jpg") }}); height: 250px;">
+    <div class="card-header ch-img" style="background-image: url({{ asset("uploads/events/default/evt-img1.jpg") }}); height:250px;">
         {% if eventForm is not null %}
             <a class="c-white"> <span class="zmdi-hc-stack zmdi-hc-2x"><i class="zmdi zmdi-square-o zmdi-hc-stack-2x"></i><i class="zmdi zmdi-camera-add zmdi-hc-stack-1x"></i></span>
                 {{ 'event.form.image.label'|trans }}</a>
         {% else %}
             <h2>{{ event.name }}</h2>
         {% endif %}
-        {% if allowEdit %}
+        {% if allowEdit and event.token is not empty %}
             <div class="dropdown add-module-menu">
                 <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
                 <ul class="dropdown-menu pull-right">
@@ -64,13 +109,10 @@
                     </div>
                 </div>
                 <div class="col-sm-5">
-                    {#{{ form_row(eventForm.responseDeadline, {'attr':{'class':'', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}#}
                     <div class="form-group">
                         {{ form_label(eventForm.responseDeadline, 'event.form.responseDeadline.label') }}
                         <div class="form-inline fg-line">
                             {{ form_widget(eventForm.responseDeadline, {'attr':{'class':'', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}
-                            {#{{ form_widget(eventForm.responseDeadline.date, {'attr':{'class':'', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}
-                            {{ form_widget(eventForm.responseDeadline.time, {'attr':{'class':'', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}#}
                         </div>
                         {{ form_errors(eventForm.responseDeadline) }}
                     </div>

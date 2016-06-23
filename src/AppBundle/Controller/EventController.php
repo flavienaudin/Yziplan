@@ -37,15 +37,17 @@ class EventController extends Controller
         return $this->render('AppBundle:Event/proto:test-event.html.twig');
     }
 
+
     /**
      * @Route("/{_locale}/evenement/{token}/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEvent")
      */
     public function displayEventAction($token = null, $tokenEdition = null, Request $request)
     {
+        /** @var EventManager $eventManager */
         $eventManager = $this->get('at.manager.event');
-
         if ($eventManager->retrieveEvent($token)) {
             $currentEvent = $eventManager->getEvent();
+            $this->denyAccessUnlessGranted(EventVoter::DISPLAY, $currentEvent);
 
             if (!empty($tokenEdition)) {
                 /** @var SessionInterface $userSession */
@@ -54,46 +56,46 @@ class EventController extends Controller
                 $request->getSession()->remove("tokenEdition");
             }
 
-            return $this->render('AppBundle:Event:event.html.twig', array(
-                'event' => $currentEvent
-            ));
-        }
-        $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator.default')->trans("event.error.message.unauthorized_access"));
-        return $this->redirectToRoute('home');
-    }
-
-
-    /**
-     * @Route("/{_locale)/event-header-card", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEventHeaderCard")
-     * @ Security(is_granted('APPUSER_SHOW', appUser)") // TODO definir AppUserAuthorizationVoter
-     */
-    public function displayEventHeaderCardAction(Event $event = null, Request $request)
-    {
-        /** @var EventManager $eventManager */
-        $eventManager = $this->get('at.manager.event');
-        if ($event == null) {
-            $event = new Event();
-        }
-        $eventManager->setEvent($event);
-        $allowEdit = false;
-        $eventForm = null;
-        if ($request->hasSession()) {
-            $tokenEdition = $request->getSession()->get("tokenEdition");
-            $allowEdit = $this->isGranted(EventVoter::EDITER, $event) && ($tokenEdition === $event->getTokenEdition() || $tokenEdition === null);
+            $eventForm = null;
+            $allowEdit = $this->isGranted(EventVoter::EDIT, $currentEvent) && ($tokenEdition === $currentEvent->getTokenEdition() || $tokenEdition === null);
 
             if ($allowEdit) {
                 /** @var Form $eventForm */
                 $eventForm = $eventManager->initEventForm($this->getUser());
                 $eventForm->handleRequest($request);
-                if ($eventForm->isValid()) {
-                    $event = $eventManager->treatEventFormSubmission($eventForm);
-                    return $this->redirectToRoute('displayEvent', array('token' => $event->getToken(), 'tokenEdition' => $event->getTokenEdition()));
+                if ($request->isXmlHttpRequest()) {
+                    if ($eventForm->isSubmitted()) {
+                        if ($eventForm->isValid()) {
+                            $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                            $data[FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                            $data['html'] = $this->renderView("@App/Event/partials/eventHeaderCard.html.twig", array('event' => $currentEvent, 'allowEdit' => $allowEdit, 'eventForm' =>
+                                $eventForm->createView()));
+                            return new JsonResponse($data);
+                        } else {
+                            $data["error"] = array();
+                            foreach ($eventForm->getErrors(true) as $error) {
+                                $data["error"][$error->getOrigin()->getName()] = $error->getMessage();
+                            }
+                            return new JsonResponse($data, 400);
+                        }
+                    }
+                } else {
+                    if ($eventForm->isValid()) {
+                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken(), 'tokenEdition' => $currentEvent->getTokenEdition()));
+                    }
                 }
             }
+
+            return $this->render('AppBundle:Event:event.html.twig', array(
+                    'event' => $currentEvent,
+                    "allowEdit" => $allowEdit,
+                    'eventForm' => ($eventForm != null ? $eventForm->createView() : null))
+            );
+
         }
-        return $this->render("@App/Event/partials/eventHeaderCard.html.twig", ["event" => $event,
-            "allowEdit" => $allowEdit,
-            'eventForm' => ($eventForm != null ? $eventForm->createView() : null)]);
+        $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator.default')->trans("event.error.message.unauthorized_access"));
+        return $this->redirectToRoute('home');
     }
 
 
@@ -104,9 +106,9 @@ class EventController extends Controller
      */
     public function displayAppUserPartialAction(AppUser $appUser, Request $request)
     {
-        return $this->render("@App/Event/partials/appUserCard.html.twig", [
+        return $this->render("@App/Event/partials/appUserCard.html.twig", array(
             "appUser" => $appUser
-        ]);
+        ));
     }
 
     /**
