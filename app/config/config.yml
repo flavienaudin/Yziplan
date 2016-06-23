@@ -115,7 +115,7 @@ fos_user:
 hwi_oauth:
     firewall_names: [main]
     # optional target_path_parameter to provide an explicit return URL
-    #target_path_parameter: home
+    #target_path_parameter: _target_path
     # ne pas utiliser le referer sinon redirection vers le formulaire de login
     use_referer: false
     connect:

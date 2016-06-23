@@ -19,6 +19,9 @@ register:
   text:
     #email_register: Inscription avec un e-mail
     already_an_account: Déjà un compte ?
+  form_field:
+    email: E-mail
+    pseudo: Pseudo
   validation:
     email_already_used: Cet adresse e-mail est déjà utilisée
   check_email:

@@ -20,8 +20,10 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
+use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
+use Symfony\Component\Security\Http\HttpUtils;
 
-class AjaxAuthenticationHandler implements AuthenticationSuccessHandlerInterface, AuthenticationFailureHandlerInterface
+class AjaxAuthenticationHandler extends DefaultAuthenticationSuccessHandler implements AuthenticationFailureHandlerInterface
 {
     private $router;
     private $session;
@@ -33,8 +35,9 @@ class AjaxAuthenticationHandler implements AuthenticationSuccessHandlerInterface
      * @param    RouterInterface $router
      * @param    Session $session
      */
-    public function __construct(RouterInterface $router, Session $session)
+    public function __construct(HttpUtils $httpUtils, RouterInterface $router, Session $session, array $options = array())
     {
+        parent::__construct($httpUtils, $options);
         $this->router = $router;
         $this->session = $session;
     }
@@ -54,13 +57,8 @@ class AjaxAuthenticationHandler implements AuthenticationSuccessHandlerInterface
             $response = new Response(json_encode($array));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
-        } else { // if form login
-            if ($this->session->get('_security.main.target_path')) {
-                $url = $this->session->get('_security.main.target_path');
-            } else {
-                $url = $this->router->generate('home');
-            }
-            return new RedirectResponse($url);
+        } else { // if form login*/
+            return parent::onAuthenticationSuccess($request, $token);
         }
     }
 

@@ -44,6 +44,8 @@ security:
                 use_forward:  true
                 failure_path: fos_user_security_login
                 default_target_path: home
+                success_handler: at.security.ajax_authentication_handler
+                failure_handler: at.security.ajax_authentication_handler
                 resource_owners:
                     google:   "/login-oauth/check-google"
                     facebook: "/login-oauth/check-facebook"

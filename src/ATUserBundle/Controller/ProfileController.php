@@ -36,7 +36,7 @@ class ProfileController extends BaseController
     {
         $user = $this->getUser();
         if (!is_object($user) || !$user instanceof User) {
-            throw new AccessDeniedException('This user does not have access to this section.');
+            throw $this->createAccessDeniedException('This user does not have access to this section.');
         }
         /** Profile edition */
         /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */

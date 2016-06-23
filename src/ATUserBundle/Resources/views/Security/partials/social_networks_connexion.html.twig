@@ -1,15 +1,25 @@
 <div class="row m-b-25">
     {% if indication is defined and indication %}
-    <div class="col-xs-12 text-center">
-        <p><em>{{ "text.social_network_connexion"|trans }}&nbsp;:</em></p>
-    </div>
-    {%  endif %}
+        <div class="col-xs-12 text-center">
+            <p><em>{{ "text.social_network_connexion"|trans }}&nbsp;:</em></p>
+        </div>
+    {% endif %}
     <div class="col-xs-6">
-        <a href="{{ path('hwi_oauth_service_redirect',{'service':'google'}) }}" class="btn btn-lg btn-block btn-danger"> <i class="zmdi zmdi-google-plus zmdi-hc-fw"></i> <span
-                    class="hidden-xs">{{ 'text.social_network.google'|trans }}</span> </a>
+        {% if app.request.get('parentRequest') is not null %}
+            <a href="{{ path('hwi_oauth_service_redirect',{'service':'google','_target_path':url(app.request.get('parentRequest').get('_route'), app.request.get('parentRequest').get('_route_params'))}) }}"
+               class="btn btn-lg btn-block btn-danger"> <i class="zmdi zmdi-google-plus zmdi-hc-fw"></i> <span class="hidden-xs">{{ 'text.social_network.google'|trans }}</span> </a>
+        {% else %}
+            <a href="{{ path('hwi_oauth_service_redirect',{'service':'google'}) }}" class="btn btn-lg btn-block btn-danger"> <i class="zmdi zmdi-google-plus zmdi-hc-fw"></i> <span
+                        class="hidden-xs">{{ 'text.social_network.google'|trans }}</span> </a>
+        {% endif %}
     </div>
     <div class="col-xs-6">
-        <a href="{{ path('hwi_oauth_service_redirect',{'service':'facebook'}) }}" class="btn btn-lg btn-block palette-Blue-A700 bg"> <i class="zmdi zmdi-facebook zmdi-hc-fw"></i> <span
-                    class="hidden-xs">{{ 'text.social_network.facebook'|trans }}</span> </a>
+        {% if app.request.get('parentRequest') is not null %}
+        <a href="{{ path('hwi_oauth_service_redirect',{'service':'facebook','_target_path':url(app.request.get('parentRequest').get('_route'), app.request.get('parentRequest').get('_route_params'))
+        }) }}" class="btn btn-lg btn-block palette-Blue-A700 bg"> <i class="zmdi zmdi-facebook zmdi-hc-fw"></i>
+            {% else %}
+            <a href="{{ path('hwi_oauth_service_redirect',{'service':'facebook'}) }}" class="btn btn-lg btn-block palette-Blue-A700 bg"> <i class="zmdi zmdi-facebook zmdi-hc-fw"></i>
+                {% endif %}
+                <span class="hidden-xs">{{ 'text.social_network.facebook'|trans }}</span> </a>
     </div>
 </div>
