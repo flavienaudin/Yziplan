@@ -58,13 +58,136 @@
 
     <div class="card">
         <div class="card-header">
-            <h1>Bonjour Et bienvenue sur <strong>Plany</strong></h1>
+            <h1><strong>Carte de test</strong></h1>
         </div>
         <div class="card-body card-padding">
             <p>
                 <a href="{{ path("eventTest") }}" class="btn btn-primary btn-block btn-lg">Test événement</a>
                 <a href="{{ path("displayEvent", {'token':'123456789'}) }}" class="btn btn-primary btn-block btn-lg">Evenement 123456</a></p>
             <p>Landing page à faire :)</p>
+        </div>
+    </div>
+
+    <div class="card palette-Red-200 bg z-depth-3">
+        <div class="card-header">
+            <h1><strong>Fonctionnalités</strong></h1>
+        </div>
+        <div class="card-body card-padding">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card z-depth-3">
+                        <div class="card-header text-center">
+                            <h3><strong>Créez votre évènement</strong></h3>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p>Et ajoutez-y l'une de nos nombreuses fonctionnalités :</p>
+                            <div class="pmo-contact">
+                                <ul class="">
+                                    <li class="ng-binding"><i class="zmdi zmdi-help-outline"></i> Soudage (Quoi, Quand, Ou, ...)</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-check-all"></i> Qui apporte quoi</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-balance-wallet"></i> Gestion des dépenses</li>
+                                    <li class="ng-binding">Cagnotte</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-collection-image"></i> Partage de photos</li>
+                                    <li class="ng-binding">...</li>
+                                </ul>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card z-depth-3">
+                        <div class="card-header text-center">
+                            <h3><strong>Invitez vos amis</strong></h3>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p>Ils particpent </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card z-depth-3">
+                        <div class="card-header text-center">
+                            <h3><strong>Profitez de l'évènement</strong></h3>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p>Tout est organisé, il ne vous reste plus qu'à vous amuser! </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card palette-Blue-200 bg z-depth-3">
+        <div class="card-header">
+            <h1><strong>Types d'évènement</strong><br/></h1>
+            <i>Découvrez nos événements pré-configurés!</i>
+
+        </div>
+        <div class="card-body card-padding">
+            <a data-toggle="modal" href="#addModule">
+                <button class="btn palette-Teal bg waves-effect text-center m-10">
+                    <i class="zmdi zmdi-cocktail zmdi-hc-5x"></i></br>
+                    Afterwork
+                </button>
+            </a>
+            <a data-toggle="modal" href="#addModule">
+                <button class="btn palette-Yellow-900 bg waves-effect text-center m-10">
+                    <i class="zmdi zmdi-cake zmdi-hc-5x"></i></br>
+                    Anniversaire
+                </button>
+            </a>
+            <a data-toggle="modal" href="#addModule">
+                <button class="btn palette-Purple bg waves-effect text-center m-10">
+                    <i class="zmdi zmdi-movie-alt zmdi-hc-5x"></i></br>
+                    Cinémas
+                </button>
+            </a>
+            <a data-toggle="modal" href="#addModule">
+                <button class="btn palette-Green bg waves-effect text-center m-10">
+                    <i class="zmdi zmdi-flight-takeoff zmdi-hc-5x"></i></br>
+                    Vacances entre amis
+                </button>
+            </a>
+
+            <a data-toggle="modal" href="#addModule">
+                <button class="btn palette-Blue bg waves-effect text-center m-10"><i class="zmdi zmdi-calendar zmdi-hc-3x"></i></br>Sondage Quand ?</button>
+            </a>
+            <a data-toggle="modal" href="#addModule">
+                <button class="btn palette-Teal bg waves-effect text-center m-10"><i class="zmdi zmdi-map zmdi-hc-3x"></i></br>Sondage Où ?</button>
+            </a>
+            <a data-toggle="modal" href="#addModule">
+                <button class="btn palette-Deep-Orange bg waves-effect text-center m-10"><i class="zmdi zmdi-pin-help zmdi-hc-3x"></i></br>Sondage Quoi ?</button>
+            </a>
+            <a data-toggle="modal" href="#addModule">
+                <button class="btn palette-Green bg waves-effect text-center m-10"><i class="zmdi zmdi-check-square zmdi-hc-3x"></i></br>Qui apporte quoi ?</button>
+            </a>
+            <a data-toggle="modal" href="#addModule">
+                <button class="btn palette-Purple bg waves-effect text-center m-10"><i class="zmdi zmdi-balance-wallet zmdi-hc-3x"></i></br>Comptes entre amis</button>
+            </a>
+        </div>
+    </div>
+
+    <div class="card z-depth-3">
+        <div class="card-header">
+            <h1>Exemple d'évènement</h1>
+        </div>
+        <div class="card-body card-padding">
+            <p> Evenemnt pré-configuré (sondage cinémas, organisation futsal, after-work, anniversaire, vacances, ...)</p>
+        </div>
+    </div>
+
+    <div class="card palette-Green-100 bg z-depth-3">
+        <div class="card-header">
+            <h1>Ils en parlent</h1>
+        </div>
+        <div class="card-body card-padding">
+            <p>Retour d'utilisateur, de presse, lien Trustpilot, etc...</p>
+            <blockquote class="blockquote-reverse m-b-25">
+                <p>J'aime quand un plan se déroule sans accro.</p>
+                <footer><cite title="Source Title">Auteur inconnu</cite></footer>
+            </blockquote>
         </div>
     </div>
 {% endblock %}
