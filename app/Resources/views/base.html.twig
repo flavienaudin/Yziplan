@@ -82,8 +82,8 @@
             </form>
         </div>
     </header>
-    {{ render(controller('ATUserBundle:Security:login', {"display":"modal"})) }}
-    {{ render(controller('ATUserBundle:Registration:register', {"display":"modal"})) }}
+    {{ render(controller('ATUserBundle:Security:login', {"parentRequest":app.request, "display":"modal"})) }}
+    {{ render(controller('ATUserBundle:Registration:register', {"parentRequest":app.request, "display":"modal"})) }}
 {% endblock %}
 <!-- CONTENT -->
 {# Pour avoir une page AVEC un menu latéral : conserver section#main et redéfinir le block "s_main_menu" #}

@@ -20,7 +20,7 @@ services:
 # Security services
     at.security.ajax_authentication_handler:
         class: ATUserBundle\Security\AjaxAuthenticationHandler
-        arguments: ['@router',"@session"]
+        arguments: ['@security.http_utils','@router',"@session"]
 
 # EventListeners
     at.event_listener.inscription:

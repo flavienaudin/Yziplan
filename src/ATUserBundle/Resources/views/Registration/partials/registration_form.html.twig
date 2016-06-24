@@ -4,7 +4,7 @@
     <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
     <div class="fg-line">
         {{ form_widget(form.email, {"attr":{"class":"input-lg"}}) }}
-        {{ form_label(form.email, null,  {"label_attr":{"class":"fg-label"}}) }}
+        {{ form_label(form.email, "register.form_field.email",  {"label_attr":{"class":"fg-label"}}) }}
     </div>
     {{ form_errors(form.email) }}
 </div>
@@ -30,7 +30,7 @@
     <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
     <div class="fg-line">
         {{ form_widget(form.pseudo, {"attr":{"class":"input-lg"}}) }}
-        {{ form_label(form.pseudo, null, {"label_attr":{"class":"fg-label"}}) }}
+        {{ form_label(form.pseudo, "register.form_field.pseudo", {"label_attr":{"class":"fg-label"}}) }}
     </div>
 
     {{ form_errors(form.pseudo) }}
