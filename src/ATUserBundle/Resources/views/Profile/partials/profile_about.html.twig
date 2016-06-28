@@ -18,7 +18,7 @@
             </dl>
             <dl class="dl-horizontal">
                 <dt>{{ "profile.show.about.mandatory_information.pseudo.title"|trans }}</dt>
-                <dd id="pmb-view-pseduo">{{ app.user.pseudo }}</dd>
+                <dd id="pmb-view-pseudo">{{ app.user.pseudo }}</dd>
             </dl>
             <dl class="dl-horizontal">
                 <dt>{{ "profile.show.about.mandatory_information.password.title"|trans }}</dt>
@@ -44,7 +44,7 @@
         </div>
 
         <div class="pmbb-edit">
-            {{ form_start(form_mandatory_information, {'method': 'post', 'action': path('updateUserProfileAjax'), 'attr':{'id':'userMandatoryInformation',
+            {{ form_start(form_mandatory_information, {'method': 'post', 'action': path('updateUserProfile'), 'attr':{'id':'userMandatoryInformation',
                 'data-profile-pmb-block-target':'#mandatory_information'} }) }}
             <dl class="dl-horizontal">
                 <dt class="p-t-10">{{ form_label(form_mandatory_information.username, "profile.show.about.mandatory_information.username.label"|trans) }}</dt>
@@ -106,7 +106,7 @@
         </div>
 
         <div class="pmbb-edit">
-            {{ form_start(form_basic_information, {'method': 'post', 'action': path('updateUserBasicInformationAjax'), 'attr':{'id':'userBasicInformation',
+            {{ form_start(form_basic_information, {'method':'post', 'action':path('updateUserBasicInformation'), 'attr':{'id':'userBasicInformation',
                 'data-profile-pmb-block-target':'#basic_information'} }) }}
             <dl class="dl-horizontal">
                 <dt class="p-t-10">{{ form_label(form_basic_information.fullname, "profile.show.about.basic_information.fullname.label") }}</dt>
@@ -156,7 +156,7 @@
         </div>
 
         <div class="pmbb-edit">
-            {{ form_start(form_biography, {'method': 'post', 'action': path('updateUserBiographyAjax'), 'attr': {'id':'userBiography','data-profile-pmb-block-target':'#pmb-biography'} }) }}
+            {{ form_start(form_biography, {'method': 'post', 'action': path('updateUserBiography'), 'attr': {'id':'userBiography','data-profile-pmb-block-target':'#pmb-biography'}}) }}
             <div class="fg-line">
                 {{ form_label(form_biography.biography, 'profile.show.about.biography.label', {'label_attr':{'class':'sr-only'}} ) }}
                 {{ form_widget(form_biography.biography, {'attr':{'rows':5,'placeholder':'profile.show.about.biography.placeholder'|trans}} ) }}
