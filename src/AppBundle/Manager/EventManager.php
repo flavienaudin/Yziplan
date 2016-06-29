@@ -76,7 +76,7 @@ class EventManager
      */
     public function retrieveEvent($token, $tokenKey = 'token')
     {
-        if ($token == null) {
+        if (empty($token)) {
             $this->event = new Event();
         } else {
             if($tokenKey == 'token' || $tokenKey == 'tokenEdition') {
@@ -105,6 +105,7 @@ class EventManager
             $this->entityManager->persist($this->getEvent());
             $this->entityManager->flush();
         }
+        return $this->event;
     }
 
     /**

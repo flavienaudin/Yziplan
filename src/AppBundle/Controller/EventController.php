@@ -39,16 +39,26 @@ class EventController extends Controller
 
 
     /**
+     * @Route("/{_locale}/evenement", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="createEvent")
+     */
+    public function createEventAction(Request $request)
+    {
+        /** @var EventManager $eventManager */
+        $eventManager = $this->get('at.manager.event');
+        $eventManager->setEvent(new Event());
+        $currentEvent = $eventManager->initEvent();
+        return $this->redirectToRoute("displayEvent", array('token' => $currentEvent->getToken(), 'tokenEdition' => $currentEvent->getTokenEdition()));
+    }
+
+    /**
      * @Route("/{_locale}/evenement/{token}/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEvent")
      */
-    public function displayEventAction($token = null, $tokenEdition = null, Request $request)
+    public function displayEventAction($token, $tokenEdition, Request $request)
     {
         /** @var EventManager $eventManager */
         $eventManager = $this->get('at.manager.event');
         if ($eventManager->retrieveEvent($token)) {
-            $eventManager->initEvent();
             $currentEvent = $eventManager->getEvent();
-
             $this->denyAccessUnlessGranted(EventVoter::DISPLAY, $currentEvent);
 
             $eventForm = null;
