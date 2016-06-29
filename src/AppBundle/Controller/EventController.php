@@ -53,7 +53,7 @@ class EventController extends Controller
     /**
      * @Route("/{_locale}/evenement/{token}/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEvent")
      */
-    public function displayEventAction($token, $tokenEdition, Request $request)
+    public function displayEventAction($token, $tokenEdition=null, Request $request)
     {
         /** @var EventManager $eventManager */
         $eventManager = $this->get('at.manager.event');

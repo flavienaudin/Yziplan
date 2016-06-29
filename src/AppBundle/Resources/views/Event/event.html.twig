@@ -27,6 +27,7 @@
             {% if event.creator is not null %}
                 {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.appUser.id})) }}
             {% endif %}
+            {{ include("@App/Event/partials/eventTechniqueDataCard.html.twig", {"event":event}) }}
         </div>
     </div>
 
