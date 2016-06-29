@@ -1,0 +1,13 @@
+<div class="card" id="event-technique-card">
+    <div class="card-header">
+        <h2>Important</h2>
+        <small>Information à conserver</small>
+
+    </div>
+    <div class="card-body card-padding">
+        {% if allowEdit %}
+            <a href="{{ url("displayEvent",{'token':event.token,'tokenEdition':event.tokenEdition}) }}">Administration</a><br>
+        {% endif %}
+        <a href="{{ url("displayEvent",{'token':event.token}) }}">Visualisation</a>
+    </div>
+</div>
