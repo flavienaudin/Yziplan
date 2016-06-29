@@ -8,12 +8,13 @@
 
 namespace AppBundle\Controller;
 
-
 use AppBundle\Entity\AppUser;
+use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Module;
-use AppBundle\Form\EventFormType;
+use AppBundle\Entity\module\PollModule;
 use AppBundle\Manager\EventManager;
+use AppBundle\Manager\GenerateursToken;
 use AppBundle\Security\EventVoter;
 use AppBundle\Utils\FlashBagTypes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -21,6 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -44,19 +46,13 @@ class EventController extends Controller
         /** @var EventManager $eventManager */
         $eventManager = $this->get('at.manager.event');
         if ($eventManager->retrieveEvent($token)) {
+            $eventManager->initEvent();
             $currentEvent = $eventManager->getEvent();
-            $this->denyAccessUnlessGranted(EventVoter::DISPLAY, $currentEvent);
 
-            if (!empty($tokenEdition)) {
-                /** @var SessionInterface $userSession */
-                $request->getSession()->set("tokenEdition", $tokenEdition);
-            } else {
-                $request->getSession()->remove("tokenEdition");
-            }
+            $this->denyAccessUnlessGranted(EventVoter::DISPLAY, $currentEvent);
 
             $eventForm = null;
             $allowEdit = $this->isGranted(EventVoter::EDIT, $currentEvent) && ($tokenEdition === $currentEvent->getTokenEdition() || $tokenEdition === null);
-
             if ($allowEdit) {
                 /** @var Form $eventForm */
                 $eventForm = $eventManager->initEventForm($this->getUser());
@@ -65,16 +61,22 @@ class EventController extends Controller
                     if ($eventForm->isSubmitted()) {
                         if ($eventForm->isValid()) {
                             $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
-                            $data[FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data['html'] = $this->renderView("@App/Event/partials/eventHeaderCard.html.twig", array('event' => $currentEvent, 'allowEdit' => $allowEdit, 'eventForm' =>
-                                $eventForm->createView()));
-                            return new JsonResponse($data);
+                            $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                            $data['html_content'] = $this->renderView("@App/Event/partials/eventHeaderCard.html.twig", array(
+                                    'event' => $currentEvent,
+                                    'allowEdit' => $allowEdit,
+                                    'eventForm' => $eventForm->createView()
+                                )
+                            );
+                            return new JsonResponse($data, Response::HTTP_OK);
                         } else {
-                            $data["error"] = array();
+                            $data["formErrors"] = array();
                             foreach ($eventForm->getErrors(true) as $error) {
-                                $data["error"][$error->getOrigin()->getName()] = $error->getMessage();
+                                $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
                             }
-                            return new JsonResponse($data, 400);
+                            // TODO remove
+                            $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("profile.message.update.error");
+                            return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     }
                 } else {
@@ -86,10 +88,10 @@ class EventController extends Controller
             }
 
             return $this->render('AppBundle:Event:event.html.twig', array(
-                    'event' => $currentEvent,
-                    "allowEdit" => $allowEdit,
-                    'eventForm' => ($eventForm != null ? $eventForm->createView() : null))
-            );
+                'event' => $currentEvent,
+                "allowEdit" => $allowEdit,
+                'eventForm' => ($eventForm != null ? $eventForm->createView() : null)
+            ));
 
         }
         $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator.default')->trans("event.error.message.unauthorized_access"));
@@ -107,27 +109,5 @@ class EventController extends Controller
         return $this->render("@App/Event/partials/appUserCard.html.twig", array(
             "appUser" => $appUser
         ));
-    }
-
-    /**
-     * @Route("/{_locale)/module/{moduleId}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayModule")
-     * @ParamConverter("module", class="AppBundle:Module", options={"id":"moduleId"})
-     * @ Security(is_granted('MODULE_SHOW', module)") // TODO definir ModuleAuthorizationVoter
-     */
-    public function displayModulePartialAction(Module $module, Request $request)
-    {
-        if ($module->getPollModule() != null) {
-            return $this->render("@App/Event/module/displayPollModule.html.twig", [
-                "module" => $module
-            ]);
-        } elseif ($module->getExpenseModule() != null) {
-            return $this->render("@App/Event/module/displayExpenseModule.html.twig", [
-                "module" => $module
-            ]);
-        } else {
-            return $this->render("@App/Event/module/displayModule.html.twig", [
-                "module" => $module
-            ]);
-        }
     }
 }

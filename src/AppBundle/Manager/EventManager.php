@@ -13,6 +13,7 @@ use AppBundle\Entity\AppUser;
 use AppBundle\Entity\enum\EventStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
+use AppBundle\Entity\Module;
 use AppBundle\Form\EventFormType;
 use ATUserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -35,18 +36,19 @@ class EventManager
     /** @var GenerateursToken */
     private $generateursToken;
 
+    /** @var ModuleManager */
+    private $moduleManager;
+
     /** @var Event L'événement en cours de traitement */
     private $event;
 
-    /** @var boolean */
-    private $sendRecapEmail;
-
-    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory, GenerateursToken $generateurToken)
+    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory, GenerateursToken $generateurToken, ModuleManager $moduleManager)
     {
         $this->entityManager = $doctrine;
         $this->authorizationChecker = $authorizationChecker;
         $this->formFactory = $formFactory;
         $this->generateursToken = $generateurToken;
+        $this->moduleManager = $moduleManager;
     }
 
     /**
@@ -69,37 +71,55 @@ class EventManager
 
     /**
      * @param $token string Le token de l'événement à récupérer
+     * @param $tokenKey string La clé du token à utiliser : token ou tokenEdition
      * @return bool true Si un événement est trouvé
      */
-    public function retrieveEvent($token)
+    public function retrieveEvent($token, $tokenKey = 'token')
     {
         if ($token == null) {
             $this->event = new Event();
         } else {
-            $eventRep = $this->entityManager->getRepository("AppBundle:Event");
-            $this->event = $eventRep->findOneBy(array('token' => $token));
+            if($tokenKey == 'token' || $tokenKey == 'tokenEdition') {
+                $eventRep = $this->entityManager->getRepository("AppBundle:Event");
+                $this->event = $eventRep->findOneBy(array($tokenKey => $token));
+            }
         }
         return ($this->event instanceof Event);
     }
 
+    /**
+     * @return Event l'événement initialisé en cours de création
+     */
+    public function initEvent()
+    {
+        if ($this->event->getStatus() == null) {
+            $this->event->setStatus(EventStatus::IN_CREATION);
+        }
+        if(empty($this->event->getToken())){
+            $this->event->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+        }
+        if(empty($this->event->getTokenEdition())){
+            $this->event->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+        }
+        if(empty($this->getEvent()->getId())){
+            $this->entityManager->persist($this->getEvent());
+            $this->entityManager->flush();
+        }
+    }
 
     /**
-     * @param $user User|string Utilisateur connecté
+     * @param $user User|string Utilisateur connecté (ou anonyme)
      * @return Form Formulaire de création/édition d'un événement
      */
     public function initEventForm($user)
     {
-        if ($this->event->getStatus() == null) {
-            $this->event->setStatus(EventStatus::IN_ORGANIZATION);
-        }
-        if ( $this->event->getCreator()==null && $this->authorizationChecker->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED) && $user instanceof User ) {
+        if ($this->event->getCreator() == null && $this->authorizationChecker->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED) && $user instanceof User) {
             $creatorInvitation = new EventInvitation();
             $creatorInvitation->setAppUser($user->getAppUser());
             $creatorInvitation->setEvent($this->event);
             $this->event->setCreator($creatorInvitation);
             $this->event->addEventInvitation($creatorInvitation);
         }
-
         return $this->formFactory->create(EventFormType::class, $this->event);
     }
 
@@ -124,6 +144,19 @@ class EventManager
         $this->entityManager->flush();
 
         return $this->event;
+    }
+
+    /**
+     * Crée et ajoute un module à l'événement
+     * @param $type string Le type du module à créer et à ajouter à l'événement
+     * @return Module le module créé
+     */
+    public function addModule($type){
+        $module = $this->moduleManager->createModule($type);
+        $this->event->addModule($module);
+        $this->entityManager->persist($this->event);
+        $this->entityManager->flush();
+        return $module; 
     }
 
 }

@@ -76,6 +76,8 @@ global:
     cancel: Cancel
     submit: Submit
     save: Save
+    nextStep: Next step
+    delete: Delete
   success:
     data_saved: Information saved
   error:
@@ -83,6 +85,7 @@ global:
     unauthorized_access: You haven't access to this section.
 
 status:
+  in_creation: Being created
   in_organization: Being organized
   awaiting_validation: Awaiting validation
   validated: Validated

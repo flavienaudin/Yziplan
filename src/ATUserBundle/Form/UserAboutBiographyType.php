@@ -19,7 +19,7 @@ class UserAboutBiographyType extends AbstractType
     {
         $builder
             ->add("biography", TextareaType::class, array(
-                "required" => false,
+                "required" => false
             ));
     }
 

@@ -1,9 +1,55 @@
-<div class="card {% block moduleCardClass %}{% endblock %}" id="{{ module.name|replace({' ':'_'}) }}">
+<div class="card {% block moduleCardClass %}{% endblock %}" id="module-{{ module.token }}">
     <div class="card-header {% block moduleHeaderClass %}{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
         {% block moduleHeader %}
             <h2>{{ module.name }}
                 <small><a href="#">Top</a></small>
+
             </h2>
+            {% if allowEdit is defined and allowEdit %}
+            <ul class="actions">
+                <li class="dropdown">
+                    <a href="" data-toggle="dropdown"><i class="zmdi zmdi-more-vert"></i></a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li>
+                            <a href="#">Editer</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('removeEventModule', {'tokenEdition':module.tokenEdition}) }}" id="removeModule{{ module.tokenEdition }}" data-target="{{ module.token }}">
+                                {{ "global.button.delete"|trans }}</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <script>
+                $('a#removeModule{{ module.tokenEdition }}').on('click', function (e) {
+                    $.ajax({
+                        url: $(this).attr("href"),
+                        type: 'post'
+                    }).done(function (response, textStatus, xhr) {
+                        if(response.actionResult===true){
+                            $('#module-{{ module.token }}').remove();
+                        }
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        // nothing
+                    }).always(function (responseDataOrJSON) {
+                        if (responseDataOrJSON.responseJSON) {
+                            responseDataOrJSON = responseDataOrJSON.responseJSON;
+                        }
+                        if (responseDataOrJSON.messages) {
+                            var messages = responseDataOrJSON.messages;
+                            for (var messageType in messages) {
+                                if (messages.hasOwnProperty(messageType)) {
+                                    messages[messageType].forEach(function (mess) {
+                                        toastr[messageType](mess);
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    return false;
+                });
+            </script>
+            {% endif %}
         {% endblock moduleHeader %}
     </div>
     <div class="card-body card-padding {% block moduleInformationClass %}{% endblock %}" {% block moduleInformationAttributs %}{% endblock %}>

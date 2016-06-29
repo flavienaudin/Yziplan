@@ -33,28 +33,44 @@ $('form').on("submit", function (e) {
         url: $form.attr('action'),
         type: $form.attr('method'),
         data: $form.serialize()
-    }).done(function (data) {
-        if (data.error) {
-            toastr['error'](data.message);
-        } else {
-            if (data.message) {
-                toastr['success'](data.message);
+    }).done(function (responseData, textStatus, jqXHR) {
+        // update form's inputs
+        if (responseData.data) {
+            for (var inputTarget in responseData.data) {
+                if (responseData.data.hasOwnProperty(inputTarget)) {
+                    $('#pmb-view-' + inputTarget).html((responseData.data[inputTarget]));
+                }
             }
-            // update form's inputs
-            for (inputTarget in data.data) {
-                $('#pmb-view-' + inputTarget).html((data.data[inputTarget]));
-            }
-            // close edition block
-            var t = $form.data('profile-pmb-block-target');
-            $(t).removeClass('toggled');
         }
+        // close edition block
+        var t = $form.data('profile-pmb-block-target');
+        $(t).removeClass('toggled');
     }).fail(function (jqXHR, textStatus, errorThrown) {
         var responseJSON = jqXHR.responseJSON;
-
-        for (fieldErrorName in responseJSON.error) {
-            var inputField = $('input[name*=' + fieldErrorName + ']');
-            inputField.parent().addClass("has-error");
-            inputField.after('<small class="help-block">' + responseJSON.error[fieldErrorName] + '</small>')
+        if (responseJSON.formErrors) {
+            var formErrors = responseJSON.formErrors;
+            for (var fieldErrorName in formErrors) {
+                if (formErrors.hasOwnProperty(fieldErrorName)) {
+                    var inputField = $('input[name*=' + fieldErrorName + ']');
+                    inputField.parent().addClass("has-error");
+                    inputField.after('<small class="help-block">' + responseJSON.formErrors[fieldErrorName] + '</small>')
+                }
+            }
+        }
+    }).always(function (responseDataOrJSON) {
+        if (responseDataOrJSON.responseJSON) {
+            // In case of fail()
+            responseDataOrJSON = responseDataOrJSON.responseJSON;
+        }
+        if (responseDataOrJSON.messages) {
+            var messages = responseDataOrJSON.messages;
+            for (var messageType in messages) {
+                if (messages.hasOwnProperty(messageType)) {
+                    messages[messageType].forEach(function (mess) {
+                        toastr[messageType](mess);
+                    });
+                }
+            }
         }
     });
 

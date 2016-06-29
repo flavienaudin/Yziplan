@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\enum\ModuleStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -29,7 +30,7 @@ class Module
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
     private $name;
 
@@ -113,9 +114,9 @@ class Module
     private $expenseModule;
 
     /*******************************************************************************************************
-     *                                Getters and Setters
+     *                                Helpers
      ********************************************************************************************************/
-    
+
     /**
      * Constructor
      */
@@ -123,7 +124,11 @@ class Module
     {
         $this->moduleInvitations = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    
+    /*******************************************************************************************************
+     *                                Getters and Setters
+     ********************************************************************************************************/
+    
     /**
      * Get id
      *

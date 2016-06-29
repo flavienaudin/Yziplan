@@ -76,6 +76,8 @@ global:
     cancel: Annuler
     submit: Soumettre
     save: Sauver
+    nextStep: Prochaine étape
+    delete: Supprimer
   success:
     data_saved: Données sauvegardées
   error:
@@ -83,6 +85,7 @@ global:
     unauthorized_access: Vous n'êtes pas autorisés à accéder à cette section.
 
 status:
+  in_creation: En cours de création
   in_organization: En cours d'organisation
   awaiting_validation: En attente de validation
   validated: Validé

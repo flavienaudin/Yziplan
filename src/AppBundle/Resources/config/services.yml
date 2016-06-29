@@ -9,12 +9,21 @@ services:
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
-    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken']
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module']
 
+  at.manager.module:
+    class: AppBundle\Manager\ModuleManager
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken']
 
 # Voters
   at.voter.event:
     class: AppBundle\Security\EventVoter
+    public: false
+    tags:
+      - { name: security.voter }
+
+  at.voter.module:
+    class: AppBundle\Security\ModuleVoter
     public: false
     tags:
       - { name: security.voter }
