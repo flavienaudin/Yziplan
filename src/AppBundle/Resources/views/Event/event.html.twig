@@ -2,8 +2,8 @@
 
 {% block mainMenu_listItems %}
     <li><a href="#event-header-card">{{ "global.event"|trans|capitalize }}</a></li>
-    {% for module in event.modules %}
-        <li><a href="#{{ module.name|replace({' ':'_'}) }}">{{ module.name|capitalize }}</a></li>
+    {% for module in event.modules if module.name is not empty %}
+        <li><a href="#module-{{ module.token }}">{{ module.name|capitalize }}</a></li>
     {% endfor %}
 {% endblock mainMenu_listItems %}
 
@@ -11,9 +11,15 @@
     {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'allowEdit':allowEdit, 'eventForm':eventForm}) }}
 
     <div class="row">
-        <div class="col-xs-12 col-sm-8">
-            {% for module in event.modules %}
-                {{ render(controller("AppBundle:Event:displayModulePartial", {"moduleId":module.id} )) }}
+        <div class="col-xs-12 col-sm-8" id="eventModulesContainer">
+            {% for module in event.modules if module.status != constant("AppBundle\\Entity\\enum\\ModuleStatus::DELETED") %}
+                {% if module.pollModule is not null %}
+                    {{ include('@App/Event/module/displayPollModule.html.twig', {'module':module,'allowEdit':allowEdit}) }}
+                {% elseif module.expenseModule is not null %}
+                    {{ include('@App/Event/module/displayExpenseModule.html.twig', {'module':module,'allowEdit':allowEdit}) }}
+                {% else %}
+                    {{ include('@App/Event/module/displayModule.html.twig', {'module':module,'allowEdit':allowEdit}) }}
+                {% endif %}
             {% endfor %}
         </div>
 

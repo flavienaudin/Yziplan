@@ -15,6 +15,7 @@ namespace AppBundle\Entity\enum;
  */
 class EventStatus
 {
+    const IN_CREATION = "status.in_creation";
     const IN_ORGANIZATION = "status.in_organization";
     const AWAITING_VALIDATION="status.awaiting_validation";
     const VALIDATED="status.validated";
