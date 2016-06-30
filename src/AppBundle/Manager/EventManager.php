@@ -8,13 +8,12 @@
 
 namespace AppBundle\Manager;
 
-
-use AppBundle\Entity\AppUser;
 use AppBundle\Entity\enum\EventStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Form\EventFormType;
+use AppBundle\Form\ModuleFormType;
 use ATUserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
@@ -79,7 +78,7 @@ class EventManager
         if (empty($token)) {
             $this->event = new Event();
         } else {
-            if($tokenKey == 'token' || $tokenKey == 'tokenEdition') {
+            if ($tokenKey == 'token' || $tokenKey == 'tokenEdition') {
                 $eventRep = $this->entityManager->getRepository("AppBundle:Event");
                 $this->event = $eventRep->findOneBy(array($tokenKey => $token));
             }
@@ -95,13 +94,13 @@ class EventManager
         if ($this->event->getStatus() == null) {
             $this->event->setStatus(EventStatus::IN_CREATION);
         }
-        if(empty($this->event->getToken())){
+        if (empty($this->event->getToken())) {
             $this->event->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
-        if(empty($this->event->getTokenEdition())){
+        if (empty($this->event->getTokenEdition())) {
             $this->event->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
-        if(empty($this->getEvent()->getId())){
+        if (empty($this->getEvent()->getId())) {
             $this->entityManager->persist($this->getEvent());
             $this->entityManager->flush();
         }
@@ -152,12 +151,37 @@ class EventManager
      * @param $type string Le type du module à créer et à ajouter à l'événement
      * @return Module le module créé
      */
-    public function addModule($type){
+    public function addModule($type)
+    {
         $module = $this->moduleManager->createModule($type);
         $this->event->addModule($module);
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
-        return $module; 
+        return $module;
+    }
+
+    /**
+     * @param User $user L'Utilisateur connecté ou non
+     * @return array Un tableau de modules de l'événement au format :
+     *  moduleId => [
+     *  'module' => Module : Le module lui-meme
+     *  'allowEdit => boolean : si l'utilisateur est autorisé à l'éditer
+     *  'moduleForm' => Form : le formulaire d'édition de l'événement si editable
+     * ]
+     */
+    public function getModulesToDisplay(User $user = null)
+    {
+        $modules = array();
+        if ($this->event != null) {
+            /** @var Module $module */
+            foreach ($this->event->getModules() as $module){
+                $moduleDescription['module'] = $module;
+                $moduleDescription['allowEdit'] = false;
+                $moduleDescription['moduleFormView'] = $this->formFactory->create(ModuleFormType::class, $module)->createView();
+                $modules[$module->getId()]= $moduleDescription;
+            }
+        }
+        return $modules;
     }
 
 }

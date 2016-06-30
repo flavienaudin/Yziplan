@@ -62,7 +62,7 @@ class EventController extends Controller
             $this->denyAccessUnlessGranted(EventVoter::DISPLAY, $currentEvent);
 
             $eventForm = null;
-            $allowEdit = $this->isGranted(EventVoter::EDIT, $currentEvent) && ($tokenEdition === $currentEvent->getTokenEdition() || $tokenEdition === null);
+            $allowEdit = $this->isGranted(EventVoter::EDIT, $currentEvent) && ($tokenEdition === $currentEvent->getTokenEdition());
             if ($allowEdit) {
                 /** @var Form $eventForm */
                 $eventForm = $eventManager->initEventForm($this->getUser());
@@ -84,8 +84,6 @@ class EventController extends Controller
                             foreach ($eventForm->getErrors(true) as $error) {
                                 $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
                             }
-                            // TODO remove
-                            $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("profile.message.update.error");
                             return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     }
@@ -96,11 +94,15 @@ class EventController extends Controller
                     }
                 }
             }
+            
+            // module management
+            $modules = $eventManager->getModulesToDisplay($this->getUser());
 
             return $this->render('AppBundle:Event:event.html.twig', array(
                 'event' => $currentEvent,
                 "allowEdit" => $allowEdit,
-                'eventForm' => ($eventForm != null ? $eventForm->createView() : null)
+                'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
+                'modules' => $modules
             ));
 
         }

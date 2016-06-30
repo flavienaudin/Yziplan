@@ -63,6 +63,18 @@ event:
   success.message:
     creation: Evénement créé avec succès.
 
+module:
+  form:
+    name:
+      label: Nom du module
+      placeholder: Nom du module
+    description:
+      label: Description
+      placeholder: Description
+    responseDeadline:
+      label: Date limite de réponse
+      placeholder: Date limite de réponse
+
 # Globals
 global:
   event: événement
@@ -71,6 +83,8 @@ global:
     1: Homme
     2: Femme
     3: Autre
+  link:
+    top: Haut
   button:
     valid: Valider
     cancel: Annuler

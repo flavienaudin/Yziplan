@@ -2,8 +2,8 @@
 
 {% block mainMenu_listItems %}
     <li><a href="#event-header-card">{{ "global.event"|trans|capitalize }}</a></li>
-    {% for module in event.modules if module.name is not empty %}
-        <li><a href="#module-{{ module.token }}">{{ module.name|capitalize }}</a></li>
+    {% for moduleDescription in modules if moduleDescription.module.name is not empty %}
+        <li><a href="#module-{{ moduleDescription.module.token }}">{{ moduleDescription.module.name|capitalize }}</a></li>
     {% endfor %}
 {% endblock mainMenu_listItems %}
 
@@ -12,13 +12,13 @@
 
     <div class="row">
         <div class="col-xs-12 col-sm-8" id="eventModulesContainer">
-            {% for module in event.modules if module.status != constant("AppBundle\\Entity\\enum\\ModuleStatus::DELETED") %}
-                {% if module.pollModule is not null %}
-                    {{ include('@App/Event/module/displayPollModule.html.twig', {'module':module,'allowEdit':allowEdit}) }}
-                {% elseif module.expenseModule is not null %}
-                    {{ include('@App/Event/module/displayExpenseModule.html.twig', {'module':module,'allowEdit':allowEdit}) }}
+            {% for moduleDescription in modules if moduleDescription.module.status != constant("AppBundle\\Entity\\enum\\ModuleStatus::DELETED") %}
+                {% if moduleDescription.module.pollModule is not null %}
+                    {{ include('@App/Event/module/displayPollModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleFormView}) }}
+                {% elseif moduleDescription.module.expenseModule is not null %}
+                    {{ include('@App/Event/module/displayExpenseModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleFormView}) }}
                 {% else %}
-                    {{ include('@App/Event/module/displayModule.html.twig', {'module':module,'allowEdit':allowEdit}) }}
+                    {{ include('@App/Event/module/displayModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleFormView}) }}
                 {% endif %}
             {% endfor %}
         </div>

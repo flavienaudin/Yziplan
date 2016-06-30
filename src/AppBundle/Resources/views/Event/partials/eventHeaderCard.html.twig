@@ -66,12 +66,13 @@
         {% endif %}
     {% endif %}
     <div class="card-header ch-img" style="background-image: url({{ asset("uploads/events/default/evt-img1.jpg") }}); height:250px;">
+        <h1 class="c-white">{{ event.name }}</h1>
         {% if eventForm is not null %}
             <a class="c-white"> <span class="zmdi-hc-stack zmdi-hc-2x"><i class="zmdi zmdi-square-o zmdi-hc-stack-2x"></i><i class="zmdi zmdi-camera-add zmdi-hc-stack-1x"></i></span>
                 {{ 'event.form.image.label'|trans }}</a>
-        {% else %}
-            <h2>{{ event.name }}</h2>
         {% endif %}
+
+
         {% if allowEdit and event.token is not empty %}
             <div class="dropdown add-module-menu">
                 <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
@@ -158,7 +159,7 @@
             <div class="row">
                 <div class="col-sm-7">
                     <div class="form-group">
-                        {{ form_label(eventForm.name, 'event.form.name.label') }}
+                        {{ form_label(eventForm.name, 'event.form.name.label', {'label_attr':{'class':'sr-only'}}) }}
                         <div class="fg-line">
                             {{ form_widget(eventForm.name, {'attr':{'placeholder':'event.form.name.placeholder'}}) }}
                             {{ form_errors(eventForm.name) }}
@@ -177,7 +178,7 @@
             </div>
 
             <div class="form-group">
-                {{ form_label(eventForm.description, 'event.form.description.label') }}
+                {{ form_label(eventForm.description, 'event.form.description.label', {'label_attr':{'class':'sr-only'}}) }}
                 <div class="fg-line">
                     {{ form_widget(eventForm.description, {'attr':{'rows':3,'placeholder':'event.form.description.placeholder'}}) }}
                     {{ form_errors(eventForm.description) }}
