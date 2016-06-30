@@ -9,10 +9,8 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Module;
-use AppBundle\Entity\module\PollModule;
-use AppBundle\Manager\GenerateursToken;
+use AppBundle\Form\ModuleFormType;
 use AppBundle\Security\EventVoter;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\FlashBagTypes;
@@ -36,11 +34,13 @@ class ModuleController extends Controller
             $event = $eventManager->getEvent();
             $this->denyAccessUnlessGranted(EventVoter::EDIT, $event);
             $module = $eventManager->addModule($type);
-            $event = $eventManager->getEvent();
             if ($request->isXmlHttpRequest()) {
-                $view = $this->displayModulePartial($module, true, $request);
+                $moduleManager = $this->get('at.manager.module');
+                $moduleForm = $this->get('form.factory')->createNamed("module_form_".$module->getTokenEdition(), ModuleFormType::class, $module);
+                $view = $moduleManager->displayModulePartial($module, true, $moduleForm, $request);
                 return new JsonResponse(array('htmlContent' => $view), Response::HTTP_OK);
             } else {
+                $event = $eventManager->getEvent();
                 return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken(), 'tokenEdition' => $event->getTokenEdition())) . '#module-' . $module->getToken());
             }
         }
@@ -53,7 +53,6 @@ class ModuleController extends Controller
             return $this->redirectToRoute('home');
         }
     }
-
 
     /**
      * @Route("/{_locale}/remove-event-module/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="removeEventModule")
@@ -70,32 +69,6 @@ class ModuleController extends Controller
             return new JsonResponse($responseData, Response::HTTP_OK);
         } else {
             return $this->redirectToRoute('displayEvent', array('token' => $module->getEvent()->getToken(), 'tokenEdition' => $module->getEvent()->getTokenEdition()));
-        }
-    }
-
-    /**
-     * @param Module $module Le module à afficher
-     * @param $allowEdit boolean "true" si le module est éditable
-     * @param Request $request
-     * @return string La vue HTML sous forme de string
-     */
-    public function displayModulePartial(Module $module, $allowEdit, Request $request)
-    {
-        if ($module->getPollModule() != null) {
-            return $this->renderView("@App/Event/module/displayPollModule.html.twig", [
-                "module" => $module,
-                "allowEdit" => $allowEdit
-            ]);
-        } elseif ($module->getExpenseModule() != null) {
-            return $this->renderView("@App/Event/module/displayExpenseModule.html.twig", [
-                "module" => $module,
-                "allowEdit" => $allowEdit
-            ]);
-        } else {
-            return $this->renderView("@App/Event/module/displayModule.html.twig", [
-                "module" => $module,
-                "allowEdit" => $allowEdit
-            ]);
         }
     }
 

@@ -14,11 +14,11 @@
         <div class="col-xs-12 col-sm-8" id="eventModulesContainer">
             {% for moduleDescription in modules if moduleDescription.module.status != constant("AppBundle\\Entity\\enum\\ModuleStatus::DELETED") %}
                 {% if moduleDescription.module.pollModule is not null %}
-                    {{ include('@App/Event/module/displayPollModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleFormView}) }}
+                    {{ include('@App/Event/module/displayPollModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleForm}) }}
                 {% elseif moduleDescription.module.expenseModule is not null %}
-                    {{ include('@App/Event/module/displayExpenseModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleFormView}) }}
+                    {{ include('@App/Event/module/displayExpenseModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleForm}) }}
                 {% else %}
-                    {{ include('@App/Event/module/displayModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleFormView}) }}
+                    {{ include('@App/Event/module/displayModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleForm}) }}
                 {% endif %}
             {% endfor %}
         </div>

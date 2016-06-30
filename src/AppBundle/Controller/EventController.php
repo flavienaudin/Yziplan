@@ -97,6 +97,39 @@ class EventController extends Controller
             
             // module management
             $modules = $eventManager->getModulesToDisplay($this->getUser());
+            $moduleManager = $this->get("at.manager.module");
+            foreach($modules as $moduleId => $moduleDescription){
+                if($moduleDescription['allowEdit'] && $moduleDescription['moduleForm'] instanceof Form){
+                    /** @var Form $moduleForm */
+                    $moduleForm = $moduleDescription['moduleForm'];
+                    
+                    dump($moduleForm->getName());
+                    dump($moduleForm);
+                    $moduleForm->handleRequest($request);
+                    if ($request->isXmlHttpRequest()) {
+                        if ($moduleForm->isSubmitted()) {
+                            if ($moduleForm->isValid()) {
+                                $currentModule = $moduleManager->treatUpdateFormeModule($moduleForm);
+                                $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                                $data['html_content'] = $moduleManager->displayModulePartial($currentModule, $moduleDescription['allowEdit'], $moduleForm, $request);
+                                return new JsonResponse($data, Response::HTTP_OK);
+                            } else {
+                                $data["formErrors"] = array();
+                                foreach ($eventForm->getErrors(true) as $error) {
+                                    $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
+                                }
+                                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                            }
+                        }
+                    } else {
+                        if ($moduleForm->isValid()) {
+                            $moduleManager->treatUpdateFormeModule($moduleForm);
+                            return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken(), 'tokenEdition' => $currentEvent->getTokenEdition()));
+                        }
+                    }
+                    $modules[$moduleId]['moduleForm'] = $moduleForm->createView();
+                }
+            }
 
             return $this->render('AppBundle:Event:event.html.twig', array(
                 'event' => $currentEvent,

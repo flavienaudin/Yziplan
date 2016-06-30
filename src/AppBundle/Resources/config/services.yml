@@ -13,7 +13,7 @@ services:
 
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
-    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken']
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating']
 
 # Voters
   at.voter.event:

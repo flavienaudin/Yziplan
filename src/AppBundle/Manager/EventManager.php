@@ -176,8 +176,8 @@ class EventManager
             /** @var Module $module */
             foreach ($this->event->getModules() as $module){
                 $moduleDescription['module'] = $module;
-                $moduleDescription['allowEdit'] = false;
-                $moduleDescription['moduleFormView'] = $this->formFactory->create(ModuleFormType::class, $module)->createView();
+                $moduleDescription['allowEdit'] = true;
+                $moduleDescription['moduleForm'] = $this->formFactory->createNamed("module_form_".$module->getTokenEdition(), ModuleFormType::class, $module);
                 $modules[$module->getId()]= $moduleDescription;
             }
         }
