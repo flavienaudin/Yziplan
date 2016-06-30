@@ -58,3 +58,5 @@ $("[id^='event-data-table']").bootgrid({
     },
 });
 
+
+

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: Flavien
- * Date: 29/06/2016
- * Time: 17:39
+ * User: Patman
+ * Date: 20/06/2016
+ * Time: 15:20
  */
 
 namespace AppBundle\Form;
@@ -42,5 +42,4 @@ class ModuleFormType extends AbstractType
             'data_class' => 'AppBundle\Entity\Module'
         ));
     }
-
 }
