@@ -2,7 +2,8 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\enum\ModuleStatus;
+use AppBundle\Entity\module\ExpenseModule;
+use AppBundle\Entity\module\PollModule;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -122,7 +123,7 @@ class Module
      */
     public function __construct()
     {
-        $this->moduleInvitations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->moduleInvitations = new ArrayCollection();
     }
     
     /*******************************************************************************************************
@@ -156,7 +157,7 @@ class Module
     /**
      * Get event
      *
-     * @return \AppBundle\Entity\Event
+     * @return Event
      */
     public function getEvent()
     {
@@ -166,11 +167,11 @@ class Module
     /**
      * Add moduleInvitation
      *
-     * @param \AppBundle\Entity\ModuleInvitation $moduleInvitation
+     * @param ModuleInvitation $moduleInvitation
      *
      * @return Module
      */
-    public function addModuleInvitation(\AppBundle\Entity\ModuleInvitation $moduleInvitation)
+    public function addModuleInvitation(ModuleInvitation $moduleInvitation)
     {
         $this->moduleInvitations[] = $moduleInvitation;
 
@@ -180,9 +181,9 @@ class Module
     /**
      * Remove moduleInvitation
      *
-     * @param \AppBundle\Entity\ModuleInvitation $moduleInvitation
+     * @param ModuleInvitation $moduleInvitation
      */
-    public function removeModuleInvitation(\AppBundle\Entity\ModuleInvitation $moduleInvitation)
+    public function removeModuleInvitation(ModuleInvitation $moduleInvitation)
     {
         $this->moduleInvitations->removeElement($moduleInvitation);
     }
@@ -190,7 +191,7 @@ class Module
     /**
      * Get moduleInvitations
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
     public function getModuleInvitations()
     {
@@ -200,11 +201,11 @@ class Module
     /**
      * Set paymentModule
      *
-     * @param \AppBundle\Entity\PaymentModule $paymentModule
+     * @param PaymentModule $paymentModule
      *
      * @return Module
      */
-    public function setPaymentModule(\AppBundle\Entity\PaymentModule $paymentModule = null)
+    public function setPaymentModule(PaymentModule $paymentModule = null)
     {
         $this->paymentModule = $paymentModule;
 
@@ -214,7 +215,7 @@ class Module
     /**
      * Get paymentModule
      *
-     * @return \AppBundle\Entity\PaymentModule
+     * @return PaymentModule
      */
     public function getPaymentModule()
     {
@@ -368,11 +369,11 @@ class Module
     /**
      * Set pollModule
      *
-     * @param \AppBundle\Entity\module\PollModule $pollModule
+     * @param PollModule $pollModule
      *
      * @return Module
      */
-    public function setPollModule(\AppBundle\Entity\module\PollModule $pollModule = null)
+    public function setPollModule(PollModule $pollModule = null)
     {
         $this->pollModule = $pollModule;
         $pollModule->setModule($this);
@@ -383,7 +384,7 @@ class Module
     /**
      * Get pollModule
      *
-     * @return \AppBundle\Entity\module\PollModule
+     * @return PollModule
      */
     public function getPollModule()
     {
@@ -393,11 +394,11 @@ class Module
     /**
      * Set expenseModule
      *
-     * @param \AppBundle\Entity\module\ExpenseModule $expenseModule
+     * @param ExpenseModule $expenseModule
      *
      * @return Module
      */
-    public function setExpenseModule(\AppBundle\Entity\module\ExpenseModule $expenseModule = null)
+    public function setExpenseModule(ExpenseModule $expenseModule = null)
     {
         $this->expenseModule = $expenseModule;
         $expenseModule->setModule($this);
@@ -408,7 +409,7 @@ class Module
     /**
      * Get expenseModule
      *
-     * @return \AppBundle\Entity\module\ExpenseModule
+     * @return ExpenseModule
      */
     public function getExpenseModule()
     {
