@@ -11,6 +11,8 @@
             <script>
                 $('form#eventHeader').on("submit", function (e) {
                     e.preventDefault();
+                    var preloader = $('.at-global-preloader');
+                    $(preloader).show();
                     var $form = $(this);
                     $('.has-error').each(function () {
                         $(this).find("small.help-block").remove();
@@ -60,7 +62,9 @@
                                 }
                             }
                         }
+                        $(preloader).hide();
                     });
+
                 });
             </script>
         {% endif %}
@@ -112,6 +116,8 @@
             </div>
             <script>
                 $('#addWhenPollModule').on('click', function (e) {
+                    var preloader = $('.at-global-preloader');
+                    $(preloader).show();
                     $.ajax({
                         url: $(this).attr("href"),
                         type: 'post'
@@ -148,6 +154,7 @@
                                 }
                             }
                         }
+                        $(preloader).hide();
                     });
                     return false;
                 });

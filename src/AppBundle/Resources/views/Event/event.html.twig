@@ -2,7 +2,7 @@
 
 {% block mainMenu_listItems %}
     <li><a href="#event-header-card">{{ "global.event"|trans|capitalize }}</a></li>
-    {% for moduleDescription in modules if moduleDescription.module.name is not empty %}
+    {% for moduleDescription in modules if moduleDescription.module.name is not empty and moduleDescription.module.status != constant("AppBundle\\Entity\\enum\\ModuleStatus::DELETED")  %}
         <li><a href="#module-{{ moduleDescription.module.token }}">{{ moduleDescription.module.name|capitalize }}</a></li>
     {% endfor %}
 {% endblock mainMenu_listItems %}
@@ -38,12 +38,14 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
 {% endblock stylesheets %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/app/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/sweetalert.min.js") }}"></script>
 
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
 {% endblock %}

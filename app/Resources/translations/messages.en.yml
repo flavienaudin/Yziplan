@@ -74,6 +74,10 @@ module:
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline
+  alert:
+    confirm_deletion:
+      title: Are you sure to whish vouloir supprimer ce module ?
+      message: Cette action est irréversible
 
 # Globals
 global:

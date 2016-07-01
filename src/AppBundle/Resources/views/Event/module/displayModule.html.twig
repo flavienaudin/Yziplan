@@ -4,62 +4,25 @@
     {% endif %}
     <div class="card-header {% block moduleHeaderClass %}{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
         {% block moduleHeader %}
-            <small class="pull-right"><a href="#">{{ "global.link.top"|trans }}</a></small>
-            {% if moduleForm is not null %}
-            <div class="form-group">
-                {{ form_label(moduleForm.name, 'module.form.name.label', {'label_attr':{'class':'sr-only'}}) }}
-                <div class="fg-line">
-                    {{ form_widget(moduleForm.name, {'attr':{'placeholder':'module.form.name.placeholder'}}) }}
-                    {{ form_errors(moduleForm.name) }}
+            <div class="row">
+                <div class="col-xs-12 col-sm-10">
+                    {% if moduleForm is not null %}
+                        <div class="form-group">
+                            {{ form_label(moduleForm.name, 'module.form.name.label', {'label_attr':{'class':'sr-only'}}) }}
+                            <div class="fg-line">
+                                {{ form_widget(moduleForm.name, {'attr':{'placeholder':'module.form.name.placeholder'}}) }}
+                                {{ form_errors(moduleForm.name) }}
+                            </div>
+                        </div>
+                    {% else %}
+                        <h2>{{ module.name is not empty?module.name }}</h2>
+                        <small>{{ module.description|nl2br|raw }}</small>
+                    {% endif %}
+                </div>
+                <div class="col-xs-offset-10 col-sm-offset-0 col-xs-2">
+                    <small class="pull-right"><a href="#">{{ "global.link.top"|trans }}</a></small>
                 </div>
             </div>
-            {% else %}
-            <h2>{{ module.name is not empty?module.name }}</h2>
-            <small>{{ module.description|nl2br|raw }}</small>
-            {% endif %}
-
-            {% if allowEdit is defined and allowEdit %}
-            <ul class="actions">
-                <li class="dropdown">
-                    <a href="" data-toggle="dropdown"><i class="zmdi zmdi-more-vert"></i></a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li>
-                            <a href="{{ path('removeEventModule', {'tokenEdition':module.tokenEdition}) }}" id="removeModule{{ module.tokenEdition }}" data-target="{{ module.token }}">
-                                {{ "global.button.delete"|trans }}</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <script>
-                $('a#removeModule{{ module.tokenEdition }}').on('click', function (e) {
-                    $.ajax({
-                        url: $(this).attr("href"),
-                        type: 'post'
-                    }).done(function (response, textStatus, xhr) {
-                        if (response.actionResult === true) {
-                            $('#module-{{ module.token }}').remove();
-                        }
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        // nothing
-                    }).always(function (responseDataOrJSON) {
-                        if (responseDataOrJSON.responseJSON) {
-                            responseDataOrJSON = responseDataOrJSON.responseJSON;
-                        }
-                        if (responseDataOrJSON.messages) {
-                            var messages = responseDataOrJSON.messages;
-                            for (var messageType in messages) {
-                                if (messages.hasOwnProperty(messageType)) {
-                                    messages[messageType].forEach(function (mess) {
-                                        toastr[messageType](mess);
-                                    });
-                                }
-                            }
-                        }
-                    });
-                    return false;
-                });
-            </script>
-            {% endif %}
         {% endblock moduleHeader %}
     </div>
     <div class="card-body card-padding {% block moduleInformationClass %}{% endblock %}" {% block moduleInformationAttributs %}{% endblock %}>
@@ -115,6 +78,8 @@
 
             {% if moduleForm is not null %}
                 <div class="pull-right">
+                    <a href="{{ path('removeEventModule', {'tokenEdition':module.tokenEdition}) }}" id="removeModule{{ module.tokenEdition }}" data-target="{{ module.token }}"
+                       class="text-danger">{{ "global.button.delete"|trans }}</a>
                     <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
                 </div>
             {% endif %}
@@ -134,4 +99,113 @@
     {% if moduleForm is not null %}
         {{ form_end(moduleForm) }}
     {% endif %}
+
+    {% block JSmodule %}
+        {% if moduleForm is not null %}
+            <script>
+                $('#removeModule{{ module.tokenEdition }}').on('click', function (e) {
+                    e.preventDefault();
+                    var removeModuleLink = $(this);
+                    swal({
+                        title: '{{ "module.alert.confirm_deletion.title"|trans }}',
+                        text: '{{ "module.alert.confirm_deletion.message"|trans }}',
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: '{{ "global.button.delete"|trans }}',
+                        closeOnConfirm: true,
+                        showLoaderOnConfirm: true
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            var preloader = $('.at-global-preloader');
+                            $(preloader).show();
+                            $.ajax({
+                                url: $(removeModuleLink).attr("href"),
+                                type: 'post'
+                            }).done(function (response, textStatus, xhr) {
+                                if (response.actionResult === true) {
+                                    $('#module-{{ module.token }}').remove();
+                                }
+                            }).fail(function (jqXHR, textStatus, errorThrown) {
+                                // nothing
+                            }).always(function (responseDataOrJSON) {
+                                if (responseDataOrJSON.responseJSON) {
+                                    responseDataOrJSON = responseDataOrJSON.responseJSON;
+                                }
+                                if (responseDataOrJSON.messages) {
+                                    var messages = responseDataOrJSON.messages;
+                                    for (var messageType in messages) {
+                                        if (messages.hasOwnProperty(messageType)) {
+                                            messages[messageType].forEach(function (mess) {
+                                                toastr[messageType](mess);
+                                            });
+                                        }
+                                    }
+                                }
+                                $(preloader).hide();
+                            });
+                        }
+                    });
+                });
+
+                $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
+                    e.preventDefault();
+                    var preloader = $('.at-global-preloader');
+                    console.log(preloader);
+                    $(preloader).show();
+                    var $form = $(this);
+                    $('.has-error').each(function () {
+                        $(this).find("small.help-block").remove();
+                        $(this).removeClass("has-error");
+                    });
+                    $.ajax({
+                        url: $form.attr('action'),
+                        type: $form.attr('method'),
+                        data: $form.serialize()
+                    }).done(function (responseData, textStatus, jqXHR) {
+                        if (responseData.htmlContent) {
+                            $('#module-{{ module.token }}').replaceWith(responseData.htmlContent);
+                        }
+                        autosize($('textarea'));
+                        $('.clockpicker').clockpicker();
+                        $('.datepicker').datetimepicker({
+                            format: "DD/MM/YYYY",
+                            locale: "fr",
+                            widgetPositioning: {
+                                horizontal: 'auto',
+                                vertical: 'bottom'
+                            }
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        var responseJSON = jqXHR.responseJSON;
+                        if (responseJSON.formErrors) {
+                            var formErrors = responseJSON.formErrors;
+                            for (var fieldErrorName in formErrors) {
+                                if (formErrors.hasOwnProperty(fieldErrorName)) {
+                                    var inputField = $('input[name*=' + fieldErrorName + ']');
+                                    inputField.parent().addClass("has-error");
+                                    inputField.after('<small class="help-block">' + responseJSON.formErrors[fieldErrorName] + '</small>')
+                                }
+                            }
+                        }
+                    }).always(function (responseDataOrJSON) {
+                        if (responseDataOrJSON.responseJSON) {
+                            responseDataOrJSON = responseDataOrJSON.responseJSON;
+                        }
+                        if (responseDataOrJSON.messages) {
+                            var messages = responseDataOrJSON.messages;
+                            for (var messageType in messages) {
+                                if (messages.hasOwnProperty(messageType)) {
+                                    messages[messageType].forEach(function (mess) {
+                                        toastr[messageType](mess);
+                                    });
+                                }
+                            }
+                        }
+                        $(preloader).hide();
+                    });
+                });
+            </script>
+        {% endif %}
+    {% endblock %}
 </div>

@@ -102,9 +102,6 @@ class EventController extends Controller
                 if($moduleDescription['allowEdit'] && $moduleDescription['moduleForm'] instanceof Form){
                     /** @var Form $moduleForm */
                     $moduleForm = $moduleDescription['moduleForm'];
-                    
-                    dump($moduleForm->getName());
-                    dump($moduleForm);
                     $moduleForm->handleRequest($request);
                     if ($request->isXmlHttpRequest()) {
                         if ($moduleForm->isSubmitted()) {
@@ -115,7 +112,7 @@ class EventController extends Controller
                                 return new JsonResponse($data, Response::HTTP_OK);
                             } else {
                                 $data["formErrors"] = array();
-                                foreach ($eventForm->getErrors(true) as $error) {
+                                foreach ($moduleForm->getErrors(true) as $error) {
                                     $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
                                 }
                                 return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
