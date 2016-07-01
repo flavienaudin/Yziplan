@@ -85,6 +85,7 @@
     {{ render(controller('ATUserBundle:Security:login', {"parentRequest":app.request, "display":"modal"})) }}
     {{ render(controller('ATUserBundle:Registration:register', {"parentRequest":app.request, "display":"modal"})) }}
 {% endblock %}
+
 <!-- CONTENT -->
 {# Pour avoir une page AVEC un menu latéral : conserver section#main et redéfinir le block "s_main_menu" #}
 {# Pour avoir une page SANS menu latéral : redfinir le block "main_section_id" et définir les blocks "s_main_menu" et "sidebar_collapse_cmd" vides #}
@@ -155,6 +156,12 @@
     </footer>
 </section>
 
+<div class="preloader at-global-preloader">
+    <svg class="pl-circular" viewBox="25 25 50 50">
+        <circle class="plc-path" cx="50" cy="50" r="20"></circle>
+    </svg>
+</div>
+
 <!-- Older IE warning message --><!--[if lt IE 9]>
 <div class="ie-warning">
     <h1 class="c-white">Warning!!</h1>
@@ -206,6 +213,7 @@
 
     <script src="{{ asset("bundles/app/js/functions.js") }}"></script>
     <script src="{{ asset("bundles/app/js/actions.js") }}"></script>
+    <script src="{{ asset("includes/js/at-app.js") }}"></script>
 
     <!-- Connexion/Registration Modals -->
     <script>

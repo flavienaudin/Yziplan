@@ -8,6 +8,19 @@
 }
 
 /*---------------------------------
+    Global Preloader
+    Affiche un preloader dans un coin de la page le temps d'une requête Ajax par exemple
+----------------------------------*/
+.at-global-preloader{
+    position: absolute;
+    z-index: 100;
+}
+
+.at-global-preloader .plc-path {
+    stroke-width: 4;
+}
+
+/*---------------------------------
     Carousel
 ----------------------------------*/
 .carousel .item {
