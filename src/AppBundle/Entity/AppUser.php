@@ -45,6 +45,16 @@ class AppUser
     private $eventInvitations;
 
     /**
+     * Reference l'ID du user mangopay si celui-ci existe
+     * Peut-être null si le user mangopay n'est pas encore créé.
+     *
+     * @var string
+     *
+     * @ORM\Column(name="mangopay_user_id", type="string", length=255, nullable=true)
+     */
+    private $mangoPayUserId;
+
+    /**
      * Get id
      *
      * @return integer
@@ -118,5 +128,29 @@ class AppUser
     public function getEventInvitations()
     {
         return $this->eventInvitations;
+    }
+
+    /**
+     * Set mangoPayUserId
+     *
+     * @param string $mangoPayUserId
+     *
+     * @return AppUser
+     */
+    public function setMangoPayUserId($mangoPayUserId)
+    {
+        $this->mangoPayUserId = $mangoPayUserId;
+
+        return $this;
+    }
+
+    /**
+     * Get mangoPayUserId
+     *
+     * @return string
+     */
+    public function getMangoPayUserId()
+    {
+        return $this->mangoPayUserId;
     }
 }

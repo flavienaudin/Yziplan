@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\module\ProposalElementResponse;
+use AppBundle\Entity\payment\Wallet;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -53,6 +53,13 @@ class ModuleInvitation
      * @ORM\JoinColumn(name="event_invitation_id", referencedColumnName="id")
      */
     private $eventInvitation;
+
+    /**
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\payment\Wallet", mappedBy="moduleInvitation")
+     *
+     * @var Wallet
+     */
+    private $wallet;
 
 
     /***********************************************************************
@@ -139,5 +146,29 @@ class ModuleInvitation
     public function getEventInvitation()
     {
         return $this->eventInvitation;
+    }
+
+    /**
+     * Set wallet
+     *
+     * @param \AppBundle\Entity\payment\Wallet $wallet
+     *
+     * @return ModuleInvitation
+     */
+    public function setWallet(\AppBundle\Entity\payment\Wallet $wallet = null)
+    {
+        $this->wallet = $wallet;
+
+        return $this;
+    }
+
+    /**
+     * Get wallet
+     *
+     * @return \AppBundle\Entity\payment\Wallet
+     */
+    public function getWallet()
+    {
+        return $this->wallet;
     }
 }

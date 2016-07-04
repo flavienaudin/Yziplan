@@ -17,7 +17,7 @@ class PaymentModule
 {
     /** Active les timestamps automatiques pour la creation et la mise a jour */
     use TimestampableEntity;
-    
+
     /**
      * @var int
      *
@@ -36,23 +36,43 @@ class PaymentModule
     private $module;
 
     /**
-     * Emetteurs des paiements
+     * Actions sur lesquelles sont appliquées les frais :
+     *  - PAYIN : frais appliqués au moment du credit duu e-wallet
+     *  - PAYOUT : frais appliqués au moment du retrait de l'argent
+     *  - TRANSFER : frais appliqué au moment du transfert de l'argent d'un e-wallet à un autre
      *
-     * @var
+     * @var string
+     *
+     * @ORM\Column(name="fees_application", type="string", length=255, nullable=true)
      */
-    private $emitter;
+    private $feesApplication;
 
     /**
-     * Destinataires des paiements
+     * Moment ou sont declanchées les transactions pour ce module
+     *  - IMMEDIATE : la transaction est effectuée dès qu'elle est créée (sauf si le wallet a crediter n'a pas de e-wallet mangopay)
+     *  - ONDEMAND : les transactions sont effectuées à la demande
      *
-     * @var
+     * @var string
+     *
+     * @ORM\Column(name="transaction_trigger", type="string", length=255, nullable=true)
      */
-    private $recipient;
+    private $transactionTrigger;
+
 
     /***********************************************************************
      *                      Getters and Setters
      ***********************************************************************/
-    
+
+    /**
+     * PaymentModule constructor.
+     *
+     */
+    public function __construct()
+    {
+        $this->feesApplication = "TRANSFER";
+        $this->transactionTrigger = "IMMEDIATE";
+    }
+
     /**
      * Get id
      *
@@ -87,40 +107,52 @@ class PaymentModule
         return $this->module;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEmitter()
-    {
-        return $this->emitter;
-    }
 
     /**
-     * @param mixed $emitter
+     * Set feesApplication
+     *
+     * @param string $feesApplication
+     *
      * @return PaymentModule
      */
-    public function setEmitter($emitter)
+    public function setFeesApplication($feesApplication)
     {
-        $this->emitter = $emitter;
+        $this->feesApplication = $feesApplication;
+
         return $this;
     }
 
     /**
-     * @return mixed
+     * Get feesApplication
+     *
+     * @return string
      */
-    public function getRecipient()
+    public function getFeesApplication()
     {
-        return $this->recipient;
+        return $this->feesApplication;
     }
 
     /**
-     * @param mixed $recipient
+     * Set transactionTrigger
+     *
+     * @param string $transactionTrigger
+     *
      * @return PaymentModule
      */
-    public function setRecipient($recipient)
+    public function setTransactionTrigger($transactionTrigger)
     {
-        $this->recipient = $recipient;
+        $this->transactionTrigger = $transactionTrigger;
+
         return $this;
     }
 
+    /**
+     * Get transactionTrigger
+     *
+     * @return string
+     */
+    public function getTransactionTrigger()
+    {
+        return $this->transactionTrigger;
+    }
 }
