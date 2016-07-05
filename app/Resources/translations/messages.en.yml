@@ -101,6 +101,7 @@ global:
   error:
     not_ajax_request: Your behavior is suspect, big brother is watching you!
     unauthorized_access: You haven't access to this section.
+    internal_server_error: An internal error occured. Please, check your data and repeat the action.
 
 status:
   in_creation: Being created
