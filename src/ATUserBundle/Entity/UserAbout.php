@@ -13,6 +13,9 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  */
 class UserAbout
 {
+    const LEGAL = "LEGAL";
+    const NATURAL = "NATURAL";
+    
     /** Active les timestamps automatiques pour la creation et la mise a jour */
     use TimestampableEntity;
 
@@ -53,13 +56,6 @@ class UserAbout
     private $gender;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="birthday", type="date", nullable=true)
-     */
-    private $birthday;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="facebook_name", type="string", length=255, nullable=true)
@@ -72,6 +68,87 @@ class UserAbout
      * @ORM\Column(name="google_name", type="string", length=255, nullable=true)
      */
     private $googleName;
+
+    /*************************************************************************************************
+     *            Informations personnelles needed for MangoPay
+     *************************************************************************************************/
+
+    /**
+     * Value:
+     * - NATURAL
+     * - LEGAL
+     *
+     * @var string
+     *
+     * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
+     */
+    private $userType;
+
+    /**
+     * First name of the user or of the legal representative
+     *
+     * @var string
+     *
+     * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
+     */
+    private $firstName;
+
+    /**
+     * Last name of the user or of the legal representative
+     *
+     * @var string
+     *
+     * @ORM\Column(name="last_name", type="string", length=255, nullable=true)
+     */
+    private $lastName;
+
+    /**
+     * Birthday of the user or of the legal representative
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(name="birthday", type="date", nullable=true)
+     */
+    private $birthday;
+
+    /**
+     * The user or legal representative's nationality. ISO 3166-1 alpha-2 format is expected
+     *
+     * @var string
+     *
+     * @ORM\Column(name="nationality", type="string", length=2, nullable=true)
+     */
+    private $nationality;
+
+    /**
+     * TThe user or legal representative's country of residence. ISO 3166-1 alpha-2 format is expected
+     *
+     * @var string
+     *
+     * @ORM\Column(name="country_of_residence", type="string", length=2, nullable=true)
+     */
+    private $countryOfResidence;
+
+    //************************* For legal user ***********************************
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="business_name", type="string", length=255, nullable=true)
+     */
+    private $businessName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="generic_business_email", type="string", length=255, nullable=true)
+     */
+    private $genericBusinessEmail;
+
+
+    /*************************************************************************************************
+     *            Getter and Setter
+     *************************************************************************************************/
 
 
     /**
@@ -239,5 +316,119 @@ class UserAbout
     {
         return $this->googleName;
     }
+
+    /**
+     * @return string
+     */
+    public function getUserType()
+    {
+        return $this->userType;
+    }
+
+    /**
+     * @param string $userType
+     */
+    public function setUserType($userType)
+    {
+        $this->userType = $userType;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param string $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNationality()
+    {
+        return $this->nationality;
+    }
+
+    /**
+     * @param string $nationality
+     */
+    public function setNationality($nationality)
+    {
+        $this->nationality = $nationality;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCountryOfResidence()
+    {
+        return $this->countryOfResidence;
+    }
+
+    /**
+     * @param string $countryOfResidence
+     */
+    public function setCountryOfResidence($countryOfResidence)
+    {
+        $this->countryOfResidence = $countryOfResidence;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBusinessName()
+    {
+        return $this->businessName;
+    }
+
+    /**
+     * @param string $businessName
+     */
+    public function setBusinessName($businessName)
+    {
+        $this->businessName = $businessName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGenericBusinessEmail()
+    {
+        return $this->genericBusinessEmail;
+    }
+
+    /**
+     * @param string $genericBusinessEmail
+     */
+    public function setGenericBusinessEmail($genericBusinessEmail)
+    {
+        $this->genericBusinessEmail = $genericBusinessEmail;
+    }
+    
+    
 }
 
