@@ -80,7 +80,7 @@ class UserAbout
      *
      * @var string
      *
-     * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="user_type", type="string", length=255, nullable=true)
      */
     private $userType;
 
