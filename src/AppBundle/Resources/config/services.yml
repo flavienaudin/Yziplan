@@ -5,7 +5,7 @@ services:
 
   at.manager.mangopay:
     class: AppBundle\Manager\MangoPayManager
-    arguments: ['%mangopay.client.id%', "%mangopay.client.password%", "%mangopay.temporary.folder%", "%mangopay.base.url%"]
+    arguments: ['%mangopay.client.id%', "%mangopay.client.password%", "%mangopay.temporary.folder%", "%mangopay.base.url%", '@doctrine.orm.entity_manager','@security.authorization_checker']
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
