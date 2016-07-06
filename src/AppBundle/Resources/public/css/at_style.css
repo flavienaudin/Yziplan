@@ -11,7 +11,7 @@
     Global Preloader
     Affiche un preloader dans un coin de la page le temps d'une requête Ajax par exemple
 ----------------------------------*/
-.at-global-preloader{
+.at-global-preloader {
     position: absolute;
     z-index: 100;
 }
@@ -231,12 +231,20 @@
 
 /** end Colored Header SELECTOR **/
 
-/** Formulaires */
+/*---------------------------------
+    Formulaires
+---------------------------------*/
+.form-control {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
 /* Pas de couleur de fond ni de bordure sur l'icone en cas d'erreur */
 .has-error .input-group-addon {
     color: #f6675d;
     border-color: transparent;
     background-color: transparent;
 }
+
+/** end Formulaires **/
 
 

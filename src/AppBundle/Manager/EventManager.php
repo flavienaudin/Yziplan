@@ -162,6 +162,7 @@ class EventManager
 
     /**
      * @param User $user L'Utilisateur connecté ou non
+     * @param $allowEventEdit boolean If the user is allowed to edit the event or not
      * @return array Un tableau de modules de l'événement au format :
      *  moduleId => [
      *  'module' => Module : Le module lui-meme
@@ -169,15 +170,19 @@ class EventManager
      *  'moduleForm' => Form : le formulaire d'édition de l'événement si editable
      * ]
      */
-    public function getModulesToDisplay(User $user = null)
+    public function getModulesToDisplay(User $user = null, $allowEventEdit = false)
     {
         $modules = array();
         if ($this->event != null) {
             /** @var Module $module */
             foreach ($this->event->getModules() as $module){
                 $moduleDescription['module'] = $module;
-                $moduleDescription['allowEdit'] = true;
-                $moduleDescription['moduleForm'] = $this->formFactory->createNamed("module_form_".$module->getTokenEdition(), ModuleFormType::class, $module);
+                $moduleDescription['allowEdit'] = $allowEventEdit; // TODO Vérifier les autorisations du module
+                if($moduleDescription['allowEdit']) {
+                    $moduleDescription['moduleForm'] = $this->formFactory->createNamed("module_form_" . $module->getTokenEdition(), ModuleFormType::class, $module);
+                }else{
+                    $moduleDescription['moduleForm'] = null;
+                }
                 $modules[$module->getId()]= $moduleDescription;
             }
         }

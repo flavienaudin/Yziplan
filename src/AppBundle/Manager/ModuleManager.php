@@ -10,12 +10,12 @@ namespace AppBundle\Manager;
 
 
 use AppBundle\Entity\enum\ModuleStatus;
-use AppBundle\Entity\Event;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -105,8 +105,10 @@ class ModuleManager
     {
         $this->module = $moduleForm->getData();
 
+        if (!empty($this->module->getName())) {
+            $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+        }
         // TODO Check ?
-
         $this->entityManager->persist($this->module);
         $this->entityManager->flush();
         return $this->module;
@@ -115,28 +117,29 @@ class ModuleManager
     /**
      * @param Module $module Le module à afficher
      * @param $allowEdit boolean "true" si le module est éditable
+     * @param $moduleForm FormInterface Formulaire
      * @param Request $request
      * @return string La vue HTML sous forme de string
      */
-    public function displayModulePartial(Module $module, $allowEdit, Form $moduleForm, Request $request)
+    public function displayModulePartial(Module $module, $allowEdit, FormInterface $moduleForm, Request $request)
     {
         if ($module->getPollModule() != null) {
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 "allowEdit" => $allowEdit,
-                'moduleForm' => $moduleForm->createView()
+                'moduleForm' => ($moduleForm != null ? $moduleForm->createView():null)
             ));
         } elseif ($module->getExpenseModule() != null) {
             return $this->templating->render("@App/Event/module/displayExpenseModule.html.twig", [
                 "module" => $module,
                 "allowEdit" => $allowEdit,
-                'moduleForm' => $moduleForm->createView()
+                'moduleForm' => ($moduleForm != null ? $moduleForm->createView():null)
             ]);
         } else {
             return $this->templating->render("@App/Event/module/displayModule.html.twig", [
                 "module" => $module,
                 "allowEdit" => $allowEdit,
-                'moduleForm' => $moduleForm->createView()
+                'moduleForm' => ($moduleForm != null ? $moduleForm->createView():null)
             ]);
         }
     }

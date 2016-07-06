@@ -16,6 +16,7 @@ use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\FlashBagTypes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,6 +37,7 @@ class ModuleController extends Controller
             $module = $eventManager->addModule($type);
             if ($request->isXmlHttpRequest()) {
                 $moduleManager = $this->get('at.manager.module');
+                /** @var FormInterface $moduleForm */
                 $moduleForm = $this->get('form.factory')->createNamed("module_form_".$module->getTokenEdition(), ModuleFormType::class, $module);
                 $view = $moduleManager->displayModulePartial($module, true, $moduleForm, $request);
                 return new JsonResponse(array('htmlContent' => $view), Response::HTTP_OK);

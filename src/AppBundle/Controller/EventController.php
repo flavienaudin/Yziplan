@@ -13,6 +13,7 @@ use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
+use AppBundle\Form\ModuleFormType;
 use AppBundle\Manager\EventManager;
 use AppBundle\Manager\GenerateursToken;
 use AppBundle\Security\EventVoter;
@@ -72,7 +73,7 @@ class EventController extends Controller
                         if ($eventForm->isValid()) {
                             $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
                             $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data['html_content'] = $this->renderView("@App/Event/partials/eventHeaderCard.html.twig", array(
+                            $data['htmlContent'] = $this->renderView("@App/Event/partials/eventHeaderCard.html.twig", array(
                                     'event' => $currentEvent,
                                     'allowEdit' => $allowEdit,
                                     'eventForm' => $eventForm->createView()
@@ -96,7 +97,7 @@ class EventController extends Controller
             }
             
             // module management
-            $modules = $eventManager->getModulesToDisplay($this->getUser());
+            $modules = $eventManager->getModulesToDisplay($this->getUser(), $allowEdit);
             $moduleManager = $this->get("at.manager.module");
             foreach($modules as $moduleId => $moduleDescription){
                 if($moduleDescription['allowEdit'] && $moduleDescription['moduleForm'] instanceof Form){
@@ -107,8 +108,9 @@ class EventController extends Controller
                         if ($moduleForm->isSubmitted()) {
                             if ($moduleForm->isValid()) {
                                 $currentModule = $moduleManager->treatUpdateFormeModule($moduleForm);
+                                $moduleForm = $this->createForm(ModuleFormType::class, $currentModule);
                                 $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                                $data['html_content'] = $moduleManager->displayModulePartial($currentModule, $moduleDescription['allowEdit'], $moduleForm, $request);
+                                $data['htmlContent'] = $moduleManager->displayModulePartial($currentModule, $moduleDescription['allowEdit'], $moduleForm, $request);
                                 return new JsonResponse($data, Response::HTTP_OK);
                             } else {
                                 $data["formErrors"] = array();

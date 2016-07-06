@@ -4,17 +4,17 @@
 
 {% block moduleHeaderClass %}ch-img{% endblock moduleHeaderClass %}
 {% block moduleHeaderAttributs %}style="background-image: url({{ asset('bundles/app/img/module-head/05.jpg') }}); height: 150px;"{% endblock moduleHeaderAttributs %}
-{% block moduleHeader %}
-    <div class="pull-left m-r-10">
-        <img class="avatar-img a-lg" src="{{ asset("bundles/app/img/test/contact/1.jpg") }}" alt="">
-    </div>
-    <h2>{{ module.name }} </h2>
+
+{% block mhMediaLeft %}
+    <img class="avatar-img a-lg" src="{{ asset("bundles/app/img/test/contact/1.jpg") }}" alt="">
+{% endblock mhMediaLeft %}
+{% block mhBtnFloat %}
     <a data-toggle="modal" href="#addPayment">
         <button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
     </a>
-{% endblock moduleHeader %}
+{% endblock mhBtnFloat %}
 
-{% block moduleInformationClass %}m-t-20{% endblock %}
+{% block moduleInformationClass %}{% endblock %}
 {% block moduleInformationAttributs %}{% endblock %}
 
 {% block moduleBodyClass %}m-t-20{% endblock %}
@@ -33,7 +33,7 @@
             <li class=""><a href="#preferenceExpense" aria-controls="preferenceExpense" role="tab" data-toggle="tab" aria-expanded="false">Paramètre</a></li>
         </ul>
 
-        <div class="tab-content">
+        <div class="tab-content p-20">
             <div role="tabpanel" class="tab-pane active" id="displayExpense">
                 <div class="table-responsive">
                     <table id="event-data-table-expense-1" class="table bootgrid-table table-condensed" aria-busy="false">
@@ -52,8 +52,7 @@
                         {% for proposal in module.expenseModule.expenseProposals %}
                             <tr data-row-id="{{ proposal.id }}">
                                 <td>
-                                    {% if proposal.creator.appUser.user.avatar is defined
-                                    and proposal.creator.appUser.user.avatar is not null %}
+                                    {% if proposal.creator.appUser.user.avatar is defined and proposal.creator.appUser.user.avatar is not null %}
                                         {"avatars" : [{"avatarSrc" : "{{ asset(proposal.creator.appUser.user.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}] }
                                     {% else %}
                                         {"avatars" : [{"pseudo" : "{{ proposal.creator.name }}"}] }
@@ -64,7 +63,7 @@
                                 <td>To define</td>
                                 <td>{{ proposal.expenseDate|date("d/m/Y") }}</td>
                                 <td>
-                                     {#Construction du Json avec la liste des participants#}
+                                    {#Construction du Json avec la liste des participants#}
                                     {"avatars" : [
                                     {% set firstElt = true %}
                                     {% for participant in proposal.listOfParticipants %}
@@ -74,7 +73,7 @@
                                             ,
                                         {% endif %}
                                         {% if participant.appUser.user.avatar is defined
-                                                    and participant.appUser.user.avatar is not null %}
+                                        and participant.appUser.user.avatar is not null %}
                                             {"avatarSrc" : "{{ asset(proposal.creator.appUser.user.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}
                                         {% else %}
                                             {"pseudo" : "{{ participant.name }}"}
@@ -106,9 +105,6 @@
             </div>
         </div>
     </div>
-
-    {#</div>#}
-
 
     <div class="modal fade" id="addPayment" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
@@ -160,7 +156,7 @@
     </div>
 {% endblock moduleBody %}
 
-    {% block moduleFooter %}{% endblock moduleFooter %}
+{% block moduleFooter %}{% endblock moduleFooter %}
 
 {#{% block moduleBody %}
     {{ parent() }}

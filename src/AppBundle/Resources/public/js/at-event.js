@@ -10,9 +10,21 @@ $(document).ready(function () {
     $('.datepicker').datetimepicker({
         format: "DD/MM/YYYY",
         locale: "fr",
+        showClear: true,
+        icons: {
+            time: 'zmdi zmdi-time',
+            date: 'zmdi zmdi-calendar',
+            up: 'zmdi zmdi-chevron-up',
+            down: 'zmdi zmdi-chevron-down',
+            previous: 'zmdi zmdi-chevron-left',
+            next: 'zmdi zmdi-chevron-right',
+            today: 'zmdi zmdi-gps-dot',
+            clear: 'zmdi zmdi-delete zmdi-hc-lg',
+            close: 'zmdi zmdi-close-circle-o zmdi-hc-lg'
+        },
         widgetPositioning: {
             horizontal: 'auto',
-            vertical: 'bottom'
+            vertical: 'auto'
         }
     });
 });
