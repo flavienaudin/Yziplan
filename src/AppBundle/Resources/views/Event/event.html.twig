@@ -2,7 +2,7 @@
 
 {% block mainMenu_listItems %}
     <li><a href="#event-header-card">{{ "global.event"|trans|capitalize }}</a></li>
-    {% for moduleDescription in modules if moduleDescription.module.name is not empty and moduleDescription.module.status != constant("AppBundle\\Entity\\enum\\ModuleStatus::DELETED")  %}
+    {% for moduleDescription in modules if moduleDescription.module.name is not empty and moduleDescription.module.status != constant("AppBundle\\Entity\\enum\\ModuleStatus::DELETED") %}
         <li><a href="#module-{{ moduleDescription.module.token }}">{{ moduleDescription.module.name|capitalize }}</a></li>
     {% endfor %}
 {% endblock mainMenu_listItems %}
@@ -39,6 +39,47 @@
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
+
+    <style>
+        .poll-container {
+            display: table;
+            table-layout: auto;
+            border-collapse: separate;
+            border-spacing: 0 2px;
+            margin: 0 auto;
+        }
+
+        .poll-container .pc-groupe-ligne {
+            display: table-row-group;
+        }
+
+        .poll-container .pc-ligne {
+            display: table-row;
+        }
+
+        .poll-container .pc-ligne .pcl-celulle {
+            display: table-cell;
+            text-align: center;
+            padding: 5px 10px;
+            vertical-align: middle;
+        }
+
+        .poll-container .pc-ligne .pcl-end-spacer {
+            display: table-cell;
+        }
+
+        .poll-container .pc-ligne .pcl-celulle:not(:first-child) {
+            width: 30px;
+        }
+
+        .poll-container .pc-ligne .pcl-celulle:first-child {
+            text-align: right;
+            font-weight: bold;
+            min-width: 100px;
+        }
+
+    </style>
+
 {% endblock stylesheets %}
 
 {% block javascripts %}

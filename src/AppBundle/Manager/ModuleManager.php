@@ -10,6 +10,7 @@ namespace AppBundle\Manager;
 
 
 use AppBundle\Entity\enum\ModuleStatus;
+use AppBundle\Entity\enum\ModuleType;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
 use Doctrine\ORM\EntityManager;
@@ -77,7 +78,7 @@ class ModuleManager
         $this->module->setStatus(ModuleStatus::IN_CREATION);
         $this->module->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         $this->module->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        if ($type == 'pollmodule') { // TODO define constantes
+        if ($type == ModuleType::POLL_MODULE) {
             $pollModule = new PollModule();
             $this->module->setPollModule($pollModule);
         }

@@ -3,22 +3,63 @@
 {% block moduleCardClass %}c-dark{% endblock moduleCardClass %}
 {% block moduleHeaderClass %}palette-Red bg{% endblock moduleHeaderClass %}
 {% block moduleHeaderAttributs %}{% endblock moduleHeaderAttributs %}
-{% block moduleHeader %}
-    {{ parent() }}
-{% endblock moduleHeader %}
 
-{% block moduleInformationClass %}m-t-20{% endblock %}
-{% block moduleInformationAttributs %}{% endblock %}
-
-{% block moduleBodyClass %}m-t-20{% endblock %}
-{% block moduleBodyAttributs %}{% endblock %}
-
-{% block moduleInformation %}
-    {{ parent() }}
-{% endblock moduleInformation %}
+{% block mhBtnFloat %}
+    <a data-toggle="modal" href="#addPollProposal">
+        <button class="btn palette-Red-A700 bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
+    </a>
+{% endblock mhBtnFloat %}
 
 {% block moduleBody %}
-    {{ parent() }}
+
+    <div class="p-5">
+        <div class="poll-container">
+            <div class="pc-ligne">
+                <div class="pcl-celulle"></div>
+                <div class="pcl-celulle">U1</div>
+                <div class="pcl-celulle">U2</div>
+                <div class="pcl-celulle">U3</div>
+                <div class="pcl-celulle">U4</div>
+                <div class="pcl-celulle">U5</div>
+                <div class="pcl-celulle">U3</div>
+                <div class="pcl-celulle">U4</div>
+                <div class="pcl-celulle">U5</div>
+                <div class="pcl-celulle"></div>
+            </div>
+            <div class="pc-groupe-ligne well">
+                <div class="pc-ligne">
+                    <div class="pcl-celulle ">
+                        <i class="zmdi zmdi-pin"></i> Element 1, 3 rue de la poste 58123 Saint-Péreuse-les-bains
+                    </div>
+                    <div class="pcl-celulle">Y</div>
+                    <div class="pcl-celulle">N</div>
+                    <div class="pcl-celulle">?</div>
+                    <div class="pcl-celulle">Y</div>
+                    <div class="pcl-celulle">1</div>
+                    <div class="pcl-celulle">1</div>
+                    <div class="pcl-celulle">1</div>
+                    <div class="pcl-celulle">1</div>
+                    <div class="pcl-celulle"><i class="zmdi zmdi-info zmdi-hc-2x c-teal"></i></div>
+                </div>
+                <div class="pc-ligne">
+                    <div class="pcl-celulle pcl-first">Element 2</div>
+                    <div class="pcl-celulle">Y</div>
+                    <div class="pcl-celulle">N</div>
+                    <div class="pcl-celulle">?</div>
+                    <div class="pcl-celulle">Y</div>
+                    <div class="pcl-celulle">1</div>
+                    <div class="pcl-celulle">1</div>
+                    <div class="pcl-celulle">1</div>
+                    <div class="pcl-celulle">1</div>
+                    <div class="pcl-celulle"><i class="zmdi zmdi-info zmdi-hc-2x c-teal"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
 {% endblock moduleBody %}
 
 {% block moduleFooter %}{% endblock moduleFooter %}

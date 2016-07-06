@@ -29,8 +29,16 @@
 }
 
 /*-----------------------------------
-
+    Fix Card style
 -----------------------------------*/
+
+.card.c-dark .card-header h2 {
+    color: #fff;
+}
+
+.card.c-dark .card-header h2 small {
+    color: rgba(255, 255, 255, 0.7);
+}
 
 .card-footer.card-padding {
     padding: 30px 33px;

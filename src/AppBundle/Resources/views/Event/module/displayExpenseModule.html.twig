@@ -1,7 +1,6 @@
 {% extends "@App/Event/module/displayModule.html.twig" %}
 
 {% block moduleCardClass %}c-dark{% endblock moduleCardClass %}
-
 {% block moduleHeaderClass %}ch-img{% endblock moduleHeaderClass %}
 {% block moduleHeaderAttributs %}style="background-image: url({{ asset('bundles/app/img/module-head/05.jpg') }}); height: 150px;"{% endblock moduleHeaderAttributs %}
 
@@ -14,18 +13,7 @@
     </a>
 {% endblock mhBtnFloat %}
 
-{% block moduleInformationClass %}{% endblock %}
-{% block moduleInformationAttributs %}{% endblock %}
-
-{% block moduleBodyClass %}m-t-20{% endblock %}
-{% block moduleBodyAttributs %}{% endblock %}
-
-{% block moduleInformation %}
-    {{ parent() }}
-{% endblock moduleInformation %}
-
 {% block moduleBody %}
-    {{ parent() }}
     <div role="tabpanel">
         <ul class="tab-nav" role="tablist">
             <li class="active"><a href="#displayExpense" aria-controls="displayExpense" role="tab" data-toggle="tab" aria-expanded="false">Dépenses</a></li>

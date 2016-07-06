@@ -82,7 +82,8 @@
                 <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
                 <ul class="dropdown-menu pull-right">
                     <li>
-                        <a href="{{ url('addEventModule', {'eventTokenEdition': event.tokenEdition, 'type':'ollmodule'}) }}" id="addWhenPollModule"> <i
+                        <a href="{{ url('addEventModule', {'eventTokenEdition': event.tokenEdition, 'type':constant('AppBundle\\Entity\\enum\\ModuleType::POLL_MODULE')}) }}"
+                        id="addWhenPollModule"> <i
                                     class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i>
                             <small>Sondage Quand ?</small>
                         </a>
