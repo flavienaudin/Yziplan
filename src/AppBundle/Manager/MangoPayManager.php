@@ -1,7 +1,7 @@
 <?php
 namespace AppBundle\Manager;
 
-use AppBundle\Entity\AppUser;
+use AppBundle\Entity\payment\Wallet;
 use AppBundle\Manager\exception\MissingUserInformationException;
 use ATUserBundle\Entity\User;
 use ATUserBundle\Entity\UserAbout;
@@ -15,9 +15,9 @@ use MangoPay;
  * Time: 16:57
  *
  * Service permettant d'utiliser l'API de MangoPay : https://docs.mangopay.com/api-references/
- * 
+ *
  * /!\ l'enregistrement d'un moyen de paiement doit se faire par un appel direct à MangoPay en JS et ne pas passer par nos serveurs
- * 
+ *
  */
 class MangoPayManager
 {
@@ -39,8 +39,8 @@ class MangoPayManager
         $this->mangoPayApi->Config->TemporaryFolder = $temporaryFolder;
 
         // Par default mangopay est configuré pour la SandBox, si l'URL de prod est définie, alors on utilise celle de prod.
-        if ($baseURL != null && $baseURL != ''){
-            $this->mangoPayApi->Config->BaseUrl =$baseURL;
+        if ($baseURL != null && $baseURL != '') {
+            $this->mangoPayApi->Config->BaseUrl = $baseURL;
         }
     }
 
@@ -52,7 +52,8 @@ class MangoPayManager
      * @param $mangoUserId
      * @return MangoPay\UserLegal|MangoPay\UserNatural
      */
-    public function getMangoUserById($mangoUserId){
+    public function getMangoUserById($mangoUserId)
+    {
         $mangoUser = $this->mangoPayApi->Users->Get($mangoUserId);
         return $mangoUser;
     }
@@ -63,19 +64,23 @@ class MangoPayManager
      * @return MangopPayUser $mangoUser créé
      * @throws MissingUserInformationException contient un array des champs manquants
      */
-    public function CreateMangoUserNatural(User $user)
+    public function createMangoUser(User $user)
     {
+        // Si l'utilisateur existe déjà on le retourne.
+        if ($user->getAppUser()->getMangoPayUserId() != null) {
+            return $this->getMangoUserById($user->getAppUser()->getMangoPayUserId());
+        }
 
         $userAbout = $user->getUserAbout();
-        if ($userAbout != null){
-            if($userAbout->getUserType() == null){
+        if ($userAbout != null) {
+            if ($userAbout->getUserType() == null) {
                 throw new MissingUserInformationException(array(MissingUserInformationException::USERTYPE));
             }
-            if (UserAbout::NATURAL == $userAbout->getUserType()){
+            if (UserAbout::NATURAL == $userAbout->getUserType()) {
                 // On verifie s'il manque des champs
-                try{
-                    $this->CheckUserNaturalInformation($user);
-                }catch (MissingUserInformationException $e){
+                try {
+                    $this->checkUserNaturalInformation($user);
+                } catch (MissingUserInformationException $e) {
                     throw $e;
                 }
 
@@ -89,14 +94,28 @@ class MangoPayManager
                 $mangoUser->CountryOfResidence = $userAbout->getCountryOfResidence();
                 $mangoUser->Email = $user->getEmail();
 
-                $mangoUser = $this->mangoPayApi->Users->Create($mangoUser);
-                return $mangoUser;
-            }
-            else if (UserAbout::LEGAL == $userAbout->getUserType()){
+
+                try {
+                    $mangoUser = $this->mangoPayApi->Users->Create($mangoUser);
+                    // Mise a jour de l'utilisateur avec son AppId
+                    $user->getAppUser()->setMangoPayUserId($mangoUser->Id);
+
+                    $this->entityManager->persist($user);
+                    $this->entityManager->flush();
+
+                    return $mangoUser;
+                } catch (MangoPay\Libraries\ResponseException $e) {
+                    // handle/log the response exception with code $e->GetCode(), message $e->GetMessage() and error(s) $e->GetErrorDetails()
+                    throw $e;
+                } catch (MangoPay\Libraries\Exception $e) {
+                    // handle/log the exception $e->GetMessage()
+                    throw $e;
+                }
+            } else if (UserAbout::LEGAL == $userAbout->getUserType()) {
                 // On verifie s'il manque des champs
-                try{
-                    $this->CheckUserLegalInformation($user);
-                }catch (MissingUserInformationException $e){
+                try {
+                    $this->checkUserLegalInformation($user);
+                } catch (MissingUserInformationException $e) {
                     throw $e;
                 }
 
@@ -111,103 +130,148 @@ class MangoPayManager
                 $mangoUser->LegalRepresentativeCountryOfResidence = $userAbout->getCountryOfResidence();
                 $mangoUser->LegalRepresentativeEmail = $userAbout->getGenericBusinessEmail();
 
-                $mangoUser = $this->mangoPayApi->Users->Create($mangoUser);
-                return $mangoUser;
+                try {
+                    $mangoUser = $this->mangoPayApi->Users->Create($mangoUser);
+                    // Mise a jour de l'utilisateur avec son AppId
+                    $user->getAppUser()->setMangoPayUserId($mangoUser->Id);
+
+                    $this->entityManager->persist($user);
+                    $this->entityManager->flush();
+
+                    return $mangoUser;
+                } catch (MangoPay\Libraries\ResponseException $e) {
+                    // handle/log the response exception with code $e->GetCode(), message $e->GetMessage() and error(s) $e->GetErrorDetails()
+                    throw $e;
+                } catch (MangoPay\Libraries\Exception $e) {
+                    // handle/log the exception $e->GetMessage()
+                    throw $e;
+                }
             }
-        }
-        else{
+        } else {
             throw new MissingUserInformationException(array(MissingUserInformationException::USERABOUTINFORMATION));
         }
     }
 
-    private function CheckUserNaturalInformation(User $user){
+    private function checkUserNaturalInformation(User $user)
+    {
         $userAbout = $user->getUserAbout();
         $missingInformation = array();
-        if($userAbout->getFirstName() == null){
+        if ($userAbout->getFirstName() == null) {
             array_push($missingInformation, MissingUserInformationException::FIRSTNAME);
         }
-        if($userAbout->getLastName() == null){
+        if ($userAbout->getLastName() == null) {
             array_push($missingInformation, MissingUserInformationException::LASTNAME);
         }
-        if($userAbout->getBirthday() == null){
+        if ($userAbout->getBirthday() == null) {
             array_push($missingInformation, MissingUserInformationException::BIRTHDAY);
         }
-        if($userAbout->getNationality() == null){
+        if ($userAbout->getNationality() == null) {
             array_push($missingInformation, MissingUserInformationException::NATIONALITY);
         }
-        if($userAbout->getCountryOfResidence() == null){
+        if ($userAbout->getCountryOfResidence() == null) {
             array_push($missingInformation, MissingUserInformationException::COUNTRYOFRESIDENCE);
         }
-        if($user->getEmail() == null){
+        if ($user->getEmail() == null) {
             array_push($missingInformation, MissingUserInformationException::EMAIL);
         }
-        if (!empty ($missingInformation)){
+        if (!empty ($missingInformation)) {
             throw new MissingUserInformationException($missingInformation);
         }
     }
 
-    private function CheckUserLegalInformation(User $user){
+    private function checkUserLegalInformation(User $user)
+    {
         $userAbout = $user->getUserAbout();
         $missingInformation = array();
-        if($userAbout->getBusinessName() == null){
+        if ($userAbout->getBusinessName() == null) {
             array_push($missingInformation, MissingUserInformationException::BUSiNESSNAME);
         }
-        if($userAbout->getFirstName() == null){
+        if ($userAbout->getFirstName() == null) {
             array_push($missingInformation, MissingUserInformationException::LEGALREPRESENTATIVE_FIRSTNAME);
         }
-        if($userAbout->getLastName() == null){
+        if ($userAbout->getLastName() == null) {
             array_push($missingInformation, MissingUserInformationException::LEGALREPRESENTATIVE_LASTNAME);
         }
-        if($userAbout->getBirthday() == null){
+        if ($userAbout->getBirthday() == null) {
             array_push($missingInformation, MissingUserInformationException::LEGALREPRESENTATIVE_BIRTHDAY);
         }
-        if($userAbout->getNationality() == null){
+        if ($userAbout->getNationality() == null) {
             array_push($missingInformation, MissingUserInformationException::LEGALREPRESENTATIVE_NATIONALITY);
         }
-        if($userAbout->getCountryOfResidence() == null){
+        if ($userAbout->getCountryOfResidence() == null) {
             array_push($missingInformation, MissingUserInformationException::LEGALREPRESENTATIVE_COUNTRYOFRESIDENCE);
         }
-        if($user->getEmail() == null){
+        if ($user->getEmail() == null) {
             array_push($missingInformation, MissingUserInformationException::LEGALREPRESENTATIVE_EMAIL);
         }
-        if (!empty ($missingInformation)){
+        if (!empty ($missingInformation)) {
             throw new MissingUserInformationException($missingInformation);
         }
     }
 
 
+    /**
+     * @param $mangoWalletId
+     * @return MangoPay\Wallet
+     * @throws MangoPay\Libraries\Exception
+     * @throws MangoPay\Libraries\ResponseException
+     */
+    public function getMangoWalletById($mangoWalletId){
+        try {
+            $Wallet = $this->mangoPayApi->Wallets->Get($mangoWalletId);
+            return $Wallet;
 
-    public function testMango()
-    {
-        $mangoUser1 = new MangoPay\UserNatural();
-        $mangoUser1->PersonType = "NATURAL";
-        $mangoUser1->FirstName = 'John';
-        $mangoUser1->LastName = 'Doe';
-        $mangoUser1->Birthday = 1409735187;
-        $mangoUser1->Nationality = "FR";
-        $mangoUser1->CountryOfResidence = "FR";
-        $mangoUser1->Email = 'john.doe@mail.com';
-
-        //Send the request
-        $mangoUser1 = $this->mangoPayApi->Users->Create($mangoUser1);
-
-        $mangoUser2 = new MangoPay\UserNatural();
-        $mangoUser2->PersonType = "NATURAL";
-        $mangoUser2->FirstName = 'John';
-        $mangoUser2->LastName = 'Doe';
-        $mangoUser2->Birthday = 1409735187;
-        $mangoUser2->Nationality = "FR";
-        $mangoUser2->CountryOfResidence = "FR";
-        $mangoUser2->Email = 'john.doe@mail.com';
-
-        //Send the request
-        $mangoUser2 = $this->mangoPayApi->Users->Create($mangoUser2);
-
-        $wallet1 = new MangoPay\Wallet();
-        $wallet1->Currency = "EUR";
-        $wallet1->Balance = 10;
-        $wallet1->Owners = array($mangoUser1);
-
-        return $mangoUser1;
+        } catch(MangoPay\Libraries\ResponseException $e) {
+            // handle/log the response exception with code $e->GetCode(), message $e->GetMessage() and error(s) $e->GetErrorDetails()
+            throw $e;
+        } catch(MangoPay\Libraries\Exception $e) {
+            // handle/log the exception $e->GetMessage()
+            throw $e;
+        }
     }
+
+    /**
+     * @param Wallet $atWallet
+     * @param string $currency
+     * @return MangoPay\Wallet
+     * @throws MangoPay\Libraries\Exception
+     * @throws MangoPay\Libraries\ResponseException
+     */
+    public function createMangoWallet(Wallet $atWallet, $currency = "EUR")
+    {
+        // Si l'utilisateur existe déjà on le retourne.
+        if ($atWallet->getMangoPayEWalletId() != null) {
+            return $this->getMangoWalletById($atWallet->getMangoPayEWalletId());
+        }
+        
+        try {
+            $Wallet = new \MangoPay\Wallet();
+            $Wallet->Tag = $atWallet->getId();
+            $Wallet->Owners = $atWallet->getModuleInvitation()->getEventInvitation()->getAppUser()->getMangoPayUserId();
+            $description = $atWallet->getModuleInvitation()->getModule()->getName();
+            if($description!= null){
+                $Wallet->Description = $description;
+            }else{
+                $Wallet->Description = "No description";
+            }
+            $Wallet->Currency = $currency;
+            $Wallet = $this->mangoPayApi->Wallets->Create($Wallet);
+
+            $atWallet->setMangoPayEWalletId($Wallet->Id);
+
+            $this->entityManager->persist($atWallet);
+            $this->entityManager->flush();
+
+            return $Wallet;
+
+        } catch(MangoPay\Libraries\ResponseException $e) {
+            // handle/log the response exception with code $e->GetCode(), message $e->GetMessage() and error(s) $e->GetErrorDetails()
+            throw $e;
+        } catch(MangoPay\Libraries\Exception $e) {
+            // handle/log the exception $e->GetMessage()
+            throw $e;
+        }
+    }
+
+    
 }
