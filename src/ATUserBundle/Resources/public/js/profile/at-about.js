@@ -47,7 +47,7 @@ $('form').on("submit", function (e) {
         $(t).removeClass('toggled');
     }).fail(function (jqXHR, textStatus, errorThrown) {
         var responseJSON = jqXHR.responseJSON;
-        if (responseJSON.formErrors) {
+        if (responseJSON != undefined && responseJSON.formErrors) {
             var formErrors = responseJSON.formErrors;
             for (var fieldErrorName in formErrors) {
                 if (formErrors.hasOwnProperty(fieldErrorName)) {

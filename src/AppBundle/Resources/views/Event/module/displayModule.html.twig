@@ -151,7 +151,6 @@
                 $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
                     e.preventDefault();
                     var preloader = $('.at-global-preloader');
-                    console.log(preloader);
                     $(preloader).show();
                     var $form = $(this);
                     $('.has-error').each(function () {
@@ -178,7 +177,7 @@
                         });
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         var responseJSON = jqXHR.responseJSON;
-                        if (responseJSON.formErrors) {
+                        if (responseJSON != undefined && responseJSON.formErrors) {
                             var formErrors = responseJSON.formErrors;
                             for (var fieldErrorName in formErrors) {
                                 if (formErrors.hasOwnProperty(fieldErrorName)) {
@@ -190,6 +189,7 @@
                         }
                     }).always(function (responseDataOrJSON) {
                         if (responseDataOrJSON.responseJSON) {
+                            // In case of fail()
                             responseDataOrJSON = responseDataOrJSON.responseJSON;
                         }
                         if (responseDataOrJSON.messages) {
