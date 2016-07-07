@@ -2,6 +2,9 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\module\PollModule;
+use AppBundle\Entity\module\PollProposal;
+use AppBundle\Entity\module\PollProposalResponse;
 use AppBundle\Entity\payment\Wallet;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -62,10 +65,62 @@ class ModuleInvitation
     private $wallet;
 
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\module\PollProposalResponse", mappedBy="moduleInvitation")
+     */
+    private $pollProposalResponses;
+
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->pollProposalResponses = new ArrayCollection();
+    }
+
+    /***********************************************************************
+     *                      Methods
+     ***********************************************************************/
+
+    /**
+     * Initialize the response for pollModule
+     *
+     * @return bool true if responses were initialize, false if pollModule is null
+     */
+    public function initPollModuleResponse()
+    {
+        if ($this->module->getPollModule() != null) {
+            /** @var PollModule $pollModule */
+            $pollModule = $this->module->getPollModule();
+            /** @var PollProposal $pollProposal */
+            foreach ($pollModule->getPollProposals() as $pollProposal) {
+                $existResponse = false;
+                for ($i = 0; $i < count($this->pollProposalResponses) && !$existResponse; $i++) {
+                    /** @var PollProposalResponse $response */
+                    $response = $this->pollProposalResponses[$i];
+                    if ($response->getPollProposal() == $pollProposal) {
+                        $existResponse = true;
+                    }
+                }
+                if (!$existResponse) {
+                    $newResponse = new PollProposalResponse();
+                    $pollProposal->addProposalResponse($newResponse);
+                    $this->addPollProposalResponse($newResponse);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+
     /***********************************************************************
      *                      Getters and Setters
      ***********************************************************************/
-    
+
     /**
      * Get id
      *
@@ -170,5 +225,38 @@ class ModuleInvitation
     public function getWallet()
     {
         return $this->wallet;
+    }
+
+    /**
+     * Add pollProposalResponse
+     *
+     * @param PollProposalResponse $pollProposalResponse
+     *
+     * @return ModuleInvitation
+     */
+    public function addPollProposalResponse(PollProposalResponse $pollProposalResponse)
+    {
+        $this->pollProposalResponses[] = $pollProposalResponse;
+        $pollProposalResponse->setModuleInvitation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove pollProposalResponse
+     *
+     * @param PollProposalResponse $pollProposalResponse
+     */
+    public function removeProposalElementResponse(\AppBundle\Entity\module\PollProposalResponse $pollProposalResponse)
+    {
+        $this->pollProposalResponses->removeElement($pollProposalResponse);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getPollProposalResponses()
+    {
+        return $this->pollProposalResponses;
     }
 }

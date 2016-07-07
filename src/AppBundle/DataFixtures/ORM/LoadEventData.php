@@ -11,13 +11,16 @@ namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\AppUser;
 use AppBundle\Entity\enum\EventStatus;
+use AppBundle\Entity\enum\PollProposalElementType;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\ExpenseModule;
 use AppBundle\Entity\module\ExpenseProposal;
 use AppBundle\Entity\module\PollModule;
-use AppBundle\Entity\module\Proposal;
+use AppBundle\Entity\module\PollProposal;
+use AppBundle\Entity\module\PollProposalElement;
+use AppBundle\Entity\ModuleInvitation;
 use AppBundle\Manager\GenerateursToken;
 use ATUserBundle\Entity\User;
 use ATUserBundle\Manager\UtilisateurManager;
@@ -140,10 +143,35 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $pollModule = new PollModule();
         $modulePoll->setPollModule($pollModule);
 
-        $pollProposal = new Proposal();
-        $pollProposal->setName("PollModuleProposal Nom");
-        $pollProposal->setDescription("PollModule Proposal description");
-        $pollModule->addProposal($pollProposal);
+        $pollProposal1 = new PollProposal();
+        $pollProposal1->setName("PollModule Proposal Nom 1");
+        $pollProposal1->setDescription("PollModule Proposal description 1");
+        $pollProposal1->setCreator($eventInvitationCreator);
+        $pollProposalElement1 = new PollProposalElement();
+        $pollProposalElement1->setName("PMP1 elt1");
+        $pollProposalElement1->setType(PollProposalElementType::STRING);
+        $pollProposal1->addProposalElement($pollProposalElement1);
+        $pollProposalElement2 = new PollProposalElement();
+        $pollProposalElement2->setName("PMP1 elt22");
+        $pollProposalElement2->setType(PollProposalElementType::STRING);
+        $pollProposal1->addProposalElement($pollProposalElement2);
+        $pollModule->addPollProposal($pollProposal1);
+
+        $pollProposal2 = new PollProposal();
+        $pollProposal2->setName("PollModule Proposal Nom 2");
+        $pollProposal2->setDescription("PollModule Proposal description 2");
+        $pollProposal2->setCreator($eventInvitationCreator);
+        $pollModule->addPollProposal($pollProposal2);
+
+        $moduleInvitation1 = new ModuleInvitation();
+        $moduleInvitation1->setModule($modulePoll);
+        $moduleInvitation1->initPollModuleResponse();
+        $eventInvitationCreator->addModuleInvitation($moduleInvitation1);
+
+        $moduleInvitation2 = new ModuleInvitation();
+        $moduleInvitation2->setModule($modulePoll);
+        $moduleInvitation2->initPollModuleResponse();
+        $eventInvitation->addModuleInvitation($moduleInvitation2);
 
         $manager->persist($event);
         $manager->flush();

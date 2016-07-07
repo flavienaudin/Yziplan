@@ -71,7 +71,7 @@ class Module
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
-    
+
     /**
      * @var Event
      *
@@ -125,11 +125,11 @@ class Module
     {
         $this->moduleInvitations = new ArrayCollection();
     }
-    
+
     /*******************************************************************************************************
      *                                Getters and Setters
      ********************************************************************************************************/
-    
+
     /**
      * Get id
      *
@@ -373,10 +373,10 @@ class Module
      *
      * @return Module
      */
-    public function setPollModule(PollModule $pollModule = null)
+    public function setPollModule(PollModule $pollModule)
     {
         $this->pollModule = $pollModule;
-        $pollModule->setModule($this);
+        $this->pollModule->setModule($this);
 
         return $this;
     }
@@ -398,7 +398,7 @@ class Module
      *
      * @return Module
      */
-    public function setExpenseModule(ExpenseModule $expenseModule = null)
+    public function setExpenseModule(ExpenseModule $expenseModule)
     {
         $this->expenseModule = $expenseModule;
         $expenseModule->setModule($this);

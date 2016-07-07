@@ -11,55 +11,44 @@
 {% endblock mhBtnFloat %}
 
 {% block moduleBody %}
-
-    <div class="p-5">
-        <div class="poll-container">
-            <div class="pc-ligne">
-                <div class="pcl-celulle"></div>
-                <div class="pcl-celulle">U1</div>
-                <div class="pcl-celulle">U2</div>
-                <div class="pcl-celulle">U3</div>
-                <div class="pcl-celulle">U4</div>
-                <div class="pcl-celulle">U5</div>
-                <div class="pcl-celulle">U3</div>
-                <div class="pcl-celulle">U4</div>
-                <div class="pcl-celulle">U5</div>
-                <div class="pcl-celulle"></div>
-            </div>
-            <div class="pc-groupe-ligne well">
-                <div class="pc-ligne">
-                    <div class="pcl-celulle ">
-                        <i class="zmdi zmdi-pin"></i> Element 1, 3 rue de la poste 58123 Saint-Péreuse-les-bains
+    {% if module.pollModule is not null %}
+        <div class="panel">
+            <div class="panel-body">
+                <h1>PollModule</h1>
+                <div class="p-5">
+                    <div class="poll-container">
+                        <div class="pc-ligne">
+                            <div class="pcl-celulle"></div>
+                            {% for moduleInvitation in module.moduleInvitations %}
+                                <div class="pcl-celulle">
+                                    {{ moduleInvitation.eventInvitation.name is not empty ? moduleInvitation.eventInvitation.name:moduleInvitation.eventInvitation.appUser.user }}
+                                </div>
+                            {% endfor %}
+                            <div class="pcl-celulle"></div>
+                        </div>
+                        <div class="pc-groupe-ligne well">
+                            {% for pollProposal in module.pollModule.pollProposals %}
+                                <div class="pc-ligne">
+                                    <div class="pcl-celulle ">
+                                        {{ pollProposal.name }}<br>
+                                        <small>{{ pollProposal.description }}</small>
+                                        <br>
+                                        {% for ppElt in pollProposal.pollProposalElements %}
+                                            {{ ppElt.name }} ({{ ppElt.type }}){% if not loop.last %}, {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {% for ppResponse in pollProposal.pollProposalResponses %}
+                                        <div class="pcl-celulle">{{ ppResponse.value is empty?'?':ppResponse.value }}</div>
+                                    {% endfor %}
+                                    <div class="pcl-celulle"><i class="zmdi zmdi-info zmdi-hc-2x c-teal"></i></div>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
-                    <div class="pcl-celulle">Y</div>
-                    <div class="pcl-celulle">N</div>
-                    <div class="pcl-celulle">?</div>
-                    <div class="pcl-celulle">Y</div>
-                    <div class="pcl-celulle">1</div>
-                    <div class="pcl-celulle">1</div>
-                    <div class="pcl-celulle">1</div>
-                    <div class="pcl-celulle">1</div>
-                    <div class="pcl-celulle"><i class="zmdi zmdi-info zmdi-hc-2x c-teal"></i></div>
-                </div>
-                <div class="pc-ligne">
-                    <div class="pcl-celulle pcl-first">Element 2</div>
-                    <div class="pcl-celulle">Y</div>
-                    <div class="pcl-celulle">N</div>
-                    <div class="pcl-celulle">?</div>
-                    <div class="pcl-celulle">Y</div>
-                    <div class="pcl-celulle">1</div>
-                    <div class="pcl-celulle">1</div>
-                    <div class="pcl-celulle">1</div>
-                    <div class="pcl-celulle">1</div>
-                    <div class="pcl-celulle"><i class="zmdi zmdi-info zmdi-hc-2x c-teal"></i></div>
                 </div>
             </div>
         </div>
-    </div>
-
-
-
-
+    {% endif %}
 {% endblock moduleBody %}
 
 {% block moduleFooter %}{% endblock moduleFooter %}

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Entity\module\ProposalElementResponse;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -37,7 +36,7 @@ class EventInvitation
     /**
      * @var Event
      *
-     * @ORM\ManyToOne(targetEntity="Event", inversedBy="eventInvitations")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Event", inversedBy="eventInvitations")
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
      */
     private $event;
@@ -48,7 +47,7 @@ class EventInvitation
     /**
      * @var AppUser
      *
-     * @ORM\ManyToOne(targetEntity="AppUser", inversedBy="eventInvitations")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\AppUser", inversedBy="eventInvitations")
      * @ORM\JoinColumn(name="app_user_id", referencedColumnName="id")
      */
     private $appUser;
@@ -63,16 +62,10 @@ class EventInvitation
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="ModuleInvitation", mappedBy="eventInvitation")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\ModuleInvitation", mappedBy="eventInvitation", cascade={"persist"} )
      */
     private $moduleInvitations;
-    
-    /**
-     * @var ProposalElementResponse
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\module\ProposalElementResponse", mappedBy="eventInvitation")
-     */
-    private $proposalElementResponse;
+
     /***********************************************************************
      *                      Getters and Setters
      ***********************************************************************/
@@ -109,47 +102,6 @@ class EventInvitation
     public function getEvent()
     {
         return $this->event;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->proposalElementResponse = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    /**
-     * Add proposalElementResponse
-     *
-     * @param \AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse
-     *
-     * @return EventInvitation
-     */
-    public function addProposalElementResponse(\AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse)
-    {
-        $this->proposalElementResponse[] = $proposalElementResponse;
-
-        return $this;
-    }
-
-    /**
-     * Remove proposalElementResponse
-     *
-     * @param \AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse
-     */
-    public function removeProposalElementResponse(\AppBundle\Entity\module\ProposalElementResponse $proposalElementResponse)
-    {
-        $this->proposalElementResponse->removeElement($proposalElementResponse);
-    }
-
-    /**
-     * Get proposalElementResponse
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getProposalElementResponse()
-    {
-        return $this->proposalElementResponse;
     }
 
     /**
@@ -203,13 +155,14 @@ class EventInvitation
     /**
      * Add moduleInvitation
      *
-     * @param \AppBundle\Entity\ModuleInvitation $moduleInvitation
+     * @param ModuleInvitation $moduleInvitation
      *
      * @return EventInvitation
      */
-    public function addModuleInvitation(\AppBundle\Entity\ModuleInvitation $moduleInvitation)
+    public function addModuleInvitation(ModuleInvitation $moduleInvitation)
     {
         $this->moduleInvitations[] = $moduleInvitation;
+        $moduleInvitation->setEventInvitation($this);
 
         return $this;
     }
@@ -217,9 +170,9 @@ class EventInvitation
     /**
      * Remove moduleInvitation
      *
-     * @param \AppBundle\Entity\ModuleInvitation $moduleInvitation
+     * @param ModuleInvitation $moduleInvitation
      */
-    public function removeModuleInvitation(\AppBundle\Entity\ModuleInvitation $moduleInvitation)
+    public function removeModuleInvitation(ModuleInvitation $moduleInvitation)
     {
         $this->moduleInvitations->removeElement($moduleInvitation);
     }

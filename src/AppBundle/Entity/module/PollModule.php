@@ -2,10 +2,11 @@
 
 namespace AppBundle\Entity\module;
 
-use AppBundle\Entity\Module as Module;
+use AppBundle\Entity\Module;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+
 
 /**
  * PollModule
@@ -28,7 +29,7 @@ class PollModule
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity="\AppBundle\Entity\Module", inversedBy="pollModule")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Module", inversedBy="pollModule")
      * @ORM\JoinColumn(name="module_id", referencedColumnName="id")
      *
      * @var Module
@@ -38,16 +39,16 @@ class PollModule
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Proposal", mappedBy="pollModule", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\module\PollProposal", mappedBy="pollModule", cascade={"persist"})
      */
-    private $proposals;
+    private $pollProposals;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->proposals = new ArrayCollection();
+        $this->pollProposals = new ArrayCollection();
     }
 
     /***********************************************************************
@@ -91,14 +92,14 @@ class PollModule
     /**
      * Add proposal
      *
-     * @param Proposal $proposal
+     * @param PollProposal $pollProposal
      *
      * @return PollModule
      */
-    public function addProposal(Proposal $proposal)
+    public function addPollProposal(PollProposal $pollProposal)
     {
-        $this->proposals[] = $proposal;
-        $proposal->setPollModule($this);
+        $this->pollProposals[] = $pollProposal;
+        $pollProposal->setPollModule($this);
 
         return $this;
     }
@@ -106,11 +107,12 @@ class PollModule
     /**
      * Remove proposal
      *
-     * @param Proposal $proposal
+     * @param PollProposal $pollProposal
      */
-    public function removeProposal(Proposal $proposal)
+    public function removePollProposal(PollProposal $pollProposal)
     {
-        $this->proposals->removeElement($proposal);
+        //TODO set Status
+        $this->pollProposals->removeElement($pollProposal);
     }
 
     /**
@@ -118,8 +120,8 @@ class PollModule
      *
      * @return ArrayCollection
      */
-    public function getProposals()
+    public function getPollProposals()
     {
-        return $this->proposals;
+        return $this->pollProposals;
     }
 }
