@@ -1,0 +1,22 @@
+<div class="pc-ligne">
+    <div class="pcl-celulle ">
+        {{ pollProposal.name }}<br>
+        <small>{{ pollProposal.description }}</small>
+        <br>
+        {% for ppElt in pollProposal.pollProposalElements %}
+            {{ ppElt.name }} ({{ ppElt.type }}){% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </div>
+    {% for moduleInvitation in moduleInvitations %}
+        <div class="pcl-celulle">
+            {% for ppResponse in moduleInvitation.pollProposalResponses if ppResponse.pollProposal == pollProposal %}
+                {{ ppResponse.value is empty?'?':ppResponse.value }}
+            {% else %}
+                ?
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <div class="pcl-celulle">
+        <i class="zmdi zmdi-info zmdi-hc-2x c-teal"></i>
+    </div>
+</div>

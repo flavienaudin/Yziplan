@@ -48,7 +48,7 @@ class PollProposalResponse
     /**
      * @var ModuleInvitation
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\ModuleInvitation", inversedBy="pollProposalResponse")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\ModuleInvitation", inversedBy="pollProposalResponses")
      * @ORM\JoinColumn(name="module_invitation_id", referencedColumnName="id")
      */
     private $moduleInvitation;

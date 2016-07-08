@@ -14,7 +14,12 @@
         <div class="col-xs-12 col-sm-8" id="eventModulesContainer">
             {% for moduleDescription in modules if moduleDescription.module.status != constant("AppBundle\\Entity\\enum\\ModuleStatus::DELETED") %}
                 {% if moduleDescription.module.pollModule is not null %}
-                    {{ include('@App/Event/module/displayPollModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleForm}) }}
+                    {{ include('@App/Event/module/displayPollModule.html.twig', {
+                        'module':moduleDescription.module,
+                        'allowEdit':moduleDescription.allowEdit,
+                        'moduleForm':moduleDescription.moduleForm,
+                        'addPollProposalForm':(moduleDescription.addPollProposalForm is defined?moduleDescription.addPollProposalForm:null )
+                    }) }}
                 {% elseif moduleDescription.module.expenseModule is not null %}
                     {{ include('@App/Event/module/displayExpenseModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleForm}) }}
                 {% else %}
@@ -40,45 +45,6 @@
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
 
-    <style>
-        .poll-container {
-            display: table;
-            table-layout: auto;
-            border-collapse: separate;
-            border-spacing: 0 2px;
-            margin: 0 auto;
-        }
-
-        .poll-container .pc-groupe-ligne {
-            display: table-row-group;
-        }
-
-        .poll-container .pc-ligne {
-            display: table-row;
-        }
-
-        .poll-container .pc-ligne .pcl-celulle {
-            display: table-cell;
-            text-align: center;
-            padding: 5px 10px;
-            vertical-align: middle;
-        }
-
-        .poll-container .pc-ligne .pcl-end-spacer {
-            display: table-cell;
-        }
-
-        .poll-container .pc-ligne .pcl-celulle:not(:first-child) {
-            width: 30px;
-        }
-
-        .poll-container .pc-ligne .pcl-celulle:first-child {
-            text-align: left;
-            font-weight: bold;
-            min-width: 100px;
-        }
-
-    </style>
 
 {% endblock stylesheets %}
 

@@ -1,46 +1,61 @@
 {% extends "@App/Event/module/displayModule.html.twig" %}
 
+{% set maxColModule = 10 %}
+
 {% block moduleCardClass %}c-dark{% endblock moduleCardClass %}
 {% block moduleHeaderClass %}palette-Red bg{% endblock moduleHeaderClass %}
 {% block moduleHeaderAttributs %}{% endblock moduleHeaderAttributs %}
 
 {% block mhBtnFloat %}
-    <a data-toggle="modal" href="#addPollProposal">
-        <button class="btn palette-Red-A700 bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
-    </a>
+    {% if addPollProposalForm is defined and addPollProposalForm is not null %}
+        <a data-toggle="modal" href="#addPollProposal_modal_{{ module.token }}">
+            <button class="btn palette-Red-A700 bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
+        </a>
+    {% endif %}
 {% endblock mhBtnFloat %}
 
 {% block moduleBody %}
+    {{ parent() }}
     {% if module.pollModule is not null %}
         <div class="panel">
             <div class="panel-body">
-                <h1>PollModule</h1>
                 <div class="p-5">
                     <div class="poll-container">
                         <div class="pc-ligne">
                             <div class="pcl-celulle"></div>
-                            {% for moduleInvitation in module.moduleInvitations %}
+                            {% for moduleInvitation in module.moduleInvitations|slice(0,maxColModule) %}
                                 <div class="pcl-celulle">
-                                    {{ moduleInvitation.eventInvitation.name is not empty ? moduleInvitation.eventInvitation.name:moduleInvitation.eventInvitation.appUser.user }}
+                                    {% if moduleInvitation.name is not empty %}
+                                        {{ moduleInvitation.name }}
+                                    {% elseif moduleInvitation.eventInvitation.name is not empty %}
+                                        {{ moduleInvitation.eventInvitation.name }}
+                                    {% elseif moduleInvitation.eventInvitation.appUser.user is not null and moduleInvitation.eventInvitation.appUser.user is not empty %}
+                                        {{ moduleInvitation.eventInvitation.appUser.user }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
                                 </div>
                             {% endfor %}
-                            <div class="pcl-celulle"></div>
+                            <div class="pcl-celulle">
+                                {% if module.moduleInvitations|length > maxColModule %}
+                                    <span class="zmdi-hc-stack zmdi-hc-lg">
+                                        <i class="zmdi zmdi-circle zmdi-hc-stack-2x"></i>
+                                        <i class="zmdi zmdi-more zmdi-hc-stack-1x zmdi-hc-inverse"></i>
+                                    </span>
+                                {% endif %}
+                            </div>
                         </div>
-                        <div class="pc-groupe-ligne well">
+                        <div class="pc-groupe-ligne palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
                             {% for pollProposal in module.pollModule.pollProposals %}
-                                <div class="pc-ligne">
-                                    <div class="pcl-celulle ">
-                                        {{ pollProposal.name }}<br>
-                                        <small>{{ pollProposal.description }}</small>
-                                        <br>
-                                        {% for ppElt in pollProposal.pollProposalElements %}
-                                            {{ ppElt.name }} ({{ ppElt.type }}){% if not loop.last %}, {% endif %}
-                                        {% endfor %}
+                                {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
+                                    "pollProposal":pollProposal,
+                                    "moduleInvitations":module.moduleInvitations|slice(0,maxColModule)
+                                }) }}
+                            {% else %}
+                                <div class="pc-ligne" id="pp-empty-{{ module.token }}">
+                                    <div class="pcl-celulle w-100">
+                                        {{ "noPollProposal"|trans }}
                                     </div>
-                                    {% for ppResponse in pollProposal.pollProposalResponses %}
-                                        <div class="pcl-celulle">{{ ppResponse.value is empty?'?':ppResponse.value }}</div>
-                                    {% endfor %}
-                                    <div class="pcl-celulle"><i class="zmdi zmdi-info zmdi-hc-2x c-teal"></i></div>
                                 </div>
                             {% endfor %}
                         </div>
@@ -52,3 +67,98 @@
 {% endblock moduleBody %}
 
 {% block moduleFooter %}{% endblock moduleFooter %}
+
+{% block modalContainer %}
+    {% if addPollProposalForm is defined and addPollProposalForm is not null %}
+        {#<div class="modal fade" id="addPollProposal_modal_{{ module.token }}" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="#addPP_title_{{ module.token }}">#}
+        {{ include('@App/Event/module/pollModulePartials/pollProposalAddFormModal.html.twig', {
+            'addPollProposalForm' : addPollProposalForm
+        }) }}
+        {#</div>#}
+    {% endif %}
+{% endblock modalContainer %}
+
+{% block JSmodule %}
+    {{ parent() }}
+    {% if addPollProposalForm is defined and addPollProposalForm is not null %}
+        <script>
+            $('form#AAaddPollProposalForm-{{ module.token }}').on('submit', function (e) {
+                e.preventDefault();
+                var preloader = $('.at-global-preloader');
+                $(preloader).show();
+                var $form = $(this);
+                $('.has-error').each(function () {
+                    $(this).find("small.help-block").remove();
+                    $(this).removeClass("has-error");
+                });
+                $.ajax({
+                    url: $form.attr('action'),
+                    type: $form.attr('method'),
+                    data: $form.serialize()
+                }).done(function (responseData, textStatus, jqXHR) {
+                    $('#addPollProposal_modal_{{ module.token }}').modal('toggle');
+                    if (responseData.htmlContent) {
+                        if (responseData.htmlContent.pollProposalRowDisplay) {
+                            $('#pp-row-group-{{ module.token }}').append(responseData.htmlContent.pollProposalRowDisplay);
+                            if ($('#pp-empty-{{ module.token }}')[0]) {
+                                $('#pp-empty-{{ module.token }}').remove();
+                            }
+                        }
+                        $form[0].reset();
+                    }
+
+                    autosize($('textarea'));
+                    $('.clockpicker').clockpicker();
+                    $('.datepicker').datetimepicker({
+                        format: "DD/MM/YYYY",
+                        locale: "fr",
+                        showClear: true,
+                        icons: {
+                            time: 'zmdi zmdi-time',
+                            date: 'zmdi zmdi-calendar',
+                            up: 'zmdi zmdi-chevron-up',
+                            down: 'zmdi zmdi-chevron-down',
+                            previous: 'zmdi zmdi-chevron-left',
+                            next: 'zmdi zmdi-chevron-right',
+                            today: 'zmdi zmdi-gps-dot',
+                            clear: 'zmdi zmdi-delete zmdi-hc-lg',
+                            close: 'zmdi zmdi-close-circle-o zmdi-hc-lg'
+                        },
+                        widgetPositioning: {
+                            horizontal: 'auto',
+                            vertical: 'auto'
+                        }
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    var responseJSON = jqXHR.responseJSON;
+                    if (responseJSON != undefined && responseJSON.formErrors) {
+                        var formErrors = responseJSON.formErrors;
+                        for (var fieldErrorName in formErrors) {
+                            if (formErrors.hasOwnProperty(fieldErrorName)) {
+                                var inputField = $('input[name*=' + fieldErrorName + ']');
+                                inputField.parent().addClass("has-error");
+                                inputField.after('<small class="help-block">' + responseJSON.formErrors[fieldErrorName] + '</small>')
+                            }
+                        }
+                    }
+                }).always(function (responseDataOrJSON) {
+                    if (responseDataOrJSON.responseJSON) {
+                        // In case of fail()
+                        responseDataOrJSON = responseDataOrJSON.responseJSON;
+                    }
+                    if (responseDataOrJSON.messages) {
+                        var messages = responseDataOrJSON.messages;
+                        for (var messageType in messages) {
+                            if (messages.hasOwnProperty(messageType)) {
+                                messages[messageType].forEach(function (mess) {
+                                    toastr[messageType](mess);
+                                });
+                            }
+                        }
+                    }
+                    $(preloader).hide();
+                });
+            });
+        </script>
+    {% endif %}
+{% endblock JSmodule %}

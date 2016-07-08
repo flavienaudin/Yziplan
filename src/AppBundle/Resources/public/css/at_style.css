@@ -32,11 +32,11 @@
     Fix Card style
 -----------------------------------*/
 
-.card.c-dark .card-header h2 {
+.card.c-dark .card-header > .media > .media-body > h2 {
     color: #fff;
 }
 
-.card.c-dark .card-header h2 small {
+.card.c-dark .card-header > .media > .media-body > h2 small {
     color: rgba(255, 255, 255, 0.7);
 }
 
@@ -205,3 +205,44 @@
 /** end Formulaires **/
 
 
+
+
+/*---------------------------------
+    PollModule
+---------------------------------*/
+.poll-container {
+    display: table;
+    table-layout: auto;
+    border-collapse: separate;
+    border-spacing: 0 2px;
+    margin: 0 auto;
+}
+
+.poll-container .pc-groupe-ligne {
+    display: table-row-group;
+}
+
+.poll-container .pc-ligne {
+    display: table-row;
+}
+
+.poll-container .pc-ligne .pcl-celulle {
+    display: table-cell;
+    text-align: center;
+    padding: 5px 10px;
+    vertical-align: middle;
+}
+
+.poll-container .pc-ligne .pcl-end-spacer {
+    display: table-cell;
+}
+
+.poll-container .pc-ligne .pcl-celulle:not(:first-child) {
+    width: 30px;
+}
+
+.poll-container .pc-ligne .pcl-celulle:first-child:not(:last-child) {
+    text-align: left;
+    font-weight: bold;
+    min-width: 100px;
+}

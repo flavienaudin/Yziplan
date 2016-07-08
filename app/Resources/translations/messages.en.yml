@@ -79,6 +79,14 @@ module:
       title: Are you sure to whish vouloir supprimer ce module ?
       message: Cette action est irréversible
 
+pollmodule:
+  modale:
+    addPollProposal:
+      title: Add a proposal
+      form:
+        name:
+          label: Name
+
 # Globals
 global:
   event: Event
@@ -96,6 +104,7 @@ global:
     save: Save
     nextStep: Next step
     delete: Delete
+    add: Add
   success:
     data_saved: Information saved
   error:

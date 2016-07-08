@@ -13,7 +13,9 @@ use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
+use AppBundle\Entity\module\PollProposal;
 use AppBundle\Form\ModuleFormType;
+use AppBundle\Form\PollProposalFormType;
 use AppBundle\Manager\EventManager;
 use AppBundle\Manager\GenerateursToken;
 use AppBundle\Security\EventVoter;
@@ -54,7 +56,7 @@ class EventController extends Controller
     /**
      * @Route("/{_locale}/evenement/{token}/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEvent")
      */
-    public function displayEventAction($token, $tokenEdition=null, Request $request)
+    public function displayEventAction($token, $tokenEdition = null, Request $request)
     {
         /** @var EventManager $eventManager */
         $eventManager = $this->get('at.manager.event');
@@ -95,22 +97,22 @@ class EventController extends Controller
                     }
                 }
             }
-            
+
             // module management
             $modules = $eventManager->getModulesToDisplay($this->getUser(), $allowEdit);
             $moduleManager = $this->get("at.manager.module");
-            foreach($modules as $moduleId => $moduleDescription){
-                if($moduleDescription['allowEdit'] && $moduleDescription['moduleForm'] instanceof Form){
+            foreach ($modules as $moduleId => $moduleDescription) {
+                if ($moduleDescription['allowEdit'] && $moduleDescription['moduleForm'] instanceof Form) {
                     /** @var Form $moduleForm */
                     $moduleForm = $moduleDescription['moduleForm'];
                     $moduleForm->handleRequest($request);
                     if ($request->isXmlHttpRequest()) {
                         if ($moduleForm->isSubmitted()) {
                             if ($moduleForm->isValid()) {
-                                $currentModule = $moduleManager->treatUpdateFormeModule($moduleForm);
-                                $moduleForm = $this->createForm(ModuleFormType::class, $currentModule);
+                                $currentModule = $moduleManager->treatUpdateFormModule($moduleForm);
+                                $moduleForm = $eventManager->createModuleForm($currentModule);
                                 $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                                $data['htmlContent'] = $moduleManager->displayModulePartial($currentModule, $moduleDescription['allowEdit'], $moduleForm, $request);
+                                $data['htmlContent'] = $moduleManager->displayModulePartial($currentModule, $moduleDescription['allowEdit'], $moduleForm);
                                 return new JsonResponse($data, Response::HTTP_OK);
                             } else {
                                 $data["formErrors"] = array();
@@ -122,11 +124,43 @@ class EventController extends Controller
                         }
                     } else {
                         if ($moduleForm->isValid()) {
-                            $moduleManager->treatUpdateFormeModule($moduleForm);
+                            $moduleManager->treatUpdateFormModule($moduleForm);
                             return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken(), 'tokenEdition' => $currentEvent->getTokenEdition()));
                         }
                     }
                     $modules[$moduleId]['moduleForm'] = $moduleForm->createView();
+                }
+
+                if ($moduleDescription['addPollProposalForm'] instanceof Form) {
+                    /** @var Form $addPollProposalForm */
+                    $addPollProposalForm = $moduleDescription['addPollProposalForm'];
+                    $addPollProposalForm->handleRequest($request);
+                    if ($request->isXmlHttpRequest()) {
+                        if ($addPollProposalForm->isSubmitted()) {
+                            dump($addPollProposalForm);
+                            if ($addPollProposalForm->isValid()) {
+                                $pollProposal = $moduleManager->treatAddPollProposalFormModule($addPollProposalForm, $moduleDescription['module']);
+                                $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                                $data['htmlContent']['pollProposalRowDisplay'] = $moduleManager->displayPollProposalRowPartial($pollProposal);
+                                return new JsonResponse($data, Response::HTTP_OK);
+                            } else {
+                                $data["formErrors"] = array();
+                                foreach ($addPollProposalForm->getErrors(true) as $error) {
+                                    $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
+                                }
+                                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                            }
+                        }
+                    } else {
+                        if ($addPollProposalForm->isValid()) {
+                            $moduleManager->treatAddPollProposalFormModule($addPollProposalForm, $moduleDescription['module']);
+                            return $this->redirect($this->generateUrl('displayEvent', array(
+                                        'token' => $currentEvent->getToken(),
+                                        'tokenEdition' => $currentEvent->getTokenEdition())
+                                ) . '#module-' . $moduleDescription['module']->getToken());
+                        }
+                    }
+                    $modules[$moduleId]['addPollProposalForm'] = $addPollProposalForm->createView();
                 }
             }
 

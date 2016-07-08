@@ -39,7 +39,7 @@ class ModuleController extends Controller
                 $moduleManager = $this->get('at.manager.module');
                 /** @var FormInterface $moduleForm */
                 $moduleForm = $this->get('form.factory')->createNamed("module_form_".$module->getTokenEdition(), ModuleFormType::class, $module);
-                $view = $moduleManager->displayModulePartial($module, true, $moduleForm, $request);
+                $view = $moduleManager->displayModulePartial($module, true, $moduleForm);
                 return new JsonResponse(array('htmlContent' => $view), Response::HTTP_OK);
             } else {
                 $event = $eventManager->getEvent();

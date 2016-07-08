@@ -136,6 +136,8 @@
         {{ form_end(moduleForm) }}
     {% endif %}
 
+    {% block modalContainer %}{% endblock %}
+
     {% block JSmodule %}
         {% if moduleForm is not null %}
             <script>

@@ -12,12 +12,16 @@ use AppBundle\Entity\enum\EventStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
+use AppBundle\Entity\module\PollProposal;
+use AppBundle\Entity\ModuleInvitation;
 use AppBundle\Form\EventFormType;
 use AppBundle\Form\ModuleFormType;
+use AppBundle\Form\PollProposalFormType;
 use ATUserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
@@ -175,18 +179,38 @@ class EventManager
         $modules = array();
         if ($this->event != null) {
             /** @var Module $module */
-            foreach ($this->event->getModules() as $module){
+            foreach ($this->event->getModules() as $module) {
                 $moduleDescription['module'] = $module;
                 $moduleDescription['allowEdit'] = $allowEventEdit; // TODO Vérifier les autorisations du module
-                if($moduleDescription['allowEdit']) {
-                    $moduleDescription['moduleForm'] = $this->formFactory->createNamed("module_form_" . $module->getTokenEdition(), ModuleFormType::class, $module);
-                }else{
+                if ($moduleDescription['allowEdit']) {
+                    $moduleDescription['moduleForm'] = $this->createModuleForm($module);
+                } else {
                     $moduleDescription['moduleForm'] = null;
                 }
-                $modules[$module->getId()]= $moduleDescription;
+                if ($module->getPollModule() != null) {
+                    $moduleDescription['addPollProposalForm'] = $this->createAddPollProposalForm($module);
+                }
+                $modules[$module->getId()] = $moduleDescription;
             }
         }
         return $modules;
+    }
+
+    /**
+     * @param Module $module
+     * @return FormInterface
+     */
+    public function createModuleForm(Module $module)
+    {
+        return $this->formFactory->createNamed("module_form_" . $module->getTokenEdition(), ModuleFormType::class, $module);
+    }
+    /**
+     * @param Module $module
+     * @return FormInterface
+     */
+    public function createAddPollProposalForm(Module $module)
+    {
+        return $this->formFactory->createNamed("add_poll_proposal_form_" . $module->getTokenEdition(), PollProposalFormType::class, new PollProposal());
     }
 
 }

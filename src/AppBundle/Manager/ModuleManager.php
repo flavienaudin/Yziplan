@@ -13,6 +13,7 @@ use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\enum\ModuleType;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
+use AppBundle\Entity\module\PollProposal;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -102,7 +103,7 @@ class ModuleManager
      * @param Form $moduleForm
      * @return Module
      */
-    public function treatUpdateFormeModule(Form $moduleForm)
+    public function treatUpdateFormModule(Form $moduleForm)
     {
         $this->module = $moduleForm->getData();
 
@@ -115,6 +116,20 @@ class ModuleManager
         return $this->module;
     }
 
+    public function treatAddPollProposalFormModule(Form $addPollProposalForm, Module $module)
+    {
+        $this->module = $module;
+        /** @var PollProposal $pollProposal */
+        $pollProposal = $addPollProposalForm->getData();
+        if ($this->module == null or $pollProposal == null) {
+            return null;
+        }
+        $pollProposal->setPollModule($this->module->getPollModule());
+        $this->entityManager->persist($pollProposal);
+        $this->entityManager->flush();
+        return $pollProposal;
+    }
+
     /**
      * @param Module $module Le module à afficher
      * @param $allowEdit boolean "true" si le module est éditable
@@ -122,26 +137,54 @@ class ModuleManager
      * @param Request $request
      * @return string La vue HTML sous forme de string
      */
-    public function displayModulePartial(Module $module, $allowEdit, FormInterface $moduleForm, Request $request)
+    public function displayModulePartial(Module $module, $allowEdit, FormInterface $moduleForm)
     {
         if ($module->getPollModule() != null) {
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 "allowEdit" => $allowEdit,
-                'moduleForm' => ($moduleForm != null ? $moduleForm->createView():null)
+                'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null)
             ));
         } elseif ($module->getExpenseModule() != null) {
             return $this->templating->render("@App/Event/module/displayExpenseModule.html.twig", [
                 "module" => $module,
                 "allowEdit" => $allowEdit,
-                'moduleForm' => ($moduleForm != null ? $moduleForm->createView():null)
+                'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null)
             ]);
         } else {
             return $this->templating->render("@App/Event/module/displayModule.html.twig", [
                 "module" => $module,
                 "allowEdit" => $allowEdit,
-                'moduleForm' => ($moduleForm != null ? $moduleForm->createView():null)
+                'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null)
             ]);
         }
+    }
+
+
+    /**
+     * @param PollProposal $pollProposal
+     * @return string
+     */
+    public function displayPollProposalRowPartial(PollProposal $pollProposal)
+    {
+        return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig", array(
+            "pollProposal" => $pollProposal,
+            'moduleInvitations' => $pollProposal->getPollModule()->getModule()->getModuleInvitations()
+        ));
+    }
+
+    /**
+     * Génére la modal pour l'ajout d'une nouvelle PolProposal avec le formulaire donné
+     *
+     * @param FormInterface $addPollProposalForm
+     * @param Module $module
+     * @return string
+     */
+    public function displayPollProposalAddFormModal(FormInterface $addPollProposalForm, Module $module)
+    {
+        return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalAddFormModal.html.twig", array(
+            "addPollProposalForm" => $addPollProposalForm->createView(),
+            "module" => $module
+        ));
     }
 }

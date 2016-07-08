@@ -9,7 +9,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * AppUser
- * 
+ *
  * Fait le lien entre l'utilisateur et les données applicatives.
  *
  * @ORM\Table(name="app_user")
@@ -28,10 +28,10 @@ class AppUser
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-    
+
     /**
      * @ORM\OneToOne(targetEntity="ATUserBundle\Entity\User", inversedBy="appUser")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
      *
      * @var User
      */
@@ -87,6 +87,7 @@ class AppUser
     {
         return $this->user;
     }
+
     /**
      * Constructor
      */

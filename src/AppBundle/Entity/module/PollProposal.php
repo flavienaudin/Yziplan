@@ -51,7 +51,7 @@ class PollProposal
      * @var EventInvitation
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EventInvitation")
-     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", nullable=true)
      *
      */
     private $creator;
