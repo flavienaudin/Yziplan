@@ -57,6 +57,13 @@ class Module
     private $tokenEdition;
 
     /**
+     * Numéro de placement dans l'ordonnancement des modules d'un événement
+     * @var integer
+     * @ORM\Column(name="order_index", type="integer", length=3, nullable=true)
+     */
+    private $orderIndex;
+
+    /**
      * @var string
      * @ORM\Column(name="status", type="string", length=64)
      */
@@ -316,6 +323,24 @@ class Module
     public function getTokenEdition()
     {
         return $this->tokenEdition;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderIndex()
+    {
+        return $this->orderIndex;
+    }
+
+    /**
+     * @param mixed $orderIndex
+     * @return Module
+     */
+    public function setOrderIndex($orderIndex)
+    {
+        $this->orderIndex = $orderIndex;
+        return $this;
     }
 
     /**

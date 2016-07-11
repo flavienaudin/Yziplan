@@ -39,9 +39,9 @@ class PollProposalElement
      *
      * @var integer
      *
-     * @ORM\Column(name="order_index", type="integer", length=2, nullable=true)
+     * @ORM\Column(name="order_index", type="integer", length=3, nullable=true)
      */
-    private $order;
+    private $orderIndex;
 
     /**
      * Type de la valeur de la réponse
@@ -108,15 +108,15 @@ class PollProposalElement
     }
 
     /**
-     * Set order
+     * Set orderIndex
      *
-     * @param integer $order
+     * @param integer $orderIndex
      *
      * @return PollProposalElement
      */
-    public function setOrder($order)
+    public function setOrderIndex($orderIndex)
     {
-        $this->order = $order;
+        $this->orderIndex = $orderIndex;
 
         return $this;
     }
@@ -126,9 +126,9 @@ class PollProposalElement
      *
      * @return integer
      */
-    public function getOrder()
+    public function getOrderIndex()
     {
-        return $this->order;
+        return $this->orderIndex;
     }
 
     /**
