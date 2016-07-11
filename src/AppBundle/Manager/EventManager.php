@@ -9,6 +9,7 @@
 namespace AppBundle\Manager;
 
 use AppBundle\Entity\enum\EventStatus;
+use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
@@ -180,17 +181,19 @@ class EventManager
         if ($this->event != null) {
             /** @var Module $module */
             foreach ($this->event->getModules() as $module) {
-                $moduleDescription['module'] = $module;
-                $moduleDescription['allowEdit'] = $allowEventEdit; // TODO Vérifier les autorisations du module
-                if ($moduleDescription['allowEdit']) {
-                    $moduleDescription['moduleForm'] = $this->createModuleForm($module);
-                } else {
-                    $moduleDescription['moduleForm'] = null;
+                if ($module->getStatus() != ModuleStatus::DELETED && $module->getStatus() != ModuleStatus::ARCHIVED) {
+                    $moduleDescription['module'] = $module;
+                    $moduleDescription['allowEdit'] = $allowEventEdit; // TODO Vérifier les autorisations du module
+                    if ($moduleDescription['allowEdit']) {
+                        $moduleDescription['moduleForm'] = $this->createModuleForm($module);
+                    } else {
+                        $moduleDescription['moduleForm'] = null;
+                    }
+                    if ($module->getPollModule() != null) {
+                        $moduleDescription['addPollProposalForm'] = $this->moduleManager->createAddPollProposalForm($module);
+                    }
+                    $modules[$module->getId()] = $moduleDescription;
                 }
-                if ($module->getPollModule() != null) {
-                    $moduleDescription['addPollProposalForm'] = $this->moduleManager->createAddPollProposalForm($module);
-                }
-                $modules[$module->getId()] = $moduleDescription;
             }
         }
         return $modules;

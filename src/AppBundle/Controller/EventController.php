@@ -137,7 +137,6 @@ class EventController extends Controller
                     $addPollProposalForm->handleRequest($request);
                     if ($request->isXmlHttpRequest()) {
                         if ($addPollProposalForm->isSubmitted()) {
-                            dump($addPollProposalForm);
                             if ($addPollProposalForm->isValid()) {
                                 $pollProposal = $moduleManager->treatAddPollProposalFormModule($addPollProposalForm, $moduleDescription['module']);
                                 $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");

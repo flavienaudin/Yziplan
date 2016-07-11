@@ -8,7 +8,6 @@
 
 namespace AppBundle\Form;
 
-
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -21,7 +20,9 @@ class PollProposalFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("name")
+            ->add("name", TextType::class, array(
+                'required' => true
+            ))
             ->add("description", TextareaType::class, array(
                 'required' => false
             ));

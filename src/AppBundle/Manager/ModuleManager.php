@@ -176,26 +176,11 @@ class ModuleManager
     }
 
     /**
-     * Génére la modal pour l'ajout d'une nouvelle PolProposal avec le formulaire donné
-     *
-     * @param FormInterface $addPollProposalForm
-     * @param Module $module
-     * @return string
-     */
-    public function displayPollProposalAddFormModal(FormInterface $addPollProposalForm, Module $module)
-    {
-        return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalAddFormModal.html.twig", array(
-            "addPollProposalForm" => $addPollProposalForm->createView(),
-            "module" => $module
-        ));
-    }
-
-    /**
      * @param Module $module
      * @return FormInterface
      */
     public function createAddPollProposalForm(Module $module)
     {
-        return $this->formFactory->createNamed("add_poll_proposal_form_" . $module->getTokenEdition(), PollProposalFormType::class, new PollProposal());
+        return $this->formFactory->createNamed("add_poll_proposal_form_" . $module->getToken(), PollProposalFormType::class, new PollProposal());
     }
 }
