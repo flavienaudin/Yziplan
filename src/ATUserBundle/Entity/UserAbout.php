@@ -44,7 +44,7 @@ class UserAbout
     /**
      * @var string
      *
-     * @ORM\Column(name="biography", type="string", length=511, nullable=true)
+     * @ORM\Column(name="biography", type="text", nullable=true)
      */
     private $biography;
 
