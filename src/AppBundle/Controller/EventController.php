@@ -131,7 +131,7 @@ class EventController extends Controller
                     $modules[$moduleId]['moduleForm'] = $moduleForm->createView();
                 }
 
-                if ($moduleDescription['addPollProposalForm'] instanceof Form) {
+                if (array_key_exists('addPollProposalForm', $moduleDescription) && $moduleDescription['addPollProposalForm'] instanceof Form) {
                     /** @var Form $addPollProposalForm */
                     $addPollProposalForm = $moduleDescription['addPollProposalForm'];
                     $addPollProposalForm->handleRequest($request);

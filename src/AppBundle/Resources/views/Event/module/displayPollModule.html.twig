@@ -82,7 +82,7 @@
     {{ parent() }}
     {% if addPollProposalForm is defined and addPollProposalForm is not null %}
         <script>
-            $('form#AAaddPollProposalForm-{{ module.token }}').on('submit', function (e) {
+            $('form#addPollProposalForm_{{ module.token }}').on('submit', function (e) {
                 e.preventDefault();
                 var preloader = $('.at-global-preloader');
                 $(preloader).show();

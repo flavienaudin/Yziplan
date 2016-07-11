@@ -188,7 +188,7 @@ class EventManager
                     $moduleDescription['moduleForm'] = null;
                 }
                 if ($module->getPollModule() != null) {
-                    $moduleDescription['addPollProposalForm'] = $this->createAddPollProposalForm($module);
+                    $moduleDescription['addPollProposalForm'] = $this->moduleManager->createAddPollProposalForm($module);
                 }
                 $modules[$module->getId()] = $moduleDescription;
             }
@@ -203,14 +203,6 @@ class EventManager
     public function createModuleForm(Module $module)
     {
         return $this->formFactory->createNamed("module_form_" . $module->getTokenEdition(), ModuleFormType::class, $module);
-    }
-    /**
-     * @param Module $module
-     * @return FormInterface
-     */
-    public function createAddPollProposalForm(Module $module)
-    {
-        return $this->formFactory->createNamed("add_poll_proposal_form_" . $module->getTokenEdition(), PollProposalFormType::class, new PollProposal());
     }
 
 }

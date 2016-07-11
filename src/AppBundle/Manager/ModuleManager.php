@@ -14,6 +14,7 @@ use AppBundle\Entity\enum\ModuleType;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
 use AppBundle\Entity\module\PollProposal;
+use AppBundle\Form\PollProposalFormType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -143,7 +144,8 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 "allowEdit" => $allowEdit,
-                'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null)
+                'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
+                'addPollProposalForm' => $this->createAddPollProposalForm($module)->createView()
             ));
         } elseif ($module->getExpenseModule() != null) {
             return $this->templating->render("@App/Event/module/displayExpenseModule.html.twig", [
@@ -186,5 +188,14 @@ class ModuleManager
             "addPollProposalForm" => $addPollProposalForm->createView(),
             "module" => $module
         ));
+    }
+
+    /**
+     * @param Module $module
+     * @return FormInterface
+     */
+    public function createAddPollProposalForm(Module $module)
+    {
+        return $this->formFactory->createNamed("add_poll_proposal_form_" . $module->getTokenEdition(), PollProposalFormType::class, new PollProposal());
     }
 }
