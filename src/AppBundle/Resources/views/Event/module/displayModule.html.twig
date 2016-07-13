@@ -99,6 +99,15 @@
                                             </div>
                                             {{ form_errors(moduleForm.responseDeadline) }}
                                         </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                {{ form_row(moduleForm.invitationOnly, {'label':'module.form.invitationOnly.label', 'label_attr':{'class' : 'radio radio-inline'}}) }}
+                                            </div>
+                                            <div class="col-sm-6">
+                                                {{ form_row(moduleForm.guestsCanInvite, {'label':'module.form.guestsCanInvite.label', 'label_attr':{'class' : 'radio radio-inline'}}) }}
+                                            </div>
+                                        </div>
+
                                         <div class="toggle-switch m-b-15">
                                             <label for="ts_{{ module.tokenEdition }}" class="ts-label">Autoriser les discussions</label> <input id="ts_{{ module.tokenEdition }}" type="checkbox"
                                                                                                                                                 hidden="hidden"> <label

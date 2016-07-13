@@ -88,6 +88,20 @@ module:
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline
+    invitationOnly:
+      label: Invitation only
+      placeholder: Invitation only
+      text.true: An invitation is required to participate (private event)
+      text.false: Everyone can participate (public event)
+    guestsCanInvite:
+      label: Guests can invite
+      placeholder: Guests can invite
+      text.true: Guests can invite other people
+      text.false: Guests can not invite other people
+    choice.label:
+      yes: Yes
+      no: No
+      inherit: Inherit
   alert:
     confirm_deletion:
       title: Are you sure to whish vouloir supprimer ce module ?

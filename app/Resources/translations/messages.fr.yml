@@ -88,6 +88,20 @@ module:
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse
+    invitationOnly:
+      label: Seulement sur invitation
+      placeholder: Seulement sur invitation
+      text.true: Seuls les invités peuvent participer (événement privé)
+      text.false: Tout le monde peut participer (événement public)
+    guestsCanInvite:
+      label: Autoriser les invités à inviter
+      placeholder: Autoriser les invités à inviter
+      text.true: Les invités peuvent inviter d'autres personnes.
+      text.false: Les invités ne peuvent pas inviter d'autres personnes.
+    choice.label:
+      yes: Oui
+      no: Non
+      inherit: Hérite
   alert:
     confirm_deletion:
       title: Are you sure you want to delete this module ?

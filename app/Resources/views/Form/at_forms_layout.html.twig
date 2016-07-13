@@ -115,7 +115,25 @@
     {%- endif %}
 {%- endblock choice_widget_expanded %}
 
-{% block md_switch_row -%}
+{% block checkbox_widget -%}
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {%- set widget_class = attr.class|default('') -%}
+    {% if 'i-checks' in parent_label_class %}
+        <div class="i-checks">
+            {{- form_label(form, null, { widget: block("icheck_checkbox_widget") }) -}}
+        </div>
+    {% elseif 'md-toogle-switch' in widget_class %}
+        {{ block('md_toggle_switch_widget') }}
+    {% else -%}
+        {{ parent() }}
+    {% endif %}
+{%- endblock checkbox_widget %}
+
+{%- block icheck_checkbox_widget -%}
+    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock icheck_checkbox_widget -%}
+
+{% block md_toggle_switch_widget -%}
     {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) -%}
     {%- set label_attr = label_attr|merge({class: (' ts-label')|trim}) -%}
     <div class="toggle-switch">
@@ -124,7 +142,23 @@
         <label for="{{ id }}" class="ts-helper"></label>
     </div>
     {{ form_errors(form) }}
-{%- endblock md_switch_row %}
+{%- endblock md_toggle_switch_widget %}
+
+{% block radio_widget -%}
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {% if 'radio-inline' in parent_label_class %}
+        {{- form_label(form, null, { widget: block('radio_input_helper_widget')}) -}}
+    {% else -%}
+        <div class="radio">
+            {{- form_label(form, null, { widget: block('radio_input_helper_widget') }) -}}
+        </div>
+    {%- endif %}
+{%- endblock radio_widget %}
+
+{%- block radio_input_helper_widget -%}
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <i class="input-helper"></i>
+{%- endblock radio_input_helper_widget -%}
 
 {#{% block checkbox_radio_label %}
     #}{# Do not display the label if widget is not defined in order to prevent double label rendering #}{#
@@ -174,18 +208,3 @@
     {% endif %}
 {% endblock checkbox_radio_label %}#}
 
-{#{% block checkbox_widget -%}
-    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
-    {% if 'i-checks' in parent_label_class %}
-        <div class="i-checks">
-            {{- form_label(form, null, { widget: block("icheck_checkbox_widget") }) -}}
-        </div>
-    {% else -%}
-        {{ parent() }}
-    {% endif %}
-{%- endblock checkbox_widget %}
-
-
-{%- block icheck_checkbox_widget -%}
-    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-{%- endblock icheck_checkbox_widget -%}#}
