@@ -108,8 +108,10 @@ class ModuleManager
     {
         $this->module = $moduleForm->getData();
 
-        if (!empty($this->module->getName())) {
+        if ($this->module->getStatus() == ModuleStatus::IN_CREATION && !empty($this->module->getName())) {
             $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+        } elseif ($this->module->getStatus() == ModuleStatus::IN_ORGANIZATION && empty($this->module->getName())) {
+            $this->module->setStatus(ModuleStatus::IN_CREATION);
         }
         // TODO Check ?
         $this->entityManager->persist($this->module);

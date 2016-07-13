@@ -58,10 +58,24 @@ event:
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse
+    invitationOnly:
+      label: Seulement sur invitation
+      placeholder: Seulement sur invitation
+      text.true: Seuls les invités peuvent participer (événement privé)
+      text.false: Tout le monde peut participer (événement public)
+    guestsCanInvite:
+      label: Autoriser les invités à inviter
+      placeholder: Autoriser les invités à inviter
+      text.true: Les invités peuvent inviter d'autres personnes.
+      text.false: Les invités ne peuvent pas inviter d'autres personnes.
   error.message:
     unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
   success.message:
     creation: Evénement créé avec succès.
+
+eventInvitation:
+  error.message:
+    unauthorized_access: Vous n'êtes pas inviter à cet événement.
 
 module:
   form:

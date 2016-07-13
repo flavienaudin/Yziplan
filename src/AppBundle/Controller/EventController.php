@@ -9,8 +9,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\AppUser;
+use AppBundle\Entity\enum\EventInvitationStatus;
 use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
 use AppBundle\Entity\module\PollProposal;
@@ -20,6 +22,7 @@ use AppBundle\Manager\EventManager;
 use AppBundle\Manager\GenerateursToken;
 use AppBundle\Security\EventVoter;
 use AppBundle\Utils\FlashBagTypes;
+use ATUserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -63,6 +66,13 @@ class EventController extends Controller
         if ($eventManager->retrieveEvent($token)) {
             $currentEvent = $eventManager->getEvent();
             $this->denyAccessUnlessGranted(EventVoter::DISPLAY, $currentEvent);
+
+            $eventInvitationManager = $this->get("at.manager.event_invitation");
+            $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($currentEvent, $this->getUser());
+            if($userEventInvitation == null){
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access"));
+                return $this->redirectToRoute("home");
+            }
 
             $eventForm = null;
             $allowEdit = $this->isGranted(EventVoter::EDIT, $currentEvent) && ($tokenEdition === $currentEvent->getTokenEdition());
@@ -167,7 +177,8 @@ class EventController extends Controller
                 'event' => $currentEvent,
                 "allowEdit" => $allowEdit,
                 'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
-                'modules' => $modules
+                'modules' => $modules,
+                'userEventInvitation' => $userEventInvitation
             ));
 
         }

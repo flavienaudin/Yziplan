@@ -66,6 +66,21 @@ class Event
      */
     private $responseDeadline;
 
+    /**
+     * If "true" then only guest with invitation can answer. No eventInivtaiton creation when displaying the event
+     * @var boolean
+     *
+     * @ORM\Column(name="invitation_only", type="boolean")
+     */
+    private $invitationOnly = true;
+
+    /**
+     * * If "true" then guests can send invitations to others.
+     * @var boolean
+     * @ORM\Column(name="guests_can_invite", type="boolean")
+     */
+    private $guestsCanInvite = false;
+
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
@@ -77,11 +92,12 @@ class Event
      * @ORM\JoinColumn(name="creator_event_invitation_id", referencedColumnName="id", nullable=true)
      */
     private $creator;
-    
+
     /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Module", mappedBy="event", cascade={"persist"})
+     * @ORM\OrderBy({"orderIndex" = "ASC"})
      */
     private $modules;
 
@@ -91,6 +107,16 @@ class Event
      * @ORM\OneToMany(targetEntity="EventInvitation", mappedBy="event", cascade={"persist"})
      */
     private $eventInvitations;
+
+
+    /***********************************************************************
+     *                      Constructor
+     ***********************************************************************/
+    public function __construct()
+    {
+        $this->modules = new ArrayCollection();
+        $this->eventInvitations = new ArrayCollection();
+    }
 
     /***********************************************************************
      *                      Getters and Setters
@@ -104,84 +130,6 @@ class Event
     public function getId()
     {
         return $this->id;
-    }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->modules = new ArrayCollection();
-        $this->eventInvitations = new ArrayCollection();
-    }
-
-    /**
-     * Add module
-     *
-     * @param Module $module
-     *
-     * @return Event
-     */
-    public function addModule(Module $module)
-    {
-        $this->modules[] = $module;
-        $module->setEvent($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove module
-     *
-     * @param Module $module
-     */
-    public function removeModule(Module $module)
-    {
-        $this->modules->removeElement($module);
-    }
-
-    /**
-     * Get modules
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getModules()
-    {
-        return $this->modules;
-    }
-
-    /**
-     * Add eventInvitation
-     *
-     * @param EventInvitation $eventInvitation
-     *
-     * @return Event
-     */
-    public function addEventInvitation(EventInvitation $eventInvitation)
-    {
-        $this->eventInvitations[] = $eventInvitation;
-        $eventInvitation->setEvent($this);
-
-        return $this;
-    }
-
-    /**
-     * Remove eventInvitation
-     *
-     * @param EventInvitation $eventInvitation
-     */
-    public function removeEventInvitation(EventInvitation $eventInvitation)
-    {
-        $this->eventInvitations->removeElement($eventInvitation);
-    }
-
-    /**
-     * Get eventInvitations
-     *
-     * @return ArrayCollection
-     */
-    public function getEventInvitations()
-    {
-        return $this->eventInvitations;
     }
 
     /**
@@ -329,6 +277,42 @@ class Event
     }
 
     /**
+     * @return boolean
+     */
+    public function isInvitationOnly()
+    {
+        return $this->invitationOnly;
+    }
+
+    /**
+     * @param boolean $invitationOnly
+     * @return Event
+     */
+    public function setInvitationOnly($invitationOnly)
+    {
+        $this->invitationOnly = $invitationOnly;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isGuestsCanInvite()
+    {
+        return $this->guestsCanInvite;
+    }
+
+    /**
+     * @param boolean $guestsCanInvite
+     * @return Event
+     */
+    public function setGuestsCanInvite($guestsCanInvite)
+    {
+        $this->guestsCanInvite = $guestsCanInvite;
+        return $this;
+    }
+
+    /**
      * Set creator
      *
      * @param EventInvitation $creator
@@ -338,7 +322,7 @@ class Event
     public function setCreator(EventInvitation $creator = null)
     {
         $this->creator = $creator;
-        if($creator!=null) {
+        if ($creator != null) {
             $creator->setCreatedEvent($this);
         }
 
@@ -353,5 +337,76 @@ class Event
     public function getCreator()
     {
         return $this->creator;
+    }
+
+
+    /**
+     * Add module
+     *
+     * @param Module $module
+     *
+     * @return Event
+     */
+    public function addModule(Module $module)
+    {
+        $this->modules[] = $module;
+        $module->setEvent($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove module
+     *
+     * @param Module $module
+     */
+    public function removeModule(Module $module)
+    {
+        $this->modules->removeElement($module);
+    }
+
+    /**
+     * Get modules
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getModules()
+    {
+        return $this->modules;
+    }
+
+    /**
+     * Add eventInvitation
+     *
+     * @param EventInvitation $eventInvitation
+     *
+     * @return Event
+     */
+    public function addEventInvitation(EventInvitation $eventInvitation)
+    {
+        $this->eventInvitations[] = $eventInvitation;
+        $eventInvitation->setEvent($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove eventInvitation
+     *
+     * @param EventInvitation $eventInvitation
+     */
+    public function removeEventInvitation(EventInvitation $eventInvitation)
+    {
+        $this->eventInvitations->removeElement($eventInvitation);
+    }
+
+    /**
+     * Get eventInvitations
+     *
+     * @return ArrayCollection
+     */
+    public function getEventInvitations()
+    {
+        return $this->eventInvitations;
     }
 }

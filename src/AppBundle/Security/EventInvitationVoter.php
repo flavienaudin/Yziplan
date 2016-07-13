@@ -8,6 +8,7 @@
 
 namespace AppBundle\Security;
 
+use AppBundle\Entity\Event;
 use ATUserBundle\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -16,14 +17,21 @@ use AppBundle\Entity\EventInvitation;
 
 class EventInvitationVoter extends Voter
 {
+    /** When displaying event without a personal invitation (public event) */
+    const CREATE = 'create';
+    /** When guest want to invite */
+    const INVITE = 'invite';
     const EDIT = 'edit';
 
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, array(self::EDIT))) {
+        if (!in_array($attribute, array(self::CREATE, self::INVITE, self::EDIT))) {
             return false;
         }
-        if (!$subject instanceof EventInvitation) {
+        if ($attribute == self::EDIT && !$subject instanceof EventInvitation) {
+            return false;
+        }
+        if (($attribute == self::CREATE || $attribute == self::INVITE) && !$subject instanceof Event) {
             return false;
         }
         return true;
@@ -31,21 +39,29 @@ class EventInvitationVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        /** @var User $utilisateur */
-        $utilisateur = $token->getUser();
-        /** @var EventInvitation $invitation */
-        $invitation = $subject; // $subject must be a Invitation instance, thanks to the supports method
-        if ($utilisateur != null && $utilisateur != 'anon.' && !$utilisateur instanceof UserInterface) {
+        /** @var User $user */
+        $user = $token->getUser();
+        if ($user != null && $user != 'anon.' && !$user instanceof UserInterface) {
             return false;
         }
-        switch ($attribute) {
-            case self::EDIT:
-                if ($invitation->getAppUser()->getUser() == null || !$invitation->getAppUser()->getUser()->isEnabled()) {
-                    return true;
-                } elseif ($utilisateur == $invitation->getAppUser()->getUser()) {
-                    return true;
-                }
-                break;
+
+        if ($attribute == self::EDIT) {
+            /** @var EventInvitation $eventInvitation */
+            $eventInvitation = $subject; // $subject must be a Invitation instance, thanks to the supports method
+            if ($eventInvitation->getAppUser() != null && ($eventInvitation->getAppUser()->getUser() == null || !$eventInvitation->getAppUser()->getUser()->isEnabled())) {
+                return true;
+            } elseif ($user == $eventInvitation->getAppUser()->getUser()) {
+                return true;
+            }
+        } else {
+            /** @var Event $event */
+            $event = $subject; // $subject must be a Event instance, thanks to the supports method
+            switch ($attribute) {
+                case self::CREATE:
+                    return !$event->isInvitationOnly();
+                case self::INVITE:
+                    return $event->isGuestsCanInvite();
+            }
         }
         return false;
     }

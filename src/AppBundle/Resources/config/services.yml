@@ -11,6 +11,10 @@ services:
     class: AppBundle\Manager\EventManager
     arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module']
 
+  at.manager.event_invitation:
+    class: AppBundle\Manager\EventInvitationManager
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@at.service.gentoken', '@session']
+
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
     arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating']

@@ -8,7 +8,9 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Form\Type\SwitchFormType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,6 +33,12 @@ class EventFormType extends AbstractType
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
                 'date_format' => 'dd/MM/yyyy'
+            ))
+            ->add("invitationOnly", SwitchFormType::class, array(
+                'required' => false
+            ))
+            ->add("guestsCanInvite", SwitchFormType::class, array(
+                'required' => false
             ));
     }
 

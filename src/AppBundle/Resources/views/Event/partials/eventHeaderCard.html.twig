@@ -38,7 +38,7 @@
                         });
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         var responseJSON = jqXHR.responseJSON;
-                        if (responseJSON!=undefined && responseJSON.formErrors) {
+                        if (responseJSON != undefined && responseJSON.formErrors) {
                             var formErrors = responseJSON.formErrors;
                             for (var fieldErrorName in formErrors) {
                                 if (formErrors.hasOwnProperty(fieldErrorName)) {
@@ -82,8 +82,7 @@
                 <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
                 <ul class="dropdown-menu pull-right">
                     <li>
-                        <a href="{{ url('addEventModule', {'eventTokenEdition': event.tokenEdition, 'type':constant('AppBundle\\Entity\\enum\\ModuleType::POLL_MODULE')}) }}"
-                        id="addWhenPollModule"> <i
+                        <a href="{{ url('addEventModule', {'eventTokenEdition': event.tokenEdition, 'type':constant('AppBundle\\Entity\\enum\\ModuleType::POLL_MODULE')}) }}" id="addWhenPollModule"> <i
                                     class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i>
                             <small>Sondage Quand ?</small>
                         </a>
@@ -126,7 +125,7 @@
                         if (responseJSON.htmlContent) {
                             var eventModulesContainer = $('#eventModulesContainer');
                             eventModulesContainer.append(responseJSON.htmlContent);
-                            $(document).scrollTop( $(eventModulesContainer ).children().last().offset().top );
+                            $(document).scrollTop($(eventModulesContainer).children().last().offset().top);
 
                             autosize($('textarea'));
                             $('.clockpicker').clockpicker();
@@ -177,7 +176,7 @@
     <div class="card-body card-padding p-t-25">
         {% if eventForm is not null %}
             <div class="row">
-                <div class="col-sm-7">
+                <div class="col-sm-6">
                     <div class="form-group">
                         {{ form_label(eventForm.name, 'event.form.name.label', {'label_attr':{'class':'sr-only'}}) }}
                         <div class="fg-line">
@@ -186,7 +185,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-5">
+                <div class="col-sm-6">
                     <div class="form-group">
                         {{ form_label(eventForm.responseDeadline, 'event.form.responseDeadline.label') }}
                         <div class="form-inline fg-line">
@@ -197,11 +196,21 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                {{ form_label(eventForm.description, 'event.form.description.label', {'label_attr':{'class':'sr-only'}}) }}
-                <div class="fg-line">
-                    {{ form_widget(eventForm.description, {'attr':{'rows':3,'placeholder':'event.form.description.placeholder'}}) }}
-                    {{ form_errors(eventForm.description) }}
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(eventForm.description, 'event.form.description.label', {'label_attr':{'class':'sr-only'}}) }}
+                        <div class="fg-line">
+                            {{ form_widget(eventForm.description, {'attr':{'rows':3,'placeholder':'event.form.description.placeholder'}}) }}
+                            {{ form_errors(eventForm.description) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    {{ form_row(eventForm.invitationOnly, {'label':'event.form.invitationOnly.label'}) }}
+                </div>
+                <div class="col-sm-3">
+                    {{ form_row(eventForm.guestsCanInvite, {'label':'event.form.guestsCanInvite.label'}) }}
                 </div>
             </div>
         {% else %}
@@ -210,6 +219,30 @@
                 <dd>{{ event.description }}</dd>
                 <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
                 <dd>{{ event.responseDeadline|localizeddate }}</dd>
+                <dt></dt>
+                <dd>
+                    {% if event.invitationOnly %}
+                        <div class="text-danger">
+                            <i class="zmdi zmdi-close-circle"></i> {{ "event.form.invitationOnly.text.true"|trans }}
+                        </div>
+                    {% else %}
+                        <div class="text-success">
+                            <i class="zmdi zmdi-check"></i> {{ "event.form.invitationOnly.text.false"|trans }}
+                        </div>
+                    {% endif %}
+                </dd>
+                <dt></dt>
+                <dd>
+
+                    {% if event.guestsCanInvite %}
+                        <div class="text-success">
+                            <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
+                        </div>
+                    {% else %}
+                        <div class="text-danger">
+                            <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
+                        </div>
+                    {% endif %}
             </dl>
         {% endif %}
     </div>

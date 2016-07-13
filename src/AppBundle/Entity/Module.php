@@ -75,6 +75,24 @@ class Module
      */
     private $responseDeadline;
 
+    /**
+     * If "true" then only guest with invitation can answer. No moduleInivtaiton creation when displaying the module.
+     * If "null" then it inherits the Event.invitationOnly
+     * @var boolean
+     *
+     * @ORM\Column(name="invitation_only", type="boolean", nullable=true)
+     */
+    private $invitationOnly = null;
+
+    /**
+     * If "true" then guests can send invitation to others.
+     * If "null" then it inherits the Event.guestsCanInvite
+     * @var boolean
+     * @ORM\Column(name="guests_can_invite", type="boolean", nullable=true)
+     */
+    private $guestsCanInvite = null;
+
+
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
@@ -169,64 +187,6 @@ class Module
     public function getEvent()
     {
         return $this->event;
-    }
-
-    /**
-     * Add moduleInvitation
-     *
-     * @param ModuleInvitation $moduleInvitation
-     *
-     * @return Module
-     */
-    public function addModuleInvitation(ModuleInvitation $moduleInvitation)
-    {
-        $this->moduleInvitations[] = $moduleInvitation;
-
-        return $this;
-    }
-
-    /**
-     * Remove moduleInvitation
-     *
-     * @param ModuleInvitation $moduleInvitation
-     */
-    public function removeModuleInvitation(ModuleInvitation $moduleInvitation)
-    {
-        $this->moduleInvitations->removeElement($moduleInvitation);
-    }
-
-    /**
-     * Get moduleInvitations
-     *
-     * @return ArrayCollection
-     */
-    public function getModuleInvitations()
-    {
-        return $this->moduleInvitations;
-    }
-
-    /**
-     * Set paymentModule
-     *
-     * @param PaymentModule $paymentModule
-     *
-     * @return Module
-     */
-    public function setPaymentModule(PaymentModule $paymentModule = null)
-    {
-        $this->paymentModule = $paymentModule;
-
-        return $this;
-    }
-
-    /**
-     * Get paymentModule
-     *
-     * @return PaymentModule
-     */
-    public function getPaymentModule()
-    {
-        return $this->paymentModule;
     }
 
     /**
@@ -389,6 +349,100 @@ class Module
     public function getResponseDeadline()
     {
         return $this->responseDeadline;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isInvitationOnly()
+    {
+        return $this->invitationOnly;
+    }
+
+    /**
+     * @param boolean $invitationOnly
+     * @return Module
+     */
+    public function setInvitationOnly($invitationOnly)
+    {
+        $this->invitationOnly = $invitationOnly;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isGuestsCanInvite()
+    {
+        return $this->guestsCanInvite;
+    }
+
+    /**
+     * @param boolean $guestsCanInvite
+     * @return Module
+     */
+    public function setGuestsCanInvite($guestsCanInvite)
+    {
+        $this->guestsCanInvite = $guestsCanInvite;
+        return $this;
+    }
+
+    /**
+     * Add moduleInvitation
+     *
+     * @param ModuleInvitation $moduleInvitation
+     *
+     * @return Module
+     */
+    public function addModuleInvitation(ModuleInvitation $moduleInvitation)
+    {
+        $this->moduleInvitations[] = $moduleInvitation;
+
+        return $this;
+    }
+
+    /**
+     * Remove moduleInvitation
+     *
+     * @param ModuleInvitation $moduleInvitation
+     */
+    public function removeModuleInvitation(ModuleInvitation $moduleInvitation)
+    {
+        $this->moduleInvitations->removeElement($moduleInvitation);
+    }
+
+    /**
+     * Get moduleInvitations
+     *
+     * @return ArrayCollection
+     */
+    public function getModuleInvitations()
+    {
+        return $this->moduleInvitations;
+    }
+
+    /**
+     * Set paymentModule
+     *
+     * @param PaymentModule $paymentModule
+     *
+     * @return Module
+     */
+    public function setPaymentModule(PaymentModule $paymentModule = null)
+    {
+        $this->paymentModule = $paymentModule;
+
+        return $this;
+    }
+
+    /**
+     * Get paymentModule
+     *
+     * @return PaymentModule
+     */
+    public function getPaymentModule()
+    {
+        return $this->paymentModule;
     }
 
     /**

@@ -41,6 +41,28 @@ class EventInvitation
      */
     private $event;
 
+
+    /**
+     * @var string
+     * @ORM\Column(name="status", type="string", length=64)
+     */
+    private $status;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=128, unique=true)
+     */
+    private $token;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token_edition", type="string", length=128, unique=true)
+     */
+    private $tokenEdition;
+
+
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
@@ -69,7 +91,7 @@ class EventInvitation
     /***********************************************************************
      *                      Getters and Setters
      ***********************************************************************/
-    
+
     /**
      * Get id
      *
@@ -78,6 +100,42 @@ class EventInvitation
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param string $token
+     * @return EventInvitation
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTokenEdition()
+    {
+        return $this->tokenEdition;
+    }
+
+    /**
+     * @param string $tokenEdition
+     * @return EventInvitation
+     */
+    public function setTokenEdition($tokenEdition)
+    {
+        $this->tokenEdition = $tokenEdition;
+        return $this;
     }
 
     /**
@@ -202,6 +260,22 @@ class EventInvitation
     {
         $this->name = $name;
     }
-    
-    
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     * @return EventInvitation
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
 }

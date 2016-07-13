@@ -179,8 +179,9 @@ class EventManager
     {
         $modules = array();
         if ($this->event != null) {
+            $eventModules = $this->entityManager->getRepository("AppBundle:Module")->findOrderedByEventToken($this->event->getToken());
             /** @var Module $module */
-            foreach ($this->event->getModules() as $module) {
+            foreach ($eventModules as $module) {
                 if ($module->getStatus() != ModuleStatus::DELETED && $module->getStatus() != ModuleStatus::ARCHIVED) {
                     $moduleDescription['module'] = $module;
                     $moduleDescription['allowEdit'] = $allowEventEdit; // TODO Vérifier les autorisations du module
