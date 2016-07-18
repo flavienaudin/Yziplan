@@ -7,7 +7,16 @@
             {{ ppElt.name }} ({{ ppElt.type }}){% if not loop.last %}, {% endif %}
         {% endfor %}
     </div>
-    {% for moduleInvitation in moduleInvitations %}
+    {%  if userModuleInvitation is defined and userModuleInvitation is not null %}
+        <div class="pcl-celulle palette-Orange-100 bg">
+            {% for ppResponse in userModuleInvitation.pollProposalResponses if ppResponse.pollProposal == pollProposal %}
+                {{ ppResponse.value is empty?'?':ppResponse.value }}
+            {% else %}
+                ?
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% for moduleInvitation in moduleInvitations if userModuleInvitation is null or moduleInvitation.id != userModuleInvitation.id %}
         <div class="pcl-celulle">
             {% for ppResponse in moduleInvitation.pollProposalResponses if ppResponse.pollProposal == pollProposal %}
                 {{ ppResponse.value is empty?'?':ppResponse.value }}

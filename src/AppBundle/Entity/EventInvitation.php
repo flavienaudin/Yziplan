@@ -300,7 +300,7 @@ class EventInvitation
     }
 
     /**
-     * Retourne le nom de l'invité à afficher en fonction des données renseignées et de l'utilisateur associé.
+     * Retourne l'email de l'invité à afficher en fonction de l'utilisateur associé.
      * @return string
      */
     public function getDisplayableEmail()
@@ -310,6 +310,24 @@ class EventInvitation
             $displayableEmail = $this->getAppUser()->getUser()->getEmail();
         }
         return $displayableEmail;
+    }
+
+
+
+    /**
+     * Get moduleInvitation for the given module
+     *
+     * @return ModuleInvitation
+     */
+    public function getModuleInvitationForModule($moduleId)
+    {
+        /** @var ModuleInvitation $moduleInvitation */
+        foreach($this->getModuleInvitations() as $moduleInvitation){
+            if($moduleInvitation->getModule()->getId() == $moduleId){
+                return $moduleInvitation;
+            }
+        }
+        return null;
     }
 
 }

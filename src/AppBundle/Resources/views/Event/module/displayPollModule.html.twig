@@ -23,7 +23,12 @@
                     <div class="poll-container">
                         <div class="pc-ligne">
                             <div class="pcl-celulle"></div>
-                            {% for moduleInvitation in module.moduleInvitations|slice(0,maxColModule) %}
+                            {%  if userModuleInvitation is not null %}
+                                <div class="pcl-celulle">
+                                    <span class="text-warning">{{ userModuleInvitation.displayableName }}</span>
+                                </div>
+                            {% endif %}
+                            {% for moduleInvitation in module.moduleInvitations|slice(0,maxColModule) if userModuleInvitation is null or moduleInvitation.id != userModuleInvitation.id %}
                                 <div class="pcl-celulle">
                                     {% if moduleInvitation.name is not empty %}
                                         {{ moduleInvitation.name }}
@@ -38,6 +43,7 @@
                             {% endfor %}
                             <div class="pcl-celulle">
                                 {% if module.moduleInvitations|length > maxColModule %}
+                                    {# TODO implement "display more"-functionnality #}
                                     <span class="zmdi-hc-stack zmdi-hc-lg">
                                         <i class="zmdi zmdi-circle zmdi-hc-stack-2x"></i>
                                         <i class="zmdi zmdi-more zmdi-hc-stack-1x zmdi-hc-inverse"></i>
@@ -49,6 +55,7 @@
                             {% for pollProposal in module.pollModule.pollProposals %}
                                 {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
                                     "pollProposal":pollProposal,
+                                    "userModuleInvitation":userModuleInvitation,
                                     "moduleInvitations":module.moduleInvitations|slice(0,maxColModule)
                                 }) }}
                             {% else %}

@@ -82,7 +82,7 @@ class ModuleInvitation
     }
 
     /***********************************************************************
-     *                      Methods
+     *                      Helpers
      ***********************************************************************/
 
     /**
@@ -114,6 +114,19 @@ class ModuleInvitation
             return true;
         }
         return false;
+    }
+
+    /**
+     * Retourne le nom de l'invité à afficher en fonction des données renseignées et de l'utilisateur associé.
+     * @return string
+     */
+    public function getDisplayableName()
+    {
+        $displayableName = $this->name;
+        if (empty($displayableName)) {
+            $displayableName = $this->eventInvitation->getDisplayableName();
+        }
+        return $displayableName;
     }
 
 

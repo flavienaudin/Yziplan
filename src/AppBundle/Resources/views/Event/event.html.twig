@@ -18,12 +18,21 @@
                         'module':moduleDescription.module,
                         'allowEdit':moduleDescription.allowEdit,
                         'moduleForm':moduleDescription.moduleForm,
-                        'addPollProposalForm':(moduleDescription.addPollProposalForm is defined?moduleDescription.addPollProposalForm:null )
+                        'addPollProposalForm':(moduleDescription.addPollProposalForm is defined?moduleDescription.addPollProposalForm:null ),
+                        'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module.id)
                     }) }}
                 {% elseif moduleDescription.module.expenseModule is not null %}
-                    {{ include('@App/Event/module/displayExpenseModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleForm}) }}
+                    {{ include('@App/Event/module/displayExpenseModule.html.twig', {
+                        'module':moduleDescription.module,
+                        'allowEdit':moduleDescription.allowEdit,
+                        'moduleForm':moduleDescription.moduleForm
+                    }) }}
                 {% else %}
-                    {{ include('@App/Event/module/displayModule.html.twig', {'module':moduleDescription.module,'allowEdit':moduleDescription.allowEdit,'moduleForm':moduleDescription.moduleForm}) }}
+                    {{ include('@App/Event/module/displayModule.html.twig', {
+                        'module':moduleDescription.module,
+                        'allowEdit':moduleDescription.allowEdit,
+                        'moduleForm':moduleDescription.moduleForm
+                    }) }}
                 {% endif %}
             {% endfor %}
         </div>
@@ -35,7 +44,7 @@
             {% if event.creator is not null %}
                 {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.appUser.id})) }}
             {% endif %}
-            {{ include("@App/Event/partials/eventTechniqueDataCard.html.twig", {"event":event}) }}
+            {{ include("@App/Event/partials/eventTechniqueDataCard.html.twig", {"event":event, 'userEventInvitation':userEventInvitation}) }}
         </div>
     </div>
 

@@ -5,9 +5,15 @@
 
     </div>
     <div class="card-body card-padding">
+        <dl>
         {% if allowEdit %}
-            <a href="{{ url("displayEvent",{'token':event.token,'tokenEdition':event.tokenEdition}) }}">Administration</a><br>
+            <dt>Lien d'administration</dt>
+            <dd><a href="{{ url("displayEvent",{'token':event.token,'tokenEdition':event.tokenEdition}) }}">Administration</a></dd>
         {% endif %}
-        <a href="{{ url("displayEvent",{'token':event.token}) }}">Visualisation</a>
+            <dt>Lien vers l'événement</dt>
+            <dd><a href="{{ url("displayEvent",{'token':event.token}) }}">Visualisation de l'événement</a></dd>
+            <dt>Lien vers votre invitation</dt>
+            <dd><a href="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}">Votre invitation</a></dd>
+        </dl>
     </div>
 </div>

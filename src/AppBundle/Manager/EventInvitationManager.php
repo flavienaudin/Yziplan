@@ -12,6 +12,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\enum\EventInvitationStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
+use AppBundle\Entity\ModuleInvitation;
 use AppBundle\Form\EventInvitationFormType;
 use AppBundle\Security\EventInvitationVoter;
 use ATUserBundle\Entity\User;
@@ -132,6 +133,14 @@ class EventInvitationManager
         }
         $event->addEventInvitation($this->eventInvitation);
         $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+
+        foreach($event->getModules() as $module){
+            // TODO check module authorization (every guests of the event, on ModuleInvitationOnly,...)
+            $moduleInvitation = new ModuleInvitation();
+            $moduleInvitation->setModule($module);
+            $this->eventInvitation->addModuleInvitation($moduleInvitation);
+        }
+
         return $this->eventInvitation;
     }
 
@@ -152,6 +161,9 @@ class EventInvitationManager
     public function treatEventFormSubmission(Form $evtForm)
     {
         $this->eventInvitation = $evtForm->getData();
+        if(!empty($this->eventInvitation->getName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER){
+            $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
+        }
 
         $guestEmailForm = $evtForm->get("email");
         if ($this->eventInvitation->getAppUser() == null) {
