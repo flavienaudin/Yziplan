@@ -9,27 +9,17 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\AppUser;
-use AppBundle\Entity\enum\EventInvitationStatus;
-use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Event;
-use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
-use AppBundle\Entity\module\PollModule;
-use AppBundle\Entity\module\PollProposal;
-use AppBundle\Form\ModuleFormType;
-use AppBundle\Form\PollProposalFormType;
 use AppBundle\Manager\EventManager;
-use AppBundle\Manager\GenerateursToken;
 use AppBundle\Security\EventVoter;
 use AppBundle\Utils\FlashBagTypes;
-use ATUserBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
 class EventController extends Controller
@@ -69,9 +59,37 @@ class EventController extends Controller
 
             $eventInvitationManager = $this->get("at.manager.event_invitation");
             $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($currentEvent, $this->getUser());
-            if($userEventInvitation == null){
+            if ($userEventInvitation == null) {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access"));
                 return $this->redirectToRoute("home");
+            } else {
+                $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
+                $eventInvitationForm->handleRequest($request);
+                if ($request->isXmlHttpRequest()) {
+                    if ($eventInvitationForm->isSubmitted()) {
+                        if ($eventInvitationForm->isValid()) {
+                            $userEventInvitation = $eventInvitationManager->treatEventFormSubmission($eventInvitationForm);
+                            $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
+                            $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                            $data['htmlContent'] = $this->renderView("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", array(
+                                "userEventInvitation" => $userEventInvitation,
+                                "userEventInvitationForm" => $eventInvitationForm->createView()
+                            ));
+                            return new JsonResponse($data, Response::HTTP_OK);
+                        } else {
+                            $data["formErrors"] = array();
+                            foreach ($eventInvitationForm->getErrors(true) as $error) {
+                                $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
+                            }
+                            return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                        }
+                    }
+                } else if ($eventInvitationForm->isValid()) {
+                    $userEventInvitation = $eventInvitationManager->treatEventFormSubmission($eventInvitationForm);
+                    return $this->redirectToRoute('displayEvent', array(
+                        'token' => $currentEvent->getToken(),
+                        'tokenEdition' => ($userEventInvitation == $currentEvent->getCreator() ? $currentEvent->getTokenEdition() : null)));
+                }
             }
 
             $eventForm = null;
@@ -100,11 +118,9 @@ class EventController extends Controller
                             return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     }
-                } else {
-                    if ($eventForm->isValid()) {
-                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
-                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken(), 'tokenEdition' => $currentEvent->getTokenEdition()));
-                    }
+                } elseif ($eventForm->isValid()) {
+                    $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                    return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken(), 'tokenEdition' => $currentEvent->getTokenEdition()));
                 }
             }
 
@@ -178,7 +194,8 @@ class EventController extends Controller
                 "allowEdit" => $allowEdit,
                 'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
                 'modules' => $modules,
-                'userEventInvitation' => $userEventInvitation
+                'userEventInvitation' => $userEventInvitation,
+                'userEventInvitationForm' => ($eventInvitationForm != null ? $eventInvitationForm->createView() : null)
             ));
 
         }

@@ -1,7 +1,7 @@
 services:
 # Services & Managers
     at.manager.user_manager:
-        class: ATUserBundle\Manager\UtilisateurManager
+        class: ATUserBundle\Manager\UserManager
         arguments: ['@security.encoder_factory', '@fos_user.util.username_canonicalizer', '@fos_user.util.email_canonicalizer', '@fos_user.object_manager', '%fos_user.model.user.class%' ]
         calls:
             - [ setTokenGenerateur, ['@at.service.gentoken'] ]

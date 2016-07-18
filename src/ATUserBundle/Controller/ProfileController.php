@@ -13,7 +13,7 @@ use ATUserBundle\Entity\User;
 use ATUserBundle\Form\UserAboutBasicInformationType;
 use ATUserBundle\Form\UserAboutBiographyType;
 use ATUserBundle\Manager\UserAboutManager;
-use ATUserBundle\Manager\UtilisateurManager;
+use ATUserBundle\Manager\UserManager;
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -85,7 +85,7 @@ class ProfileController extends BaseController
         $user = $this->getUser();
         $data = array();
         if ($user instanceof User) {
-            /** @var UtilisateurManager $userManager */
+            /** @var UserManager $userManager */
             $userManager = $this->get("at.manager.user_manager");
             /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
             $dispatcher = $this->get('event_dispatcher');

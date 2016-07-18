@@ -33,14 +33,6 @@ class EventInvitation
      */
     private $name;
 
-    /**
-     * @var Event
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Event", inversedBy="eventInvitations")
-     * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
-     */
-    private $event;
-
 
     /**
      * @var string
@@ -66,6 +58,14 @@ class EventInvitation
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
+    /**
+     * @var Event
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Event", inversedBy="eventInvitations")
+     * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
+     */
+    private $event;
+
     /**
      * @var AppUser
      *
@@ -100,6 +100,40 @@ class EventInvitation
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     * @return EventInvitation
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
     }
 
     /**
@@ -155,7 +189,7 @@ class EventInvitation
     /**
      * Get event
      *
-     * @return \AppBundle\Entity\Event
+     * @return Event
      */
     public function getEvent()
     {
@@ -165,11 +199,11 @@ class EventInvitation
     /**
      * Set appUser
      *
-     * @param \AppBundle\Entity\AppUser $appUser
+     * @param AppUser $appUser
      *
      * @return EventInvitation
      */
-    public function setAppUser(\AppBundle\Entity\AppUser $appUser = null)
+    public function setAppUser(AppUser $appUser = null)
     {
         $this->appUser = $appUser;
 
@@ -189,11 +223,11 @@ class EventInvitation
     /**
      * Set createdEvent
      *
-     * @param \AppBundle\Entity\Event $createdEvent
+     * @param Event $createdEvent
      *
      * @return EventInvitation
      */
-    public function setCreatedEvent(\AppBundle\Entity\Event $createdEvent = null)
+    public function setCreatedEvent(Event $createdEvent = null)
     {
         $this->createdEvent = $createdEvent;
 
@@ -203,7 +237,7 @@ class EventInvitation
     /**
      * Get createdEvent
      *
-     * @return \AppBundle\Entity\Event
+     * @return Event
      */
     public function getCreatedEvent()
     {
@@ -238,44 +272,44 @@ class EventInvitation
     /**
      * Get moduleInvitations
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection
      */
     public function getModuleInvitations()
     {
         return $this->moduleInvitations;
     }
 
+    /***********************************************************************
+     *                      Helpers
+     ***********************************************************************/
     /**
+     * Retourne le nom de l'invité à afficher en fonction des données renseignées et de l'utilisateur associé.
      * @return string
      */
-    public function getName()
+    public function getDisplayableName()
     {
-        return $this->name;
+        $displayableName = $this->name;
+        if (empty($displayableName)) {
+            if ($this->getAppUser() != null && $this->getAppUser()->getUser() != null && $this->getAppUser()->getUser()->isEnabled()) {
+                $displayableName = $this->getAppUser()->getUser()->__toString();
+            } else {
+                $displayableName = null;
+            }
+        }
+        return $displayableName;
     }
 
     /**
-     * @param string $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
+     * Retourne le nom de l'invité à afficher en fonction des données renseignées et de l'utilisateur associé.
      * @return string
      */
-    public function getStatus()
+    public function getDisplayableEmail()
     {
-        return $this->status;
+        $displayableEmail = null;
+        if ($this->getAppUser() != null && $this->getAppUser()->getUser() != null) {
+            $displayableEmail = $this->getAppUser()->getUser()->getEmail();
+        }
+        return $displayableEmail;
     }
 
-    /**
-     * @param string $status
-     * @return EventInvitation
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-        return $this;
-    }
 }

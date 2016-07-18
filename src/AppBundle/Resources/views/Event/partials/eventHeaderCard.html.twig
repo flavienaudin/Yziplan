@@ -189,7 +189,7 @@
                     <div class="form-group">
                         {{ form_label(eventForm.responseDeadline, 'event.form.responseDeadline.label') }}
                         <div class="form-inline fg-line">
-                            {{ form_widget(eventForm.responseDeadline, {'attr':{'class':'', 'placeholder':'event.form.responseDeadline.placeholder'}}) }}
+                            {{ form_widget(eventForm.responseDeadline, {'attr':{'placeholder':'event.form.responseDeadline.placeholder'}}) }}
                         </div>
                         {{ form_errors(eventForm.responseDeadline) }}
                     </div>
@@ -249,7 +249,6 @@
     <div class="card-footer card-padding-sm">
         {% if eventForm is not null %}
             <div class="text-right">
-
                 {% if event.token is empty %}
                     <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.nextStep"|trans }}</button>
                 {% else %}

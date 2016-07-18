@@ -29,6 +29,9 @@
         </div>
 
         <div class="col-xs-12 col-sm-4">
+            {% if userEventInvitation is defined %}
+                {{ include("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", {"userEventInvitation":userEventInvitation, 'userEventInvitationForm' : userEventInvitationForm}) }}
+            {% endif %}
             {% if event.creator is not null %}
                 {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.appUser.id})) }}
             {% endif %}

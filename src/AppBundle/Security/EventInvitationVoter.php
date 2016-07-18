@@ -48,7 +48,9 @@ class EventInvitationVoter extends Voter
         if ($attribute == self::EDIT) {
             /** @var EventInvitation $eventInvitation */
             $eventInvitation = $subject; // $subject must be a Invitation instance, thanks to the supports method
-            if ($eventInvitation->getAppUser() != null && ($eventInvitation->getAppUser()->getUser() == null || !$eventInvitation->getAppUser()->getUser()->isEnabled())) {
+            if($eventInvitation->getAppUser() == null){
+                return true;
+            }else if ($eventInvitation->getAppUser()->getUser() == null || !$eventInvitation->getAppUser()->getUser()->isEnabled()) {
                 return true;
             } elseif ($user == $eventInvitation->getAppUser()->getUser()) {
                 return true;

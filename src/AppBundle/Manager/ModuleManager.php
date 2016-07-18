@@ -18,6 +18,7 @@ use AppBundle\Form\PollProposalFormType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -43,7 +44,7 @@ class ModuleManager
     /** @var Module Le module en cours de traitement */
     private $module;
 
-    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory, GenerateursToken $generateurToken, EngineInterface $templating)
+    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, EngineInterface $templating)
     {
         $this->entityManager = $doctrine;
         $this->authorizationChecker = $authorizationChecker;

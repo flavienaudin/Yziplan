@@ -23,7 +23,7 @@ use AppBundle\Entity\module\PollProposalElement;
 use AppBundle\Entity\ModuleInvitation;
 use AppBundle\Manager\GenerateursToken;
 use ATUserBundle\Entity\User;
-use ATUserBundle\Manager\UtilisateurManager;
+use ATUserBundle\Manager\UserManager;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;

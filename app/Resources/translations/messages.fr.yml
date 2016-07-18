@@ -74,6 +74,15 @@ event:
     creation: Evénement créé avec succès.
 
 eventInvitation:
+  form:
+    name:
+      label: Votre nom pour l'événement
+      placeholder: Votre nom pour l'événement
+    email:
+      label: Votre e-mail de contact
+      placeholder: Votre e-mail
+  maindata.card:
+    title: A propos de votre invitation
   error.message:
     unauthorized_access: Vous n'êtes pas inviter à cet événement.
 
