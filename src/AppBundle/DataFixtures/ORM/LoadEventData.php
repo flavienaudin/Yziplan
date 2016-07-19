@@ -10,6 +10,7 @@ namespace AppBundle\DataFixtures\ORM;
 
 
 use AppBundle\Entity\AppUser;
+use AppBundle\Entity\enum\EventInvitationStatus;
 use AppBundle\Entity\enum\EventStatus;
 use AppBundle\Entity\enum\PollProposalElementType;
 use AppBundle\Entity\Event;
@@ -82,10 +83,15 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $event->setTokenEdition("987654321");
         $event->setStatus(EventStatus::IN_ORGANIZATION);
         $event->setDescription("Nouvel événément super cool de test. C'est donc sa description");
+        $event->setGuestsCanInvite(false);
+        $event->setInvitationOnly(true);
 
         //EventInvitation Creator
         $eventInvitationCreator = new EventInvitation();
         $eventInvitationCreator->setName("Jacky");
+        $eventInvitationCreator->setStatus(EventInvitationStatus::VALID);
+        $eventInvitationCreator->setToken('azerty');
+        $eventInvitationCreator->setTokenEdition('ytreza');
         $userprincipal->getAppUser()->addEventInvitation($eventInvitationCreator);
         $event->addEventInvitation($eventInvitationCreator);
         $event->setCreator($eventInvitationCreator);
@@ -93,6 +99,9 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         //EventInvitation Invite
         $eventInvitation = new EventInvitation();
         $eventInvitation->setName("Raymond");
+        $eventInvitation->setStatus(EventInvitationStatus::VALID);
+        $eventInvitation->setToken('qsdfgh');
+        $eventInvitation->setTokenEdition('hgfdsq');
         $userInvite->getAppUser()->addEventInvitation($eventInvitation);
         $event->addEventInvitation($eventInvitation);
 
@@ -106,6 +115,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $module->setToken("12345");
         $module->setTokenEdition("543221");
         $module->setStatus(EventStatus::IN_ORGANIZATION);
+        $module->setOrderIndex(2);
 
        //Module specifique pour les depenses
         $expenseModule = new ExpenseModule();
@@ -139,6 +149,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $modulePoll->setToken("quand123");
         $modulePoll->setTokenEdition("quand321");
         $modulePoll->setStatus(EventStatus::IN_ORGANIZATION);
+        $modulePoll->setOrderIndex(1);
 
         $pollModule = new PollModule();
         $modulePoll->setPollModule($pollModule);

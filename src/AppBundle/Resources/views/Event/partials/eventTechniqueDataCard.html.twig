@@ -6,10 +6,10 @@
     </div>
     <div class="card-body card-padding">
         <dl>
-        {% if allowEdit %}
-            <dt>Lien d'administration</dt>
-            <dd><a href="{{ url("displayEvent",{'token':event.token,'tokenEdition':event.tokenEdition}) }}">Administration</a></dd>
-        {% endif %}
+            {% if allowEdit %}
+                <dt>Lien d'administration</dt>
+                <dd><a href="{{ url("displayEvent",{'token':event.token,'tokenEdition':event.tokenEdition}) }}">Administration</a></dd>
+            {% endif %}
             <dt>Lien vers l'événement</dt>
             <dd><a href="{{ url("displayEvent",{'token':event.token}) }}">Visualisation de l'événement</a></dd>
             <dt>Lien vers votre invitation</dt>
