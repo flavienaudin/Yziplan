@@ -43,10 +43,10 @@ class EventController extends Controller
         $eventManager = $this->get('at.manager.event');
         /** @var Event $currentEvent */
         $currentEvent = $eventManager->initializeEvent(true);
-        if($currentEvent!=null) {
+        if ($currentEvent != null) {
             $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $currentEvent->getCreator()->getToken());
             return $this->redirectToRoute("displayEvent", array('token' => $currentEvent->getToken(), 'tokenEdition' => $currentEvent->getTokenEdition()));
-        }else{
+        } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("global.error.unauthorized_access"));
             return $this->redirect('home');
         }
@@ -59,9 +59,10 @@ class EventController extends Controller
     {
         /** @var EventManager $eventManager */
         $eventManager = $this->get('at.manager.event');
-        if ($eventManager->retrieveEvent($token)) {
-            $currentEvent = $eventManager->getEvent();
-
+        if (($currentEvent = $eventManager->retrieveEvent($token)) != null) {
+            /////////////////////////////////////
+            // user EventInvitation management //
+            /////////////////////////////////////
             $eventInvitationManager = $this->get("at.manager.event_invitation");
             $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($currentEvent, $this->getUser());
             if ($userEventInvitation == null) {
@@ -98,6 +99,9 @@ class EventController extends Controller
                 }
             }
 
+            ////////////////////////
+            // Edition management //
+            ////////////////////////
             $eventForm = null;
             $allowEdit = $this->isGranted(EventVoter::EDIT, $currentEvent) && ($tokenEdition === $currentEvent->getTokenEdition());
             if ($allowEdit) {
@@ -129,8 +133,10 @@ class EventController extends Controller
                 }
             }
 
-            // module management
-            $modules = $eventManager->getModulesToDisplay($this->getUser(), $allowEdit);
+            ////////////////////////
+            // modules management //
+            ////////////////////////
+            $modules = $eventManager->getModulesToDisplay($allowEdit);
             $moduleManager = $this->get("at.manager.module");
             foreach ($modules as $moduleId => $moduleDescription) {
                 if ($moduleDescription['allowEdit'] && $moduleDescription['moduleForm'] instanceof Form) {

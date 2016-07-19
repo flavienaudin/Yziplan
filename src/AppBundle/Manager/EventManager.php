@@ -77,21 +77,17 @@ class EventManager
 
     /**
      * @param $token string Le token de l'événement à récupérer
-     * @param $tokenKey string La clé du token à utiliser : token ou tokenEdition
-     * @return bool true Si un événement est trouvé
+     * @return Event|null L'événement trouvé sinon null
      */
-    public function retrieveEvent($token, $tokenKey = 'token')
+    public function retrieveEvent($token)
     {
         if (empty($token)) {
-            $this->event = new Event();
-            $this->initializeEvent();
+            $this->initializeEvent(true);
         } else {
-            if ($tokenKey == 'token' || $tokenKey == 'tokenEdition') {
-                $eventRep = $this->entityManager->getRepository("AppBundle:Event");
-                $this->event = $eventRep->findOneBy(array($tokenKey => $token));
-            }
+            $eventRep = $this->entityManager->getRepository("AppBundle:Event");
+            $this->event = $eventRep->findOneBy(array('token' => $token));
         }
-        return ($this->event instanceof Event);
+        return ($this->event instanceof Event?$this->event:null);
     }
 
     /**
@@ -113,7 +109,7 @@ class EventManager
             $this->event->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
         $user = $this->tokenStorage->getToken()->getUser();
-        if($this->eventInvitationManager->createCreatorEventInvitation($this->event, ($user instanceof User ? $user : null)) == null){
+        if ($this->eventInvitationManager->createCreatorEventInvitation($this->event, ($user instanceof User ? $user : null)) == null) {
             $this->event = null;
             return $this->event;
         }
@@ -165,14 +161,16 @@ class EventManager
     {
         $module = $this->moduleManager->createModule($type);
         $this->event->addModule($module);
+
+        // TODO Créer les moduleInvitations selon autorisation
+
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
         return $module;
     }
 
     /**
-     * @param User $user L'Utilisateur connecté ou non
-     * @param $allowEventEdit boolean If the user is allowed to edit the event or not
+     * @param $allowEventEdit boolean TODO specific authroziation control. If the user is allowed to edit the event or not
      * @return array Un tableau de modules de l'événement au format :
      *  moduleId => [
      *  'module' => Module : Le module lui-meme
@@ -180,7 +178,7 @@ class EventManager
      *  'moduleForm' => Form : le formulaire d'édition de l'événement si editable
      * ]
      */
-    public function getModulesToDisplay(User $user = null, $allowEventEdit = false)
+    public function getModulesToDisplay($allowEventEdit = false)
     {
         $modules = array();
         if ($this->event != null) {
@@ -196,6 +194,7 @@ class EventManager
                         $moduleDescription['moduleForm'] = null;
                     }
                     if ($module->getPollModule() != null) {
+                        // TODO Vérifier les autorisations d'ajouter des propositions au module
                         $moduleDescription['addPollProposalForm'] = $this->moduleManager->createAddPollProposalForm($module);
                     }
                     $modules[$module->getId()] = $moduleDescription;
