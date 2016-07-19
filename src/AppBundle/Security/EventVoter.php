@@ -61,7 +61,7 @@ class EventVoter extends Voter
         return false;
     }
 
-    private function canEdit(Event $event, User $user)
+    private function canEdit(Event $event, $user)
     {
         if ($event->getCreator() == null || $event->getCreator()->getAppUser() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {
             return true;
