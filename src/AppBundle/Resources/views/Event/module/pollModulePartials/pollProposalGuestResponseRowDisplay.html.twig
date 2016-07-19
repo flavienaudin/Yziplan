@@ -16,7 +16,7 @@
             {% endfor %}
         </div>
     {% endif %}
-    {% for moduleInvitation in moduleInvitations if userModuleInvitation is null or moduleInvitation.id != userModuleInvitation.id %}
+    {% for moduleInvitation in moduleInvitations if (userModuleInvitation is not defined or userModuleInvitation is null or moduleInvitation.id != userModuleInvitation.id) %}
         <div class="pcl-celulle">
             {% for ppResponse in moduleInvitation.pollProposalResponses if ppResponse.pollProposal == pollProposal %}
                 {{ ppResponse.value is empty?'?':ppResponse.value }}

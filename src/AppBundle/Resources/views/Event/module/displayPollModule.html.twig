@@ -23,7 +23,7 @@
                     <div class="poll-container">
                         <div class="pc-ligne">
                             <div class="pcl-celulle"></div>
-                            {%  if userModuleInvitation is not null %}
+                            {%  if userModuleInvitation is defined and userModuleInvitation is not null %}
                                 <div class="pcl-celulle">
                                     <span class="text-warning">{{ userModuleInvitation.displayableName }}</span>
                                 </div>
