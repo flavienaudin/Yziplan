@@ -28,12 +28,13 @@ class EventInvitationController extends Controller
      */
     public function displayEventInvitationAction(EventInvitation $eventInvitation = null, Request $request)
     {
-        if ($this->isGranted(EventInvitationVoter::EDIT, $eventInvitation)) {
-            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $eventInvitation->getToken());
-            return $this->redirectToRoute("displayEvent", array('token' => $eventInvitation->getEvent()->getToken()));
+        if ($eventInvitation == null) {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access"));
+            return $this->redirectToRoute("home");
         }
-        $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access"));
-        return $this->redirectToRoute("home");
+        $this->denyAccessUnlessGranted(EventInvitationVoter::EDIT, $eventInvitation);
+        $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $eventInvitation->getToken());
+        return $this->redirectToRoute("displayEvent", array('token' => $eventInvitation->getEvent()->getToken()));
     }
 
 }
