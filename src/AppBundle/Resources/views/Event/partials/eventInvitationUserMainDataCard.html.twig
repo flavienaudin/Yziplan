@@ -28,7 +28,7 @@
                     {{ userEventInvitation.displayableName is not empty?userEventInvitation.displayableName:" - "}}</dd>
                 <dt>{{ "eventInvitation.form.email.label"|trans }}</dt>
                 <dd>
-                    {{ userEventInvitation.appUser is not null and userEventInvitation.appUser.user is not null ? userEventInvitation.appUser.user.email}}
+                    {{ userEventInvitation.displayableEmail is not empty? userEventInvitation.displayableEmail:" - "}}
                 </dd>
             </dl>
         {% endif %}

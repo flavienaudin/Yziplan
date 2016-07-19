@@ -16,8 +16,8 @@ use ATUserBundle\Entity\User;
 
 class EventVoter extends Voter
 {
-    const DISPLAY = 'display';
     const EDIT = 'edit';
+    const ADD_EVENT_MODULE = 'addEventModule';
     const VALIDATE = 'validate';
     const ARCHIVE = 'archive';
     const CANCEL = 'cancel';
@@ -25,7 +25,7 @@ class EventVoter extends Voter
 
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, array(self::DISPLAY, self::EDIT, self::VALIDATE, self::ARCHIVE, self::CANCEL))) {
+        if (!in_array($attribute, array(self::EDIT, self::ADD_EVENT_MODULE, self::VALIDATE, self::ARCHIVE, self::CANCEL))) {
             return false;
         }
         if (!$subject instanceof Event) {
@@ -45,20 +45,28 @@ class EventVoter extends Voter
             return false;
         }
         switch ($attribute) {
-            case self::DISPLAY:
-                // TODO Controler l'access (si evenement privée, invitation nécessaire...)
-                return true;
+            case self::ADD_EVENT_MODULE:
+                if ($event->isGuestsCanAddModule()) {
+                    return true;
+                }
+                return $this->canEdit($event, $user);
                 break;
             case self::VALIDATE:
             case self::CANCEL:
             case self::ARCHIVE:
             case self::EDIT:
-                if ($event->getCreator() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {
-                    return true;
-                } else if ($event->getCreator()->getAppUser()->getUser()->isEnabled() && $user == $event->getCreator()->getAppUser()->getUser()) {
-                    return true;
-                }
+                return $this->canEdit($event, $user);
                 break;
+        }
+        return false;
+    }
+
+    private function canEdit(Event $event, User $user)
+    {
+        if ($event->getCreator() == null || $event->getCreator()->getAppUser() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {
+            return true;
+        } else if ($user == $event->getCreator()->getAppUser()->getUser()) {
+            return true;
         }
         return false;
     }

@@ -68,7 +68,13 @@ event:
       placeholder: Guests can invite
       text.true: Guests can invite other people
       text.false: Guests can not invite other people
+    guestsCanAddModule:
+      label: Guests can add module
+      placeholder: Guests can add module
+      text.true: Guests can add module to the event
+      text.false: Guests can not add module to the event
   error.message:
+    creation: An error occured while creating an event.
     unauthorized_access: You have no right to access this event.
   success.message:
     creation: Event created successfully.

@@ -76,13 +76,12 @@
                 {{ 'event.form.image.label'|trans }}</a>
         {% endif %}
 
-
-        {% if allowEdit and event.token is not empty %}
+        {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'),event) and event.tokenEdition is not empty %}
             <div class="dropdown add-module-menu">
                 <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
                 <ul class="dropdown-menu pull-right">
                     <li>
-                        <a href="{{ url('addEventModule', {'eventTokenEdition': event.tokenEdition, 'type':constant('AppBundle\\Entity\\enum\\ModuleType::POLL_MODULE')}) }}" id="addWhenPollModule"> <i
+                        <a href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Entity\\enum\\ModuleType::POLL_MODULE')}) }}" id="addWhenPollModule"> <i
                                     class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i>
                             <small>Sondage Quand ?</small>
                         </a>
@@ -233,7 +232,6 @@
                 </dd>
                 <dt></dt>
                 <dd>
-
                     {% if event.guestsCanInvite %}
                         <div class="text-success">
                             <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
@@ -243,6 +241,19 @@
                             <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
                         </div>
                     {% endif %}
+                </dd>
+                <dt></dt>
+                <dd>
+                    {% if event.guestsCanAddModule %}
+                        <div class="text-success">
+                            <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanAddModule.text.true"|trans }} (à garder ?)
+                        </div>
+                    {% else %}
+                        <div class="text-danger">
+                            <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanAddModule.text.false"|trans }} (à garder ?)
+                        </div>
+                    {% endif %}
+                </dd>
             </dl>
         {% endif %}
     </div>

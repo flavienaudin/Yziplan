@@ -10,7 +10,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\AppUser;
 use AppBundle\Entity\Event;
-use AppBundle\Entity\Module;
+use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventVoter;
 use AppBundle\Utils\FlashBagTypes;
@@ -41,9 +41,15 @@ class EventController extends Controller
     {
         /** @var EventManager $eventManager */
         $eventManager = $this->get('at.manager.event');
-        $eventManager->setEvent(new Event());
-        $currentEvent = $eventManager->initEvent();
-        return $this->redirectToRoute("displayEvent", array('token' => $currentEvent->getToken(), 'tokenEdition' => $currentEvent->getTokenEdition()));
+        /** @var Event $currentEvent */
+        $currentEvent = $eventManager->initializeEvent(true);
+        if($currentEvent!=null) {
+            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $currentEvent->getCreator()->getToken());
+            return $this->redirectToRoute("displayEvent", array('token' => $currentEvent->getToken(), 'tokenEdition' => $currentEvent->getTokenEdition()));
+        }else{
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("global.error.unauthorized_access"));
+            return $this->redirect('home');
+        }
     }
 
     /**
@@ -55,7 +61,6 @@ class EventController extends Controller
         $eventManager = $this->get('at.manager.event');
         if ($eventManager->retrieveEvent($token)) {
             $currentEvent = $eventManager->getEvent();
-            $this->denyAccessUnlessGranted(EventVoter::DISPLAY, $currentEvent);
 
             $eventInvitationManager = $this->get("at.manager.event_invitation");
             $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($currentEvent, $this->getUser());
@@ -69,6 +74,7 @@ class EventController extends Controller
                     if ($eventInvitationForm->isSubmitted()) {
                         if ($eventInvitationForm->isValid()) {
                             $userEventInvitation = $eventInvitationManager->treatEventFormSubmission($eventInvitationForm);
+                            // Update the form with the updated userEventInvitation
                             $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
                             $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
                             $data['htmlContent'] = $this->renderView("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", array(
@@ -96,7 +102,7 @@ class EventController extends Controller
             $allowEdit = $this->isGranted(EventVoter::EDIT, $currentEvent) && ($tokenEdition === $currentEvent->getTokenEdition());
             if ($allowEdit) {
                 /** @var Form $eventForm */
-                $eventForm = $eventManager->initEventForm($this->getUser());
+                $eventForm = $eventManager->initEventForm();
                 $eventForm->handleRequest($request);
                 if ($request->isXmlHttpRequest()) {
                     if ($eventForm->isSubmitted()) {
@@ -105,7 +111,6 @@ class EventController extends Controller
                             $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
                             $data['htmlContent'] = $this->renderView("@App/Event/partials/eventHeaderCard.html.twig", array(
                                     'event' => $currentEvent,
-                                    'allowEdit' => $allowEdit,
                                     'eventForm' => $eventForm->createView()
                                 )
                             );
@@ -136,9 +141,8 @@ class EventController extends Controller
                         if ($moduleForm->isSubmitted()) {
                             if ($moduleForm->isValid()) {
                                 $currentModule = $moduleManager->treatUpdateFormModule($moduleForm);
-                                $moduleForm = $eventManager->createModuleForm($currentModule);
                                 $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                                $data['htmlContent'] = $moduleManager->displayModulePartial($currentModule, $moduleDescription['allowEdit'], $moduleForm);
+                                $data['htmlContent'] = $moduleManager->displayModulePartial($currentModule, $moduleDescription['allowEdit']);
                                 return new JsonResponse($data, Response::HTTP_OK);
                             } else {
                                 $data["formErrors"] = array();
@@ -191,7 +195,6 @@ class EventController extends Controller
 
             return $this->render('AppBundle:Event:event.html.twig', array(
                 'event' => $currentEvent,
-                "allowEdit" => $allowEdit,
                 'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
                 'modules' => $modules,
                 'userEventInvitation' => $userEventInvitation,
@@ -199,7 +202,7 @@ class EventController extends Controller
             ));
 
         }
-        $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator.default')->trans("event.error.message.unauthorized_access"));
+        $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.unauthorized_access"));
         return $this->redirectToRoute('home');
     }
 

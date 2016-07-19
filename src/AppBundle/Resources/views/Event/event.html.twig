@@ -8,7 +8,7 @@
 {% endblock mainMenu_listItems %}
 
 {% block event_content %}
-    {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'allowEdit':allowEdit, 'eventForm':eventForm}) }}
+    {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'eventForm':eventForm}) }}
 
     <div class="row">
         <div class="col-xs-12 col-sm-8" id="eventModulesContainer">
@@ -41,7 +41,8 @@
             {% if userEventInvitation is defined %}
                 {{ include("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", {"userEventInvitation":userEventInvitation, 'userEventInvitationForm' : userEventInvitationForm}) }}
             {% endif %}
-            {% if event.creator is not null %}
+            {% if event.creator is not null and event.creator.appUser is not null %}
+                {# TODO refaire l'affichage du cadre de l'organisateur à partir de l'EventInvitation et non de l'AppUser #}
                 {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.appUser.id})) }}
             {% endif %}
             {{ include("@App/Event/partials/eventTechniqueDataCard.html.twig", {"event":event, 'userEventInvitation':userEventInvitation}) }}

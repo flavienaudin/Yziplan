@@ -21,12 +21,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class EventInvitationController extends Controller
 {
     /**
-     * Action pour afficher sur un événement avec un token eventInvitation qui est alors enregistré en session avant la rediection vers la page d'affichage de l'événement
+     * Action pour afficher sur un événement à partir d'un token eventInvitation qui est alors enregistré en session avant la rediection vers la page d'affichage de l'événement
      *
      * @Route("/{_locale}/invitation/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEventInvitation" )
-     * @ParamConverter("eventInvitation", class="AppBundle:EventInvitation" , options={"token":"token"})
+     * @ParamConverter("eventInvitation", class="AppBundle:EventInvitation")
      */
-    public function displayEventInvitationAction(EventInvitation $eventInvitation, Request $request)
+    public function displayEventInvitationAction(EventInvitation $eventInvitation = null, Request $request)
     {
         if ($this->isGranted(EventInvitationVoter::EDIT, $eventInvitation)) {
             $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $eventInvitation->getToken());

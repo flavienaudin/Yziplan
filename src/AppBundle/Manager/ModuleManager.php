@@ -14,6 +14,7 @@ use AppBundle\Entity\enum\ModuleType;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
 use AppBundle\Entity\module\PollProposal;
+use AppBundle\Form\ModuleFormType;
 use AppBundle\Form\PollProposalFormType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
@@ -85,6 +86,7 @@ class ModuleManager
             $pollModule = new PollModule();
             $this->module->setPollModule($pollModule);
         }
+        // TODO : add attribut Creator = EventInvitation en cours
         return $this->module;
     }
 
@@ -99,6 +101,16 @@ class ModuleManager
         $this->entityManager->persist($this->module);
         $this->entityManager->flush();
         return $this->module;
+    }
+
+
+    /**
+     * @param Module $module
+     * @return FormInterface
+     */
+    public function createModuleForm(Module $module)
+    {
+        return $this->formFactory->createNamed("module_form_" . $module->getTokenEdition(), ModuleFormType::class, $module);
     }
 
     /**
@@ -137,12 +149,13 @@ class ModuleManager
     /**
      * @param Module $module Le module à afficher
      * @param $allowEdit boolean "true" si le module est éditable
-     * @param $moduleForm FormInterface Formulaire
      * @param Request $request
      * @return string La vue HTML sous forme de string
      */
-    public function displayModulePartial(Module $module, $allowEdit, FormInterface $moduleForm)
+    public function displayModulePartial(Module $module, $allowEdit)
     {
+        /** @var FormInterface $moduleForm */
+        $moduleForm = $this->createModuleForm($module);
         if ($module->getPollModule() != null) {
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,

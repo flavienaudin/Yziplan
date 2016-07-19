@@ -9,15 +9,15 @@ services:
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
-    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module']
-
-  at.manager.event_invitation:
-    class: AppBundle\Manager\EventInvitationManager
-    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.user_manager']
+    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module', '@at.manager.event_invitation']
 
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
     arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating']
+
+  at.manager.event_invitation:
+    class: AppBundle\Manager\EventInvitationManager
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.user_manager']
 
 # Voters
   at.voter.event:

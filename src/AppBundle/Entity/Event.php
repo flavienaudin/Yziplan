@@ -81,6 +81,13 @@ class Event
      */
     private $guestsCanInvite = false;
 
+    /**
+     * * If "true" then guests can add module
+     * @var boolean
+     * @ORM\Column(name="guests_can_add_module", type="boolean")
+     */
+    private $guestsCanAddModule = false;
+
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
@@ -309,6 +316,24 @@ class Event
     public function setGuestsCanInvite($guestsCanInvite)
     {
         $this->guestsCanInvite = $guestsCanInvite;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isGuestsCanAddModule()
+    {
+        return $this->guestsCanAddModule;
+    }
+
+    /**
+     * @param boolean $guestsCanAddModule
+     * @return Event
+     */
+    public function setGuestsCanAddModule($guestsCanAddModule)
+    {
+        $this->guestsCanAddModule = $guestsCanAddModule;
         return $this;
     }
 

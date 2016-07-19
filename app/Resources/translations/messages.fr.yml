@@ -66,9 +66,15 @@ event:
     guestsCanInvite:
       label: Autoriser les invités à inviter
       placeholder: Autoriser les invités à inviter
-      text.true: Les invités peuvent inviter d'autres personnes.
-      text.false: Les invités ne peuvent pas inviter d'autres personnes.
+      text.true: Les invités peuvent inviter d'autres personnes
+      text.false: Les invités ne peuvent pas inviter d'autres personnes
+    guestsCanAddModule:
+      label: Autoriser les invités à ajouter un module
+      placeholder: Autoriser les invités à ajouter un module
+      text.true: Les invités peuvent ajouter un module
+      text.false: Les invités ne peuvent pas ajouter un module
   error.message:
+    creation: Une erreur est survenue lors de la création de l'événement.
     unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
   success.message:
     creation: Evénement créé avec succès.

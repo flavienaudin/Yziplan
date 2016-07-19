@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
@@ -45,7 +46,7 @@ class EventInvitationManager
     /** @var SessionInterface */
     private $session;
 
-    /** @var  UserManager */
+    /** @var UserManager */
     private $userManager;
 
     /** @var EventInvitation L'événement en cours de traitement */
@@ -99,7 +100,7 @@ class EventInvitationManager
             $this->session->set(self::TOKEN_SESSION_KEY, $this->eventInvitation->getToken());
         } else {
             if ($this->session->has(self::TOKEN_SESSION_KEY)) {
-                $this->eventInvitation = $eventInvitationRepo->findOneBy(array('token' => $this->session->get(self::TOKEN_SESSION_KEY)));
+                $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event,'token' => $this->session->get(self::TOKEN_SESSION_KEY)));
             }
             if ($this->eventInvitation != null) {
                 if (!$this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
@@ -112,6 +113,23 @@ class EventInvitationManager
                     $this->eventInvitation = null;
                 }
             }
+        }
+        return $this->eventInvitation;
+    }
+
+    /**
+     * Create an EventInvitation and set it as creator of the event
+     * @param Event $event
+     * @param User|null $user
+     * @return EventInvitation|null If null, the creator is already set
+     */
+    public function createCreatorEventInvitation(Event $event, User $user = null)
+    {
+        if ($event->getCreator() != null) {
+            $this->eventInvitation = null;
+        } else {
+            $this->initializeEventInvitation($event, $user);
+            $event->setCreator($this->eventInvitation);
         }
         return $this->eventInvitation;
     }
@@ -131,10 +149,10 @@ class EventInvitationManager
         if ($user != null) {
             $this->eventInvitation->setAppUser($user->getAppUser());
         }
-        $event->addEventInvitation($this->eventInvitation);
         $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+        $event->addEventInvitation($this->eventInvitation);
 
-        foreach($event->getModules() as $module){
+        foreach ($event->getModules() as $module) {
             // TODO check module authorization (every guests of the event, on ModuleInvitationOnly,...)
             $moduleInvitation = new ModuleInvitation();
             $moduleInvitation->setModule($module);
@@ -146,7 +164,7 @@ class EventInvitationManager
 
     /**
      * Génère le formulaire d'édition des informations principale d'une EventInvitation
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
     public function createEventInvitationForm()
     {
@@ -161,7 +179,7 @@ class EventInvitationManager
     public function treatEventFormSubmission(Form $evtForm)
     {
         $this->eventInvitation = $evtForm->getData();
-        if(!empty($this->eventInvitation->getName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER){
+        if (!empty($this->eventInvitation->getName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
         }
 

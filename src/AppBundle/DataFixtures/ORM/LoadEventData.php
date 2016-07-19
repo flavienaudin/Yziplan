@@ -84,7 +84,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $event->setStatus(EventStatus::IN_ORGANIZATION);
         $event->setDescription("Nouvel événément super cool de test. C'est donc sa description");
         $event->setGuestsCanInvite(false);
-        $event->setInvitationOnly(true);
+        $event->setInvitationOnly(false);
 
         //EventInvitation Creator
         $eventInvitationCreator = new EventInvitation();
