@@ -13,6 +13,7 @@ use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\Module;
 use AppBundle\Form\EventFormType;
+use AppBundle\Security\ModuleVoter;
 use ATUserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
@@ -87,7 +88,7 @@ class EventManager
             $eventRep = $this->entityManager->getRepository("AppBundle:Event");
             $this->event = $eventRep->findOneBy(array('token' => $token));
         }
-        return ($this->event instanceof Event?$this->event:null);
+        return ($this->event instanceof Event ? $this->event : null);
     }
 
     /**
@@ -170,15 +171,14 @@ class EventManager
     }
 
     /**
-     * @param $allowEventEdit boolean TODO specific authroziation control. If the user is allowed to edit the event or not
      * @return array Un tableau de modules de l'événement au format :
      *  moduleId => [
      *  'module' => Module : Le module lui-meme
-     *  'allowEdit => boolean : si l'utilisateur est autorisé à l'éditer
      *  'moduleForm' => Form : le formulaire d'édition de l'événement si editable
+     *  'addPollProposalForm' => Form : uniquement pour un PollModule
      * ]
      */
-    public function getModulesToDisplay($allowEventEdit = false)
+    public function getModulesToDisplay()
     {
         $modules = array();
         if ($this->event != null) {
@@ -187,11 +187,8 @@ class EventManager
             foreach ($eventModules as $module) {
                 if ($module->getStatus() != ModuleStatus::DELETED && $module->getStatus() != ModuleStatus::ARCHIVED) {
                     $moduleDescription['module'] = $module;
-                    $moduleDescription['allowEdit'] = $allowEventEdit; // TODO Vérifier les autorisations du module
-                    if ($moduleDescription['allowEdit']) {
+                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $module)) {
                         $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
-                    } else {
-                        $moduleDescription['moduleForm'] = null;
                     }
                     if ($module->getPollModule() != null) {
                         // TODO Vérifier les autorisations d'ajouter des propositions au module

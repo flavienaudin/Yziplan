@@ -10,61 +10,11 @@
             {{ form_start(eventForm, {'action':path('displayEvent',{'token':event.token,'tokenEdition':event.tokenEdition}), 'attr':{'id':'eventHeader'}}) }}
             <script>
                 $('form#eventHeader').on("submit", function (e) {
-                    e.preventDefault();
-                    var preloader = $('.at-global-preloader');
-                    $(preloader).show();
-                    var $form = $(this);
-                    $('.has-error').each(function () {
-                        $(this).find("small.help-block").remove();
-                        $(this).removeClass("has-error");
-                    });
-                    $.ajax({
-                        url: $form.attr('action'),
-                        type: $form.attr('method'),
-                        data: $form.serialize()
-                    }).done(function (responseData, textStatus, jqXHR) {
-                        if (responseData.htmlContent) {
-                            $('#event-header-card').replaceWith(responseData.htmlContent);
+                    ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                        if (responseJSON.htmlContent) {
+                            $('#event-header-card').replaceWith(responseJSON.htmlContent);
                         }
-                        autosize($('textarea'));
-                        $('.clockpicker').clockpicker();
-                        $('.datepicker').datetimepicker({
-                            format: "DD/MM/YYYY",
-                            locale: "fr",
-                            widgetPositioning: {
-                                horizontal: 'auto',
-                                vertical: 'bottom'
-                            }
-                        });
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        var responseJSON = jqXHR.responseJSON;
-                        if (responseJSON != undefined && responseJSON.formErrors) {
-                            var formErrors = responseJSON.formErrors;
-                            for (var fieldErrorName in formErrors) {
-                                if (formErrors.hasOwnProperty(fieldErrorName)) {
-                                    var inputField = $('input[name*=' + fieldErrorName + ']');
-                                    inputField.parent().addClass("has-error");
-                                    inputField.after('<small class="help-block">' + responseJSON.formErrors[fieldErrorName] + '</small>')
-                                }
-                            }
-                        }
-                    }).always(function (responseDataOrJSON) {
-                        if (responseDataOrJSON.responseJSON) {
-                            responseDataOrJSON = responseDataOrJSON.responseJSON;
-                        }
-                        if (responseDataOrJSON.messages) {
-                            var messages = responseDataOrJSON.messages;
-                            for (var messageType in messages) {
-                                if (messages.hasOwnProperty(messageType)) {
-                                    messages[messageType].forEach(function (mess) {
-                                        toastr[messageType](mess);
-                                    });
-                                }
-                            }
-                        }
-                        $(preloader).hide();
-                    });
-
+                    }, null, null);
                 });
             </script>
         {% endif %}
@@ -115,59 +65,13 @@
             </div>
             <script>
                 $('#addWhenPollModule').on('click', function (e) {
-                    var preloader = $('.at-global-preloader');
-                    $(preloader).show();
-                    $.ajax({
-                        url: $(this).attr("href"),
-                        type: 'post'
-                    }).done(function (responseJSON, textStatus, jqXHR) {
+                    ajaxRequest(this, e, function (responseJSON, textStatus, jqXHR) {
                         if (responseJSON.htmlContent) {
                             var eventModulesContainer = $('#eventModulesContainer');
                             eventModulesContainer.append(responseJSON.htmlContent);
                             $(document).scrollTop($(eventModulesContainer).children().last().offset().top);
-
-                            autosize($('textarea'));
-                            $('.clockpicker').clockpicker();
-                            $('.datepicker').datetimepicker({
-                                format: "DD/MM/YYYY",
-                                locale: "fr",
-                                showClear: true,
-                                icons: {
-                                    time: 'zmdi zmdi-time',
-                                    date: 'zmdi zmdi-calendar',
-                                    up: 'zmdi zmdi-chevron-up',
-                                    down: 'zmdi zmdi-chevron-down',
-                                    previous: 'zmdi zmdi-chevron-left',
-                                    next: 'zmdi zmdi-chevron-right',
-                                    today: 'zmdi zmdi-gps-dot',
-                                    clear: 'zmdi zmdi-delete zmdi-hc-lg',
-                                    close: 'zmdi zmdi-close-circle-o zmdi-hc-lg'
-                                },
-                                widgetPositioning: {
-                                    horizontal: 'auto',
-                                    vertical: 'auto'
-                                }
-                            });
                         }
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        // nothing
-                    }).always(function (responseDataOrJSON) {
-                        if (responseDataOrJSON.responseJSON) {
-                            responseDataOrJSON = responseDataOrJSON.responseJSON;
-                        }
-                        if (responseDataOrJSON.messages) {
-                            var messages = responseDataOrJSON.messages;
-                            for (var messageType in messages) {
-                                if (messages.hasOwnProperty(messageType)) {
-                                    messages[messageType].forEach(function (mess) {
-                                        toastr[messageType](mess);
-                                    });
-                                }
-                            }
-                        }
-                        $(preloader).hide();
-                    });
-                    return false;
+                    }, null, null);
                 });
             </script>
         {% endif %}

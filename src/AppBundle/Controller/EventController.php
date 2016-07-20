@@ -103,8 +103,7 @@ class EventController extends Controller
             // Edition management //
             ////////////////////////
             $eventForm = null;
-            $allowEdit = $this->isGranted(EventVoter::EDIT, $currentEvent) && ($tokenEdition === $currentEvent->getTokenEdition());
-            if ($allowEdit) {
+            if (($tokenEdition === $currentEvent->getTokenEdition()) && $this->isGranted(EventVoter::EDIT, $currentEvent)) {
                 /** @var Form $eventForm */
                 $eventForm = $eventManager->initEventForm();
                 $eventForm->handleRequest($request);
@@ -136,10 +135,10 @@ class EventController extends Controller
             ////////////////////////
             // modules management //
             ////////////////////////
-            $modules = $eventManager->getModulesToDisplay($allowEdit);
+            $modules = $eventManager->getModulesToDisplay();
             $moduleManager = $this->get("at.manager.module");
             foreach ($modules as $moduleId => $moduleDescription) {
-                if ($moduleDescription['allowEdit'] && $moduleDescription['moduleForm'] instanceof Form) {
+                if (key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
                     /** @var Form $moduleForm */
                     $moduleForm = $moduleDescription['moduleForm'];
                     $moduleForm->handleRequest($request);
@@ -148,7 +147,7 @@ class EventController extends Controller
                             if ($moduleForm->isValid()) {
                                 $currentModule = $moduleManager->treatUpdateFormModule($moduleForm);
                                 $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                                $data['htmlContent'] = $moduleManager->displayModulePartial($currentModule, $moduleDescription['allowEdit']);
+                                $data['htmlContent'] = $moduleManager->displayModulePartial($currentModule);
                                 return new JsonResponse($data, Response::HTTP_OK);
                             } else {
                                 $data["formErrors"] = array();
@@ -167,6 +166,9 @@ class EventController extends Controller
                     $modules[$moduleId]['moduleForm'] = $moduleForm->createView();
                 }
 
+                //////////////////////
+                // poll module case //
+                //////////////////////
                 if (array_key_exists('addPollProposalForm', $moduleDescription) && $moduleDescription['addPollProposalForm'] instanceof Form) {
                     /** @var Form $addPollProposalForm */
                     $addPollProposalForm = $moduleDescription['addPollProposalForm'];

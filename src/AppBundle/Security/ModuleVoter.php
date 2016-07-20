@@ -57,6 +57,7 @@ class ModuleVoter extends Voter
             case self::ARCHIVE:
             case self::EDIT:
             case self::DELETE:
+                // TODO : use Module.Creator first then Event.Creator if Module.Creator is not set
                 if ($event->getCreator() == null || $event->getCreator()->getAppUser() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {
                     return true;
                 } else if ($user == $event->getCreator()->getAppUser()->getUser()) {

@@ -148,31 +148,27 @@ class ModuleManager
 
     /**
      * @param Module $module Le module à afficher
-     * @param $allowEdit boolean "true" si le module est éditable
      * @param Request $request
      * @return string La vue HTML sous forme de string
      */
-    public function displayModulePartial(Module $module, $allowEdit)
+    public function displayModulePartial(Module $module)
     {
         /** @var FormInterface $moduleForm */
         $moduleForm = $this->createModuleForm($module);
         if ($module->getPollModule() != null) {
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
-                "allowEdit" => $allowEdit,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
                 'addPollProposalForm' => $this->createAddPollProposalForm($module)->createView()
             ));
         } elseif ($module->getExpenseModule() != null) {
             return $this->templating->render("@App/Event/module/displayExpenseModule.html.twig", [
                 "module" => $module,
-                "allowEdit" => $allowEdit,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null)
             ]);
         } else {
             return $this->templating->render("@App/Event/module/displayModule.html.twig", [
                 "module" => $module,
-                "allowEdit" => $allowEdit,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null)
             ]);
         }

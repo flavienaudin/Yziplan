@@ -13,6 +13,7 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\Module;
 use AppBundle\Security\EventVoter;
 use AppBundle\Security\ModuleVoter;
+use AppBundle\Utils\FlashBagTypes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,7 +36,7 @@ class ModuleController extends Controller
         $module = $eventManager->addModule($type);
         if ($request->isXmlHttpRequest()) {
             $moduleManager = $this->get('at.manager.module');
-            return new JsonResponse(array('htmlContent' => $moduleManager->displayModulePartial($module, true)), Response::HTTP_OK);
+            return new JsonResponse(array('htmlContent' => $moduleManager->displayModulePartial($module)), Response::HTTP_OK);
         } else {
             $event = $eventManager->getEvent();
             return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken(), 'tokenEdition' => $event->getTokenEdition())) . '#module-' . $module->getToken());
@@ -48,15 +49,26 @@ class ModuleController extends Controller
      */
     public function removeEventModuleAction(Module $module, Request $request)
     {
-        $this->denyAccessUnlessGranted(ModuleVoter::DELETE, $module);
-        $moduleManager = $this->get("at.manager.module");
-        $moduleManager->setModule($module);
-        $module = $moduleManager->removeModule();
         if ($request->isXmlHttpRequest()) {
-            $responseData['actionResult'] = true;
-            return new JsonResponse($responseData, Response::HTTP_OK);
+            if ($this->isGranted(ModuleVoter::DELETE, $module)) {
+                $moduleManager = $this->get("at.manager.module");
+                $moduleManager->setModule($module);
+                $moduleManager->removeModule();
+                $responseData['actionResult'] = true;
+                return new JsonResponse($responseData, Response::HTTP_OK);
+            } else {
+                $responseData['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
+                return new JsonResponse($responseData, Response::HTTP_UNAUTHORIZED);
+            }
         } else {
-            return $this->redirectToRoute('displayEvent', array('token' => $module->getEvent()->getToken(), 'tokenEdition' => $module->getEvent()->getTokenEdition()));
+            $this->denyAccessUnlessGranted(ModuleVoter::DELETE, $module);
+            $moduleManager = $this->get("at.manager.module");
+            $moduleManager->setModule($module);
+            $moduleManager->removeModule();
+            return $this->redirectToRoute('displayEvent', array(
+                'token' => $module->getEvent()->getToken(),
+                'tokenEdition' => ($this->isGranted(EventVoter::EDIT, $module->getEvent()) ? $module->getEvent()->getTokenEdition() : null)
+            ));
         }
     }
 

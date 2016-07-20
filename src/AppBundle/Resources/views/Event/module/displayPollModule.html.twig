@@ -23,12 +23,13 @@
                     <div class="poll-container">
                         <div class="pc-ligne">
                             <div class="pcl-celulle"></div>
-                            {%  if userModuleInvitation is defined and userModuleInvitation is not null %}
+                            {% if userModuleInvitation is defined and userModuleInvitation is not null %}
                                 <div class="pcl-celulle">
                                     <span class="text-warning">{{ userModuleInvitation.displayableName }}</span>
                                 </div>
                             {% endif %}
-                            {% for moduleInvitation in module.moduleInvitations|slice(0,maxColModule) if userModuleInvitation is null or moduleInvitation.id != userModuleInvitation.id %}
+                            {% for moduleInvitation in module.moduleInvitations|slice(0,maxColModule) if userModuleInvitation is not defined or userModuleInvitation is null
+                            or moduleInvitation.id!= userModuleInvitation.id %}
                                 <div class="pcl-celulle">
                                     {% if moduleInvitation.name is not empty %}
                                         {{ moduleInvitation.name }}
@@ -55,7 +56,7 @@
                             {% for pollProposal in module.pollModule.pollProposals %}
                                 {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
                                     "pollProposal":pollProposal,
-                                    "userModuleInvitation":userModuleInvitation,
+                                    "userModuleInvitation":(userModuleInvitation is defined?userModuleInvitation:null),
                                     "moduleInvitations":module.moduleInvitations|slice(0,maxColModule)
                                 }) }}
                             {% else %}
@@ -77,11 +78,7 @@
 
 {% block modalContainer %}
     {% if addPollProposalForm is defined and addPollProposalForm is not null %}
-        {#<div class="modal fade" id="addPollProposal_modal_{{ module.token }}" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="#addPP_title_{{ module.token }}">#}
-        {{ include('@App/Event/module/pollModulePartials/pollProposalAddFormModal.html.twig', {
-            'addPollProposalForm' : addPollProposalForm
-        }) }}
-        {#</div>#}
+        {{ include('@App/Event/module/pollModulePartials/pollProposalAddFormModal.html.twig', {'addPollProposalForm' : addPollProposalForm}) }}
     {% endif %}
 {% endblock modalContainer %}
 
@@ -90,81 +87,19 @@
     {% if addPollProposalForm is defined and addPollProposalForm is not null %}
         <script>
             $('form#addPollProposalForm_{{ module.token }}').on('submit', function (e) {
-                e.preventDefault();
-                var preloader = $('.at-global-preloader');
-                $(preloader).show();
                 var $form = $(this);
-                $('.has-error').each(function () {
-                    $(this).find("small.help-block").remove();
-                    $(this).removeClass("has-error");
-                });
-                $.ajax({
-                    url: $form.attr('action'),
-                    type: $form.attr('method'),
-                    data: $form.serialize()
-                }).done(function (responseData, textStatus, jqXHR) {
+                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                     $('#addPollProposal_modal_{{ module.token }}').modal('toggle');
-                    if (responseData.htmlContent) {
-                        if (responseData.htmlContent.pollProposalRowDisplay) {
-                            $('#pp-row-group-{{ module.token }}').append(responseData.htmlContent.pollProposalRowDisplay);
+                    if (responseJSON.htmlContent) {
+                        if (responseJSON.htmlContent.pollProposalRowDisplay) {
+                            $('#pp-row-group-{{ module.token }}').append(responseJSON.htmlContent.pollProposalRowDisplay);
                             if ($('#pp-empty-{{ module.token }}')[0]) {
                                 $('#pp-empty-{{ module.token }}').remove();
                             }
                         }
                         $form[0].reset();
                     }
-
-                    autosize($('textarea'));
-                    $('.clockpicker').clockpicker();
-                    $('.datepicker').datetimepicker({
-                        format: "DD/MM/YYYY",
-                        locale: "fr",
-                        showClear: true,
-                        icons: {
-                            time: 'zmdi zmdi-time',
-                            date: 'zmdi zmdi-calendar',
-                            up: 'zmdi zmdi-chevron-up',
-                            down: 'zmdi zmdi-chevron-down',
-                            previous: 'zmdi zmdi-chevron-left',
-                            next: 'zmdi zmdi-chevron-right',
-                            today: 'zmdi zmdi-gps-dot',
-                            clear: 'zmdi zmdi-delete zmdi-hc-lg',
-                            close: 'zmdi zmdi-close-circle-o zmdi-hc-lg'
-                        },
-                        widgetPositioning: {
-                            horizontal: 'auto',
-                            vertical: 'auto'
-                        }
-                    });
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    var responseJSON = jqXHR.responseJSON;
-                    if (responseJSON != undefined && responseJSON.formErrors) {
-                        var formErrors = responseJSON.formErrors;
-                        for (var fieldErrorName in formErrors) {
-                            if (formErrors.hasOwnProperty(fieldErrorName)) {
-                                var inputField = $('input[name*=' + fieldErrorName + ']');
-                                inputField.parent().addClass("has-error");
-                                inputField.after('<small class="help-block">' + responseJSON.formErrors[fieldErrorName] + '</small>')
-                            }
-                        }
-                    }
-                }).always(function (responseDataOrJSON) {
-                    if (responseDataOrJSON.responseJSON) {
-                        // In case of fail()
-                        responseDataOrJSON = responseDataOrJSON.responseJSON;
-                    }
-                    if (responseDataOrJSON.messages) {
-                        var messages = responseDataOrJSON.messages;
-                        for (var messageType in messages) {
-                            if (messages.hasOwnProperty(messageType)) {
-                                messages[messageType].forEach(function (mess) {
-                                    toastr[messageType](mess);
-                                });
-                            }
-                        }
-                    }
-                    $(preloader).hide();
-                });
+                }, null, null);
             });
         </script>
     {% endif %}

@@ -30,7 +30,7 @@
                 </div>
             </div>
             {% block mhBtnFloat %}
-                {% if allowEdit and (module.expenseModule is null and module.pollModule is null) %}
+                {% if module.expenseModule is null and module.pollModule is null %}
                     <a href="#addSubModule">
                         <button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
                     </a>
@@ -57,18 +57,18 @@
                                 </li>
                                 <li role="presentation">
                                     <a href="#tab-modQui_{{ module.token }}" aria-controls="#tab-modQui_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-accounts-list-alt
-                                    icon-tab"></i>
-                                    </a>
+                                    icon-tab"></i> </a>
                                 </li>
-                                {% if moduleForm is not null %}
+                                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
                                     <li role="presentation">
-                                        <a class="" href="#tab-admin_{{ module.token }}" aria-controls="#tab-admin_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-settings icon-tab"></i> </a>
+                                        <a href="#tab-admin_{{ module.token }}" aria-controls="#tab-admin_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-settings icon-tab"></i>
+                                        </a>
                                     </li>
                                 {% endif %}
                             </ul>
                             <div class="tab-content p-20 b-b-w">
                                 <div role="tabpanel" class="tab-pane animated fadeIn in active" id="tab-infoG_{{ module.token }}">
-                                    {% if moduleForm is not null %}
+                                    {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
                                         <div class="form-group">
                                             {{ form_label(moduleForm.description, 'module.form.description.label', {'label_attr':{'class':'sr-only'}}) }}
                                             <div class="fg-line">
@@ -90,7 +90,7 @@
                                     <h2>Liste des invités</h2>
                                 </div>
 
-                                {% if moduleForm is not null %}
+                                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
                                     <div role="tabpanel" class="tab-pane animated fadeIn" id="tab-admin_{{ module.token }}">
                                         <div class="form-group">
                                             {{ form_label(moduleForm.responseDeadline, 'module.form.responseDeadline.label') }}
@@ -120,19 +120,20 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            {% if moduleForm is not null %}
-                                <div class="pull-right m-b-20 m-r-20">
-                                    <a href="{{ path('removeEventModule', {'tokenEdition':module.tokenEdition}) }}" id="removeModule{{ module.tokenEdition }}" data-target="{{ module.token }}"
-                                       class="text-danger">{{ "global.button.delete"|trans }}</a>
+                            <div class="pull-right m-b-20 m-r-20">
+                                {#{% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), module) %}#}
+                                <a href="{{ path('removeEventModule', {'tokenEdition':module.tokenEdition}) }}" id="removeModule{{ module.tokenEdition }}" data-target="{{ module.token }}"
+                                   class="text-danger">{{ "global.button.delete"|trans }}</a>
+                                {#{% endif %}#}
+                                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
                                     <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
-                                </div>
-                            {% endif %}
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 {% endblock moduleInformation %}
             </div>
-            {#</div>
-            <div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>#}
+            {#</div><div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>#}
             {% block moduleBody %}{% endblock moduleBody %}
         </div>
     </div>
@@ -148,123 +149,41 @@
     {% block modalContainer %}{% endblock %}
 
     {% block JSmodule %}
-        {% if moduleForm is not null %}
-            <script>
-                $('#removeModule{{ module.tokenEdition }}').on('click', function (e) {
-                    e.preventDefault();
-                    var removeModuleLink = $(this);
-                    swal({
-                        title: '{{ "module.alert.confirm_deletion.title"|trans }}',
-                        text: '{{ "module.alert.confirm_deletion.message"|trans }}',
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: '{{ "global.button.delete"|trans }}',
-                        closeOnConfirm: true,
-                        showLoaderOnConfirm: true
-                    }, function (isConfirm) {
-                        if (isConfirm) {
-                            var preloader = $('.at-global-preloader');
-                            $(preloader).show();
-                            $.ajax({
-                                url: $(removeModuleLink).attr("href"),
-                                type: 'post'
-                            }).done(function (response, textStatus, xhr) {
-                                if (response.actionResult === true) {
-                                    $('#module-{{ module.token }}').remove();
-                                }
-                            }).fail(function (jqXHR, textStatus, errorThrown) {
-                                // nothing
-                            }).always(function (responseDataOrJSON) {
-                                if (responseDataOrJSON.responseJSON) {
-                                    responseDataOrJSON = responseDataOrJSON.responseJSON;
-                                }
-                                if (responseDataOrJSON.messages) {
-                                    var messages = responseDataOrJSON.messages;
-                                    for (var messageType in messages) {
-                                        if (messages.hasOwnProperty(messageType)) {
-                                            messages[messageType].forEach(function (mess) {
-                                                toastr[messageType](mess);
-                                            });
-                                        }
-                                    }
-                                }
-                                $(preloader).hide();
-                            });
-                        }
-                    });
+        <script>
+            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), module) %}
+            $('#removeModule{{ module.tokenEdition }}').on('click', function (e) {
+                e.preventDefault();
+                var removeModuleLink = $(this);
+                swal({
+                    title: '{{ "module.alert.confirm_deletion.title"|trans }}',
+                    text: '{{ "module.alert.confirm_deletion.message"|trans }}',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: '{{ "global.button.delete"|trans }}',
+                    closeOnConfirm: true,
+                    showLoaderOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        ajaxRequest(removeModuleLink, e, function (responseJSON, textStatus, jqXHR) {
+                            if (responseJSON.actionResult === true) {
+                                $('#module-{{ module.token }}').remove();
+                            }
+                        }, null, null);
+                    }
                 });
+            });
+            {% endif %}
 
-                $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
-                    e.preventDefault();
-                    var preloader = $('.at-global-preloader');
-                    $(preloader).show();
-                    var $form = $(this);
-                    $('.has-error').each(function () {
-                        $(this).find("small.help-block").remove();
-                        $(this).removeClass("has-error");
-                    });
-                    $.ajax({
-                        url: $form.attr('action'),
-                        type: $form.attr('method'),
-                        data: $form.serialize()
-                    }).done(function (responseData, textStatus, jqXHR) {
-                        if (responseData.htmlContent) {
-                            $('#module-{{ module.token }}').replaceWith(responseData.htmlContent);
-                        }
-                        autosize($('textarea'));
-                        $('.clockpicker').clockpicker();
-                        $('.datepicker').datetimepicker({
-                            format: "DD/MM/YYYY",
-                            locale: "fr",
-                            showClear: true,
-                            icons: {
-                                time: 'zmdi zmdi-time',
-                                date: 'zmdi zmdi-calendar',
-                                up: 'zmdi zmdi-chevron-up',
-                                down: 'zmdi zmdi-chevron-down',
-                                previous: 'zmdi zmdi-chevron-left',
-                                next: 'zmdi zmdi-chevron-right',
-                                today: 'zmdi zmdi-gps-dot',
-                                clear: 'zmdi zmdi-delete zmdi-hc-lg',
-                                close: 'zmdi zmdi-close-circle-o zmdi-hc-lg'
-                            },
-                            widgetPositioning: {
-                                horizontal: 'auto',
-                                vertical: 'auto'
-                            }
-                        });
-                    }).fail(function (jqXHR, textStatus, errorThrown) {
-                        var responseJSON = jqXHR.responseJSON;
-                        if (responseJSON != undefined && responseJSON.formErrors) {
-                            var formErrors = responseJSON.formErrors;
-                            for (var fieldErrorName in formErrors) {
-                                if (formErrors.hasOwnProperty(fieldErrorName)) {
-                                    var inputField = $('input[name*=' + fieldErrorName + ']');
-                                    inputField.parent().addClass("has-error");
-                                    inputField.after('<small class="help-block">' + responseJSON.formErrors[fieldErrorName] + '</small>')
-                                }
-                            }
-                        }
-                    }).always(function (responseDataOrJSON) {
-                        if (responseDataOrJSON.responseJSON) {
-                            // In case of fail()
-                            responseDataOrJSON = responseDataOrJSON.responseJSON;
-                        }
-                        if (responseDataOrJSON.messages) {
-                            var messages = responseDataOrJSON.messages;
-                            for (var messageType in messages) {
-                                if (messages.hasOwnProperty(messageType)) {
-                                    messages[messageType].forEach(function (mess) {
-                                        toastr[messageType](mess);
-                                    });
-                                }
-                            }
-                        }
-                        $(preloader).hide();
-                    });
-                });
-            </script>
-        {% endif %}
+            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
+            $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
+                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                    if (responseJSON.htmlContent) {
+                        $('#module-{{ module.token }}').replaceWith(responseJSON.htmlContent);
+                    }
+                }, null, null);
+            });
+            {% endif %}
+        </script>
     {% endblock %}
 </div>
