@@ -1,6 +1,6 @@
-<div class="card">
+<div class="card" id="user-event-invitation-card">
     {% if userEventInvitationForm is defined %}
-        {{ form_start(userEventInvitationForm ) }}
+        {{ form_start(userEventInvitationForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAbout'}}) }}
     {% endif %}
     <div class="card-header">
         <h3>{{ "eventInvitation.maindata.card.title"|trans }}</h3>
@@ -43,4 +43,13 @@
     {% if userEventInvitationForm is defined %}
         {{ form_end(userEventInvitationForm ) }}
     {% endif %}
+    <script>
+        $('form#userEventInvitationAbout').on("submit", function (e) {
+            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                if (responseJSON.htmlContent) {
+                    $('#user-event-invitation-card').replaceWith(responseJSON.htmlContent);
+                }
+            }, null, null);
+        });
+    </script>
 </div>
