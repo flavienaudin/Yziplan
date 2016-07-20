@@ -106,6 +106,14 @@ class Module
     private $event;
 
     /**
+     * @var ModuleInvitation
+     *
+     * @ORM\OneToOne(targetEntity="ModuleInvitation", inversedBy="createdmodule", cascade={"persist"})
+     * @ORM\JoinColumn(name="creator_module_invitation_id", referencedColumnName="id", nullable=true)
+     */
+    private $creator;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ModuleInvitation", mappedBy="module")
@@ -187,6 +195,25 @@ class Module
     public function getEvent()
     {
         return $this->event;
+    }
+
+    /**
+     * @return ModuleInvitation
+     */
+    public function getCreator()
+    {
+        return $this->creator;
+    }
+
+    /**
+     * @param ModuleInvitation $creator
+     * @return Module
+     */
+    public function setCreator($creator)
+    {
+        $this->creator = $creator;
+        $creator->setCreatedmodule($this);
+        return $this;
     }
 
     /**

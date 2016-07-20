@@ -230,7 +230,6 @@ class EventInvitation
     public function setCreatedEvent(Event $createdEvent = null)
     {
         $this->createdEvent = $createdEvent;
-
         return $this;
     }
 

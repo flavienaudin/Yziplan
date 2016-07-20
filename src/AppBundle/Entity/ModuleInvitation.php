@@ -58,6 +58,13 @@ class ModuleInvitation
     private $eventInvitation;
 
     /**
+     * @var Event
+     *
+     * @ORM\OneToOne(targetEntity="Module", mappedBy="creator")
+     */
+    private $createdmodule;
+
+    /**
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\payment\Wallet", mappedBy="moduleInvitation")
      *
      * @var Wallet
@@ -217,6 +224,26 @@ class ModuleInvitation
     }
 
     /**
+     * Set createdModule
+     *
+     * @param Module $createdmodule
+     * @return ModuleInvitation
+     */
+    public function setCreatedmodule(Module $createdmodule)
+    {
+        $this->createdmodule = $createdmodule;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCreatedmodule()
+    {
+        return $this->createdmodule;
+    }
+
+    /**
      * Set wallet
      *
      * @param \AppBundle\Entity\payment\Wallet $wallet
@@ -226,7 +253,6 @@ class ModuleInvitation
     public function setWallet(\AppBundle\Entity\payment\Wallet $wallet = null)
     {
         $this->wallet = $wallet;
-
         return $this;
     }
 

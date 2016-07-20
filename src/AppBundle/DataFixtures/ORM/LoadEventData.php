@@ -176,6 +176,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
 
         $moduleInvitation1 = new ModuleInvitation();
         $moduleInvitation1->setModule($modulePoll);
+        $modulePoll->setCreator($moduleInvitation1);
         $moduleInvitation1->initPollModuleResponse();
         $eventInvitationCreator->addModuleInvitation($moduleInvitation1);
 

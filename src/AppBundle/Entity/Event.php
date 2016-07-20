@@ -96,7 +96,7 @@ class Event
      * @var EventInvitation
      *
      * @ORM\OneToOne(targetEntity="EventInvitation", inversedBy="createdEvent", cascade={"persist"})
-     * @ORM\JoinColumn(name="creator_event_invitation_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="creator_event_invitation_id", referencedColumnName="id")
      */
     private $creator;
 
@@ -344,13 +344,10 @@ class Event
      *
      * @return Event
      */
-    public function setCreator(EventInvitation $creator = null)
+    public function setCreator(EventInvitation $creator)
     {
         $this->creator = $creator;
-        if ($creator != null) {
-            $creator->setCreatedEvent($this);
-        }
-
+        $creator->setCreatedEvent($this);
         return $this;
     }
 

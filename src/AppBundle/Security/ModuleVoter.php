@@ -46,7 +46,7 @@ class ModuleVoter extends Voter
         if ($user != null && $user != 'anon.' && !$user instanceof UserInterface) {
             return false;
         }
-        $event= $module->getEvent();;
+        $event = $module->getEvent();;
         switch ($attribute) {
             case self::DISPLAY:
                 // TODO Controler l'access (si evenement privée, invitation nécessaire...)
@@ -57,8 +57,13 @@ class ModuleVoter extends Voter
             case self::ARCHIVE:
             case self::EDIT:
             case self::DELETE:
-                // TODO : use Module.Creator first then Event.Creator if Module.Creator is not set
-                if ($event->getCreator() == null || $event->getCreator()->getAppUser() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {
+                if ($module->getCreator() != null) {
+                    if ($module->getCreator()->getEventInvitation()->getAppUser() == null || !$module->getCreator()->getEventInvitation()->getAppUser()->getUser()->isEnabled()) {
+                        return true;
+                    } else if ($user == $module->getCreator()->getEventInvitation()->getAppUser()->getUser()) {
+                        return true;
+                    }
+                } else if ($event->getCreator() == null || $event->getCreator()->getAppUser() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {
                     return true;
                 } else if ($user == $event->getCreator()->getAppUser()->getUser()) {
                     return true;

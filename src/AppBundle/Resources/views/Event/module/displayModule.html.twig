@@ -121,10 +121,10 @@
                                 {% endif %}
                             </div>
                             <div class="pull-right m-b-20 m-r-20">
-                                {#{% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), module) %}#}
+                                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), module) %}
                                 <a href="{{ path('removeEventModule', {'tokenEdition':module.tokenEdition}) }}" id="removeModule{{ module.tokenEdition }}" data-target="{{ module.token }}"
                                    class="text-danger">{{ "global.button.delete"|trans }}</a>
-                                {#{% endif %}#}
+                                {% endif %}
                                 {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
                                     <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
                                 {% endif %}
