@@ -160,13 +160,22 @@ class EventManager
      */
     public function addModule($type)
     {
-        $module = $this->moduleManager->createModule($type);
-        $this->event->addModule($module);
+        $user = $this->tokenStorage->getToken()->getUser();
+        if (!$user instanceof User) {
+            $user = null;
+        }
+        $userEventInvitation = $this->eventInvitationManager->retrieveUserEventInvitation($this->event, false, false, $user);
+        if ($userEventInvitation == null) {
+            return null;
+        }
+
+        $module = $this->moduleManager->createModule($this->event, $type, $userEventInvitation);
 
         // TODO Créer les moduleInvitations selon autorisation
 
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
+
         return $module;
     }
 
@@ -186,6 +195,7 @@ class EventManager
             /** @var Module $module */
             foreach ($eventModules as $module) {
                 if ($module->getStatus() != ModuleStatus::DELETED && $module->getStatus() != ModuleStatus::ARCHIVED) {
+                    $moduleDescription = array();
                     $moduleDescription['module'] = $module;
                     if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $module)) {
                         $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);

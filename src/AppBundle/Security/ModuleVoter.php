@@ -8,9 +8,9 @@
 
 namespace AppBundle\Security;
 
-
 use AppBundle\Entity\Module;
 use ATUserBundle\Entity\User;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -23,6 +23,14 @@ class ModuleVoter extends Voter
     const ARCHIVE = 'archive';
     const CANCEL = 'cancel';
     const DELETE = 'delete';
+
+    /** @var Container */
+    private $container;
+
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
 
 
     protected function supports($attribute, $subject)
@@ -58,9 +66,11 @@ class ModuleVoter extends Voter
             case self::EDIT:
             case self::DELETE:
                 if ($module->getCreator() != null) {
-                    if ($module->getCreator()->getEventInvitation()->getAppUser() == null || !$module->getCreator()->getEventInvitation()->getAppUser()->getUser()->isEnabled()) {
+                    $eventInvitationManager = $this->container->get("at.manager.event_invitation");
+                    $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($event, false, false, ($user instanceof User ? $user : null));
+                    if ($module->getCreator()->getEventInvitation() === $userEventInvitation) {
                         return true;
-                    } else if ($user == $module->getCreator()->getEventInvitation()->getAppUser()->getUser()) {
+                    } else if ($module->getCreator()->getEventInvitation()->getAppUser() != null && $user == $module->getCreator()->getEventInvitation()->getAppUser()->getUser()) {
                         return true;
                     }
                 } else if ($event->getCreator() == null || $event->getCreator()->getAppUser() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {

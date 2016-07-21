@@ -318,11 +318,11 @@ class EventInvitation
      *
      * @return ModuleInvitation
      */
-    public function getModuleInvitationForModule($moduleId)
+    public function getModuleInvitationForModule(Module $module)
     {
         /** @var ModuleInvitation $moduleInvitation */
         foreach($this->getModuleInvitations() as $moduleInvitation){
-            if($moduleInvitation->getModule()->getId() == $moduleId){
+            if($moduleInvitation->getModule()->getId() == $module->getId()){
                 return $moduleInvitation;
             }
         }

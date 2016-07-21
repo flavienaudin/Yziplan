@@ -18,7 +18,7 @@
                         'module':moduleDescription.module,
                         'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
                         'addPollProposalForm':(moduleDescription.addPollProposalForm is defined?moduleDescription.addPollProposalForm:null ),
-                        'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module.id)
+                        'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module)
                     }) }}
                 {% elseif moduleDescription.module.expenseModule is not null %}
                     {{ include('@App/Event/module/displayExpenseModule.html.twig', {

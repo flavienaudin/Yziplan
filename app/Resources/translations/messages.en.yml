@@ -119,8 +119,10 @@ module:
       inherit: Inherit
   alert:
     confirm_deletion:
-      title: Are you sure to whish vouloir supprimer ce module ?
-      message: Cette action est irréversible
+      title: Are you sure you want to delete this module ?
+      message: This action is irreversible
+  error.message:
+    add: You must set your name on your invitation.
 
 pollmodule:
   modale:

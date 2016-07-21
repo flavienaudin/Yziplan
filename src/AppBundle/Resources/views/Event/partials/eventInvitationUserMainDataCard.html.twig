@@ -1,6 +1,13 @@
 <div class="card" id="user-event-invitation-card">
     {% if userEventInvitationForm is defined %}
-        {{ form_start(userEventInvitationForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAbout'}}) }}
+        {{ form_start(userEventInvitationForm, {'action': path('displayEvent',
+            {
+                'token':userEventInvitation.event.token,
+                'tokenEdition': (app.request.get('tokenEdition') == userEventInvitation.event.tokenEdition and
+                is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'),userEventInvitation.event)?userEventInvitation.event.tokenEdition:null)
+            }),
+            'attr':{'id':'userEventInvitationAbout'}
+        }) }}
     {% endif %}
     <div class="card-header">
         <h3>{{ "eventInvitation.maindata.card.title"|trans }}</h3>
@@ -25,10 +32,10 @@
             <dl>
                 <dt>{{ "eventInvitation.form.name.label"|trans }}</dt>
                 <dd>
-                    {{ userEventInvitation.displayableName is not empty?userEventInvitation.displayableName:" - "}}</dd>
+                    {{ userEventInvitation.displayableName is not empty?userEventInvitation.displayableName:" - " }}</dd>
                 <dt>{{ "eventInvitation.form.email.label"|trans }}</dt>
                 <dd>
-                    {{ userEventInvitation.displayableEmail is not empty? userEventInvitation.displayableEmail:" - "}}
+                    {{ userEventInvitation.displayableEmail is not empty? userEventInvitation.displayableEmail:" - " }}
                 </dd>
             </dl>
         {% endif %}

@@ -109,7 +109,7 @@ class Module
      * @var ModuleInvitation
      *
      * @ORM\OneToOne(targetEntity="ModuleInvitation", inversedBy="createdmodule", cascade={"persist"})
-     * @ORM\JoinColumn(name="creator_module_invitation_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="creator_module_invitation_id", referencedColumnName="id")
      */
     private $creator;
 
@@ -206,13 +206,13 @@ class Module
     }
 
     /**
-     * @param ModuleInvitation $creator
+     * @param ModuleInvitation $creatorModuleInvitation
      * @return Module
      */
-    public function setCreator($creator)
+    public function setCreator(ModuleInvitation $creatorModuleInvitation)
     {
-        $this->creator = $creator;
-        $creator->setCreatedmodule($this);
+        $this->creator = $creatorModuleInvitation;
+        $creatorModuleInvitation->setCreatedmodule($this);
         return $this;
     }
 
@@ -424,6 +424,7 @@ class Module
     public function addModuleInvitation(ModuleInvitation $moduleInvitation)
     {
         $this->moduleInvitations[] = $moduleInvitation;
+        $moduleInvitation->setModule($this);
 
         return $this;
     }

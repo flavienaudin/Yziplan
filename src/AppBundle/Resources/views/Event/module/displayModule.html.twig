@@ -1,6 +1,11 @@
 <div class="card {% block moduleCardClass %}{% endblock %}" id="module-{{ module.token }}">
     {% if moduleForm is not null %}
-        {{ form_start(moduleForm, {'action':path('displayEvent',{'token':module.event.token,'tokenEdition':module.event.tokenEdition}), 'attr':{'id':"moduleForm-"~module.token} }) }}
+        {{ form_start(moduleForm, {'action':path('displayEvent', {
+            'token':module.event.token,
+            'tokenEdition': (app.request.get('tokenEdition') == module.event.tokenEdition and
+            is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'),module.event)?module.event.tokenEdition:null)
+        }),
+            'attr':{'id':"moduleForm-"~module.token} }) }}
     {% endif %}
     <div class="card-header {% block moduleHeaderClass %}{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
         {% block moduleHeader %}
@@ -23,8 +28,17 @@
                                     {{ form_errors(moduleForm.name) }}
                                 </div>
                             </div>
+                            {% if module.creator != null and module.creator.displayableName is not empty %}
+                                <h2>
+                                    <small>{{ module.creator.displayableName }}</small>
+                                </h2>
+                            {% endif %}
                         {% else %}
-                            <h2>{{ module.name is not empty?module.name }}</h2>
+                            <h2>{{ module.name is not empty?module.name }}
+                                {% if module.creator != null and module.creator.displayableName is not empty %}
+                                    <small>{{ module.creator.displayableName }}</small>
+                                {% endif %}
+                            </h2>
                         {% endif %}
                     {% endblock mhMediaBody %}
                 </div>
@@ -122,8 +136,8 @@
                             </div>
                             <div class="pull-right m-b-20 m-r-20">
                                 {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), module) %}
-                                <a href="{{ path('removeEventModule', {'tokenEdition':module.tokenEdition}) }}" id="removeModule{{ module.tokenEdition }}" data-target="{{ module.token }}"
-                                   class="text-danger">{{ "global.button.delete"|trans }}</a>
+                                    <a href="{{ path('removeEventModule', {'tokenEdition':module.tokenEdition}) }}" id="removeModule{{ module.tokenEdition }}" data-target="{{ module.token }}"
+                                       class="text-danger">{{ "global.button.delete"|trans }}</a>
                                 {% endif %}
                                 {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
                                     <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>

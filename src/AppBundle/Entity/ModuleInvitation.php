@@ -37,6 +37,26 @@ class ModuleInvitation
      */
     private $name;
 
+    /**
+     * @var string
+     * @ORM\Column(name="status", type="string", length=64)
+     */
+    private $status;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token", type="string", length=128, unique=true)
+     */
+    private $token;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="token_edition", type="string", length=128, unique=true)
+     */
+    private $tokenEdition;
+
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
@@ -173,6 +193,60 @@ class ModuleInvitation
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     * @return ModuleInvitation
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param string $token
+     * @return ModuleInvitation
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTokenEdition()
+    {
+        return $this->tokenEdition;
+    }
+
+    /**
+     * @param string $tokenEdition
+     * @return ModuleInvitation
+     */
+    public function setTokenEdition($tokenEdition)
+    {
+        $this->tokenEdition = $tokenEdition;
+        return $this;
     }
 
     /**

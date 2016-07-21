@@ -8,6 +8,7 @@
 
 {% block mhBtnFloat %}
     {% if addPollProposalForm is defined and addPollProposalForm is not null %}
+        {# TODO Check authorization to addPollProposal #}
         <a data-toggle="modal" href="#addPollProposal_modal_{{ module.token }}">
             <button class="btn palette-Red-A700 bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
         </a>
@@ -29,17 +30,9 @@
                                 </div>
                             {% endif %}
                             {% for moduleInvitation in module.moduleInvitations|slice(0,maxColModule) if userModuleInvitation is not defined or userModuleInvitation is null
-                            or moduleInvitation.id!= userModuleInvitation.id %}
+                            or moduleInvitation.id != userModuleInvitation.id %}
                                 <div class="pcl-celulle">
-                                    {% if moduleInvitation.name is not empty %}
-                                        {{ moduleInvitation.name }}
-                                    {% elseif moduleInvitation.eventInvitation.name is not empty %}
-                                        {{ moduleInvitation.eventInvitation.name }}
-                                    {% elseif moduleInvitation.eventInvitation.appUser.user is not null and moduleInvitation.eventInvitation.appUser.user is not empty %}
-                                        {{ moduleInvitation.eventInvitation.appUser.user }}
-                                    {% else %}
-                                        -
-                                    {% endif %}
+                                    {{ moduleInvitation.displayableName is not empty?moduleInvitation.displayableName:'-' }}
                                 </div>
                             {% endfor %}
                             <div class="pcl-celulle">
@@ -78,6 +71,7 @@
 
 {% block modalContainer %}
     {% if addPollProposalForm is defined and addPollProposalForm is not null %}
+        {# TODO Check authorization to addPollProposal #}
         {{ include('@App/Event/module/pollModulePartials/pollProposalAddFormModal.html.twig', {'addPollProposalForm' : addPollProposalForm}) }}
     {% endif %}
 {% endblock modalContainer %}
@@ -85,6 +79,7 @@
 {% block JSmodule %}
     {{ parent() }}
     {% if addPollProposalForm is defined and addPollProposalForm is not null %}
+        {# TODO Check authorization to addPollProposal #}
         <script>
             $('form#addPollProposalForm_{{ module.token }}').on('submit', function (e) {
                 var $form = $(this);

@@ -34,7 +34,9 @@ class EventInvitationController extends Controller
         }
         $this->denyAccessUnlessGranted(EventInvitationVoter::EDIT, $eventInvitation);
         $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $eventInvitation->getToken());
-        return $this->redirectToRoute("displayEvent", array('token' => $eventInvitation->getEvent()->getToken()));
+        return $this->redirectToRoute("displayEvent", array(
+            'token' => $eventInvitation->getEvent()->getToken(),
+            'tokenEdition' => ($eventInvitation->getEvent()->getCreator() == $eventInvitation ? $eventInvitation->getEvent()->getTokenEdition() : null)));
     }
 
 }

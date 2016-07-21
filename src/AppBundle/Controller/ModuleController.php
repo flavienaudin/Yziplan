@@ -35,11 +35,23 @@ class ModuleController extends Controller
         $eventManager->setEvent($event);
         $module = $eventManager->addModule($type);
         if ($request->isXmlHttpRequest()) {
-            $moduleManager = $this->get('at.manager.module');
-            return new JsonResponse(array('htmlContent' => $moduleManager->displayModulePartial($module)), Response::HTTP_OK);
+            if ($module != null) {
+                $moduleManager = $this->get('at.manager.module');
+                return new JsonResponse(array('htmlContent' => $moduleManager->displayModulePartial($module)), Response::HTTP_OK);
+            } else {
+                $responseData['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('module.error.message.add');
+                return new JsonResponse($responseData, Response::HTTP_BAD_REQUEST);
+            }
         } else {
-            $event = $eventManager->getEvent();
-            return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken(), 'tokenEdition' => $event->getTokenEdition())) . '#module-' . $module->getToken());
+            if ($module == null) {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('module.error.message.add'));
+            }
+            return $this->redirect($this->generateUrl('displayEvent', array(
+                    'token' => $event->getToken(),
+                    'tokenEdition' => ($this->isGranted(EventVoter::EDIT, $event) ? $event->getTokenEdition() : null)
+                )) . '#module-' . $module->getToken()
+            );
+
         }
     }
 

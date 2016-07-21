@@ -13,11 +13,15 @@ services:
 
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
-    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating']
+    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation']
 
   at.manager.event_invitation:
     class: AppBundle\Manager\EventInvitationManager
-    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.user_manager']
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.user_manager','@at.manager.module_invitation']
+
+  at.manager.module_invitation:
+      class: AppBundle\Manager\ModuleInvitationManager
+      arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@at.service.gentoken']
 
 # Voters
   at.voter.event:
@@ -29,6 +33,7 @@ services:
   at.voter.module:
     class: AppBundle\Security\ModuleVoter
     public: false
+    arguments: ['@service_container']
     tags:
       - { name: security.voter }
 

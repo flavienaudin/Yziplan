@@ -12,7 +12,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\enum\EventInvitationStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
-use AppBundle\Entity\ModuleInvitation;
+use AppBundle\Entity\Module;
 use AppBundle\Form\EventInvitationFormType;
 use AppBundle\Security\EventInvitationVoter;
 use ATUserBundle\Entity\User;
@@ -49,11 +49,15 @@ class EventInvitationManager
     /** @var UserManager */
     private $userManager;
 
-    /** @var EventInvitation L'événement en cours de traitement */
+    /** @var  ModuleInvitationManager */
+    private $moduleInvitationManager;
+
+    /** @var EventInvitation L'invitation à l'événement en cours de traitement */
     private $eventInvitation;
 
 
-    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, UserManager $userManager)
+    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface
+    $session, UserManager $userManager, ModuleInvitationManager $moduleInvitationManager)
     {
         $this->entityManager = $doctrine;
         $this->authorizationChecker = $authorizationChecker;
@@ -61,6 +65,7 @@ class EventInvitationManager
         $this->generateursToken = $generateurToken;
         $this->session = $session;
         $this->userManager = $userManager;
+        $this->moduleInvitationManager = $moduleInvitationManager;
     }
 
     /**
@@ -85,11 +90,13 @@ class EventInvitationManager
      * Défini l'EventInvitation en fonction de l'événement fourni et de l'utilisateur (connecté ou non).
      * L'EventInivitation peut être initialisée si les autorisations le permettent.
      *
-     * @param Event $event L'événement concerné
-     * @param User|null $user L'utilisateur conntcté ou non
+     * @param $event Event L'événement concerné
+     * @param $saveInSession boolean If the session is impacted by the search of the User EventInvitation
+     * @param $initializeIfNotExists boolean If true and the EventInvitation doesn't already exist, a new one is initialised
+     * @param $user User|null L'utilisateur connecté ou non
      * @return EventInvitation|null
      */
-    public function retrieveUserEventInvitation(Event $event, User $user = null)
+    public function retrieveUserEventInvitation(Event $event, $saveInSession, $initializeIfNotExists, User $user = null)
     {
         $this->eventInvitation = null;
         $eventInvitationRepo = $this->entityManager->getRepository("AppBundle:EventInvitation");
@@ -97,21 +104,31 @@ class EventInvitationManager
             $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'appUser' => $user->getAppUser()));
         }
         if ($this->eventInvitation != null) {
-            $this->session->set(self::TOKEN_SESSION_KEY, $this->eventInvitation->getToken());
+            if ($this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
+            } else {
+                $this->eventInvitation = null;
+            }
         } else {
             if ($this->session->has(self::TOKEN_SESSION_KEY)) {
-                $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event,'token' => $this->session->get(self::TOKEN_SESSION_KEY)));
+                $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'token' => $this->session->get(self::TOKEN_SESSION_KEY)));
             }
             if ($this->eventInvitation != null) {
                 if (!$this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
                     $this->eventInvitation = null;
                 }
             } else {
-                if ($this->authorizationChecker->isGranted(EventInvitationVoter::CREATE, $event)) {
+                if ($initializeIfNotExists && $this->authorizationChecker->isGranted(EventInvitationVoter::CREATE, $event)) {
                     $this->eventInvitation = $this->initializeEventInvitation($event, ($user instanceof User ? $user : null));
                 } else {
                     $this->eventInvitation = null;
                 }
+            }
+        }
+        if($saveInSession) {
+            if ($this->eventInvitation != null) {
+                $this->session->set(self::TOKEN_SESSION_KEY, $this->eventInvitation->getToken());
+            } else {
+                $this->session->remove(self::TOKEN_SESSION_KEY);
             }
         }
         return $this->eventInvitation;
@@ -152,10 +169,10 @@ class EventInvitationManager
         $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
         $event->addEventInvitation($this->eventInvitation);
 
+        /** @var Module $module */
         foreach ($event->getModules() as $module) {
             // TODO check module authorization (every guests of the event, on ModuleInvitationOnly,...)
-            $moduleInvitation = new ModuleInvitation();
-            $moduleInvitation->setModule($module);
+            $moduleInvitation = $this->moduleInvitationManager->initializeModuleInvitation($module, $this->eventInvitation);
             $this->eventInvitation->addModuleInvitation($moduleInvitation);
         }
 

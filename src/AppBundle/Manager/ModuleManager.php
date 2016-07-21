@@ -11,17 +11,21 @@ namespace AppBundle\Manager;
 
 use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\enum\ModuleType;
+use AppBundle\Entity\Event;
+use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
 use AppBundle\Entity\module\PollProposal;
 use AppBundle\Form\ModuleFormType;
 use AppBundle\Form\PollProposalFormType;
+use AppBundle\Security\ModuleVoter;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -29,6 +33,9 @@ class ModuleManager
 {
     /** @var EntityManager */
     private $entityManager;
+
+    /** @var  TokenStorageInterface */
+    private $tokenStorage;
 
     /** @var AuthorizationCheckerInterface */
     private $authorizationChecker;
@@ -42,16 +49,22 @@ class ModuleManager
     /** @var EngineInterface */
     private $templating;
 
+    /** @var ModuleInvitationManager */
+    private $moduleInvitationManager;
+
     /** @var Module Le module en cours de traitement */
     private $module;
 
-    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, EngineInterface $templating)
+    public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory,
+                                GenerateursToken $generateurToken, EngineInterface $templating, ModuleInvitationManager $moduleInvitationManager)
     {
         $this->entityManager = $doctrine;
+        $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
         $this->formFactory = $formFactory;
         $this->generateursToken = $generateurToken;
         $this->templating = $templating;
+        $this->moduleInvitationManager = $moduleInvitationManager;
     }
 
     /**
@@ -73,10 +86,13 @@ class ModuleManager
     }
 
     /**
-     * @param $type string
-     * @return Module
+     * Create a module and set required data.
+     * @param Event $event The event which is added the module.
+     * @param $type
+     * @param EventInvitation $creatorEventInvitation The user's eventInvitation to set the module creator
+     * @return Module The module added to the event
      */
-    public function createModule($type)
+    public function createModule(Event $event, $type, EventInvitation $creatorEventInvitation)
     {
         $this->module = new Module();
         $this->module->setStatus(ModuleStatus::IN_CREATION);
@@ -86,7 +102,9 @@ class ModuleManager
             $pollModule = new PollModule();
             $this->module->setPollModule($pollModule);
         }
-        // TODO : add attribut Creator = EventInvitation en cours
+        $moduleInvitation = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation);
+        $this->module->setCreator($moduleInvitation);
+        $event->addModule($this->module);
         return $this->module;
     }
 
@@ -153,9 +171,13 @@ class ModuleManager
      */
     public function displayModulePartial(Module $module)
     {
-        /** @var FormInterface $moduleForm */
-        $moduleForm = $this->createModuleForm($module);
+        $moduleForm = null;
+        if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $module)) {
+            /** @var FormInterface $moduleForm */
+            $moduleForm = $this->createModuleForm($module);
+        }
         if ($module->getPollModule() != null) {
+            // TODO Check authorization to "AddPollProposal"
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),

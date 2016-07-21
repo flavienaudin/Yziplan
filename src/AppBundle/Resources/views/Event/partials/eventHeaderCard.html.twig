@@ -4,20 +4,16 @@
 
 <div class="card" id="event-header-card">
     {% if eventForm is not null %}
-        {% if event.token is empty %}
-            {{ form_start(eventForm, {'action':path('displayEvent'), 'attr':{'id':'eventHeader'}}) }}
-        {% else %}
-            {{ form_start(eventForm, {'action':path('displayEvent',{'token':event.token,'tokenEdition':event.tokenEdition}), 'attr':{'id':'eventHeader'}}) }}
-            <script>
-                $('form#eventHeader').on("submit", function (e) {
-                    ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                        if (responseJSON.htmlContent) {
-                            $('#event-header-card').replaceWith(responseJSON.htmlContent);
-                        }
-                    }, null, null);
-                });
-            </script>
-        {% endif %}
+        {{ form_start(eventForm, {'action':path('displayEvent',{'token':event.token,'tokenEdition':event.tokenEdition}), 'attr':{'id':'eventHeader'}}) }}
+        <script>
+            $('form#eventHeader').on("submit", function (e) {
+                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                    if (responseJSON.htmlContent) {
+                        $('#event-header-card').replaceWith(responseJSON.htmlContent);
+                    }
+                }, null, null);
+            });
+        </script>
     {% endif %}
     <div class="card-header ch-img" style="background-image: url({{ asset("uploads/events/default/evt-img1.jpg") }}); height:250px;">
         <h1 class="c-white">{{ event.name }}</h1>
@@ -26,7 +22,7 @@
                 {{ 'event.form.image.label'|trans }}</a>
         {% endif %}
 
-        {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'),event) and event.tokenEdition is not empty %}
+        {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'),event) %}
             <div class="dropdown add-module-menu">
                 <a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>
                 <ul class="dropdown-menu pull-right">
@@ -164,12 +160,7 @@
     <div class="card-footer card-padding-sm">
         {% if eventForm is not null %}
             <div class="text-right">
-                {% if event.token is empty %}
-                    <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.nextStep"|trans }}</button>
-                {% else %}
-                    <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
-                {% endif %}
-
+                <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
             </div>
         {% endif %}
     </div>
