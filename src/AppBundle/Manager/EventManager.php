@@ -11,6 +11,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\enum\EventStatus;
 use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Form\EventFormType;
 use AppBundle\Security\ModuleVoter;
@@ -187,7 +188,7 @@ class EventManager
      *  'addPollProposalForm' => Form : uniquement pour un PollModule
      * ]
      */
-    public function getModulesToDisplay()
+    public function getModulesToDisplay(EventInvitation $userEventInvitation)
     {
         $modules = array();
         if ($this->event != null) {
@@ -197,7 +198,8 @@ class EventManager
                 if ($module->getStatus() != ModuleStatus::DELETED && $module->getStatus() != ModuleStatus::ARCHIVED) {
                     $moduleDescription = array();
                     $moduleDescription['module'] = $module;
-                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $module)) {
+                    $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
+                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
                         $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
                     }
                     if ($module->getPollModule() != null) {

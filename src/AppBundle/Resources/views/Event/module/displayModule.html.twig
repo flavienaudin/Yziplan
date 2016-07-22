@@ -73,7 +73,7 @@
                                     <a href="#tab-modQui_{{ module.token }}" aria-controls="#tab-modQui_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-accounts-list-alt
                                     icon-tab"></i> </a>
                                 </li>
-                                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
+                                {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) %}
                                     <li role="presentation">
                                         <a href="#tab-admin_{{ module.token }}" aria-controls="#tab-admin_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-settings icon-tab"></i>
                                         </a>
@@ -82,7 +82,7 @@
                             </ul>
                             <div class="tab-content p-20 b-b-w">
                                 <div role="tabpanel" class="tab-pane animated fadeIn in active" id="tab-infoG_{{ module.token }}">
-                                    {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
+                                    {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) %}
                                         <div class="form-group">
                                             {{ form_label(moduleForm.description, 'module.form.description.label', {'label_attr':{'class':'sr-only'}}) }}
                                             <div class="fg-line">
@@ -104,7 +104,7 @@
                                     <h2>Liste des invités</h2>
                                 </div>
 
-                                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
+                                {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) %}
                                     <div role="tabpanel" class="tab-pane animated fadeIn" id="tab-admin_{{ module.token }}">
                                         <div class="form-group">
                                             {{ form_label(moduleForm.responseDeadline, 'module.form.responseDeadline.label') }}
@@ -135,11 +135,11 @@
                                 {% endif %}
                             </div>
                             <div class="pull-right m-b-20 m-r-20">
-                                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), module) %}
+                                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), [module, userModuleInvitation]) %}
                                     <a href="{{ path('removeEventModule', {'tokenEdition':module.tokenEdition}) }}" id="removeModule{{ module.tokenEdition }}" data-target="{{ module.token }}"
                                        class="text-danger">{{ "global.button.delete"|trans }}</a>
                                 {% endif %}
-                                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
+                                {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) %}
                                     <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
                                 {% endif %}
                             </div>
@@ -164,7 +164,7 @@
 
     {% block JSmodule %}
         <script>
-            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), module) %}
+            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), [module, userModuleInvitation]) %}
             $('#removeModule{{ module.tokenEdition }}').on('click', function (e) {
                 e.preventDefault();
                 var removeModuleLink = $(this);
@@ -189,7 +189,7 @@
             });
             {% endif %}
 
-            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), module) and moduleForm is not null %}
+            {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) %}
             $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
                 ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                     if (responseJSON.htmlContent) {

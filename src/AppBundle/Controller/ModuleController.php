@@ -37,7 +37,8 @@ class ModuleController extends Controller
         if ($request->isXmlHttpRequest()) {
             if ($module != null) {
                 $moduleManager = $this->get('at.manager.module');
-                return new JsonResponse(array('htmlContent' => $moduleManager->displayModulePartial($module)), Response::HTTP_OK);
+                $userEventInvitation = $this->get('at.manager.event_invitation')->retrieveUserEventInvitation($event, false, false, $this->getUser());
+                return new JsonResponse(array('htmlContent' => $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module))), Response::HTTP_OK);
             } else {
                 $responseData['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('module.error.message.add');
                 return new JsonResponse($responseData, Response::HTTP_BAD_REQUEST);
@@ -61,8 +62,10 @@ class ModuleController extends Controller
      */
     public function removeEventModuleAction(Module $module, Request $request)
     {
+        $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($module->getEvent(), false, false, $this->getUser());
+        $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
         if ($request->isXmlHttpRequest()) {
-            if ($this->isGranted(ModuleVoter::DELETE, $module)) {
+            if ($this->isGranted(ModuleVoter::DELETE, array($module, $userModuleInvitation))) {
                 $moduleManager = $this->get("at.manager.module");
                 $moduleManager->setModule($module);
                 $moduleManager->removeModule();
@@ -73,7 +76,7 @@ class ModuleController extends Controller
                 return new JsonResponse($responseData, Response::HTTP_UNAUTHORIZED);
             }
         } else {
-            $this->denyAccessUnlessGranted(ModuleVoter::DELETE, $module);
+            $this->denyAccessUnlessGranted(ModuleVoter::DELETE, array($module, $userModuleInvitation));
             $moduleManager = $this->get("at.manager.module");
             $moduleManager->setModule($module);
             $moduleManager->removeModule();

@@ -137,7 +137,7 @@ class EventController extends Controller
             ////////////////////////
             // modules management //
             ////////////////////////
-            $modules = $eventManager->getModulesToDisplay();
+            $modules = $eventManager->getModulesToDisplay($userEventInvitation);
             $moduleManager = $this->get("at.manager.module");
             foreach ($modules as $moduleId => $moduleDescription) {
                 if (key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
@@ -149,7 +149,7 @@ class EventController extends Controller
                             if ($moduleForm->isValid()) {
                                 $currentModule = $moduleManager->treatUpdateFormModule($moduleForm);
                                 $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                                $data['htmlContent'] = $moduleManager->displayModulePartial($currentModule);
+                                $data['htmlContent'] = $moduleManager->displayModulePartial($currentModule, $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
                                 return new JsonResponse($data, Response::HTTP_OK);
                             } else {
                                 $data["formErrors"] = array();
@@ -205,8 +205,6 @@ class EventController extends Controller
                     $modules[$moduleId]['addPollProposalForm'] = $addPollProposalForm->createView();
                 }
             }
-
-            dump($userEventInvitation);
 
             return $this->render('AppBundle:Event:event.html.twig', array(
                 'event' => $currentEvent,

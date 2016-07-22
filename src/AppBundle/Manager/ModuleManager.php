@@ -16,6 +16,7 @@ use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
 use AppBundle\Entity\module\PollProposal;
+use AppBundle\Entity\ModuleInvitation;
 use AppBundle\Form\ModuleFormType;
 use AppBundle\Form\PollProposalFormType;
 use AppBundle\Security\ModuleVoter;
@@ -144,7 +145,9 @@ class ModuleManager
         } elseif ($this->module->getStatus() == ModuleStatus::IN_ORGANIZATION && empty($this->module->getName())) {
             $this->module->setStatus(ModuleStatus::IN_CREATION);
         }
-        // TODO Check ?
+
+        // TODO faire des vérifications/traitement sur les données
+
         $this->entityManager->persist($this->module);
         $this->entityManager->flush();
         return $this->module;
@@ -165,14 +168,14 @@ class ModuleManager
     }
 
     /**
-     * @param Module $module Le module à afficher
-     * @param Request $request
+     * @param Module $module  Le module à afficher
+     * @param ModuleInvitation|null $userModuleInvitation
      * @return string La vue HTML sous forme de string
      */
-    public function displayModulePartial(Module $module)
+    public function displayModulePartial(Module $module, ModuleInvitation $userModuleInvitation = null)
     {
         $moduleForm = null;
-        if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $module)) {
+        if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
             /** @var FormInterface $moduleForm */
             $moduleForm = $this->createModuleForm($module);
         }
@@ -181,17 +184,20 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
-                'addPollProposalForm' => $this->createAddPollProposalForm($module)->createView()
+                'addPollProposalForm' => $this->createAddPollProposalForm($module)->createView(),
+                'userModuleInvitation' => $userModuleInvitation
             ));
         } elseif ($module->getExpenseModule() != null) {
             return $this->templating->render("@App/Event/module/displayExpenseModule.html.twig", [
                 "module" => $module,
-                'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null)
+                'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
+                'userModuleInvitation' => $userModuleInvitation
             ]);
         } else {
             return $this->templating->render("@App/Event/module/displayModule.html.twig", [
                 "module" => $module,
-                'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null)
+                'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
+                'userModuleInvitation' => $userModuleInvitation
             ]);
         }
     }

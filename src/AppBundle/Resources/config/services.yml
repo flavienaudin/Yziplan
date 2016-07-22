@@ -33,11 +33,10 @@ services:
   at.voter.module:
     class: AppBundle\Security\ModuleVoter
     public: false
-    arguments: ['@service_container']
     tags:
       - { name: security.voter }
 
-  at.voter.eventInvitation:
+  at.voter.event_invitation:
     class: AppBundle\Security\EventInvitationVoter
     public: false
     tags:

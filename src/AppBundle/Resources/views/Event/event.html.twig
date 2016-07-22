@@ -24,11 +24,13 @@
                     {{ include('@App/Event/module/displayExpenseModule.html.twig', {
                         'module':moduleDescription.module,
                         'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
+                        'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module)
                     }) }}
                 {% else %}
                     {{ include('@App/Event/module/displayModule.html.twig', {
                         'module':moduleDescription.module,
                         'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
+                        'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module)
                     }) }}
                 {% endif %}
             {% endfor %}

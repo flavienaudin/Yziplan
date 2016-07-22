@@ -9,8 +9,8 @@
 namespace AppBundle\Security;
 
 use AppBundle\Entity\Module;
+use AppBundle\Entity\ModuleInvitation;
 use ATUserBundle\Entity\User;
-use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -19,29 +19,17 @@ class ModuleVoter extends Voter
 {
     const DISPLAY = 'display';
     const EDIT = 'edit';
-    const VALIDATE = 'validate';
-    const ARCHIVE = 'archive';
-    const CANCEL = 'cancel';
     const DELETE = 'delete';
-
-    /** @var Container */
-    private $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
 
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, array(self::DISPLAY, self::EDIT, self::VALIDATE, self::ARCHIVE, self::CANCEL, self::DELETE))) {
+        if (!in_array($attribute, array(self::DISPLAY, self::EDIT, self::DELETE))) {
             return false;
         }
-        if (!$subject instanceof Module) {
+        if (!is_array($subject) && count($subject) != 2) {
             return false;
         }
-        return true;
+        return $subject[0] instanceof Module && $subject[1] instanceof ModuleInvitation;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
@@ -49,34 +37,26 @@ class ModuleVoter extends Voter
         /** @var User $user */
         $user = $token->getUser();
         /** @var Module $module */
-        $module = $subject; // $subject must be a Module instance, thanks to the supports method
+        $module = $subject[0]; // $subject[0] must be a Module instance, thanks to the supports method
+        /** @var ModuleInvitation $userModuleInvitation */
+        $userModuleInvitation = $subject[1]; // $subject[1] must be a EventInvitation instance, thanks to the supports method
 
         if ($user != null && $user != 'anon.' && !$user instanceof UserInterface) {
             return false;
         }
-        $event = $module->getEvent();;
         switch ($attribute) {
             case self::DISPLAY:
                 // TODO Controler l'access (si evenement privée, invitation nécessaire...)
                 return true;
                 break;
-            case self::VALIDATE:
-            case self::CANCEL:
-            case self::ARCHIVE:
             case self::EDIT:
             case self::DELETE:
                 if ($module->getCreator() != null) {
-                    $eventInvitationManager = $this->container->get("at.manager.event_invitation");
-                    $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($event, false, false, ($user instanceof User ? $user : null));
-                    if ($module->getCreator()->getEventInvitation() === $userEventInvitation) {
+                    if ($module->getCreator() === $userModuleInvitation) {
                         return true;
                     } else if ($module->getCreator()->getEventInvitation()->getAppUser() != null && $user == $module->getCreator()->getEventInvitation()->getAppUser()->getUser()) {
                         return true;
                     }
-                } else if ($event->getCreator() == null || $event->getCreator()->getAppUser() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {
-                    return true;
-                } else if ($user == $event->getCreator()->getAppUser()->getUser()) {
-                    return true;
                 }
                 break;
         }
