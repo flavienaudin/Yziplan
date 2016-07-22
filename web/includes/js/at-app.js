@@ -23,6 +23,7 @@ $(document).on('mousemove', function (e) {
 /** Ajax Request **/
 /*----------------*/
 // TODO remove for PROD
+// Attention au cas où une alerte de confirmation est demandé au préalable (e.preventDefault déclencé avant l'appel à la function)
 var disabledAjax = false;
 function ajaxRequest(target, event, doneCallback, failCallback, alwaysCallback) {
     if(disabledAjax ){

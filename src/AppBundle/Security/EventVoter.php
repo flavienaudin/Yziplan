@@ -31,7 +31,7 @@ class EventVoter extends Voter
         if (!is_array($subject) || count($subject) != 2) {
             return false;
         }
-        return ($subject[0] instanceof Event && is_string($subject[1]));
+        return ($subject[0] instanceof Event && ($attribute == self::ADD_EVENT_MODULE || is_string($subject[1])));
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
