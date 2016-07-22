@@ -9,7 +9,7 @@ services:
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
-    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module', '@at.manager.event_invitation']
+    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.event_invitation','@at.manager.module_invitation']
 
   at.manager.module:
     class: AppBundle\Manager\ModuleManager

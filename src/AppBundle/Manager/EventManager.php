@@ -45,10 +45,13 @@ class EventManager
     /** @var  EventInvitationManager */
     private $eventInvitationManager;
 
+    /** @var ModuleInvitationManager */
+    private $moduleInvitationManager;
+
     /** @var Event L'événement en cours de traitement */
     private $event;
 
-    public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory, GenerateursToken $generateurToken, ModuleManager $moduleManager, EventInvitationManager $eventInvitationManager)
+    public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory, GenerateursToken $generateurToken, ModuleManager $moduleManager, EventInvitationManager $eventInvitationManager, ModuleInvitationManager $moduleInvitationManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -57,6 +60,7 @@ class EventManager
         $this->generateursToken = $generateurToken;
         $this->moduleManager = $moduleManager;
         $this->eventInvitationManager = $eventInvitationManager;
+        $this->moduleInvitationManager = $moduleInvitationManager;
     }
 
     /**
@@ -171,9 +175,8 @@ class EventManager
         }
 
         $module = $this->moduleManager->createModule($this->event, $type, $userEventInvitation);
-
-        // TODO Créer les moduleInvitations selon autorisation
-
+        // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator).
+        $this->moduleInvitationManager->initializeModuleInvitationsForEvent($this->event, $module);
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
 

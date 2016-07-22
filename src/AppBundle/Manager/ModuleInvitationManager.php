@@ -10,6 +10,7 @@ namespace AppBundle\Manager;
 
 
 use AppBundle\Entity\enum\ModuleInvitationStatus;
+use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\ModuleInvitation;
@@ -84,5 +85,14 @@ class ModuleInvitationManager
         return $this->moduleInvitation;
     }
 
+    public function initializeModuleInvitationsForEvent(Event $event, Module $module){
+        /** @var EventInvitation $eventInvitation */
+        foreach($event->getEventInvitations() as $eventInvitation){
+            $this->moduleInvitation = $eventInvitation->getModuleInvitationForModule($module);
+            if($this->moduleInvitation == null){
+                $this->initializeModuleInvitation($module, $eventInvitation);
+            }
+        }
+    }
 
 }
