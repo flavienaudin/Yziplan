@@ -22,7 +22,12 @@ $(document).on('mousemove', function (e) {
 /*----------------*/
 /** Ajax Request **/
 /*----------------*/
+// TODO remove for PROD
+var disabledAjax = false;
 function ajaxRequest(target, event, doneCallback, failCallback, alwaysCallback) {
+    if(disabledAjax ){
+        return true;
+    }
     if (event != null) {
         event.preventDefault();
     }
@@ -66,6 +71,9 @@ function ajaxRequest(target, event, doneCallback, failCallback, alwaysCallback) 
 }
 
 function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallback) {
+    if(disabledAjax ){
+        return true;
+    }
     if (event != null) {
         event.preventDefault();
     }
