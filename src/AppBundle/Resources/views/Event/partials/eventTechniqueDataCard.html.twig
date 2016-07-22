@@ -6,7 +6,7 @@
     </div>
     <div class="card-body card-padding">
         <dl>
-            {% if is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'), event) %}
+            {% if is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'), [event, app.request.get('tokenEdition')]) %}
                 <dt>Lien d'administration</dt>
                 <dd>
                     {# TODO TOFIX Cas où event.creator.appUser == null && event.invitationOnly

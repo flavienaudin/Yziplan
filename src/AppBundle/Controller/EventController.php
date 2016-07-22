@@ -95,7 +95,7 @@ class EventController extends Controller
                     $eventInvitationManager->treatEventFormSubmission($eventInvitationForm);
                     return $this->redirectToRoute('displayEvent', array(
                         'token' => $currentEvent->getToken(),
-                        'tokenEdition' => ($tokenEdition === $currentEvent->getTokenEdition() && $this->isGranted(EventVoter::EDIT, $currentEvent) ? $currentEvent->getTokenEdition() : null)));
+                        'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition)) ? $currentEvent->getTokenEdition() : null)));
                 }
             }
 
@@ -103,7 +103,7 @@ class EventController extends Controller
             // Edition management //
             ////////////////////////
             $eventForm = null;
-            if (($tokenEdition === $currentEvent->getTokenEdition()) && $this->isGranted(EventVoter::EDIT, $currentEvent)) {
+            if ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition))) {
                 /** @var Form $eventForm */
                 $eventForm = $eventManager->initEventForm();
                 $eventForm->handleRequest($request);
@@ -130,7 +130,7 @@ class EventController extends Controller
                     $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
                     return $this->redirectToRoute('displayEvent', array(
                         'token' => $currentEvent->getToken(),
-                        'tokenEdition' => ($tokenEdition === $currentEvent->getTokenEdition() && $this->isGranted(EventVoter::EDIT, $currentEvent) ? $currentEvent->getTokenEdition() : null)));
+                        'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition)) ? $currentEvent->getTokenEdition() : null)));
                 }
             }
 
@@ -164,7 +164,7 @@ class EventController extends Controller
                             $module = $moduleManager->treatUpdateFormModule($moduleForm);
                             return $this->redirect($this->generateUrl('displayEvent', array(
                                     'token' => $currentEvent->getToken(),
-                                    'tokenEdition' => ($tokenEdition === $currentEvent->getTokenEdition() && $this->isGranted(EventVoter::EDIT, $currentEvent) ? $currentEvent->getTokenEdition() : null)
+                                    'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition)) ? $currentEvent->getTokenEdition() : null)
                                 )) . '#module-' . $module->getToken());
                         }
                     }
@@ -198,7 +198,7 @@ class EventController extends Controller
                             $moduleManager->treatAddPollProposalFormModule($addPollProposalForm, $moduleDescription['module']);
                             return $this->redirect($this->generateUrl('displayEvent', array(
                                     'token' => $currentEvent->getToken(),
-                                    'tokenEdition' => ($tokenEdition === $currentEvent->getTokenEdition() && $this->isGranted(EventVoter::EDIT, $currentEvent) ? $currentEvent->getTokenEdition() : null)
+                                    'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition)) ? $currentEvent->getTokenEdition() : null)
                                 )) . '#module-' . $moduleDescription['module']->getToken());
                         }
                     }

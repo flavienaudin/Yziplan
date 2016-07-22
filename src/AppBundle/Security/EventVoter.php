@@ -28,10 +28,10 @@ class EventVoter extends Voter
         if (!in_array($attribute, array(self::EDIT, self::ADD_EVENT_MODULE, self::VALIDATE, self::ARCHIVE, self::CANCEL))) {
             return false;
         }
-        if (!$subject instanceof Event) {
+        if (!is_array($subject) || count($subject) != 2) {
             return false;
         }
-        return true;
+        return ($subject[0] instanceof Event && is_string($subject[1]));
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
@@ -39,7 +39,8 @@ class EventVoter extends Voter
         /** @var User $user */
         $user = $token->getUser();
         /** @var Event $event */
-        $event = $subject; // $subject must be a Event instance, thanks to the supports method
+        $event = $subject[0]; // $subject must be a Event instance, thanks to the supports method
+        $tokenEdition = $subject[1]; // $subject must be a string, thanks to the supports method
 
         if ($user != null && $user != 'anon.' && !$user instanceof UserInterface) {
             return false;
@@ -49,24 +50,26 @@ class EventVoter extends Voter
                 if ($event->isGuestsCanAddModule()) {
                     return true;
                 }
-                return $this->canEdit($event, $user);
+                return $this->canEdit($event, $user, $tokenEdition);
                 break;
             case self::VALIDATE:
             case self::CANCEL:
             case self::ARCHIVE:
             case self::EDIT:
-                return $this->canEdit($event, $user);
+                return $this->canEdit($event, $user, $tokenEdition);
                 break;
         }
         return false;
     }
 
-    private function canEdit(Event $event, $user)
+    private function canEdit(Event $event, $user, $tokenEdition)
     {
-        if ($event->getCreator() == null || $event->getCreator()->getAppUser() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {
-            return true;
-        } else if ($user == $event->getCreator()->getAppUser()->getUser()) {
-            return true;
+        if (!empty($tokenEdition) && $event->getTokenEdition() === $tokenEdition) {
+            if ($event->getCreator() == null || $event->getCreator()->getAppUser() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {
+                return true;
+            } else if ($user == $event->getCreator()->getAppUser()->getUser()) {
+                return true;
+            }
         }
         return false;
     }

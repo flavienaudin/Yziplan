@@ -25,12 +25,12 @@ class ModuleController extends Controller
 {
 
     /**
-     * @Route("/{_locale}/add-event-module/{token}/{type}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="addEventModule")
-     * @ParamConverter("event", class="AppBundle:Event")
+     * @Route("/{_locale}/add-event-module/{token}/{type}/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="addEventModule")
+     * @ParamConverter("event", class="AppBundle:Event", options={"exclude": {"tokenEdition"}})
      */
-    public function addEventModuleAction(Event $event, $type, Request $request)
+    public function addEventModuleAction(Event $event, $type, $tokenEdition = null, Request $request)
     {
-        $this->denyAccessUnlessGranted(EventVoter::ADD_EVENT_MODULE, $event);
+        $this->denyAccessUnlessGranted(EventVoter::ADD_EVENT_MODULE, array($event, $tokenEdition));
         $eventManager = $this->get("at.manager.event");
         $eventManager->setEvent($event);
         $module = $eventManager->addModule($type);
@@ -49,18 +49,18 @@ class ModuleController extends Controller
             }
             return $this->redirect($this->generateUrl('displayEvent', array(
                     'token' => $event->getToken(),
-                    'tokenEdition' => ($this->isGranted(EventVoter::EDIT, $event) ? $event->getTokenEdition() : null)
-                )) . '#module-' . $module->getToken()
+                    'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($event, $tokenEdition)) ? $event->getTokenEdition() : null)
+                )) . ($module != null ? '#module-' . $module->getToken():'')
             );
 
         }
     }
 
     /**
-     * @Route("/{_locale}/remove-event-module/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="removeEventModule")
-     * @ParamConverter("module", class="AppBundle:Module", options={"tokenEdition":"tokenEdition"})
+     * @Route("/{_locale}/remove-event-module/{tokenEdition}/{eventTokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="removeEventModule")
+     * @ParamConverter("module", class="AppBundle:Module", options={"exclude": {"eventTokenEdition"}})
      */
-    public function removeEventModuleAction(Module $module, Request $request)
+    public function removeEventModuleAction(Module $module, $eventTokenEdition = null, Request $request)
     {
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($module->getEvent(), false, false, $this->getUser());
         $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
@@ -82,7 +82,7 @@ class ModuleController extends Controller
             $moduleManager->removeModule();
             return $this->redirectToRoute('displayEvent', array(
                 'token' => $module->getEvent()->getToken(),
-                'tokenEdition' => ($this->isGranted(EventVoter::EDIT, $module->getEvent()) ? $module->getEvent()->getTokenEdition() : null)
+                'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($module->getEvent(), $eventTokenEdition)) ? $module->getEvent()->getTokenEdition() : null)
             ));
         }
     }

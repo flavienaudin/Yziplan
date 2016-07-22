@@ -4,8 +4,7 @@
             {{ form_start(addPollProposalForm, {'action':path('displayEvent',
                 {
                     'token':module.event.token,
-                    'tokenEdition': (app.request.get('tokenEdition') == module.event.tokenEdition and
-                    is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'),module.event)?module.event.tokenEdition:null)
+                    'tokenEdition': (is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'),[module.event,app.request.get('tokenEdition')])?module.event.tokenEdition:null)
                 }),
                 'attr':{'id':"addPollProposalForm_"~module.token}
             }) }}

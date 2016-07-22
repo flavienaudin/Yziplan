@@ -4,7 +4,7 @@
             {
                 'token':userEventInvitation.event.token,
                 'tokenEdition': (app.request.get('tokenEdition') == userEventInvitation.event.tokenEdition and
-                is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'),userEventInvitation.event)?userEventInvitation.event.tokenEdition:null)
+                is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'),[userEventInvitation.event,app.request.get('tokenEdition')])?userEventInvitation.event.tokenEdition:null)
             }),
             'attr':{'id':'userEventInvitationAbout'}
         }) }}
