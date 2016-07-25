@@ -38,6 +38,9 @@ class EventFormType extends AbstractType
             ))
             ->add("guestsCanInvite", CheckboxType::class, array(
                 'required' => false
+            ))
+            ->add("guestsCanAddModule", CheckboxType::class, array(
+                'required' => false
             ));
     }
 

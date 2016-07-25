@@ -107,11 +107,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-6">
                     {{ form_row(eventForm.invitationOnly, {'label':'event.form.invitationOnly.label','attr':{'class':'md-toogle-switch'}}) }}
-                </div>
-                <div class="col-sm-3">
                     {{ form_row(eventForm.guestsCanInvite, {'label':'event.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
+                    {{ form_row(eventForm.guestsCanAddModule, {'label':'event.form.guestsCanAddModule.label','attr':{'class':'md-toogle-switch'}}) }}
                 </div>
             </div>
         {% else %}
