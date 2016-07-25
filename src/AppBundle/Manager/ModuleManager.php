@@ -168,7 +168,7 @@ class ModuleManager
     }
 
     /**
-     * @param Module $module  Le module à afficher
+     * @param Module $module Le module à afficher
      * @param ModuleInvitation|null $userModuleInvitation
      * @return string La vue HTML sous forme de string
      */
@@ -207,11 +207,16 @@ class ModuleManager
      * @param PollProposal $pollProposal
      * @return string
      */
-    public function displayPollProposalRowPartial(PollProposal $pollProposal)
+    public function displayPollProposalRowPartial(PollProposal $pollProposal, EventInvitation $userEventInvitation = null)
     {
+        $userModuleInvitation = null ;
+        if ($userEventInvitation != null) {
+            $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($pollProposal->getPollModule()->getModule());
+        }
         return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig", array(
-            "pollProposal" => $pollProposal,
-            'moduleInvitations' => $pollProposal->getPollModule()->getModule()->getModuleInvitations()
+            'pollProposal' => $pollProposal,
+            'moduleInvitations' => $pollProposal->getPollModule()->getModule()->getModuleInvitations(),
+            'userModuleInvitation' => $userModuleInvitation
         ));
     }
 

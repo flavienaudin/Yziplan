@@ -183,7 +183,7 @@ class EventController extends Controller
                             if ($addPollProposalForm->isValid()) {
                                 $pollProposal = $moduleManager->treatAddPollProposalFormModule($addPollProposalForm, $moduleDescription['module']);
                                 $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                                $data['htmlContent']['pollProposalRowDisplay'] = $moduleManager->displayPollProposalRowPartial($pollProposal);
+                                $data['htmlContent']['pollProposalRowDisplay'] = $moduleManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
                                 return new JsonResponse($data, Response::HTTP_OK);
                             } else {
                                 $data["formErrors"] = array();
