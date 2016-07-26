@@ -125,9 +125,20 @@
     {% elseif 'md-toogle-switch' in widget_class %}
         {{ block('md_toggle_switch_widget') }}
     {% else -%}
-        {{ parent() }}
+        {% if 'checkbox-inline' in parent_label_class %}
+            {{- form_label(form, null, { widget: block('checkbox_helper_widget') }) -}}
+        {% else -%}
+            <div class="checkbox">
+                {{- form_label(form, null, { widget: block('checkbox_helper_widget') }) -}}
+            </div>
+        {%- endif %}
     {% endif %}
 {%- endblock checkbox_widget %}
+
+{%- block checkbox_helper_widget -%}
+    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <i class="input-helper"></i>
+{%- endblock checkbox_helper_widget -%}
 
 {%- block icheck_checkbox_widget -%}
     <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
@@ -138,8 +149,8 @@
     {%- set label_attr = label_attr|merge({class: (' ts-label')|trim}) -%}
     <div class="toggle-switch">
         {{ block('form_label') }}
-        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} hidden="hidden"/>
-        <label for="{{ id }}" class="ts-helper"></label>
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} hidden="hidden"/> <label
+                for="{{ id }}" class="ts-helper"></label>
     </div>
     {{ form_errors(form) }}
 {%- endblock md_toggle_switch_widget %}
