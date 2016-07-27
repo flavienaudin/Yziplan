@@ -8,6 +8,7 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\module\PollProposal;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -31,7 +32,7 @@ class PollProposalFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\module\PollProposal'
+            'data_class' => PollProposal::class
         ));
     }
 }

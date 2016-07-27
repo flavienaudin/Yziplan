@@ -156,6 +156,7 @@ global:
     not_ajax_request: Your behavior is suspect, big brother is watching you!
     unauthorized_access: You haven't access to this section.
     internal_server_error: An internal error occured. Please, check your data and repeat the action.
+    javascrip_disabled: Javascript is disabled by your web browser. The web site may react badly. Enable it to take full advantage of the features we offer.
 
 status:
   in_creation: Being created

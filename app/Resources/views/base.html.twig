@@ -26,6 +26,11 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
 <body data-ma-header="teal">
+<noscript>
+    <div class="alert alert-danger  at-alert-no-js" role="alert">
+        <i class="zmdi zmdi-alert-triangle zmdi-hc-2x"></i> {{ "global.error.javascrip_disabled"|trans }}
+    </div>
+</noscript>
 <script src="{{ asset("bundles/app/js/jquery.js") }}"></script>
 <script src="{{ asset("bundles/app/js/bootstrap.js") }}"></script>
 {% block header_body %}

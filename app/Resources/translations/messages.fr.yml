@@ -156,6 +156,7 @@ global:
     not_ajax_request: Vous agissez suspectement, on vous garde à l'oeil!
     unauthorized_access: Vous n'êtes pas autorisés à accéder à cette section.
     internal_server_error: Une erreur interne est survenue. Merci de vérifier vos données et de réessayer votre action.
+    javascrip_disabled: Le javascript est désactivé par votre navigateur. Le site risque de mal réagir. Ré-activez-le afin de profiter pleinement des fonctionnalités que nous vous proposons
 
 status:
   in_creation: En cours de création
