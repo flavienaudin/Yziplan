@@ -165,6 +165,7 @@ global:
     internal_server_error: An internal error occured. Please, check your data and repeat the action.
     javascrip_disabled: Javascript is disabled by your web browser. The web site may react badly. Enable it to take full advantage of the features we offer.
   exception:
+    access_denied_http: You do not have access to these information. Please, connect with the appropriate user.
     method_not_allowed_http: This request is not allowed. Take care.
 
 status:
