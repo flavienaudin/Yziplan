@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -71,7 +72,22 @@ class KernelEventsSubscriber implements EventSubscriberInterface
 
     public function onKernelException(GetResponseForExceptionEvent $event){
         $exception  = $event->getException();
-        if ($exception instanceof NotFoundHttpException || $exception instanceof MethodNotAllowedHttpException) {
+        if ($exception instanceof AccessDeniedHttpException) {
+            $request = $event->getRequest();
+            if (empty($request->get('messages'))) {
+                if ($request->isXmlHttpRequest()) {
+                    $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("global.exception.access_denied_http");
+                    $event->setResponse(new JsonResponse($data, Response::HTTP_UNAUTHORIZED));
+                } else {
+                    if ($request->hasSession()) {
+                        $this->flashBag->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("global.exception.access_denied_http"));
+                    }
+                    $url = $this->router->generate('home');
+                    $response = new RedirectResponse($url);
+                    $event->setResponse($response);
+                }
+            }
+        }elseif ($exception instanceof NotFoundHttpException || $exception instanceof MethodNotAllowedHttpException) {
             $request = $event->getRequest();
             if (empty($request->get('messages'))) {
                 if ($request->isXmlHttpRequest()) {
