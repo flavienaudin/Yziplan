@@ -84,16 +84,14 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $event->setTokenEdition("987654321");
         $event->setStatus(EventStatus::IN_ORGANIZATION);
         $event->setDescription("Nouvel événément super cool de test. C'est donc sa description");
-        $event->setGuestsCanInvite(false);
-        $event->setInvitationOnly(false);
         $event->setGuestsCanAddModule(true);
 
         //EventInvitation Creator
         $eventInvitationCreator = new EventInvitation();
         $eventInvitationCreator->setName("Jacky");
-        $eventInvitationCreator->setStatus(EventInvitationStatus::VALID);
-        $eventInvitationCreator->setToken('azerty');
-        $eventInvitationCreator->setTokenEdition('ytreza');
+        $eventInvitationCreator->setStatus('notNull:-)');
+        $eventInvitationCreator->setToken('notNull1:-)');
+        $eventInvitationCreator->setTokenEdition('notNull1:-)');
         $userprincipal->getAppUser()->addEventInvitation($eventInvitationCreator);
         $event->addEventInvitation($eventInvitationCreator);
         $event->setCreator($eventInvitationCreator);
@@ -167,7 +165,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $modulePoll->setToken("quand123");
         $modulePoll->setTokenEdition("quand321");
         $modulePoll->setStatus(EventStatus::IN_ORGANIZATION);
-        $modulePoll->setOrderIndex(1);
 
         $pollModule = new PollModule();
         $modulePoll->setPollModule($pollModule);

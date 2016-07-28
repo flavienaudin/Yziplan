@@ -6,9 +6,10 @@
 
 {% block mhMediaLeft %}
     <img class="avatar-img a-lg" src="{{ asset("bundles/app/img/test/contact/1.jpg") }}" alt="">
+    <div class='avatar-char palette-Cyan-200 bg' name='Raymond'>R</div>
 {% endblock mhMediaLeft %}
 {% block mhBtnFloat %}
-    <a data-toggle="modal" href="#addPayment">
+    <a data-toggle="modal" data-backdrop="static" href="#addPayment">
         <button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
     </a>
 {% endblock mhBtnFloat %}
@@ -94,6 +95,12 @@
         </div>
     </div>
 
+{% endblock moduleBody %}
+
+{% block moduleFooter %}{% endblock moduleFooter %}
+
+{% block modalContainer %}
+    {{ parent() }}
     <div class="modal fade" id="addPayment" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -101,47 +108,127 @@
                     <h4 class="modal-title">Ajouter un paiement</h4>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group fg-float m-b-30">
-                        <div class="fg-line">
-                            <input class="form-control input-sm" type="email"> <label class="fg-label">Payeur</label>
+                    <div class="input-group m-b-30">
+                        <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                        <div class="form-group">
+                            <label class="fg-label">Qui a payé</label>
+                            <select class="selectpicker" type="text" data-live-search="true" name="1rst">
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''>
+                                Paul</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''>
+                                Jacques</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''>
+                                Pierre</span>"></option>
+                            </select>
                         </div>
                     </div>
 
-                    <div class="form-group fg-float m-b-30">
-                        <div class="fg-line">
-                            <input class="form-control input-sm" type="email"> <label class="fg-label">Pour</label>
+                    <div class="input-group m-b-30">
+                        <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
+                        <div class="form-group">
+                            <label class="fg-label">Qui a payé</label>
+                            {{ include('@App/Event/partials/user_select.html.twig', {
+                                'module_invitation_list': module.moduleInvitations,
+                                'select_name': 'test_name'
+                            }) }}
                         </div>
                     </div>
+                    {#http://stackoverflow.com/questions/25066417/how-to-display-all-selected-options-using-multiple-bootstrap-select#}
 
-                    <div class="form-group fg-float m-b-30">
+                        <div class="input-group fg-float m-b-30">
+                            <span class="input-group-addon"><i class="zmdi zmdi-accounts-alt"></i></span>
+                            <div class="form-group">
+                                <label class="">Pour qui</label>
+                                <select class="selectpicker" type="text" multiple data-live-search="true" name="2nd">
+                                    <option data-content="<span class='insecable-white-space' ><div class='avatar-char palette-Cyan-200 bg' name='Raymond' style='display: inline-block;'>R</div>
+                                    Raymond</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de
+                                    l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de
+                                    l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de
+                                    l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+
+                                    {#       <option>Mustard</option>
+                                           <option>Ketchup</option>
+                                           <option>Relish</option>
+                                           <option>Toasted</option>
+                                           <option>Mustard</option>
+                                           <option>Ketchup</option>
+                                           <option>Relish</option>
+                                           <option>Toasted</option>
+                                           <option>Mustard</option>
+                                           <option>Ketchup</option>
+                                           <option>Relish</option>
+                                           <option>Toasted</option>
+                                           <option>Mustard</option>
+                                           <option>Ketchup</option>
+                                           <option>Relish</option>
+                                           <option>Toasted</option>
+                                           <option>Mustard</option>
+                                           <option>Ketchup</option>
+                                           <option>Relish</option>
+                                           <option>Toasted</option>
+                                           <option>Mustard</option>
+                                           <option>Ketchup</option>
+                                           <option>Relish</option>
+                                           <option>Toasted</option>#}
+                                </select>
+                            </div>
+                        </div>
+
+
+                    <div class="input-group fg-float m-b-30">
+                        <span class="input-group-addon"><i class="zmdi zmdi-card"></i></span>
                         <div class="fg-line">
                             <input class="form-control input-sm" type="email"> <label class="fg-label">Montant</label>
                         </div>
                     </div>
 
-                    <div class="form-group fg-float m-b-30">
+                    <div class="input-group fg-float m-b-30">
+                        <span class="input-group-addon"><i class="zmdi zmdi-comment-edit"></i></span>
                         <div class="fg-line">
-                            <input class="form-control input-sm" type="email"> <label class="fg-label">Raison</label>
+                            <input class="form-control input-sm" type="email"> <label class="fg-label">Description</label>
                         </div>
                     </div>
 
-                    <div class="form-group fg-float">
+                    <div class="input-group fg-float">
+                        <span class="input-group-addon"><i class="zmdi zmdi-comment-alert"></i></span>
                         <div class="fg-line">
                             <textarea style="overflow: hidden; word-wrap: break-word; height: 43px;" data-autosize-on="true" class="form-control auto-size input-sm"></textarea> <label
-                                    class="fg-label">Message</label>
+                                    class="fg-label">Informations complémentaires</label>
                         </div>
                     </div>
+
 
                     <div class="clearfix"></div>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-info waves-effect">Valider</button>
                     <button class="btn btn-info waves-effect">Valider et ajouter une autre dépense</button>
-                    <button class="btn btn-link waves-effect">Annuler</button>
+                    <button class="btn btn-link waves-effect" data-dismiss="modal">Annuler</button>
                 </div>
             </div>
         </div>
     </div>
-{% endblock moduleBody %}
+{% endblock %}
 
-{% block moduleFooter %}{% endblock moduleFooter %}
+{% block JSmodule %}
+    {{ parent() }}
+{% endblock %}
+
+

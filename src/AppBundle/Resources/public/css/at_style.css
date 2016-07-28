@@ -246,3 +246,24 @@
     font-weight: bold;
     min-width: 100px;
 }
+
+/*---------------------------------
+    User select
+---------------------------------*/
+
+.bootstrap-select.btn-group .btn .filter-option {
+    display: inline-block;
+    width: 100%;
+    float: left;
+    text-align: left;
+    overflow: visible;
+    height: auto;
+}
+
+.bootstrap-select .btn {
+    white-space: normal;
+}
+
+.insecable-white-space {
+    white-space: nowrap;
+}
