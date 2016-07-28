@@ -8,16 +8,6 @@ $(document).ready(function () {
     $('.at-global-preloader').hide();
 });
 
-/*-------------------*/
-/** Global preloader */
-/*-------------------*/
-$(document).on('mousemove', function (e) {
-    $('.at-global-preloader').css({
-        left: e.pageX+10,
-        top: e.pageY-10
-    });
-});
-
 
 /*----------------*/
 /** Ajax Request **/
@@ -26,7 +16,7 @@ $(document).on('mousemove', function (e) {
 // Attention au cas où une alerte de confirmation est demandé au préalable (e.preventDefault déclencé avant l'appel à la function)
 var disabledAjax = false;
 function ajaxRequest(target, event, doneCallback, failCallback, alwaysCallback) {
-    if(disabledAjax ){
+    if (disabledAjax) {
         return true;
     }
     if (event != null) {
@@ -72,7 +62,7 @@ function ajaxRequest(target, event, doneCallback, failCallback, alwaysCallback) 
 }
 
 function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallback) {
-    if(disabledAjax ){
+    if (disabledAjax) {
         return true;
     }
     if (event != null) {
@@ -80,6 +70,17 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
     }
     var preloader = $('.at-global-preloader');
     $(preloader).show();
+
+    $(form).find('[type=submit]').each(function () {
+        $(this).on('click', function (e) {
+            e.preventDefault();
+        });
+        $(this).prop("disabled");
+        $(this).addClass("disabled");
+        if ($(this).data('loading-text')) {
+            $(this).html($(this).data('loading-text'));
+        }
+    });
 
     $('.has-error').each(function () {
         $(this).find("small.help-block").remove();
@@ -130,6 +131,14 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
             }
         }
         $(preloader).hide();
+        $(form).find('[type=submit]').each(function () {
+            $(this).off('click');
+            $(this).removeProp("disabled");
+            $(this).removeClass("disabled");
+            if ($(this).data('original-text')) {
+                $(this).html($(this).data('original-text'));
+            }
+        });
     });
 }
 

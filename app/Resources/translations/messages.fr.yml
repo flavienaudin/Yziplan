@@ -89,8 +89,12 @@ eventInvitation:
       placeholder: Votre e-mail
   maindata.card:
     title: A propos de votre invitation
-  message:
-    disconnect: Vous n'êtes pas %user% ?
+    text:
+      disconnect: Vous n'êtes pas %user% ?
+    new_warning_alert:
+      title: Quel est votre nom ?
+      message: Merci de renseigner votre nom pour valider l'invitation.
+      inputError: C'est mieux avec quelques lettres.
   error.message:
     unauthorized_access: Vous n'êtes pas inviter à cet événement.
 
@@ -157,6 +161,7 @@ global:
     nextStep: Prochaine étape
     delete: Supprimer
     add: Ajouter
+    loading: En cours...
   success:
     data_saved: Données sauvegardées
   error:

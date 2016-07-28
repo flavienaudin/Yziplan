@@ -64,4 +64,28 @@
     <script src="{{ asset("bundles/app/js/sweetalert.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
+
+    {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Entity\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
+        <script>
+            swal({
+                title: "{{ "eventInvitation.maindata.card.new_warning_alert.title"|trans|raw }}",
+                text: "{{ "eventInvitation.maindata.card.new_warning_alert.message"|trans|raw }}",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                animation: "slide-from-top",
+                inputPlaceholder: "{{ "eventInvitation.form.name.placeholder"|trans|raw }}"
+            }, function (inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("{{ "eventInvitation.maindata.card.new_warning_alert.inputError"|trans|raw }}");
+                    return false
+                }
+                $('#event_invitation_form_name').val(inputValue);
+                $('form#userEventInvitationAbout').submit();
+                swal.close();
+            });
+        </script>
+    {% endif %}
+
 {% endblock %}

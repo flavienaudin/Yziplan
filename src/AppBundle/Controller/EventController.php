@@ -78,7 +78,7 @@ class EventController extends Controller
                             $userEventInvitation = $eventInvitationManager->treatEventInvitationFormSubmission($eventInvitationForm);
                             // Update the form with the updated userEventInvitation
                             $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
-                            $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                            //$data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
                             $data['htmlContent'] = $this->renderView("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", array(
                                 "userEventInvitation" => $userEventInvitation,
                                 "userEventInvitationForm" => $eventInvitationForm->createView()

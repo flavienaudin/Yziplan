@@ -35,6 +35,7 @@
                     'userModuleInvitationToken' : "{{ userModuleInvitation.token }}",
                     'value' : $(this).val()
                 };
+                var icon = $(this).parent("label");
                 var preloader = $('.at-global-preloader');
                 $(preloader).show();
                 $.ajax({
@@ -42,6 +43,11 @@
                     method: "POST",
                     data: $data
                 }).done(function (responseJSON, textStatus, jqXHR) {
+                    var animation = 'bounceIn';
+                    icon.addClass('animated ' + animation);
+                    setTimeout(function () {
+                        icon.removeClass(animation);
+                    }, 1000);
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                 }).always(function (responseDataOrJSON) {
                     if (responseDataOrJSON.responseJSON) {

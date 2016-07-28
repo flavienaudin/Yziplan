@@ -45,7 +45,7 @@
             {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and userEventInvitation.appUser is null and userEventInvitation.status is not constant
             ('AppBundle\\Entity\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
                 <i class="m-r-10"><a href="{{ path('disconnectEventInvitation', {'token':userEventInvitation.event.token}) }}">
-                        {{ "eventInvitation.message.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}
+                        {{ "eventInvitation.maindata.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}
                     </a></i>
             {% endif %}
             {% if userEventInvitationForm is defined %}
