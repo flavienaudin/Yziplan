@@ -56,8 +56,7 @@ class EventInvitationManager
     private $eventInvitation;
 
 
-    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface
-    $session, UserManager $userManager, ModuleInvitationManager $moduleInvitationManager)
+    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, UserManager $userManager, ModuleInvitationManager $moduleInvitationManager)
     {
         $this->entityManager = $doctrine;
         $this->authorizationChecker = $authorizationChecker;
@@ -119,12 +118,13 @@ class EventInvitationManager
             } else {
                 if ($initializeIfNotExists && $this->authorizationChecker->isGranted(EventInvitationVoter::CREATE, $event)) {
                     $this->eventInvitation = $this->initializeEventInvitation($event, ($user instanceof User ? $user : null));
+                    $this->updateEventInvitation();
                 } else {
                     $this->eventInvitation = null;
                 }
             }
         }
-        if($saveInSession) {
+        if ($saveInSession) {
             if ($this->eventInvitation != null) {
                 $this->session->set(self::TOKEN_SESSION_KEY, $this->eventInvitation->getToken());
             } else {
@@ -163,20 +163,34 @@ class EventInvitationManager
         $this->eventInvitation = new EventInvitation();
         $this->eventInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         $this->eventInvitation->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+        $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
         if ($user != null) {
             $this->eventInvitation->setAppUser($user->getAppUser());
+            $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
         }
-        $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
         $event->addEventInvitation($this->eventInvitation);
 
         /** @var Module $module */
         foreach ($event->getModules() as $module) {
             // TODO check module authorization (every guests of the event, on ModuleInvitationOnly,...)
-            $moduleInvitation = $this->moduleInvitationManager->initializeModuleInvitation($module, $this->eventInvitation);
-            $this->eventInvitation->addModuleInvitation($moduleInvitation);
+            $this->moduleInvitationManager->initializeModuleInvitation($module, $this->eventInvitation, true);
         }
 
         return $this->eventInvitation;
+    }
+
+    /**
+     * @return bool true if the eventInvitaiton has been persisted false otherwise
+     */
+    public function updateEventInvitation()
+    {
+        if ($this->eventInvitation != null) {
+            $this->entityManager->persist($this->eventInvitation);
+            $this->entityManager->flush();
+            $this->session->set(self::TOKEN_SESSION_KEY, $this->eventInvitation->getToken());
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -193,10 +207,10 @@ class EventInvitationManager
      * @param Form $evtForm
      * @return EventInvitation|mixed
      */
-    public function treatEventFormSubmission(Form $evtForm)
+    public function treatEventInvitationFormSubmission(Form $evtForm)
     {
         $this->eventInvitation = $evtForm->getData();
-        if (!empty($this->eventInvitation->getName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+        if (!empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
         }
 
@@ -212,10 +226,7 @@ class EventInvitationManager
 
             }
         }
-
-        $this->entityManager->persist($this->eventInvitation);
-        $this->entityManager->flush();
-        $this->session->set(self::TOKEN_SESSION_KEY, $this->eventInvitation->getToken());
+        $this->updateEventInvitation();
 
         return $this->eventInvitation;
     }

@@ -17,6 +17,7 @@ use AppBundle\Utils\FlashBagTypes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,7 +75,7 @@ class EventController extends Controller
                 if ($request->isXmlHttpRequest()) {
                     if ($eventInvitationForm->isSubmitted()) {
                         if ($eventInvitationForm->isValid()) {
-                            $userEventInvitation = $eventInvitationManager->treatEventFormSubmission($eventInvitationForm);
+                            $userEventInvitation = $eventInvitationManager->treatEventInvitationFormSubmission($eventInvitationForm);
                             // Update the form with the updated userEventInvitation
                             $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
                             $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
@@ -92,7 +93,7 @@ class EventController extends Controller
                         }
                     }
                 } else if ($eventInvitationForm->isValid()) {
-                    $eventInvitationManager->treatEventFormSubmission($eventInvitationForm);
+                    $eventInvitationManager->treatEventInvitationFormSubmission($eventInvitationForm);
                     return $this->redirectToRoute('displayEvent', array(
                         'token' => $currentEvent->getToken(),
                         'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition)) ? $currentEvent->getTokenEdition() : null)));
@@ -175,7 +176,7 @@ class EventController extends Controller
                 // poll module case //
                 //////////////////////
                 if (array_key_exists('addPollProposalForm', $moduleDescription) && $moduleDescription['addPollProposalForm'] instanceof Form) {
-                    /** @var Form $addPollProposalForm */
+                    /** @var FormInterface $addPollProposalForm */
                     $addPollProposalForm = $moduleDescription['addPollProposalForm'];
                     $addPollProposalForm->handleRequest($request);
                     if ($request->isXmlHttpRequest()) {

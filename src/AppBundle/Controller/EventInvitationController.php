@@ -39,4 +39,15 @@ class EventInvitationController extends Controller
             'tokenEdition' => ($eventInvitation->getEvent()->getCreator() == $eventInvitation ? $eventInvitation->getEvent()->getTokenEdition() : null)));
     }
 
+    /**
+     * @Route("/{_locale}/disconnect-invitation/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="disconnectEventInvitation" )
+     */
+    public function disconnectEventInvitationAction($token, Request $request)
+    {
+        if ($request->hasSession()) {
+            $request->getSession()->remove(EventInvitationManager::TOKEN_SESSION_KEY);
+        }
+        return $this->redirectToRoute("displayEvent", array('token' => $token));
+    }
+
 }

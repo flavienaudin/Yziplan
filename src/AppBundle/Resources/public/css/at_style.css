@@ -21,6 +21,21 @@
 }
 
 /*---------------------------------
+    Global Preloader
+    Affiche un preloader dans un coin de la page le temps d'une requête Ajax par exemple
+----------------------------------*/
+.at-alert-no-js {
+    position: absolute;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+.at-alert-no-js:hover {
+    opacity: 0.25;
+}
+
+/*---------------------------------
     Carousel
 ----------------------------------*/
 .carousel .item {
@@ -114,6 +129,15 @@
     transform: rotate(-360deg);
 }
 
+
+/*---------------------------------
+    Poll Proposal Response
+----------------------------------*/
+.pollproposal-response > label.active{
+    border: black 1px solid;
+}
+
+
 /*---------------------------------
     Colored Header
 ----------------------------------*/
@@ -175,17 +199,18 @@
 
 /** end Colored Header **/
 
-
 /*---------------------------------
     Borders : b-Position-Color
 ---------------------------------*/
 
-.b-b-primary{
+.b-b-primary {
     border-bottom: #2196f3 solid 2px;
 }
-.b-b-w{
+
+.b-b-w {
     border-bottom: #eee solid 2px;
 }
+
 /** Borders **/
 
 /*---------------------------------
@@ -203,9 +228,6 @@
 }
 
 /** end Formulaires **/
-
-
-
 
 /*---------------------------------
     PollModule

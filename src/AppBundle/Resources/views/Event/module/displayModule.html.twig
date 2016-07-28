@@ -120,12 +120,6 @@
                                                 {{ form_row(moduleForm.guestsCanInvite, {'label':'module.form.guestsCanInvite.label', 'label_attr':{'class' : 'radio radio-inline'}}) }}
                                             </div>
                                         </div>
-
-                                        <div class="toggle-switch m-b-15">
-                                            <label for="ts_{{ module.tokenEdition }}" class="ts-label">Autoriser les discussions</label> <input id="ts_{{ module.tokenEdition }}" type="checkbox"
-                                                                                                                                                hidden="hidden"> <label
-                                                    for="ts_{{ module.tokenEdition }}" class="ts-helper"></label>
-                                        </div>
                                         <dl class="dl-horizontal">
                                             <dt>Status</dt>
                                             <dd>{{ module.status|trans }}</dd>
@@ -146,18 +140,19 @@
                     </div>
                 {% endblock moduleInformation %}
             </div>
-            {#</div><div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>#}
-            {% block moduleBody %}{% endblock moduleBody %}
+
         </div>
     </div>
-
-    <div class="card-footer">
-        {% block moduleFooter %}{% endblock moduleFooter %}
-    </div>
-
     {% if moduleForm is not null %}
         {{ form_end(moduleForm) }}
     {% endif %}
+
+    <div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
+        {% block moduleBody %}{% endblock moduleBody %}
+    </div>
+    <div class="card-footer">
+        {% block moduleFooter %}{% endblock moduleFooter %}
+    </div>
 
     {% block modalContainer %}{% endblock %}
 

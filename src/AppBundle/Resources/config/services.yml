@@ -23,6 +23,9 @@ services:
       class: AppBundle\Manager\ModuleInvitationManager
       arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@at.service.gentoken']
 
+  at.manager.pollproposal_response:
+      class: AppBundle\Manager\PollProposalResponseManager
+      arguments: ['@doctrine.orm.entity_manager']
 # Voters
   at.voter.event:
     class: AppBundle\Security\EventVoter
@@ -42,9 +45,15 @@ services:
     tags:
       - { name: security.voter }
 
+  at.voter.module_invitation:
+    class: AppBundle\Security\ModuleInvitationVoter
+    public: false
+    tags:
+      - { name: security.voter }
+
 # Event Subscribers
-  at.event_subscriber.kernel_response.:
-    class: AppBundle\EventListener\KernelResponseEventSubscriber
-    arguments: ['@translator.default','@session.flash_bag']
+  at.event_subscriber.kernel_events.:
+    class: AppBundle\EventListener\KernelEventsSubscriber
+    arguments: ['@translator.default','@session.flash_bag','@router']
     tags:
       - { name: kernel.event_subscriber }

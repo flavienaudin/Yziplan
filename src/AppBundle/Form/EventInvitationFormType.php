@@ -12,6 +12,7 @@ namespace AppBundle\Form;
 use AppBundle\Entity\EventInvitation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,11 +31,14 @@ class EventInvitationFormType extends AbstractType
             $eventInvitation = $formEvent->getData();
 
             $displayableName = $eventInvitation->getDisplayableName();
-            $form->add('name', TextType::class, array(
-                'required' => false,
-                'data' => $displayableName
+            $form
+                ->add('name', TextType::class, array(
+                    'required' => false,
+                    'data' => $displayableName
 
-            ));
+                ))
+                ->add('token', HiddenType::class)
+                ->add('tokenEdition', HiddenType::class);
 
             $email = $eventInvitation->getDisplayableEmail();
             $form->add('email', EmailType::class, array(

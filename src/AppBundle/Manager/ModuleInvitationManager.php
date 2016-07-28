@@ -13,6 +13,7 @@ use AppBundle\Entity\enum\ModuleInvitationStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
+use AppBundle\Entity\module\PollProposalResponse;
 use AppBundle\Entity\ModuleInvitation;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -29,9 +30,9 @@ class ModuleInvitationManager
     /** @var GenerateursToken */
     private $generateursToken;
 
+
     /** @var ModuleInvitation L'invitation au module en cours de traitement */
     private $moduleInvitation;
-
 
     public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, GenerateursToken $generateurToken)
     {
@@ -59,22 +60,37 @@ class ModuleInvitationManager
     }
 
 
-    public function retrieveModuleInvitation(EventInvitation $eventInvitation, Module $module){
+    /**
+     * Retrieve a ModuleInvitaiton by its token. Can be NULL if it is not found
+     * @param $token string Token of the moduleInvitation to look for
+     * @return ModuleInvitation|null
+     */
+    public function retrieveModuleInvitationByToken($token)
+    {
+        $moduleInvitationRepo = $this->entityManager->getRepository(ModuleInvitation::class);
+        $this->moduleInvitation = $moduleInvitationRepo->findOneBy(array('token' => $token));
+        return $this->moduleInvitation;
+    }
+
+    public function retrieveModuleInvitation(EventInvitation $eventInvitation, Module $module)
+    {
         $this->moduleInvitation = $eventInvitation->getModuleInvitationForModule($module);
-        if($this->moduleInvitation == null){
-            $this->moduleInvitation = $this->initializeModuleInvitation($module, $eventInvitation);
+        if ($this->moduleInvitation == null) {
+            $this->moduleInvitation = $this->initializeModuleInvitation($module, $eventInvitation, true);
         }
         return $this->moduleInvitation;
     }
 
     /**
      * Initialize a ModuleInvitation for the current module and the given EventInvitation
+     * @param $module Module le module pour lequel l'invitation est créée
      * @param $eventInvitation EventInvitation The EventInvitation owner of the ModuleInvitation
+     * @param $createNew boolean If true, a new ModuleInvitation is created
      * @return ModuleInvitation
      */
-    public function initializeModuleInvitation(Module $module, EventInvitation $eventInvitation)
+    public function initializeModuleInvitation(Module $module, EventInvitation $eventInvitation, $createNew)
     {
-        if($this->moduleInvitation == null) {
+        if ($this->moduleInvitation == null || $createNew) {
             $this->moduleInvitation = new ModuleInvitation();
         }
         $this->moduleInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
@@ -85,14 +101,14 @@ class ModuleInvitationManager
         return $this->moduleInvitation;
     }
 
-    public function initializeModuleInvitationsForEvent(Event $event, Module $module){
+    public function initializeModuleInvitationsForEvent(Event $event, Module $module)
+    {
         /** @var EventInvitation $eventInvitation */
-        foreach($event->getEventInvitations() as $eventInvitation){
+        foreach ($event->getEventInvitations() as $eventInvitation) {
             $this->moduleInvitation = $eventInvitation->getModuleInvitationForModule($module);
-            if($this->moduleInvitation == null){
-                $this->initializeModuleInvitation($module, $eventInvitation);
+            if ($this->moduleInvitation == null) {
+                $this->initializeModuleInvitation($module, $eventInvitation, true);
             }
         }
     }
-
 }
