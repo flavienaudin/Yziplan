@@ -95,7 +95,6 @@ class PollProposalResponse
      * Set pollProposal
      *
      * @param PollProposal $pollProposal
-     *
      * @return PollProposalResponse
      */
     public function setPollProposal(PollProposal $pollProposal)
@@ -106,9 +105,9 @@ class PollProposalResponse
     }
 
     /**
-     * Get proposalElement
+     * Get pollProposal
      *
-     * @return \AppBundle\Entity\module\PollProposalElement
+     * @return PollProposal
      */
     public function getPollProposal()
     {

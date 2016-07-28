@@ -129,6 +129,15 @@
     transform: rotate(-360deg);
 }
 
+
+/*---------------------------------
+    Poll Proposal Response
+----------------------------------*/
+.pollproposal-response > label.active{
+    border: black 1px solid;
+}
+
+
 /*---------------------------------
     Colored Header
 ----------------------------------*/

@@ -44,6 +44,13 @@ class PollModule
     private $pollProposals;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="sorting_type", type="string", length=127)
+     */
+    private $sortingType;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -64,6 +71,25 @@ class PollModule
     {
         return $this->id;
     }
+
+    /**
+     * @return string
+     */
+    public function getSortingType()
+    {
+        return $this->sortingType;
+    }
+
+    /**
+     * @param string $sortingType
+     * @return PollModule
+     */
+    public function setSortingType($sortingType)
+    {
+        $this->sortingType = $sortingType;
+        return $this;
+    }
+
 
     /**
      * Set module
@@ -123,5 +149,22 @@ class PollModule
     public function getPollProposals()
     {
         return $this->pollProposals;
+    }
+
+    /**
+     * Get the proposal by its Id
+     *
+     * @param $pollProposalId
+     * @return PollProposal|null
+     */
+    public function getPollProposalById($pollProposalId)
+    {
+        /** @var PollProposal $pollProposal */
+        foreach ($this->pollProposals as $pollProposal) {
+            if ($pollProposal->getId() == $pollProposalId) {
+                return $pollProposal;
+            }
+        }
+        return null;
     }
 }

@@ -11,6 +11,7 @@ namespace AppBundle\Manager;
 
 use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\enum\ModuleType;
+use AppBundle\Entity\enum\PollModuleSortingType;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
@@ -101,9 +102,10 @@ class ModuleManager
         $this->module->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         if ($type == ModuleType::POLL_MODULE) {
             $pollModule = new PollModule();
+            $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
             $this->module->setPollModule($pollModule);
         }
-        $moduleInvitation = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation);
+        $moduleInvitation = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
         $this->module->setCreator($moduleInvitation);
         $event->addModule($this->module);
         return $this->module;

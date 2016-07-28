@@ -140,18 +140,19 @@
                     </div>
                 {% endblock moduleInformation %}
             </div>
-            {#</div><div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>#}
-            {% block moduleBody %}{% endblock moduleBody %}
+
         </div>
     </div>
-
-    <div class="card-footer">
-        {% block moduleFooter %}{% endblock moduleFooter %}
-    </div>
-
     {% if moduleForm is not null %}
         {{ form_end(moduleForm) }}
     {% endif %}
+
+    <div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
+        {% block moduleBody %}{% endblock moduleBody %}
+    </div>
+    <div class="card-footer">
+        {% block moduleFooter %}{% endblock moduleFooter %}
+    </div>
 
     {% block modalContainer %}{% endblock %}
 

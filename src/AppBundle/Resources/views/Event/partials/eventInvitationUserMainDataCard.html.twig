@@ -41,11 +41,17 @@
         {% endif %}
     </div>
     <div class="card-footer card-padding-sm">
-        {% if userEventInvitationForm is defined %}
-            <div class="text-right">
+        <div class="text-right">
+            {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and userEventInvitation.appUser is null and userEventInvitation.status is not constant
+            ('AppBundle\\Entity\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
+                <i class="m-r-10"><a href="{{ path('disconnectEventInvitation', {'token':userEventInvitation.event.token}) }}">
+                        {{ "eventInvitation.message.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}
+                    </a></i>
+            {% endif %}
+            {% if userEventInvitationForm is defined %}
                 <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
     {% if userEventInvitationForm is defined %}
         {{ form_end(userEventInvitationForm ) }}

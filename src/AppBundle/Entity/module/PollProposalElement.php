@@ -44,9 +44,9 @@ class PollProposalElement
     private $orderIndex;
 
     /**
-     * Type de la valeur de la réponse
+     * Type de la valeur de l'élément (string, booléan, date...)
      *
-     * @var string
+     * @var string Cf. AppBundle/enum/PollProposalElementType
      *
      * @ORM\Column(name="type", type="string", length=255, nullable=true)
      */

@@ -89,6 +89,8 @@ eventInvitation:
       placeholder: Votre e-mail
   maindata.card:
     title: A propos de votre invitation
+  message:
+    disconnect: Vous n'êtes pas %user% ?
   error.message:
     unauthorized_access: Vous n'êtes pas inviter à cet événement.
 
@@ -132,6 +134,11 @@ pollmodule:
         name:
           label: Nom
 
+moduleInvitation:
+  error.message:
+    missing_data: Des informations sont manquantes pour traiter la requête.
+    unauthorized_access: Vous n'êtes pas autoriser à modifier cette réponse
+
 # Globals
 global:
   event: événement
@@ -157,6 +164,8 @@ global:
     unauthorized_access: Vous n'êtes pas autorisés à accéder à cette section.
     internal_server_error: Une erreur interne est survenue. Merci de vérifier vos données et de réessayer votre action.
     javascrip_disabled: Le javascript est désactivé par votre navigateur. Le site risque de mal réagir. Ré-activez-le afin de profiter pleinement des fonctionnalités que nous vous proposons
+  exception:
+    method_not_allowed_http: Cette requête n'est pas autorisée. Faites attention.
 
 status:
   in_creation: En cours de création

@@ -89,6 +89,8 @@ eventInvitation:
       placeholder: Your email
   maindata.card:
     title: About your invitation
+  message:
+    disconnect: You are not %user%?
   error.message:
     unauthorized_access: You are ot invited to this event.
 
@@ -132,6 +134,11 @@ pollmodule:
         name:
           label: Name
 
+moduleInvitation:
+  error.message:
+    missing_data: Data are missing to treat the request.
+    unauthorized_access: You are not allowed to edit this answer.
+
 # Globals
 global:
   event: Event
@@ -157,6 +164,8 @@ global:
     unauthorized_access: You haven't access to this section.
     internal_server_error: An internal error occured. Please, check your data and repeat the action.
     javascrip_disabled: Javascript is disabled by your web browser. The web site may react badly. Enable it to take full advantage of the features we offer.
+  exception:
+    method_not_allowed_http: This request is not allowed. Take care.
 
 status:
   in_creation: Being created
