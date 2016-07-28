@@ -161,7 +161,9 @@
     <div class="card-footer card-padding-sm">
         {% if eventForm is not null %}
             <div class="text-right">
-                <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+                <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                    {{ "global.button.save"|trans }}
+                </button>
             </div>
         {% endif %}
     </div>

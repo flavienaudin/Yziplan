@@ -157,6 +157,7 @@ global:
     nextStep: Next step
     delete: Delete
     add: Add
+    loading: In progress...
   success:
     data_saved: Information saved
   error:

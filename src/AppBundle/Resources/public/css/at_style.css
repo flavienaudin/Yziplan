@@ -12,8 +12,12 @@
     Affiche un preloader dans un coin de la page le temps d'une requête Ajax par exemple
 ----------------------------------*/
 .at-global-preloader {
-    position: absolute;
+    position: fixed;
     z-index: 100;
+    top: 10px;
+    left: 50%;
+    width: 40px;
+    margin-left: -20px ;
 }
 
 .at-global-preloader .plc-path {
@@ -134,7 +138,7 @@
     Poll Proposal Response
 ----------------------------------*/
 .pollproposal-response > label.active{
-    border: black 1px solid;
+    border: red 1px solid;
 }
 
 
