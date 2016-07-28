@@ -89,8 +89,12 @@ eventInvitation:
       placeholder: Your email
   maindata.card:
     title: About your invitation
-  message:
-    disconnect: You are not %user%?
+    text:
+      disconnect: You are not %user%?
+    new_warning_alert:
+      title: What's your name ?
+      message: Please, fill in your name to validate your invitation.
+      inputError: It's better with non-empty name
   error.message:
     unauthorized_access: You are ot invited to this event.
 

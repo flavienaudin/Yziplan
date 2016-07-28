@@ -42,7 +42,7 @@ class ModuleInvitationVoter extends Voter
 
         switch ($attribute) {
             case self::EDIT:
-                if ($moduleInvitation->getEventInvitation()->getAppUser() == null) {
+                if ($moduleInvitation->getEventInvitation()->getAppUser() == null || !$moduleInvitation->getEventInvitation()->getAppUser()->getUser()->isEnabled()) {
                     return true;
                 } elseif ($moduleInvitation->getEventInvitation()->getAppUser()->getUser() == $user) {
                     return true;
