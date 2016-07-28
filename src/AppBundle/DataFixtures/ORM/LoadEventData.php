@@ -13,6 +13,7 @@ use AppBundle\Entity\enum\EventInvitationStatus;
 use AppBundle\Entity\enum\EventStatus;
 use AppBundle\Entity\enum\ModuleInvitationStatus;
 use AppBundle\Entity\enum\ModuleStatus;
+use AppBundle\Entity\enum\PollModuleSortingType;
 use AppBundle\Entity\enum\PollProposalElementType;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
@@ -170,6 +171,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $modulePoll->setOrderIndex(1);
 
         $pollModule = new PollModule();
+        $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
         $modulePoll->setPollModule($pollModule);
 
         $pollProposal1 = new PollProposal();
@@ -239,6 +241,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $moduleEvent2->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $moduleEvent2->setTokenEdition($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $pollModuleEvent2 = new PollModule();
+        $pollModuleEvent2->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
         $moduleEvent2->setPollModule($pollModuleEvent2);
         $event2->addModule($moduleEvent2);
 
