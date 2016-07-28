@@ -13,8 +13,8 @@ $(document).ready(function () {
 /*-------------------*/
 $(document).on('mousemove', function (e) {
     $('.at-global-preloader').css({
-        left: e.pageX,
-        top: e.pageY
+        left: e.pageX+10,
+        top: e.pageY-10
     });
 });
 
