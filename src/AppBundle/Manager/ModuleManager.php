@@ -12,11 +12,13 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\enum\ModuleType;
 use AppBundle\Entity\enum\PollModuleSortingType;
+use AppBundle\Entity\enum\PollProposalElementType;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
 use AppBundle\Entity\module\PollProposal;
+use AppBundle\Entity\module\PollProposalElement;
 use AppBundle\Entity\ModuleInvitation;
 use AppBundle\Form\ModuleFormType;
 use AppBundle\Form\PollProposalFormType;
@@ -155,7 +157,7 @@ class ModuleManager
         return $this->module;
     }
 
-    public function treatAddPollProposalFormModule(Form $addPollProposalForm, Module $module)
+    public function treatAddPollProposalFormModule(FormInterface $addPollProposalForm, Module $module, Request $request = null)
     {
         $this->module = $module;
         /** @var PollProposal $pollProposal */
@@ -164,6 +166,30 @@ class ModuleManager
             return null;
         }
         $pollProposal->setPollModule($this->module->getPollModule());
+
+        if($addPollProposalForm->has('strPPElts')){
+            $strPPElts = $addPollProposalForm->get('strPPElts')->getData();
+            dump($strPPElts);
+            foreach ($strPPElts as $key => $value){
+                $newPPE = new PollProposalElement();
+                $newPPE->setName($key);
+                $newPPE->setType(PollProposalElementType::STRING);
+                $newPPE->setValString($value);
+                $pollProposal->addPollProposalElement($newPPE);
+            }
+        }
+        if($addPollProposalForm->has('intPPElts')){
+            $intPPElts = $addPollProposalForm->get('intPPElts')->getData();
+            dump($intPPElts);
+            foreach ($intPPElts as $key => $value){
+                $newPPE = new PollProposalElement();
+                $newPPE->setName($key);
+                $newPPE->setType(PollProposalElementType::INTEGER);
+                $newPPE->setValString($value);
+                $pollProposal->addPollProposalElement($newPPE);
+            }
+        }
+
         $this->entityManager->persist($pollProposal);
         $this->entityManager->flush();
         return $pollProposal;
@@ -186,7 +212,7 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
-                'addPollProposalForm' => $this->createAddPollProposalForm($module)->createView(),
+                'addPollProposalForm' => $this->createAddPollProposalForm($module, $userModuleInvitation)->createView(),
                 'userModuleInvitation' => $userModuleInvitation
             ));
         } elseif ($module->getExpenseModule() != null) {
@@ -207,9 +233,10 @@ class ModuleManager
 
     /**
      * @param PollProposal $pollProposal
+     * @param EventInvitation $userEventInvitation
      * @return string
      */
-    public function displayPollProposalRowPartial(PollProposal $pollProposal, EventInvitation $userEventInvitation = null)
+    public function displayPollProposalRowPartial(PollProposal $pollProposal, EventInvitation $userEventInvitation)
     {
         $userModuleInvitation = null ;
         if ($userEventInvitation != null) {
@@ -224,10 +251,13 @@ class ModuleManager
 
     /**
      * @param Module $module
+     * @param ModuleInvitation $userModuleInvitation
      * @return FormInterface
      */
-    public function createAddPollProposalForm(Module $module)
+    public function createAddPollProposalForm(Module $module, ModuleInvitation $userModuleInvitation = null)
     {
-        return $this->formFactory->createNamed("add_poll_proposal_form_" . $module->getToken(), PollProposalFormType::class, new PollProposal());
+        $newPollProposal = new PollProposal();
+        $newPollProposal->setCreator($userModuleInvitation);
+        return $this->formFactory->createNamed("add_poll_proposal_form_" . $module->getToken(), PollProposalFormType::class, $newPollProposal);
     }
 }

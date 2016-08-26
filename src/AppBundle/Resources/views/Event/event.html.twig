@@ -54,7 +54,6 @@
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select.min.css") }}">
 {% endblock stylesheets %}
 
 {% block javascripts %}
@@ -62,7 +61,6 @@
     <script src="{{ asset('bundles/app/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.js") }}"></script>
     <script src="{{ asset("bundles/app/js/sweetalert.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
 
     {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Entity\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}

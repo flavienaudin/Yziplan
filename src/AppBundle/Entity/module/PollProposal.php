@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\module;
 
 use AppBundle\Entity\EventInvitation;
+use AppBundle\Entity\ModuleInvitation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -48,11 +49,11 @@ class PollProposal
      ***********************************************************************/
 
     /**
-     * Personne ayant ajouté la depense
+     * ModuleInvitation de l'invité ayant ajouté la proposition
      *
-     * @var EventInvitation
+     * @var ModuleInvitation
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EventInvitation")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\ModuleInvitation")
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", nullable=true)
      *
      */
@@ -104,7 +105,7 @@ class PollProposal
     }
 
     /**
-     * @return EventInvitation
+     * @return ModuleInvitation
      */
     public function getCreator()
     {
@@ -112,7 +113,7 @@ class PollProposal
     }
 
     /**
-     * @param EventInvitation $creator
+     * @param ModuleInvitation $creator
      * @return PollProposal
      */
     public function setCreator($creator)
@@ -152,7 +153,7 @@ class PollProposal
      *
      * @return PollProposal
      */
-    public function addProposalElement(PollProposalElement $pollProposalElement)
+    public function addPollProposalElement(PollProposalElement $pollProposalElement)
     {
         $this->pollProposalElements[] = $pollProposalElement;
         $pollProposalElement->setPollProposal($this);
@@ -165,7 +166,7 @@ class PollProposal
      *
      * @param PollProposalElement $pollProposalElement
      */
-    public function removeProposalElement(PollProposalElement $pollProposalElement)
+    public function removePollProposalElement(PollProposalElement $pollProposalElement)
     {
         $this->pollProposalElements->removeElement($pollProposalElement);
     }
@@ -185,9 +186,9 @@ class PollProposal
      *
      * @param PollProposalResponse $pollProposalResponse
      *
-     * @return PollProposalElement
+     * @return PollProposal
      */
-    public function addProposalResponse(PollProposalResponse $pollProposalResponse)
+    public function addPollProposalResponse(PollProposalResponse $pollProposalResponse)
     {
         $this->pollProposalResponses[] = $pollProposalResponse;
         $pollProposalResponse->setPollProposal($this);

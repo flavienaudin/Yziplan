@@ -11,12 +11,16 @@ namespace AppBundle\Entity\enum;
 
 class PollProposalElementType
 {
-    const BOOLEAN = "Boolean";
-    const STRING = "String";
-    // Pour le stockage des dates
-    const TIME_STAMP = "TimeStamp";
-    const INTEGER = "Integer";
-    const FLOAT = "Float";
-    /// Pour les lieux
-    const PLACE = "Place";
+    // Text value
+    const STRING = "string";
+    // Number value
+    const INTEGER = "integer";
+
+    // TODO : futur types
+    // Datetime value
+    // const DATE_TIME = "datetime";
+    // const FLOAT = "float";
+    // const BOOLEAN = "boolean";
+    // Place value
+    // const PLACE = "place";
 }

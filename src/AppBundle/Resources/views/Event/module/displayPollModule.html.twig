@@ -95,6 +95,7 @@
                             }
                         }
                         $form[0].reset();
+                        $('.ppeCollection_{{ module.token }}').children('.form-group').each(function(){ $(this).remove();});
                     }
                 }, null, null);
             });

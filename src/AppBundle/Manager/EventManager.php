@@ -184,6 +184,7 @@ class EventManager
     }
 
     /**
+     * @param EventInvitation $userEventInvitation
      * @return array Un tableau de modules de l'événement au format :
      *  moduleId => [
      *  'module' => Module : Le module lui-meme
@@ -207,7 +208,7 @@ class EventManager
                     }
                     if ($module->getPollModule() != null) {
                         // TODO Vérifier les autorisations d'ajouter des propositions au module
-                        $moduleDescription['addPollProposalForm'] = $this->moduleManager->createAddPollProposalForm($module);
+                        $moduleDescription['addPollProposalForm'] = $this->moduleManager->createAddPollProposalForm($module, $userModuleInvitation);
                     }
                     $modules[$module->getId()] = $moduleDescription;
                 }

@@ -90,9 +90,9 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         //EventInvitation Creator
         $eventInvitationCreator = new EventInvitation();
         $eventInvitationCreator->setName("Jacky");
-        $eventInvitationCreator->setStatus('notNull:-)');
-        $eventInvitationCreator->setToken('notNull1:-)');
-        $eventInvitationCreator->setTokenEdition('notNull1:-)');
+        $eventInvitationCreator->setStatus(EventInvitationStatus::VALID);
+        $eventInvitationCreator->setToken('azerty');
+        $eventInvitationCreator->setTokenEdition('ytreza');
         $userprincipal->getAppUser()->addEventInvitation($eventInvitationCreator);
         $event->addEventInvitation($eventInvitationCreator);
         $event->setCreator($eventInvitationCreator);
@@ -166,6 +166,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $modulePoll->setToken("quand123");
         $modulePoll->setTokenEdition("quand321");
         $modulePoll->setStatus(EventStatus::IN_ORGANIZATION);
+        $moduleExpense->setOrderIndex(1);
 
         $pollModule = new PollModule();
         $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
@@ -174,21 +175,19 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $pollProposal1 = new PollProposal();
         $pollProposal1->setName("PollModule Proposal Nom 1");
         $pollProposal1->setDescription("PollModule Proposal description 1");
-        $pollProposal1->setCreator($eventInvitationCreator);
         $pollProposalElement1 = new PollProposalElement();
         $pollProposalElement1->setName("PMP1 elt1");
         $pollProposalElement1->setType(PollProposalElementType::STRING);
-        $pollProposal1->addProposalElement($pollProposalElement1);
+        $pollProposal1->addPollProposalElement($pollProposalElement1);
         $pollProposalElement2 = new PollProposalElement();
         $pollProposalElement2->setName("PMP1 elt22");
         $pollProposalElement2->setType(PollProposalElementType::STRING);
-        $pollProposal1->addProposalElement($pollProposalElement2);
+        $pollProposal1->addPollProposalElement($pollProposalElement2);
         $pollModule->addPollProposal($pollProposal1);
 
         $pollProposal2 = new PollProposal();
         $pollProposal2->setName("PollModule Proposal Nom 2");
         $pollProposal2->setDescription("PollModule Proposal description 2");
-        $pollProposal2->setCreator($eventInvitationCreator);
         $pollModule->addPollProposal($pollProposal2);
 
         $moduleInvitation1 = new ModuleInvitation();
@@ -199,6 +198,9 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $modulePoll->setCreator($moduleInvitation1);
         $moduleInvitation1->initPollModuleResponse();
         $eventInvitationCreator->addModuleInvitation($moduleInvitation1);
+
+        $pollProposal1->setCreator($moduleInvitation1);
+        $pollProposal2->setCreator($moduleInvitation1);
 
         $moduleInvitation2 = new ModuleInvitation();
         $moduleInvitation2->setModule($modulePoll);

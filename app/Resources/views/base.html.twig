@@ -10,13 +10,14 @@
     <title>{% block title %}{{ 'base.page.meta_title'|trans }}{% endblock %}</title>
 
     {% block stylesheets %}
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery-ui.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-3.3.6-dist/bootstrap.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/animate.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/waves.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/material-design-iconic-font.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.mCustomScrollbar.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootgrid.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select-1.10.0/bootstrap-select.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select-1.10.0/bootstrap-select.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/palette.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/toastr.min.css") }}">
 
@@ -34,7 +35,10 @@
     </div>
 </noscript>
 <script src="{{ asset("bundles/app/js/jquery.min.js") }}"></script>
+<script src="{{ asset("bundles/app/js/jquery-ui.min.js") }}"></script>
 <script src="{{ asset("bundles/app/js/bootstrap-3.3.6-dist/bootstrap.js") }}"></script>
+<script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>
+
 {% block header_body %}
     <header id="header" class="media">
         <div class="pull-left h-logo">
@@ -206,7 +210,7 @@
 </div><![endif]-->
 
 {% block javascripts %}
-    <script src="{{ asset("bundles/app/js/bootstrap-select-1.10.0/bootstrap-select.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-select-1.10.0/bootstrap-select.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/waves.js") }}"></script>
     <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
