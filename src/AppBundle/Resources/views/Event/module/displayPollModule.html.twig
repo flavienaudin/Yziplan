@@ -86,18 +86,29 @@
             $('form#addPollProposalForm_{{ module.token }}').on('submit', function (e) {
                 var $form = $(this);
                 ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                    $('#addPollProposal_modal_{{ module.token }}').modal('toggle');
-                    if (responseJSON.htmlContent) {
-                        if (responseJSON.htmlContent.pollProposalRowDisplay) {
-                            $('#pp-row-group-{{ module.token }}').append(responseJSON.htmlContent.pollProposalRowDisplay);
-                            if ($('#pp-empty-{{ module.token }}')[0]) {
-                                $('#pp-empty-{{ module.token }}').remove();
+                            $('#addPollProposal_modal_{{ module.token }}').modal('toggle');
+                            if (responseJSON.htmlContent) {
+                                if (responseJSON.htmlContent.pollProposalRowDisplay) {
+                                    $('#pp-row-group-{{ module.token }}').append(responseJSON.htmlContent.pollProposalRowDisplay);
+                                    if ($('#pp-empty-{{ module.token }}')[0]) {
+                                        $('#pp-empty-{{ module.token }}').remove();
+                                    }
+                                }
+                                $form[0].reset();
+                                $('.strPPECollection_{{ module.token }}').children('.form-group').each(function () {
+                                    $(this).find('[class*=-remove]').each(function () {
+                                        $(this).trigger('click');
+                                    });
+                                });
+                                $('.intPPECollection_{{ module.token }}').children('.form-group').each(function () {
+                                    $(this).find('[class*=-remove]').each(function () {
+                                        $(this).trigger('click');
+                                    });
+                                });
                             }
-                        }
-                        $form[0].reset();
-                        $('.ppeCollection_{{ module.token }}').children('.form-group').each(function(){ $(this).remove();});
-                    }
-                }, null, null);
+                        },
+                        null, null
+                );
             });
         </script>
     {% endif %}

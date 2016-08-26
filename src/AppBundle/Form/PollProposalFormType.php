@@ -40,8 +40,7 @@ class PollProposalFormType extends AbstractType
                 'mapped' => false,
                 'by_reference' => false,
                 'delete_empty' => true,
-                'prototype_name' => '__str_ppe__',
-                ''
+                'prototype_name' => '__str_ppe__'
 
             ))
             ->add("intPPElts", KeyValueType::class, array(
