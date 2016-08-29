@@ -15,10 +15,10 @@ class PollProposalElementType
     const STRING = "string";
     // Number value
     const INTEGER = "integer";
+    // Datetime value
+    const DATE_TIME = "datetime";
 
     // TODO : futur types
-    // Datetime value
-    // const DATE_TIME = "datetime";
     // const FLOAT = "float";
     // const BOOLEAN = "boolean";
     // Place value

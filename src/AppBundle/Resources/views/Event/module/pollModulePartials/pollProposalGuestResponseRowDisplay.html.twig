@@ -1,10 +1,8 @@
 <div class="pc-ligne">
     <div class="pcl-celulle ">
-        {{ pollProposal.name }}<br>
-        <small>{{ pollProposal.description }}</small>
-        <br>
         {% for ppElt in pollProposal.pollProposalElements %}
-            {{ ppElt.name }} ({{ ppElt.type }}){% if not loop.last %}, {% endif %}
+            {% set val = attribute(ppElt, 'val'~ppElt.type) %}
+            {{ ppElt.name }} : {{ ppElt.type==constant('AppBundle\\Entity\\enum\\PollProposalElementType::DATE_TIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
         {% endfor %}
     </div>
     {% if userModuleInvitation is defined and userModuleInvitation is not null %}

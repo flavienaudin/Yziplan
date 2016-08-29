@@ -14,12 +14,25 @@
                 </div>
             </div>
             <div class="modal-body">
-                {{ form_row(addPollProposalForm.name) }}
-                {{ form_row(addPollProposalForm.description) }}
-
                 <div class="alert alert-info" id="{{ module.token }}_container">
-                    {{ form_row(addPollProposalForm.strPPElts, {'attr':{'class':'strPPECollection_'~module.token, 'data-prefix':module.token~'_str'}}) }}
-                    {{ form_row(addPollProposalForm.intPPElts, {'attr':{'class':'intPPECollection_'~module.token, 'data-prefix':module.token~'_str'}}) }}
+                    {{ form_row(addPollProposalForm.strPPElts, {
+                        'label':'AddText',
+                        'attr':{
+                            'class':'strPPECollection_'~module.token,
+                            'data-prefix':module.token~'_str'
+                        }}) }}
+                    {{ form_row(addPollProposalForm.intPPElts, {
+                        'label':'AddInt',
+                        'attr':{
+                            'class':'intPPECollection_'~module.token,
+                            'data-prefix':module.token~'_integer'
+                        }}) }}
+                    {{ form_row(addPollProposalForm.datetimePPElts, {
+                        'label':'AddDatetime',
+                        'attr':{
+                            'class':'datetimePPECollection_'~module.token,
+                            'data-prefix':module.token~'_datetime'
+                        }}) }}
                 </div>
 
                 <div class="alert alert-warning">
@@ -46,21 +59,22 @@
     $('.strPPECollection_{{ module.token }}').collection(
             {
                 'drag_drop': false,
-                'add': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-plus"></i></a>'{#,
-                 'remove': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-minus"></i></a>',
-                 'up': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-triangle-up"></i></a>',
-                 'down': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-triangle-down"></i></a>',
-                'prefix': '{{ module.token }}_str'#}
+                'add': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-comment-text"></i></a>'
             }
     );
     $('.intPPECollection_{{ module.token }}').collection(
             {
                 'drag_drop': false,
-                'add': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-plus"></i></a>'{#,
-                'remove': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-minus"></i></a>',
-                'up': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-triangle-up"></i></a>',
-                'down': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-triangle-down"></i></a>',#}
-                {#'prefix': '{{ module.token }}_int' #}
+                'add': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-plus-1"></i></a>'
+            }
+    );
+    $('.datetimePPECollection_{{ module.token }}').collection(
+            {
+                'drag_drop': false,
+                'add': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-time"></i></a>',
+                'after_add' : function(collection, element){
+                    jsPlugginActivation();
+                }
             }
     );
 </script>

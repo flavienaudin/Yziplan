@@ -105,6 +105,11 @@
                                         $(this).trigger('click');
                                     });
                                 });
+                                $('.datetimePPECollection_{{ module.token }}').children('.form-group').each(function () {
+                                    $(this).find('[class*=-remove]').each(function () {
+                                        $(this).trigger('click');
+                                    });
+                                });
                             }
                         },
                         null, null

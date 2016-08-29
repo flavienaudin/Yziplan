@@ -231,6 +231,10 @@
     background-color: transparent;
 }
 
+.clockpicker-popover{
+    z-index : 1100;
+}
+
 /** end Formulaires **/
 
 /*---------------------------------

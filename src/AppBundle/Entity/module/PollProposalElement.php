@@ -70,6 +70,15 @@ class PollProposalElement
      */
     private $valInteger;
 
+    /**
+     * Contient la valeur si le type == PollProposalElementType::DATE_TIME
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(name="val_datetime", type="datetime", nullable=true)
+     */
+    private $valDatetime;
+
     /***********************************************************************
      *                      Getters and Setters
      ***********************************************************************/
@@ -197,6 +206,24 @@ class PollProposalElement
     public function setValInteger($valInteger)
     {
         $this->valInteger = $valInteger;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getValDatetime()
+    {
+        return $this->valDatetime;
+    }
+
+    /**
+     * @param \DateTime $valDatetime
+     * @return PollProposalElement
+     */
+    public function setValDatetime($valDatetime)
+    {
+        $this->valDatetime = $valDatetime;
         return $this;
     }
 

@@ -134,7 +134,7 @@ class ModuleInvitation
                 }
                 if (!$existResponse) {
                     $newResponse = new PollProposalResponse();
-                    $pollProposal->addProposalResponse($newResponse);
+                    $pollProposal->addPollProposalResponse($newResponse);
                     $this->addPollProposalResponse($newResponse);
                 }
             }

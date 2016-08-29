@@ -169,7 +169,6 @@ class ModuleManager
 
         if($addPollProposalForm->has('strPPElts')){
             $strPPElts = $addPollProposalForm->get('strPPElts')->getData();
-            dump($strPPElts);
             foreach ($strPPElts as $key => $value){
                 $newPPE = new PollProposalElement();
                 $newPPE->setName($key);
@@ -180,12 +179,21 @@ class ModuleManager
         }
         if($addPollProposalForm->has('intPPElts')){
             $intPPElts = $addPollProposalForm->get('intPPElts')->getData();
-            dump($intPPElts);
             foreach ($intPPElts as $key => $value){
                 $newPPE = new PollProposalElement();
                 $newPPE->setName($key);
                 $newPPE->setType(PollProposalElementType::INTEGER);
-                $newPPE->setValString($value);
+                $newPPE->setValInteger($value);
+                $pollProposal->addPollProposalElement($newPPE);
+            }
+        }
+        if($addPollProposalForm->has('datetimePPElts')){
+            $datetimePPElts = $addPollProposalForm->get('datetimePPElts')->getData();
+            foreach ($datetimePPElts as $key => $value){
+                $newPPE = new PollProposalElement();
+                $newPPE->setName($key);
+                $newPPE->setType(PollProposalElementType::DATE_TIME);
+                $newPPE->setValDatetime($value);
                 $pollProposal->addPollProposalElement($newPPE);
             }
         }

@@ -173,21 +173,29 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $modulePoll->setPollModule($pollModule);
 
         $pollProposal1 = new PollProposal();
-        $pollProposal1->setName("PollModule Proposal Nom 1");
-        $pollProposal1->setDescription("PollModule Proposal description 1");
         $pollProposalElement1 = new PollProposalElement();
-        $pollProposalElement1->setName("PMP1 elt1");
+        $pollProposalElement1->setName("Occasion");
         $pollProposalElement1->setType(PollProposalElementType::STRING);
+        $pollProposalElement1->setValString("Crémaillère");
         $pollProposal1->addPollProposalElement($pollProposalElement1);
         $pollProposalElement2 = new PollProposalElement();
-        $pollProposalElement2->setName("PMP1 elt22");
+        $pollProposalElement2->setName("Complt.");
         $pollProposalElement2->setType(PollProposalElementType::STRING);
+        $pollProposalElement2->setValString("Party");
         $pollProposal1->addPollProposalElement($pollProposalElement2);
         $pollModule->addPollProposal($pollProposal1);
 
         $pollProposal2 = new PollProposal();
-        $pollProposal2->setName("PollModule Proposal Nom 2");
-        $pollProposal2->setDescription("PollModule Proposal description 2");
+        $pollProposalElement11 = new PollProposalElement();
+        $pollProposalElement11->setName("Occasion");
+        $pollProposalElement11->setType(PollProposalElementType::STRING);
+        $pollProposalElement11->setValString("Anniversaire");
+        $pollProposal2->addPollProposalElement($pollProposalElement11);
+        $pollProposalElement22 = new PollProposalElement();
+        $pollProposalElement22->setName("Complt.");
+        $pollProposalElement22->setType(PollProposalElementType::STRING);
+        $pollProposalElement22->setValString("30 ans");
+        $pollProposal2->addPollProposalElement($pollProposalElement22);
         $pollModule->addPollProposal($pollProposal2);
 
         $moduleInvitation1 = new ModuleInvitation();

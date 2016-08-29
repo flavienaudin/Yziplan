@@ -29,21 +29,6 @@ class PollProposal
      */
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255)
-     * @Assert\NotBlank()
-     */
-    private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    private $description;
-
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
@@ -214,53 +199,5 @@ class PollProposal
     public function getPollProposalResponses()
     {
         return $this->pollProposalResponses;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return PollProposal
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return PollProposal
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 }
