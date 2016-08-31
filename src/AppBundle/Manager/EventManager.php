@@ -13,7 +13,10 @@ use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
+use AppBundle\Entity\module\PollProposal;
+use AppBundle\Entity\module\PollProposalElement;
 use AppBundle\Form\EventFormType;
+use AppBundle\Form\PollProposalFormType;
 use AppBundle\Security\ModuleVoter;
 use ATUserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -189,7 +192,10 @@ class EventManager
      *  moduleId => [
      *  'module' => Module : Le module lui-meme
      *  'moduleForm' => Form : le formulaire d'édition de l'événement si editable
-     *  'addPollProposalForm' => Form : uniquement pour un PollModule
+     *  'pollProposalAddForm' => Form : uniquement pour un PollModule
+     *  'pollProposalEditionForms' => [
+     *      "pollProposal.id" => Form : s'il est possible d'éditer le pollProposal
+     *  ]
      * ]
      */
     public function getModulesToDisplay(EventInvitation $userEventInvitation)
@@ -208,7 +214,7 @@ class EventManager
                     }
                     if ($module->getPollModule() != null) {
                         // TODO Vérifier les autorisations d'ajouter des propositions au module
-                        $moduleDescription['addPollProposalForm'] = $this->moduleManager->createAddPollProposalForm($module, $userModuleInvitation);
+                        $moduleDescription['pollProposalAddForm'] = $this->moduleManager->createPollProposalAddForm($module, $userModuleInvitation);
                     }
                     $modules[$module->getId()] = $moduleDescription;
                 }

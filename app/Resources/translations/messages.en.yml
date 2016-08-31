@@ -131,12 +131,19 @@ module:
     add: You must set your name on your invitation.
 
 pollmodule:
-  modale:
+  modal:
     addPollProposal:
       title: Add a proposal
+    editPollProposal:
+      title: Edit proposal
+    all:
       form:
-        name:
-          label: Name
+        string_collection:
+          label: Add a text
+        integer_collection:
+          label: Add an integer
+        datetime_collection:
+          label: Add a datetime
 
 moduleInvitation:
   error.message:

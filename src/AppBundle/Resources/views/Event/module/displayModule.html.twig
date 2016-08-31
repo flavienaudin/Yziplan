@@ -154,7 +154,9 @@
         {% block moduleFooter %}{% endblock moduleFooter %}
     </div>
 
-    {% block modalContainer %}{% endblock %}
+    <div id="modal-container-block-{{ module.token }}">
+        {% block modalContainer %}{% endblock %}
+    </div>
 
     {% block JSmodule %}
         <script>

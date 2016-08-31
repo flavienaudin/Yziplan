@@ -29,6 +29,13 @@ class PollProposal
      */
     private $id;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="deleted", type="boolean")
+     */
+    private $deleted = false;
+
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
@@ -87,6 +94,24 @@ class PollProposal
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param mixed $deleted
+     * @return PollProposal
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+        return $this;
     }
 
     /**

@@ -131,12 +131,19 @@ module:
     add: Vous devez renseigner votre nom sur l'invitation.
 
 pollmodule:
-  modale:
+  modal:
     addPollProposal:
       title: Ajouter une proposition
+    editPollProposal:
+      title: Editer la proposition
+    all:
       form:
-        name:
-          label: Nom
+        string_collection:
+          label: Ajouter un texte
+        integer_collection:
+          label: Ajouter un nombre
+        datetime_collection:
+          label: Ajouter une date
 
 moduleInvitation:
   error.message:

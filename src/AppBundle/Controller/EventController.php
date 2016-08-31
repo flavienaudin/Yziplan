@@ -175,35 +175,35 @@ class EventController extends Controller
                 //////////////////////
                 // poll module case //
                 //////////////////////
-                if (array_key_exists('addPollProposalForm', $moduleDescription) && $moduleDescription['addPollProposalForm'] instanceof Form) {
-                    /** @var FormInterface $addPollProposalForm */
-                    $addPollProposalForm = $moduleDescription['addPollProposalForm'];
-                    $addPollProposalForm->handleRequest($request);
+                if (array_key_exists('pollProposalAddForm', $moduleDescription) && $moduleDescription['pollProposalAddForm'] instanceof Form) {
+                    /** @var FormInterface $pollProposalAddForm */
+                    $pollProposalAddForm = $moduleDescription['pollProposalAddForm'];
+                    $pollProposalAddForm->handleRequest($request);
                     if ($request->isXmlHttpRequest()) {
-                        if ($addPollProposalForm->isSubmitted()) {
-                            if ($addPollProposalForm->isValid()) {
-                                $pollProposal = $moduleManager->treatAddPollProposalFormModule($addPollProposalForm, $moduleDescription['module'], $request);
+                        if ($pollProposalAddForm->isSubmitted()) {
+                            if ($pollProposalAddForm->isValid()) {
+                                $pollProposal = $moduleManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
                                 $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
                                 $data['htmlContent']['pollProposalRowDisplay'] = $moduleManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
                                 return new JsonResponse($data, Response::HTTP_OK);
                             } else {
                                 $data["formErrors"] = array();
-                                foreach ($addPollProposalForm->getErrors(true) as $error) {
+                                foreach ($pollProposalAddForm->getErrors(true) as $error) {
                                     $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
                                 }
                                 return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                             }
                         }
                     } else {
-                        if ($addPollProposalForm->isValid()) {
-                            $moduleManager->treatAddPollProposalFormModule($addPollProposalForm, $moduleDescription['module']);
+                        if ($pollProposalAddForm->isValid()) {
+                            $moduleManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
                             return $this->redirect($this->generateUrl('displayEvent', array(
                                     'token' => $currentEvent->getToken(),
                                     'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition)) ? $currentEvent->getTokenEdition() : null)
                                 )) . '#module-' . $moduleDescription['module']->getToken());
                         }
                     }
-                    $modules[$moduleId]['addPollProposalForm'] = $addPollProposalForm->createView();
+                    $modules[$moduleId]['pollProposalAddForm'] = $pollProposalAddForm->createView();
                 }
             }
 

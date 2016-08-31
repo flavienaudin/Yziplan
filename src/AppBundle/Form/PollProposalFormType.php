@@ -51,7 +51,6 @@ class PollProposalFormType extends AbstractType
                 )
 
             ))
-
             ->add("datetimePPElts", KeyValueType::class, array(
                 'value_type' => DateTimeType::class,
                 'required' => false,
@@ -80,7 +79,7 @@ class PollProposalFormType extends AbstractType
                 foreach($pollProposal->getPollProposalElements() as $ppElt){
                     if($ppElt->getType() == PollProposalElementType::STRING){
                         $strPPE[$ppElt->getName()] = $ppElt->getValString();
-                    }elseif($ppElt->getType() == PollProposalElementType::STRING){
+                    }elseif($ppElt->getType() == PollProposalElementType::INTEGER){
                         $intPPE[$ppElt->getName()] = $ppElt->getValInteger();
                     }elseif($ppElt->getType() == PollProposalElementType::DATE_TIME){
                         $datetimePPE[$ppElt->getName()] = $ppElt->getValDatetime();
