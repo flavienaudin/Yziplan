@@ -94,15 +94,30 @@
                     }, null, null);
                 });
                 $('#removePP_{{ pollProposal.id}}').on('click', function(e){
-                    ajaxRequest($(this), e, function (responseJSON, textStatus, jqXHR) {
-                        if (responseJSON.actionResult) {
-                            $('#pp_display_row_{{ pollProposal.id }}').remove();
-                            var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
-                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function(){
-                                $(this).remove();
-                            });
+                    e.preventDefault();
+                    var removePPLink = $(this);
+                    swal({
+                        title: '{{ "pollmodule.alert.confirm_proposal_deletion.title"|trans }}',
+                        text: '{{ "pollmodule.alert.confirm_proposal_deletion.message"|trans }}',
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: '{{ "global.button.delete"|trans }}',
+                        closeOnConfirm: true,
+                        showLoaderOnConfirm: true
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            ajaxRequest(removePPLink, e, function (responseJSON, textStatus, jqXHR) {
+                                if (responseJSON.actionResult) {
+                                    $('#pp_display_row_{{ pollProposal.id }}').remove();
+                                    var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
+                                    $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function(){
+                                        $(this).remove();
+                                    });
+                                }
+                            }, null, null);
                         }
-                    }, null, null);
+                    });
                 });
             </script>
         {% endif %}

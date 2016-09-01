@@ -144,6 +144,11 @@ pollmodule:
           label: Ajouter un nombre
         datetime_collection:
           label: Ajouter une date
+  alert:
+    confirm_proposal_deletion:
+      title: Etes-vous sûr de vouloir supprimer cette proposition ?
+      message: Cette action est irréversible
+
 
 moduleInvitation:
   error.message:
