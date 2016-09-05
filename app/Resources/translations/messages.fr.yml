@@ -184,6 +184,7 @@ global:
     unauthorized_access: Vous n'êtes pas autorisés à accéder à cette section.
     internal_server_error: Une erreur interne est survenue. Merci de vérifier vos données et de réessayer votre action.
     javascrip_disabled: Le javascript est désactivé par votre navigateur. Le site risque de mal réagir. Ré-activez-le afin de profiter pleinement des fonctionnalités que nous vous proposons
+    invalid_form: Des données du formulaire sont invalides.
   exception:
     access_denied_http: Vous n'avez pas accès à ces données. Connectez-vous avec l'utilisateur adéquate.
     method_not_allowed_http: Cette requête n'est pas autorisée. Faites attention.

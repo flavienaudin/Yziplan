@@ -23,6 +23,10 @@ services:
       class: AppBundle\Manager\ModuleInvitationManager
       arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@at.service.gentoken']
 
+  at.manager.pollproposal:
+      class: AppBundle\Manager\PollProposalManager
+      arguments: ['@form.factory']
+
   at.manager.pollproposal_response:
       class: AppBundle\Manager\PollProposalResponseManager
       arguments: ['@doctrine.orm.entity_manager']

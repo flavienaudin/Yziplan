@@ -175,31 +175,37 @@ class ModuleManager
         if($pollProposalAddForm->has('strPPElts')){
             $strPPElts = $pollProposalAddForm->get('strPPElts')->getData();
             foreach ($strPPElts as $key => $value){
-                $newPPE = new PollProposalElement();
-                $newPPE->setName($key);
-                $newPPE->setType(PollProposalElementType::STRING);
-                $newPPE->setValString($value);
-                $pollProposal->addPollProposalElement($newPPE);
+                if(!empty($value)) {
+                    $newPPE = new PollProposalElement();
+                    $newPPE->setName($key);
+                    $newPPE->setType(PollProposalElementType::STRING);
+                    $newPPE->setValString($value);
+                    $pollProposal->addPollProposalElement($newPPE);
+                }
             }
         }
         if($pollProposalAddForm->has('intPPElts')){
             $intPPElts = $pollProposalAddForm->get('intPPElts')->getData();
             foreach ($intPPElts as $key => $value){
-                $newPPE = new PollProposalElement();
-                $newPPE->setName($key);
-                $newPPE->setType(PollProposalElementType::INTEGER);
-                $newPPE->setValInteger($value);
-                $pollProposal->addPollProposalElement($newPPE);
+                if(!empty($value)) {
+                    $newPPE = new PollProposalElement();
+                    $newPPE->setName($key);
+                    $newPPE->setType(PollProposalElementType::INTEGER);
+                    $newPPE->setValInteger($value);
+                    $pollProposal->addPollProposalElement($newPPE);
+                }
             }
         }
         if($pollProposalAddForm->has('datetimePPElts')){
             $datetimePPElts = $pollProposalAddForm->get('datetimePPElts')->getData();
             foreach ($datetimePPElts as $key => $value){
-                $newPPE = new PollProposalElement();
-                $newPPE->setName($key);
-                $newPPE->setType(PollProposalElementType::DATE_TIME);
-                $newPPE->setValDatetime($value);
-                $pollProposal->addPollProposalElement($newPPE);
+                if(!empty($value)) {
+                    $newPPE = new PollProposalElement();
+                    $newPPE->setName($key);
+                    $newPPE->setType(PollProposalElementType::DATE_TIME);
+                    $newPPE->setValDatetime($value);
+                    $pollProposal->addPollProposalElement($newPPE);
+                }
             }
         }
 

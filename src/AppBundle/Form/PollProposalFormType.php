@@ -37,7 +37,6 @@ class PollProposalFormType extends AbstractType
                 'attr' => array(
                     'data-type'=> 'string'
                 )
-
             ))
             ->add("intPPElts", KeyValueType::class, array(
                 'value_type' => IntegerType::class,
@@ -49,7 +48,6 @@ class PollProposalFormType extends AbstractType
                 'attr' => array(
                     'data-type'=> 'integer'
                 )
-
             ))
             ->add("datetimePPElts", KeyValueType::class, array(
                 'value_type' => DateTimeType::class,

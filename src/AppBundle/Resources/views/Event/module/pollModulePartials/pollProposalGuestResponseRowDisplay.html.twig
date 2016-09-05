@@ -83,18 +83,22 @@
                id="removePP_{{ pollProposal.id}}">Supprimer</a>
             <script>
                 $('#getPPEditionForm_{{ pollProposal.id}}').on('click', function (e){
-                   ajaxRequest($(this), e, function (responseJSON, textStatus, jqXHR) {
-                        if (responseJSON.htmlContent) {
-                            var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
-                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function(){
-                                $(this).remove();
-                            });
-                            moduleModalsContainer.append(responseJSON.htmlContent);
-                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function(){
-                                $(this).modal('show');
-                            });
-                        }
-                    }, null, null);
+                    e.preventDefault();
+                    var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
+                    var modals = $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id');
+                    if ($(modals).length > 0) {
+                        $(modals).first().modal('toggle');
+                    } else {
+                        ajaxRequest($(this), e, function (responseJSON, textStatus, jqXHR) {
+                            if (responseJSON.htmlContent) {
+                                var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
+                                moduleModalsContainer.append(responseJSON.htmlContent);
+                                $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
+                                    $(this).modal('show');
+                                });
+                            }
+                        }, null, null);
+                    }
                 });
                 $('#removePP_{{ pollProposal.id}}').on('click', function(e){
                     e.preventDefault();

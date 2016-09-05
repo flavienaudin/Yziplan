@@ -34,14 +34,20 @@ class PollModuleController extends Controller
                 $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
                 return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
             }
-            $pollProposalEditionForm = $this->createForm(PollProposalFormType::class, $pollProposal);
+            $pollProposalEditionForm = $this->get("at.manager.pollproposal")->createModuleForm($pollProposal);
             $pollProposalEditionForm->handleRequest($request);
-            if ($pollProposalEditionForm->isValid()) {
-                $moduleManager = $this->get("at.manager.module");
-                $pollProposal = $moduleManager->treatPollProposalForm($pollProposalEditionForm, $pollProposal->getPollModule()->getModule());
-                $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                $data['htmlContent'] = $moduleManager->displayPollProposalRowPartial($pollProposal, $moduleInvitation->getEventInvitation());
-                return new JsonResponse($data, Response::HTTP_OK);
+            if ($pollProposalEditionForm->isSubmitted()) {
+                if ($pollProposalEditionForm->isValid()) {
+                    $moduleManager = $this->get("at.manager.module");
+                    $pollProposal = $moduleManager->treatPollProposalForm($pollProposalEditionForm, $pollProposal->getPollModule()->getModule());
+                    $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                    $data['formValid'] = true;
+                    $data['htmlContent'] = $moduleManager->displayPollProposalRowPartial($pollProposal, $moduleInvitation->getEventInvitation());
+                    return new JsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $data['messages'][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("global.error.invalid_form");
+                    $data['formValid'] = false;
+                }
             }
             $data['htmlContent'] = $this->renderView(
                 '@App/Event/module/pollModulePartials/pollProposalFormModal.html.twig', array(
