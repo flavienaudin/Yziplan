@@ -14,6 +14,7 @@ use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventVoter;
 use AppBundle\Utils\FlashBagTypes;
+use AppBundle\Utils\FormUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -87,7 +88,7 @@ class EventController extends Controller
                         } else {
                             $data["formErrors"] = array();
                             foreach ($eventInvitationForm->getErrors(true) as $error) {
-                                $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
+                                $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
                             }
                             return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
@@ -132,7 +133,7 @@ class EventController extends Controller
                         } else {
                             $data["formErrors"] = array();
                             foreach ($eventForm->getErrors(true) as $error) {
-                                $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
+                                $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
                             }
                             return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
@@ -167,7 +168,7 @@ class EventController extends Controller
                             } else {
                                 $data["formErrors"] = array();
                                 foreach ($moduleForm->getErrors(true) as $error) {
-                                    $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
+                                    $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
                                 }
                                 return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                             }
@@ -201,7 +202,7 @@ class EventController extends Controller
                             } else {
                                 $data["formErrors"] = array();
                                 foreach ($pollProposalAddForm->getErrors(true) as $error) {
-                                    $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
+                                    $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
                                 }
                                 return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                             }

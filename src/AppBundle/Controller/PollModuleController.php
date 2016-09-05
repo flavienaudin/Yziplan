@@ -13,6 +13,7 @@ use AppBundle\Entity\module\PollProposal;
 use AppBundle\Entity\ModuleInvitation;
 use AppBundle\Form\PollProposalFormType;
 use AppBundle\Utils\FlashBagTypes;
+use AppBundle\Utils\FormUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,7 +31,7 @@ class PollModuleController extends Controller
     public function pollProposalEditionFormAction(PollProposal $pollProposal, ModuleInvitation $moduleInvitation, Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            if($moduleInvitation != $pollProposal->getCreator()){
+            if ($moduleInvitation != $pollProposal->getCreator()) {
                 $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
                 return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
             }
@@ -41,25 +42,27 @@ class PollModuleController extends Controller
                     $moduleManager = $this->get("at.manager.module");
                     $pollProposal = $moduleManager->treatPollProposalForm($pollProposalEditionForm, $pollProposal->getPollModule()->getModule());
                     $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                    $data['formValid'] = true;
                     $data['htmlContent'] = $moduleManager->displayPollProposalRowPartial($pollProposal, $moduleInvitation->getEventInvitation());
                     return new JsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $data['messages'][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("global.error.invalid_form");
-                    $data['formValid'] = false;
+                    $data["formErrors"] = array();
+                    foreach ($pollProposalEditionForm->getErrors(true) as $error) {
+                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
+                    }
+                    return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             }
             $data['htmlContent'] = $this->renderView(
                 '@App/Event/module/pollModulePartials/pollProposalFormModal.html.twig', array(
                     'pollProposalForm' => $pollProposalEditionForm->createView(),
-                    'pp_form_modal_prefix' => 'pollProposalEdition_'.$pollProposal->getId(),
+                    'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
                     'edition' => true,
                     'pollProposal' => $pollProposal,
                     'userModuleInvitation' => $moduleInvitation
                 )
             );
             return new JsonResponse($data, Response::HTTP_OK);
-        }else{
+        } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
             return $this->redirectToRoute("home");
         }
@@ -72,18 +75,18 @@ class PollModuleController extends Controller
      */
     public function removePollProposalAction(PollProposal $pollProposal, ModuleInvitation $moduleInvitation, Request $request)
     {
-        if($moduleInvitation == $pollProposal->getCreator()){
+        if ($moduleInvitation == $pollProposal->getCreator()) {
             if ($request->isXmlHttpRequest()) {
                 $moduleManager = $this->get("at.manager.module");
                 $moduleManager->removePollProposal($pollProposal);
                 $data['actionResult'] = true;
                 $data['messsages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
                 return new JsonResponse($data, Response::HTTP_OK);
-            }else{
+            } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
                 return $this->redirectToRoute("home");
             }
-        }else{
+        } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.unauthorized_access'));
             return $this->redirectToRoute("home");
         }

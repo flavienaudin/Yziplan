@@ -87,22 +87,15 @@
             {% if (edition) %}
             ajaxFormSubmission($(this), e, function (responseJSON, textStatus, jqXHR) {
                         if (responseJSON.htmlContent) {
-                            if(responseJSON.formValid) {
-                                $('#{{ pp_form_modal_prefix }}_modal_id').modal('toggle');
-                                /* Suppression des cellules de la ligne */
-                                $('#pp_display_row_{{ pollProposal.id }}').children().each(function () {
-                                    $(this).remove();
-                                });
-                                /* Ajout des cellules à la ligne existante */
-                                $(responseJSON.htmlContent).children().each(function () {
-                                    $('#pp_display_row_{{ pollProposal.id }}').append($(this));
-                                });
-                            }else{
-                                var thisModal= $('#{{ pp_form_modal_prefix }}_modal_id');
-                                // MaJ du contenu de la modal
-                                $(thisModal).empty();
-                                $(thisModal).append($(responseJSON.htmlContent).children());
-                            }
+                            $('#{{ pp_form_modal_prefix }}_modal_id').modal('toggle');
+                            // Suppression des cellules de la ligne
+                            $('#pp_display_row_{{ pollProposal.id }}').children().each(function () {
+                                $(this).remove();
+                            });
+                            // Ajout des cellules à la ligne existante
+                            $(responseJSON.htmlContent).children().each(function () {
+                                $('#pp_display_row_{{ pollProposal.id }}').append($(this));
+                            });
                         }
                     }, null, null
             );
