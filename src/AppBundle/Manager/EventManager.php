@@ -27,6 +27,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class EventManager
 {
+    const TOKEN_EDITION_SESSION_KEY = "user/event/tokenEdition";
+
     /** @var EntityManager */
     private $entityManager;
 

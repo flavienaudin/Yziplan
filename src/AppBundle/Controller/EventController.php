@@ -104,7 +104,17 @@ class EventController extends Controller
             // Edition management //
             ////////////////////////
             $eventForm = null;
+            if($request->hasSession()){
+                if (empty($tokenEdition) && $request->getSession()->has(EventManager::TOKEN_EDITION_SESSION_KEY)) {
+                    $tokenEdition = $request->getSession()->get(EventManager::TOKEN_EDITION_SESSION_KEY);
+                    $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $currentEvent->getCreator()->getToken());
+                }
+            }
+
             if ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition))) {
+                if($request->hasSession() && !$request->getSession()->has(EventManager::TOKEN_EDITION_SESSION_KEY)) {
+                    $request->getSession()->set(EventManager::TOKEN_EDITION_SESSION_KEY, $tokenEdition);
+                }
                 /** @var Form $eventForm */
                 $eventForm = $eventManager->initEventForm();
                 $eventForm->handleRequest($request);
@@ -133,6 +143,8 @@ class EventController extends Controller
                         'token' => $currentEvent->getToken(),
                         'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition)) ? $currentEvent->getTokenEdition() : null)));
                 }
+            }elseif($request->hasSession() && $request->getSession()->has(EventManager::TOKEN_EDITION_SESSION_KEY)) {
+                $request->getSession()->remove(EventManager::TOKEN_EDITION_SESSION_KEY);
             }
 
             ////////////////////////
