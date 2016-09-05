@@ -2,7 +2,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             {% if edition %}
-                {{ form_start(pollProposalForm, {'action':path('getPollProposalEditionForm',
+                {{ form_start(pollProposalForm, {'action':path('pollProposalEditionForm',
                     {
                         'pollProposalId':pollProposal.id,
                         'moduleInvitationToken': userModuleInvitation.token

@@ -23,11 +23,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class PollModuleController extends Controller
 {
     /**
-     * @Route("/{_locale}/pollproposal/edition/{pollProposalId}/{moduleInvitationToken}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="getPollProposalEditionForm")
+     * @Route("/{_locale}/pollproposal/edition/{pollProposalId}/{moduleInvitationToken}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="pollProposalEditionForm")
      * @ParamConverter("pollProposal", class="AppBundle:module\PollProposal", options={"id" = "pollProposalId"})
      * @ParamConverter("moduleInvitation", class="AppBundle:ModuleInvitation", options={"mapping" = {"moduleInvitationToken":"token"}})
      */
-    public function getPollProposalEditionFormAction(PollProposal $pollProposal, ModuleInvitation $moduleInvitation, Request $request)
+    public function pollProposalEditionFormAction(PollProposal $pollProposal, ModuleInvitation $moduleInvitation, Request $request)
     {
         if ($request->isXmlHttpRequest()) {
             if($moduleInvitation != $pollProposal->getCreator()){

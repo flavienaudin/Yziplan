@@ -77,7 +77,7 @@
     {% endfor %}
     <div class="pcl-celulle">
         {% if userModuleInvitation is defined and userModuleInvitation is not null and pollProposal.creator == userModuleInvitation %}
-            <a href="{{ path('getPollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}"
+            <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}"
                id="getPPEditionForm_{{ pollProposal.id}}">Edition</a>
             <a href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" class="text-danger"
                id="removePP_{{ pollProposal.id}}">Supprimer</a>
