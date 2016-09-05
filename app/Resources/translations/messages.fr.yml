@@ -131,6 +131,8 @@ module:
     add: Vous devez renseigner votre nom sur l'invitation.
 
 pollmodule:
+  display:
+    no_proposal: Pas encore de propositoin
   modal:
     addPollProposal:
       title: Ajouter une proposition
@@ -151,6 +153,7 @@ pollmodule:
 
 
 moduleInvitation:
+  empty_displayable_name: Vous
   error.message:
     missing_data: Des informations sont manquantes pour traiter la requête.
     unauthorized_access: Vous n'êtes pas autoriser à modifier cette réponse

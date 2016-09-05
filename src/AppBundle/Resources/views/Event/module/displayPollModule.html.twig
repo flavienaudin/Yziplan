@@ -29,7 +29,9 @@
                             <div class="pcl-celulle"></div>
                             {% if userModuleInvitation is defined and userModuleInvitation is not null %}
                                 <div class="pcl-celulle">
-                                    <span class="text-warning">{{ userModuleInvitation.displayableName }}</span>
+                                    <span class="text-warning">
+                                        {{ userModuleInvitation.displayableName is not empty?userModuleInvitation.displayableName:'moduleInvitation.empty_displayable_name'|trans }}
+                                    </span>
                                 </div>
                             {% endif %}
                             {% for moduleInvitation in module.moduleInvitations|slice(0,maxColModule) if userModuleInvitation is not defined or userModuleInvitation is null
@@ -53,13 +55,12 @@
                                 {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
                                     "pollProposal":pollProposal,
                                     "userModuleInvitation":(userModuleInvitation is defined?userModuleInvitation:null),
-                                    "moduleInvitations":module.moduleInvitations|slice(0,maxColModule),
-                                    "editionForm":(pollProposalEditionForms is not null and pollProposalEditionForms[pollProposal.id] is defined?pollProposalEditionForms[pollProposal.id]:null)
+                                    "moduleInvitations":module.moduleInvitations|slice(0,maxColModule)
                                 }) }}
                             {% else %}
                                 <div class="pc-ligne" id="pp-empty-{{ module.token }}">
                                     <div class="pcl-celulle w-100">
-                                        {{ "noPollProposal"|trans }}
+                                        {{ "pollmodule.display.no_proposal"|trans }}
                                     </div>
                                 </div>
                             {% endfor %}

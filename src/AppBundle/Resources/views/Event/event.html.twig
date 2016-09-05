@@ -18,7 +18,6 @@
                         'module':moduleDescription.module,
                         'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
                         'pollProposalAddForm':(moduleDescription.pollProposalAddForm is defined?moduleDescription.pollProposalAddForm:null ),
-                        'pollProposalEditionForms':(moduleDescription.pollProposalEditionForms is defined?moduleDescription.pollProposalEditionForms:null ),
                         'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module)
                     }) }}
                 {% elseif moduleDescription.module.expenseModule is not null %}

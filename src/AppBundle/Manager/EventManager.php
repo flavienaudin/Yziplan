@@ -193,9 +193,6 @@ class EventManager
      *  'module' => Module : Le module lui-meme
      *  'moduleForm' => Form : le formulaire d'édition de l'événement si editable
      *  'pollProposalAddForm' => Form : uniquement pour un PollModule
-     *  'pollProposalEditionForms' => [
-     *      "pollProposal.id" => Form : s'il est possible d'éditer le pollProposal
-     *  ]
      * ]
      */
     public function getModulesToDisplay(EventInvitation $userEventInvitation)

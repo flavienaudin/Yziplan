@@ -12,15 +12,18 @@
                 {% set responseValue = (ppResponse.value is not empty?ppResponse.value:null) %}
             {% endfor %}
             <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
-                <label class="btn palette-Light-Green bg waves-effect {{ responseValue == "yes"?'active' }}"> <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                     value="yes" {{ responseValue == "yes"?'checked="checked"' }}> <i
-                            class="zmdi zmdi-thumb-up"></i> </label> <label class="btn palette-Amber bg waves-effect {{ responseValue == "maybe"?'active' }}"> <input type="radio" autocomplete="off"
-                                                                                                                                                                      name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                                                                      value="maybe" {{ responseValue == "maybe"?'checked="checked"' }}>
-                    <i class="zmdi zmdi-thumb-up-down"></i> </label> <label class="btn palette-Red bg waves-effect {{ responseValue == "no"?'active' }}"> <input type="radio" autocomplete="off"
-                                                                                                                                                                 name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                                                                 value="no" {{ responseValue == "no"?'checked="checked"' }}>
-                    <i class="zmdi zmdi-thumb-down"></i> </label>
+                <label class="btn palette-Light-Green bg waves-effect {{ responseValue == "yes"?'active' }}">
+                    <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="yes" {{ responseValue == "yes"?'checked="checked"' }}>
+                    <i class="zmdi zmdi-thumb-up"></i>
+                </label>
+                <label class="btn palette-Amber bg waves-effect {{ responseValue == "maybe"?'active' }}">
+                    <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="maybe" {{ responseValue == "maybe"?'checked="checked"' }}>
+                    <i class="zmdi zmdi-thumb-up-down"></i>
+                </label>
+                <label class="btn palette-Red bg waves-effect {{ responseValue == "no"?'active' }}">
+                    <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="no" {{ responseValue == "no"?'checked="checked"' }}>
+                    <i class="zmdi zmdi-thumb-down"></i>
+                </label>
             </div>
         </div>
         <script>

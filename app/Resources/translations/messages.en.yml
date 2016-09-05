@@ -131,6 +131,8 @@ module:
     add: You must set your name on your invitation.
 
 pollmodule:
+  display:
+    no_proposal: No proposal yet
   modal:
     addPollProposal:
       title: Add a proposal
@@ -150,6 +152,7 @@ pollmodule:
       message: This action is irreversible
 
 moduleInvitation:
+  empty_displayable_name: You
   error.message:
     missing_data: Data are missing to treat the request.
     unauthorized_access: You are not allowed to edit this answer.
