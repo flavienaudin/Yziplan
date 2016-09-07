@@ -22,7 +22,11 @@ class EventVoter extends Voter
     const ARCHIVE = 'archive';
     const CANCEL = 'cancel';
 
-
+    /**
+     * @param string $attribute Cf. constants in EventVoter
+     * @param mixed $subject Array with {Event, null|request.event.tokenEdition}
+     * @return bool
+     */
     protected function supports($attribute, $subject)
     {
         if (!in_array($attribute, array(self::EDIT, self::ADD_EVENT_MODULE, self::VALIDATE, self::ARCHIVE, self::CANCEL))) {

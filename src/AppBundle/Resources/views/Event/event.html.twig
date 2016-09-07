@@ -8,7 +8,7 @@
 {% endblock mainMenu_listItems %}
 
 {% block event_content %}
-    {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'eventForm':eventForm}) }}
+    {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'eventForm':eventForm, 'invitationsForm':invitationsForm}) }}
 
     <div class="row">
         <div class="col-xs-12 col-sm-8" id="eventModulesContainer">
@@ -53,8 +53,17 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
 {% endblock stylesheets %}
+
+{% block top_javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/selectize.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/at-selectize.js") }}"></script>
+{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}

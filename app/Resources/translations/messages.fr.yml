@@ -98,6 +98,18 @@ eventInvitation:
   error.message:
     unauthorized_access: Vous n'êtes pas inviter à cet événement.
 
+invitations:
+  display:
+    title: Liste des invités
+    remove_link: Annuler l'invitation de %name%
+  form:
+    invitations:
+      label: Inviter de nouvelles personnes
+      placeholder: E-mails de vos invités
+      invalid_message: Veuillez renseigner des e-mails valides
+  button:
+    send_invitation: Envoyer les invitations
+
 module:
   form:
     name:

@@ -98,6 +98,18 @@ eventInvitation:
   error.message:
     unauthorized_access: You are ot invited to this event.
 
+invitations:
+  display:
+    title: Guests list
+    remove_link: Cancel %name%'s invitation
+  form:
+    invitations:
+      label: Invite new people
+      placeholder: Emails of your guests
+      invalid_message: Valid email address required
+  button:
+    send_invitation: Send invitations
+
 module:
   form:
     name:

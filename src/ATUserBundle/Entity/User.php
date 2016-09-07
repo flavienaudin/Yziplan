@@ -92,7 +92,7 @@ class User extends FosUser
      * @var AppUser
      */
     private $appUser;
-    
+
     /**
      * User constructor.
      */
@@ -107,12 +107,18 @@ class User extends FosUser
 
     public function __toString()
     {
-        if(empty($this->pseudo)){
+        return $this->getDisplayableName();
+    }
+
+    public function getDisplayableName()
+    {
+        if (empty($this->pseudo)) {
             return $this->username;
-        }else{
+        } else {
             return $this->pseudo;
         }
     }
+
 
     /**
      * Get id
@@ -145,7 +151,8 @@ class User extends FosUser
     /**
      * @return bool true si au moins un des ID de ResSoc est renseigné
      */
-    public function isSocialNetworkConnected(){
+    public function isSocialNetworkConnected()
+    {
         return !(empty($this->googleId) && empty($this->facebookId));
     }
 
@@ -314,7 +321,7 @@ class User extends FosUser
     {
         return $this->passwordKnown;
     }
-    
+
 
     /**
      * Set appUser

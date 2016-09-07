@@ -1,0 +1,10 @@
+{% spaceless %}
+    <li id=eventInvitation_event_{{ eventInvitation.token }}>{{ eventInvitation.displayableName }}
+        {% if editEventMode and eventInvitation != event.creator %}
+            <a href="{{ path("cancelEventInvitation", {
+                "eventInvitationToken":eventInvitation.token,
+                "eventTokenEdition":app.request.get('tokenEdition')
+            }) }}" data-toggle="tooltip" data-original-title="{{ "invitations.display.remove_link"|trans({"%name%":eventInvitation.displayableName}) }}"> <i class="zmdi zmdi-close-circle-o"></i></a>
+        {% endif %}
+    </li>
+{% endspaceless %}

@@ -10,8 +10,10 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\AppUser;
 use AppBundle\Entity\Event;
+use AppBundle\Entity\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
+use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Security\EventVoter;
 use AppBundle\Utils\FlashBagTypes;
 use AppBundle\Utils\FormUtils;
@@ -105,7 +107,8 @@ class EventController extends Controller
             // Edition management //
             ////////////////////////
             $eventForm = null;
-            if($request->hasSession()){
+            $eventInvitationsForm = null;
+            if ($request->hasSession()) {
                 if (empty($tokenEdition) && $request->getSession()->has(EventManager::TOKEN_EDITION_SESSION_KEY)) {
                     $tokenEdition = $request->getSession()->get(EventManager::TOKEN_EDITION_SESSION_KEY);
                     $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $currentEvent->getCreator()->getToken());
@@ -113,9 +116,10 @@ class EventController extends Controller
             }
 
             if ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition))) {
-                if($request->hasSession() && !$request->getSession()->has(EventManager::TOKEN_EDITION_SESSION_KEY)) {
+                if ($request->hasSession() && !$request->getSession()->has(EventManager::TOKEN_EDITION_SESSION_KEY)) {
                     $request->getSession()->set(EventManager::TOKEN_EDITION_SESSION_KEY, $tokenEdition);
                 }
+
                 /** @var Form $eventForm */
                 $eventForm = $eventManager->initEventForm();
                 $eventForm->handleRequest($request);
@@ -124,9 +128,11 @@ class EventController extends Controller
                         if ($eventForm->isValid()) {
                             $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
                             $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                            $eventInvitationsForm = $eventManager->createEventInvitationsForm();
                             $data['htmlContent'] = $this->renderView("@App/Event/partials/eventHeaderCard.html.twig", array(
                                     'event' => $currentEvent,
-                                    'eventForm' => $eventForm->createView()
+                                    'eventForm' => $eventForm->createView(),
+                                    'invitationsForm' => ($eventInvitationsForm != null ? $eventInvitationsForm->createView() : null)
                                 )
                             );
                             return new JsonResponse($data, Response::HTTP_OK);
@@ -142,10 +148,51 @@ class EventController extends Controller
                     $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
                     return $this->redirectToRoute('displayEvent', array(
                         'token' => $currentEvent->getToken(),
-                        'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition)) ? $currentEvent->getTokenEdition() : null)));
+                        'tokenEdition' => $currentEvent->getTokenEdition()));
                 }
-            }elseif($request->hasSession() && $request->getSession()->has(EventManager::TOKEN_EDITION_SESSION_KEY)) {
+
+            } elseif ($request->hasSession() && $request->getSession()->has(EventManager::TOKEN_EDITION_SESSION_KEY)) {
                 $request->getSession()->remove(EventManager::TOKEN_EDITION_SESSION_KEY);
+            }
+
+            ////////////////////////////
+            // Invitations management //
+            ////////////////////////////
+            if ($this->isGranted(EventInvitationVoter::INVITE, $currentEvent) || $this->isGranted(EventVoter::EDIT, array($currentEvent, $tokenEdition))) {
+                /** @var FormInterface $eventInvitationsForm */
+                $eventInvitationsForm = $eventManager->createEventInvitationsForm();
+                if ($eventInvitationsForm != null) {
+                    $eventInvitationsForm->handleRequest($request);
+                    if ($request->isXmlHttpRequest()) {
+                        if ($eventInvitationsForm->isSubmitted()) {
+                            if ($eventInvitationsForm->isValid()) {
+                                $currentEvent = $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm);
+                                $eventInvitationsForm = $eventManager->createEventInvitationsForm();
+                                $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                                $data['htmlContent'] = $this->renderView("@App/Event/partials/eventInvitations.html.twig", array(
+                                    'event' => $currentEvent,
+                                    'eventInvitations' => $currentEvent->getEventInvitations(),
+                                    'invitationsForm' => $eventInvitationsForm->createView(),
+                                    'editEventMode' => true
+
+                                ));
+                                return new JsonResponse($data, Response::HTTP_OK);
+                            } else {
+                                $data["formErrors"] = array();
+                                foreach ($eventInvitationsForm->getErrors(true) as $error) {
+                                    $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
+                                    $data["messages"][FlashBagTypes::WARNING_TYPE][] = $this->get("translator")->trans($error->getMessage());
+                                }
+                                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                            }
+                        }
+                    } elseif ($eventInvitationsForm->isValid()) {
+                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm);
+                        return $this->redirectToRoute('displayEvent', array(
+                            'token' => $currentEvent->getToken(),
+                            'tokenEdition' => $currentEvent->getTokenEdition()));
+                    }
+                }
             }
 
             ////////////////////////
@@ -223,6 +270,7 @@ class EventController extends Controller
             return $this->render('AppBundle:Event:event.html.twig', array(
                 'event' => $currentEvent,
                 'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
+                'invitationsForm' => ($eventInvitationsForm != null ? $eventInvitationsForm->createView() : null),
                 'modules' => $modules,
                 'userEventInvitation' => $userEventInvitation,
                 'userEventInvitationForm' => ($eventInvitationForm != null ? $eventInvitationForm->createView() : null)

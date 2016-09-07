@@ -14,6 +14,7 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Form\EventInvitationFormType;
+use AppBundle\Form\InvitationsFormType;
 use AppBundle\Security\EventInvitationVoter;
 use ATUserBundle\Entity\User;
 use ATUserBundle\Manager\UserManager;
@@ -135,6 +136,28 @@ class EventInvitationManager
     }
 
     /**
+     * Retrieve an EventInvitation by the email of the guest and the concerned event
+     * @param Event $event The event concerned
+     * @param string $email The email of the guest to search the EventInvitation for
+     * @return EventInvitation
+     */
+    public function getGuestEventInvitation(Event $event, $email){
+        $this->eventInvitation = null;
+        $guestUser = $this->userManager->findUserByEmail($email);
+        if($guestUser != null){
+            $eventInvitationRepo = $this->entityManager->getRepository("AppBundle:EventInvitation");
+            $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'appUser' => $guestUser->getAppUser()));
+        }else{
+            $guestUser = $this->userManager->createUserFromEmail($email);
+        }
+        if($this->eventInvitation == null) {
+             $this->initializeEventInvitation($event, $guestUser);
+        }
+
+        return $this->eventInvitation;
+    }
+
+    /**
      * Create an EventInvitation and set it as creator of the event
      * @param Event $event
      * @param User|null $user
@@ -180,6 +203,25 @@ class EventInvitationManager
     }
 
     /**
+     * Set EventInvitation.status == EventInvitationStatus::CANCELLED
+     *
+     * @param EventInvitation|null $eventInvitation If null, $this->eventInvitation is used;
+     * @return bool true if the update is successful
+     */
+    public function cancelEventInvitation(EventInvitation $eventInvitation = null)
+    {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        if ($this->eventInvitation != null) {
+            $this->eventInvitation->setStatus(EventInvitationStatus::CANCELLED);
+            return $this->updateEventInvitation();
+        }
+        return false;
+    }
+
+    /**
+     * Persist the EventInvitation into the database and save into the session the Token
      * @return bool true if the eventInvitaiton has been persisted false otherwise
      */
     public function updateEventInvitation()
@@ -194,7 +236,7 @@ class EventInvitationManager
     }
 
     /**
-     * Génère le formulaire d'édition des informations principale d'une EventInvitation
+     * Génère le formulaire d'édition des informations principales d'une EventInvitation (Réponse à un événement)
      * @return FormInterface
      */
     public function createEventInvitationForm()
@@ -203,7 +245,7 @@ class EventInvitationManager
     }
 
     /**
-     * Traite la soumission du formulaire d'EventInvitationFormType en créatnt un AppUser et User si besoin
+     * Traite la soumission du formulaire d'EventInvitationFormType (Réponse à un événement) en créant un AppUser et User si besoin
      * @param Form $evtForm
      * @return EventInvitation|mixed
      */

@@ -142,7 +142,6 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
     });
 }
 
-
 /**
  * Active les pluggins JS/CSS après une requête Ajax
  *  - textarea autosize

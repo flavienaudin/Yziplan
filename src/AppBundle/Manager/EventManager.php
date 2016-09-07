@@ -13,15 +13,14 @@ use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
-use AppBundle\Entity\module\PollProposal;
-use AppBundle\Entity\module\PollProposalElement;
 use AppBundle\Form\EventFormType;
-use AppBundle\Form\PollProposalFormType;
+use AppBundle\Form\InvitationsFormType;
 use AppBundle\Security\ModuleVoter;
 use ATUserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -161,6 +160,24 @@ class EventManager
         $this->entityManager->flush();
 
         return $this->event;
+    }
+
+    public function createEventInvitationsForm()
+    {
+        return $this->formFactory->create(InvitationsFormType::class);
+    }
+
+    public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm){
+        if($this->event != null){
+            $emailsData = $eventInvitationsForm->get("invitations")->getData();
+            foreach ($emailsData as $email){
+                $this->eventInvitationManager->getGuestEventInvitation($this->event, $email);
+            }
+            $this->entityManager->persist($this->event);
+            $this->entityManager->flush();
+            return $this->event;
+        }
+        return null;
     }
 
     /**

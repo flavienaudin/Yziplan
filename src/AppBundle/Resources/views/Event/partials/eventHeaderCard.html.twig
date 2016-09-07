@@ -1,7 +1,3 @@
-{% if eventForm is not null %}
-    {% form_theme eventForm with [_self,':Form:at_forms_layout.html.twig'] %}
-{% endif %}
-
 <div class="card" id="event-header-card">
     {% if eventForm is not null %}
         {{ form_start(eventForm, {'action':path('displayEvent',{'token':event.token,'tokenEdition':event.tokenEdition}), 'attr':{'id':'eventHeader'}}) }}
@@ -75,9 +71,9 @@
         {% endif %}
     </div>
     <div class="card-body card-padding p-t-25">
-        {% if eventForm is not null %}
-            <div class="row">
-                <div class="col-sm-6">
+        <div class="row">
+            <div class="col-sm-8">
+                {% if eventForm is not null %}
                     <div class="form-group">
                         {{ form_label(eventForm.name, 'event.form.name.label', {'label_attr':{'class':'sr-only'}}) }}
                         <div class="fg-line">
@@ -85,20 +81,6 @@
                             {{ form_errors(eventForm.name) }}
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        {{ form_label(eventForm.responseDeadline, 'event.form.responseDeadline.label') }}
-                        <div class="form-inline fg-line">
-                            {{ form_widget(eventForm.responseDeadline, {'attr':{'placeholder':'event.form.responseDeadline.placeholder'}}) }}
-                        </div>
-                        {{ form_errors(eventForm.responseDeadline) }}
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-sm-6">
                     <div class="form-group">
                         {{ form_label(eventForm.description, 'event.form.description.label', {'label_attr':{'class':'sr-only'}}) }}
                         <div class="fg-line">
@@ -106,69 +88,75 @@
                             {{ form_errors(eventForm.description) }}
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-6">
+                    <div class="form-group">
+                        {{ form_label(eventForm.responseDeadline, 'event.form.responseDeadline.label') }}
+                        <div class="form-inline fg-line">
+                            {{ form_widget(eventForm.responseDeadline, {'attr':{'placeholder':'event.form.responseDeadline.placeholder'}}) }}
+                        </div>
+                        {{ form_errors(eventForm.responseDeadline) }}
+                    </div>
                     {{ form_row(eventForm.invitationOnly, {'label':'event.form.invitationOnly.label','attr':{'class':'md-toogle-switch'}}) }}
                     {{ form_row(eventForm.guestsCanInvite, {'label':'event.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
                     {{ form_row(eventForm.guestsCanAddModule, {'label':'event.form.guestsCanAddModule.label','attr':{'class':'md-toogle-switch'}}) }}
-                </div>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                            {{ "global.button.save"|trans }}
+                        </button>
+                    </div>
+                    {{ form_end(eventForm) }}
+                {% else %}
+                    <dl class="dl-horizontal">
+                        <dt>{{ "event.form.description.label"|trans }}</dt>
+                        <dd>{{ event.description }}</dd>
+                        <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
+                        <dd>{{ event.responseDeadline|localizeddate }}</dd>
+                        <dt></dt>
+                        <dd>
+                            {% if event.invitationOnly %}
+                                <div class="text-danger">
+                                    <i class="zmdi zmdi-close-circle"></i> {{ "event.form.invitationOnly.text.true"|trans }}
+                                </div>
+                            {% else %}
+                                <div class="text-success">
+                                    <i class="zmdi zmdi-check"></i> {{ "event.form.invitationOnly.text.false"|trans }}
+                                </div>
+                            {% endif %}
+                        </dd>
+                        <dt></dt>
+                        <dd>
+                            {% if event.guestsCanInvite %}
+                                <div class="text-success">
+                                    <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
+                                </div>
+                            {% else %}
+                                <div class="text-danger">
+                                    <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
+                                </div>
+                            {% endif %}
+                        </dd>
+                        <dt></dt>
+                        <dd>
+                            {% if event.guestsCanAddModule %}
+                                <div class="text-success">
+                                    <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanAddModule.text.true"|trans }} (à garder ?)
+                                </div>
+                            {% else %}
+                                <div class="text-danger">
+                                    <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanAddModule.text.false"|trans }} (à garder ?)
+                                </div>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                {% endif %}
             </div>
-        {% else %}
-            <dl class="dl-horizontal">
-                <dt>{{ "event.form.description.label"|trans }}</dt>
-                <dd>{{ event.description }}</dd>
-                <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
-                <dd>{{ event.responseDeadline|localizeddate }}</dd>
-                <dt></dt>
-                <dd>
-                    {% if event.invitationOnly %}
-                        <div class="text-danger">
-                            <i class="zmdi zmdi-close-circle"></i> {{ "event.form.invitationOnly.text.true"|trans }}
-                        </div>
-                    {% else %}
-                        <div class="text-success">
-                            <i class="zmdi zmdi-check"></i> {{ "event.form.invitationOnly.text.false"|trans }}
-                        </div>
-                    {% endif %}
-                </dd>
-                <dt></dt>
-                <dd>
-                    {% if event.guestsCanInvite %}
-                        <div class="text-success">
-                            <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
-                        </div>
-                    {% else %}
-                        <div class="text-danger">
-                            <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
-                        </div>
-                    {% endif %}
-                </dd>
-                <dt></dt>
-                <dd>
-                    {% if event.guestsCanAddModule %}
-                        <div class="text-success">
-                            <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanAddModule.text.true"|trans }} (à garder ?)
-                        </div>
-                    {% else %}
-                        <div class="text-danger">
-                            <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanAddModule.text.false"|trans }} (à garder ?)
-                        </div>
-                    {% endif %}
-                </dd>
-            </dl>
-        {% endif %}
-    </div>
-    <div class="card-footer card-padding-sm">
-        {% if eventForm is not null %}
-            <div class="text-right">
-                <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
-                    {{ "global.button.save"|trans }}
-                </button>
+            <div class="col-sm-4">
+                {{ include('@App/Event/partials/eventInvitations.html.twig', {
+                    'event': event,
+                    'eventInvitations' : event.eventInvitations,
+                    'invitationsForm':invitationsForm,
+                    'editEventMode':(eventForm is not null)
+                }) }}
             </div>
-        {% endif %}
+        </div>
     </div>
-
-    {% if eventForm is not null %}
-        {{ form_end(eventForm) }}
-    {% endif %}
 </div>

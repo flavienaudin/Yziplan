@@ -34,10 +34,12 @@
         <i class="zmdi zmdi-alert-triangle zmdi-hc-2x"></i> {{ "global.error.javascrip_disabled"|trans }}
     </div>
 </noscript>
-<script src="{{ asset("bundles/app/js/jquery.min.js") }}"></script>
-<script src="{{ asset("bundles/app/js/jquery-ui.min.js") }}"></script>
-<script src="{{ asset("bundles/app/js/bootstrap-3.3.6-dist/bootstrap.js") }}"></script>
-<script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>
+
+{% block top_javascripts %}
+    <script src="{{ asset("bundles/app/js/jquery.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery-ui.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-3.3.6-dist/bootstrap.js") }}"></script>
+{% endblock top_javascripts %}
 
 {% block header_body %}
     <header id="header" class="media">
@@ -101,7 +103,6 @@
 {# Pour avoir une page AVEC un menu latéral : conserver section#main et redéfinir le block "s_main_menu" #}
 {# Pour avoir une page SANS menu latéral : redfinir le block "main_section_id" et définir les blocks "s_main_menu" et "sidebar_collapse_cmd" vides #}
 <section id="{% block main_section_id %}main{% endblock %}">
-
     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
         {# Panneaux d'affichage des "Notifications utilisateur" ouverts via l'icone #}
         <aside id="s-user-alerts" class="sidebar">
