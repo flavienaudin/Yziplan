@@ -11,17 +11,21 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
+use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
+use AppBundle\Security\EventVoter;
 use AppBundle\Utils\FlashBagTypes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class EventInvitationController extends Controller
 {
     /**
-     * Action pour afficher sur un événement à partir d'un token eventInvitation qui est alors enregistré en session avant la rediection vers la page d'affichage de l'événement
+     * Action pour afficher sur un événement à partir d'un token eventInvitation qui est alors enregistré en session avant la redirection vers la page d'affichage de l'événement
      *
      * @Route("/{_locale}/invitation/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEventInvitation" )
      * @ParamConverter("eventInvitation", class="AppBundle:EventInvitation")
@@ -46,8 +50,43 @@ class EventInvitationController extends Controller
     {
         if ($request->hasSession()) {
             $request->getSession()->remove(EventInvitationManager::TOKEN_SESSION_KEY);
+            $request->getSession()->remove(EventInvitationManager::TOKEN_EDITION_SESSION_KEY);
+            $request->getSession()->remove(EventManager::TOKEN_EDITION_SESSION_KEY);
         }
         return $this->redirectToRoute("displayEvent", array('token' => $token));
+    }
+
+    /**
+     * @Route("/{_locale}/cancel-invitation/{eventInvitationToken}/{eventTokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="cancelEventInvitation" )
+     * @ParamConverter("eventInvitation", class="AppBundle:EventInvitation", options={"mapping": {"eventInvitationToken":"token"}})
+     */
+    public function cancelEventInvitationAction(EventInvitation $eventInvitation, $eventTokenEdition = null, Request $request)
+    {
+        if ($this->isGranted(EventVoter::EDIT, array($eventInvitation->getEvent(), $eventTokenEdition))) {
+            $eventInvitationManager = $this->get("at.manager.event_invitation");
+            if ($eventInvitationManager->cancelEventInvitation($eventInvitation)) {
+                if ($request->isXmlHttpRequest()) {
+                    $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("global.success.data_saved");
+                    return new JsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("global.success.data_saved"));
+                    return $this->redirectToRoute("displayEvent", array(
+                        "token" => $eventInvitation->getEvent()->getToken(),
+                        "tokenEdition" => $eventTokenEdition));
+                }
+            }
+        }
+        if ($request->isXmlHttpRequest()) {
+            $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access");
+            return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access"));
+            if ($eventInvitation != null) {
+                return $this->redirectToRoute("displayEvent", array("token" => $eventInvitation->getEvent()->getToken()));
+            } else {
+                return $this->redirectToRoute("home");
+            }
+        }
     }
 
 }

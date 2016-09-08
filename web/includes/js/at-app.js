@@ -104,7 +104,7 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
             var formErrors = responseJSON.formErrors;
             for (var fieldErrorName in formErrors) {
                 if (formErrors.hasOwnProperty(fieldErrorName)) {
-                    var inputField = $('input[name*=' + fieldErrorName + ']');
+                    var inputField = $('input[name*=' + escapeSelectorCharacters(fieldErrorName) + ']');
                     inputField.parent().addClass("has-error");
                     inputField.after('<small class="help-block">' + responseJSON.formErrors[fieldErrorName] + '</small>')
                 }
@@ -142,7 +142,6 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
     });
 }
 
-
 /**
  * Active les pluggins JS/CSS après une requête Ajax
  *  - textarea autosize
@@ -172,4 +171,13 @@ function jsPlugginActivation() {
             vertical: 'auto'
         }
     });
+}
+
+/**
+ * Echappe les caractères spéciaux d'un Selector pour JQuery
+ * @param selector
+ * @returns {string|XML|void}
+ */
+function escapeSelectorCharacters(selector ) {
+    return selector.replace( /(:|\.|\[|\]|,)/g, "\\$1" );
 }

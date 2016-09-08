@@ -23,7 +23,10 @@ class AppKernel extends Kernel
             //User bundles
             new FOS\UserBundle\FOSUserBundle(),
             new ATUserBundle\ATUserBundle(),
-            new HWI\Bundle\OAuthBundle\HWIOAuthBundle()
+            new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
+
+            // KeyValueFormType
+            new Burgov\Bundle\KeyValueFormBundle\BurgovKeyValueFormBundle()
         ];
 
         //Test and Dev Bundles

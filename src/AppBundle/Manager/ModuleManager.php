@@ -12,11 +12,13 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\enum\ModuleStatus;
 use AppBundle\Entity\enum\ModuleType;
 use AppBundle\Entity\enum\PollModuleSortingType;
+use AppBundle\Entity\enum\PollProposalElementType;
 use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Entity\module\PollModule;
 use AppBundle\Entity\module\PollProposal;
+use AppBundle\Entity\module\PollProposalElement;
 use AppBundle\Entity\ModuleInvitation;
 use AppBundle\Form\ModuleFormType;
 use AppBundle\Form\PollProposalFormType;
@@ -155,15 +157,69 @@ class ModuleManager
         return $this->module;
     }
 
-    public function treatAddPollProposalFormModule(Form $addPollProposalForm, Module $module)
+    public function treatPollProposalForm(FormInterface $pollProposalAddForm, Module $module)
     {
         $this->module = $module;
         /** @var PollProposal $pollProposal */
-        $pollProposal = $addPollProposalForm->getData();
+        $pollProposal = $pollProposalAddForm->getData();
         if ($this->module == null or $pollProposal == null) {
             return null;
         }
         $pollProposal->setPollModule($this->module->getPollModule());
+        /** @var PollProposalElement $pollProposalElt */
+        foreach ($pollProposal->getPollProposalElements() as $pollProposalElt){
+            $pollProposal->removePollProposalElement($pollProposalElt);
+            $this->entityManager->remove($pollProposalElt);
+        }
+
+        if($pollProposalAddForm->has('strPPElts')){
+            $strPPElts = $pollProposalAddForm->get('strPPElts')->getData();
+            foreach ($strPPElts as $key => $value){
+                if(!empty($value)) {
+                    $newPPE = new PollProposalElement();
+                    $newPPE->setName($key);
+                    $newPPE->setType(PollProposalElementType::STRING);
+                    $newPPE->setValString($value);
+                    $pollProposal->addPollProposalElement($newPPE);
+                }
+            }
+        }
+        if($pollProposalAddForm->has('intPPElts')){
+            $intPPElts = $pollProposalAddForm->get('intPPElts')->getData();
+            foreach ($intPPElts as $key => $value){
+                if(!empty($value)) {
+                    $newPPE = new PollProposalElement();
+                    $newPPE->setName($key);
+                    $newPPE->setType(PollProposalElementType::INTEGER);
+                    $newPPE->setValInteger($value);
+                    $pollProposal->addPollProposalElement($newPPE);
+                }
+            }
+        }
+        if($pollProposalAddForm->has('datetimePPElts')){
+            $datetimePPElts = $pollProposalAddForm->get('datetimePPElts')->getData();
+            foreach ($datetimePPElts as $key => $value){
+                if(!empty($value)) {
+                    $newPPE = new PollProposalElement();
+                    $newPPE->setName($key);
+                    $newPPE->setType(PollProposalElementType::DATE_TIME);
+                    $newPPE->setValDatetime($value);
+                    $pollProposal->addPollProposalElement($newPPE);
+                }
+            }
+        }
+
+        $this->entityManager->persist($pollProposal);
+        $this->entityManager->flush();
+        return $pollProposal;
+    }
+
+    /**
+     * @param PollProposal $pollProposal The PollProposal to remove
+     * @return PollProposal
+     */
+    public function removePollProposal(PollProposal $pollProposal){
+        $pollProposal->setDeleted(true);
         $this->entityManager->persist($pollProposal);
         $this->entityManager->flush();
         return $pollProposal;
@@ -186,7 +242,7 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
-                'addPollProposalForm' => $this->createAddPollProposalForm($module)->createView(),
+                'pollProposalAddForm' => $this->createPollProposalAddForm($module, $userModuleInvitation)->createView(),
                 'userModuleInvitation' => $userModuleInvitation
             ));
         } elseif ($module->getExpenseModule() != null) {
@@ -207,9 +263,10 @@ class ModuleManager
 
     /**
      * @param PollProposal $pollProposal
+     * @param EventInvitation $userEventInvitation
      * @return string
      */
-    public function displayPollProposalRowPartial(PollProposal $pollProposal, EventInvitation $userEventInvitation = null)
+    public function displayPollProposalRowPartial(PollProposal $pollProposal, EventInvitation $userEventInvitation)
     {
         $userModuleInvitation = null ;
         if ($userEventInvitation != null) {
@@ -224,10 +281,13 @@ class ModuleManager
 
     /**
      * @param Module $module
+     * @param ModuleInvitation $userModuleInvitation
      * @return FormInterface
      */
-    public function createAddPollProposalForm(Module $module)
+    public function createPollProposalAddForm(Module $module, ModuleInvitation $userModuleInvitation = null)
     {
-        return $this->formFactory->createNamed("add_poll_proposal_form_" . $module->getToken(), PollProposalFormType::class, new PollProposal());
+        $newPollProposal = new PollProposal();
+        $newPollProposal->setCreator($userModuleInvitation);
+        return $this->formFactory->createNamed("add_poll_proposal_form_" . $module->getToken(), PollProposalFormType::class, $newPollProposal);
     }
 }

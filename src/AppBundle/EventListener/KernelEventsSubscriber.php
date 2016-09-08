@@ -20,8 +20,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\Translator;
 

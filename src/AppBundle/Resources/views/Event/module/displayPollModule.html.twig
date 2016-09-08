@@ -1,15 +1,16 @@
 {% extends "@App/Event/module/displayModule.html.twig" %}
 
 {% set maxColModule = 10 %}
+{% set add_pp_form_modal_prefix = 'add_pp_fm_'~module.token %}
 
 {% block moduleCardClass %}c-dark{% endblock moduleCardClass %}
 {% block moduleHeaderClass %}palette-Red bg{% endblock moduleHeaderClass %}
 {% block moduleHeaderAttributs %}{% endblock moduleHeaderAttributs %}
 
 {% block mhBtnFloat %}
-    {% if addPollProposalForm is defined and addPollProposalForm is not null %}
+    {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
         {# TODO Check authorization to addPollProposal #}
-        <a data-toggle="modal" href="#addPollProposal_modal_{{ module.token }}">
+        <a data-toggle="modal" href="#{{ add_pp_form_modal_prefix }}_modal_id">
             <button class="btn palette-Red-A700 bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
         </a>
     {% endif %}
@@ -28,7 +29,9 @@
                             <div class="pcl-celulle"></div>
                             {% if userModuleInvitation is defined and userModuleInvitation is not null %}
                                 <div class="pcl-celulle">
-                                    <span class="text-warning">{{ userModuleInvitation.displayableName }}</span>
+                                    <span class="text-warning">
+                                        {{ userModuleInvitation.displayableName is not empty?userModuleInvitation.displayableName:'moduleInvitation.empty_displayable_name'|trans }}
+                                    </span>
                                 </div>
                             {% endif %}
                             {% for moduleInvitation in module.moduleInvitations|slice(0,maxColModule) if userModuleInvitation is not defined or userModuleInvitation is null
@@ -48,7 +51,7 @@
                             </div>
                         </div>
                         <div class="pc-groupe-ligne palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
-                            {% for pollProposal in module.pollModule.pollProposals %}
+                            {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted %}
                                 {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
                                     "pollProposal":pollProposal,
                                     "userModuleInvitation":(userModuleInvitation is defined?userModuleInvitation:null),
@@ -57,7 +60,7 @@
                             {% else %}
                                 <div class="pc-ligne" id="pp-empty-{{ module.token }}">
                                     <div class="pcl-celulle w-100">
-                                        {{ "noPollProposal"|trans }}
+                                        {{ "pollmodule.display.no_proposal"|trans }}
                                     </div>
                                 </div>
                             {% endfor %}
@@ -72,32 +75,12 @@
 {% block moduleFooter %}{% endblock moduleFooter %}
 
 {% block modalContainer %}
-    {% if addPollProposalForm is defined and addPollProposalForm is not null %}
+    {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
         {# TODO Check authorization to addPollProposal #}
-        {{ include('@App/Event/module/pollModulePartials/pollProposalAddFormModal.html.twig', {'addPollProposalForm' : addPollProposalForm}) }}
+        {{ include('@App/Event/module/pollModulePartials/pollProposalFormModal.html.twig', {
+            'pollProposalForm' : pollProposalAddForm,
+            'pp_form_modal_prefix' : add_pp_form_modal_prefix,
+            'edition' : false
+        }) }}
     {% endif %}
 {% endblock modalContainer %}
-
-{% block JSmodule %}
-    {{ parent() }}
-    {% if addPollProposalForm is defined and addPollProposalForm is not null %}
-        {# TODO Check authorization to addPollProposal #}
-        <script>
-            $('form#addPollProposalForm_{{ module.token }}').on('submit', function (e) {
-                var $form = $(this);
-                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                    $('#addPollProposal_modal_{{ module.token }}').modal('toggle');
-                    if (responseJSON.htmlContent) {
-                        if (responseJSON.htmlContent.pollProposalRowDisplay) {
-                            $('#pp-row-group-{{ module.token }}').append(responseJSON.htmlContent.pollProposalRowDisplay);
-                            if ($('#pp-empty-{{ module.token }}')[0]) {
-                                $('#pp-empty-{{ module.token }}').remove();
-                            }
-                        }
-                        $form[0].reset();
-                    }
-                }, null, null);
-            });
-        </script>
-    {% endif %}
-{% endblock JSmodule %}

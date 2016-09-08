@@ -98,6 +98,18 @@ eventInvitation:
   error.message:
     unauthorized_access: Vous n'êtes pas inviter à cet événement.
 
+invitations:
+  display:
+    title: Liste des invités
+    remove_link: Annuler l'invitation de %name%
+  form:
+    invitations:
+      label: Inviter de nouvelles personnes
+      placeholder: E-mails de vos invités
+      invalid_message: Veuillez renseigner des e-mails valides
+  button:
+    send_invitation: Envoyer les invitations
+
 module:
   form:
     name:
@@ -131,14 +143,29 @@ module:
     add: Vous devez renseigner votre nom sur l'invitation.
 
 pollmodule:
-  modale:
+  display:
+    no_proposal: Pas encore de propositoin
+  modal:
     addPollProposal:
       title: Ajouter une proposition
+    editPollProposal:
+      title: Editer la proposition
+    all:
       form:
-        name:
-          label: Nom
+        string_collection:
+          label: Ajouter un texte
+        integer_collection:
+          label: Ajouter un nombre
+        datetime_collection:
+          label: Ajouter une date
+  alert:
+    confirm_proposal_deletion:
+      title: Etes-vous sûr de vouloir supprimer cette proposition ?
+      message: Cette action est irréversible
+
 
 moduleInvitation:
+  empty_displayable_name: Vous
   error.message:
     missing_data: Des informations sont manquantes pour traiter la requête.
     unauthorized_access: Vous n'êtes pas autoriser à modifier cette réponse
@@ -169,6 +196,7 @@ global:
     unauthorized_access: Vous n'êtes pas autorisés à accéder à cette section.
     internal_server_error: Une erreur interne est survenue. Merci de vérifier vos données et de réessayer votre action.
     javascrip_disabled: Le javascript est désactivé par votre navigateur. Le site risque de mal réagir. Ré-activez-le afin de profiter pleinement des fonctionnalités que nous vous proposons
+    invalid_form: Des données du formulaire sont invalides.
   exception:
     access_denied_http: Vous n'avez pas accès à ces données. Connectez-vous avec l'utilisateur adéquate.
     method_not_allowed_http: Cette requête n'est pas autorisée. Faites attention.

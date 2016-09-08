@@ -32,7 +32,7 @@ class PollProposalResponseManager
     {
         $this->pollProposalResponse = new PollProposalResponse();
         $this->pollProposalResponse->setValue($value);
-        $pollProposal->addProposalResponse($this->pollProposalResponse);
+        $pollProposal->addPollProposalResponse($this->pollProposalResponse);
         $moduleInvitation->addPollProposalResponse($this->pollProposalResponse);
     }
 

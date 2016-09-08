@@ -1,0 +1,137 @@
+<div class="modal fade" id="{{ pp_form_modal_prefix }}_modal_id" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="#{{ pp_form_modal_prefix }}_modal_title">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            {% if edition %}
+                {{ form_start(pollProposalForm, {'action':path('pollProposalEditionForm',
+                    {
+                        'pollProposalId':pollProposal.id,
+                        'moduleInvitationToken': userModuleInvitation.token
+                    }),
+                    'attr':{'id': pp_form_modal_prefix~"_form_id"}
+                }) }}
+            {% else %}
+                {{ form_start(pollProposalForm, {'action':path('displayEvent',
+                    {
+                        'token':module.event.token,
+                        'tokenEdition': (is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'),[module.event,app.request.get('tokenEdition')])?module.event.tokenEdition:null)
+                    }),
+                    'attr':{'id': pp_form_modal_prefix~"_form_id"}
+                }) }}
+            {% endif %}
+            <div class="modal-header">
+                <div class="modal-title" id="{{ pp_form_modal_prefix }}_modal_title">
+                    <h2>{{ (edition?"pollmodule.modal.editPollProposal.title":"pollmodule.modal.addPollProposal.title")|trans }}</h2>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    {{ form_row(pollProposalForm.strPPElts, {
+                        'label':'pollmodule.modal.all.form.string_collection.label',
+                        'attr':{
+                            'class':pp_form_modal_prefix~'_strPPECollection'
+                        }}) }}
+                    {{ form_row(pollProposalForm.intPPElts, {
+                        'label':'pollmodule.modal.all.form.integer_collection.label',
+                        'attr':{
+                            'class':pp_form_modal_prefix~'_intPPECollection'
+                        }}) }}
+                    {{ form_row(pollProposalForm.datetimePPElts, {
+                        'label':'pollmodule.modal.all.form.datetime_collection.label',
+                        'attr':{
+                            'class':pp_form_modal_prefix~'_datetimePPECollection'
+                        }}) }}
+                </div>
+
+                <div class="alert alert-warning">
+                    A faire
+                    <ul>
+                        <li>gérer les boutons d'ajout dans un groupe</li>
+                        <li>Design (boutton up/bottom/....)</li>
+                    </ul>
+                </div>
+
+                <div class="pull-right">
+                    <button class="btn btn-danger waves-effect" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                    <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+            {{ form_end(pollProposalForm) }}
+        </div>
+    </div>
+    <script type="text/javascript">
+        $('.{{ pp_form_modal_prefix }}_strPPECollection').collection(
+                {
+                    'drag_drop': false,
+                    'add': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-comment-text"></i></a>'
+                }
+        );
+        $('.{{ pp_form_modal_prefix }}_intPPECollection').collection(
+                {
+                    'drag_drop': false,
+                    'add': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-plus-1"></i></a>'
+                }
+        );
+        $('.{{ pp_form_modal_prefix }}_datetimePPECollection').collection(
+                {
+                    'drag_drop': false,
+                    'add': '<a href="#" class="btn btn-default"><i class="zmdi zmdi-time"></i></a>',
+                    'after_add': function (collection, element) {
+                        jsPlugginActivation();
+                    }
+                }
+        );
+
+        $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
+            {% if (edition) %}
+            ajaxFormSubmission($(this), e, function (responseJSON, textStatus, jqXHR) {
+                        if (responseJSON.htmlContent) {
+                            $('#{{ pp_form_modal_prefix }}_modal_id').modal('toggle');
+                            // Suppression des cellules de la ligne
+                            $('#pp_display_row_{{ pollProposal.id }}').children().each(function () {
+                                $(this).remove();
+                            });
+                            // Ajout des cellules à la ligne existante
+                            $(responseJSON.htmlContent).children().each(function () {
+                                $('#pp_display_row_{{ pollProposal.id }}').append($(this));
+                            });
+                        }
+                    }, null, null
+            );
+            {% else %}
+            var $form = $(this);
+            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                        if (responseJSON.htmlContent) {
+                            $('#{{ pp_form_modal_prefix }}_modal_id').modal('toggle');
+                            if (responseJSON.htmlContent.pollProposalRowDisplay) {
+                                $('#pp-row-group-{{ module.token }}').append(responseJSON.htmlContent.pollProposalRowDisplay);
+                                if ($('#pp-empty-{{ module.token }}')[0]) {
+                                    $('#pp-empty-{{ module.token }}').remove();
+                                }
+                            }
+                            $form[0].reset();
+                            $('.strPPECollection_{{ module.token }}').children('.form-group').each(function () {
+                                $(this).find('[class*=-remove]').each(function () {
+                                    $(this).trigger('click');
+                                });
+                            });
+                            $('.intPPECollection_{{ module.token }}').children('.form-group').each(function () {
+                                $(this).find('[class*=-remove]').each(function () {
+                                    $(this).trigger('click');
+                                });
+                            });
+                            $('.datetimePPECollection_{{ module.token }}').children('.form-group').each(function () {
+                                $(this).find('[class*=-remove]').each(function () {
+                                    $(this).trigger('click');
+                                });
+                            });
+                        }
+                    }, null, null
+            );
+            {% endif %}
+        });
+    </script>
+</div>
+
+

@@ -32,7 +32,8 @@
         "stof/doctrine-extensions-bundle": "^1.2",
         "friendsofsymfony/user-bundle": "dev-master",
         "hwi/oauth-bundle": "dev-master",
-		"mangopay/php-sdk-v2": "^2.3"
+		"mangopay/php-sdk-v2": "^2.3",
+        "burgov/key-value-form-bundle": "@stable"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

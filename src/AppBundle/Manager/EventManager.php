@@ -14,16 +14,20 @@ use AppBundle\Entity\Event;
 use AppBundle\Entity\EventInvitation;
 use AppBundle\Entity\Module;
 use AppBundle\Form\EventFormType;
+use AppBundle\Form\InvitationsFormType;
 use AppBundle\Security\ModuleVoter;
 use ATUserBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class EventManager
 {
+    const TOKEN_EDITION_SESSION_KEY = "user/event/tokenEdition";
+
     /** @var EntityManager */
     private $entityManager;
 
@@ -158,6 +162,24 @@ class EventManager
         return $this->event;
     }
 
+    public function createEventInvitationsForm()
+    {
+        return $this->formFactory->create(InvitationsFormType::class);
+    }
+
+    public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm){
+        if($this->event != null){
+            $emailsData = $eventInvitationsForm->get("invitations")->getData();
+            foreach ($emailsData as $email){
+                $this->eventInvitationManager->getGuestEventInvitation($this->event, $email);
+            }
+            $this->entityManager->persist($this->event);
+            $this->entityManager->flush();
+            return $this->event;
+        }
+        return null;
+    }
+
     /**
      * Crée et ajoute un module à l'événement
      * @param $type string Le type du module à créer et à ajouter à l'événement
@@ -184,11 +206,12 @@ class EventManager
     }
 
     /**
+     * @param EventInvitation $userEventInvitation
      * @return array Un tableau de modules de l'événement au format :
      *  moduleId => [
      *  'module' => Module : Le module lui-meme
      *  'moduleForm' => Form : le formulaire d'édition de l'événement si editable
-     *  'addPollProposalForm' => Form : uniquement pour un PollModule
+     *  'pollProposalAddForm' => Form : uniquement pour un PollModule
      * ]
      */
     public function getModulesToDisplay(EventInvitation $userEventInvitation)
@@ -207,7 +230,7 @@ class EventManager
                     }
                     if ($module->getPollModule() != null) {
                         // TODO Vérifier les autorisations d'ajouter des propositions au module
-                        $moduleDescription['addPollProposalForm'] = $this->moduleManager->createAddPollProposalForm($module);
+                        $moduleDescription['pollProposalAddForm'] = $this->moduleManager->createPollProposalAddForm($module, $userModuleInvitation);
                     }
                     $modules[$module->getId()] = $moduleDescription;
                 }

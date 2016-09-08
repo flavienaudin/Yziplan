@@ -98,6 +98,18 @@ eventInvitation:
   error.message:
     unauthorized_access: You are ot invited to this event.
 
+invitations:
+  display:
+    title: Guests list
+    remove_link: Cancel %name%'s invitation
+  form:
+    invitations:
+      label: Invite new people
+      placeholder: Emails of your guests
+      invalid_message: Valid email address required
+  button:
+    send_invitation: Send invitations
+
 module:
   form:
     name:
@@ -131,14 +143,28 @@ module:
     add: You must set your name on your invitation.
 
 pollmodule:
-  modale:
+  display:
+    no_proposal: No proposal yet
+  modal:
     addPollProposal:
       title: Add a proposal
+    editPollProposal:
+      title: Edit proposal
+    all:
       form:
-        name:
-          label: Name
+        string_collection:
+          label: Add a text
+        integer_collection:
+          label: Add an integer
+        datetime_collection:
+          label: Add a datetime
+  alert:
+    confirm_proposal_deletion:
+      title: Are you sure you want to delete this proposal?
+      message: This action is irreversible
 
 moduleInvitation:
+  empty_displayable_name: You
   error.message:
     missing_data: Data are missing to treat the request.
     unauthorized_access: You are not allowed to edit this answer.
@@ -169,6 +195,7 @@ global:
     unauthorized_access: You haven't access to this section.
     internal_server_error: An internal error occured. Please, check your data and repeat the action.
     javascrip_disabled: Javascript is disabled by your web browser. The web site may react badly. Enable it to take full advantage of the features we offer.
+    invalid_form: Submitted data are not valid.
   exception:
     access_denied_http: You do not have access to these information. Please, connect with the appropriate user.
     method_not_allowed_http: This request is not allowed. Take care.

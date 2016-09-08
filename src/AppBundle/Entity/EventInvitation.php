@@ -289,7 +289,7 @@ class EventInvitation
     {
         $displayableName = $this->name;
         if (empty($displayableName)) {
-            if ($this->getAppUser() != null && $this->getAppUser()->getUser() != null && $this->getAppUser()->getUser()->isEnabled()) {
+            if ($this->getAppUser() != null && $this->getAppUser()->getUser() != null) {
                 $displayableName = $this->getAppUser()->getUser()->__toString();
             } else {
                 $displayableName = null;

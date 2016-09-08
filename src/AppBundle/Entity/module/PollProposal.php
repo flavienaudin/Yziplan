@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\module;
 
 use AppBundle\Entity\EventInvitation;
+use AppBundle\Entity\ModuleInvitation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -29,30 +30,22 @@ class PollProposal
     private $id;
 
     /**
-     * @var string
+     * @var boolean
      *
-     * @ORM\Column(name="name", type="string", length=255)
-     * @Assert\NotBlank()
+     * @ORM\Column(name="deleted", type="boolean")
      */
-    private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    private $description;
+    private $deleted = false;
 
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
 
     /**
-     * Personne ayant ajouté la depense
+     * ModuleInvitation de l'invité ayant ajouté la proposition
      *
-     * @var EventInvitation
+     * @var ModuleInvitation
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\EventInvitation")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\ModuleInvitation")
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id", nullable=true)
      *
      */
@@ -104,7 +97,25 @@ class PollProposal
     }
 
     /**
-     * @return EventInvitation
+     * @return mixed
+     */
+    public function getDeleted()
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param mixed $deleted
+     * @return PollProposal
+     */
+    public function setDeleted($deleted)
+    {
+        $this->deleted = $deleted;
+        return $this;
+    }
+
+    /**
+     * @return ModuleInvitation
      */
     public function getCreator()
     {
@@ -112,7 +123,7 @@ class PollProposal
     }
 
     /**
-     * @param EventInvitation $creator
+     * @param ModuleInvitation $creator
      * @return PollProposal
      */
     public function setCreator($creator)
@@ -152,7 +163,7 @@ class PollProposal
      *
      * @return PollProposal
      */
-    public function addProposalElement(PollProposalElement $pollProposalElement)
+    public function addPollProposalElement(PollProposalElement $pollProposalElement)
     {
         $this->pollProposalElements[] = $pollProposalElement;
         $pollProposalElement->setPollProposal($this);
@@ -165,7 +176,7 @@ class PollProposal
      *
      * @param PollProposalElement $pollProposalElement
      */
-    public function removeProposalElement(PollProposalElement $pollProposalElement)
+    public function removePollProposalElement(PollProposalElement $pollProposalElement)
     {
         $this->pollProposalElements->removeElement($pollProposalElement);
     }
@@ -185,9 +196,9 @@ class PollProposal
      *
      * @param PollProposalResponse $pollProposalResponse
      *
-     * @return PollProposalElement
+     * @return PollProposal
      */
-    public function addProposalResponse(PollProposalResponse $pollProposalResponse)
+    public function addPollProposalResponse(PollProposalResponse $pollProposalResponse)
     {
         $this->pollProposalResponses[] = $pollProposalResponse;
         $pollProposalResponse->setPollProposal($this);
@@ -213,53 +224,5 @@ class PollProposal
     public function getPollProposalResponses()
     {
         return $this->pollProposalResponses;
-    }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     *
-     * @return PollProposal
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     *
-     * @return PollProposal
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
     }
 }

@@ -23,9 +23,14 @@ services:
       class: AppBundle\Manager\ModuleInvitationManager
       arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@at.service.gentoken']
 
+  at.manager.pollproposal:
+      class: AppBundle\Manager\PollProposalManager
+      arguments: ['@form.factory']
+
   at.manager.pollproposal_response:
       class: AppBundle\Manager\PollProposalResponseManager
       arguments: ['@doctrine.orm.entity_manager']
+
 # Voters
   at.voter.event:
     class: AppBundle\Security\EventVoter
@@ -50,6 +55,13 @@ services:
     public: false
     tags:
       - { name: security.voter }
+
+# FormTypes
+  at.form_type.invitation:
+    class: AppBundle\Form\InvitationsFormType
+    arguments: ['@security.authorization_checker', '@security.token_storage', '@validator']
+    tags:
+    - { name: form.type }
 
 # Event Subscribers
   at.event_subscriber.kernel_events.:

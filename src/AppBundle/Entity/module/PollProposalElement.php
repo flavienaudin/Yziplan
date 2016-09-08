@@ -53,13 +53,31 @@ class PollProposalElement
     private $type;
 
     /**
-     * Contient les informations complémentaires, par exemple le placeId pour un lieu, le fuseau horaire pour une date, etc...
+     * Contient la valeur si le type == PollProposalElementType::STRING
      *
      * @var string
      *
-     * @ORM\Column(name="additional_data", type="string", length=255, nullable=true)
+     * @ORM\Column(name="val_string", type="string", length=511, nullable=true)
      */
-    private $additionalData;
+    private $valString;
+
+    /**
+     * Contient la valeur si le type == PollProposalElementType::INTEGER
+     *
+     * @var integer
+     *
+     * @ORM\Column(name="val_integer", type="integer", nullable=true)
+     */
+    private $valInteger;
+
+    /**
+     * Contient la valeur si le type == PollProposalElementType::DATE_TIME
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(name="val_datetime", type="datetime", nullable=true)
+     */
+    private $valDatetime;
 
     /***********************************************************************
      *                      Getters and Setters
@@ -148,7 +166,7 @@ class PollProposalElement
     /**
      * Get type
      *
-     * @return PollProposalElementType
+     * @return string Cf. PollProposalElementType
      */
     public function getType()
     {
@@ -158,18 +176,54 @@ class PollProposalElement
     /**
      * @return string
      */
-    public function getAdditionalData()
+    public function getValString()
     {
-        return $this->additionalData;
+        return $this->valString;
     }
 
     /**
-     * @param string $additionalData
+     * @param string $valString
      * @return PollProposalElement
      */
-    public function setAdditionalData($additionalData = null)
+    public function setValString($valString)
     {
-        $this->additionalData = $additionalData;
+        $this->valString = $valString;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getValInteger()
+    {
+        return $this->valInteger;
+    }
+
+    /**
+     * @param int $valInteger
+     * @return PollProposalElement
+     */
+    public function setValInteger($valInteger)
+    {
+        $this->valInteger = $valInteger;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getValDatetime()
+    {
+        return $this->valDatetime;
+    }
+
+    /**
+     * @param \DateTime $valDatetime
+     * @return PollProposalElement
+     */
+    public function setValDatetime($valDatetime)
+    {
+        $this->valDatetime = $valDatetime;
         return $this;
     }
 

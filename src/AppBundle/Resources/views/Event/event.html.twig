@@ -8,7 +8,7 @@
 {% endblock mainMenu_listItems %}
 
 {% block event_content %}
-    {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'eventForm':eventForm}) }}
+    {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'eventForm':eventForm, 'invitationsForm':invitationsForm}) }}
 
     <div class="row">
         <div class="col-xs-12 col-sm-8" id="eventModulesContainer">
@@ -17,7 +17,7 @@
                     {{ include('@App/Event/module/displayPollModule.html.twig', {
                         'module':moduleDescription.module,
                         'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
-                        'addPollProposalForm':(moduleDescription.addPollProposalForm is defined?moduleDescription.addPollProposalForm:null ),
+                        'pollProposalAddForm':(moduleDescription.pollProposalAddForm is defined?moduleDescription.pollProposalAddForm:null ),
                         'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module)
                     }) }}
                 {% elseif moduleDescription.module.expenseModule is not null %}
@@ -53,16 +53,23 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select.min.css") }}">
 {% endblock stylesheets %}
+
+{% block top_javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/selectize.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/at-selectize.js") }}"></script>
+{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/app/js/bootstrap-datetimepicker.min.js') }}"></script>
     <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.js") }}"></script>
     <script src="{{ asset("bundles/app/js/sweetalert.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
 
     {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Entity\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}

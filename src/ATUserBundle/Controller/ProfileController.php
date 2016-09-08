@@ -9,6 +9,7 @@
 namespace ATUserBundle\Controller;
 
 use AppBundle\Utils\FlashBagTypes;
+use AppBundle\Utils\FormUtils;
 use ATUserBundle\Entity\User;
 use ATUserBundle\Form\UserAboutBasicInformationType;
 use ATUserBundle\Form\UserAboutBiographyType;
@@ -120,7 +121,7 @@ class ProfileController extends BaseController
                 } else {
                     $data["formErrors"] = array();
                     foreach ($userForm->getErrors(true) as $error) {
-                        $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
+                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
                     }
                     return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
@@ -171,7 +172,7 @@ class ProfileController extends BaseController
                 } else {
                     $data["formErrors"] = array();
                     foreach ($biographyForm->getErrors(true) as $error) {
-                        $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
+                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
                     }
                     return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
@@ -225,7 +226,7 @@ class ProfileController extends BaseController
                 } else {
                     $data["formErrors"] = array();
                     foreach ($basicInformationForm->getErrors(true) as $error) {
-                        $data["formErrors"][$error->getOrigin()->getName()] = $error->getMessage();
+                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
                     }
                     return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
