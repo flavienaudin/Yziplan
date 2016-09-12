@@ -170,6 +170,11 @@ moduleInvitation:
     missing_data: Des informations sont manquantes pour traiter la requête.
     unauthorized_access: Vous n'êtes pas autoriser à modifier cette réponse
 
+email:
+  template:
+    application_name: Plany
+
+
 # Globals
 global:
   event: événement

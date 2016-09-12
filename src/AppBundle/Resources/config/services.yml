@@ -31,6 +31,10 @@ services:
       class: AppBundle\Manager\PollProposalResponseManager
       arguments: ['@doctrine.orm.entity_manager']
 
+  at.service.mailer:
+    class: AppBundle\Mailer\ATTwigSwiftMailer
+    arguments: ['@mailer','@router','@templating','@translator.default']
+
 # Voters
   at.voter.event:
     class: AppBundle\Security\EventVoter
