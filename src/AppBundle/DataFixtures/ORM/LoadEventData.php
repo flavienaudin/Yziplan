@@ -166,7 +166,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $modulePoll->setToken("quand123");
         $modulePoll->setTokenEdition("quand321");
         $modulePoll->setStatus(EventStatus::IN_ORGANIZATION);
-        $moduleExpense->setOrderIndex(1);
+        $modulePoll->setOrderIndex(1);
 
         $pollModule = new PollModule();
         $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
