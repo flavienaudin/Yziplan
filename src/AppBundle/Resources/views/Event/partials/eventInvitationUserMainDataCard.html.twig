@@ -1,5 +1,10 @@
+{# Données d'entrée :
+- userEventInvitation : EventInvitation de l'utilisateur
+- userEventInvitationForm : Form permettant de répondre à l'invitation
+#}
+
 <div class="card" id="user-event-invitation-card">
-    {% if userEventInvitationForm is defined %}
+    {% if userEventInvitationForm is defined and userEventInvitationForm is not null %}
         {{ form_start(userEventInvitationForm, {'action': path('displayEvent',
             {
                 'token':userEventInvitation.event.token,
@@ -13,7 +18,7 @@
         <h3>{{ "eventInvitation.maindata.card.title"|trans }}</h3>
     </div>
     <div class="card-body card-padding">
-        {% if userEventInvitationForm is defined %}
+        {% if userEventInvitationForm is defined and userEventInvitationForm is not null %}
             <div class="form-group">
                 {{ form_label(userEventInvitationForm.name, 'eventInvitation.form.name.label') }}
                 <div class="fg-line">
@@ -26,6 +31,13 @@
                 <div class="fg-line">
                     {{ form_widget(userEventInvitationForm.email, {'attr':{'placeholder':'eventInvitation.form.email.placeholder'}}) }}
                     {{ form_errors(userEventInvitationForm.email) }}
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form_label(userEventInvitationForm.answer, 'eventInvitation.form.answer.label') }}
+                <div class="fg-line">
+                    {{ form_widget(userEventInvitationForm.answer, {'attr':{'placeholder':'eventInvitation.form.answer.placeholder'}}) }}
+                    {{ form_errors(userEventInvitationForm.answer) }}
                 </div>
             </div>
         {% else %}

@@ -95,6 +95,14 @@ eventInvitation:
     email:
       label: Your contact email
       placeholder: Your email
+    answer:
+      label: Your answer
+      placeholder: Your answer
+  answer:
+    yes: Yes
+    no: No
+    interested: Interested
+    dont_know: Don't know yet
   maindata.card:
     title: About your invitation
     text:

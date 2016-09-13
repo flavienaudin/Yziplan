@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\enum\EventInvitationAnswer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -53,6 +54,14 @@ class EventInvitation
      * @ORM\Column(name="token_edition", type="string", length=128, unique=true)
      */
     private $tokenEdition;
+
+    /**
+     * Cf. AppBundle/enum/EventInvitationAnswer
+     * @var string
+     *
+     * @ORM\Column(name="answer", type="string", length=128, nullable=false)
+     */
+    private $answer = EventInvitationAnswer::DONT_KNOW;
 
 
     /***********************************************************************
@@ -169,6 +178,24 @@ class EventInvitation
     public function setTokenEdition($tokenEdition)
     {
         $this->tokenEdition = $tokenEdition;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAnswer()
+    {
+        return $this->answer;
+    }
+
+    /**
+     * @param string|null $answer
+     * @return EventInvitation
+     */
+    public function setAnswer($answer = null)
+    {
+        $this->answer = $answer;
         return $this;
     }
 
@@ -312,7 +339,6 @@ class EventInvitation
     }
 
 
-
     /**
      * Get moduleInvitation for the given module
      *
@@ -321,8 +347,8 @@ class EventInvitation
     public function getModuleInvitationForModule(Module $module)
     {
         /** @var ModuleInvitation $moduleInvitation */
-        foreach($this->getModuleInvitations() as $moduleInvitation){
-            if($moduleInvitation->getModule()->getId() == $module->getId()){
+        foreach ($this->getModuleInvitations() as $moduleInvitation) {
+            if ($moduleInvitation->getModule()->getId() == $module->getId()) {
                 return $moduleInvitation;
             }
         }

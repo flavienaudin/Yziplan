@@ -144,7 +144,7 @@ class EventInvitationManager
     public function getGuestEventInvitation(Event $event, $email){
         $this->eventInvitation = null;
         $guestUser = $this->userManager->findUserByEmail($email);
-        if($guestUser != null){
+        if($guestUser instanceof User){
             $eventInvitationRepo = $this->entityManager->getRepository("AppBundle:EventInvitation");
             $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'appUser' => $guestUser->getAppUser()));
         }else{

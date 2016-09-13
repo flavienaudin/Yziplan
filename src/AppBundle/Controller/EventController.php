@@ -272,7 +272,7 @@ class EventController extends Controller
                 'invitationsForm' => ($eventInvitationsForm != null ? $eventInvitationsForm->createView() : null),
                 'modules' => $modules,
                 'userEventInvitation' => $userEventInvitation,
-                'userEventInvitationForm' => ($eventInvitationForm != null ? $eventInvitationForm->createView() : null)
+                'userEventInvitationForm' => $eventInvitationForm->createView()
             ));
 
         }

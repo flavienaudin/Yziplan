@@ -66,6 +66,12 @@ services:
     tags:
     - { name: form.type }
 
+  at.form_type.invitation_answer:
+    class: AppBundle\Form\InvitationAnswerFormType
+    arguments: ['@translator.default']
+    tags:
+      - { name: form.type }
+
 # Event Subscribers
   at.event_subscriber.kernel_events.:
     class: AppBundle\EventListener\KernelEventsSubscriber

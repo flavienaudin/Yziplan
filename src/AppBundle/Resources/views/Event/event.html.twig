@@ -1,4 +1,13 @@
 {% extends "@App/Event/layout.html.twig" %}
+{# Données d'entrée :
+- event (Event) L'évenement à afficher
+- eventForm (Form|null) Formulaire d'édition des information général de l'événement (si les droits le permettent)
+- invitationsForm (Form|null) Formulaire permettant d'inviter (renseignement des e-mails des invités)
+- modules (array) Tableau des modules de l'événement. Chaque module est décrit un tableau de données (Cf. EventManager:getModulesToDisplay(...) )
+- userEventInvitation (EventInvitation)
+- userEventInvitationForm (Form) Formulaire de réponse à l'invitation
+#}
+
 
 {% block mainMenu_listItems %}
     <li><a href="#event-header-card">{{ "global.event"|trans|capitalize }}</a></li>
