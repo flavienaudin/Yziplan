@@ -1,0 +1,23 @@
+{% extends "@App/EventInvitation/layout_cboxed.html.twig" %}
+
+{#
+Commentaires : - Choix du layout modifiable. Définir le menu de gauche si besoin, les alerts et autres paneau de notifications
+
+Données d'entrée :
+- eventInvitations : tableau d'EventInvitation qui sont à afficher
+#}
+
+{% block title %}{{ 'eventInvitations.page.meta_title'|trans }}{% endblock %}
+
+{% block event_invitations_content %}
+    <div class="card">
+        <div class="card-header">
+            <h2>{{ "eventInvitations.page.title"|trans }}<small>{{ "eventInvitations.page.subtitle"|trans }}</small></h2>
+        </div>
+        <div class="card-body card-padding">
+            {% for eventInvitation in eventInvitations %}
+                {{ include('@App/EventInvitation/partials/event_invitation.html.twig', {'eventInvitation':eventInvitation}) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

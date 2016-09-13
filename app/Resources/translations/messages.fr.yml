@@ -79,6 +79,14 @@ event:
   success.message:
     creation: Evénement créé avec succès.
 
+eventInvitations:
+  user_menu:
+    entry: Mes événements
+  page:
+    meta_title: Mes événements
+    title: Mes événements
+    subtitle: Liste des événements que j'organise et des invitations que j'ai reçues
+
 eventInvitation:
   form:
     name:
@@ -205,6 +213,8 @@ status:
   in_creation: En cours de création
   in_organization: En cours d'organisation
   awaiting_validation: En attente de validation
+  valid: Valide
   validated: Validé
   archived: Archivé
   deprogrammed: Déprogrammé
+  cancelled: Annulé

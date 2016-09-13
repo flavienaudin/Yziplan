@@ -58,10 +58,12 @@ resetting:
       title: Forgot password
 
 profile:
+  user_menu:
+    entry: My profile
   show:
     page:
-      meta_title: Your profile
-      title: Your profile
+      meta_title: My profile
+      title: My profile
       avatar_update: Update Profile Picture
     about:
       mandatory_information:

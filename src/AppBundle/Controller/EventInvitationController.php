@@ -21,6 +21,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 class EventInvitationController extends Controller
 {
@@ -87,6 +88,20 @@ class EventInvitationController extends Controller
                 return $this->redirectToRoute("home");
             }
         }
+    }
+
+
+    /**
+     * @Route("/{_locale}/mes-evenements", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayUserEvents")
+     */
+    public function displayUserEventsAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
+        $userEventInvitations = $this->get('at.manager.app_user')->getUserEventInvitations($this->getUser());
+        return $this->render("@App/EventInvitation/user_event_invitations.html.twig", array(
+            "eventInvitations" => $userEventInvitations
+        ));
+
     }
 
 }

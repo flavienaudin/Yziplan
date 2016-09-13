@@ -76,7 +76,8 @@
                         {# TODO : mettre l'avatar de l'utilisateur #}
                         <i class="hm-icon zmdi zmdi-account-circle"></i> </a>
                     <ul class="dropdown-menu pull-right dm-icon" role="menu">
-                        <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ app.user.username }}</a></li>
+                        <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a></li>
+                        <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a></li>
                         <li role="separator" class="divider"></li>
                         {# TODO : définir le menu déroulant de l'utilisateur connecté : profil, déconnexion, ... #}
                         <li role="presentation"><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>

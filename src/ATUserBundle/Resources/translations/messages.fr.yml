@@ -58,10 +58,12 @@ resetting:
       title: Mot de passe oublié
 
 profile:
+  user_menu:
+    entry: Mon profil
   show:
     page:
-      meta_title: Votre profil
-      title: Votre profil
+      meta_title: Mon profil
+      title: Mon profil
       avatar_update: Mettre à jour votre avatar
     about:
       mandatory_information:

@@ -10,7 +10,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\AppUser;
 use AppBundle\Entity\Event;
-use AppBundle\Entity\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
@@ -280,7 +279,6 @@ class EventController extends Controller
         $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.unauthorized_access"));
         return $this->redirectToRoute('home');
     }
-
 
     /**
      * @Route("/{_locale)/app-user/{appUserId}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="appUser")

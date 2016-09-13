@@ -1,0 +1,16 @@
+{# Données d'entrée :
+- eventInvitation : EventInvitation à afficher
+#}
+<div>
+    <u><span data-toggle="popover" data-placement="top" data-content="{{ eventInvitation.event.description }}"
+          title="{{ "event.form.description.label"|trans }}" data-original-title="{{ "event.form.description.label"|trans }}">
+        {{ eventInvitation.event.name }}
+    </span></u>
+    <i class="zmdi zmdi-circle"></i>
+    <span>{{ eventInvitation.displayableName }}</span>
+    <i class="zmdi zmdi-circle"></i>
+    <span class="badge">{{ eventInvitation.status|trans }}</span>
+    <span>
+        <a href="{{ path('displayEventInvitation', {'token': eventInvitation.token}) }}"><i class="zmdi zmdi-eye"></i></a>
+    </span>
+</div>
