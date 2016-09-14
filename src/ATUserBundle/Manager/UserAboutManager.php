@@ -10,16 +10,58 @@ namespace ATUserBundle\Manager;
 
 use ATUserBundle\Entity\User;
 use ATUserBundle\Entity\UserAbout;
+use ATUserBundle\Form\UserAboutBasicInformationType;
+use ATUserBundle\Form\UserAboutBiographyType;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 
 class UserAboutManager
 {
-    /** @var  EntityManager */
-    protected $entityManager;
+    /** @var  EntityManager $entityManager */
+    private $entityManager;
+    /** @var FormFactoryInterface $formFactory */
+    private $formFactory;
+    /** @var UserAbout $userAbout */
+    private $userAbout;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, FormFactoryInterface $formFactory)
     {
         $this->entityManager = $em;
+        $this->formFactory = $formFactory;
+    }
+
+    /**
+     * @return UserAbout
+     */
+    public function getUserAbout()
+    {
+        return $this->userAbout;
+    }
+
+    /**
+     * @param UserAbout|null $userAbout
+     */
+    public function setUserAbout($userAbout = null)
+    {
+        $this->userAbout = $userAbout;
+    }
+
+    /**
+     * Get the UserAbout and create it if null
+     * @param User $user
+     * @return UserAbout
+     */
+    public function retrieveUserAbout(User $user)
+    {
+        $this->userAbout = $user->getUserAbout();
+        if ($this->userAbout == null) {
+            $this->userAbout = new UserAbout();
+            $user->setUserAbout($this->userAbout);
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+        }
+        return $this->userAbout;
     }
 
     /**
@@ -34,19 +76,24 @@ class UserAboutManager
     }
 
     /**
-     * Get the UserAbout and create it if null
-     * @param User $user
-     * @return UserAbout
+     * @return FormInterface|null
      */
-    public function getUserAbout(User $user)
+    public function createBiographyForm()
     {
-        $userAbout = $user->getUserAbout();
-        if ($userAbout == null) {
-            $userAbout = new UserAbout();
-            $user->setUserAbout($userAbout);
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+        if ($this->userAbout != null) {
+            return $this->formFactory->create(UserAboutBiographyType::class, $this->userAbout);
         }
-        return $userAbout;
+        return null;
+    }
+
+    /**
+     * @return FormInterface|null
+     */
+    public function createBasicInformationForm()
+    {
+        if ($this->userAbout != null) {
+            return $this->formFactory->create(UserAboutBasicInformationType::class, $this->userAbout);
+        }
+        return null;
     }
 }

@@ -1,14 +1,20 @@
 {% extends "ATUserBundle::layout_cboxed.html.twig" %}
 
+{# Données d'entrée !
+- user (User) L'utilisateur dont on affiche le profil
+- form_mandatory_information (Form) Le formulaire des informations obligatoires
+- form_biography (Form|null) Le formulaire pour la partie "Biographie"
+- form_basic_information (Form|null) Le formulaire pour la partie "Information basique"
+#}
+
 {% block title %}
     {% spaceless %}{{ parent() }} - {{ "profile.show.page.meta_title"|trans }}{% endspaceless %}
 {% endblock %}
 
 {% block fos_user_content %}
-
     <div class="c-header">
-        <h2>{{ app.user }}
-            <small>{{ app.user.email }}</small>
+        <h2>{{ user }}
+            <small>{{ user.email }}</small>
         </h2>
     </div>
 
@@ -50,7 +56,6 @@
             </div>
         </div>
 
-
         <div class="pm-body clearfix">
             <div role="tabpanel">
                 <ul class="tab-nav tn-justified">
@@ -60,7 +65,12 @@
                 </ul>
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="profile-about">
-                        {{ include('@ATUser/Profile/partials/profile_about.html.twig') }}
+                        {{ include('@ATUser/Profile/partials/profile_about.html.twig', {
+                            'user':user,
+                            'form_mandatory_information':form_mandatory_information,
+                            'form_biography':form_biography,
+                            'form_basic_information':form_basic_information
+                        }) }}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile-connections">
                         {{ include('@ATUser/Profile/partials/profile_connections.html.twig') }}
@@ -77,12 +87,10 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select.css") }}">
 {% endblock stylesheets %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/app/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('bundles/app/js/bootstrap-select.min.js') }}"></script>
     <script src="{{ asset('bundles/atuser/js/profile/at-about.js') }}"></script>
 {% endblock javascripts %}

@@ -6,9 +6,11 @@ services:
         calls:
             - [ setTokenGenerateur, ['@at.service.gentoken'] ]
             - [ setEntityManager, ['@doctrine.orm.entity_manager'] ]
+            - [ setFosUserProfileFormFactory, ['@fos_user.profile.form.factory'] ]
+
     at.manager.user_about_manager:
         class: ATUserBundle\Manager\UserAboutManager
-        arguments: ['@doctrine.orm.entity_manager']
+        arguments: ['@doctrine.orm.entity_manager','@form.factory']
 
 # Provider
     at.provider.user:

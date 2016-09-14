@@ -13,7 +13,9 @@ use ATUserBundle\Entity\User;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager as BaseManager;
+use FOS\UserBundle\Form\Factory\FormFactory;
 use FOS\UserBundle\Util\CanonicalizerInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserManager extends BaseManager
@@ -22,10 +24,13 @@ class UserManager extends BaseManager
     protected $tokenGenerateur;
     /** @var  EntityManager */
     protected $entityManager;
+    /** @var FormFactory */
+    private $fosUserProfileFormFactory;
 
     public function __construct(EncoderFactoryInterface $encoderFactory, CanonicalizerInterface $usernameCanonicalizer, CanonicalizerInterface $emailCanonicalizer, ObjectManager $om, $class)
     {
         parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $om, $class);
+
     }
 
     /**
@@ -42,6 +47,13 @@ class UserManager extends BaseManager
     public function setEntityManager(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @param FormFactory $formFactory
+     */
+    public function setFosUserProfileFormFactory(FormFactory $formFactory){
+        $this->fosUserProfileFormFactory = $formFactory;
     }
 
     /**
@@ -64,5 +76,16 @@ class UserManager extends BaseManager
         $user->setPasswordKnown(false);
         $this->updateUser($user);
         return $user;
+    }
+
+    /**
+     * @param User $user
+     * @return FormInterface
+     */
+    public function createProfileForm(User $user)
+    {
+        $userForm =  $this->fosUserProfileFormFactory->createForm();
+        $userForm->setData($user);
+        return $userForm;
     }
 }
