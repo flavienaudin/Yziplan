@@ -52,7 +52,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
     public function load(ObjectManager $manager)
     {
         // Get our userManager, you must implement `ContainerAwareInterface`
-        $userManager = $this->container->get('at.manager.user_manager');
+        $userManager = $this->container->get('at.manager.user');
         $tokenManager = $this->container->get('at.service.gentoken');
         $eventManager = $this->container->get('at.manager.event');
 

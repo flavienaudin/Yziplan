@@ -11,6 +11,7 @@
     {% spaceless %}{{ parent() }} - {{ "profile.show.page.meta_title"|trans }}{% endspaceless %}
 {% endblock %}
 
+
 {% block fos_user_content %}
     <div class="c-header">
         <h2>{{ user }}
@@ -59,12 +60,12 @@
         <div class="pm-body clearfix">
             <div role="tabpanel">
                 <ul class="tab-nav tn-justified">
-                    <li class="active waves-effect"><a href="#profile-about" aria-controls="profile-about" role="tab" data-toggle="tab">About</a></li>
-                    <li class="waves-effect"><a href="#profile-connections" aria-controls="profile-connections" role="tab" data-toggle="tab">Connections</a></li>
+                    <li class="waves-effect"><a href="#profile-about" aria-controls="profile-about" role="tab" data-toggle="tab">About</a></li>
+                    <li class="active waves-effect"><a href="#profile-connections" aria-controls="profile-connections" role="tab" data-toggle="tab">Connections</a></li>
                     <li class="waves-effect"><a href="#profile-preferences" aria-controls="profile-preferences" role="tab" data-toggle="tab">Preferences</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="profile-about">
+                    <div role="tabpanel" class="tab-pane" id="profile-about">
                         {{ include('@ATUser/Profile/partials/profile_about.html.twig', {
                             'user':user,
                             'form_mandatory_information':form_mandatory_information,
@@ -72,8 +73,8 @@
                             'form_basic_information':form_basic_information
                         }) }}
                     </div>
-                    <div role="tabpanel" class="tab-pane" id="profile-connections">
-                        {{ include('@ATUser/Profile/partials/profile_connections.html.twig') }}
+                    <div role="tabpanel" class="tab-pane active" id="profile-connections">
+                        {{ include('@ATUser/Contact/partials/display_contacts.html.twig', {'contacts':user.contacts}) }}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile-preferences">
                         {{ include('@ATUser/Profile/partials/profile_preferences.html.twig') }}
@@ -87,7 +88,19 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootgrid.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
 {% endblock stylesheets %}
+
+{% block top_javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("bundles/app/js/jquery.bootgrid.updated.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/selectize.js") }}"></script>
+    <script src="{{ asset("includes/js/at-selectize.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/sweetalert.min.js") }}"></script>
+{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}

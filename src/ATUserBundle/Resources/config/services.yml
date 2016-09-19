@@ -1,6 +1,6 @@
 services:
 # Services & Managers
-    at.manager.user_manager:
+    at.manager.user:
         class: ATUserBundle\Manager\UserManager
         arguments: ['@security.encoder_factory', '@fos_user.util.username_canonicalizer', '@fos_user.util.email_canonicalizer', '@fos_user.object_manager', '%fos_user.model.user.class%' ]
         calls:
@@ -8,9 +8,13 @@ services:
             - [ setEntityManager, ['@doctrine.orm.entity_manager'] ]
             - [ setFosUserProfileFormFactory, ['@fos_user.profile.form.factory'] ]
 
-    at.manager.user_about_manager:
+    at.manager.user_about:
         class: ATUserBundle\Manager\UserAboutManager
         arguments: ['@doctrine.orm.entity_manager','@form.factory']
+
+    at.manager.contact:
+        class: ATUserBundle\Manager\ContactManager
+        arguments: ['@doctrine.orm.entity_manager','@at.manager.user']
 
 # Provider
     at.provider.user:

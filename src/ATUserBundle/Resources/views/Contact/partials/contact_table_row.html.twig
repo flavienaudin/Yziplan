@@ -1,0 +1,10 @@
+{# Données d'entrée:
+- contact (Contact) Le contact à afficher
+#}
+
+<tr>
+    <td>{% if false %}{{ contact.linked.getAbsoluteAvatarPath }}{% else %}{% endif %}</td>
+    <td>{{ contact.linked.displayableName }}</td>
+    <td>{#{% if contact.linked.preferences is not null and contact.linked.preferences.emailVisible %}#}{{ contact.linked.email }}{#{% else %} - {% endif %}#}</td>
+    <td>{% for group in contact.groups %}<span class="label label-default">{{ group.name }}</span>{% endfor %}</td>
+</tr>

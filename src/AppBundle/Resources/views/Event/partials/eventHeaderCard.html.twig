@@ -59,7 +59,7 @@
             </div>
             <script>
                 $('#addWhenPollModule').on('click', function (e) {
-                    ajaxRequest(this, e, function (responseJSON, textStatus, jqXHR) {
+                    ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
                         if (responseJSON.htmlContent) {
                             var eventModulesContainer = $('#eventModulesContainer');
                             eventModulesContainer.append(responseJSON.htmlContent);

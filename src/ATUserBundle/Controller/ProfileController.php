@@ -11,20 +11,16 @@ namespace ATUserBundle\Controller;
 use AppBundle\Utils\FlashBagTypes;
 use AppBundle\Utils\FormUtils;
 use ATUserBundle\Entity\User;
-use ATUserBundle\Form\UserAboutBasicInformationType;
 use ATUserBundle\Form\UserAboutBiographyType;
 use ATUserBundle\Manager\UserAboutManager;
 use ATUserBundle\Manager\UserManager;
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
-use FOS\UserBundle\Form\Factory\FactoryInterface;
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
@@ -32,7 +28,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 class ProfileController extends BaseController
 {
-
     /**
      * Show the user
      */
@@ -53,10 +48,10 @@ class ProfileController extends BaseController
         }
 
         /** User Profile */
-        $userForm = $this->get("at.manager.user_manager")->createProfileForm($user);
+        $userForm = $this->get("at.manager.user")->createProfileForm($user);
 
         /** User About */
-        $userAboutManager = $this->get("at.manager.user_about_manager");
+        $userAboutManager = $this->get("at.manager.user_about");
         $userAboutManager->retrieveUserAbout($user);
         $biographyForm = $userAboutManager->createBiographyForm();
         $basicInformationForm = $userAboutManager->createBasicInformationForm();
@@ -87,7 +82,7 @@ class ProfileController extends BaseController
         $data = array();
         if ($user instanceof User) {
             /** @var UserManager $userManager */
-            $userManager = $this->get("at.manager.user_manager");
+            $userManager = $this->get("at.manager.user");
             /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
             $dispatcher = $this->get('event_dispatcher');
 
@@ -149,7 +144,7 @@ class ProfileController extends BaseController
         $data = array();
         if ($user instanceof User) {
             /** @var UserAboutManager $userAboutManager */
-            $userAboutManager = $this->get("at.manager.user_about_manager");
+            $userAboutManager = $this->get("at.manager.user_about");
             $userAbout = $userAboutManager->retrieveUserAbout($user);
             $biographyForm = $this->createForm(UserAboutBiographyType::class, $userAbout);
 
@@ -194,7 +189,7 @@ class ProfileController extends BaseController
         $user = $this->getUser();
         $data = array();
         if ($user instanceof User) {
-            $userAboutManager = $this->get("at.manager.user_about_manager");
+            $userAboutManager = $this->get("at.manager.user_about");
             $userAbout = $userAboutManager->retrieveUserAbout($user);
             $basicInformationForm = $userAboutManager->createBasicInformationForm();
             $basicInformationForm->handleRequest($request);

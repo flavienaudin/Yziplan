@@ -22,7 +22,7 @@ $(document).ready(function () {
     }
 });
 
-$('form').on("submit", function (e) {
+$('form#userMandatoryInformation, form#userBasicInformation, form#userBiography').on("submit", function (e) {
     var $form = $(this);
     ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
         // update form's inputs

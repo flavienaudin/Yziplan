@@ -10,4 +10,21 @@ namespace ATUserBundle\Repository;
  */
 class UserRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param string $needle Aiguille à rechercher dans la colonne "username" et "email"
+     * @param boolean $enabledOnly Si true Alors uniquement les utilisateurs activés (enabled==true) seront retournés
+     * @return array of User
+     */
+    public function findByUsernameOrEmailLike($needle, $enabledOnly)
+    {
+        $query = $this->getEntityManager()->createQuery(
+            "SELECT u FROM ATUserBundle:User u
+            WHERE ( u.email LIKE :needle OR u.username LIKE :needle )
+              AND (u.enabled = TRUE OR (u.enabled=FALSE AND :enabledOnly = FALSE ))
+            ORDER BY u.username ASC"
+        )->setParameters(array('needle' => '%' . $needle . '%', 'enabledOnly' => $enabledOnly));
+
+        return $query->getResult();
+    }
+
 }

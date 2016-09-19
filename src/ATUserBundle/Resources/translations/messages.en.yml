@@ -112,6 +112,35 @@ profile:
     init_password:
       already_init: This action is forbidden since you should already know your password.
 
+contacts:
+  add_form:
+    label: Search contact
+    placeholder: Add email here
+    submit: Add
+  table:
+    avatar:
+      column_title: Avatar
+      title_attr: Personnal record
+    contact: Contact
+    email: Email
+    groups: Groups
+    commnads: Actions
+    delete: Delete
+  text:
+    selection_action: With selected contacts
+    selection_button: Create an event
+    empty_contact_list: You do not have contact, search
+  alert:
+    remove_contact_confirmation_title: Are you sure you want to delete this contact?
+    remove_contact_confirmation_text: This action is irreversible
+  message:
+    add_contacts:
+      success: Contacts were all added successfully.
+      error: Some contacts could not be added.
+    remove_contact:
+      success: The contact was deleted successfully.
+      error: The contact was not successfully deleted.
+
 # Global messages
 text:
   social_network_connexion: 'Log in via your social network account'

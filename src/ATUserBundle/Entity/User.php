@@ -3,6 +3,9 @@
 namespace ATUserBundle\Entity;
 
 use AppBundle\Entity\AppUser;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use FOS\UserBundle\Model\User as FosUser;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -94,6 +97,18 @@ class User extends FosUser
     private $appUser;
 
     /**
+     * @var ArrayCollection of Contact
+     * @ORM\OneToMany(targetEntity="ATUserBundle\Entity\Contact", mappedBy="owner", cascade={"persist"})
+     */
+    private $contacts;
+
+    /**
+     * @var ArrayCollection of ContactGroup
+     * @ORM\OneToMany(targetEntity="ATUserBundle\Entity\ContactGroup", mappedBy="owner", cascade={"persist"})
+     */
+    private $contactGroups;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -103,6 +118,8 @@ class User extends FosUser
         $this->userAbout->setUser($this);
         $this->appUser = new AppUser();
         $this->appUser->setUser($this);
+        $this->contacts = new ArrayCollection();
+        $this->contactGroups = new ArrayCollection();
     }
 
     public function __toString()
@@ -118,7 +135,6 @@ class User extends FosUser
             return $this->pseudo;
         }
     }
-
 
     /**
      * Get id
@@ -326,11 +342,11 @@ class User extends FosUser
     /**
      * Set appUser
      *
-     * @param \AppBundle\Entity\AppUser $appUser
+     * @param AppUser $appUser
      *
      * @return User
      */
-    public function setAppUser(\AppBundle\Entity\AppUser $appUser = null)
+    public function setAppUser(AppUser $appUser = null)
     {
         $this->appUser = $appUser;
 
@@ -340,10 +356,113 @@ class User extends FosUser
     /**
      * Get appUser
      *
-     * @return \AppBundle\Entity\AppUser
+     * @return AppUser
      */
     public function getAppUser()
     {
         return $this->appUser;
     }
+
+    /**
+     * @return Collection
+     */
+    public function getContacts()
+    {
+        return $this->contacts;
+    }
+
+    /**
+     * Retourne la liste des Contact valides (sauf si $etat = false). Valide SSI contact.status = Contact::STATUS_VALID
+     *
+     * @param $statusFilter boolean Permet de désactiver le filtre sur l'état
+     * @return ArrayCollection of Contact
+     */
+    public function getContactsList($statusFilter = true)
+    {
+        $criteria = Criteria::create();
+        if ($statusFilter) {
+            $criteria
+                ->where(Criteria::expr()->eq("status", Contact::STATUS_VALID));
+        }
+        $criteria
+            ->orderBy(array("linked" => Criteria::ASC))
+            ->setFirstResult(0);
+        return $this->contacts->matching($criteria);
+    }
+
+    /**
+     * Retourne la liste des Users qui sont des contacts valides (sauf si $etat = false). Valide SSI contact.status = Contact::STATUS_VALID
+     *
+     * @param $status boolean Permet de désactiver le filtre sur l'état
+     * @return ArrayCollection of User
+     */
+    public function getContactsListAsUser($status = true)
+    {
+        $contactsList = $this->getContactsList($status);
+        $usersList = new ArrayCollection();
+        /** @var Contact $contact */
+        foreach ($contactsList as $contact) {
+            $usersList[] = $contact->getLinked();
+        }
+        return $usersList;
+    }
+
+    /**
+     * Add contact
+     *
+     * @param Contact $contact
+     *
+     * @return User
+     */
+    public function addContact(Contact $contact)
+    {
+        $this->contacts[] = $contact;
+        $contact->setOwner($this);
+        return $this;
+    }
+
+    /**
+     * Remove contact
+     *
+     * @param Contact $contact
+     */
+    public function removeContact(Contact $contact)
+    {
+        $this->contacts->removeElement($contact);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContactGroups()
+    {
+        return $this->contactGroups;
+    }
+
+    /**
+     * Add groupesContact
+     *
+     * @param ContactGroup $contactGroup
+     *
+     * @return User
+     */
+    public function addContactGroup(ContactGroup $contactGroup)
+    {
+        $this->contactGroups[] = $contactGroup;
+        $contactGroup->setOwner($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove contactGroup
+     *
+     * @param ContactGroup $contactGroup
+     */
+    public function removeContactGroup(ContactGroup $contactGroup)
+    {
+        $this->contactGroups->removeElement($contactGroup);
+    }
+
+
 }
