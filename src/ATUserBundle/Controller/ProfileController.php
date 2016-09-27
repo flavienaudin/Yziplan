@@ -11,7 +11,6 @@ namespace ATUserBundle\Controller;
 use AppBundle\Utils\FlashBagTypes;
 use AppBundle\Utils\FormUtils;
 use ATUserBundle\Entity\User;
-use ATUserBundle\Form\UserAboutBasicInformationType;
 use ATUserBundle\Form\UserAboutBiographyType;
 use ATUserBundle\Manager\UserAboutManager;
 use ATUserBundle\Manager\UserManager;
@@ -21,9 +20,7 @@ use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\Finder\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
@@ -31,7 +28,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 class ProfileController extends BaseController
 {
-
     /**
      * Show the user
      */
@@ -50,24 +46,23 @@ class ProfileController extends BaseController
         if (null !== $event->getResponse()) {
             return $event->getResponse();
         }
-        /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
-        $formFactory = $this->get('fos_user.profile.form.factory');
-        $userForm = $formFactory->createForm();
-        $userForm->setData($user);
+
+        /** User Profile */
+        $userForm = $this->get("at.manager.user")->createProfileForm($user);
 
         /** User About */
-        $userAbout = $this->get("at.manager.user_about_manager")->getUserAbout($user);
-        $biographyForm = $this->createForm(UserAboutBiographyType::class, $userAbout);
-        $basicInformationForm = $this->createForm(UserAboutBasicInformationType::class, $userAbout);
+        $userAboutManager = $this->get("at.manager.user_about");
+        $userAboutManager->retrieveUserAbout($user);
+        $biographyForm = $userAboutManager->createBiographyForm();
+        $basicInformationForm = $userAboutManager->createBasicInformationForm();
 
         return $this->render('FOSUserBundle:Profile:show.html.twig', array(
             'user' => $user,
             'form_mandatory_information' => $userForm->createView(),
-            'form_biography' => $biographyForm->createView(),
-            'form_basic_information' => $basicInformationForm->createView()
+            'form_biography' => ($biographyForm != null ? $biographyForm->createView() : null),
+            'form_basic_information' => ($basicInformationForm != null ? $basicInformationForm->createView() : $basicInformationForm)
         ));
     }
-
 
     /**
      * Edit the user
@@ -87,15 +82,11 @@ class ProfileController extends BaseController
         $data = array();
         if ($user instanceof User) {
             /** @var UserManager $userManager */
-            $userManager = $this->get("at.manager.user_manager");
+            $userManager = $this->get("at.manager.user");
             /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
             $dispatcher = $this->get('event_dispatcher');
 
-            /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
-            $formFactory = $this->get('fos_user.profile.form.factory');
-            $userForm = $formFactory->createForm();
-            $userForm->setData($user);
-
+            $userForm = $userManager->createProfileForm($user);
             $userForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
                 if ($userForm->isValid()) {
@@ -104,8 +95,6 @@ class ProfileController extends BaseController
 
                     $userManager->updateUser($user);
 
-                    // TODO necessaire ?
-                    //$data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("profile.message.update.success");
                     $data['data']['username'] = $user->getUsername();
                     $data['data']['email'] = $user->getEmail();
                     $data['data']['pseudo'] = $user->getPseudo();
@@ -140,7 +129,7 @@ class ProfileController extends BaseController
                 return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
-                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                return $this->redirectToRoute('fos_user_profile_show');
             }
         }
     }
@@ -155,19 +144,15 @@ class ProfileController extends BaseController
         $data = array();
         if ($user instanceof User) {
             /** @var UserAboutManager $userAboutManager */
-            $userAboutManager = $this->get("at.manager.user_about_manager");
-            $userAbout = $userAboutManager->getUserAbout($user);
+            $userAboutManager = $this->get("at.manager.user_about");
+            $userAbout = $userAboutManager->retrieveUserAbout($user);
             $biographyForm = $this->createForm(UserAboutBiographyType::class, $userAbout);
 
             $biographyForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
                 if ($biographyForm->isValid()) {
                     $userAboutManager->updateUserAbout($userAbout);
-
-                    // TODO necessaire ?
-                    //$data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("profile.message.update.success");
                     $data["data"]["biography"] = nl2br(empty($userAbout->getBiography()) ? $this->get("translator")->trans("profile.show.about.biography.empty") : $userAbout->getBiography());
-
                     return new JsonResponse($data, Response::HTTP_OK);
                 } else {
                     $data["formErrors"] = array();
@@ -190,7 +175,7 @@ class ProfileController extends BaseController
                 return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
-                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                return $this->redirectToRoute("fos_user_profile_show");
             }
         }
     }
@@ -204,18 +189,13 @@ class ProfileController extends BaseController
         $user = $this->getUser();
         $data = array();
         if ($user instanceof User) {
-            /** @var UserAboutManager $userAboutManager */
-            $userAboutManager = $this->get("at.manager.user_about_manager");
-            $userAbout = $userAboutManager->getUserAbout($user);
-            $basicInformationForm = $this->createForm(UserAboutBasicInformationType::class, $userAbout);
-
+            $userAboutManager = $this->get("at.manager.user_about");
+            $userAbout = $userAboutManager->retrieveUserAbout($user);
+            $basicInformationForm = $userAboutManager->createBasicInformationForm();
             $basicInformationForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
                 if ($basicInformationForm->isValid()) {
                     $userAboutManager->updateUserAbout($userAbout);
-
-                    // TODO necessaire ?
-                    //$data["message"] = $this->get("translator")->trans("profile.message.update.success");
                     // TODO : Gérer le format de la date en fonction de la locale
                     $data["data"] = array(
                         'fullname' => (!empty($userAbout->getFullname()) ? $userAbout->getFullname() : '-'),
@@ -230,21 +210,21 @@ class ProfileController extends BaseController
                     }
                     return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
-            } else if($basicInformationForm->isValid()) {
+            } else if ($basicInformationForm->isValid()) {
                 $userAboutManager->updateUserAbout($userAbout);
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");
-            }else{
+            } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
                 return $this->redirectToRoute("fos_user_profile_show");
             }
-        }else{
+        } else {
             if ($request->isXmlHttpRequest()) {
                 $data[FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("profile.message.update.error");
                 return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
-                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                return $this->redirectToRoute("fos_user_profile_show");
             }
         }
     }

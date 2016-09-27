@@ -76,6 +76,8 @@
                         {# TODO : mettre l'avatar de l'utilisateur #}
                         <i class="hm-icon zmdi zmdi-account-circle"></i> </a>
                     <ul class="dropdown-menu pull-right dm-icon" role="menu">
+                        <li role="presentation"><a>{{ app.user.displayableName }}</a></li>
+                        <li role="separator" class="divider"></li>
                         <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a></li>
                         <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a></li>
                         <li role="separator" class="divider"></li>
@@ -220,8 +222,6 @@
     <script src="{{ asset("bundles/app/js/autosize.js") }}"></script>
     <script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jquery.bootstrap.wizard.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery.bootgrid.updated.min.js") }}"></script>
-
 
     <!-- Placeholder for IE9 --><!--[if IE 9 ]>
     <script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->

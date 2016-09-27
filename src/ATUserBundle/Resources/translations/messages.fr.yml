@@ -112,6 +112,35 @@ profile:
     init_password:
       already_init: Cette action est interdite car vous devriez déjà connaître votre mot de passe.
 
+contacts:
+  add_form:
+    label: Rechercher un contact
+    placeholder: Ajouter les e-mails ici
+    submit: Ajouter
+  table:
+    avatar:
+      column_title: Avatar
+      title_attr: Fiche personnelle
+    contact: Contact
+    email: E-mail
+    groups: Groupes
+    commnads: Actions
+    delete: Supprimer
+  text:
+    selection_action: Avec les contacts sélectionnés
+    selection_button: Créer un événement
+    empty_contact_list: Vous n'avez pas encore de contact, faites une recherche
+  alert:
+    remove_contact_confirmation_title: Etes-vous sûr de vouloir supprimer ce contact ?
+    remove_contact_confirmation_text: Cette action est irréversible
+  message:
+    add_contacts:
+      success: Les contacts ont été ajoutés avec succès.
+      error: Certains contacts n'ont pas pu être ajoutés.
+    remove_contact:
+      success: Le contact a été supprimé avec succès.
+      error: Le contact n'a pas pu être supprimé correctement.
+
 # Global messages
 text:
   social_network_connexion: 'Connectez-vous via les réseaux sociaux'

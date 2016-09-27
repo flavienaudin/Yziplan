@@ -175,7 +175,7 @@
                     showLoaderOnConfirm: true
                 }, function (isConfirm) {
                     if (isConfirm) {
-                        ajaxRequest(removeModuleLink, e, function (responseJSON, textStatus, jqXHR) {
+                        ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
                             if (responseJSON.actionResult === true) {
                                 $('#module-{{ module.token }}').remove();
                             }

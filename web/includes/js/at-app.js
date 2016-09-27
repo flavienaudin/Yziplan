@@ -15,7 +15,7 @@ $(document).ready(function () {
 // TODO remove for PROD
 // Attention au cas où une alerte de confirmation est demandé au préalable (e.preventDefault déclencé avant l'appel à la function)
 var disabledAjax = false;
-function ajaxRequest(target, event, doneCallback, failCallback, alwaysCallback) {
+function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCallback) {
     if (disabledAjax) {
         return true;
     }
@@ -24,10 +24,10 @@ function ajaxRequest(target, event, doneCallback, failCallback, alwaysCallback) 
     }
     var preloader = $('.at-global-preloader');
     $(preloader).show();
-
     $.ajax({
         url: $(target).attr("href"),
-        type: 'post'
+        type: 'post',
+        data: data
     }).done(function (responseJSON, textStatus, jqXHR) {
         if (doneCallback) {
             doneCallback(responseJSON, textStatus, jqXHR);
@@ -113,15 +113,15 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         if (failCallback) {
             failCallback(jqXHR, textStatus, errorThrown);
         }
-    }).always(function (responseDataOrJSON) {
+    }).always(function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
         if (alwaysCallback) {
-            alwaysCallback(responseDataOrJSON);
+            alwaysCallback(dataOrJqXHR, textStatus, jqXHROrErrorThrown);
         }
-        if (responseDataOrJSON.responseJSON) {
-            responseDataOrJSON = responseDataOrJSON.responseJSON;
+        if (dataOrJqXHR.responseJSON) {
+            dataOrJqXHR = dataOrJqXHR.responseJSON;
         }
-        if (responseDataOrJSON.messages) {
-            var messages = responseDataOrJSON.messages;
+        if (dataOrJqXHR.messages) {
+            var messages = dataOrJqXHR.messages;
             for (var messageType in messages) {
                 if (messages.hasOwnProperty(messageType)) {
                     messages[messageType].forEach(function (mess) {

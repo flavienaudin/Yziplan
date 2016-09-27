@@ -41,9 +41,9 @@
             render: {
                 item: renderUserAsItem,
                 option: renderUserAsOption,
-                option_create: renderOptionCreateUser
+                option_create: renderOptionCreate
             },
-            createFilter: createFilterUser,
+            createFilter: createFilterEmail,
             create: createUser
         });
 
@@ -60,7 +60,7 @@
         $('#eventInvitations').find('li > a').each(function () {
             var link = $(this);
             $(this).on('click', function (e) {
-                ajaxRequest($(this), e, function (responseJSON, textStatus, jqXHR) {
+                ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
                     $(link).parent().remove();
                 }, null, null);
             });
