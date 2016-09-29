@@ -34,6 +34,14 @@ services:
   at.manager.application_user:
     class: AppBundle\Manager\ApplicationUserManager
 
+  at.manager.app_user_information:
+      class: AppBundle\Manager\AppUserInformationManager
+      arguments: ['@doctrine.orm.entity_manager','@form.factory']
+
+  at.manager.contact:
+      class: AppBundle\Manager\ContactManager
+      arguments: ['@doctrine.orm.entity_manager','@at.manager.user']
+
 # Voters
   at.voter.event:
     class: AppBundle\Security\EventVoter

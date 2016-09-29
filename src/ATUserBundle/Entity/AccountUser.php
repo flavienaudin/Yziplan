@@ -90,8 +90,9 @@ class AccountUser extends FosUser
     public function __construct()
     {
         parent::__construct();
+        $this->applicationUser = new ApplicationUser();
+        $this->applicationUser->setAccountUser($this);
     }
-
 
     /***********************************************************************
      *                      Getters and Setters

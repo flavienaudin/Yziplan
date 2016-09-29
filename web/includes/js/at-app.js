@@ -6,6 +6,9 @@
 $(document).ready(function () {
     /** Global pre-loader */
     $('.at-global-preloader').hide();
+
+    /** Autosize **/
+    autosize($('textarea'));
 });
 
 

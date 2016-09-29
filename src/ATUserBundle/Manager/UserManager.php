@@ -52,25 +52,24 @@ class UserManager extends BaseManager
     /**
      * @param FormFactory $formFactory
      */
-    public function setFosUserProfileFormFactory(FormFactory $formFactory){
+    public function setFosUserProfileFormFactory(FormFactory $formFactory)
+    {
         $this->fosUserProfileFormFactory = $formFactory;
     }
 
     /**
      * Create a user from the given email. The user is disabled and a random password is set.
-     * 
+     *
      * @param $email
      * @return AccountUser
      */
-    public function createUserFromEmail($email){
+    public function createUserFromEmail($email)
+    {
         /** @var AccountUser $user */
         $user = $this->createUser();
         $user->setEmail($email);
         $user->setUsername($email);
 
-        if($user instanceof AccountUser) {
-            $user->setPseudo(explode("@", $email)[0]);
-        }
         $user->setPlainPassword($this->tokenGenerateur->random(GenerateursToken::MOTDEPASSE_LONGUEUR));
         $user->setEnabled(false);
         $user->setPasswordKnown(false);
@@ -84,7 +83,7 @@ class UserManager extends BaseManager
      */
     public function createProfileForm(AccountUser $user)
     {
-        $userForm =  $this->fosUserProfileFormFactory->createForm();
+        $userForm = $this->fosUserProfileFormFactory->createForm();
         $userForm->setData($user);
         return $userForm;
     }

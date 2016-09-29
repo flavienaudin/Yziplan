@@ -83,7 +83,7 @@ class ATUserProvider extends FOSUBUserProvider
             }
 
             if ($response instanceof PathUserResponse && $user instanceof AccountUser) {
-                $user->setPseudo($response->getNickname());
+                $user->getApplicationUser()->getAppUserInformation()->setPublicName($response->getNickname());
             }
 
             $user->setEnabled(true);

@@ -10,17 +10,18 @@
     <title>{% block title %}{{ 'base.page.meta_title'|trans }}{% endblock %}</title>
 
     {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery-ui.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-3.3.6-dist/bootstrap.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery-ui.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/animate.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/waves.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/material-design-iconic-font.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/waves.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/material-design-iconic-font.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootgrid.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.mCustomScrollbar.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootgrid.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select-1.10.0/bootstrap-select.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/palette.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/toastr.min.css") }}">
-
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select.min.css") }}">
     {% endblock %}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/app.min.1.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/app.min.2.css") }}">
@@ -36,9 +37,9 @@
 </noscript>
 
 {% block top_javascripts %}
-    <script src="{{ asset("bundles/app/js/jquery.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery-3.1.1.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jquery-ui.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-3.3.6-dist/bootstrap.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap.min.js") }}"></script>
 {% endblock top_javascripts %}
 
 {% block header_body %}
@@ -214,14 +215,18 @@
 </div><![endif]-->
 
 {% block javascripts %}
-    <script src="{{ asset("bundles/app/js/bootstrap-select-1.10.0/bootstrap-select.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/waves.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery.bootgrid-updated.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-datetimepicker.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/waves.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/salvattore.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/autosize.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/palette.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/toastr.min.js") }}"></script>
+
     <script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery.bootstrap.wizard.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/autosize.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
 
     <!-- Placeholder for IE9 --><!--[if IE 9 ]>
     <script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->
@@ -245,7 +250,6 @@
     </script>
 
     <!-- Base : Config pluggin Toastr -->
-    <script src="{{ asset("bundles/app/js/toastr.min.js") }}"></script>
     <script>
         // Configuration des notifcations via le pluggin TOASTR
         toastr.options = {

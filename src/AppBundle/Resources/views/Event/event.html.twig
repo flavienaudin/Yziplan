@@ -60,25 +60,20 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
 {% endblock stylesheets %}
 
 {% block top_javascripts %}
     {{ parent() }}
     <script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/selectize.js") }}"></script>
-    <script src="{{ asset("includes/js/at-selectize.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/selectize.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/at-selectize.js") }}"></script>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/app/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/sweetalert.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
 
     {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}

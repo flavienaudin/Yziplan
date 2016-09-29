@@ -12,13 +12,12 @@ use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\FormUtils;
 use ATUserBundle\Entity\AccountUser;
 use ATUserBundle\Form\UserAboutBiographyType;
-use ATUserBundle\Manager\UserAboutManager;
 use ATUserBundle\Manager\UserManager;
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
+use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\FOSUserEvents;
-use FOS\UserBundle\Event\FormEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,10 +50,10 @@ class ProfileController extends BaseController
         $userForm = $this->get("at.manager.user")->createProfileForm($user);
 
         /** User About */
-        $userAboutManager = $this->get("at.manager.user_about");
-        $userAboutManager->retrieveUserAbout($user);
-        $biographyForm = $userAboutManager->createBiographyForm();
-        $basicInformationForm = $userAboutManager->createBasicInformationForm();
+        $appUserInformationManager = $this->get("at.manager.app_user_information");
+        $appUserInformationManager->retrieveAppUserInformation($user);
+        $biographyForm = $appUserInformationManager->createBiographyForm();
+        $basicInformationForm = $appUserInformationManager->createBasicInformationForm();
 
         return $this->render('FOSUserBundle:Profile:show.html.twig', array(
             'user' => $user,
@@ -143,7 +142,7 @@ class ProfileController extends BaseController
         $user = $this->getUser();
         $data = array();
         if ($user instanceof AccountUser) {
-            /** @var UserAboutManager $userAboutManager */
+            /** @var AppUSerInformationManager $userAboutManager */
             $userAboutManager = $this->get("at.manager.user_about");
             $userAbout = $userAboutManager->retrieveUserAbout($user);
             $biographyForm = $this->createForm(UserAboutBiographyType::class, $userAbout);

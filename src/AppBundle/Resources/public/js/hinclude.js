@@ -43,7 +43,10 @@ var hinclude;
         if (req.status === 200 || req.status === 304) {
           element.innerHTML = req.responseText;
         }
-        element.className = hinclude.classprefix + req.status;
+
+        hinclude.set_class(element, req.status);
+
+        hinclude.trigger_event(element);
       }
     },
 
@@ -65,7 +68,8 @@ var hinclude;
         if (include[1].status === 200 || include[1].status === 304) {
           include[0].innerHTML = include[1].responseText;
         }
-        include[0].className = hinclude.classprefix + include[1].status;
+        hinclude.set_class(include[0], include[1].status);
+        hinclude.trigger_event(include[0]);
       }
     },
 
@@ -105,6 +109,9 @@ var hinclude;
         if (window.XMLHttpRequest) {
           try {
             req = new XMLHttpRequest();
+            if (element.hasAttribute('data-with-credentials')) {
+              req.withCredentials = true;
+            }
           } catch (e1) {
             req = false;
           }
@@ -216,6 +223,33 @@ var hinclude;
         window.__load_events = [];
       }
       window.__load_events.push(func);
+    },
+
+    trigger_event: function (element) {
+      var event;
+
+      if (document.createEvent) {
+        event = document.createEvent("HTMLEvents");
+        event.initEvent("hinclude", true, true);
+        event.eventName = "hinclude";
+        element.dispatchEvent(event);
+
+      } else if (document.createEventObject) { // IE
+        event = document.createEventObject();
+        event.eventType = "hinclude";
+        event.eventName = "hinclude";
+        element.fireEvent("on" + event.eventType, event);
+      }
+    },
+
+    set_class: function (element, status) {
+      var tokens = element.className.split(/\s+/);
+      var otherClasses = tokens.filter(function (token) {
+        return !token.match(/^include_\d+$/i) && !token.match(/^included/i);
+      }).join(' ');
+
+      element.className = otherClasses + (otherClasses ? ' ' : '') +
+        'included ' + hinclude.classprefix + status;
     }
   };
 
