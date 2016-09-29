@@ -9,8 +9,6 @@
 namespace AppBundle\Form;
 
 
-use AppBundle\Entity\EventInvitation;
-use ATUserBundle\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,7 +17,6 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -35,8 +32,7 @@ class InvitationsFormType extends AbstractType
     /** @var  ValidatorInterface */
     private $validator;
 
-    public function __construct(AuthorizationCheckerInterface $authorizationChecker,
-                                TokenStorageInterface $tokenStorage, ValidatorInterface $validator)
+    public function __construct(AuthorizationCheckerInterface $authorizationChecker, TokenStorageInterface $tokenStorage, ValidatorInterface $validator)
     {
         $this->authorizationChecker = $authorizationChecker;
         $this->tokenStorage = $tokenStorage;
@@ -73,7 +69,7 @@ class InvitationsFormType extends AbstractType
                         'choice_value' => 'email'
                     ));
             })
-            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $formEvent){
+            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $formEvent) {
                 $data = $formEvent->getData();
                 $emails = array();
                 if (isset($data['invitations']) && is_array($data['invitations'])) {

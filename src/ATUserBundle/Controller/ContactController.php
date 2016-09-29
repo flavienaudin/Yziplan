@@ -9,8 +9,8 @@
 namespace ATUserBundle\Controller;
 
 
-use AppBundle\Utils\FlashBagTypes;
-use ATUserBundle\Entity\User;
+use AppBundle\Utils\enum\FlashBagTypes;
+use ATUserBundle\Entity\AccountUser;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +34,7 @@ class ContactController extends Controller
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
         if ($request->isXmlHttpRequest()) {
             $user = $this->getUser();
-            if ($user instanceof User) {
+            if ($user instanceof AccountUser) {
                 $contactManager = $this->get("at.manager.contact");
                 $data = $contactManager->getFilteredContactsOfUser($user, $request->request->get("searchPhrase", ""), $request->request->get("rowCount", 10), $request->request->get("current", 1),
                     $request->request->get("sort", array()));

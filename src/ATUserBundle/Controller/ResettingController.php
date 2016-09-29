@@ -2,7 +2,7 @@
 
 namespace ATUserBundle\Controller;
 
-use ATUserBundle\Entity\User;
+use ATUserBundle\Entity\AccountUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use FOS\UserBundle\Controller\ResettingController as BaseController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,7 +18,7 @@ class ResettingController extends BaseController
     public function initializePasswordAction(Request $request)
     {
         $utilisateur = $this->getUser();
-        if (!is_object($utilisateur) || !$utilisateur instanceof User) {
+        if (!is_object($utilisateur) || !$utilisateur instanceof AccountUser) {
             throw $this->createAccessDeniedException($this->get("translator")->trans("global.error.unauthorized_access"));
         }
 

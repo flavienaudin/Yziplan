@@ -8,7 +8,7 @@
 
 namespace AppBundle\EventListener;
 
-use AppBundle\Utils\FlashBagTypes;
+use AppBundle\Utils\enum\FlashBagTypes;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;

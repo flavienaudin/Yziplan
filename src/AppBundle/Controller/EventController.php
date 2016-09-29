@@ -8,13 +8,13 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\AppUser;
-use AppBundle\Entity\Event;
+use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Security\EventVoter;
-use AppBundle\Utils\FlashBagTypes;
+use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\FormUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -282,10 +282,10 @@ class EventController extends Controller
 
     /**
      * @Route("/{_locale)/app-user/{appUserId}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="appUser")
-     * @ParamConverter("appUser", class="AppBundle:AppUser", options={"id":"appUserId"})
+     * @ParamConverter("appUser", class="AppBundle:User/ApplicationUser", options={"id":"appUserId"})
      * @ Security(is_granted('APPUSER_SHOW', appUser)") // TODO definir AppUserAuthorizationVoter
      */
-    public function displayAppUserPartialAction(AppUser $appUser, Request $request)
+    public function displayApplicationUserPartialAction(ApplicationUser $appUser, Request $request)
     {
         return $this->render("@App/Event/partials/appUserCard.html.twig", array(
             "appUser" => $appUser

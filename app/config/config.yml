@@ -60,13 +60,26 @@ doctrine:
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
-        # if using pdo_sqlite as your database driver:
-        #   1. add the path in parameters.yml
-        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
-        #   2. Uncomment database_path in parameters.yml.dist
-        #   3. Uncomment next line:
-        #     path:     "%database_path%"
-
+        mapping_types:
+            enum: string
+        types:
+            enum_gender: AppBundle\Utils\enum\Gender
+            enum_legal_status: AppBundle\Utils\enum\LegalStatus
+            enum_marital_status: AppBundle\Utils\enum\MaritalStatus
+            enum_contactinfo_type: AppBundle\Utils\enum\ContactInfoType
+            enum_contact_status: AppBundle\Utils\enum\ContactStatus
+            enum_appuser_status: AppBundle\Utils\enum\AppUserStatus
+            enum_event_status: AppBundle\Utils\enum\EventStatus
+            enum_eventinvitation_status: AppBundle\Utils\enum\EventInvitationStatus
+            enum_eventinvitation_answer: AppBundle\Utils\enum\EventInvitationAnswer
+            enum_module_status: AppBundle\Utils\enum\ModuleStatus
+            enum_moduleinvitation_status: AppBundle\Utils\enum\ModuleInvitationStatus
+            enum_pollmodule_sortingtype: AppBundle\Utils\enum\PollModuleSortingType
+            enum_pollproposal_elementtype: AppBundle\Utils\enum\PollElementType
+            enum_expenseelement_type: AppBundle\Utils\enum\ExpenseElementType
+            enum_payment_feeapplication: AppBundle\Utils\enum\FeeApplication
+            enum_payment_transactiontrigger: AppBundle\Utils\enum\TransactionTrigger
+            enum_transaction_status: AppBundle\Utils\enum\TransactionStatus
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         naming_strategy: doctrine.orm.naming_strategy.underscore
@@ -92,7 +105,7 @@ swiftmailer:
 fos_user:
     db_driver: orm
     firewall_name: main
-    user_class: ATUserBundle\Entity\User
+    user_class: ATUserBundle\Entity\AccountUser
     use_flash_notifications: false
     service:
         mailer: fos_user.mailer.twig_swift

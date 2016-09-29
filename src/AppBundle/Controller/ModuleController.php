@@ -9,11 +9,11 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\Entity\Event;
-use AppBundle\Entity\Module;
+use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\Module;
 use AppBundle\Security\EventVoter;
 use AppBundle\Security\ModuleVoter;
-use AppBundle\Utils\FlashBagTypes;
+use AppBundle\Utils\enum\FlashBagTypes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,7 +26,7 @@ class ModuleController extends Controller
 
     /**
      * @Route("/{_locale}/add-event-module/{token}/{type}/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="addEventModule")
-     * @ParamConverter("event", class="AppBundle:Event", options={"exclude": {"tokenEdition"}})
+     * @ParamConverter("event", class="AppBundle:Event/Event", options={"exclude": {"tokenEdition"}})
      */
     public function addEventModuleAction(Event $event, $type, $tokenEdition = null, Request $request)
     {

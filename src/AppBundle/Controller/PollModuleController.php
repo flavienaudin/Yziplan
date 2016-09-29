@@ -9,10 +9,9 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\Entity\module\PollProposal;
-use AppBundle\Entity\ModuleInvitation;
-use AppBundle\Form\PollProposalFormType;
-use AppBundle\Utils\FlashBagTypes;
+use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\FormUtils;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -25,8 +24,8 @@ class PollModuleController extends Controller
 {
     /**
      * @Route("/{_locale}/pollproposal/edition/{pollProposalId}/{moduleInvitationToken}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="pollProposalEditionForm")
-     * @ParamConverter("pollProposal", class="AppBundle:module\PollProposal", options={"id" = "pollProposalId"})
-     * @ParamConverter("moduleInvitation", class="AppBundle:ModuleInvitation", options={"mapping" = {"moduleInvitationToken":"token"}})
+     * @ParamConverter("pollProposal", class="AppBundle:Module\PollProposal", options={"id" = "pollProposalId"})
+     * @ParamConverter("moduleInvitation", class="AppBundle:Module\ModuleInvitation", options={"mapping" = {"moduleInvitationToken":"token"}})
      */
     public function pollProposalEditionFormAction(PollProposal $pollProposal, ModuleInvitation $moduleInvitation, Request $request)
     {
@@ -70,8 +69,8 @@ class PollModuleController extends Controller
 
     /**
      * @Route("/{_locale}/pollproposal/remove/{pollProposalId}/{moduleInvitationToken}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="removePollProposal")
-     * @ParamConverter("pollProposal", class="AppBundle:module\PollProposal", options={"id" = "pollProposalId"})
-     * @ParamConverter("moduleInvitation", class="AppBundle:ModuleInvitation", options={"mapping" = {"moduleInvitationToken":"token"}})
+     * @ParamConverter("pollProposal", class="AppBundle:Module\PollProposal", options={"id" = "pollProposalId"})
+     * @ParamConverter("moduleInvitation", class="AppBundle:Module\ModuleInvitation", options={"mapping" = {"moduleInvitationToken":"token"}})
      */
     public function removePollProposalAction(PollProposal $pollProposal, ModuleInvitation $moduleInvitation, Request $request)
     {

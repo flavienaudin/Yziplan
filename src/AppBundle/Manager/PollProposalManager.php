@@ -9,7 +9,7 @@
 namespace AppBundle\Manager;
 
 
-use AppBundle\Entity\module\PollProposal;
+use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\PollProposalFormType;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;

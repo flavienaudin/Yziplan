@@ -8,7 +8,7 @@
 
 namespace ATUserBundle\EventListener;
 
-use ATUserBundle\Entity\User;
+use ATUserBundle\Entity\AccountUser;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
@@ -45,7 +45,7 @@ class InscriptionListener implements EventSubscriberInterface
 
     public function onRegistrationConfirm(GetResponseUserEvent $event){
         $utilisateur = $event->getUser();
-        if($utilisateur instanceof User) {
+        if($utilisateur instanceof AccountUser) {
             $utilisateur->setPasswordKnown(true);
         }
     }

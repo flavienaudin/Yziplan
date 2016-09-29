@@ -9,7 +9,7 @@
 namespace AppBundle\Form;
 
 
-use AppBundle\Entity\enum\EventInvitationAnswer;
+use AppBundle\Utils\enum\EventInvitationAnswer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;

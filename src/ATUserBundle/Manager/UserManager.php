@@ -9,7 +9,7 @@
 namespace ATUserBundle\Manager;
 
 use AppBundle\Manager\GenerateursToken;
-use ATUserBundle\Entity\User;
+use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager as BaseManager;
@@ -60,15 +60,15 @@ class UserManager extends BaseManager
      * Create a user from the given email. The user is disabled and a random password is set.
      * 
      * @param $email
-     * @return User
+     * @return AccountUser
      */
     public function createUserFromEmail($email){
-        /** @var User $user */
+        /** @var AccountUser $user */
         $user = $this->createUser();
         $user->setEmail($email);
         $user->setUsername($email);
 
-        if($user instanceof User) {
+        if($user instanceof AccountUser) {
             $user->setPseudo(explode("@", $email)[0]);
         }
         $user->setPlainPassword($this->tokenGenerateur->random(GenerateursToken::MOTDEPASSE_LONGUEUR));
@@ -79,10 +79,10 @@ class UserManager extends BaseManager
     }
 
     /**
-     * @param User $user
+     * @param AccountUser $user
      * @return FormInterface
      */
-    public function createProfileForm(User $user)
+    public function createProfileForm(AccountUser $user)
     {
         $userForm =  $this->fosUserProfileFormFactory->createForm();
         $userForm->setData($user);

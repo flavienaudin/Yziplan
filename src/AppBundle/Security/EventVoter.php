@@ -11,8 +11,8 @@ namespace AppBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
-use AppBundle\Entity\Event;
-use ATUserBundle\Entity\User;
+use AppBundle\Entity\Event\Event;
+use ATUserBundle\Entity\AccountUser;
 
 class EventVoter extends Voter
 {
@@ -40,7 +40,7 @@ class EventVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        /** @var User $user */
+        /** @var AccountUser $user */
         $user = $token->getUser();
         /** @var Event $event */
         $event = $subject[0]; // $subject must be a Event instance, thanks to the supports method
@@ -69,9 +69,9 @@ class EventVoter extends Voter
     private function canEdit(Event $event, $user, $tokenEdition)
     {
         if (!empty($tokenEdition) && $event->getTokenEdition() === $tokenEdition) {
-            if ($event->getCreator() == null || $event->getCreator()->getAppUser() == null || !$event->getCreator()->getAppUser()->getUser()->isEnabled()) {
+            if ($event->getCreator() == null || $event->getCreator()->getApplicationUser() == null || !$event->getCreator()->getApplicationUser()->getUser()->isEnabled()) {
                 return true;
-            } else if ($user == $event->getCreator()->getAppUser()->getUser()) {
+            } else if ($user == $event->getCreator()->getApplicationUser()->getUser()) {
                 return true;
             }
         }

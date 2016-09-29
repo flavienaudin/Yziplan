@@ -31,8 +31,8 @@ services:
       class: AppBundle\Manager\PollProposalResponseManager
       arguments: ['@doctrine.orm.entity_manager']
 
-  at.manager.app_user:
-    class: AppBundle\Manager\AppUserManager
+  at.manager.application_user:
+    class: AppBundle\Manager\ApplicationUserManager
 
 # Voters
   at.voter.event:

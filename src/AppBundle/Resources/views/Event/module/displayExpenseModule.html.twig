@@ -41,8 +41,8 @@
                         {% for proposal in module.expenseModule.expenseProposals %}
                             <tr data-row-id="{{ proposal.id }}">
                                 <td>
-                                    {% if proposal.creator.appUser.user.avatar is defined and proposal.creator.appUser.user.avatar is not null %}
-                                        {"avatars" : [{"avatarSrc" : "{{ asset(proposal.creator.appUser.user.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}] }
+                                    {% if proposal.creator.applicationUser.accountUser.avatar is defined and proposal.creator.applicationUser.accountUser.avatar is not null %}
+                                        {"avatars" : [{"avatarSrc" : "{{ asset(proposal.creator.applicationUser.accountUser.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}] }
                                     {% else %}
                                         {"avatars" : [{"pseudo" : "{{ proposal.creator.name }}"}] }
                                     {% endif %}
@@ -61,9 +61,9 @@
                                         {% else %}
                                             ,
                                         {% endif %}
-                                        {% if participant.appUser.user.avatar is defined
-                                        and participant.appUser.user.avatar is not null %}
-                                            {"avatarSrc" : "{{ asset(proposal.creator.appUser.user.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}
+                                        {% if participant.applicationUser.accountUser.avatar is defined
+                                        and participant.applicationUser.accountUser.avatar is not null %}
+                                            {"avatarSrc" : "{{ asset(proposal.creator.applicationUser.accountUser.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}
                                         {% else %}
                                             {"pseudo" : "{{ participant.name }}"}
                                         {% endif %}

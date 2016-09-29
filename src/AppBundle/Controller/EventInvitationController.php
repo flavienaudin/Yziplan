@@ -14,7 +14,7 @@ use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Security\EventVoter;
-use AppBundle\Utils\FlashBagTypes;
+use AppBundle\Utils\enum\FlashBagTypes;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -97,7 +97,7 @@ class EventInvitationController extends Controller
     public function displayUserEventsAction(Request $request)
     {
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-        $userEventInvitations = $this->get('at.manager.app_user')->getUserEventInvitations($this->getUser());
+        $userEventInvitations = $this->get('at.manager.application_user')->getUserEventInvitations($this->getUser());
         return $this->render("@App/EventInvitation/user_event_invitations.html.twig", array(
             "eventInvitations" => $userEventInvitations
         ));

@@ -8,9 +8,9 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Entity\enum\PollProposalElementType;
-use AppBundle\Entity\module\PollProposal;
-use AppBundle\Entity\module\PollProposalElement;
+use AppBundle\Utils\enum\PollElementType;
+use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Entity\Module\PollProposalElement;
 use Burgov\Bundle\KeyValueFormBundle\Form\Type\KeyValueType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -75,11 +75,11 @@ class PollProposalFormType extends AbstractType
                 $datetimePPE = array();
                 /** @var PollProposalElement $ppElt */
                 foreach($pollProposal->getPollProposalElements() as $ppElt){
-                    if($ppElt->getType() == PollProposalElementType::STRING){
+                    if($ppElt->getType() == PollElementType::STRING){
                         $strPPE[$ppElt->getName()] = $ppElt->getValString();
-                    }elseif($ppElt->getType() == PollProposalElementType::INTEGER){
+                    }elseif($ppElt->getType() == PollElementType::INTEGER){
                         $intPPE[$ppElt->getName()] = $ppElt->getValInteger();
-                    }elseif($ppElt->getType() == PollProposalElementType::DATE_TIME){
+                    }elseif($ppElt->getType() == PollElementType::DATE_TIME){
                         $datetimePPE[$ppElt->getName()] = $ppElt->getValDatetime();
                     }
                 }

@@ -8,7 +8,7 @@
 
 namespace AppBundle\Form;
 
-
+use AppBundle\Entity\Module\ExpenseModule;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -21,10 +21,10 @@ class ExpenseModuleFormType extends AbstractType
             ->add('module', ModuleFormType::class, array(
                 'required' => true
             ))
-            ->add('expenseProposals', CollectionType::class, array(
+            ->add('expenseElements', CollectionType::class, array(
                 'label_attr' => array('class' => 'sr-only'),
-                'block_name' => 'expenseProposals',
-                'entry_type' => ExpenseProposalFormType::class,
+                'block_name' => 'expenseElements',
+                'entry_type' => ExpenseElementFormType::class,
                 'by_reference' => false,
                 'allow_add' => true,
                 'allow_delete' => true
@@ -34,7 +34,7 @@ class ExpenseModuleFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\module\ExpenseModule'
+            'data_class' => ExpenseModule::class
         ));
     }
 }

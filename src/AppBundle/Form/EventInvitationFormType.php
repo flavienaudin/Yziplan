@@ -9,10 +9,8 @@
 namespace AppBundle\Form;
 
 
-use AppBundle\Entity\enum\EventInvitationAnswer;
-use AppBundle\Entity\EventInvitation;
+use AppBundle\Entity\Event\EventInvitation;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -48,7 +46,7 @@ class EventInvitationFormType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'data' => $email,
-                'disabled' => ($eventInvitation->getAppUser() != null)
+                'disabled' => ($eventInvitation->getApplicationUser() != null)
             ));
         });
     }

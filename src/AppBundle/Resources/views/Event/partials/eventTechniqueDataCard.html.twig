@@ -9,7 +9,7 @@
             {% if is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'), [event, app.request.get('tokenEdition')]) %}
                 <dt>Lien d'administration</dt>
                 <dd>
-                    {# TODO TOFIX Cas où event.creator.appUser == null && event.invitationOnly
+                    {# TODO TOFIX Cas où event.creator.ApplicationUser == null && event.invitationOnly
                             => affichage de la page via {event.token/event.tokenEdition} s'il y a pas le token de l'eventInvitation
                             => refus d'afficher la page #}
                     <a href="{{ url("displayEvent",{'token':event.token,'tokenEdition':event.tokenEdition}) }}">Administration</a>

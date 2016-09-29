@@ -8,15 +8,15 @@
 
 namespace AppBundle\Manager;
 
-use AppBundle\Entity\enum\EventStatus;
-use AppBundle\Entity\enum\ModuleStatus;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\EventInvitation;
-use AppBundle\Entity\Module;
+use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Entity\Event\Module;
 use AppBundle\Form\EventFormType;
 use AppBundle\Form\InvitationsFormType;
 use AppBundle\Security\ModuleVoter;
-use ATUserBundle\Entity\User;
+use AppBundle\Utils\enum\EventStatus;
+use AppBundle\Utils\enum\ModuleStatus;
+use ATUserBundle\Entity\AccountUser;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -94,7 +94,7 @@ class EventManager
         if (empty($token)) {
             $this->initializeEvent(true);
         } else {
-            $eventRep = $this->entityManager->getRepository("AppBundle:Event");
+            $eventRep = $this->entityManager->getRepository(Event::class);
             $this->event = $eventRep->findOneBy(array('token' => $token));
         }
         return ($this->event instanceof Event ? $this->event : null);
@@ -119,7 +119,7 @@ class EventManager
             $this->event->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
         $user = $this->tokenStorage->getToken()->getUser();
-        if ($this->eventInvitationManager->createCreatorEventInvitation($this->event, ($user instanceof User ? $user : null)) == null) {
+        if ($this->eventInvitationManager->createCreatorEventInvitation($this->event, ($user instanceof AccountUser ? $user : null)) == null) {
             $this->event = null;
             return $this->event;
         }
@@ -188,7 +188,7 @@ class EventManager
     public function addModule($type)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        if (!$user instanceof User) {
+        if (!$user instanceof AccountUser) {
             $user = null;
         }
         $userEventInvitation = $this->eventInvitationManager->retrieveUserEventInvitation($this->event, false, false, $user);
@@ -218,7 +218,7 @@ class EventManager
     {
         $modules = array();
         if ($this->event != null) {
-            $eventModules = $this->entityManager->getRepository("AppBundle:Module")->findOrderedByEventToken($this->event->getToken());
+            $eventModules = $this->entityManager->getRepository(Module::class)->findOrderedByEventToken($this->event->getToken());
             /** @var Module $module */
             foreach ($eventModules as $module) {
                 if ($module->getStatus() != ModuleStatus::DELETED && $module->getStatus() != ModuleStatus::ARCHIVED) {

@@ -10,7 +10,7 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Security\ModuleInvitationVoter;
-use AppBundle\Utils\FlashBagTypes;
+use AppBundle\Utils\enum\FlashBagTypes;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

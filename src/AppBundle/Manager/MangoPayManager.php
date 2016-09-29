@@ -1,12 +1,13 @@
 <?php
 namespace AppBundle\Manager;
 
-use AppBundle\Entity\payment\Wallet;
+use AppBundle\Entity\Payment\Wallet;
 use AppBundle\Manager\exception\MissingUserInformationException;
-use ATUserBundle\Entity\User;
+use ATUserBundle\Entity\AccountUser;
 use ATUserBundle\Entity\UserAbout;
 use Doctrine\ORM\EntityManager;
 use MangoPay;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Created by PhpStorm.
@@ -64,11 +65,11 @@ class MangoPayManager
      * @return MangopPayUser $mangoUser créé
      * @throws MissingUserInformationException contient un array des champs manquants
      */
-    public function createMangoUser(User $user)
+    public function createMangoUser(AccountUser $user)
     {
         // Si l'utilisateur existe déjà on le retourne.
-        if ($user->getAppUser()->getMangoPayUserId() != null) {
-            return $this->getMangoUserById($user->getAppUser()->getMangoPayUserId());
+        if ($user->getApplicationUser()->getMangoPayUserId() != null) {
+            return $this->getMangoUserById($user->getApplicationUser()->getMangoPayUserId());
         }
 
         $userAbout = $user->getUserAbout();
@@ -98,7 +99,7 @@ class MangoPayManager
                 try {
                     $mangoUser = $this->mangoPayApi->Users->Create($mangoUser);
                     // Mise a jour de l'utilisateur avec son AppId
-                    $user->getAppUser()->setMangoPayUserId($mangoUser->Id);
+                    $user->getApplicationUser()->setMangoPayUserId($mangoUser->Id);
 
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
@@ -133,7 +134,7 @@ class MangoPayManager
                 try {
                     $mangoUser = $this->mangoPayApi->Users->Create($mangoUser);
                     // Mise a jour de l'utilisateur avec son AppId
-                    $user->getAppUser()->setMangoPayUserId($mangoUser->Id);
+                    $user->getApplicationUser()->setMangoPayUserId($mangoUser->Id);
 
                     $this->entityManager->persist($user);
                     $this->entityManager->flush();
@@ -152,7 +153,7 @@ class MangoPayManager
         }
     }
 
-    private function checkUserNaturalInformation(User $user)
+    private function checkUserNaturalInformation(AccountUser $user)
     {
         $userAbout = $user->getUserAbout();
         $missingInformation = array();
@@ -179,7 +180,7 @@ class MangoPayManager
         }
     }
 
-    private function checkUserLegalInformation(User $user)
+    private function checkUserLegalInformation(AccountUser $user)
     {
         $userAbout = $user->getUserAbout();
         $missingInformation = array();
@@ -247,8 +248,8 @@ class MangoPayManager
         try {
             $Wallet = new \MangoPay\Wallet();
             $Wallet->Tag = $atWallet->getId();
-            $Wallet->Owners = $atWallet->getModuleInvitation()->getEventInvitation()->getAppUser()->getMangoPayUserId();
-            $description = $atWallet->getModuleInvitation()->getModule()->getName();
+            $Wallet->Owners = $atWallet->getEventInvitation()->getEventInvitation()->getApplicationUser()->getMangoPayUserId();
+            $description = $atWallet->getEventInvitation()->getModule()->getName();
             if($description!= null){
                 $Wallet->Description = $description;
             }else{

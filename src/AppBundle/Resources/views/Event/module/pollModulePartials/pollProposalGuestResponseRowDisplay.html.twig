@@ -2,7 +2,7 @@
     <div class="pcl-celulle ">
         {% for ppElt in pollProposal.pollProposalElements %}
             {% set val = attribute(ppElt, 'val'~ppElt.type) %}
-            {{ ppElt.name }} : {{ ppElt.type==constant('AppBundle\\Entity\\enum\\PollProposalElementType::DATE_TIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
+            {{ ppElt.name }} : {{ ppElt.type==constant('AppBundle\\Entity\\enum\\PollElementType::DATE_TIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
         {% endfor %}
     </div>
     {% if userModuleInvitation is defined and userModuleInvitation is not null %}

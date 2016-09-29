@@ -9,11 +9,12 @@
 namespace ATUserBundle\Security;
 
 use AppBundle\Manager\GenerateursToken;
-use ATUserBundle\Entity\User;
+use ATUserBundle\Entity\AccountUser;
 use HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 
 class ATUserProvider extends FOSUBUserProvider
 {
@@ -76,12 +77,12 @@ class ATUserProvider extends FOSUBUserProvider
                     $user->setEmail($response->getEmail());
                 }
                 $user->setPlainPassword($this->tokenGenerateur->random(GenerateursToken::MOTDEPASSE_LONGUEUR));
-                if ($user instanceof User) {
+                if ($user instanceof AccountUser) {
                     $user->setPasswordKnown(false);
                 }
             }
 
-            if ($response instanceof PathUserResponse && $user instanceof User) {
+            if ($response instanceof PathUserResponse && $user instanceof AccountUser) {
                 $user->setPseudo($response->getNickname());
             }
 

@@ -8,9 +8,9 @@
 
 namespace AppBundle\Security;
 
-use AppBundle\Entity\Module;
-use AppBundle\Entity\ModuleInvitation;
-use ATUserBundle\Entity\User;
+use AppBundle\Entity\Event\Module;
+use AppBundle\Entity\Event\ModuleInvitation;
+use ATUserBundle\Entity\AccountUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -34,7 +34,7 @@ class ModuleVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        /** @var User $user */
+        /** @var AccountUser $user */
         $user = $token->getUser();
         /** @var Module $module */
         $module = $subject[0]; // $subject[0] must be a Module instance, thanks to the supports method
@@ -54,7 +54,7 @@ class ModuleVoter extends Voter
                 if ($module->getCreator() != null) {
                     if ($module->getCreator() === $userModuleInvitation) {
                         return true;
-                    } else if ($module->getCreator()->getEventInvitation()->getAppUser() != null && $user == $module->getCreator()->getEventInvitation()->getAppUser()->getUser()) {
+                    } else if ($module->getCreator()->getEventInvitation()->getApplicationUser() != null && $user == $module->getCreator()->getEventInvitation()->getApplicationUser()->getUser()) {
                         return true;
                     }
                 }

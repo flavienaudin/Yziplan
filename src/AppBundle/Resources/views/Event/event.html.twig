@@ -49,9 +49,9 @@
             {% if userEventInvitation is defined %}
                 {{ include("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", {"userEventInvitation":userEventInvitation, 'userEventInvitationForm' : userEventInvitationForm}) }}
             {% endif %}
-            {% if event.creator is not null and event.creator.appUser is not null %}
-                {# TODO refaire l'affichage du cadre de l'organisateur à partir de l'EventInvitation et non de l'AppUser #}
-                {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.appUser.id})) }}
+            {% if event.creator is not null and event.creator.applicationUser is not null %}
+                {# TODO refaire l'affichage du cadre de l'organisateur à partir de l'EventInvitation et non de l'ApplicationUser #}
+                {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.applicationUser.id})) }}
             {% endif %}
             {{ include("@App/Event/partials/eventTechniqueDataCard.html.twig", {"event":event, 'userEventInvitation':userEventInvitation}) }}
         </div>
@@ -81,7 +81,7 @@
     <script src="{{ asset("bundles/app/js/sweetalert.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
 
-    {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Entity\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
+    {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
         <script>
             swal({
                 title: "{{ "eventInvitation.maindata.card.new_warning_alert.title"|trans|raw }}",

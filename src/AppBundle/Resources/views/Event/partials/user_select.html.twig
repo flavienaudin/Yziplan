@@ -19,21 +19,16 @@
     {% if event_invitation_list is defined %}
         {% for event_invitation in event_invitation_list %}
             {% set avatar_path = '' %}
-            {% if event_invitation.appUser is defined and event_invitation.appUser.user is defined and event_invitation.appUser.user.getAvatarPath is defined %}
-                {% set avatar_path = event_invitation.appUser.user.getAvatarPath %}
+            {% if event_invitation.applicationUser is defined and event_invitation.applicationUser.accountUser is defined and event_invitation.applicationUser.accountUser.getAvatarPath is defined %}
+                {% set avatar_path = event_invitation.applicationUser.accountUser.getAvatarPath %}
             {% endif %}
-            {% set userName = 'Anonyme' %}
-            {% if event_invitation.name is defined %}
-                {% set userName = event_invitation.name %}
-            {% elseif event_invitation.appUser is defined and event_invitation.appUser.user is defined and event_invitation.appUser.user.pseudo is defined %}
-                {% set userName = event_invitation.appUser.user.pseudo %}
-            {% endif %}
+            {% set userName = event_invitation.displayableName %}
             {% if avatar_path == '' %}
                 <option data-content="<span class='insecable-white-space' ><div class='avatar-char palette-Cyan-200 bg' name='{{ userName }}' style='display: inline-block;'>
                                     {{ userName|slice(0,1) }}</div> {{ userName }}</span>"></option>
             {% else %}
-                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt='{{ userName }}'> {{ userName
-                }}</span>"></option>
+                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt='{{ userName }}'>
+                        {{ userName }}</span>"></option>
             {% endif %}
         {% endfor %}
     {% endif %}

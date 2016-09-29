@@ -8,7 +8,7 @@
 
 namespace ATUserBundle\Manager;
 
-use ATUserBundle\Entity\User;
+use ATUserBundle\Entity\AccountUser;
 use ATUserBundle\Entity\UserAbout;
 use ATUserBundle\Form\UserAboutBasicInformationType;
 use ATUserBundle\Form\UserAboutBiographyType;
@@ -49,10 +49,10 @@ class UserAboutManager
 
     /**
      * Get the UserAbout and create it if null
-     * @param User $user
+     * @param AccountUser $user
      * @return UserAbout
      */
-    public function retrieveUserAbout(User $user)
+    public function retrieveUserAbout(AccountUser $user)
     {
         $this->userAbout = $user->getUserAbout();
         if ($this->userAbout == null) {

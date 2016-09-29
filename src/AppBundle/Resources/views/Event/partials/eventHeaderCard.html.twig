@@ -25,7 +25,7 @@
                     <li>
                         <a href="{{ url('addEventModule', {
                             'token': event.token,
-                            'type':constant('AppBundle\\Entity\\enum\\ModuleType::POLL_MODULE'),
+                            'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                             'tokenEdition' :app.request.get('tokenEdition')}) }}" id="addWhenPollModule"> <i class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i>
                             <small>Sondage Quand ?</small>
                         </a>

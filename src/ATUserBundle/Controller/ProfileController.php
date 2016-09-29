@@ -8,9 +8,9 @@
 
 namespace ATUserBundle\Controller;
 
-use AppBundle\Utils\FlashBagTypes;
+use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\FormUtils;
-use ATUserBundle\Entity\User;
+use ATUserBundle\Entity\AccountUser;
 use ATUserBundle\Form\UserAboutBiographyType;
 use ATUserBundle\Manager\UserAboutManager;
 use ATUserBundle\Manager\UserManager;
@@ -34,7 +34,7 @@ class ProfileController extends BaseController
     public function showAction(Request $request = null)
     {
         $user = $this->getUser();
-        if (!is_object($user) || !$user instanceof User) {
+        if (!is_object($user) || !$user instanceof AccountUser) {
             throw $this->createAccessDeniedException('This user does not have access to this section.');
         }
         /** Profile edition */
@@ -80,7 +80,7 @@ class ProfileController extends BaseController
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
         $user = $this->getUser();
         $data = array();
-        if ($user instanceof User) {
+        if ($user instanceof AccountUser) {
             /** @var UserManager $userManager */
             $userManager = $this->get("at.manager.user");
             /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
@@ -142,7 +142,7 @@ class ProfileController extends BaseController
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
         $user = $this->getUser();
         $data = array();
-        if ($user instanceof User) {
+        if ($user instanceof AccountUser) {
             /** @var UserAboutManager $userAboutManager */
             $userAboutManager = $this->get("at.manager.user_about");
             $userAbout = $userAboutManager->retrieveUserAbout($user);
@@ -188,7 +188,7 @@ class ProfileController extends BaseController
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
         $user = $this->getUser();
         $data = array();
-        if ($user instanceof User) {
+        if ($user instanceof AccountUser) {
             $userAboutManager = $this->get("at.manager.user_about");
             $userAbout = $userAboutManager->retrieveUserAbout($user);
             $basicInformationForm = $userAboutManager->createBasicInformationForm();

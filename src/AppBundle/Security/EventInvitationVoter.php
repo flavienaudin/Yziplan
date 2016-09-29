@@ -8,8 +8,8 @@
 
 namespace AppBundle\Security;
 
-use AppBundle\Entity\Event;
-use ATUserBundle\Entity\User;
+use AppBundle\Entity\Event\Event;
+use ATUserBundle\Entity\AccountUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -39,7 +39,7 @@ class EventInvitationVoter extends Voter
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
-        /** @var User $user */
+        /** @var AccountUser $user */
         $user = $token->getUser();
         if ($user != null && $user != 'anon.' && !$user instanceof UserInterface) {
             return false;
@@ -48,11 +48,11 @@ class EventInvitationVoter extends Voter
         if ($attribute == self::EDIT) {
             /** @var EventInvitation $eventInvitation */
             $eventInvitation = $subject; // $subject must be a Invitation instance, thanks to the supports method
-            if($eventInvitation->getAppUser() == null){
+            if($eventInvitation->getApplicationUser() == null){
                 return true;
-            }else if ($eventInvitation->getAppUser()->getUser() == null || !$eventInvitation->getAppUser()->getUser()->isEnabled()) {
+            }else if ($eventInvitation->getApplicationUser()->getUser() == null || !$eventInvitation->getApplicationUser()->getUser()->isEnabled()) {
                 return true;
-            } elseif ($user == $eventInvitation->getAppUser()->getUser()) {
+            } elseif ($user == $eventInvitation->getApplicationUser()->getUser()) {
                 return true;
             }
         } else {

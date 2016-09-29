@@ -9,9 +9,9 @@
 namespace AppBundle\Manager;
 
 
-use AppBundle\Entity\module\PollProposal;
-use AppBundle\Entity\module\PollProposalResponse;
-use AppBundle\Entity\ModuleInvitation;
+use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Entity\Module\PollProposalResponse;
+use AppBundle\Entity\Event\ModuleInvitation;
 use Doctrine\ORM\EntityManager;
 
 class PollProposalResponseManager
@@ -31,7 +31,7 @@ class PollProposalResponseManager
     public function initializePollProposalResponse(ModuleInvitation $moduleInvitation, PollProposal $pollProposal, $value)
     {
         $this->pollProposalResponse = new PollProposalResponse();
-        $this->pollProposalResponse->setValue($value);
+        $this->pollProposalResponse->setAnswer($value);
         $pollProposal->addPollProposalResponse($this->pollProposalResponse);
         $moduleInvitation->addPollProposalResponse($this->pollProposalResponse);
     }
@@ -43,7 +43,7 @@ class PollProposalResponseManager
         foreach ($moduleInvitation->getPollProposalResponses() as $pollProposalResponse) {
             if ($pollProposalResponse->getPollProposal() != null && $pollProposalResponse->getPollProposal()->getId() == $pollProposalId) {
                 $this->pollProposalResponse = $pollProposalResponse;
-                $this->pollProposalResponse->setValue($value);
+                $this->pollProposalResponse->setAnswer($value);
             }
         }
         if($this->pollProposalResponse == null) {
