@@ -171,7 +171,7 @@ class PollModule
      */
     public function addPollElement(PollElement $pollElement)
     {
-        $this->pollElements = $pollElement;
+        $this->pollElements[] = $pollElement;
         $pollElement->setPollModule($this);
 
         return $this;

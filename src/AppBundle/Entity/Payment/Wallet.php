@@ -80,18 +80,14 @@ class Wallet
     
     /**
      * Wallet sur lequel l'argent a été/sera retiré
-     *
      * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment\Transaction", mappedBy="debited", cascade={"persist"})
      */
     private $debitedTransactions;
 
     /**
      * Wallet sur lequel l'argent a été/sera ajouté
-     *
      * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment\Transaction", mappedBy="credited", cascade={"persist"})
      */
     private $creditedTransactions;

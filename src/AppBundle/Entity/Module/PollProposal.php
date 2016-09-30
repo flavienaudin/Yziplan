@@ -29,6 +29,12 @@ class PollProposal
     private $id;
 
     /**
+     * @var string
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    private $description;
+
+    /**
      * @var boolean
      *
      * @ORM\Column(name="deleted", type="boolean")
@@ -45,7 +51,7 @@ class PollProposal
      *
      * @var ModuleInvitation
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Event\ModuleInvitation")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Event\ModuleInvitation", inversedBy="pollProposalsCreated")
      * @ORM\JoinColumn(name="creator_id", referencedColumnName="id")
      */
     private $creator;
@@ -92,6 +98,24 @@ class PollProposal
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     * @return PollProposal
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        return $this;
     }
 
     /**

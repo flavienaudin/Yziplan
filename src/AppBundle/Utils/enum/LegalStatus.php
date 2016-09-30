@@ -16,5 +16,5 @@ class LegalStatus extends AbstractEnumType
     const ORGANISATION = "legal_status.organisation";
 
     protected $name = 'enum_legal_status';
-    protected $values = array(self::INDIVIDUAL, self::ORGANISATION);
+    protected $values = array(null, self::INDIVIDUAL, self::ORGANISATION);
 }

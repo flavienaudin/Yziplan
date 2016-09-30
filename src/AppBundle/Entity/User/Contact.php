@@ -85,7 +85,6 @@ class Contact
      */
     private $linkeds;
 
-
     /**
      * @var ArrayCollection of ContactGroup
      *
@@ -95,7 +94,7 @@ class Contact
     private $groups;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection of ContactEmail
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\User\ContactEmail", mappedBy="contact")
      */
     private $contactEmails;
@@ -107,6 +106,8 @@ class Contact
     public function __construct()
     {
         $this->linkeds = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->contactEmails = new ArrayCollection();
     }
 
     /***********************************************************************

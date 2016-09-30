@@ -77,6 +77,13 @@ class ModuleInvitation
     private $eventInvitation;
 
     /**
+     * Proposition ajoutées au sondage par l'invité
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Module\PollProposal", mappedBy="creator")
+     */
+    private $pollProposalsCreated;
+
+    /**
      * Réponses au sondage de l'invité
      * @var ArrayCollection
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Module\PollProposalResponse", mappedBy="moduleInvitation")
@@ -109,6 +116,7 @@ class ModuleInvitation
      ***********************************************************************/
     public function __construct()
     {
+        $this->pollProposalsCreated = new ArrayCollection();
         $this->pollProposalResponses = new ArrayCollection();
         $this->expenseElementsCreated = new ArrayCollection();
         $this->expenseElementsPayed = new ArrayCollection();

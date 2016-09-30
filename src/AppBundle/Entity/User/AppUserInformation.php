@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\User;
 
+use AppBundle\Utils\enum\LegalStatus;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -23,10 +24,9 @@ class AppUserInformation
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="legal_status", type="enum_legal_status")
+     * @ORM\Column(name="legal_status", type="enum_legal_status", nullable=true)
      */
-    private $legalStatus;
+    private $legalStatus = null;
 
     /**
      * @var string
@@ -52,9 +52,9 @@ class AppUserInformation
     /**
      * @var string
      *
-     * @ORM\Column(name="gender", type="enum_gender")
+     * @ORM\Column(name="gender", type="enum_gender", nullable=true)
      */
-    private $gender;
+    private $gender = null;
 
     /**
      * @var \DateTime
@@ -108,9 +108,9 @@ class AppUserInformation
     /**
      * @var string
      *
-     * @ORM\Column(name="marital_status", type="enum_marital_status")
+     * @ORM\Column(name="marital_status", type="enum_marital_status", nullable=true)
      */
-    private $maritalStatus;
+    private $maritalStatus = null;
 
 
     /***********************************************************************

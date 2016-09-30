@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\User;
 
 use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Utils\enum\AppUserStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -34,9 +35,9 @@ class ApplicationUser
     /**
      * @var string
      *
-     * @ORM\Column(name="status", type="enum_appuser_status", length=127)
+     * @ORM\Column(name="status", type="enum_appuser_status")
      */
-    private $status;
+    private $status = AppUserStatus::MAIN;
 
     /**
      * @var string
@@ -65,8 +66,7 @@ class ApplicationUser
     private $appUserInformation;
 
     /**
-     * @var ArrayCollection
-     *
+     * @var ArrayCollection of EventInvitation
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Event\EventInvitation", mappedBy="applicationUser")
      */
     private $eventInvitations;
@@ -98,9 +98,10 @@ class ApplicationUser
         $this->appUserInformation = new AppUserInformation();
         $this->appUserInformation->setApplicationUser($this);
 
-        $this->appUserEmails = new ArrayCollection();
         $this->eventInvitations = new ArrayCollection();
+        $this->appUserEmails = new ArrayCollection();
         $this->contacts = new ArrayCollection();
+        $this->contactGroups = new ArrayCollection();
     }
 
 

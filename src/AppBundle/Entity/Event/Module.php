@@ -82,7 +82,7 @@ class Module
      * @var boolean
      * @ORM\Column(name="guests_can_invite", type="boolean")
      */
-    private $guestsCanInvite;
+    private $guestsCanInvite = true;
 
 
     /***********************************************************************

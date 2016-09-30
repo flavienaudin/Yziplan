@@ -66,7 +66,7 @@ class PaymentModule
     private $module;
 
     /**
-     * @var Transaction
+     * @var ArrayCollection of Transaction
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Payment\Transaction", mappedBy="paymentModule")
      */
     private $transactions;

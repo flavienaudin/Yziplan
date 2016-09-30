@@ -18,6 +18,6 @@ class MaritalStatus extends AbstractEnumType
     const WIDOWED = "marital_status.widowed";
 
     protected $name = 'enum_marital_status';
-    protected $values = array(self::SINGLE, self::COUPLE, self::MARRIED, self::WIDOWED);
+    protected $values = array(null, self::SINGLE, self::COUPLE, self::MARRIED, self::WIDOWED);
 
 }

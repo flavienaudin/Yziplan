@@ -9,13 +9,13 @@
 namespace AppBundle\DataFixtures\ORM;
 
 
-use AppBundle\Entity\enum\PollModuleSortingType;
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\ExpenseElement;
 use AppBundle\Entity\Module\ExpenseModule;
+use AppBundle\Entity\Module\PollElement;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalElement;
@@ -25,6 +25,7 @@ use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\PollElementType;
+use AppBundle\Utils\enum\PollModuleSortingType;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -76,15 +77,16 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         // Update the user for password
         $userManager->updateUser($userInvite, true);
 
-        
         //Event
-        $event = new Event();
-        $event->setName("Test d'evenement");
-        $event->setToken("123456789");
-        $event->setTokenEdition("987654321");
-        $event->setStatus(EventStatus::IN_ORGANIZATION);
-        $event->setDescription("Nouvel événément super cool de test. C'est donc sa description");
-        $event->setGuestsCanAddModule(true);
+        $event1 = new Event();
+        $event1->setName("Evenement de la soirée");
+        $event1->setToken("123456789");
+        $event1->setTokenEdition("987654321");
+        $event1->setStatus(EventStatus::IN_ORGANIZATION);
+        $event1->setDescription("On se fait une soirée. on va s'éclater");
+        $event1->setInvitationOnly(false);
+        $event1->setGuestsCanInvite(true);
+        $event1->setGuestsCanAddModule(true);
 
         //EventInvitation Creator
         $eventInvitationCreator = new EventInvitation();
@@ -93,7 +95,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $eventInvitationCreator->setToken('azerty');
         $eventInvitationCreator->setCreator(true);
         $userprincipal->getApplicationUser()->addEventInvitation($eventInvitationCreator);
-        $event->addEventInvitation($eventInvitationCreator);
+        $event1->addEventInvitation($eventInvitationCreator);
 
         //EventInvitation Invite
         $eventInvitationRaymond = new EventInvitation();
@@ -101,11 +103,12 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $eventInvitationRaymond->setStatus(EventInvitationStatus::VALID);
         $eventInvitationRaymond->setToken('qsdfgh');
         $userInvite->getApplicationUser()->addEventInvitation($eventInvitationRaymond);
-        $event->addEventInvitation($eventInvitationRaymond);
+        $event1->addEventInvitation($eventInvitationRaymond);
 
-        //Module
+        /*
+        //Module Expense
         $moduleExpense = new Module();
-        $event->addModule($moduleExpense);
+        $event1->addModule($moduleExpense);
         $moduleExpense->setName("Test Expense Module");
         $moduleExpense->setDescription("Ceci est une super description.
 
@@ -118,15 +121,15 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $expenseModule = new ExpenseModule();
         $moduleExpense->setExpenseModule($expenseModule);
 
-        $expenseProposal = new ExpenseElement();
-        $expenseProposal->setName("Restaurant");
-        $expenseProposal->setAmount(12);
-        $expenseProposal->setExpenseDate(new \DateTime());
-        $expenseProposal->setCreator($eventInvitationCreator);
-        $expenseProposal->setPayer($eventInvitationCreator);
-        $expenseProposal->addListOfParticipant($eventInvitationCreator);
-        $expenseProposal->addListOfParticipant($eventInvitationRaymond);
-        $expenseModule->addExpenseElement($expenseProposal);
+        $expenseElement = new ExpenseElement();
+        $expenseElement->setName("Restaurant");
+        $expenseElement->setAmount(12);
+        $expenseElement->setExpenseDate(new \DateTime());
+        $expenseElement->setCreator($eventInvitationCreator);
+        $expenseElement->setPayer($eventInvitationCreator);
+        $expenseElement->addListOfParticipant($eventInvitationCreator);
+        $expenseElement->addListOfParticipant($eventInvitationRaymond);
+        $expenseModule->addExpenseElement($expenseElement);
         
         $expenseProposal2 = new ExpenseElement();
         $expenseProposal2->setName("Restaurant2");
@@ -150,45 +153,56 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $expenseModuleInvitation2->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $expenseModuleInvitation2->isCreator();
         $eventInvitationRaymond->addModuleInvitation($expenseModuleInvitation2);
+        */
 
 
         // Module Poll
         $modulePoll = new Module();
-        $event->addModule($modulePoll);
-        $modulePoll->setName("Module Quand");
-        $modulePoll->setDescription("C'est un chouette module");
-        $modulePoll->setToken("quand123");
-        $modulePoll->setStatus(EventStatus::IN_ORGANIZATION);
+        $event1->addModule($modulePoll);
+        $modulePoll->setName("Quoi qu'on fait ?");
+        $modulePoll->setDescription("On veut savoir ce qu'on fait");
+        $modulePoll->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
+        $modulePoll->setStatus(ModuleStatus::IN_ORGANIZATION);
         $modulePoll->setOrderIndex(1);
 
         $pollModule = new PollModule();
         $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
         $modulePoll->setPollModule($pollModule);
 
+        $pollElementAct1 = new PollElement();
+        $pollModule->addPollElement($pollElementAct1);
+        $pollElementAct1->setName("Activité 1");
+        $pollElementAct1->setType(PollElementType::STRING);
+        $pollElementAct1->setOrderIndex(1);
+
+        $pollElementAct2 = new PollElement();
+        $pollModule->addPollElement($pollElementAct2);
+        $pollElementAct2->setName("Activité 2");
+        $pollElementAct2->setType(PollElementType::STRING);
+        $pollElementAct2->setOrderIndex(2);
+
         $pollProposal1 = new PollProposal();
-        $pollProposalElement1 = new PollProposalElement();
-        $pollProposalElement1->setName("Occasion");
-        $pollProposalElement1->setType(PollElementType::STRING);
-        $pollProposalElement1->setValString("Crémaillère");
-        $pollProposal1->addPollProposalElement($pollProposalElement1);
-        $pollProposalElement2 = new PollProposalElement();
-        $pollProposalElement2->setName("Complt.");
-        $pollProposalElement2->setType(PollElementType::STRING);
-        $pollProposalElement2->setValString("Party");
-        $pollProposal1->addPollProposalElement($pollProposalElement2);
+        $pollProposal1->setDescription("Ca va être sportif!!!");
+        $pollProposal1Act1 = new PollProposalElement();
+        $pollProposal1Act1->setValString("Match de rugby");
+        $pollElementAct1->addPollProposalElement($pollProposal1Act1);
+        $pollProposal1->addPollProposalElement($pollProposal1Act1);
+        $pollProposal1Act2 = new PollProposalElement();
+        $pollProposal1Act2->setValString("3ième mi-temps");
+        $pollElementAct2->addPollProposalElement($pollProposal1Act2);
+        $pollProposal1->addPollProposalElement($pollProposal1Act2);
         $pollModule->addPollProposal($pollProposal1);
 
         $pollProposal2 = new PollProposal();
-        $pollProposalElement11 = new PollProposalElement();
-        $pollProposalElement11->setName("Occasion");
-        $pollProposalElement11->setType(PollElementType::STRING);
-        $pollProposalElement11->setValString("Anniversaire");
-        $pollProposal2->addPollProposalElement($pollProposalElement11);
-        $pollProposalElement22 = new PollProposalElement();
-        $pollProposalElement22->setName("Complt.");
-        $pollProposalElement22->setType(PollElementType::STRING);
-        $pollProposalElement22->setValString("30 ans");
-        $pollProposal2->addPollProposalElement($pollProposalElement22);
+        $pollProposal2->setDescription("Ca va être ludique");
+        $pollProposal2Act1 = new PollProposalElement();
+        $pollProposal2Act1->setValString("Carcassonne");
+        $pollElementAct2->addPollProposalElement($pollProposal2Act1);
+        $pollProposal2->addPollProposalElement($pollProposal2Act1);
+        $pollProposal2Act2 = new PollProposalElement();
+        $pollProposal2Act2->setValString("7 wxonders");
+        $pollElementAct2->addPollProposalElement($pollProposal2Act2);
+        $pollProposal2->addPollProposalElement($pollProposal2Act2);
         $pollModule->addPollProposal($pollProposal2);
 
         $moduleInvitation1 = new ModuleInvitation();
@@ -209,9 +223,8 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $moduleInvitation2->initPollModuleResponse();
         $eventInvitationRaymond->addModuleInvitation($moduleInvitation2);
 
-        $manager->persist($event);
+        $manager->persist($event1);
         $manager->flush();
-
 
         //Event 2
         $event2 = new Event();

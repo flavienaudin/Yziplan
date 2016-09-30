@@ -80,7 +80,7 @@ class AccountUser extends FosUser
     /**
      * @var ApplicationUser
      *
-     * @ORM\OneToOne(targetEntity="AppBundle\Entity\User\ApplicationUser", mappedBy="accountUser")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\User\ApplicationUser", mappedBy="accountUser", cascade={"persist"})
      */
     private $applicationUser;
 

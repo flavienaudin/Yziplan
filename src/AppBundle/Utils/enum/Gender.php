@@ -17,5 +17,5 @@ class Gender extends AbstractEnumType
     const OTHER = "gender.other";
 
     protected $name = 'enum_gender';
-    protected $values = array(self::MALE, self::FEMALE, self::OTHER);
+    protected $values = array(null, self::MALE, self::FEMALE, self::OTHER);
 }
