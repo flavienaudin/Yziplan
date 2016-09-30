@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootgrid.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.mCustomScrollbar.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/palette.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/toastr.min.css") }}">
@@ -215,10 +216,11 @@
 </div><![endif]-->
 
 {% block javascripts %}
+    <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
     <script src="{{ asset("bundles/app/js/waves.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jquery.bootgrid-updated.js") }}"></script>
     <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-datetimepicker.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-datetimepicker.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/palette.js") }}"></script>
@@ -226,12 +228,14 @@
 
     <script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
     <script src="{{ asset("bundles/app/js/autosize.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
 
-    <!-- Placeholder for IE9 --><!--[if IE 9 ]>
+    <!-- Placeholder for IE9 -->
+    <!--[if IE 9 ]>
     <script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->
 
-    <script src="{{ asset("bundles/app/js/functions.js") }}"></script>
+    {# /!\ en cas d'ajout de nouveaux widgets venant du Template AdminExtended, vérifier dans le fichier ci-dessus
+    les functions appelées et les ajouter au fichier at-app.js au cas par cas
+    <script src="{{ asset("bundles/app/js/functions.js") }}"></script>#}
     <script src="{{ asset("bundles/app/js/actions.js") }}"></script>
     <script src="{{ asset("includes/js/at-app.js") }}"></script>
 

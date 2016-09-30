@@ -9,7 +9,7 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\Entity\EventInvitation;
+use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
@@ -29,7 +29,7 @@ class EventInvitationController extends Controller
      * Action pour afficher sur un événement à partir d'un token eventInvitation qui est alors enregistré en session avant la redirection vers la page d'affichage de l'événement
      *
      * @Route("/{_locale}/invitation/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEventInvitation" )
-     * @ParamConverter("eventInvitation", class="AppBundle:EventInvitation")
+     * @ParamConverter("eventInvitation", class="AppBundle:Event/EventInvitation")
      */
     public function displayEventInvitationAction(EventInvitation $eventInvitation = null, Request $request)
     {
@@ -41,7 +41,7 @@ class EventInvitationController extends Controller
         $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $eventInvitation->getToken());
         return $this->redirectToRoute("displayEvent", array(
             'token' => $eventInvitation->getEvent()->getToken(),
-            'tokenEdition' => ($eventInvitation->getEvent()->getCreator() == $eventInvitation ? $eventInvitation->getEvent()->getTokenEdition() : null)));
+            'tokenEdition' => ($eventInvitation->isCreator() ? $eventInvitation->getEvent()->getTokenEdition() : null)));
     }
 
     /**

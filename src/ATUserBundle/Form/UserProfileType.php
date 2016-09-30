@@ -17,9 +17,6 @@ class UserProfileType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("pseudo", TextType::class, array(
-                'required' => false
-            ))
             // Suppression du mot de passe pour pouvoir modifier son profil (pour les compte ReseauSoc notamment)
             ->remove("current_password");
     }

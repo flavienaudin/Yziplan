@@ -3,7 +3,7 @@
 
 base:
   page:
-    meta_title: Prototype 2
+    meta_title: Yziplan
   ie_warning:
     browser:
       chrome: Chrome
@@ -17,7 +17,7 @@ base:
     home: Home
 
 navbar:
-  brand: Plany
+  brand: YziPlan
   subtitle: Version beta 2
   search:
     placeholder: Search for contact, event...

@@ -52,9 +52,7 @@ class ApplicationUser
 
     /**
      * @var AccountUser
-     *
      * @ORM\OneToOne(targetEntity="ATUserBundle\Entity\AccountUser", inversedBy="applicationUser")
-     * @ORM\JoinColumn(name="account_user_id", referencedColumnName="id", nullable=true)
      */
     private $accountUser;
 

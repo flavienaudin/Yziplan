@@ -3,10 +3,11 @@
 namespace ATUserBundle\Entity;
 
 use AppBundle\Entity\User\ApplicationUser;
-use FOS\UserBundle\Model\User as FosUser;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\UserBundle\Model\User as FosUser;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+
 
 /**
  * AccountUser
@@ -267,6 +268,14 @@ class AccountUser extends FosUser
     /***********************************************************************
      * Helpers
      ***********************************************************************/
+
+    public function getDisplayableName()
+    {
+        if ($this->applicationUser == null) {
+            return substr($this->username, 0, 4) . "...";
+        }
+        return $this->applicationUser->getDisplayableName();
+    }
 
     /**
      * @return bool true si au moins un des ID de ResSoc est renseigné

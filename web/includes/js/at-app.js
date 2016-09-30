@@ -7,9 +7,194 @@ $(document).ready(function () {
     /** Global pre-loader */
     $('.at-global-preloader').hide();
 
+    jsPlugginActivation();
+
+    /** Common JQuery Selectors **/
+    var $html = $('html');
+    var $body = $('body');
+
+    /* --------------------------------------------------------
+     Scrollbar
+     ----------------------------------------------------------*/
+    function scrollBar(selector, theme, mousewheelaxis) {
+        $(selector).mCustomScrollbar({
+            theme: theme,
+            scrollInertia: 100,
+            axis: 'yx',
+            mouseWheel: {
+                enable: true,
+                axis: mousewheelaxis,
+                preventDefault: true
+            }
+        });
+    }
+
+    if (!$html.hasClass('ismobile')) {
+        //On Custom Class
+        if ($('.c-overflow')[0]) {
+            scrollBar('.c-overflow', 'minimal-dark', 'y');
+        }
+    }
+
+    /* --------------------------------------------------------
+     Top Search
+     ----------------------------------------------------------*/
+    /* Bring search reset icon when focused */
+    $body.on('focus', '.hs-input', function () {
+        $('.h-search').addClass('focused');
+    });
+
+    /* Take off reset icon if input length is 0, when blurred */
+    $body.on('blur', '.hs-input', function () {
+        var x = $(this).val();
+
+        if (!x.length > 0) {
+            $('.h-search').removeClass('focused');
+        }
+    });
+
+
+    /* --------------------------------------------------------
+     User Alerts
+     ----------------------------------------------------------*/
+    $body.on('click', '[data-user-alert]', function (e) {
+        e.preventDefault();
+
+        var u = $(this).data('user-alert');
+        $('.' + u).tab('show');
+
+    });
+
+    /* --------------------------------------------------------
+     Text Feild
+     ----------------------------------------------------------*/
+
+    //Add blue animated border and remove with condition when focus and blur
+    if ($('.fg-line')[0]) {
+        $body.on('focus', '.fg-line .form-control', function () {
+            $(this).closest('.fg-line').addClass('fg-toggled');
+        });
+
+        $body.on('blur', '.form-control', function () {
+            var p = $(this).closest('.form-group, .input-group');
+            var i = p.find('.form-control').val();
+
+            if (p.hasClass('fg-float')) {
+                if (i.length == 0) {
+                    $(this).closest('.fg-line').removeClass('fg-toggled');
+                }
+            }
+            else {
+                $(this).closest('.fg-line').removeClass('fg-toggled');
+            }
+        });
+    }
+
+    //Add blue border for pre-valued fg-flot text feilds
+    if ($('.fg-float')[0]) {
+        $('.fg-float .form-control').each(function () {
+            var i = $(this).val();
+            if (i.length != 0) {
+                $(this).closest('.fg-line').addClass('fg-toggled');
+            }
+
+        });
+    }
+
+    /* --------------------------------------------------------
+     Waves Animation
+     ----------------------------------------------------------*/
+    (function () {
+        Waves.attach('.btn:not(.btn-icon):not(.btn-float)');
+        Waves.attach('.btn-icon, .btn-float', ['waves-circle', 'waves-float']);
+        Waves.init();
+    })();
+
+
+    /* --------------------------------------------------------
+     Collapse Fix
+     ----------------------------------------------------------*/
+    var $collapse = $('.collapse');
+    if ($collapse[0]) {
+        //Add active class for opened items
+        $collapse.on('show.bs.collapse', function () {
+            $(this).closest('.panel').find('.panel-heading').addClass('active');
+        });
+
+        $collapse.on('hide.bs.collapse', function () {
+            $(this).closest('.panel').find('.panel-heading').removeClass('active');
+        });
+
+        //Add active class for pre opened items
+        $('.collapse.in').each(function () {
+            $(this).closest('.panel').find('.panel-heading').addClass('active');
+        });
+    }
+
+    /* --------------------------------------------------------
+     Tooltips
+     ----------------------------------------------------------*/
+    var $tooltip = $('[data-toggle="tooltip"]');
+    if ($tooltip[0]) {
+        $tooltip.tooltip();
+    }
+
+    /* --------------------------------------------------------
+     Popover
+     ----------------------------------------------------------*/
+    var $popover = $('[data-toggle="popover"]');
+    if ($popover[0]) {
+        $popover.popover();
+    }
+
+    /* --------------------------------------------------------
+     IE 9 Placeholder
+     ----------------------------------------------------------*/
+    if ($html.hasClass('ie9')) {
+        $('input, textarea').placeholder({
+            customClass: 'ie9-placeholder'
+        });
+    }
+});
+
+
+/**
+ * Active les pluggins JS/CSS après une requête Ajax et au chargement d'une page
+ *  - textarea autosize
+ *  - clockpicker
+ *  - datepicker
+ */
+function jsPlugginActivation() {
     /** Autosize **/
     autosize($('textarea'));
-});
+    /** Auto Hight Textarea */
+    var $autosizeElt = $('.auto-size');
+    if ($autosizeElt[0]) {
+        autosize($autosizeElt[0]);
+    }
+
+    $('.clockpicker').clockpicker();
+    $('.datepicker').datetimepicker({
+        format: "DD/MM/YYYY",
+        locale: "fr",
+        showClear: true,
+        icons: {
+            time: 'zmdi zmdi-time',
+            date: 'zmdi zmdi-calendar',
+            up: 'zmdi zmdi-chevron-up',
+            down: 'zmdi zmdi-chevron-down',
+            previous: 'zmdi zmdi-chevron-left',
+            next: 'zmdi zmdi-chevron-right',
+            today: 'zmdi zmdi-gps-dot',
+            clear: 'zmdi zmdi-delete zmdi-hc-lg',
+            close: 'zmdi zmdi-close-circle-o zmdi-hc-lg'
+        },
+        widgetPositioning: {
+            horizontal: 'auto',
+            vertical: 'auto'
+        }
+    });
+}
 
 
 /*----------------*/
@@ -145,42 +330,12 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
     });
 }
 
-/**
- * Active les pluggins JS/CSS après une requête Ajax
- *  - textarea autosize
- *  - clockpicker
- *  - datepicker
- */
-function jsPlugginActivation() {
-    autosize($('textarea'));
-    $('.clockpicker').clockpicker();
-    $('.datepicker').datetimepicker({
-        format: "DD/MM/YYYY",
-        locale: "fr",
-        showClear: true,
-        icons: {
-            time: 'zmdi zmdi-time',
-            date: 'zmdi zmdi-calendar',
-            up: 'zmdi zmdi-chevron-up',
-            down: 'zmdi zmdi-chevron-down',
-            previous: 'zmdi zmdi-chevron-left',
-            next: 'zmdi zmdi-chevron-right',
-            today: 'zmdi zmdi-gps-dot',
-            clear: 'zmdi zmdi-delete zmdi-hc-lg',
-            close: 'zmdi zmdi-close-circle-o zmdi-hc-lg'
-        },
-        widgetPositioning: {
-            horizontal: 'auto',
-            vertical: 'auto'
-        }
-    });
-}
 
 /**
  * Echappe les caractères spéciaux d'un Selector pour JQuery
  * @param selector
  * @returns {string|XML|void}
  */
-function escapeSelectorCharacters(selector ) {
-    return selector.replace( /(:|\.|\[|\]|,)/g, "\\$1" );
+function escapeSelectorCharacters(selector) {
+    return selector.replace(/(:|\.|\[|\]|,)/g, "\\$1");
 }
