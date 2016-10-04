@@ -9,10 +9,8 @@
 namespace AppBundle\Manager;
 
 
-use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserInformation;
-use ATUserBundle\Form\UserAboutBasicInformationType;
-use ATUserBundle\Form\UserAboutBiographyType;
+use ATUserBundle\Entity\AccountUser;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -34,16 +32,16 @@ class AppUserInformationManager
 
     /**
      * Get the AppUserInformation and create it if null
-     * @param ApplicationUser $applicationUser
+     * @param AccountUser $accountUSer
      * @return AppUserInformation
      */
-    public function retrieveAppUserInformation(ApplicationUser $applicationUser)
+    public function retrieveAppUserInformation(AccountUser $accountUSer)
     {
-        $this->appUserInformation = $applicationUser->getAppUserInformation();
+        $this->appUserInformation = $accountUSer->getApplicationUser()->getAppUserInformation();
         if ($this->appUserInformation == null) {
             $this->appUserInformation = new AppUserInformation();
-            $applicationUser->setAppUserInformation($this->appUserInformation);
-            $this->entityManager->persist($applicationUser);
+            $accountUSer->getApplicationUser()->setAppUserInformation($this->appUserInformation);
+            $this->entityManager->persist($accountUSer);
             $this->entityManager->flush();
         }
         return $this->appUserInformation;

@@ -21,7 +21,7 @@ register:
     already_an_account: Already have an account?
   form_field:
     email: Email
-    pseudo: Pseudo
+    publicName: Your public name
   validation:
     email_already_used: This email is already registered
   check_email:

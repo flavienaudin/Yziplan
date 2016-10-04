@@ -14,6 +14,7 @@ use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\FOSUserEvents;
 use FOS\UserBundle\Event\FormEvent;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Config\FileLocator;
@@ -39,6 +40,7 @@ class RegistrationController extends BaseController
             return $event->getResponse();
         }
 
+        /** @var FormInterface $form */
         $form = $formFactory->createForm();
         $form->setData($user);
 

@@ -69,14 +69,14 @@
                     </div>
                 </dd>
             </dl>
-            <dl class="dl-horizontal">
+            {#<dl class="dl-horizontal">
                 <dt class="p-t-10">{{ form_label(form_mandatory_information.pseudo, 'profile.show.about.mandatory_information.pseudo.label'|trans) }}</dt>
                 <dd>
                     <div class="fg-line">
                         {{ form_widget(form_mandatory_information.pseudo, {'attr':{'placeholder':"profile.show.about.mandatory_information.pseudo.placeholder"|trans}}) }}
                     </div>
                 </dd>
-            </dl>
+            </dl>#}
 
             <div class="m-t-30 pull-right">
                 <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
@@ -101,15 +101,15 @@
         <div class="pmbb-view">
             <dl class="dl-horizontal">
                 <dt>{{ "profile.show.about.basic_information.fullname.title"|trans }}</dt>
-                <dd id="pmb-view-fullname">{{ user.userAbout.fullname is not empty ? user.userAbout.fullname : "-" }}</dd>
+                <dd id="pmb-view-fullname">{{ user.applicationUser.appUserInformation.displayableName }}</dd>
             </dl>
             <dl class="dl-horizontal">
                 <dt>{{ "profile.show.about.basic_information.gender.title"|trans }}</dt>
-                <dd id="pmb-view-gender">{{ user.userAbout.gender is not empty ? ("global.gender."~user.userAbout.gender)|trans():"-" }}</dd>
+                <dd id="pmb-view-gender">{{ user.applicationUser.appUserInformation.gender is not empty ? ("global.gender."~user.applicationUser.appUserInformation.gender)|trans():"-" }}</dd>
             </dl>
             <dl class="dl-horizontal">
                 <dt>{{ "profile.show.about.basic_information.birthday.title"|trans }}</dt>
-                <dd id="pmb-view-birthday">{{ user.userAbout.birthday is not null?user.userAbout.birthday|localizeddate('short', 'none'):"-" }}</dd>
+                <dd id="pmb-view-birthday">{{ user.applicationUser.appUserInformation.birthday is not null?user.applicationUser.appUserInformation.birthday|localizeddate('short', 'none'):"-" }}</dd>
             </dl>
         </div>
         {% if form_basic_information is not null %}
@@ -162,7 +162,7 @@
     </div>
     <div class="pmbb-body p-l-30">
         <div class="pmbb-view" id="pmb-view-biography">
-            {{ user.userAbout.biography is not empty?user.userAbout.biography:"profile.show.about.biography.empty"|trans }}
+            {{ user.applicationUser.appUserInformation.biography is not empty?user.applicationUser.appUserInformation.biography:"profile.show.about.biography.empty"|trans }}
         </div>
 
         {% if form_biography is not null %}
