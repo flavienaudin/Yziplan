@@ -86,3 +86,10 @@ services:
     arguments: ['@translator.default','@session.flash_bag','@router']
     tags:
       - { name: kernel.event_subscriber }
+
+# Twig Extenstions
+  at.twig_extension.country:
+        class: AppBundle\Twig\CountryExtension
+        public: false
+        tags:
+            - { name: twig.extension }

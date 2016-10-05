@@ -188,11 +188,7 @@ moduleInvitation:
 # Globals
 global:
   event: Event
-  gender:
-    0: "-"
-    1: Male
-    2: Female
-    3: Other
+  user_anonyme: YsiPlanor anonyme
   link:
     top: Top
   button:
@@ -215,6 +211,16 @@ global:
   exception:
     access_denied_http: You do not have access to these information. Please, connect with the appropriate user.
     method_not_allowed_http: This request is not allowed. Take care.
+
+# Enums
+gender:
+  male: Male
+  female: Female
+  other: Other
+
+legal_status:
+  individual: Individual
+  organisation: Organisation
 
 status:
   in_creation: Being created

@@ -115,7 +115,7 @@ fos_user:
     user_class: ATUserBundle\Entity\AccountUser
     use_flash_notifications: false
     service:
-        mailer: fos_user.mailer.twig_swift
+        mailer: at.mailer.twig_swift
     from_email:
         address:  "%mailer_user%"
         sender_name:  "Yziplan"

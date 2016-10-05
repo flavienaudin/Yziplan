@@ -41,6 +41,7 @@ class InscriptionListener implements EventSubscriberInterface
         $user=$form->getData();
         $user->setEmail($email);
         $user->setUsername($user->getEmail());
+        $user->getApplicationUser()->getAppUserInformation()->setPublicName($form['publicName']->getData());
     }
 
     public function onRegistrationConfirm(GetResponseUserEvent $event){

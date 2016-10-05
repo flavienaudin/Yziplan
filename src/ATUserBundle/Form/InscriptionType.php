@@ -21,11 +21,17 @@ class InscriptionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('publicName', TextType::class, array(
+                'required' => false,
+                'mapped' => false
+            ))
             ->add('email', EmailType::class, array(
+                'required' => true,
                 'mapped' => false
             ))
             ->add('plainPassword', RepeatedType::class, array(
                 'type' => PasswordType::class,
+                'required' => true,
                 'options' => array('translation_domain' => 'FOSUserBundle'),
                 'first_options' => array('label' => 'form.password'),
                 'second_options' => array('label' => 'form.password_confirmation'),

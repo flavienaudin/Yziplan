@@ -272,7 +272,7 @@ class AccountUser extends FosUser
     public function getDisplayableName()
     {
         if ($this->applicationUser == null) {
-            return substr($this->username, 0, 4) . "...";
+            return null;
         }
         return $this->applicationUser->getDisplayableName();
     }

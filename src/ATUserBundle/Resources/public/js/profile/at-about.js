@@ -3,9 +3,18 @@
  */
 
 $(document).ready(function () {
-    /*
-     * Profile About Edit Toggle
-     */
+    /** Profile TabPanel active */
+    var anchor = getAnchor();
+    var tabs = $('#profile-tabs');
+    var tabToShow;
+    if (anchor != null && (tabs.find('a[href="#' + anchor + '"]')[0])) {
+        tabToShow = tabs.find('a[href="#' + anchor + '"]');
+    } else {
+        tabToShow = tabs.find('a:first');
+    }
+    tabToShow.tab('show');
+
+    /** Profile About Edit Toggle */
     if ($('[data-profile-action]')[0]) {
         $('body').on('click', '[data-profile-action]', function (e) {
             e.preventDefault();
@@ -22,14 +31,18 @@ $(document).ready(function () {
     }
 });
 
-$('form#userMandatoryInformation, form#userBasicInformation, form#userBiography').on("submit", function (e) {
+$('form#userConnexionInformation, form#userPersonalInformation, form#userContactDetails, form#userBiography').on("submit", function (e) {
     var $form = $(this);
     ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
         // update form's inputs
         if (responseJSON.data) {
             for (var inputTarget in responseJSON.data) {
                 if (responseJSON.data.hasOwnProperty(inputTarget)) {
-                    $('#pmb-view-' + inputTarget).html((responseJSON.data[inputTarget]));
+                    $('#pmb-view-' + inputTarget).html(responseJSON.data[inputTarget]);
+                    /** Update information elsewhere in the page */
+                    $('.user-' + inputTarget).each(function () {
+                        $(this).html(responseJSON.data[inputTarget]);
+                    });
                 }
             }
         }

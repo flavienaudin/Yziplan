@@ -55,4 +55,7 @@ services:
     at.user_checker:
         class: ATUserBundle\Security\UserChecker
 
-# Voters
+# Mailer
+    at.mailer.twig_swift:
+        class: ATUserBundle\Mailer\AtTwigSiwftMailer
+        parent: fos_user.mailer.twig_swift

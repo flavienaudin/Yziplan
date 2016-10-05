@@ -1,6 +1,16 @@
 {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register')}) }}
 
-<div class="input-group m-t-25 m-b-25 fg-float {% if (not form.email.vars.compound or form.email.vars.force_error|default(false)) and not form.email.vars.valid %} has-error{% endif %}">
+
+<div class="input-group m-t-25 m-b-25 fg-float">
+    <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
+    <div class="fg-line">
+        {{ form_widget(form.publicName, {"attr":{"class":"input-lg"}}) }}
+        {{ form_label(form.publicName, "register.form_field.publicName", {"label_attr":{"class":"fg-label"}}) }}
+    </div>
+    {{ form_errors(form.publicName) }}
+</div>
+
+<div class="input-group m-b-25 fg-float {% if (not form.email.vars.compound or form.email.vars.force_error|default(false)) and not form.email.vars.valid %} has-error{% endif %}">
     <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
     <div class="fg-line">
         {{ form_widget(form.email, {"attr":{"class":"input-lg"}}) }}

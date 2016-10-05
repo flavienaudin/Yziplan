@@ -65,38 +65,41 @@ profile:
       meta_title: My profile
       title: My profile
       avatar_update: Update Profile Picture
-    about:
-      mandatory_information:
-        title: Mandatory Fields
-        username:
-          title: Username
-          label: Username
-          placeholder: Username
+    tab:
+      profile_information: Profile
+      profile_contacts: Contacts
+      profile_preferences: Preferences
+    profile_information:
+      connexion_information:
+        title: Connexion information
         email:
           title: Email
           label: Email
           placeholder: Email
-        pseudo:
-          title: Pseudo
-          label: Pseudo
-          placeholder: Pseudo
         password:
           title: Password
           change: Change your password
           init: Initialize your password
         social_network:
           title: Social networks
-      biography:
-        title: Biography
-        label: Biography
-        placeholder: A little about you...
-        empty: You didn't fill your biography yet
-      basic_information:
+      personal_information:
         title: Basic Information
-        fullname:
-          title: Full Name
-          label: Full Name
-          placeholder: Full Name
+        publicname:
+          title: Public Name
+          label: Public Name
+          placeholder: Public Name
+        firstname:
+          title: First Name
+          label: First Name
+          placeholder: First Name
+        lastname:
+          title: Last Name
+          label: Last Name
+          placeholder: Last Name
+        legalstatus:
+          title: Legal Status
+          label: Legal Status
+          placeholder: Legal Status
         gender:
           title: Gender
           label: Gender
@@ -105,6 +108,25 @@ profile:
           title: Birthday
           label: Birthday
           placeholder: Click here...
+        nationality:
+          title: Nationality
+          label: Nationality
+          placeholder: Nationality
+      contact_details:
+        title: Contact details
+        living_country:
+          title: Country
+          label: Country
+          placeholder: Country
+        living_city:
+          title: City
+          label: City
+          placeholder: City
+      biography:
+        title: Biography
+        label: Biography
+        placeholder: A little about you...
+        empty: You didn't fill your biography yet
   message:
     update:
       success: Information updated

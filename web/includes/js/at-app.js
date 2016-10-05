@@ -196,6 +196,36 @@ function jsPlugginActivation() {
     });
 }
 
+/**
+ * Get URL get parameter by its name
+ * @param name Parameter's name
+ * @param url (string|null) Optionnal URL to search in, if undefined then current URL is used
+ * @returns {*}
+ */
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+/**
+ * Get anchor presents in the URL
+ * @param url (string|null) Optionnal URL to search in, if undefined then current URL is used
+ * @returns {*}
+ * @returns {*}
+ */
+function getAnchor(url){
+    if (!url) url = window.location.href;
+    var anchor = null;
+    if( (idx = url.indexOf("#")) > 0 ){
+        anchor = url.substring(idx+1);
+    }
+    return anchor;
+}
 
 /*----------------*/
 /** Ajax Request **/

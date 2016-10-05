@@ -65,38 +65,41 @@ profile:
       meta_title: Mon profil
       title: Mon profil
       avatar_update: Mettre à jour votre avatar
-    about:
-      mandatory_information:
-        title: Champs Obligatoires
-        username:
-          title: Nom d'utilisateur
-          label: Nom d'utilisateur
-          placeholder: Nom d'utilisateur
+    tab:
+      profile_information: Profil
+      profile_contacts: Contacts
+      profile_preferences: Préférences
+    profile_information:
+      connexion_information:
+        title: Informations de connexion
         email:
           title: E-mail
           label: E-mail
           placeholder: E-mail
-        pseudo:
-          title: Pseudo
-          label: Pseudo
-          placeholder: Pseudo
         password:
           title: Mot de passe
           change: Modifier votre mot de passe
           init: Initialiser votre mot de passe
         social_network:
           title: Réseaux sociaux
-      biography:
-        title: Biographie
-        label: Biographie
-        placeholder: Quelques mots à propos de vous ...
-        empty: Vous n'avez pas encore renseignée votre biographie
-      basic_information:
+      personal_information:
         title: Informations Personnelles
-        fullname:
+        publicname:
+          title: Nom public
+          label: Nom public
+          placeholder: Nom Public
+        firstname:
+          title: Prénom
+          label: Prénom
+          placeholder: Prénom
+        lastname:
           title: Nom
           label: Nom
           placeholder: Nom
+        legalstatus:
+          title: Status légal
+          label: Status légal
+          placeholder: Status légal
         gender:
           title: Sexe
           label: Sexe
@@ -105,6 +108,25 @@ profile:
           title: Anniversaire
           label: Anniversaire
           placeholder: Cliquez ici...
+        nationality:
+          title: Nationalité
+          label: Nationalité
+          placeholder: Nationalité
+      contact_details:
+        title: Coordonnées
+        living_country:
+          title: Pays
+          label: Pays
+          placeholder: Pays
+        living_city:
+          title: Ville
+          label: Ville
+          placeholder: Ville
+      biography:
+        title: Biographie
+        label: Biographie
+        placeholder: Quelques mots à propos de vous ...
+        empty: Vous n'avez pas encore renseignée votre biographie
   message:
     update:
       success: Informations mises à jour

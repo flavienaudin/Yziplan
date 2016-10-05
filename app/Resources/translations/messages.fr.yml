@@ -189,11 +189,7 @@ moduleInvitation:
 # Globals
 global:
   event: événement
-  gender:
-    0: "-"
-    1: Homme
-    2: Femme
-    3: Autre
+  user_anonyme: YsiPlaneur anonyme
   link:
     top: Haut
   button:
@@ -216,6 +212,17 @@ global:
   exception:
     access_denied_http: Vous n'avez pas accès à ces données. Connectez-vous avec l'utilisateur adéquate.
     method_not_allowed_http: Cette requête n'est pas autorisée. Faites attention.
+
+# Enums
+gender:
+  0: "-"
+  male: Homme
+  female: Femme
+  other: Autre
+
+legal_status:
+  individual: Personne
+  organisation: Organisation
 
 status:
   in_creation: En cours de création

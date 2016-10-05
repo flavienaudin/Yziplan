@@ -9,8 +9,12 @@
 namespace AppBundle\Manager;
 
 
+use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserInformation;
 use ATUserBundle\Entity\AccountUser;
+use ATUserBundle\Form\AppUserInfoContactDetailsType;
+use ATUserBundle\Form\AppUserInformationBiographyType;
+use ATUserBundle\Form\AppUserInfoPersonalType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -37,9 +41,17 @@ class AppUserInformationManager
      */
     public function retrieveAppUserInformation(AccountUser $accountUSer)
     {
-        $this->appUserInformation = $accountUSer->getApplicationUser()->getAppUserInformation();
+        $this->appUserInformation = null;
+        if ($accountUSer->getApplicationUser() != null) {
+            $this->appUserInformation = $accountUSer->getApplicationUser()->getAppUserInformation();
+        }
         if ($this->appUserInformation == null) {
             $this->appUserInformation = new AppUserInformation();
+            if ($accountUSer->getApplicationUser() == null) {
+                $applicationUser = new ApplicationUser();
+                $accountUSer->setApplicationUser($applicationUser);
+                $applicationUser->setAccountUser($accountUSer);
+            }
             $accountUSer->getApplicationUser()->setAppUserInformation($this->appUserInformation);
             $this->entityManager->persist($accountUSer);
             $this->entityManager->flush();
@@ -61,10 +73,10 @@ class AppUserInformationManager
     /**
      * @return FormInterface|null
      */
-    public function createBiographyForm()
+    public function createPersonalInformationForm()
     {
         if ($this->appUserInformation != null) {
-            // TODO return $this->formFactory->create(UserAboutBiographyType::class, $this->appUserInformation);
+            return $this->formFactory->create(AppUserInfoPersonalType::class, $this->appUserInformation);
         }
         return null;
     }
@@ -72,10 +84,21 @@ class AppUserInformationManager
     /**
      * @return FormInterface|null
      */
-    public function createBasicInformationForm()
+    public function createContactDetailsForm()
     {
         if ($this->appUserInformation != null) {
-            // TODO return $this->formFactory->create(UserAboutBasicInformationType::class, $this->appUserInformation);
+            return $this->formFactory->create(AppUserInfoContactDetailsType::class, $this->appUserInformation);
+        }
+        return null;
+    }
+
+    /**
+     * @return FormInterface|null
+     */
+    public function createBiographyForm()
+    {
+        if ($this->appUserInformation != null) {
+            return $this->formFactory->create(AppUserInformationBiographyType::class, $this->appUserInformation);
         }
         return null;
     }
