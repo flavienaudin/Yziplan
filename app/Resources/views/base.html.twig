@@ -78,7 +78,7 @@
                         {# TODO : mettre l'avatar de l'utilisateur #}
                         <i class="hm-icon zmdi zmdi-account-circle"></i> </a>
                     <ul class="dropdown-menu pull-right dm-icon" role="menu">
-                        <li role="presentation"><a>{{ app.user.displayableName is not empty?app.user.displayableName:"global.user_anonyme"|trans }}</a></li>
+                        <li role="presentation"><a class="user-public-name">{{ app.user.displayableName is not empty ? app.user.displayableName:"global.user_anonyme"|trans }}</a></li>
                         <li role="separator" class="divider"></li>
                         <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a></li>
                         <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a></li>

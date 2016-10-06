@@ -112,7 +112,8 @@
                     'attr':{ 'id':'userPersonalInformation', 'data-profile-pmb-block-target':'#personal_information'} }) }}
 
                 <dl class="dl-horizontal">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_personals.publicName, 'profile.show.profile_information.personal_information.publicname.label'|trans) }}</dt>
+                    <dt class="p-t-10">{{ form_label(form_app_user_info_personals.publicName, 'profile.show.profile_information.personal_information.publicname.label'|trans,
+                        {'help':"profile.show.profile_information.personal_information.publicname.help"|trans}) }}</dt>
                     <dd>
                         <div class="fg-line">
                             {{ form_widget(form_app_user_info_personals.publicName, {'attr':{'placeholder':"profile.show.profile_information.personal_information.publicname.placeholder"|trans}}) }}

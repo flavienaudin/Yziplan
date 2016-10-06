@@ -22,7 +22,7 @@ class InscriptionType extends AbstractType
     {
         $builder
             ->add('publicName', TextType::class, array(
-                'required' => false,
+                'required' => true,
                 'mapped' => false
             ))
             ->add('email', EmailType::class, array(

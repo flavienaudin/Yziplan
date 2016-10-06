@@ -88,6 +88,7 @@ profile:
           title: Nom public
           label: Nom public
           placeholder: Nom Public
+          help: Il s'agit de votre nom affiché publiquement par défault (par exempe pour les invitations ou votre profile public)
         firstname:
           title: Prénom
           label: Prénom

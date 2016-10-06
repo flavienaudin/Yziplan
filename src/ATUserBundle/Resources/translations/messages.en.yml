@@ -88,6 +88,7 @@ profile:
           title: Public Name
           label: Public Name
           placeholder: Public Name
+          help: This is your name displayed by default (for example in invitations or public profile)
         firstname:
           title: First Name
           label: First Name

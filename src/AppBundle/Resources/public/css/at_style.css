@@ -291,6 +291,10 @@
     z-index : 1100;
 }
 
+label.required:after{
+    content: " *";
+}
+
 /** end Formulaires **/
 
 /*---------------------------------

@@ -34,7 +34,7 @@ class AppUserInfoPersonalType extends AbstractType
                 )
             ))
             ->add('publicName', TextType::class, array(
-                'required' => false,
+                'required' => true,
             ))
             ->add('firstName', TextType::class, array(
                 'required' => false,
