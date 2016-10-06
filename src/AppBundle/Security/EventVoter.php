@@ -8,11 +8,11 @@
 
 namespace AppBundle\Security;
 
+use AppBundle\Entity\Event\EventInvitation;
+use ATUserBundle\Entity\AccountUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
-use AppBundle\Entity\Event\Event;
-use ATUserBundle\Entity\AccountUser;
 
 class EventVoter extends Voter
 {
@@ -24,7 +24,7 @@ class EventVoter extends Voter
 
     /**
      * @param string $attribute Cf. constants in EventVoter
-     * @param mixed $subject Array with {Event, null|request.event.tokenEdition}
+     * @param mixed $subject EventInvitation
      * @return bool
      */
     protected function supports($attribute, $subject)
@@ -32,48 +32,37 @@ class EventVoter extends Voter
         if (!in_array($attribute, array(self::EDIT, self::ADD_EVENT_MODULE, self::VALIDATE, self::ARCHIVE, self::CANCEL))) {
             return false;
         }
-        if (!is_array($subject) || count($subject) != 2) {
+        if (!$subject instanceof EventInvitation) {
             return false;
         }
-        return ($subject[0] instanceof Event && ($attribute == self::ADD_EVENT_MODULE || is_string($subject[1])));
+        return true;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         /** @var AccountUser $user */
         $user = $token->getUser();
-        /** @var Event $event */
-        $event = $subject[0]; // $subject must be a Event instance, thanks to the supports method
-        $tokenEdition = $subject[1]; // $subject must be a string, thanks to the supports method
+        /** @var EventInvitation $eventInvitation */
+        $eventInvitation = $subject; // $subject must be a EventInvitation instance, thanks to the supports method
 
         if ($user != null && $user != 'anon.' && !$user instanceof UserInterface) {
             return false;
         }
+
         switch ($attribute) {
             case self::ADD_EVENT_MODULE:
-                if ($event->isGuestsCanAddModule()) {
+                if ($eventInvitation->getEvent()->isGuestsCanAddModule()) {
                     return true;
                 }
-                return $this->canEdit($event, $user, $tokenEdition);
+                return $eventInvitation->isCreator() || $eventInvitation->isAdministrator();
                 break;
-            case self::VALIDATE:
             case self::CANCEL:
             case self::ARCHIVE:
+                return $eventInvitation->isCreator();
+            case self::VALIDATE:
             case self::EDIT:
-                return $this->canEdit($event, $user, $tokenEdition);
+                return $eventInvitation->isCreator() || $eventInvitation->isAdministrator();
                 break;
-        }
-        return false;
-    }
-
-    private function canEdit(Event $event, $user, $tokenEdition)
-    {
-        if (!empty($tokenEdition) && $event->getTokenEdition() === $tokenEdition) {
-            if ($event->getCreator() == null || $event->getCreator()->getApplicationUser() == null || !$event->getCreator()->getApplicationUser()->getUser()->isEnabled()) {
-                return true;
-            } else if ($user == $event->getCreator()->getApplicationUser()->getUser()) {
-                return true;
-            }
         }
         return false;
     }

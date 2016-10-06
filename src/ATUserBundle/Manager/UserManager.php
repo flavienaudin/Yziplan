@@ -69,7 +69,6 @@ class UserManager extends BaseManager
         $user = $this->createUser();
         $user->setEmail($email);
         $user->setUsername($email);
-
         $user->setPlainPassword($this->tokenGenerateur->random(GenerateursToken::MOTDEPASSE_LONGUEUR));
         $user->setEnabled(false);
         $user->setPasswordKnown(false);

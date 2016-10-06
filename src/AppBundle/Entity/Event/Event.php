@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\Event;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -46,13 +48,6 @@ class Event
      * @ORM\Column(name="token", type="string", length=128, unique=true)
      */
     private $token;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="token_edition", type="string", length=128, unique=true)
-     */
-    private $tokenEdition;
 
     /**
      * @var string
@@ -199,29 +194,6 @@ class Event
     public function setToken($token)
     {
         $this->token = $token;
-        return $this;
-    }
-
-    /**
-     * Get tokenEdition
-     *
-     * @return string
-     */
-    public function getTokenEdition()
-    {
-        return $this->tokenEdition;
-    }
-
-    /**
-     * Set tokenEdition
-     *
-     * @param string $tokenEdition
-     *
-     * @return Event
-     */
-    public function setTokenEdition($tokenEdition)
-    {
-        $this->tokenEdition = $tokenEdition;
         return $this;
     }
 
@@ -399,5 +371,25 @@ class Event
     /***********************************************************************
      *                      Helpers
      ***********************************************************************/
+
+    /**
+     * Retrieve EventInvitation with creator = true
+     * @return Collection
+     */
+    public function getCreators()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("creator", true));
+        return $this->eventInvitations->matching($criteria);
+    }
+
+    /**
+     * Retrieve EventInvitation with administrator = true
+     * @return Collection
+     */
+    public function getAdministrators()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("administrator", true));
+        return $this->eventInvitations->matching($criteria);
+    }
 
 }

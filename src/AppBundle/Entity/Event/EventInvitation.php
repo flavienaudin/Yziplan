@@ -346,8 +346,6 @@ class EventInvitation
         if (empty($displayableName)) {
             if ($this->getApplicationUser() != null) {
                 $displayableName = $this->getApplicationUser()->getDisplayableName();
-            } else {
-                $displayableName = null;
             }
         }
         return $displayableName;
@@ -360,8 +358,13 @@ class EventInvitation
     public function getDisplayableEmail()
     {
         $displayableEmail = null;
-        if ($this->getApplicationUser() != null && $this->getApplicationUser()->getUser() != null) {
-            $displayableEmail = $this->getApplicationUser()->getUser()->getEmail();
+        if ($this->getApplicationUser() != null){
+            if($this->getApplicationUser()->getAppUserEmails()->count()>0){
+                $this->getApplicationUser()->getAppUserEmails()->first();
+                $displayableEmail = $this->getApplicationUser()->getAccountUser()->getEmail();
+            }elseif($this->getApplicationUser()->getAccountUser() != null) {
+                $displayableEmail = $this->getApplicationUser()->getAccountUser()->getEmail();
+            }
         }
         return $displayableEmail;
     }

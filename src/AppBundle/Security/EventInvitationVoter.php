@@ -9,11 +9,12 @@
 namespace AppBundle\Security;
 
 use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\EventInvitation;
 use ATUserBundle\Entity\AccountUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
-use AppBundle\Entity\EventInvitation;
+
 
 class EventInvitationVoter extends Voter
 {
@@ -48,11 +49,11 @@ class EventInvitationVoter extends Voter
         if ($attribute == self::EDIT) {
             /** @var EventInvitation $eventInvitation */
             $eventInvitation = $subject; // $subject must be a Invitation instance, thanks to the supports method
-            if($eventInvitation->getApplicationUser() == null){
+            if ($eventInvitation->getApplicationUser() == null) {
                 return true;
-            }else if ($eventInvitation->getApplicationUser()->getUser() == null || !$eventInvitation->getApplicationUser()->getUser()->isEnabled()) {
+            } else if ($eventInvitation->getApplicationUser()->getAccountUser() == null || !$eventInvitation->getApplicationUser()->getAccountUser()->isEnabled()) {
                 return true;
-            } elseif ($user == $eventInvitation->getApplicationUser()->getUser()) {
+            } elseif ($user == $eventInvitation->getApplicationUser()->getAccountUser()) {
                 return true;
             }
         } else {

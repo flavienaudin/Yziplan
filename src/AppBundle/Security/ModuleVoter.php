@@ -26,20 +26,15 @@ class ModuleVoter extends Voter
         if (!in_array($attribute, array(self::DISPLAY, self::EDIT, self::DELETE))) {
             return false;
         }
-        if (!is_array($subject) && count($subject) != 2) {
-            return false;
-        }
-        return $subject[0] instanceof Module && $subject[1] instanceof ModuleInvitation;
+        return $subject instanceof ModuleInvitation;
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         /** @var AccountUser $user */
         $user = $token->getUser();
-        /** @var Module $module */
-        $module = $subject[0]; // $subject[0] must be a Module instance, thanks to the supports method
         /** @var ModuleInvitation $userModuleInvitation */
-        $userModuleInvitation = $subject[1]; // $subject[1] must be a EventInvitation instance, thanks to the supports method
+        $userModuleInvitation = $subject; // $subject must be a EventInvitation instance, thanks to the supports method
 
         if ($user != null && $user != 'anon.' && !$user instanceof UserInterface) {
             return false;
@@ -51,13 +46,7 @@ class ModuleVoter extends Voter
                 break;
             case self::EDIT:
             case self::DELETE:
-                if ($module->getCreator() != null) {
-                    if ($module->getCreator() === $userModuleInvitation) {
-                        return true;
-                    } else if ($module->getCreator()->getEventInvitation()->getApplicationUser() != null && $user == $module->getCreator()->getEventInvitation()->getApplicationUser()->getUser()) {
-                        return true;
-                    }
-                }
+                return $userModuleInvitation->isCreator() || $userModuleInvitation->isAdministrator();
                 break;
         }
         return false;

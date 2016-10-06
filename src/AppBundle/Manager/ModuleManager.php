@@ -9,7 +9,6 @@
 namespace AppBundle\Manager;
 
 
-use AppBundle\Entity\enum\PollModuleSortingType;
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
@@ -23,6 +22,7 @@ use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\ModuleType;
 use AppBundle\Utils\enum\PollElementType;
+use AppBundle\Utils\enum\PollModuleSortingType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -105,7 +105,8 @@ class ModuleManager
             $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
             $this->module->setPollModule($pollModule);
         }
-        $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
+        $moduleInvitation = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
+        $moduleInvitation->setCreator(true);
         $event->addModule($this->module);
         return $this->module;
     }

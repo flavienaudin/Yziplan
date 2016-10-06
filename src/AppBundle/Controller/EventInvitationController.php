@@ -39,9 +39,7 @@ class EventInvitationController extends Controller
         }
         $this->denyAccessUnlessGranted(EventInvitationVoter::EDIT, $eventInvitation);
         $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $eventInvitation->getToken());
-        return $this->redirectToRoute("displayEvent", array(
-            'token' => $eventInvitation->getEvent()->getToken(),
-            'tokenEdition' => ($eventInvitation->isCreator() ? $eventInvitation->getEvent()->getTokenEdition() : null)));
+        return $this->redirectToRoute("displayEvent", array('token' => $eventInvitation->getEvent()->getToken()));
     }
 
     /**
@@ -51,19 +49,17 @@ class EventInvitationController extends Controller
     {
         if ($request->hasSession()) {
             $request->getSession()->remove(EventInvitationManager::TOKEN_SESSION_KEY);
-            $request->getSession()->remove(EventInvitationManager::TOKEN_EDITION_SESSION_KEY);
-            $request->getSession()->remove(EventManager::TOKEN_EDITION_SESSION_KEY);
         }
         return $this->redirectToRoute("displayEvent", array('token' => $token));
     }
 
     /**
-     * @Route("/{_locale}/cancel-invitation/{eventInvitationToken}/{eventTokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="cancelEventInvitation" )
+     * @Route("/{_locale}/cancel-invitation/{eventInvitationToken}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="cancelEventInvitation" )
      * @ParamConverter("eventInvitation", class="AppBundle:EventInvitation", options={"mapping": {"eventInvitationToken":"token"}})
      */
-    public function cancelEventInvitationAction(EventInvitation $eventInvitation, $eventTokenEdition = null, Request $request)
+    public function cancelEventInvitationAction(EventInvitation $eventInvitation, Request $request)
     {
-        if ($this->isGranted(EventVoter::EDIT, array($eventInvitation->getEvent(), $eventTokenEdition))) {
+        if ($this->isGranted(EventVoter::EDIT, $eventInvitation)) {
             $eventInvitationManager = $this->get("at.manager.event_invitation");
             if ($eventInvitationManager->cancelEventInvitation($eventInvitation)) {
                 if ($request->isXmlHttpRequest()) {
@@ -71,9 +67,7 @@ class EventInvitationController extends Controller
                     return new JsonResponse($data, Response::HTTP_OK);
                 } else {
                     $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("global.success.data_saved"));
-                    return $this->redirectToRoute("displayEvent", array(
-                        "token" => $eventInvitation->getEvent()->getToken(),
-                        "tokenEdition" => $eventTokenEdition));
+                    return $this->redirectToRoute("displayEvent", array("token" => $eventInvitation->getEvent()->getToken()));
                 }
             }
         }
@@ -90,7 +84,6 @@ class EventInvitationController extends Controller
         }
     }
 
-
     /**
      * @Route("/{_locale}/mes-evenements", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayUserEvents")
      */
@@ -98,9 +91,7 @@ class EventInvitationController extends Controller
     {
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
         $userEventInvitations = $this->get('at.manager.application_user')->getUserEventInvitations($this->getUser());
-        return $this->render("@App/EventInvitation/user_event_invitations.html.twig", array(
-            "eventInvitations" => $userEventInvitations
-        ));
+        return $this->render("@App/EventInvitation/user_event_invitations.html.twig", array("eventInvitations" => $userEventInvitations));
 
     }
 

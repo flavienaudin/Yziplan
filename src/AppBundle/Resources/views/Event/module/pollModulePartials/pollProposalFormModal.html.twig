@@ -2,21 +2,12 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             {% if edition %}
-                {{ form_start(pollProposalForm, {'action':path('pollProposalEditionForm',
-                    {
-                        'pollProposalId':pollProposal.id,
-                        'moduleInvitationToken': userModuleInvitation.token
-                    }),
-                    'attr':{'id': pp_form_modal_prefix~"_form_id"}
+                {{ form_start(pollProposalForm, {
+                    'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposal.id,'moduleInvitationToken': userModuleInvitation.token}),
+                    'attr' : {'id': pp_form_modal_prefix~"_form_id"}
                 }) }}
             {% else %}
-                {{ form_start(pollProposalForm, {'action':path('displayEvent',
-                    {
-                        'token':module.event.token,
-                        'tokenEdition': (is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'),[module.event,app.request.get('tokenEdition')])?module.event.tokenEdition:null)
-                    }),
-                    'attr':{'id': pp_form_modal_prefix~"_form_id"}
-                }) }}
+                {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
             {% endif %}
             <div class="modal-header">
                 <div class="modal-title" id="{{ pp_form_modal_prefix }}_modal_title">
@@ -25,21 +16,9 @@
             </div>
             <div class="modal-body">
                 <div class="alert alert-info">
-                    {{ form_row(pollProposalForm.strPPElts, {
-                        'label':'pollmodule.modal.all.form.string_collection.label',
-                        'attr':{
-                            'class':pp_form_modal_prefix~'_strPPECollection'
-                        }}) }}
-                    {{ form_row(pollProposalForm.intPPElts, {
-                        'label':'pollmodule.modal.all.form.integer_collection.label',
-                        'attr':{
-                            'class':pp_form_modal_prefix~'_intPPECollection'
-                        }}) }}
-                    {{ form_row(pollProposalForm.datetimePPElts, {
-                        'label':'pollmodule.modal.all.form.datetime_collection.label',
-                        'attr':{
-                            'class':pp_form_modal_prefix~'_datetimePPECollection'
-                        }}) }}
+                    {{ form_row(pollProposalForm.strPPElts, {'label':'pollmodule.modal.all.form.string_collection.label', 'attr':{'class':pp_form_modal_prefix~'_strPPECollection'}}) }}
+                    {{ form_row(pollProposalForm.intPPElts, {'label':'pollmodule.modal.all.form.integer_collection.label','attr':{'class':pp_form_modal_prefix~'_intPPECollection'}}) }}
+                    {{ form_row(pollProposalForm.datetimePPElts, {'label':'pollmodule.modal.all.form.datetime_collection.label','attr':{'class':pp_form_modal_prefix~'_datetimePPECollection'}}) }}
                 </div>
 
                 <div class="alert alert-warning">
@@ -55,8 +34,7 @@
                     <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
                 </div>
             </div>
-            <div class="modal-footer">
-            </div>
+            <div class="modal-footer"></div>
             {{ form_end(pollProposalForm) }}
         </div>
     </div>

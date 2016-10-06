@@ -4,24 +4,24 @@
 - eventForm (Form|null) Formulaire d'édition des information général de l'événement (si les droits le permettent)
 - invitationsForm (Form|null) Formulaire permettant d'inviter (renseignement des e-mails des invités)
 - modules (array) Tableau des modules de l'événement. Chaque module est décrit un tableau de données (Cf. EventManager:getModulesToDisplay(...) )
-- userEventInvitation (EventInvitation)
+- userEventInvitation (EventInvitation) L'invitation à afficher
 - userEventInvitationForm (Form) Formulaire de réponse à l'invitation
 #}
 
 
 {% block mainMenu_listItems %}
     <li><a href="#event-header-card">{{ "global.event"|trans|capitalize }}</a></li>
-    {% for moduleDescription in modules if moduleDescription.module.name is not empty and moduleDescription.module.status != constant("AppBundle\\Entity\\enum\\ModuleStatus::DELETED") %}
+    {% for moduleDescription in modules if moduleDescription.module.name is not empty and moduleDescription.module.status != constant("AppBundle\\Utils\\enum\\ModuleStatus::DELETED") %}
         <li><a href="#module-{{ moduleDescription.module.token }}">{{ moduleDescription.module.name|capitalize }}</a></li>
     {% endfor %}
 {% endblock mainMenu_listItems %}
 
 {% block event_content %}
-    {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'eventForm':eventForm, 'invitationsForm':invitationsForm}) }}
+    {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'eventForm':eventForm, 'userEventInvitation':userEventInvitation, 'invitationsForm':invitationsForm}) }}
 
     <div class="row">
         <div class="col-xs-12 col-sm-8" id="eventModulesContainer">
-            {% for moduleDescription in modules if moduleDescription.module.status != constant("AppBundle\\Entity\\enum\\ModuleStatus::DELETED") %}
+            {% for moduleDescription in modules if moduleDescription.module.status != constant("AppBundle\\Utils\\enum\\ModuleStatus::DELETED") %}
                 {% if moduleDescription.module.pollModule is not null %}
                     {{ include('@App/Event/module/displayPollModule.html.twig', {
                         'module':moduleDescription.module,
@@ -49,10 +49,6 @@
             {% if userEventInvitation is defined %}
                 {{ include("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", {"userEventInvitation":userEventInvitation, 'userEventInvitationForm' : userEventInvitationForm}) }}
             {% endif %}
-            {% if event.creator is not null and event.creator.applicationUser is not null %}
-                {# TODO refaire l'affichage du cadre de l'organisateur à partir de l'EventInvitation et non de l'ApplicationUser #}
-                {{ render(controller("AppBundle:Event:displayAppUserPartial", {"appUserId":event.creator.applicationUser.id})) }}
-            {% endif %}
             {{ include("@App/Event/partials/eventTechniqueDataCard.html.twig", {"event":event, 'userEventInvitation':userEventInvitation}) }}
         </div>
     </div>
@@ -68,7 +64,7 @@
 {% block top_javascripts %}
     {{ parent() }}
     <script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/selectize.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/at-selectize.js") }}"></script>
 {% endblock %}
 

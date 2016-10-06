@@ -33,13 +33,12 @@ class EventInvitationFormType extends AbstractType
 
             $displayableName = $eventInvitation->getDisplayableName();
             $form
-                ->add('name', TextType::class, array(
+                ->add('guestName', TextType::class, array(
                     'required' => false,
                     'data' => $displayableName
 
                 ))
-                ->add('token', HiddenType::class)
-                ->add('tokenEdition', HiddenType::class);
+                ->add('token', HiddenType::class);
 
             $email = $eventInvitation->getDisplayableEmail();
             $form->add('email', EmailType::class, array(

@@ -29,7 +29,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 class EventInvitationManager
 {
     const TOKEN_SESSION_KEY = "user/eventInvitation/token";
-    const TOKEN_EDITION_SESSION_KEY = "user/eventInvitation/tokenEdition";
 
     /** @var EntityManager */
     private $entityManager;
@@ -103,8 +102,7 @@ class EventInvitationManager
             $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'applicationUser' => $user->getApplicationUser()));
         }
         if ($this->eventInvitation != null) {
-            if ($this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
-            } else {
+            if (!$this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
                 $this->eventInvitation = null;
             }
         } else {
@@ -140,17 +138,19 @@ class EventInvitationManager
      * @param string $email The email of the guest to search the EventInvitation for
      * @return EventInvitation
      */
-    public function getGuestEventInvitation(Event $event, $email){
+    public function getGuestEventInvitation(Event $event, $email)
+    {
         $this->eventInvitation = null;
+        // TODO Check in AppUserEmail
         $guestUser = $this->userManager->findUserByEmail($email);
-        if($guestUser instanceof AccountUser){
+        if ($guestUser instanceof AccountUser) {
             $eventInvitationRepo = $this->entityManager->getRepository(EventInvitation::class);
             $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'applicationUser' => $guestUser->getApplicationUser()));
-        }else{
+        } else {
             $guestUser = $this->userManager->createUserFromEmail($email);
         }
-        if($this->eventInvitation == null) {
-             $this->initializeEventInvitation($event, $guestUser);
+        if ($this->eventInvitation == null) {
+            $this->initializeEventInvitation($event, $guestUser);
         }
 
         return $this->eventInvitation;
@@ -164,12 +164,8 @@ class EventInvitationManager
      */
     public function createCreatorEventInvitation(Event $event, AccountUser $user = null)
     {
-        if ($event->getCreator() != null) {
-            $this->eventInvitation = null;
-        } else {
-            $this->initializeEventInvitation($event, $user);
-            $event->setCreator($this->eventInvitation);
-        }
+        $this->initializeEventInvitation($event, $user);
+        $this->eventInvitation->setCreator(true);
         return $this->eventInvitation;
     }
 
@@ -184,7 +180,6 @@ class EventInvitationManager
     {
         $this->eventInvitation = new EventInvitation();
         $this->eventInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        $this->eventInvitation->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
         if ($user != null) {
             $this->eventInvitation->setApplicationUser($user->getApplicationUser());
@@ -228,7 +223,6 @@ class EventInvitationManager
         if ($this->eventInvitation != null) {
             $this->entityManager->persist($this->eventInvitation);
             $this->entityManager->flush();
-            $this->session->set(self::TOKEN_SESSION_KEY, $this->eventInvitation->getToken());
             return true;
         }
         return false;
@@ -259,6 +253,7 @@ class EventInvitationManager
         if ($this->eventInvitation->getApplicationUser() == null) {
             $guestEmailData = $guestEmailForm->getData();
             if (!empty($guestEmailData)) {
+                // TODO check in AppUserEmail table ?
                 $guest = $this->userManager->findUserByEmail($guestEmailData);
                 if ($guest == null) {
                     $guest = $this->userManager->createUserFromEmail($guestEmailData);

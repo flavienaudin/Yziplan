@@ -1,6 +1,8 @@
 <?php
 
 namespace AppBundle\Repository\Event;
+use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\Module;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -15,8 +17,8 @@ class ModuleRepository extends EntityRepository
     public function findOrderedByEventToken($eventToken)
     {
         $query = $this->getEntityManager()->createQuery(
-            "SELECT m, -m.orderIndex AS HIDDEN inversedOrderIndex FROM AppBundle:Module m WHERE m.event = 
-                          (SELECT e FROM AppBundle:Event e WHERE e.token = :eventToken)
+            "SELECT m, -m.orderIndex AS HIDDEN inversedOrderIndex FROM ".Module::class." m WHERE m.event = 
+                          (SELECT e FROM ".Event::class." e WHERE e.token = :eventToken)
                           ORDER BY inversedOrderIndex DESC"
         );
         $query->execute(array(

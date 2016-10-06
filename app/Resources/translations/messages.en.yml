@@ -89,7 +89,7 @@ eventInvitations:
 
 eventInvitation:
   form:
-    name:
+    guestname:
       label: Your event name
       placeholder: Your event name
     email:

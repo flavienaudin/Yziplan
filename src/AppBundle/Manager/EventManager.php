@@ -26,8 +26,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class EventManager
 {
-    const TOKEN_EDITION_SESSION_KEY = "user/event/tokenEdition";
-
     /** @var EntityManager */
     private $entityManager;
 
@@ -97,7 +95,7 @@ class EventManager
             $eventRep = $this->entityManager->getRepository(Event::class);
             $this->event = $eventRep->findOneBy(array('token' => $token));
         }
-        return ($this->event instanceof Event ? $this->event : null);
+        return $this->event;
     }
 
     /**
@@ -119,10 +117,7 @@ class EventManager
             $this->event->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
         $user = $this->tokenStorage->getToken()->getUser();
-        if ($this->eventInvitationManager->createCreatorEventInvitation($this->event, ($user instanceof AccountUser ? $user : null)) == null) {
-            $this->event = null;
-            return $this->event;
-        }
+        $this->eventInvitationManager->createCreatorEventInvitation($this->event, ($user instanceof AccountUser ? $user : null));
 
         if (empty($this->getEvent()->getId())) {
             $this->entityManager->persist($this->getEvent());
@@ -148,14 +143,9 @@ class EventManager
     public function treatEventFormSubmission(Form $evtForm)
     {
         $this->event = $evtForm->getData();
-
         if (empty($this->event->getToken())) {
             $this->event->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
-        if (empty($this->event->getTokenEdition())) {
-            $this->event->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        }
-
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
 
@@ -167,10 +157,12 @@ class EventManager
         return $this->formFactory->create(InvitationsFormType::class);
     }
 
-    public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm){
-        if($this->event != null){
+    public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm)
+    {
+        if ($this->event != null) {
             $emailsData = $eventInvitationsForm->get("invitations")->getData();
-            foreach ($emailsData as $email){
+            foreach ($emailsData as $email) {
+                // TODO check getGuestEventInvitation() ==> AppUserEmail
                 $this->eventInvitationManager->getGuestEventInvitation($this->event, $email);
             }
             $this->entityManager->persist($this->event);

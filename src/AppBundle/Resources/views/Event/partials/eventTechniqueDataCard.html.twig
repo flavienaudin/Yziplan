@@ -1,22 +1,15 @@
+{# Données d'entrée :
+- event : Event
+- userEventInvitation : EventInvitation de l'utilisateur
+#}
+
 <div class="card" id="event-technique-card">
     <div class="card-header">
         <h2>Important</h2>
         <small>Information à conserver</small>
-
     </div>
     <div class="card-body card-padding">
         <dl>
-            {% if is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'), [event, app.request.get('tokenEdition')]) %}
-                <dt>Lien d'administration</dt>
-                <dd>
-                    {# TODO TOFIX Cas où event.creator.ApplicationUser == null && event.invitationOnly
-                            => affichage de la page via {event.token/event.tokenEdition} s'il y a pas le token de l'eventInvitation
-                            => refus d'afficher la page #}
-                    <a href="{{ url("displayEvent",{'token':event.token,'tokenEdition':event.tokenEdition}) }}">Administration</a>
-                </dd>
-            {% endif %}
-            <dt>Lien vers l'événement</dt>
-            <dd><a href="{{ url("displayEvent",{'token':event.token}) }}">Visualisation de l'événement</a></dd>
             <dt>Lien vers votre invitation</dt>
             <dd><a href="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}">Votre invitation</a></dd>
         </dl>

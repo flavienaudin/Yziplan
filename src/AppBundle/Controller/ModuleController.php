@@ -25,19 +25,19 @@ class ModuleController extends Controller
 {
 
     /**
-     * @Route("/{_locale}/add-event-module/{token}/{type}/{tokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="addEventModule")
-     * @ParamConverter("event", class="AppBundle:Event/Event", options={"exclude": {"tokenEdition"}})
+     * @Route("/{_locale}/add-event-module/{token}/{type}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="addEventModule")
+     * @ParamConverter("event", class="AppBundle:Event\Event", options={"exclude":{"type"}})
      */
-    public function addEventModuleAction(Event $event, $type, $tokenEdition = null, Request $request)
+    public function addEventModuleAction(Event $event, $type, Request $request)
     {
-        $this->denyAccessUnlessGranted(EventVoter::ADD_EVENT_MODULE, array($event, $tokenEdition));
+        $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
+        $this->denyAccessUnlessGranted(EventVoter::ADD_EVENT_MODULE, $userEventInvitation);
         $eventManager = $this->get("at.manager.event");
         $eventManager->setEvent($event);
         $module = $eventManager->addModule($type);
         if ($request->isXmlHttpRequest()) {
             if ($module != null) {
                 $moduleManager = $this->get('at.manager.module');
-                $userEventInvitation = $this->get('at.manager.event_invitation')->retrieveUserEventInvitation($event, false, false, $this->getUser());
                 return new JsonResponse(array('htmlContent' => $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module))), Response::HTTP_OK);
             } else {
                 $responseData['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('module.error.message.add');
@@ -47,20 +47,16 @@ class ModuleController extends Controller
             if ($module == null) {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('module.error.message.add'));
             }
-            return $this->redirect($this->generateUrl('displayEvent', array(
-                    'token' => $event->getToken(),
-                    'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($event, $tokenEdition)) ? $event->getTokenEdition() : null)
-                )) . ($module != null ? '#module-' . $module->getToken():'')
-            );
+            return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . ($module != null ? '#module-' . $module->getToken() : ''));
 
         }
     }
 
     /**
-     * @Route("/{_locale}/remove-event-module/{tokenEdition}/{eventTokenEdition}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="removeEventModule")
-     * @ParamConverter("module", class="AppBundle:Module", options={"exclude": {"eventTokenEdition"}})
+     * @Route("/{_locale}/remove-event-module/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="removeEventModule")
+     * @ParamConverter("module", class="AppBundle:Module")
      */
-    public function removeEventModuleAction(Module $module, $eventTokenEdition = null, Request $request)
+    public function removeEventModuleAction(Module $module, Request $request)
     {
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($module->getEvent(), false, false, $this->getUser());
         $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
@@ -80,10 +76,7 @@ class ModuleController extends Controller
             $moduleManager = $this->get("at.manager.module");
             $moduleManager->setModule($module);
             $moduleManager->removeModule();
-            return $this->redirectToRoute('displayEvent', array(
-                'token' => $module->getEvent()->getToken(),
-                'tokenEdition' => ($this->isGranted(EventVoter::EDIT, array($module->getEvent(), $eventTokenEdition)) ? $module->getEvent()->getTokenEdition() : null)
-            ));
+            return $this->redirectToRoute('displayEvent', array('token' => $module->getEvent()->getToken()));
         }
     }
 
