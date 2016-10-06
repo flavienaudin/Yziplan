@@ -9,11 +9,10 @@
 namespace ATUserBundle\Controller;
 
 use AppBundle\Manager\AppUserInformationManager;
-use AppBundle\Twig\CountryExtension;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\FormUtils;
 use ATUserBundle\Entity\AccountUser;
-use ATUserBundle\Form\AppUserInformationBiographyType;
+use ATUserBundle\Form\AppUserInfoComplementariesType;
 use ATUserBundle\Manager\UserManager;
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Event\FilterUserResponseEvent;
@@ -61,14 +60,14 @@ class ProfileController extends BaseController
         $appUserInformationManager->retrieveAppUserInformation($user);
         $appUserInfoPersonalsForm = $appUserInformationManager->createPersonalInformationForm();
         $appUserContactDetailsForm = $appUserInformationManager->createContactDetailsForm();
-        $biographyForm = $appUserInformationManager->createBiographyForm();
+        $appUserInfoComplementariesForm = $appUserInformationManager->createComplementaryInformationForm();
 
         return $this->render('FOSUserBundle:Profile:show.html.twig', array(
             'user' => $user,
             'form_connexion_information' => $userForm->createView(),
             'form_app_user_info_personals' => ($appUserInfoPersonalsForm != null ? $appUserInfoPersonalsForm->createView() : $appUserInfoPersonalsForm),
             'form_contact_details' => ($appUserContactDetailsForm != null ? $appUserContactDetailsForm->createView() : $appUserContactDetailsForm),
-            'form_biography' => ($biographyForm != null ? $biographyForm->createView() : null)
+            'form_app_user_info_complementaries' => ($appUserInfoComplementariesForm != null ? $appUserInfoComplementariesForm->createView() : null)
         ));
     }
 
@@ -158,7 +157,7 @@ class ProfileController extends BaseController
                     // TODO : Gérer le format de la date en fonction de la locale
                     $data["data"] = array(
                         'public-name' => (!empty($appUserInformation->getPublicName()) ? $appUserInformation->getPublicName() : '-'),
-                        'legal-status' => ($appUserInformation->getGender() != null ? $this->get('translator')->trans($appUserInformation->getGender()) : '-'),
+                        'legal-status' => ($appUserInformation->getLegalStatus() != null ? $this->get('translator')->trans($appUserInformation->getLegalStatus()) : '-'),
                         'firstname' => (!empty($appUserInformation->getFirstName()) ? $appUserInformation->getFirstName() : '-'),
                         'lastname' => (!empty($appUserInformation->getLastName()) ? $appUserInformation->getLastName() : '-'),
                         'gender' => ($appUserInformation->getGender() != null ? $this->get('translator')->trans($appUserInformation->getGender()) : '-'),
@@ -240,9 +239,9 @@ class ProfileController extends BaseController
     }
 
     /**
-     * @Route("/update-user-biography", name="updateUserBiography")
+     * @Route("/update-user-biography", name="updateUserComplementatyInformation")
      */
-    public function updateUserBiographyAction(Request $request)
+    public function updateUserComplementatyInformationAction(Request $request)
     {
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
         $user = $this->getUser();
@@ -251,14 +250,19 @@ class ProfileController extends BaseController
             /** @var AppUserInformationManager $appUserInformationManager */
             $appUserInformationManager = $this->get("at.manager.app_user_information");
             $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($user);
-            $biographyForm = $this->createForm(AppUserInformationBiographyType::class, $appUserInformation);
+            $biographyForm = $this->createForm(AppUserInfoComplementariesType::class, $appUserInformation);
 
             $biographyForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
                 if ($biographyForm->isValid()) {
                     $appUserInformationManager->updateAppUserInformation($appUserInformation);
-                    $data["data"]["biography"] = nl2br(empty($appUserInformation->getBiography()) ? $this->get("translator")->trans("profile.show.profile_information.biography.empty") :
-                        $appUserInformation->getBiography());
+                    $data["data"]["marital-status"] = empty($appUserInformation->getBiography()) ? "-"  : $this->get("translator")->trans($appUserInformation->getMaritalStatus());
+                    $data["data"]["biography"] = nl2br(empty($appUserInformation->getBiography()) ?
+                        $this->get("translator")->trans("profile.show.profile_information.complementaries.biography.empty") : $appUserInformation->getBiography());
+                    $data["data"]["interets"] = nl2br(empty($appUserInformation->getInterests()) ?
+                        $this->get("translator")->trans("profile.show.profile_information.complementaries.interests.empty") : $appUserInformation->getInterests());
+                    $data["data"]["food-conveniences"] = nl2br(empty($appUserInformation->getFoodConveniences()) ?
+                        $this->get("translator")->trans("profile.show.profile_information.complementaries.food_conveniences.empty") : $appUserInformation->getFoodConveniences());
                     return new JsonResponse($data, Response::HTTP_OK);
                 } else {
                     $data["formErrors"] = array();

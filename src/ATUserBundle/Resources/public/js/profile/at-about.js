@@ -31,7 +31,7 @@ $(document).ready(function () {
     }
 });
 
-$('form#userConnexionInformation, form#userPersonalInformation, form#userContactDetails, form#userBiography').on("submit", function (e) {
+$('form#userConnexionInformation, form#userPersonalInformation, form#userContactDetails, form#userComplementaryInformations').on("submit", function (e) {
     var $form = $(this);
     ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
         // update form's inputs

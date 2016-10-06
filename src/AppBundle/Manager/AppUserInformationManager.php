@@ -13,7 +13,7 @@ use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserInformation;
 use ATUserBundle\Entity\AccountUser;
 use ATUserBundle\Form\AppUserInfoContactDetailsType;
-use ATUserBundle\Form\AppUserInformationBiographyType;
+use ATUserBundle\Form\AppUserInfoComplementariesType;
 use ATUserBundle\Form\AppUserInfoPersonalType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -95,10 +95,10 @@ class AppUserInformationManager
     /**
      * @return FormInterface|null
      */
-    public function createBiographyForm()
+    public function createComplementaryInformationForm()
     {
         if ($this->appUserInformation != null) {
-            return $this->formFactory->create(AppUserInformationBiographyType::class, $this->appUserInformation);
+            return $this->formFactory->create(AppUserInfoComplementariesType::class, $this->appUserInformation);
         }
         return null;
     }

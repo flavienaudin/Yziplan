@@ -94,16 +94,16 @@ class AppUserInformation
     /**
      * @var string
      *
-     * @ORM\Column(name="interest", type="text", nullable=true)
+     * @ORM\Column(name="interests", type="text", nullable=true)
      */
-    private $interest;
+    private $interests;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="food_allergy", type="text", nullable=true)
+     * @ORM\Column(name="food_conveniences", type="text", nullable=true)
      */
-    private $foodAllergy;
+    private $foodConveniences;
 
     /**
      * @var string
@@ -322,36 +322,36 @@ class AppUserInformation
     /**
      * @return string
      */
-    public function getInterest()
+    public function getInterests()
     {
-        return $this->interest;
+        return $this->interests;
     }
 
     /**
-     * @param string $interest
+     * @param string $interests
      * @return AppUserInformation
      */
-    public function setInterest($interest)
+    public function setInterests($interests)
     {
-        $this->interest = $interest;
+        $this->interests = $interests;
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getFoodAllergy()
+    public function getFoodConveniences()
     {
-        return $this->foodAllergy;
+        return $this->foodConveniences;
     }
 
     /**
-     * @param string $foodAllergy
+     * @param string $foodConveniences
      * @return AppUserInformation
      */
-    public function setFoodAllergy($foodAllergy)
+    public function setFoodConveniences($foodConveniences)
     {
-        $this->foodAllergy = $foodAllergy;
+        $this->foodConveniences = $foodConveniences;
         return $this;
     }
 

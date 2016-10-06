@@ -123,11 +123,27 @@ profile:
           title: City
           label: City
           placeholder: City
-      biography:
-        title: Biography
-        label: Biography
-        placeholder: A little about you...
-        empty: You didn't fill your biography yet
+      complementaries:
+        title: A little more about you
+        marital_status:
+          title: Marital Status
+          label: Marital Status
+          placeholder: Marital Status
+        biography:
+          title: Biography
+          label: Biography
+          placeholder: A little about your life...
+          empty: You didn't fill your biography yet
+        interests:
+          title: Interests
+          label: Interests
+          placeholder: A little about your insterests...
+          empty: You didn't fill your interests yet
+        food_conveniences:
+          title: Food Conveniences
+          label: Food Conveniences
+          placeholder: Describe your food ccnveniences (allergies or preferences) ...
+          empty: You didn't fill food conveniances yet
   message:
     update:
       success: Information updated

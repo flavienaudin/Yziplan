@@ -222,6 +222,11 @@ legal_status:
   individual: Individual
   organisation: Organisation
 
+marital_status:
+  single: Single
+  couple: Couple
+  married: Married
+
 status:
   in_creation: Being created
   in_organization: Being organized

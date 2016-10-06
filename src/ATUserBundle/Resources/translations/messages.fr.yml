@@ -123,11 +123,27 @@ profile:
           title: Ville
           label: Ville
           placeholder: Ville
-      biography:
-        title: Biographie
-        label: Biographie
-        placeholder: Quelques mots à propos de vous ...
-        empty: Vous n'avez pas encore renseignée votre biographie
+      complementaries:
+        title: A propos de vous
+        marital_status:
+          title: Situation Familiale
+          label: Situation Familiale
+          placeholder: Situation Familiale
+        biography:
+          title: Biographie
+          label: Biographie
+          placeholder: Quelques mots à propos de vous ...
+          empty: Vous n'avez pas encore renseigné votre biographie
+        interests:
+          title: Centres d'intérêts
+          label: Centres d'intérêts
+          placeholder: Quels sont vos centres d'intérêts...
+          empty: Vous n'avez pas encore renseigné vos centres d'intérêts
+        food_conveniences:
+          title: Commodités Alimentaires
+          label: Commodités Alimentaires
+          placeholder: Renseignez vos préférences et allergies alimentaires...
+          empty: Vous n'avez pas encore renseigné vos commodités alimentaires
   message:
     update:
       success: Informations mises à jour
