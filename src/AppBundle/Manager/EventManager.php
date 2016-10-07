@@ -113,9 +113,6 @@ class EventManager
         if (empty($this->event->getToken())) {
             $this->event->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
-        if (empty($this->event->getTokenEdition())) {
-            $this->event->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        }
         $user = $this->tokenStorage->getToken()->getUser();
         $this->eventInvitationManager->createCreatorEventInvitation($this->event, ($user instanceof AccountUser ? $user : null));
 

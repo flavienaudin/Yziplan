@@ -81,7 +81,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $event1 = new Event();
         $event1->setName("Evenement de la soirée");
         $event1->setToken("123456789");
-        $event1->setTokenEdition("987654321");
         $event1->setStatus(EventStatus::IN_ORGANIZATION);
         $event1->setDescription("On se fait une soirée. on va s'éclater");
         $event1->setInvitationOnly(false);
@@ -230,7 +229,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $event2 = new Event();
         $event2->setName("Evénement 2");
         $event2->setToken("012345678");
-        $event2->setTokenEdition("876543210");
         $event2->setStatus(EventStatus::IN_ORGANIZATION);
         $event2->setDescription("Evénément 2 organisé par un utilisateur anonyme");
         $event2->setGuestsCanInvite(false);
