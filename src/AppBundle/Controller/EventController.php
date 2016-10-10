@@ -65,7 +65,7 @@ class EventController extends Controller
         $eventManager->setEvent($currentEvent);
 
         /////////////////////////////////////
-        // user EventInvitation management //
+        // User EventInvitation management //
         /////////////////////////////////////
         $eventInvitationManager = $this->get("at.manager.event_invitation");
         $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($currentEvent, true, true, $this->getUser());

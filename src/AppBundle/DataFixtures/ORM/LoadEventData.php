@@ -19,6 +19,7 @@ use AppBundle\Entity\Module\PollElement;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalElement;
+use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Manager\GenerateursToken;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
@@ -63,6 +64,10 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $userprincipal->setPlainPassword('user1');
         $userprincipal->setPasswordKnown(true);
         $userprincipal->setEnabled(true);
+        $userprincipalAppEmail = new AppUserEmail();
+        $userprincipalAppEmail->setEmail("user1@at.fr");
+        $userprincipal->getApplicationUser()->addAppUserEmail($userprincipalAppEmail);
+        $userprincipal->getApplicationUser()->getAppUserInformation()->setPublicName("User One");
         // Update the user for password
         $userManager->updateUser($userprincipal, true);
 
@@ -74,6 +79,10 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $userInvite->setPlainPassword('user2');
         $userInvite->setPasswordKnown(true);
         $userInvite->setEnabled(true);
+        $userInviteAppEmail = new AppUserEmail();
+        $userInviteAppEmail->setEmail("user2@at.fr");
+        $userInvite->getApplicationUser()->addAppUserEmail($userInviteAppEmail);
+        $userInvite->getApplicationUser()->getAppUserInformation()->setPublicName("User two");
         // Update the user for password
         $userManager->updateUser($userInvite, true);
 

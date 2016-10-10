@@ -28,6 +28,16 @@ register:
     page:
       meta_title: E-mail envoyé
       title: E-mail envoyé
+  lossAppUserEmail_email:
+    subject: Yziplan - Inscription à partir d''une adresse e-mail que vous possédez
+    message: |
+        Bonjour %username%!
+
+        Nous avons enregistré un inscription avec l'adresse %email% que vous avez attaché à votre compte. Cet e-mail va être transférer au nouveau compte.
+        Si vous n'êtes pas à l'initiative de cette inscription, vérifiez immédiatement la boîte e-mail correspondante et annulez la demande.
+
+        Cordialement,
+        L'équipe.
 
 confirmed:
   page:

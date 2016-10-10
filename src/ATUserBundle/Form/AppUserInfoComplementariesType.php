@@ -51,7 +51,7 @@ class AppUserInfoComplementariesType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => AppUserInformation::class,
-            'csrf_token_id' => 'appUserInfoComplementaries'
+            'csrf_token_id' => 'appuserinfo_complementaries'
         ));
     }
 }

@@ -28,6 +28,16 @@ register:
     page:
       meta_title: Email sent
       title: Email sent
+  lossAppUserEmail_email:
+    subject: Yziplan - Inscription à partir d'une adresse e-mail que vous possédez
+    message: |
+        Hello %username%!
+
+        Someone just registered using the email %email% that is attached to your account. This address is going to be transfered to the new acocunt.
+        If you are not at this initiative, check immediately the corresponding mailbox and cancel the new registration.
+
+        Regards,
+        the Team.
 
 confirmed:
   page:

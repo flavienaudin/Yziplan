@@ -16,5 +16,5 @@ class ContactInfoType extends AbstractEnumType
     const BUSINESS = "contact_info_type.business";
 
     protected $name = 'enum_contactinfo_type';
-    protected $values = array(self::HOME, self::BUSINESS);
+    protected $values = array(null, self::HOME, self::BUSINESS);
 }

@@ -17,9 +17,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ModuleVoter extends Voter
 {
-    const DISPLAY = 'display';
-    const EDIT = 'edit';
-    const DELETE = 'delete';
+    const DISPLAY = 'module.display';
+    const EDIT = 'module.edit';
+    const DELETE = 'module.delete';
 
     protected function supports($attribute, $subject)
     {

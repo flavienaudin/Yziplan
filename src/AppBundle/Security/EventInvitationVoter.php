@@ -19,11 +19,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class EventInvitationVoter extends Voter
 {
     /** When displaying event without a personal invitation (public event) */
-    const CREATE = 'create';
+    const CREATE = 'event_invitation.create';
+    /** When user want to access en EventInvitation to edit it*/
+    const EDIT = 'event_invitation.edit';
     /** When guest want to invite */
-    const INVITE = 'invite';
-    const EDIT = 'edit';
+    const INVITE = 'event_invitation.invite';
 
+    /**
+     * @inheritdoc
+     */
     protected function supports($attribute, $subject)
     {
         if (!in_array($attribute, array(self::CREATE, self::INVITE, self::EDIT))) {
@@ -38,6 +42,10 @@ class EventInvitationVoter extends Voter
         return true;
     }
 
+
+    /**
+     * @inheritdoc
+     */
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         /** @var AccountUser $user */

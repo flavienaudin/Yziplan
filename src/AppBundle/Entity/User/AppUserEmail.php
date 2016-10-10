@@ -31,7 +31,14 @@ class AppUserEmail
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="enum_contactinfo_type")
+     * @ORM\Column(name="email_canonical", type="string", length=255, unique=true)
+     */
+    private $emailCanonical;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="enum_contactinfo_type", nullable=true)
      */
     private $type;
 
@@ -77,6 +84,24 @@ class AppUserEmail
     public function setEmail($email)
     {
         $this->email = $email;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmailCanonical()
+    {
+        return $this->emailCanonical;
+    }
+
+    /**
+     * @param string $emailCanonical
+     * @return AppUserEmail
+     */
+    public function setEmailCanonical($emailCanonical)
+    {
+        $this->emailCanonical = $emailCanonical;
         return $this;
     }
 

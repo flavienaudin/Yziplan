@@ -16,11 +16,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class EventVoter extends Voter
 {
-    const EDIT = 'edit';
-    const ADD_EVENT_MODULE = 'addEventModule';
-    const VALIDATE = 'validate';
-    const ARCHIVE = 'archive';
-    const CANCEL = 'cancel';
+    const EDIT = 'event.edit';
+    const ADD_EVENT_MODULE = 'event.addEventModule';
+    const VALIDATE = 'event.validate';
+    const ARCHIVE = 'event.archive';
+    const CANCEL = 'event.cancel';
 
     /**
      * @param string $attribute Cf. constants in EventVoter

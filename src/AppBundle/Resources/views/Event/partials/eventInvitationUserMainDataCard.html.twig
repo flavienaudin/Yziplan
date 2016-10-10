@@ -13,7 +13,7 @@
     <div class="card-body card-padding">
         {% if userEventInvitationForm is defined and userEventInvitationForm is not null %}
             <div class="form-group">
-                {{ form_label(userEventInvitationForm.guestName, 'eventInvitation.form.name.label') }}
+                {{ form_label(userEventInvitationForm.guestName, 'eventInvitation.form.guestname.label') }}
                 <div class="fg-line">
                     {{ form_widget(userEventInvitationForm.guestName, {'attr':{'placeholder':'eventInvitation.form.guestname.placeholder'}}) }}
                     {{ form_errors(userEventInvitationForm.guestName) }}
@@ -35,7 +35,7 @@
             </div>
         {% else %}
             <dl>
-                <dt>{{ "eventInvitation.form.name.label"|trans }}</dt>
+                <dt>{{ "eventInvitation.form.guestname.label"|trans }}</dt>
                 <dd>
                     {{ userEventInvitation.displayableName is not empty?userEventInvitation.displayableName:" - " }}</dd>
                 <dt>{{ "eventInvitation.form.email.label"|trans }}</dt>

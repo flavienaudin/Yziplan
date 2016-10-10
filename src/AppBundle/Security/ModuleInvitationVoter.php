@@ -9,7 +9,7 @@
 namespace AppBundle\Security;
 
 
-use AppBundle\Entity\ModuleInvitation;
+use AppBundle\Entity\Event\ModuleInvitation;
 use ATUserBundle\Entity\AccountUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -17,7 +17,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ModuleInvitationVoter extends Voter
 {
-    const EDIT = 'edit';
+    // Authorization to edit a ModuleInvitation
+    const EDIT = 'module_invitation.edit';
 
     protected function supports($attribute, $subject)
     {
@@ -42,9 +43,9 @@ class ModuleInvitationVoter extends Voter
 
         switch ($attribute) {
             case self::EDIT:
-                if ($moduleInvitation->getEventInvitation()->getApplicationUser() == null || !$moduleInvitation->getEventInvitation()->getApplicationUser()->getUser()->isEnabled()) {
+                if ($moduleInvitation->getEventInvitation()->getApplicationUser() == null || $moduleInvitation->getEventInvitation()->getApplicationUser()->getAccountUser() == null) {
                     return true;
-                } elseif ($moduleInvitation->getEventInvitation()->getApplicationUser()->getUser() == $user) {
+                } elseif ($moduleInvitation->getEventInvitation()->getApplicationUser()->getAccountUser() == $user) {
                     return true;
                 }
                 return false;

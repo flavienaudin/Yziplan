@@ -97,6 +97,7 @@ class ContactManager
             }
             return $result;
         } else {
+            // TODO Revoir la gestion des contacts => ApplicationUser + AppUserEmail
             if (is_numeric($userLinkedId)) {
                 $userLinked = $this->userManager->findUserBy(array('id' => $userLinkedId));
             } else {

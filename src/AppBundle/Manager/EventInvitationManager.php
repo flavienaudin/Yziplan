@@ -110,7 +110,8 @@ class EventInvitationManager
                 $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'token' => $this->session->get(self::TOKEN_SESSION_KEY)));
             }
             if ($this->eventInvitation != null) {
-                if (!$this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
+                $auth = $this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation);
+                if (!$auth) {
                     $this->eventInvitation = null;
                 }
             } else {
@@ -147,6 +148,7 @@ class EventInvitationManager
             $eventInvitationRepo = $this->entityManager->getRepository(EventInvitation::class);
             $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'applicationUser' => $guestUser->getApplicationUser()));
         } else {
+            // TODO Revoir la gestion des invitation => ApplicationUser + AppUserEmail
             $guestUser = $this->userManager->createUserFromEmail($email);
         }
         if ($this->eventInvitation == null) {
@@ -256,6 +258,7 @@ class EventInvitationManager
                 // TODO check in AppUserEmail table ?
                 $guest = $this->userManager->findUserByEmail($guestEmailData);
                 if ($guest == null) {
+                    // TODO Revoir la gestion des invitgations => ApplicationUser + AppUserEmail
                     $guest = $this->userManager->createUserFromEmail($guestEmailData);
                 }
                 $guest->getApplicationUser()->addEventInvitation($this->eventInvitation);

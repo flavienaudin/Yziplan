@@ -9,8 +9,11 @@
 namespace AppBundle\Utils\enum;
 
 
-class ModuleType
+class ModuleType extends AbstractEnumType
 {
     const POLL_MODULE = 'PollModule';
     const EXPENSE_MODULE = 'ExpenseModule';
+
+    protected $name = 'enum_module_type';
+    protected $values = array(self::POLL_MODULE, self::EXPENSE_MODULE);
 }

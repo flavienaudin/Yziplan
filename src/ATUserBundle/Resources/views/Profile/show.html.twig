@@ -54,6 +54,12 @@
                                         Total Invitations
                                     </div>
 
+                                    <ul>
+                                    {% for appUserEmail in user.applicationUser.appUserEmails %}
+                                        <li>{{ appUserEmail.email }} {{ appUserEmail.type is not null?'('~(appUserEmail.type|trans)~')'}}</li>
+                                    {% endfor %}
+                                    </ul>
+
                                     {#<div class="pmo-block pmo-contact hidden-xs">#}
                                         {#<h2>Contact</h2>#}
 

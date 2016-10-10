@@ -11,9 +11,10 @@ services:
 # Provider
     at.provider.user:
         class: ATUserBundle\Security\ATUserProvider
-        arguments: ['@fos_user.user_manager.default',{facebook: facebookId, google: googleId}]
+        arguments: ['@at.manager.user',{facebook: facebookId, google: googleId}]
         calls:
             - [ setTokenGenerateur, ['@at.service.gentoken'] ]
+            - [ setApplicationUserManager, ['@at.manager.application_user'] ]
 
 # Security services
     at.security.ajax_authentication_handler:
@@ -23,33 +24,36 @@ services:
 # EventListeners
     at.event_listener.inscription:
         class: ATUserBundle\EventListener\InscriptionListener
+        arguments: ['@at.manager.application_user', '@at.mailer.twig_swift']
         tags:
             - { name: kernel.event_subscriber }
+
     at.event_listener.resetting:
         class: ATUserBundle\EventListener\ResettingListener
         tags:
             - { name: kernel.event_subscriber }
 
 # FormTypes
-    at.form_type.user_profile:
-        class: ATUserBundle\Form\UserProfileType
-        tags:
-            - { name: form.type, alias: user_user_profile}
-
     at.form_type.inscription:
         class: ATUserBundle\Form\InscriptionType
         tags:
             - { name: form.type, alias: at_user_registration }
-
-    at.form_type.userabout_biography:
-        class: ATUserBundle\Form\UserAboutBiographyType
+    at.form_type.user_profile:
+        class: ATUserBundle\Form\UserProfileType
         tags:
-            - { name: form.type, alias: userabout_biography}
-
-    at.form_type.userabout_basicinformation:
-        class: ATUserBundle\Form\UserAboutBasicInformationType
+            - { name: form.type, alias: user_profile}
+    at.form_type.appuserinfo_personals:
+        class: ATUserBundle\Form\AppUserInfoPersonalType
         tags:
-            - { name: form.type, alias: userabout_basicinformation}
+            - { name: form.type, alias: appuserinfo_personals}
+    at.form_type.appuserinfo_complementaries:
+        class: ATUserBundle\Form\AppUserInfoComplementariesType
+        tags:
+            - { name: form.type, alias: appuserinfo_complementaries}
+    at.form_type.appuserinfo_contactdetails:
+        class: ATUserBundle\Form\AppUserInfoContactDetailsType
+        tags:
+            - { name: form.type, alias: appuserinfo_contactdetails}
 
 # UserChecker
     at.user_checker:

@@ -73,7 +73,7 @@ class ApplicationUser
 
     /**
      * @var ArrayCollection
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User\AppUserEmail", mappedBy="applicationUser")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User\AppUserEmail", mappedBy="applicationUser", cascade={"persist"})
      */
     private $appUserEmails;
 
@@ -253,10 +253,12 @@ class ApplicationUser
      * @param AppUserEmail $appUserEmail
      * @return ApplicationUser
      */
-    public function addAppUserEmails($appUserEmail)
+    public function addAppUserEmail($appUserEmail)
     {
-        $this->appUserEmails[] = $appUserEmail;
-        $appUserEmail->setApplicationUser($this);
+        if (!$this->appUserEmails->contains($appUserEmail)) {
+            $this->appUserEmails[] = $appUserEmail;
+            $appUserEmail->setApplicationUser($this);
+        }
         return $this;
     }
 
@@ -325,7 +327,7 @@ class ApplicationUser
         $this->contactGroups->removeElement($contactGroup);
     }
 
-        /***********************************************************************
+    /***********************************************************************
      *                      Helpers
      ***********************************************************************/
     public function getDisplayableName()

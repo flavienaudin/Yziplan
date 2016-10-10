@@ -33,6 +33,7 @@ services:
 
   at.manager.application_user:
     class: AppBundle\Manager\ApplicationUserManager
+    arguments: ['@doctrine.orm.entity_manager','@fos_user.util.email_canonicalizer']
 
   at.manager.app_user_information:
       class: AppBundle\Manager\AppUserInformationManager

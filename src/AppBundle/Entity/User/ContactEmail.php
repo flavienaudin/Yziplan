@@ -30,9 +30,9 @@ class ContactEmail
 
     /**
      * @var string
-     * @ORM\Column(name="type", type="enum_contactinfo_type")
+     * @ORM\Column(name="type", type="enum_contactinfo_type", nullable=true)
      */
-    private $type;
+    private $type = true;
 
     /***********************************************************************
      *                      Jointures

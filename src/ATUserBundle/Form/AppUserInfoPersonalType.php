@@ -71,6 +71,6 @@ class AppUserInfoPersonalType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'appuserinfo_personalinformation';
+        return 'appuserinfo_personals';
     }
 }

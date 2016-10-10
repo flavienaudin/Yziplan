@@ -238,3 +238,7 @@ status:
   archived: Archivé
   deprogrammed: Déprogrammé
   cancelled: Annulé
+
+contact_info_type:
+  home: Personnelle
+  business: Professionelle

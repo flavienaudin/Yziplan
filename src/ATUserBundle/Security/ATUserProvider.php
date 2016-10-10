@@ -8,6 +8,9 @@
 
 namespace ATUserBundle\Security;
 
+use AppBundle\Entity\User\ApplicationUser;
+use AppBundle\Entity\User\AppUserEmail;
+use AppBundle\Manager\ApplicationUserManager;
 use AppBundle\Manager\GenerateursToken;
 use ATUserBundle\Entity\AccountUser;
 use HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse;
@@ -18,15 +21,21 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ATUserProvider extends FOSUBUserProvider
 {
-    /** @var GenerateursToken */
+    /** @var GenerateursToken $tokenGenerateur */
     protected $tokenGenerateur;
+    /** @var ApplicationUserManager $applicationUserManager ; */
+    protected $applicationUserManager;
 
-    /**
-     * @param GenerateursToken $tokenGenerateur
-     */
+    /** @param GenerateursToken $tokenGenerateur */
     public function setTokenGenerateur(GenerateursToken $tokenGenerateur)
     {
         $this->tokenGenerateur = $tokenGenerateur;
+    }
+
+    /** @param ApplicationUser $applicationUserManager */
+    public function setApplicationUserManager($applicationUserManager)
+    {
+        $this->applicationUserManager = $applicationUserManager;
     }
 
     /**
@@ -79,6 +88,25 @@ class ATUserProvider extends FOSUBUserProvider
                 $user->setPlainPassword($this->tokenGenerateur->random(GenerateursToken::MOTDEPASSE_LONGUEUR));
                 if ($user instanceof AccountUser) {
                     $user->setPasswordKnown(false);
+
+                    /** @var AppUserEmail $appUserEmail */
+                    $appUserEmail = $this->applicationUserManager->findAppUserEmailByEmail($response->getEmail());
+                    if ($appUserEmail == null) {
+                        $appUserEmail = new AppUserEmail();
+                        $appUserEmail->setEmail($response->getEmail());
+                        $applicationUser = new ApplicationUser();
+                        $applicationUser->addAppUserEmail($appUserEmail);
+                        $user->setApplicationUser($applicationUser);
+                        $applicationUser->setAccountUser($user);
+                    } elseif ($appUserEmail->getApplicationUser()->getAccountUser() == null) {
+                        $appUserEmail->setApplicationUser($user->getApplicationUser());
+                        $user->setApplicationUser($appUserEmail->getApplicationUser());
+                    } elseif ($appUserEmail->getApplicationUser()->getAccountUser()->getEmail() != $response->getEmail()) {
+                        // L'email de la nouvelle inscription OAuth est déjà rattaché à un autre compte => envoi d'email d'avertissement.
+                        // TODO : Envoyer un email lors du transfert d'un AppUserEmail à un autre ApplicationUser
+                        // $this->mailer->sendLoseAppUserEmail($appUserEmail->getApplicationUser()->getAccountUser(), $response->getEmail());
+                        $user->getApplicationUser()->addAppUserEmail($appUserEmail);
+                    }
                 }
             }
 

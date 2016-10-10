@@ -34,7 +34,7 @@ class UserProfileType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'user_user_profile';
+        return 'user_profile';
     }
 
     // For Symfony 2.x
