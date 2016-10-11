@@ -12,10 +12,14 @@ use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Manager\ApplicationUserManager;
 use AppBundle\Manager\GenerateursToken;
+use ATUserBundle\ATUserEvents;
 use ATUserBundle\Entity\AccountUser;
+use ATUserBundle\Event\AppUserEmailEvent;
+use FOS\UserBundle\Event\UserEvent;
 use HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 
@@ -25,6 +29,8 @@ class ATUserProvider extends FOSUBUserProvider
     protected $tokenGenerateur;
     /** @var ApplicationUserManager $applicationUserManager ; */
     protected $applicationUserManager;
+    /** @var EventDispatcherInterface $eventDispatcher */
+    protected $eventDispatcher;
 
     /** @param GenerateursToken $tokenGenerateur */
     public function setTokenGenerateur(GenerateursToken $tokenGenerateur)
@@ -37,6 +43,15 @@ class ATUserProvider extends FOSUBUserProvider
     {
         $this->applicationUserManager = $applicationUserManager;
     }
+
+    /**
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -103,8 +118,10 @@ class ATUserProvider extends FOSUBUserProvider
                         $user->setApplicationUser($appUserEmail->getApplicationUser());
                     } elseif ($appUserEmail->getApplicationUser()->getAccountUser()->getEmail() != $response->getEmail()) {
                         // L'email de la nouvelle inscription OAuth est déjà rattaché à un autre compte => envoi d'email d'avertissement.
-                        // TODO : Envoyer un email lors du transfert d'un AppUserEmail à un autre ApplicationUser
-                        // $this->mailer->sendLoseAppUserEmail($appUserEmail->getApplicationUser()->getAccountUser(), $response->getEmail());
+                        $userEmailEvent = new AppUserEmailEvent($appUserEmail);
+                        $this->eventDispatcher->dispatch(ATUserEvents::OAUTH_REGISTRATION_SUCCESS, $userEmailEvent);
+
+                        $appUserEmail->setType(null);
                         $user->getApplicationUser()->addAppUserEmail($appUserEmail);
                     }
                 }

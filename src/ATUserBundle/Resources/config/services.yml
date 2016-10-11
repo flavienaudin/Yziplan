@@ -15,6 +15,7 @@ services:
         calls:
             - [ setTokenGenerateur, ['@at.service.gentoken'] ]
             - [ setApplicationUserManager, ['@at.manager.application_user'] ]
+            - [ setEventDispatcher, ['@event_dispatcher'] ]
 
 # Security services
     at.security.ajax_authentication_handler:

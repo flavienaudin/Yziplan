@@ -10,7 +10,9 @@ namespace ATUserBundle\EventListener;
 
 use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Manager\ApplicationUserManager;
+use ATUserBundle\ATUserEvents;
 use ATUserBundle\Entity\AccountUser;
+use ATUserBundle\Event\AppUserEmailEvent;
 use ATUserBundle\Mailer\AtTwigSiwftMailer;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -39,6 +41,7 @@ class InscriptionListener implements EventSubscriberInterface
             FOSUserEvents::REGISTRATION_INITIALIZE => 'onRegistrationInitialise',
             FOSUserEvents::REGISTRATION_SUCCESS => 'onRegistrationSuccess',
             FOSUserEvents::REGISTRATION_CONFIRM => 'onRegistrationConfirm',
+            ATUserEvents::OAUTH_REGISTRATION_SUCCESS => 'onOauthRegistrationSuccess'
         );
     }
 
@@ -87,5 +90,15 @@ class InscriptionListener implements EventSubscriberInterface
                 $user->getApplicationUser()->addAppUserEmail($appUserEmail);
             }
         }
+    }
+
+    public function onOauthRegistrationSuccess(AppUserEmailEvent $event)
+    {
+        $appUserEmail = $event->getAppUserEmail();
+        // AppUserEmail existant et rattaché à un compte utilisateur sans en être l'email principal => Envoi d'un e-mail d'avertisement
+        // Le rattachement ne se fera qu'à la confirmation du compte
+        $oldOwner = $appUserEmail->getApplicationUser()->getAccountUser();
+        $this->mailer->sendLoseAppUserEmail($oldOwner, $appUserEmail->getEmail());
+
     }
 }
