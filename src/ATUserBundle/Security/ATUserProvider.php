@@ -25,7 +25,7 @@ class ATUserProvider extends FOSUBUserProvider
 {
     /** @var GenerateursToken $tokenGenerateur */
     protected $tokenGenerateur;
-    /** @var EventDispatcherInterface $eventDispatcher */
+        /** @var EventDispatcherInterface $eventDispatcher */
     protected $eventDispatcher;
 
     /** @param GenerateursToken $tokenGenerateur */
@@ -99,11 +99,13 @@ class ATUserProvider extends FOSUBUserProvider
                     if ($appUserEmail == null) {
                         $appUserEmail = new AppUserEmail();
                         $appUserEmail->setEmail($response->getEmail());
+                        $appUserEmail->setUseToReceiveEmail(true);
                         $applicationUser = new ApplicationUser();
                         $applicationUser->addAppUserEmail($appUserEmail);
                         $user->setApplicationUser($applicationUser);
                         $applicationUser->setAccountUser($user);
                     } elseif ($appUserEmail->getApplicationUser()->getAccountUser() == null) {
+                        $appUserEmail->setUseToReceiveEmail(true);
                         $appUserEmail->setApplicationUser($user->getApplicationUser());
                         $user->setApplicationUser($appUserEmail->getApplicationUser());
                     } elseif ($appUserEmail->getApplicationUser()->getAccountUser()->getEmail() != $response->getEmail()) {
@@ -112,6 +114,7 @@ class ATUserProvider extends FOSUBUserProvider
                         $this->eventDispatcher->dispatch(ATUserEvents::OAUTH_REGISTRATION_SUCCESS, $userEmailEvent);
 
                         $appUserEmail->setType(null);
+                        $appUserEmail->setUseToReceiveEmail(true);
                         $user->getApplicationUser()->addAppUserEmail($appUserEmail);
                     }
                 }

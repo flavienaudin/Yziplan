@@ -35,19 +35,21 @@
                         'data-none-selected-text':'profile.show.appuseremail.modal.form.type.none-selected-text'|trans}}) }}
                     {{ form_errors(form_appuseremail.type) }}
                 </div>
-                <div class="form-group">
-                    {{ form_row(form_appuseremail.useToReceiveEmail, {
-                        'label' : 'profile.show.appuseremail.modal.form.use_to_receive_email.label'|trans,
-                        'attr':{'class':'md-toogle-switch'},
-                        'help': 'profile.show.appuseremail.modal.form.use_to_receive_email.help'|trans}) }}
-                </div>
+                {% if form_appuseremail.useToReceiveEmail is defined %}
+                    <div class="form-group">
+                        {{ form_row(form_appuseremail.useToReceiveEmail, {
+                            'label' : 'profile.show.appuseremail.modal.form.use_to_receive_email.label'|trans,
+                            'attr':{'class':'md-toogle-switch'},
+                            'help': 'profile.show.appuseremail.modal.form.use_to_receive_email.help'|trans}) }}
+                    </div>
+                {% endif %}
                 {{ form_rest(form_appuseremail) }}
             </div>
             <div class="modal-footer">
                 {% if appuseremail is not null and appuseremail.emailCanonical != appuseremail.applicationUser.accountUser.emailCanonical %}
                     <a id="deleteAppUserEmail_{{ appuseremail.id }}" href="{{ path('deleteAppUserEmail', {'id':appuseremail.id}) }}" class="text-danger">{{ "global.button.delete"|trans }}</a>
                     <script>
-                        $('#deleteAppUserEmail_{{ appuseremail.id }}').on('click', function(e){
+                        $('#deleteAppUserEmail_{{ appuseremail.id }}').on('click', function (e) {
                             e.preventDefault();
                             var link = $(this);
                             swal({

@@ -33,15 +33,19 @@ class AppUserEmailType extends AbstractType
                     ContactInfoType::BUSINESS => ContactInfoType::BUSINESS
                 )
             ))
-            ->add('useToReceiveEmail', CheckboxType::class, array(
-                'required' => false,
-            ))
             ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
                 /** @var AppUserEmail $appUserEmail */
                 $appUserEmail = $formEvent->getData();
-                if(empty($appUserEmail->getId())) {
-                    $form = $formEvent->getForm();
+                $form = $formEvent->getForm();
+                if (empty($appUserEmail->getId())) {
                     $form->add('email', EmailType::class, array('required' => true));
+                }
+                if ($appUserEmail->getApplicationUser() == null || $appUserEmail->getApplicationUser()->getAccountUser() == null
+                    || $appUserEmail->getEmailCanonical() != $appUserEmail->getApplicationUser()->getAccountUser()->getEmailCanonical()
+                ) {
+                    $form->add('useToReceiveEmail', CheckboxType::class, array(
+                        'required' => false,
+                    ));
                 }
             });
     }

@@ -55,11 +55,8 @@ $('form#userPersonalInformation, form#userContactDetails, form#userComplementary
 $('form#addAppUserEmailForm').on('submit', function (e) {
     var $form = $(this);
     ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-        if (responseJSON.htmlContent) {
-            $('#profile-appuseremails').appendChild(responseJSON.htmlContent);
-        }
         $form[0].reset();
         $form.find('.selectpicker').selectpicker('val', '');
-        $('#addAppUserEmailModal').modal('toggle');
+        $('#addAppUserEmail_modal').modal('toggle');
     }, null, null);
 });
