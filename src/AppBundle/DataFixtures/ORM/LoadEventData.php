@@ -66,6 +66,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $userprincipal->setEnabled(true);
         $userprincipalAppEmail = new AppUserEmail();
         $userprincipalAppEmail->setEmail("user1@at.fr");
+        $userprincipalAppEmail->setUseToReceiveEmail(true);
         $userprincipal->getApplicationUser()->addAppUserEmail($userprincipalAppEmail);
         $userprincipal->getApplicationUser()->getAppUserInformation()->setPublicName("User One");
         // Update the user for password
@@ -81,6 +82,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $userInvite->setEnabled(true);
         $userInviteAppEmail = new AppUserEmail();
         $userInviteAppEmail->setEmail("user2@at.fr");
+        $userInviteAppEmail->setUseToReceiveEmail(true);
         $userInvite->getApplicationUser()->addAppUserEmail($userInviteAppEmail);
         $userInvite->getApplicationUser()->getAppUserInformation()->setPublicName("User two");
         // Update the user for password
