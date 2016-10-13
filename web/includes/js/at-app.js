@@ -195,7 +195,7 @@ function jsPlugginActivation() {
         }
     });
     $('.selectpicker').selectpicker();
-    $('.label_tooltip').tooltip();
+    $('[data-toggle="tooltip"]').tooltip();
 }
 
 /**
@@ -218,12 +218,12 @@ function getParameterByName(name, url) {
  * Get anchor presents in the URL
  * @param url (string|null) Optionnal URL to search in, if undefined then current URL is used
  * @returns {*}
- * @returns {*}
  */
 function getAnchor(url) {
     if (!url) url = window.location.href;
     var anchor = null;
-    if ((idx = url.indexOf("#")) > 0) {
+    var idx = url.indexOf("#");
+    if (idx > 0) {
         anchor = url.substring(idx + 1);
     }
     return anchor;
@@ -263,11 +263,11 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
         if (alwaysCallback) {
             alwaysCallback(responseDataOrJSON);
         }
-        if (responseDataOrJSON.responseJSON) {
-            responseDataOrJSON = responseDataOrJSON.responseJSON;
+        if (responseDataOrJSON.hasOwnProperty('responseJSON')) {
+            responseDataOrJSON = responseDataOrJSON['responseJSON'];
         }
-        if (responseDataOrJSON.messages) {
-            var messages = responseDataOrJSON.messages;
+        if (responseDataOrJSON.hasOwnProperty('messages')) {
+            var messages = responseDataOrJSON['messages'];
             for (var messageType in messages) {
                 if (messages.hasOwnProperty(messageType)) {
                     messages[messageType].forEach(function (mess) {
@@ -337,11 +337,11 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         if (alwaysCallback) {
             alwaysCallback(dataOrJqXHR, textStatus, jqXHROrErrorThrown);
         }
-        if (dataOrJqXHR.responseJSON) {
-            dataOrJqXHR = dataOrJqXHR.responseJSON;
+        if (dataOrJqXHR.hasOwnProperty('responseJSON')) {
+            dataOrJqXHR = dataOrJqXHR['responseJSON'];
         }
-        if (dataOrJqXHR.messages) {
-            var messages = dataOrJqXHR.messages;
+        if (dataOrJqXHR.hasOwnProperty('messages')) {
+            var messages = dataOrJqXHR['messages'];
             for (var messageType in messages) {
                 if (messages.hasOwnProperty(messageType)) {
                     messages[messageType].forEach(function (mess) {
@@ -366,10 +366,10 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
  * Update or Append HTML content
  * @param htmlContents
  */
-function treatHtmlContents(htmlContents){
+function treatHtmlContents(htmlContents) {
     for (var htmlContentAction in htmlContents) {
         if (htmlContents.hasOwnProperty(htmlContentAction)) {
-            for(var htmlId in htmlContents[htmlContentAction]) {
+            for (var htmlId in htmlContents[htmlContentAction]) {
                 if (htmlContents[htmlContentAction].hasOwnProperty(htmlId)) {
                     var hContent = htmlContents[htmlContentAction][htmlId];
                     var eltParent = $(htmlId);

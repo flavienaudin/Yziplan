@@ -23,11 +23,8 @@
     {% spaceless %}
         {{- parent() -}}
         {% if help is defined %}
-            {% set label_attr = label_attr|merge({"class" : ( label_attr.class|default('') ~ ' label_tooltip')|trim,
-            "data-toggle" : "tooltip", "data-placement" : data_placement|default("top"), "title": help} ) %}
-            <span class="m-l-5 zmdi zmdi-info label_tooltip" data-toggle="tooltip" data-placement=top" title="{{ help }}"></span>
+            <span class="m-l-5 zmdi zmdi-info" data-toggle="tooltip" data-placement="{{ data_placement|default('top') }}" title="{{ help }}"></span>
         {% endif %}
-
     {% endspaceless %}
 {%- endblock form_label %}
 
