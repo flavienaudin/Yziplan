@@ -20,9 +20,9 @@ class AtTwigSiwftMailer extends TwigSwiftMailer
 
     /**
      * Send email when "OAuth" account initialize its password
-     * @param UserInterface $user
+     * @ param UserInterface $user
      */
-    public function sendInitializePasswordMessage(UserInterface $user)
+    /*public function sendInitializePasswordMessage(UserInterface $user)
     {
         $template = $this->parameters['template']['resetting'];
         $url = $this->router->generate('init_password_initialize', array('token' => $user->getConfirmationToken()), UrlGeneratorInterface::ABSOLUTE_URL);
@@ -33,7 +33,7 @@ class AtTwigSiwftMailer extends TwigSwiftMailer
         );
 
         $this->sendMessage($template, $context, $this->parameters['from_email']['resetting'], $user->getEmail());
-    }
+    }*/
 
     /**
      * Send email to the old owner of the AppUserEmail

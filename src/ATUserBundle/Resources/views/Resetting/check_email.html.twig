@@ -10,7 +10,7 @@
             <h1>{{ "resetting.check_email.page.title"|trans }}</h1>
         </div>
         <div class="card-body card-padding">
-            {{ 'resetting.check_email'|trans({'%email%': email}, "FOSUserBundle") }}
+            {{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime},'FOSUserBundle') }}
         </div>
     </div>
 {% endblock %}
