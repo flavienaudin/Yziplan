@@ -25,7 +25,7 @@ class PollModuleController extends Controller
     /**
      * @Route("/{_locale}/pollproposal/edition/{pollProposalId}/{moduleInvitationToken}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="pollProposalEditionForm")
      * @ParamConverter("pollProposal", class="AppBundle:Module\PollProposal", options={"id" = "pollProposalId"})
-     * @ParamConverter("moduleInvitation", class="AppBundle:Module\ModuleInvitation", options={"mapping" = {"moduleInvitationToken":"token"}})
+     * @ParamConverter("moduleInvitation", class="AppBundle:Event\ModuleInvitation", options={"mapping" = {"moduleInvitationToken":"token"}})
      */
     public function pollProposalEditionFormAction(PollProposal $pollProposal, ModuleInvitation $moduleInvitation, Request $request)
     {

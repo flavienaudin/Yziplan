@@ -7,7 +7,7 @@
     <meta name="author" content="ArdTeam">
     {% block meta_data %}{% endblock %}
 
-    <title>{% block title %}{{ 'base.page.meta_title'|trans }}{% endblock %}</title>
+    <title>{% block title %}{{ "base.page.meta_title"|trans }}{% endblock %}</title>
 
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery-ui.min.css") }}">
@@ -100,8 +100,6 @@
             </form>
         </div>
     </header>
-    {{ render(controller('ATUserBundle:Security:login', {"parentRequest":app.request, "display":"modal"})) }}
-    {{ render(controller('ATUserBundle:Registration:register', {"parentRequest":app.request, "display":"modal"})) }}
 {% endblock %}
 
 <!-- CONTENT -->
@@ -177,6 +175,14 @@
     <svg class="pl-circular" viewBox="25 25 50 50">
         <circle class="plc-path" cx="50" cy="50" r="20"></circle>
     </svg>
+</div>
+
+<div id="page_modal_container">
+    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        {{ render(controller('ATUserBundle:Security:login', {"parentRequest":app.request, "display":"modal"})) }}
+        {{ render(controller('ATUserBundle:Registration:register', {"parentRequest":app.request, "display":"modal"})) }}
+    {% endif %}
+    {% block page_modal_container %}{% endblock %}
 </div>
 
 <!-- Older IE warning message --><!--[if lt IE 9]>

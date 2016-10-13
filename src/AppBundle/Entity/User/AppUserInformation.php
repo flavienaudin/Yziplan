@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity\User;
 
-use AppBundle\Utils\enum\LegalStatus;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * AppUserInformation
@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AppUserInformation
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *

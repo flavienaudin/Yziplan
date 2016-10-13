@@ -1,0 +1,14 @@
+
+{% block subject %}
+    {% autoescape false %}
+        {{ 'appuseremail.associate.confirmationAppUserEmail_email.subject'|trans }}
+    {% endautoescape %}
+{% endblock %}
+{% block body_text %}
+    {% autoescape false %}
+    {{ 'appuseremail.associate.confirmationAppUserEmail_email.message'|trans({
+            '%username%': username, '%email%': email, '%confirmationUrl%' : confirmationUrl
+        }) }}
+    {% endautoescape %}
+{% endblock %}
+{% block body_html %}{% endblock %}

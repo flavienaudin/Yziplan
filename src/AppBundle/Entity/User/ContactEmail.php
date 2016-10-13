@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * ContactEmail
@@ -12,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ContactEmail
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *

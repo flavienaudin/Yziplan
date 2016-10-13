@@ -194,6 +194,8 @@ function jsPlugginActivation() {
             vertical: 'auto'
         }
     });
+    $('.selectpicker').selectpicker();
+    $('.label_tooltip').tooltip();
 }
 
 /**
@@ -218,11 +220,11 @@ function getParameterByName(name, url) {
  * @returns {*}
  * @returns {*}
  */
-function getAnchor(url){
+function getAnchor(url) {
     if (!url) url = window.location.href;
     var anchor = null;
-    if( (idx = url.indexOf("#")) > 0 ){
-        anchor = url.substring(idx+1);
+    if ((idx = url.indexOf("#")) > 0) {
+        anchor = url.substring(idx + 1);
     }
     return anchor;
 }
@@ -247,11 +249,11 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
         type: 'post',
         data: data
     }).done(function (responseJSON, textStatus, jqXHR) {
+        if (responseJSON.hasOwnProperty('htmlContents')) {
+            treatHtmlContents(responseJSON['htmlContents']);
+        }
         if (doneCallback) {
             doneCallback(responseJSON, textStatus, jqXHR);
-        }
-        if (responseJSON.htmlContent) {
-            jsPlugginActivation();
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         if (failCallback) {
@@ -310,11 +312,11 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         type: $(form).attr('method'),
         data: $(form).serialize()
     }).done(function (responseJSON, textStatus, jqXHR) {
+        if (responseJSON.hasOwnProperty('htmlContents')) {
+            treatHtmlContents(responseJSON['htmlContents']);
+        }
         if (doneCallback) {
             doneCallback(responseJSON, textStatus, jqXHR);
-        }
-        if (responseJSON.htmlContent) {
-            jsPlugginActivation();
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         var responseJSON = jqXHR.responseJSON;
@@ -360,6 +362,26 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
     });
 }
 
+/**
+ * Update or Append HTML content
+ * @param htmlContents
+ */
+function treatHtmlContents(htmlContents){
+    for (var htmlContentAction in htmlContents) {
+        if (htmlContents.hasOwnProperty(htmlContentAction)) {
+            for(var htmlId in htmlContents[htmlContentAction]) {
+                if (htmlContents[htmlContentAction].hasOwnProperty(htmlId)) {
+                    var hContent = htmlContents[htmlContentAction][htmlId];
+                    var eltParent = $(htmlId);
+                    if (eltParent[0]) {
+                        eltParent[htmlContentAction](hContent);
+                    }
+                }
+            }
+        }
+    }
+    jsPlugginActivation();
+}
 
 /**
  * Echappe les caractères spéciaux d'un Selector pour JQuery

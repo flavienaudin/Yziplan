@@ -2,9 +2,9 @@
 
 {# Données d'entrée !
 - user (User) L'utilisateur dont on affiche le profil
-- form_connexion_information (Form) Le formulaire des informations obligatoires
 - form_app_user_info_personals (Form|null) Le formulaire pour la partie "Information basique"
 - form_app_user_info_complementaries (Form|null) Le formulaire pour la partie "A propos de vous"
+- form_appuseremail (Form) Ajout d'un AppUserEmail au compte
 #}
 
 {% block title %}
@@ -53,36 +53,16 @@
                                         <h2 class="m-0 c-white">156</h2>
                                         Total Invitations
                                     </div>
-
-                                    <ul>
-                                    {% for appUserEmail in user.applicationUser.appUserEmails %}
-                                        <li>{{ appUserEmail.email }} {{ appUserEmail.type is not null?'('~(appUserEmail.type|trans)~')'}}</li>
-                                    {% endfor %}
-                                    </ul>
-
-                                    {#<div class="pmo-block pmo-contact hidden-xs">#}
-                                        {#<h2>Contact</h2>#}
-
-                                        {#<ul>#}
-                                            {#<li><i class="zmdi zmdi-email"></i> {{ app.user.email }}</li>#}
-                                            {#<li><i class="zmdi zmdi-phone"></i> 00971 12345678 9</li>#}
-                                            {#<li><i class="zmdi zmdi-facebook-box"></i> malinda.hollaway</li>#}
-                                            {#<li><i class="zmdi zmdi-google"></i> malinda.hollaway</li>#}
-                                            {#<li>#}
-                                                {#<i class="zmdi zmdi-pin"></i>#}
-                                                {#<address class="m-b-0 ng-binding">#}
-                                                    {#44-46 Morningside Road,<br> Edinburgh,<br> Scotland#}
-                                                {#</address>#}
-                                            {#</li>#}
-                                        {#</ul>#}
-                                    {#</div>#}
+                                    {# User -> AppUserEmails #}
+                                    {{ include('@App/AppUserEmail/partials/profile_appuseremails.html.twig', {
+                                        'appuseremails' : user.applicationUser.appUserEmails,
+                                        'form_appuseremail' : form_appuseremail }) }}
                                 </div>
                             </div>
 
                             <div class="pm-body clearfix">
                                 {{ include('@ATUser/Profile/partials/profile_about.html.twig', {
                                     'user':user,
-                                    'form_connexion_information':form_connexion_information,
                                     'form_app_user_info_personals':form_app_user_info_personals,
                                     'form_contact_details':form_contact_details,
                                     'form_app_user_info_complementaries':form_app_user_info_complementaries
@@ -103,6 +83,11 @@
         </div>
     </div>
 {% endblock fos_user_content %}
+
+{% block page_modal_container %}
+    {{ parent() }}
+    <div id="editAppUserEmail_modalContainer">{# where  modals to add/edit AppUserEmail will be added by Ajax request #}</div>
+{% endblock page_modal_container %}
 
 {% block stylesheets %}
     {{ parent() }}

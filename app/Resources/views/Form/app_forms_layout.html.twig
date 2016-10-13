@@ -148,9 +148,8 @@
     {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) -%}
     {%- set label_attr = label_attr|merge({class: (' ts-label')|trim}) -%}
     <div class="toggle-switch">
-        {{ block('form_label') }}
         <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} hidden="hidden"/> <label
-                for="{{ id }}" class="ts-helper"></label>
+                for="{{ id }}" class="ts-helper"></label>&nbsp; {{ block('form_label') }}
     </div>
     {{ form_errors(form) }}
 {%- endblock md_toggle_switch_widget %}

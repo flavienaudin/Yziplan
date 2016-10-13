@@ -29,7 +29,7 @@ register:
       meta_title: E-mail envoyé
       title: E-mail envoyé
   lossAppUserEmail_email:
-    subject: Yziplan - Inscription à partir d''une adresse e-mail que vous possédez
+    subject: Yziplan Avertissement - Inscription à partir d''une adresse e-mail que vous possédez
     message: |
         Bonjour %username%!
 
@@ -79,6 +79,33 @@ profile:
       profile_information: Profil
       profile_contacts: Contacts
       profile_preferences: Préférences
+    appuseremail:
+      title: Vos e-mails associés
+      add_link: Associer un nouvel email
+      waiting_validation: En attente de validation
+      tooltip:
+        account-email: E-mail principal
+        email: E-mail associé
+      modal:
+        add:
+          title: Associer un nouvel e-mail
+        edit:
+          title: Editer l'email "%email%"
+        delete:
+          swal_title: Suppression d'un e-mail
+          swal_text: Êtes-vous sûre de vouloir supprimer cet email ?
+        form:
+          email:
+            label: E-mail
+            placeholder: E-mail
+          type:
+            label: Type
+            none-selected-text: Type
+          use_to_receive_email:
+            label: Recevoir les notifications
+            help: Recevoir les notifications liées à cet e-mail dans sa boîte de réception plutôt que dans celle de l'e-mail de votre compte utilisateur.
+          validation:
+            email_already_used: Cet adresse e-mail est déjà associée à un compte
     profile_information:
       connexion_information:
         title: Informations de connexion
@@ -110,11 +137,11 @@ profile:
         legalstatus:
           title: Status légal
           label: Status légal
-          placeholder: Status légal
+          none_selected_text: Status légal
         gender:
           title: Sexe
           label: Sexe
-          placeholder: Sexe
+          none_selected_text: Sexe
         birthday:
           title: Anniversaire
           label: Anniversaire
@@ -128,7 +155,7 @@ profile:
         living_country:
           title: Pays
           label: Pays
-          placeholder: Pays
+          none_selected_text: Pays
         living_city:
           title: Ville
           label: Ville
@@ -138,7 +165,7 @@ profile:
         marital_status:
           title: Situation Familiale
           label: Situation Familiale
-          placeholder: Situation Familiale
+          none_selected_text: Situation Familiale
         biography:
           title: Biographie
           label: Biographie

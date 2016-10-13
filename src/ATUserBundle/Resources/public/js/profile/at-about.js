@@ -31,7 +31,7 @@ $(document).ready(function () {
     }
 });
 
-$('form#userConnexionInformation, form#userPersonalInformation, form#userContactDetails, form#userComplementaryInformations').on("submit", function (e) {
+$('form#userPersonalInformation, form#userContactDetails, form#userComplementaryInformations').on("submit", function (e) {
     var $form = $(this);
     ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
         // update form's inputs
@@ -49,5 +49,17 @@ $('form#userConnexionInformation, form#userPersonalInformation, form#userContact
         // close edition block
         var t = $form.data('profile-pmb-block-target');
         $(t).removeClass('toggled');
+    }, null, null);
+});
+
+$('form#addAppUserEmailForm').on('submit', function (e) {
+    var $form = $(this);
+    ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+        if (responseJSON.htmlContent) {
+            $('#profile-appuseremails').appendChild(responseJSON.htmlContent);
+        }
+        $form[0].reset();
+        $form.find('.selectpicker').selectpicker('val', '');
+        $('#addAppUserEmailModal').modal('toggle');
     }, null, null);
 });

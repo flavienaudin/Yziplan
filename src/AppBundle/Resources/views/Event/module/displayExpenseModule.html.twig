@@ -99,7 +99,7 @@
 
 {% block moduleFooter %}{% endblock moduleFooter %}
 
-{% block modalContainer %}
+{% block module_modal_container %}
     {{ parent() }}
     <div class="modal fade" id="addPayment" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
@@ -225,7 +225,7 @@
             </div>
         </div>
     </div>
-{% endblock %}
+{% endblock module_modal_container %}
 
 {% block JSmodule %}
     {{ parent() }}

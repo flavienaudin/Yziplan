@@ -1,0 +1,25 @@
+{# Données d'entrée :
+- appuseremails ([AppUserEmail]) AppUserEmail associés au compte de l'utilisateur connecté
+- form_appuseremail (Form) Le formulaire d'ajout d'un AppUserEmail
+#}
+
+{% set addAppUserEmailPrefix = "addAppUserEmail" %}
+
+<div id="profile-appuseremails" class="pmo-block pmo-contact">
+    <h2>{{ "profile.show.appuseremail.title"|trans }}</h2>
+    <ul id="ul-profile-appuseremails">
+        {% for appuseremail in appuseremails %}
+            {{ include('@App/AppUserEmail/partials/display_appuseremail.html.twig',{'appuseremail':appuseremail}) }}
+        {% endfor %}
+    </ul>
+    <ul>
+        <li><a data-toggle="modal" href="#{{ addAppUserEmailPrefix~'_modal' }}"> <i class="zmdi zmdi-plus"></i> {{ "profile.show.appuseremail.add_link"|trans }}</a></li>
+    </ul>
+</div>
+
+{# Include the modal with the Add AppUserEmail form #}
+{{ include('@App/AppUserEmail/partials/modal_appuseremail_form.html.twig', {
+    'modalIdPrefix' : addAppUserEmailPrefix,
+    'appuseremail' : null,
+    'form_appuseremail' : form_appuseremail
+}) }}

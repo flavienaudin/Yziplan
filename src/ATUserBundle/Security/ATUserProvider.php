@@ -10,12 +10,10 @@ namespace ATUserBundle\Security;
 
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
-use AppBundle\Manager\ApplicationUserManager;
+use AppBundle\Envent\AppUserEmailEvent;
 use AppBundle\Manager\GenerateursToken;
 use ATUserBundle\ATUserEvents;
 use ATUserBundle\Entity\AccountUser;
-use ATUserBundle\Event\AppUserEmailEvent;
-use FOS\UserBundle\Event\UserEvent;
 use HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider;
@@ -27,8 +25,6 @@ class ATUserProvider extends FOSUBUserProvider
 {
     /** @var GenerateursToken $tokenGenerateur */
     protected $tokenGenerateur;
-    /** @var ApplicationUserManager $applicationUserManager ; */
-    protected $applicationUserManager;
     /** @var EventDispatcherInterface $eventDispatcher */
     protected $eventDispatcher;
 
@@ -36,12 +32,6 @@ class ATUserProvider extends FOSUBUserProvider
     public function setTokenGenerateur(GenerateursToken $tokenGenerateur)
     {
         $this->tokenGenerateur = $tokenGenerateur;
-    }
-
-    /** @param ApplicationUser $applicationUserManager */
-    public function setApplicationUserManager($applicationUserManager)
-    {
-        $this->applicationUserManager = $applicationUserManager;
     }
 
     /**
@@ -105,7 +95,7 @@ class ATUserProvider extends FOSUBUserProvider
                     $user->setPasswordKnown(false);
 
                     /** @var AppUserEmail $appUserEmail */
-                    $appUserEmail = $this->applicationUserManager->findAppUserEmailByEmail($response->getEmail());
+                    $appUserEmail = $this->userManager->findAppUserEmailByEmail($response->getEmail());
                     if ($appUserEmail == null) {
                         $appUserEmail = new AppUserEmail();
                         $appUserEmail->setEmail($response->getEmail());

@@ -1,6 +1,7 @@
 {# Données d'entrée :
-- moduleForm : Form|null
--
+- module (Module) Le module à afficher
+- moduleForm (Form|null) Le formulaire d'édition du module
+
 #}
 
 <div class="card {% block moduleCardClass %}{% endblock %}" id="module-{{ module.token }}">
@@ -160,7 +161,7 @@
     </div>
 
     <div id="modal-container-block-{{ module.token }}">
-        {% block modalContainer %}{% endblock %}
+        {% block module_modal_container %}{% endblock %}
     </div>
 
     {% block JSmodule %}

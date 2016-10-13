@@ -28,14 +28,14 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class InitializePasswordController
  * @package ATUserBundle\Controller
- * @Route("/init-password")
+ * @Route("/{_locale}/init-password", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
  */
 class InitializePasswordController extends Controller
 {
 
     /**
      * Initialise le mot de passe d'un utilisateur ne le connaissant pas car l'utilisateur a été créé via hwi-oAuth (ou par invitation)
-     * @Route("/{_locale}/request", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="init_password_request")
+     * @Route("/request", name="init_password_request")
      */
     public function requestPasswordAction(Request $request)
     {
@@ -109,7 +109,7 @@ class InitializePasswordController extends Controller
 
     /**
      * Tell the user to check his email provider
-     * @Route("/{_locale}/check-email", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="init_password_check_email")
+     * @Route("/check-email", name="init_password_check_email")
      */
     public function checkEmailAction(Request $request)
     {
@@ -127,11 +127,10 @@ class InitializePasswordController extends Controller
 
     /**
      * Initialize user password
-     * @Route("/{_locale}/initialize/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="init_password_initialize", methods={"GET", "POST"})
+     * @Route("/initialize/{token}", name="init_password_initialize", methods={"GET", "POST"})
      *
      * @param Request $request
-     * @param string  $token
-     *
+     * @param string  $token     *
      * @return Response
      */
     public function initializeAction(Request $request, $token)
@@ -185,12 +184,10 @@ class InitializePasswordController extends Controller
 
 
     /**
-     * Get the truncated email displayed when requesting the resetting.
-     *
+     * Get the truncated email displayed when requesting the initialization.     *
      * The default implementation only keeps the part following @ in the address.
      *
-     * @param UserInterface $user
-     *
+     * @param UserInterface $user     *
      * @return string
      */
     protected function getObfuscatedEmail(UserInterface $user)

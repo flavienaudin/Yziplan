@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * AppUserEmail
@@ -12,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AppUserEmail
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
     /**
      * @var int
      *
@@ -42,6 +45,18 @@ class AppUserEmail
      */
     private $type;
 
+    /**
+     * @var boolean
+     * @ORM\COlumn(name="use_to_receive_email", type="boolean")
+     */
+    private $useToReceiveEmail;
+
+    /**
+     * Random string sent to the user email address in order to verify it     *
+     * @var string
+     * @ORM\Column(name="confirmation_token", type="string", length=180, unique=true, nullable=true)
+     */
+    protected $confirmationToken;
 
     /***********************************************************************
      *                      Jointures
@@ -120,6 +135,42 @@ class AppUserEmail
     public function setType($type)
     {
         $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isUseToReceiveEmail()
+    {
+        return $this->useToReceiveEmail;
+    }
+
+    /**
+     * @param boolean $useToReceiveEmail
+     * @return AppUserEmail
+     */
+    public function setUseToReceiveEmail($useToReceiveEmail)
+    {
+        $this->useToReceiveEmail = $useToReceiveEmail;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfirmationToken()
+    {
+        return $this->confirmationToken;
+    }
+
+    /**
+     * @param string $confirmationToken
+     * @return AppUserEmail
+     */
+    public function setConfirmationToken($confirmationToken)
+    {
+        $this->confirmationToken = $confirmationToken;
         return $this;
     }
 

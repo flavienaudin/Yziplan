@@ -74,7 +74,7 @@
 
 {% block moduleFooter %}{% endblock moduleFooter %}
 
-{% block modalContainer %}
+{% block module_modal_container %}
     {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
         {# TODO Check authorization to addPollProposal #}
         {{ include('@App/Event/module/pollModulePartials/pollProposalFormModal.html.twig', {
@@ -83,4 +83,4 @@
             'edition' : false
         }) }}
     {% endif %}
-{% endblock modalContainer %}
+{% endblock module_modal_container %}

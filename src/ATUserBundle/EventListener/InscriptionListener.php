@@ -9,10 +9,10 @@
 namespace ATUserBundle\EventListener;
 
 use AppBundle\Entity\User\AppUserEmail;
+use AppBundle\Envent\AppUserEmailEvent;
 use AppBundle\Manager\ApplicationUserManager;
 use ATUserBundle\ATUserEvents;
 use ATUserBundle\Entity\AccountUser;
-use ATUserBundle\Event\AppUserEmailEvent;
 use ATUserBundle\Mailer\AtTwigSiwftMailer;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -67,9 +67,11 @@ class InscriptionListener implements EventSubscriberInterface
             // Pas d'AppUserEmail existant => on le créé et on le rattache au nouveau compte utilisateur
             $appUserEmail = new AppUserEmail();
             $appUserEmail->setEmail($email);
+            $appUserEmail->setUseToReceiveEmail(true);
             $user->getApplicationUser()->addAppUserEmail($appUserEmail);
         } elseif ($appUserEmail->getApplicationUser()->getAccountUser() == null) {
             // AppUserEmail existant mais non rattaché à un compte => On le rattache au nouveau compte utilisateur
+            $appUserEmail->setUseToReceiveEmail(true);
             $user->getApplicationUser()->addAppUserEmail($appUserEmail);
         } else {
             // AppUserEmail existant et rattaché à un compte utilisateur sans en être l'email principal => Envoi d'un e-mail d'avertisement
@@ -87,6 +89,7 @@ class InscriptionListener implements EventSubscriberInterface
             /** @var AppUserEmail $appUserEmail */
             $appUserEmail = $this->applicationUserManager->findAppUserEmailByEmail($user->getEmail());
             if ($appUserEmail != null && $appUserEmail->getApplicationUser()->getAccountUser() != $user) {
+                $appUserEmail->setUseToReceiveEmail(true);
                 $user->getApplicationUser()->addAppUserEmail($appUserEmail);
             }
         }
@@ -95,8 +98,8 @@ class InscriptionListener implements EventSubscriberInterface
     public function onOauthRegistrationSuccess(AppUserEmailEvent $event)
     {
         $appUserEmail = $event->getAppUserEmail();
-        // AppUserEmail existant et rattaché à un compte utilisateur sans en être l'email principal => Envoi d'un e-mail d'avertisement
-        // Le rattachement ne se fera qu'à la confirmation du compte
+        // AppUserEmail existant et il est rattaché à un compte utilisateur sans en être l'email principal => Envoi d'un e-mail d'avertisement
+        // Le rattachement est effectif dès maintenant car l'OAuth ne requiert pas de validation par email
         $oldOwner = $appUserEmail->getApplicationUser()->getAccountUser();
         $this->mailer->sendLoseAppUserEmail($oldOwner, $appUserEmail->getEmail());
 

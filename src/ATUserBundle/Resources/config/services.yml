@@ -11,10 +11,9 @@ services:
 # Provider
     at.provider.user:
         class: ATUserBundle\Security\ATUserProvider
-        arguments: ['@at.manager.user',{facebook: facebookId, google: googleId}]
+        arguments: ['@at.manager.user', {facebook: facebookId, google: googleId}]
         calls:
             - [ setTokenGenerateur, ['@at.service.gentoken'] ]
-            - [ setApplicationUserManager, ['@at.manager.application_user'] ]
             - [ setEventDispatcher, ['@event_dispatcher'] ]
 
 # Security services

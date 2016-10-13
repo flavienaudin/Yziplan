@@ -45,6 +45,31 @@ landing_page:
       title: Vacation between friends ?
       text: Organize yourself with your friends to know where and when to go on weekends or holidays !
 
+appuseremail:
+  associate:
+    message:
+      check_mailbox: Please check the "%email%" mailbox to validate the association.
+      association_validated: The association with the email %email% is confirmed.
+      not_found: The associated email with given token does not exist
+      wrong_user: The email is not associated with the account.
+    confirmationAppUserEmail_email:
+      subject: Yziplan Confirmation - Email association
+      message: |
+        Hello %username%!
+
+        To finish associating the email %email% - please visit %confirmationUrl%
+
+        Regards,
+        The Team.
+  edit:
+    message:
+      error: Impossible to edit this association.
+  delete:
+    message:
+      error:
+        default: An error occured while deleting the associated email.
+        main_email: Sorry, it is not allowed to delete your main email address.
+
 event:
   form:
     name:
@@ -195,6 +220,7 @@ global:
     valid: Validate
     cancel: Cancel
     submit: Submit
+    edit: Edit
     save: Save
     nextStep: Next step
     delete: Delete

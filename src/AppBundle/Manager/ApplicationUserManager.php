@@ -11,8 +11,14 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
 use ATUserBundle\Entity\AccountUser;
+use ATUserBundle\Mailer\AtTwigSiwftMailer;
 use Doctrine\ORM\EntityManager;
+use FOS\UserBundle\Mailer\MailerInterface;
 use FOS\UserBundle\Util\CanonicalizerInterface;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
+use FOS\UserBundle\Util\TokenGeneratorInterface;
 
 class ApplicationUserManager
 {
@@ -21,19 +27,23 @@ class ApplicationUserManager
     private $entityManager;
     /** @var CanonicalizerInterface $emailCanonicalizer */
     private $emailCanonicalizer;
-
+    /** @var Translator $translator */
+    private $translator;
     /** @var ApplicationUser */
     private $applicationUser;
-
+    /** @var TokenGeneratorInterface $tokenGenerator */
+    private $tokenGenerator;
     /**
      * ApplicationUserManager constructor.
      * @param EntityManager $entityManager
      * @param CanonicalizerInterface $emailCanonicalizer
      */
-    public function __construct(EntityManager $entityManager, CanonicalizerInterface $emailCanonicalizer)
+    public function __construct(EntityManager $entityManager, CanonicalizerInterface $emailCanonicalizer, Translator $translator, TokenGeneratorInterface $tokenGenerator)
     {
         $this->entityManager = $entityManager;
         $this->emailCanonicalizer = $emailCanonicalizer;
+        $this->translator = $translator;
+        $this->tokenGenerator = $tokenGenerator;
     }
 
     /**
@@ -85,13 +95,43 @@ class ApplicationUserManager
 
     /**
      * @param $email string Email to look for
-     * @return ApplicationUser|null
+     * @return AppUserEmail|null
      */
     public function findAppUserEmailByEmail($email)
     {
         return $this->entityManager->getRepository(AppUserEmail::class)->findOneBy(['emailCanonical' => $this->emailCanonicalizer->canonicalize($email)]);
-
     }
 
+    /**
+     * @param $confirmationToken string confirmationToken to look for
+     * @return AppUserEmail|null
+     */
+    public function findAppUserEmailByConfirmationToken($confirmationToken)
+    {
+        return $this->entityManager->getRepository(AppUserEmail::class)->findOneBy(['confirmationToken' => $confirmationToken]);
+    }
 
+    /**
+     * @param FormInterface $appUserEmailForm
+     * @return AppUserEmail|null
+     */
+    public function treatAddAppUserEmailForm(FormInterface $appUserEmailForm)
+    {
+        if ($this->applicationUser != null) {
+            /** @var AppUserEmail $newAppUserEmail */
+            $newAppUserEmail = $appUserEmailForm->getData();
+            $existingAppUserEmail = $this->findAppUserEmailByEmail($newAppUserEmail->getEmail());
+            if ($existingAppUserEmail != null) {
+                $appUserEmailForm->get('email')
+                    ->addError(new FormError($this->translator->trans("profile.show.appuseremail.modal.form.validation.email_already_used")));
+                return null;
+            }
+            $newAppUserEmail->setEmailCanonical($this->emailCanonicalizer->canonicalize($newAppUserEmail->getEmail()));
+            $this->applicationUser->addAppUserEmail($newAppUserEmail);
+            $this->entityManager->persist($this->applicationUser);
+            $this->entityManager->flush();
+            return $newAppUserEmail;
+        }
+        return null;
+    }
 }

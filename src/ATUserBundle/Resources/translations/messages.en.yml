@@ -29,7 +29,7 @@ register:
       meta_title: Email sent
       title: Email sent
   lossAppUserEmail_email:
-    subject: Yziplan - Inscription à partir d'une adresse e-mail que vous possédez
+    subject: Yziplan Warning - Registration using an email you own
     message: |
         Hello %username%!
 
@@ -79,6 +79,33 @@ profile:
       profile_information: Profile
       profile_contacts: Contacts
       profile_preferences: Preferences
+    appuseremail:
+      title: Your associated emails
+      add_link: Add a new email
+      waiting_validation: Waiting email validation
+      tooltip:
+        account-email: Main email
+        email: Associate email
+      modal:
+        add:
+          title: Associate a new email
+        edit:
+          title: Edit email "%email%"
+        delete:
+          swal_title: Email deleting
+          swal_text: Are you sure you want to delete this email ?
+        form:
+          email:
+            label: E-mail
+            placeholder: E-mail
+          type:
+            label: Type
+            none-selected-text: Type
+          use_to_receive_email:
+            label: Receive notifications
+            help: Receive notifications related to this email in its mailbox instead of the one of your email account.
+          validation:
+            email_already_used: This email address is already associated to another account
     profile_information:
       connexion_information:
         title: Connexion information
@@ -110,11 +137,11 @@ profile:
         legalstatus:
           title: Legal Status
           label: Legal Status
-          placeholder: Legal Status
+          none_selected_text: Legal Status
         gender:
           title: Gender
           label: Gender
-          placeholder: Gender
+          none_selected_text: Gender
         birthday:
           title: Birthday
           label: Birthday
@@ -128,7 +155,7 @@ profile:
         living_country:
           title: Country
           label: Country
-          placeholder: Country
+          none_selected_text: Country
         living_city:
           title: City
           label: City
@@ -138,7 +165,7 @@ profile:
         marital_status:
           title: Marital Status
           label: Marital Status
-          placeholder: Marital Status
+          none_selected_text: Marital Status
         biography:
           title: Biography
           label: Biography

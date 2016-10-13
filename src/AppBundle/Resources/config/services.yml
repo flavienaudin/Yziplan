@@ -33,7 +33,7 @@ services:
 
   at.manager.application_user:
     class: AppBundle\Manager\ApplicationUserManager
-    arguments: ['@doctrine.orm.entity_manager','@fos_user.util.email_canonicalizer']
+    arguments: ['@doctrine.orm.entity_manager','@fos_user.util.email_canonicalizer','@translator.default','@fos_user.util.token_generator']
 
   at.manager.app_user_information:
       class: AppBundle\Manager\AppUserInformationManager
@@ -85,6 +85,12 @@ services:
   at.event_subscriber.kernel_events.:
     class: AppBundle\EventListener\KernelEventsSubscriber
     arguments: ['@translator.default','@session.flash_bag','@router']
+    tags:
+      - { name: kernel.event_subscriber }
+
+  at.event_listener.appuseremail_confirmation:
+    class: AppBundle\EventListener\AppUserEmailConfirmationListener
+    arguments: ['@at.mailer.twig_swift','@fos_user.util.token_generator','@router']
     tags:
       - { name: kernel.event_subscriber }
 

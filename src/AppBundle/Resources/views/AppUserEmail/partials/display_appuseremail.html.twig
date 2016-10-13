@@ -1,0 +1,39 @@
+{# Données d'entrée :
+- appuseremail (AppUserEmail) l'appUserEmail à afficher
+#}
+{% set isAccountEmail = (appuseremail.applicationUser.accountUser.emailCanonical == appuseremail.emailCanonical) %}
+<li id="appuseremail_{{ appuseremail.id }}">
+    {% if appuseremail.confirmationToken is null %}
+        <span>
+            <a href="{{ path('editAppUserEmail',{"id":appuseremail.id}) }}" id="editAppUserEmail_{{ appuseremail.id }}">
+                <i class="zmdi zmdi-{{ isAccountEmail ?'account-box-mail':'email' }}" data-toggle="tooltip"
+                   title="{{ ("profile.show.appuseremail.tooltip."~(isAccountEmail?'account-')~"email")|trans }}"></i></a>
+            {{ appuseremail.email }} {{ appuseremail.type is not null?'('~(appuseremail.type|trans)~')' }}
+            {% if not isAccountEmail and appuseremail.useToReceiveEmail %}
+                <span class="zmdi zmdi-notifications-active" data-toggle="tooltip" title="{{ "profile.show.appuseremail.modal.form.use_to_receive_email.help"|trans }}"></span>
+            {% endif %}
+            <script>
+                $('#editAppUserEmail_{{ appuseremail.id }}').on('click', function (e) {
+                    e.preventDefault();
+                    var moduleModalsContainer = $('#editAppUserEmail_modalContainer');
+                    $(moduleModalsContainer).empty();
+                    ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
+                        var editModal = $('#editAppUSerEmail_modal');
+                        editModal.modal('show');
+                        $('form#editAppUserEmailForm').on('submit', function (e) {
+                            console.log('submit editAppUserEmailForm');
+                            var $form = $(this);
+                            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                                $('#editAppUSerEmail_modal').modal('toggle');
+                            }, null, null);
+                        });
+                    }, null, null);
+                });
+            </script>
+        </span>
+    {% else %}
+        <span data-toggle="tooltip" title="{{ "profile.show.appuseremail.waiting_validation"|trans }}">
+            <i class="zmdi zmdi-help-outline"></i> {{ appuseremail.email }} {{ appuseremail.type is not null?'('~(appuseremail.type|trans)~')' }}
+        </span>
+    {% endif %}
+</li>
