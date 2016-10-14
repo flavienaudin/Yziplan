@@ -1,0 +1,16 @@
+{#
+ Ligne de la table uniquement si le javascript est désactivé pour avoir la liste des contacts sans Bootgrid
+Données d'entrée :
+- contact (Contact) Le contact à afficher
+#}
+
+<tr>
+    <td>{{ contact.lastname|upper|first }}</td>
+    <td>{{ contact.firstname }} {{ contact.lastname }}</td>
+    <td>{#{% if contact.linked.preferences is not null and contact.linked.preferences.emailVisible %}#}
+        {% for email in contact.contactEmails %}{{ email.email }}{% endfor %}
+        {#{% else %} - {% endif %}#}
+    </td>
+    <td>{% for group in contact.groups %}<span class="label label-default">{{ group.name }}</span>{% endfor %}</td>
+    <td>{# actions #}</td>
+</tr>

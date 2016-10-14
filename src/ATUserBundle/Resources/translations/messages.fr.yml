@@ -189,11 +189,26 @@ profile:
       already_init: Cette action est interdite car vous devriez déjà connaître votre mot de passe.
 
 contacts:
+  left-menu:
+    title: Vos groupes
+    all_contacts: Tous vos contacts
+    add_group:
+      label: Nouveau
+  menu:
+    add_contact:
+      text: Nouveau
+      tooltip: Ajouter un nouveau contact
+    import_contact:
+      text: Import
+      tooltip: Importer des contacts
   add_form:
     label: Rechercher un contact
     placeholder: Ajouter les e-mails ici
     submit: Ajouter
   table:
+    label:
+      search_contact: Rechercher un contact
+      refresh: Rafraichir
     avatar:
       column_title: Avatar
       title_attr: Fiche personnelle

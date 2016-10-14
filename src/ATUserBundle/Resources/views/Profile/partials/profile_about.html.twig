@@ -5,315 +5,342 @@
 - form_app_user_info_complementaries (Form|null) Le formulaire pour la partie "Informations complémentaires"
 #}
 
-<div class="pmb-block" id="pmbblock_connexion_information">
-    <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-account m-r-5"></i> {{ "profile.show.profile_information.connexion_information.title"|trans }}</h2>
-    </div>
+<div class="profile-tab">
+    <div class="pm-overview c-overflow">
+        <div class="pmo-pic">
+            <div class="p-relative">
+                {#TODO : user avatar#}
+                <a href="#"> <img class="img-responsive" src="{{ asset('bundles/atuser/profile/avatar_default.png') }}" alt="AVATAR"> </a>
+                {#<div class="pmop-message">
+                    <a href="{{ path("fos_user_profile_edit") }}" class="btn palette-White bg btn-float z-depth-1"><i class="zmdi zmdi-edit"></i></a>
+                </div>#}
 
-    <div class="pmbb-body p-l-30">
-        <div class="pmbb-view">
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.connexion_information.email.title"|trans }}</dt>
-                <dd id="pmb-view-email">{{ user.email }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.connexion_information.password.title"|trans }}</dt>
-                <dd>
-                    {% if user.passwordKnown %}
-                        <a href="{{ path('fos_user_change_password') }}">{{ "profile.show.profile_information.connexion_information.password.change"|trans }}</a>
-                    {% else %}
-                        <a href="{{ path('init_password_request') }}">{{ "profile.show.profile_information.connexion_information.password.init"|trans }}</a>
-                    {% endif %}
-                </dd>
-            </dl>
-            {% if user.googleId is not empty or  user.facebookId is not empty %}
-                <dl class="dl-horizontal">
-                    <dt>{{ "profile.show.profile_information.connexion_information.social_network.title"|trans }}</dt>
-                    <dd>
-                        {% if user.googleId is not empty %}
-                            <i class="zmdi zmdi-google-plus-box zmdi-hc-2x palette-Red text"></i>
-                        {% endif %}
-                        {% if user.facebookId is not empty %}
-                            <i class="zmdi zmdi-facebook-box zmdi-hc-2x  palette-Blue-A700 text"></i>
-                        {% endif %}
-                    </dd>
-                </dl>
-            {% endif %}
-        </div>
-    </div>
-</div>
-
-<div class="pmb-block" id="pmbblock_personal_information">
-    <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-account m-r-5"></i> {{ "profile.show.profile_information.personal_information.title"|trans }}</h2>
-        <ul class="actions">
-            <li><a data-profile-action="edit" data-profile-action-target="#pmbblock_personal_information" href="#"><i class="zmdi zmdi-edit"></i></a></li>
-        </ul>
-    </div>
-
-    <div class="pmbb-body p-l-30">
-        <div class="pmbb-view">
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.personal_information.publicname.title"|trans }}</dt>
-                <dd id="pmb-view-public-name">{{ user.applicationUser.appUserInformation.publicName is not empty?user.applicationUser.appUserInformation.publicName:"-" }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.personal_information.legalstatus.title"|trans }}</dt>
-                <dd id="pmb-view-legal-status">{{ user.applicationUser.appUserInformation.legalStatus is not empty?user.applicationUser.appUserInformation.legalStatus|trans:"-" }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.personal_information.firstname.title"|trans }}</dt>
-                <dd id="pmb-view-firstname">{{ user.applicationUser.appUserInformation.firstName is not empty? user.applicationUser.appUserInformation.firstName:"-" }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.personal_information.lastname.title"|trans }}</dt>
-                <dd id="pmb-view-lastname">{{ user.applicationUser.appUserInformation.lastName is not empty ? user.applicationUser.appUserInformation.lastName: "-" }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.personal_information.gender.title"|trans }}</dt>
-                <dd id="pmb-view-gender">{{ user.applicationUser.appUserInformation.gender is not empty ? user.applicationUser.appUserInformation.gender|trans():"-" }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.personal_information.birthday.title"|trans }}</dt>
-                <dd id="pmb-view-birthday">{{ user.applicationUser.appUserInformation.birthday is not null?user.applicationUser.appUserInformation.birthday|localizeddate('short', 'none'):"-" }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.personal_information.nationality.title"|trans }}</dt>
-                <dd id="pmb-view-nationality">{{ user.applicationUser.appUserInformation.nationality is not null?user.applicationUser.appUserInformation.nationality : "-" }}</dd>
-            </dl>
-        </div>
-        {% if form_app_user_info_personals is not null %}
-            <div class="pmbb-edit">
-                {{ form_start(form_app_user_info_personals, {'method':'post', 'action':path('updateUserPersonalInformation'),
-                    'attr':{ 'id':'userPersonalInformation', 'data-profile-pmb-block-target':'#pmbblock_personal_information'} }) }}
-                <dl class="dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_personals.publicName, 'profile.show.profile_information.personal_information.publicname.label'|trans,
-                        {'help':"profile.show.profile_information.personal_information.publicname.help"|trans}) }}</dt>
-                    <dd>
-                        <div class="fg-line">
-                            {{ form_widget(form_app_user_info_personals.publicName, {'attr':{'placeholder':"profile.show.profile_information.personal_information.publicname.placeholder"|trans}}) }}
-                        </div>
-                    </dd>
-                </dl>
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_personals.legalStatus, 'profile.show.profile_information.personal_information.legalstatus.label'|trans) }}</dt>
-                    <dd>
-                        {{ form_widget(form_app_user_info_personals.legalStatus, {'attr':{
-                            'class':'selectpicker',
-                            'data-none-selected-text':'profile.show.profile_information.personal_information.legalstatus.none_selected_text'|trans,}}) }}
-                    </dd>
-                </dl>
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_personals.firstName, "profile.show.profile_information.personal_information.firstname.label") }}</dt>
-                    <dd>
-                        <div class="fg-line">
-                            {{ form_widget(form_app_user_info_personals.firstName, {'attr':{'placeholder': "profile.show.profile_information.personal_information.firstname.placeholder"|trans}} ) }}
-                        </div>
-                    </dd>
-                </dl>
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_personals.lastName, "profile.show.profile_information.personal_information.lastname.label") }}</dt>
-                    <dd>
-                        <div class="fg-line">
-                            {{ form_widget(form_app_user_info_personals.lastName, {'attr':{'placeholder': "profile.show.profile_information.personal_information.lastname.placeholder"|trans}} ) }}
-                        </div>
-                    </dd>
-                </dl>
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_personals.gender, 'profile.show.profile_information.personal_information.gender.label'|trans) }}</dt>
-                    <dd>
-                        {{ form_widget(form_app_user_info_personals.gender, {'attr':{
-                            'class':'selectpicker',
-                            'data-none-selected-text':'profile.show.profile_information.personal_information.gender.none_selected_text'|trans}}) }}
-                    </dd>
-                </dl>
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_personals.birthday, 'profile.show.profile_information.personal_information.birthday.title'|trans) }}</dt>
-                    <dd>
-                        <div class="dtp-container dropdown fg-line">
-                            {{ form_widget(form_app_user_info_personals.birthday, {'attr':{'class':'date-picker', 'placeholder':'profile.show.profile_information.personal_information.birthday.placeholder'}}) }}
-                        </div>
-                    </dd>
-                </dl>
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_personals.nationality, 'profile.show.profile_information.personal_information.nationality.label'|trans) }}</dt>
-                    <dd>
-                        <div class="fg-line">
-                            {{ form_widget(form_app_user_info_personals.nationality, {'attr':{'placeholder':'profile.show.profile_information.personal_information.nationality.placeholder'|trans }}) }}
-                        </div>
-                    </dd>
-                </dl>
-                <div class=" m-t-10 pull-right">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
-                    <button data-profile-action="reset" data-profile-action-target="#pmbblock_personal_information" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
-                </div>
-                {{ form_rest(form_app_user_info_personals) }}
-                {{ form_end(form_app_user_info_personals) }}
-                <div class="clearfix"></div>
+                <a href="#" class="pmop-edit"> <i class="zmdi zmdi-camera"></i> <span class="hidden-xs">{{ "profile.show.page.avatar_update"|trans }}</span> </a>
             </div>
-        {% endif %}
-    </div>
-</div>
 
-<div class="pmb-block" id="pmbblock_contact_details">
-    <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-pin m-r-5"></i> {{ "profile.show.profile_information.contact_details.title"|trans }}</h2>
-        <ul class="actions">
-            <li><a data-profile-action="edit" data-profile-action-target="#pmbblock_contact_details" href="#"><i class="zmdi zmdi-edit"></i></a></li>
-        </ul>
-    </div>
-    <div class="pmbb-body p-l-30">
-        <div class="pmbb-view">
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.contact_details.living_country.title"|trans }}</dt>
-                <dd id="pmb-view-living-country">{{ user.applicationUser.appUserInformation.livingCountry is not empty ? user.applicationUser.appUserInformation.livingCountry|country : "-" }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.contact_details.living_city.title"|trans }}</dt>
-                <dd id="pmb-view-living-city">{{ user.applicationUser.appUserInformation.livingCity is not empty ? user.applicationUser.appUserInformation.livingCity : "-" }}</dd>
-            </dl>
-        </div>
-        {% if form_contact_details is not null %}
-            <div class="pmbb-edit">
-                {{ form_start(form_contact_details, {'action':path('updateUserContactDetails'), 'method':'post',
-                    'attr':{ 'id':'userContactDetails', 'data-profile-pmb-block-target':'#pmbblock_contact_details'} }) }}
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_contact_details.livingCountry, 'profile.show.profile_information.contact_details.living_country.label'|trans) }}</dt>
-                    <dd>
-                        {{ form_widget(form_contact_details.livingCountry, {'attr':{
-                            'class':'selectpicker',
-                            'data-none-selected-text':'profile.show.profile_information.contact_details.living_country.none_selected_text'|trans,
-                            'data-live-search' : "true"
-                        }}) }}
-                    </dd>
-                </dl>
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_contact_details.livingCity, 'profile.show.profile_information.contact_details.living_city.label'|trans) }}</dt>
-                    <dd>
-                        <div class="fg-line">
-                            {{ form_widget(form_contact_details.livingCity, {'attr':{'placeholder':'profile.show.profile_information.contact_details.living_city.placeholder'|trans}}) }}
-                        </div>
-                    </dd>
-                </dl>
-
-                <div class=" m-t-10 pull-right">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
-                    <button data-profile-action="reset" data-profile-action-target="#pmbblock_contact_details" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
-                </div>
-                {{ form_rest(form_contact_details) }}
-                {{ form_end(form_contact_details) }}
-                <div class="clearfix"></div>
+            <div class="pmo-stat">
+                <h2 class="m-0 c-white">156</h2>
+                Total Invitations
             </div>
-        {% endif %}
+        </div>
+        {# User -> AppUserEmails #}
+        {{ include('@App/AppUserEmail/partials/profile_appuseremails.html.twig', {
+            'appuseremails' : user.applicationUser.appUserEmails,
+            'form_appuseremail' : form_appuseremail }) }}
     </div>
-</div>
 
-<div class="pmb-block" id="pmbblock_complementaries">
-    <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-face m-r-5"></i> {{ "profile.show.profile_information.complementaries.title"|trans }}</h2>
-        <ul class="actions">
-            <li><a data-profile-action="edit" data-profile-action-target="#pmbblock_complementaries" href="#"><i class="zmdi zmdi-edit"></i></a></li>
-        </ul>
-    </div>
-    <div class="pmbb-body p-l-30">
-        <div class="pmbb-view">
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.complementaries.marital_status.title"|trans }}</dt>
-                <dd id="pmb-view-marital-status">{{ user.applicationUser.appUserInformation.maritalStatus is not empty ? user.applicationUser.appUserInformation.maritalStatus|trans : "-" }}</dd>
-            </dl>
-        </div>
-        <div class="pmbb-view">
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.complementaries.biography.title"|trans }}</dt>
-                <dd id="pmb-view-biography">
-                    {% if user.applicationUser.appUserInformation.biography is not empty %}
-                        {% set biography = user.applicationUser.appUserInformation.biography|nl2br %}
-                        {{ biography|raw }}
-                    {% else %}
-                        {{ "profile.show.profile_information.complementaries.biography.empty"|trans }}
-                    {% endif %}
-                </dd>
-            </dl>
-        </div>
-        <div class="pmbb-view">
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.complementaries.interests.title"|trans }}</dt>
-                <dd id="pmb-view-interets">
-                    {% if user.applicationUser.appUserInformation.interests is not empty %}
-                        {% set interests = user.applicationUser.appUserInformation.interests|nl2br %}
-                        {{ interests|raw }}
-                    {% else %}
-                        {{ "profile.show.profile_information.complementaries.interests.empty"|trans }}
-                    {% endif %}
-                </dd>
-            </dl>
-        </div>
-        <div class="pmbb-view">
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.profile_information.complementaries.food_conveniences.title"|trans }}</dt>
-                <dd id="pmb-view-food-conveniences">
-                    {% if user.applicationUser.appUserInformation.foodConveniences is not empty %}
-                        {% set foodConveniences = user.applicationUser.appUserInformation.foodConveniences|nl2br %}
-                        {{ foodConveniences|raw }}
-                    {% else %}
-                        {{ "profile.show.profile_information.complementaries.food_conveniences.empty"|trans }}
-                    {% endif %}
-                </dd>
-            </dl>
-        </div>
-
-        {% if form_app_user_info_complementaries is not null %}
-            <div class="pmbb-edit">
-                {{ form_start(form_app_user_info_complementaries, {
-                    'action': path('updateUserComplementatyInformation'), 'method': 'post',
-                    'attr': {'id':'userComplementaryInformations','data-profile-pmb-block-target':'#pmbblock_complementaries'}}) }}
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.maritalStatus, 'profile.show.profile_information.complementaries.marital_status.label'|trans) }}</dt>
-                    <dd>
-                        {{ form_widget(form_app_user_info_complementaries.maritalStatus, {'attr':{
-                            'class':'selectpicker',
-                            'data-none-selected-text':'profile.show.profile_information.complementaries.marital_status.none_selected_text'|trans }}) }}
-                    </dd>
-                </dl>
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.biography, 'profile.show.profile_information.complementaries.biography.label'|trans) }}</dt>
-                    <dd>
-                        <div class="fg-line">
-                            {{ form_widget(form_app_user_info_complementaries.biography, {'attr':{
-                                'rows':5,
-                                'placeholder':'profile.show.profile_information.complementaries.biography.placeholder'|trans}} ) }}
-                        </div>
-                    </dd>
-                </dl>
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.interests, 'profile.show.profile_information.complementaries.interests.label'|trans) }}</dt>
-                    <dd>
-                        <div class="fg-line">
-                            {{ form_widget(form_app_user_info_complementaries.interests, {'attr':{
-                                'rows':5,
-                                'placeholder':'profile.show.profile_information.complementaries.interests.placeholder'|trans}} ) }}
-                        </div>
-                    </dd>
-                </dl>
-                <dl class=" dl-horizontal form-group">
-                    <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.foodConveniences, 'profile.show.profile_information.complementaries.food_conveniences.label'|trans) }}</dt>
-                    <dd>
-                        <div class="fg-line">
-                            {{ form_widget(form_app_user_info_complementaries.foodConveniences, {'attr':{
-                                'rows':5,
-                                'placeholder':'profile.show.profile_information.complementaries.food_conveniences.placeholder'|trans}} ) }}
-                        </div>
-                    </dd>
-                </dl>
-
-                <div class="m-t-10 pull-right">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
-                    <button data-profile-action="reset" data-profile-action-target="#pmbblock_complementaries" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
-                </div>
-                {{ form_rest(form_app_user_info_complementaries) }}
-                {{ form_end(form_app_user_info_complementaries) }}
-                <div class="clearfix"></div>
+    <div class="pm-body clearfix">
+        <div class="pmb-block" id="pmbblock_connexion_information">
+            <div class="pmbb-header">
+                <h2><i class="zmdi zmdi-account m-r-5"></i> {{ "profile.show.profile_information.connexion_information.title"|trans }}</h2>
             </div>
-        {% endif %}
+
+            <div class="pmbb-body p-l-30">
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.connexion_information.email.title"|trans }}</dt>
+                        <dd id="pmb-view-email">{{ user.email }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.connexion_information.password.title"|trans }}</dt>
+                        <dd>
+                            {% if user.passwordKnown %}
+                                <a href="{{ path('fos_user_change_password') }}">{{ "profile.show.profile_information.connexion_information.password.change"|trans }}</a>
+                            {% else %}
+                                <a href="{{ path('init_password_request') }}">{{ "profile.show.profile_information.connexion_information.password.init"|trans }}</a>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                    {% if user.googleId is not empty or  user.facebookId is not empty %}
+                        <dl class="dl-horizontal">
+                            <dt>{{ "profile.show.profile_information.connexion_information.social_network.title"|trans }}</dt>
+                            <dd>
+                                {% if user.googleId is not empty %}
+                                    <i class="zmdi zmdi-google-plus-box zmdi-hc-2x palette-Red text"></i>
+                                {% endif %}
+                                {% if user.facebookId is not empty %}
+                                    <i class="zmdi zmdi-facebook-box zmdi-hc-2x  palette-Blue-A700 text"></i>
+                                {% endif %}
+                            </dd>
+                        </dl>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="pmb-block" id="pmbblock_personal_information">
+            <div class="pmbb-header">
+                <h2><i class="zmdi zmdi-account m-r-5"></i> {{ "profile.show.profile_information.personal_information.title"|trans }}</h2>
+                <ul class="actions">
+                    <li><a data-profile-action="edit" data-profile-action-target="#pmbblock_personal_information" href="#"><i class="zmdi zmdi-edit"></i></a></li>
+                </ul>
+            </div>
+
+            <div class="pmbb-body p-l-30">
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.publicname.title"|trans }}</dt>
+                        <dd id="pmb-view-public-name">{{ user.applicationUser.appUserInformation.publicName is not empty?user.applicationUser.appUserInformation.publicName:"-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.legalstatus.title"|trans }}</dt>
+                        <dd id="pmb-view-legal-status">{{ user.applicationUser.appUserInformation.legalStatus is not empty?user.applicationUser.appUserInformation.legalStatus|trans:"-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.firstname.title"|trans }}</dt>
+                        <dd id="pmb-view-firstname">{{ user.applicationUser.appUserInformation.firstName is not empty? user.applicationUser.appUserInformation.firstName:"-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.lastname.title"|trans }}</dt>
+                        <dd id="pmb-view-lastname">{{ user.applicationUser.appUserInformation.lastName is not empty ? user.applicationUser.appUserInformation.lastName: "-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.gender.title"|trans }}</dt>
+                        <dd id="pmb-view-gender">{{ user.applicationUser.appUserInformation.gender is not empty ? user.applicationUser.appUserInformation.gender|trans():"-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.birthday.title"|trans }}</dt>
+                        <dd id="pmb-view-birthday">{{ user.applicationUser.appUserInformation.birthday is not null?user.applicationUser.appUserInformation.birthday|localizeddate('short', 'none'):"-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.nationality.title"|trans }}</dt>
+                        <dd id="pmb-view-nationality">{{ user.applicationUser.appUserInformation.nationality is not null?user.applicationUser.appUserInformation.nationality : "-" }}</dd>
+                    </dl>
+                </div>
+                {% if form_app_user_info_personals is not null %}
+                    <div class="pmbb-edit">
+                        {{ form_start(form_app_user_info_personals, {'method':'post', 'action':path('updateUserPersonalInformation'),
+                            'attr':{ 'id':'userPersonalInformation', 'data-profile-pmb-block-target':'#pmbblock_personal_information'} }) }}
+                        <dl class="dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.publicName, 'profile.show.profile_information.personal_information.publicname.label'|trans,
+                                {'help':"profile.show.profile_information.personal_information.publicname.help"|trans}) }}</dt>
+                            <dd>
+                                <div class="fg-line">
+                                    {{ form_widget(form_app_user_info_personals.publicName, {'attr':{'placeholder':"profile.show.profile_information.personal_information.publicname.placeholder"|trans}}) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.legalStatus, 'profile.show.profile_information.personal_information.legalstatus.label'|trans) }}</dt>
+                            <dd>
+                                {{ form_widget(form_app_user_info_personals.legalStatus, {'attr':{
+                                    'class':'selectpicker',
+                                    'data-none-selected-text':'profile.show.profile_information.personal_information.legalstatus.none_selected_text'|trans,}}) }}
+                            </dd>
+                        </dl>
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.firstName, "profile.show.profile_information.personal_information.firstname.label") }}</dt>
+                            <dd>
+                                <div class="fg-line">
+                                    {{ form_widget(form_app_user_info_personals.firstName, {'attr':{'placeholder': "profile.show.profile_information.personal_information.firstname.placeholder"|trans}} ) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.lastName, "profile.show.profile_information.personal_information.lastname.label") }}</dt>
+                            <dd>
+                                <div class="fg-line">
+                                    {{ form_widget(form_app_user_info_personals.lastName, {'attr':{'placeholder': "profile.show.profile_information.personal_information.lastname.placeholder"|trans}} ) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.gender, 'profile.show.profile_information.personal_information.gender.label'|trans) }}</dt>
+                            <dd>
+                                {{ form_widget(form_app_user_info_personals.gender, {'attr':{
+                                    'class':'selectpicker',
+                                    'data-none-selected-text':'profile.show.profile_information.personal_information.gender.none_selected_text'|trans}}) }}
+                            </dd>
+                        </dl>
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.birthday, 'profile.show.profile_information.personal_information.birthday.title'|trans) }}</dt>
+                            <dd>
+                                <div class="dtp-container dropdown fg-line">
+                                    {{ form_widget(form_app_user_info_personals.birthday, {'attr':{'class':'date-picker', 'placeholder':'profile.show.profile_information.personal_information.birthday.placeholder'}}) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.nationality, 'profile.show.profile_information.personal_information.nationality.label'|trans) }}</dt>
+                            <dd>
+                                <div class="fg-line">
+                                    {{ form_widget(form_app_user_info_personals.nationality, {'attr':{'placeholder':'profile.show.profile_information.personal_information.nationality.placeholder'|trans }}) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <div class=" m-t-10 pull-right">
+                            <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
+                            <button data-profile-action="reset" data-profile-action-target="#pmbblock_personal_information" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
+                        </div>
+                        {{ form_rest(form_app_user_info_personals) }}
+                        {{ form_end(form_app_user_info_personals) }}
+                        <div class="clearfix"></div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="pmb-block" id="pmbblock_contact_details">
+            <div class="pmbb-header">
+                <h2><i class="zmdi zmdi-pin m-r-5"></i> {{ "profile.show.profile_information.contact_details.title"|trans }}</h2>
+                <ul class="actions">
+                    <li><a data-profile-action="edit" data-profile-action-target="#pmbblock_contact_details" href="#"><i class="zmdi zmdi-edit"></i></a></li>
+                </ul>
+            </div>
+            <div class="pmbb-body p-l-30">
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.contact_details.living_country.title"|trans }}</dt>
+                        <dd id="pmb-view-living-country">{{ user.applicationUser.appUserInformation.livingCountry is not empty ? user.applicationUser.appUserInformation.livingCountry|country : "-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.contact_details.living_city.title"|trans }}</dt>
+                        <dd id="pmb-view-living-city">{{ user.applicationUser.appUserInformation.livingCity is not empty ? user.applicationUser.appUserInformation.livingCity : "-" }}</dd>
+                    </dl>
+                </div>
+                {% if form_contact_details is not null %}
+                    <div class="pmbb-edit">
+                        {{ form_start(form_contact_details, {'action':path('updateUserContactDetails'), 'method':'post',
+                            'attr':{ 'id':'userContactDetails', 'data-profile-pmb-block-target':'#pmbblock_contact_details'} }) }}
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_contact_details.livingCountry, 'profile.show.profile_information.contact_details.living_country.label'|trans) }}</dt>
+                            <dd>
+                                {{ form_widget(form_contact_details.livingCountry, {'attr':{
+                                    'class':'selectpicker',
+                                    'data-none-selected-text':'profile.show.profile_information.contact_details.living_country.none_selected_text'|trans,
+                                    'data-live-search' : "true"
+                                }}) }}
+                            </dd>
+                        </dl>
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_contact_details.livingCity, 'profile.show.profile_information.contact_details.living_city.label'|trans) }}</dt>
+                            <dd>
+                                <div class="fg-line">
+                                    {{ form_widget(form_contact_details.livingCity, {'attr':{'placeholder':'profile.show.profile_information.contact_details.living_city.placeholder'|trans}}) }}
+                                </div>
+                            </dd>
+                        </dl>
+
+                        <div class=" m-t-10 pull-right">
+                            <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
+                            <button data-profile-action="reset" data-profile-action-target="#pmbblock_contact_details" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
+                        </div>
+                        {{ form_rest(form_contact_details) }}
+                        {{ form_end(form_contact_details) }}
+                        <div class="clearfix"></div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="pmb-block" id="pmbblock_complementaries">
+            <div class="pmbb-header">
+                <h2><i class="zmdi zmdi-face m-r-5"></i> {{ "profile.show.profile_information.complementaries.title"|trans }}</h2>
+                <ul class="actions">
+                    <li><a data-profile-action="edit" data-profile-action-target="#pmbblock_complementaries" href="#"><i class="zmdi zmdi-edit"></i></a></li>
+                </ul>
+            </div>
+            <div class="pmbb-body p-l-30">
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.complementaries.marital_status.title"|trans }}</dt>
+                        <dd id="pmb-view-marital-status">{{ user.applicationUser.appUserInformation.maritalStatus is not empty ? user.applicationUser.appUserInformation.maritalStatus|trans : "-" }}</dd>
+                    </dl>
+                </div>
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.complementaries.biography.title"|trans }}</dt>
+                        <dd id="pmb-view-biography">
+                            {% if user.applicationUser.appUserInformation.biography is not empty %}
+                                {% set biography = user.applicationUser.appUserInformation.biography|nl2br %}
+                                {{ biography|raw }}
+                            {% else %}
+                                {{ "profile.show.profile_information.complementaries.biography.empty"|trans }}
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.complementaries.interests.title"|trans }}</dt>
+                        <dd id="pmb-view-interets">
+                            {% if user.applicationUser.appUserInformation.interests is not empty %}
+                                {% set interests = user.applicationUser.appUserInformation.interests|nl2br %}
+                                {{ interests|raw }}
+                            {% else %}
+                                {{ "profile.show.profile_information.complementaries.interests.empty"|trans }}
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.complementaries.food_conveniences.title"|trans }}</dt>
+                        <dd id="pmb-view-food-conveniences">
+                            {% if user.applicationUser.appUserInformation.foodConveniences is not empty %}
+                                {% set foodConveniences = user.applicationUser.appUserInformation.foodConveniences|nl2br %}
+                                {{ foodConveniences|raw }}
+                            {% else %}
+                                {{ "profile.show.profile_information.complementaries.food_conveniences.empty"|trans }}
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+
+                {% if form_app_user_info_complementaries is not null %}
+                    <div class="pmbb-edit">
+                        {{ form_start(form_app_user_info_complementaries, {
+                            'action': path('updateUserComplementatyInformation'), 'method': 'post',
+                            'attr': {'id':'userComplementaryInformations','data-profile-pmb-block-target':'#pmbblock_complementaries'}}) }}
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.maritalStatus, 'profile.show.profile_information.complementaries.marital_status.label'|trans) }}</dt>
+                            <dd>
+                                {{ form_widget(form_app_user_info_complementaries.maritalStatus, {'attr':{
+                                    'class':'selectpicker',
+                                    'data-none-selected-text':'profile.show.profile_information.complementaries.marital_status.none_selected_text'|trans }}) }}
+                            </dd>
+                        </dl>
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.biography, 'profile.show.profile_information.complementaries.biography.label'|trans) }}</dt>
+                            <dd>
+                                <div class="fg-line">
+                                    {{ form_widget(form_app_user_info_complementaries.biography, {'attr':{
+                                        'rows':5,
+                                        'placeholder':'profile.show.profile_information.complementaries.biography.placeholder'|trans}} ) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.interests, 'profile.show.profile_information.complementaries.interests.label'|trans) }}</dt>
+                            <dd>
+                                <div class="fg-line">
+                                    {{ form_widget(form_app_user_info_complementaries.interests, {'attr':{
+                                        'rows':5,
+                                        'placeholder':'profile.show.profile_information.complementaries.interests.placeholder'|trans}} ) }}
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl class=" dl-horizontal form-group">
+                            <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.foodConveniences, 'profile.show.profile_information.complementaries.food_conveniences.label'|trans) }}</dt>
+                            <dd>
+                                <div class="fg-line">
+                                    {{ form_widget(form_app_user_info_complementaries.foodConveniences, {'attr':{
+                                        'rows':5,
+                                        'placeholder':'profile.show.profile_information.complementaries.food_conveniences.placeholder'|trans}} ) }}
+                                </div>
+                            </dd>
+                        </dl>
+
+                        <div class="m-t-10 pull-right">
+                            <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
+                            <button data-profile-action="reset" data-profile-action-target="#pmbblock_complementaries" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
+                        </div>
+                        {{ form_rest(form_app_user_info_complementaries) }}
+                        {{ form_end(form_app_user_info_complementaries) }}
+                        <div class="clearfix"></div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
     </div>
 </div>

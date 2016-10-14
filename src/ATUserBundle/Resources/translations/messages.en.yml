@@ -189,11 +189,26 @@ profile:
       already_init: This action is forbidden since you should already know your password.
 
 contacts:
+  left-menu:
+    title: Your groups
+    all_contacts: All your contacts
+    add_group:
+      label: New
+  menu:
+    add_contact:
+      text: New
+      tooltip: Add a new contact
+    import_contact:
+      text: Import
+      tooltip: Import contacts
   add_form:
     label: Search contact
     placeholder: Add email here
     submit: Add
   table:
+    label:
+      search_contact: Search a contact
+      refresh: Refresh
     avatar:
       column_title: Avatar
       title_attr: Personnal record

@@ -33,6 +33,9 @@ class ContactGroup
      */
     private $name;
 
+    /*----------
+    Preferences : display the owner's first name to group members
+    ----------*/
     /**
      * @var bool
      *

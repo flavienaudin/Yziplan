@@ -9,6 +9,10 @@
 namespace AppBundle\Manager;
 
 use AppBundle\Entity\User\ApplicationUser;
+use AppBundle\Entity\User\Contact;
+use AppBundle\Entity\User\ContactEmail;
+use AppBundle\Entity\User\ContactGroup;
+use AppBundle\Utils\enum\ContactStatus;
 use ATUserBundle\Entity\AccountUser;
 use ATUserBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;
@@ -62,16 +66,19 @@ class ContactManager
         $result['current'] = (int)$pageIdx;
         $result['rowCount'] = (int)$nbResult;
 
-        $contactRepo = $this->entityManager->getRepository("ATUserBundle:Contact");
+        $contactRepo = $this->entityManager->getRepository(Contact::class);
         $contactsList = $contactRepo->findUserContacts($user, $search, $nbResult, $pageIdx, $sorts);
         $result['rows'] = array();
         /** @var Contact $contact */
         foreach ($contactsList as $contact) {
-            $linked = $contact->getLinked();
+            //$linked = $contact->getLinked();
             $linkedAsArray = array();
-            $linkedAsArray['name'] = $linked->getDisplayableName();
+            $linkedAsArray['name'] = $contact->getFirstName() . ' ' . $contact->getLastName();
             $linkedAsArray['avatar'] = null; // TODO
-            $linkedAsArray['email'] = $linked->getEmail();
+            /** @var ContactEmail $contactEmail */
+            foreach ($contact->getContactEmails() as $contactEmail) {
+                $linkedAsArray['email'][] = $contactEmail->getEmail();
+            }
             /** @var ContactGroup $group */
             foreach ($contact->getGroups() as $group) {
                 $linkedAsArray['groups'][] = $group->getName();
@@ -86,14 +93,16 @@ class ContactManager
      * Ajoute aux contacts d'un utilisateur un autre utilisateur
      * @param AccountUser $owner L'utilisateur a qui ajouter le contact
      * @param int|string $userLinkedId L'identifiant ou EMAIL de l'utilisateur à ajouter
-     * @return array|bool true si l'opréation réussit, false sinon
+     * @return array|null [$id => Contact]|Contact
+     * @deprecated
      */
     public function addContact(AccountUser $owner, $userLinkedId)
     {
+        return null;
         if (is_array($userLinkedId)) {
-            $result = true;
+            $result = array();
             foreach ($userLinkedId as $id) {
-                $result &= $this->addContact($owner, $id);
+                array_merge($result, $this->addContact($owner, $id));
             }
             return $result;
         } else {
@@ -102,7 +111,7 @@ class ContactManager
                 $userLinked = $this->userManager->findUserBy(array('id' => $userLinkedId));
             } else {
                 $userLinked = $this->userManager->findUserByEmail($userLinkedId);
-                if ($userLinked == null) {
+                if (false && $userLinked == null) {
                     $userLinked = $this->userManager->createUserFromEmail($userLinkedId);
                 }
             }
@@ -112,18 +121,17 @@ class ContactManager
                 /** @var Contact $existingContact */
                 $existingContact = $contactRepository->findOneBy(array('owner' => $owner, 'linked' => $userLinked));
                 if ($existingContact != null) {
-                    if ($existingContact->getStatus() != Contact::STATUS_VALID) {
-                        $existingContact->setStatus(Contact::STATUS_VALID);
+                    if ($existingContact->getStatus() != ContactStatus::VALID) {
+                        $existingContact->setStatus(ContactStatus::VALID);
                         $this->entityManager->persist($existingContact);
                     } else {
-                        return false;
+                        return [$userLinkedId => null];
                     }
                 } else {
                     $existingContact = new Contact();
-                    $existingContact->setOwner($owner);
-                    $existingContact->setLinked($userLinked);
-                    $existingContact->setStatus(Contact::STATUS_VALID);
-                    $owner->addContact($existingContact);
+                    $existingContact->addLinked($userLinked->getApplicationUser());
+                    $existingContact->setStatus(ContactStatus::VALID);
+                    $owner->getApplicationUser()->addContact($existingContact);
                     $this->entityManager->persist($owner);
 
                     /* TODO Envoi d'email ?
@@ -133,9 +141,9 @@ class ContactManager
                     }*/
                 }
                 $this->entityManager->flush();
-                return true;
+                return [$userLinkedId => $existingContact];
             }
-            return false;
+            return [$userLinkedId => null];
         }
     }
 

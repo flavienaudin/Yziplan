@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,12 +36,12 @@ class ContactController extends Controller
             $user = $this->getUser();
             if ($user instanceof AccountUser) {
                 $contactManager = $this->get("at.manager.contact");
-                $data = $contactManager->getFilteredContactsOfUser($user, $request->request->get("searchPhrase", ""), $request->request->get("rowCount", 10), $request->request->get("current", 1),
-                    $request->request->get("sort", array()));
+                $data = $contactManager->getFilteredContactsOfUser($user, $request->request->get("searchPhrase", ""), $request->request->get("rowCount", 10),
+                    $request->request->get("current", 1), $request->request->get("sort", array()));
                 return new JsonResponse($data, Response::HTTP_OK);
             } else {
-                $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("global.error.unauthorized_access");
-                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                $data[AppJsonResponse::FORM_ERRORS][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("global.error.unauthorized_access");
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             }
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("global.error.not_ajax_request"));
@@ -59,16 +60,16 @@ class ContactController extends Controller
             $contactManager = $this->get("at.manager.contact");
             if ($contactManager->addContact($this->getUser(), $emailsToAdd)) {
                 if ($request->isXmlHttpRequest()) {
-                    $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("contacts.message.add_contacts.success");
-                    return new JsonResponse($data, Response::HTTP_OK);
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("contacts.message.add_contacts.success");
+                    return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator.default")->trans("contacts.message.add_contacts.success"));
                     return $this->redirectToRoute('fos_user_profile_show');
                 }
             } else {
                 if ($request->isXmlHttpRequest()) {
-                    $data['messages'][FlashBagTypes::WARNING_TYPE][] = $this->get("translator")->trans("contacts.message.add_contacts.error");
-                    return new JsonResponse($data, Response::HTTP_OK);
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get("translator")->trans("contacts.message.add_contacts.error");
+                    return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get("translator.default")->trans("contacts.message.add_contacts.error"));
                     return $this->redirectToRoute('fos_user_profile_show');
@@ -76,8 +77,8 @@ class ContactController extends Controller
             }
         } else {
             if ($request->isXmlHttpRequest()) {
-                $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get("translator.default")->trans("global.error.invalid_form");
-                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator.default")->trans("global.error.invalid_form");
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator.default")->trans("global.error.invalid_form"));
                 return $this->redirectToRoute('home');
@@ -97,16 +98,16 @@ class ContactController extends Controller
             $contactManager = $this->get("at.manager.contact");
             if ($contactManager->removeContact($this->getUser(), $emailToDelete)) {
                 if ($request->isXmlHttpRequest()) {
-                    $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("contacts.message.remove_contact.success");
-                    return new JsonResponse($data, Response::HTTP_OK);
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("contacts.message.remove_contact.success");
+                    return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator.default")->trans("contacts.message.remove_contact.success"));
                     return $this->redirectToRoute('fos_user_profile_show');
                 }
             } else {
                 if ($request->isXmlHttpRequest()) {
-                    $data['messages'][FlashBagTypes::WARNING_TYPE][] = $this->get("translator")->trans("contacts.message.remove_contact.error");
-                    return new JsonResponse($data, Response::HTTP_OK);
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get("translator")->trans("contacts.message.remove_contact.error");
+                    return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get("translator.default")->trans("contacts.message.remove_contact.error"));
                     return $this->redirectToRoute('fos_user_profile_show');
@@ -114,8 +115,8 @@ class ContactController extends Controller
             }
         } else {
             if ($request->isXmlHttpRequest()) {
-                $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get("translator.default")->trans("global.error.invalid_form");
-                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator.default")->trans("global.error.invalid_form");
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator.default")->trans("global.error.invalid_form"));
                 return $this->redirectToRoute('home');

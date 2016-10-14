@@ -1,94 +1,60 @@
-<div class="pmb-block">
-    <div class="p-header">
-        <ul class="p-menu">
-            <li class="active"><a href=""><i class="zmdi zmdi-accounts-add hidden-xs"></i> Add</a></li>
-            <li><a href=""><i class="zmdi zmdi-accounts hidden-xs"></i> Friends</a></li>
-            <li class="pm-search">
-                <div class="pms-inner">
-                    <i class="zmdi zmdi-search"></i> <input type="text" placeholder="Search...">
-                </div>
-            </li>
-        </ul>
+{# Données d'entrée :
+- contacts (Array of Contact) Tableau des contacts à afficher
+- contactGroups (Array of ContactGroup) Tableau des groupes de contacts créés par l'utilisateur
+#}
 
-        <ul class="actions m-t-20 hidden-xs">
-            <li class="dropdown">
-                <a href="#" data-toggle="dropdown"> <i class="zmdi zmdi-more-vert"></i> </a>
-
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li>
-                        <a href="#">Refresh</a>
+<div class="profile-tab">
+    <div class="pm-overview c-overflow">
+        <div class="pmo-block">
+            <h2><i class="zmdi zmdi-accounts zmdi-hc-lg"></i>&nbsp;{{ "contacts.left-menu.title"|trans }}</h2>
+            <div class="list-group">
+                <a href="#" class="list-group-item">{{ "contacts.left-menu.all_contacts"|trans }}</a>
+                {% for contactGroup in contactGroups %}
+                    <a href="#" class="list-group-item"> <span class="badge">{{ contactGroup.contacts|length }}</span>
+                        {{ contactGroup.name }}
+                    </a>
+                {% endfor %}
+            </div>
+            <div class="text-center m-t-15">
+                <button type="button" class="btn btn-default btn-icon-text waves-effect center" data-toggle="modal" data-target="#addContactGroup">
+                    <i class="zmdi zmdi-accounts-add"></i> {{ "contacts.left-menu.add_group.label"|trans }}</button>
+            </div>
+        </div>
+    </div>
+    <div class="pm-body clearfix">
+        <div class="pmb-block" id="pmbb-contacts">
+            <div class="p-header">
+                <ul class="p-menu">
+                    <li><a href="#" class="c-black" data-toggle="tooltip" title="{{ "contacts.menu.add_contact.tooltip"|trans }}">
+                            <i class="zmdi zmdi-account-add"></i> {{ "contacts.menu.add_contact.text"|trans }}</a>
                     </li>
-                    <li>
-                        <a href="#">Settings</a>
+                    <li><a href="#" class="c-black" data-toggle="tooltip" title="{{ "contacts.menu.import_contact.tooltip"|trans }}">
+                            {{ "contacts.menu.import_contact.text"|trans }} <i class="zmdi zmdi-forward"></i></a>
                     </li>
+                    {#<li class="pm-search">
+                        <div class="pms-inner">
+                            <i class="zmdi zmdi-search"></i> <input type="text" placeholder="{{ "contacts.menu.search_contact.placeholder"|trans }}">
+                        </div>
+                    </li>#}
                 </ul>
-            </li>
-        </ul>
-    </div>
 
-    <div class="contacts c-profile clearfix row">
-        <div class="col-md-3 col-sm-4 col-xs-6">
-            <div class="c-item">
-                <a href="{{ asset('bundles/atuser/profile/avatar_default.png') }}" class="ci-avatar"> <img src="#" alt="Contact 1"> </a>
+                {#<ul class="actions m-t-20 hidden-xs">
+                    <li class="dropdown">
+                        <a href="#" data-toggle="dropdown"> <i class="zmdi zmdi-more-vert"></i> </a>
 
-                <div class="c-info">
-                    <strong>Cathy Shelton</strong>
-                    <small>cathy.shelton31@example.com</small>
-                </div>
-
-                <div class="c-footer">
-                    <button class="waves-effect"><i class="zmdi zmdi-face-add"></i> Add</button>
-                </div>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="#">Refresh</a>
+                            </li>
+                            <li>
+                                <a href="#">Settings</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>#}
             </div>
+
+            {{ include('@App/Contact/partials/display_contacts.html.twig', { 'contacts': contacts}) }}
         </div>
-
-        <div class="col-md-3 col-sm-4 col-xs-6">
-            <div class="c-item">
-                <a href="{{ asset('bundles/atuser/profile/avatar_default.png') }}" class="ci-avatar"> <img src="#" alt="Contact 2"> </a>
-
-                <div class="c-info">
-                    <strong>Stella Flores</strong>
-                    <small>stella@example.com</small>
-                </div>
-
-                <div class="c-footer">
-                    <button class="waves-effect"><i class="zmdi zmdi-face-add"></i> Add</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-sm-4 col-xs-6">
-            <div class="c-item">
-                <a href="{{ asset('bundles/atuser/profile/avatar_default.png') }}" class="ci-avatar"> <img src="#" alt="Contact 3"> </a>
-
-                <div class="c-info">
-                    <strong>Marilyn Thomas</strong>
-                    <small>marilyn@example.com</small>
-                </div>
-
-                <div class="c-footer">
-                    <button class="waves-effect"><i class="zmdi zmdi-face-add"></i> Add</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3 col-sm-4 col-xs-6">
-            <div class="c-item">
-                <a href="{{ asset('bundles/atuser/profile/avatar_default.png') }}" class="ci-avatar"> <img src="#" alt="Contact 4"> </a>
-
-                <div class="c-info">
-                    <strong>Dwight Gilbert</strong>
-                    <small>dwight@example.com</small>
-                </div>
-
-                <div class="c-footer">
-                    <button class="waves-effect"><i class="zmdi zmdi-face-add"></i> Add</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="load-more">
-        <a href=""><i class="zmdi zmdi-refresh-alt"></i> Load More...</a>
-    </div>
-</div>
+    </div> {# End div.pm-body #}
+</div> {# End div.profile-tab #}

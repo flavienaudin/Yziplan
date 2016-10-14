@@ -2,28 +2,7 @@
 - contacts (Array of Contact) Tableau des contacts à afficher
 #}
 
-
-<div class="well m-15">
-    <form id="addContact-form" action="{{ path('addContact') }}" method="post">
-        <div class="row">
-            <div class="col-sm-10">
-                <div class="form-group">
-                    <label for="email-contacts" class="sr-only">{{ "contacts.add_form.label"|trans }} :</label> <select id="email-contacts" name="email-contacts[]" multiple="multiple"
-                                                                                                                        class="form-control"></select>
-                </div>
-            </div>
-            <div class="col-sm-2 text-center">
-                <button type="submit" class="btn btn-success" id="btn-add-contact" data-style="zoom-in" data-loading-text="{{ "global.button.loading"|trans }}"
-                        data-original-text="<i class='zmdi zmdi-accounts-add'></i>{{ "contacts.add_form.submit"|trans }}">
-                    <i class="zmdi zmdi-accounts-add"></i>{{ "contacts.add_form.submit"|trans }}
-                </button>
-            </div>
-        </div>
-    </form>
-</div>
-
 <div class="contacts-list">
-    {#{% if contacts|length>0 %}#}
     <form id="selectionContacts" method="post" action="#">
         <div class="table-responsive">
             <table id="contactsTable" class="table table-condensed table-hover table-striped table-vmiddle" role="grid">
@@ -41,7 +20,7 @@
                 <tbody class="f-10">
                 <noscript>
                     {% for contact in contacts %}
-                        {{ include('ATUserBundle:contact/partials:contact_table_row.html.twig', {
+                        {{ include('@App/Contact/partials/contact_table_row.html.twig', {
                             'contact' : contact
                         }) }}
                     {% endfor %}
@@ -54,29 +33,10 @@
             <input type="submit" disabled="disabled" class="btn btn-default" value="{{ "contacts.text.selection_button"|trans }}">
         </div>
     </form>
-    {#{% else %}
-        <p>{{ "contacts.text.empty_contact_list"|trans }}.</p>
-    {% endif %}#}
 </div>
 
 <script>
     $(document).ready(function () {
-        var $emailsSelectize = $('#email-contacts').selectize({
-            persist: false,
-            placeholder: "{{ "contacts.add_form.placeholder"|trans }}",
-            valueField: 'id',
-            labelField: 'name',
-            searchField: ['name', 'email'],
-            sortField: 'name',
-            render: {
-                item: renderContactAsItem,
-                option: renderContactAsOption,
-                option_create: renderOptionCreate
-            },
-            createFilter: createFilterEmail,
-            create: createContact
-        });
-
         var contactsBootgrid = $('#contactsTable').bootgrid({
             multiSort: true,
             selection: true,
@@ -100,11 +60,13 @@
                 },
                 "commands": function (column, row) {
                     return "<button type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.email + "\"><span class=\"zmdi zmdi-edit\"></span></button>" +
-                            "<a href='{{ path('deleteContact') }}' class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.email + "\">" +
+                            "<a href='#deleteContact{#{{ path('deleteContact') }}#}' class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.email + "\">" +
                             "<span class=\"zmdi zmdi-delete\"></span></a>";
                 }
             },
             labels: {
+                'search' : '{{ "contacts.table.label.search_contact"|trans }}',
+                'refresh' : '{{ "contacts.table.label.refresh"|trans }}',
                 'noResults': '{{ "contacts.text.empty_contact_list"|trans }}'
             }
         }).on("loaded.rs.jquery.bootgrid", function () {

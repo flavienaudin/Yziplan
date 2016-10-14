@@ -1,8 +1,9 @@
 {% extends "ATUserBundle::layout_cboxed.html.twig" %}
 
-{# Données d'entrée !
-- user (User) L'utilisateur dont on affiche le profil
-- form_app_user_info_personals (Form|null) Le formulaire pour la partie "Information basique"
+{# Données d'entrée :
+- user (AccountUser) L'utilisateur dont on affiche le profil
+- form_contact_details (Form|null) Le formulaire pour la partie "Informations Personnelles"
+- form_contact_details (Form|null) Le formulaire pour la partie "Coordonnées"
 - form_app_user_info_complementaries (Form|null) Le formulaire pour la partie "A propos de vous"
 - form_appuseremail (Form) Ajout d'un AppUserEmail au compte
 #}
@@ -13,7 +14,7 @@
 
 
 {% block fos_user_content %}
-    <div class="card" id="profile-main">
+    <div class="card" id="profile-card">
         <div class="card-header">
             <h2><span class="user-public-name">{{ user.displayableName }}</span>
                 <small class="user-email">{{ user.email }}</small>
@@ -36,43 +37,18 @@
 
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane" id="profile-information">
-                        <div id="profile-main">
-                            <div class="pm-overview c-overflow">
-                                <div class="pmo-pic">
-                                    <div class="p-relative">
-                                        {#TODO : user avatar#}
-                                        <a href="#"> <img class="img-responsive" src="{{ asset('bundles/atuser/profile/avatar_default.png') }}" alt="AVATAR"> </a>
-                                        {#<div class="pmop-message">
-                                            <a href="{{ path("fos_user_profile_edit") }}" class="btn palette-White bg btn-float z-depth-1"><i class="zmdi zmdi-edit"></i></a>
-                                        </div>#}
-
-                                        <a href="#" class="pmop-edit"> <i class="zmdi zmdi-camera"></i> <span class="hidden-xs">{{ "profile.show.page.avatar_update"|trans }}</span> </a>
-                                    </div>
-
-                                    <div class="pmo-stat">
-                                        <h2 class="m-0 c-white">156</h2>
-                                        Total Invitations
-                                    </div>
-                                    {# User -> AppUserEmails #}
-                                    {{ include('@App/AppUserEmail/partials/profile_appuseremails.html.twig', {
-                                        'appuseremails' : user.applicationUser.appUserEmails,
-                                        'form_appuseremail' : form_appuseremail }) }}
-                                </div>
-                            </div>
-
-                            <div class="pm-body clearfix">
-                                {{ include('@ATUser/Profile/partials/profile_about.html.twig', {
-                                    'user':user,
-                                    'form_app_user_info_personals':form_app_user_info_personals,
-                                    'form_contact_details':form_contact_details,
-                                    'form_app_user_info_complementaries':form_app_user_info_complementaries
-                                }) }}
-                            </div>
-                        </div>
+                        {{ include('@ATUser/Profile/partials/profile_about.html.twig', {
+                            'user':user,
+                            'form_app_user_info_personals':form_app_user_info_personals,
+                            'form_contact_details':form_contact_details,
+                            'form_app_user_info_complementaries':form_app_user_info_complementaries
+                        }) }}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile-contacts">
-                        Contacts
-                        {#{{ include('@ATUser/Contact/partials/display_contacts.html.twig', {'contacts':user.contacts}) }}#}
+                        {# User -> Contacts|ContactGroups #}
+                        {{ include('@ATUser/Profile/partials/profile_connections.html.twig', {
+                            'contacts': user.applicationUser.contacts,
+                            'contactGroups': user.applicationUser.contactGroups}) }}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile-preferences">
                         Préférences

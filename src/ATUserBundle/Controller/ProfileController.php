@@ -66,8 +66,8 @@ class ProfileController extends BaseController
 
         return $this->render('FOSUserBundle:Profile:show.html.twig', array(
             'user' => $user,
-            'form_app_user_info_personals' => ($appUserInfoPersonalsForm != null ? $appUserInfoPersonalsForm->createView() : $appUserInfoPersonalsForm),
-            'form_contact_details' => ($appUserContactDetailsForm != null ? $appUserContactDetailsForm->createView() : $appUserContactDetailsForm),
+            'form_app_user_info_personals' => ($appUserInfoPersonalsForm != null ? $appUserInfoPersonalsForm->createView() : null),
+            'form_contact_details' => ($appUserContactDetailsForm != null ? $appUserContactDetailsForm->createView() : null),
             'form_app_user_info_complementaries' => ($appUserInfoComplementariesForm != null ? $appUserInfoComplementariesForm->createView() : null),
             'form_appuseremail' => $appUserEmailForm->createView()
         ));

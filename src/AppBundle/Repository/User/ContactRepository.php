@@ -2,7 +2,11 @@
 
 namespace AppBundle\Repository\User;
 
+use AppBundle\Entity\User\Contact;
+use AppBundle\Utils\enum\ContactStatus;
+use ATUserBundle\Entity\AccountUser;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * ContactRepository
@@ -12,4 +16,69 @@ use Doctrine\ORM\EntityRepository;
  */
 class ContactRepository extends EntityRepository
 {
+
+    public function findUserContacts(AccountUser $user, $search = null, $nbResult = 10, $pageIdx = 1, $sort = array())
+    {
+        $query = $this->createQueryBuilder('c');
+        $query->where($query->expr()->andX(
+            $query->expr()->eq("c.owner", ":appuser"),
+            $query->expr()->neq("c.status", $query->expr()->literal(ContactStatus::DELETED))
+        ));
+        $query->setParameter('appuser', $user->getApplicationUser());
+        /*$query->leftJoin('c.linked', 'linked');*/
+        /*if (!(empty($search))) {
+            $search = "%" . trim($search) . "%";
+            $query
+                ->andWhere(
+                    $query->expr()->orX(
+                        $query->expr()->like("linked.pseudo", ':search'),
+                        $query->expr()->like("linked.username", ':search')
+                    )
+                )
+                ->setParameter('search', $search);
+        }*/
+
+        if (is_array($sort)) {
+            foreach ($sort as $key => $value) {
+                if ($key == 'name') {
+                    //$query->addOrderBy('displayableName', $value);
+                } else if (property_exists(AccountUser::class, $key)) {
+
+                }
+            }
+        }
+
+        if ($nbResult > 0) {
+            $query
+                ->setFirstResult(($pageIdx - 1) * $nbResult)
+                ->setMaxResults($nbResult);
+        }
+        return $query->getQuery()->getResult();
+    }
+
+    public function countUserContacts(AccountUser $user, $search = null)
+    {
+        $query = $this->createQueryBuilder("c");
+        $query->select('count(c.id)');
+
+        $query->where($query->expr()->andX(
+            $query->expr()->eq("c.owner", ":appuser"),
+            $query->expr()->neq("c.status", $query->expr()->literal(ContactStatus::DELETED))
+        ));
+        $query->setParameter('appuser', $user->getApplicationUser());
+        /*$query->leftJoin('c.linked', 'linked');*/
+        /*if (!(empty($search))) {
+            $search = "%" . trim($search) . "%";
+            $query
+                ->andWhere(
+                    $query->expr()->orX(
+                        $query->expr()->like("linked.pseudo", ':search'),
+                        $query->expr()->like("linked.username", ':search')
+                    )
+                )
+                ->setParameter('search', $search);
+        }*/
+        return $query->getQuery()->getResult(Query::HYDRATE_SINGLE_SCALAR);
+    }
+
 }
