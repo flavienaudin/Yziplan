@@ -28,6 +28,7 @@ class AppJsonResponse extends JsonResponse
      *      self::HTML_CONTENTS => array(
      *          self::HTML_CONTENT_ACTION_REPLACE => array( htmlElementId => contenu HTML à utiliser ),
      *          self::HTML_CONTENT_ACTION_APPEND_TO => array( htmlElementId => contenu HTML à utiliser )
+     *          self::HTML_CONTENT_ACTION_HTML => array( htmlElementId => contenu HTML à utiliser )
      *      ),
      *      self::FORM_ERRORS => array( nom complet du champ du formulaire (Cf. FormUtils::getFullFormErrorFieldName(FormError)) => message d'erreur au champ )
      *      )
@@ -38,6 +39,10 @@ class AppJsonResponse extends JsonResponse
     const HTML_CONTENTS = "htmlContents";
     const FORM_ERRORS = "formErrors";
 
+    /** Replace the element by the content */
     const HTML_CONTENT_ACTION_REPLACE = "replaceWith";
+    /** Append the content to the element */
     const HTML_CONTENT_ACTION_APPEND_TO = "append";
+    /** Change the html content of the element by the content */
+    const HTML_CONTENT_ACTION_HTML = "html";
 }

@@ -13,6 +13,7 @@ use AppBundle\Form\AppUserEmailType;
 use AppBundle\Manager\AppUserInformationManager;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\FormUtils;
+use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
 use ATUserBundle\Form\AppUserInfoComplementariesType;
 use FOS\UserBundle\Controller\ProfileController as BaseController;
@@ -108,11 +109,11 @@ class ProfileController extends BaseController
                     );
                     return new JsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $data["formErrors"] = array();
+                    $data[AppJsonResponse::FORM_ERRORS] = array();
                     foreach ($personalInformationForm->getErrors(true) as $error) {
-                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
+                        $data[AppJsonResponse::FORM_ERRORS][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
                     }
-                    return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             } else if ($personalInformationForm->isValid()) {
                 $appUserInformationManager->updateUserAbout($appUserInformation);

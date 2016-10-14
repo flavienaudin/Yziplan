@@ -35,13 +35,13 @@ $('form#userPersonalInformation, form#userContactDetails, form#userComplementary
     var $form = $(this);
     ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
         // update form's inputs
-        if (responseJSON.data) {
-            for (var inputTarget in responseJSON.data) {
-                if (responseJSON.data.hasOwnProperty(inputTarget)) {
-                    $('#pmb-view-' + inputTarget).html(responseJSON.data[inputTarget]);
+        if (responseJSON.hasOwnProperty('data')) {
+            for (var inputTarget in responseJSON['data']) {
+                if (responseJSON['data'].hasOwnProperty(inputTarget)) {
+                    $('#pmb-view-' + inputTarget).html(responseJSON['data'][inputTarget]);
                     /** Update information elsewhere in the page */
                     $('.user-' + inputTarget).each(function () {
-                        $(this).html(responseJSON.data[inputTarget]);
+                        $(this).html(responseJSON['data'][inputTarget]);
                     });
                 }
             }
