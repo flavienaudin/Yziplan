@@ -10,10 +10,11 @@ namespace AppBundle\Form\Type;
 
 
 use AppBundle\Utils\enum\LegalStatus;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class LegalStatusType
+class LegalStatusType extends AbstractType 
 {
 
     public function configureOptions(OptionsResolver $resolver)

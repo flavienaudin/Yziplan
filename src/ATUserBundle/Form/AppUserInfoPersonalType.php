@@ -12,7 +12,6 @@ namespace ATUserBundle\Form;
 use AppBundle\Entity\User\AppUserInformation;
 use AppBundle\Form\Type\GenderType;
 use AppBundle\Form\Type\LegalStatusType;
-use AppBundle\Utils\enum\LegalStatus;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
