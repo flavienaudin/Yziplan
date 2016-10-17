@@ -9,10 +9,9 @@
 namespace AppBundle\Form\User;
 
 use AppBundle\Entity\User\AppUserEmail;
-use AppBundle\Utils\enum\ContactInfoType;
+use AppBundle\Form\Type\ContactInfoTypeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -25,12 +24,8 @@ class AppUserEmailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('type', ChoiceType::class, array(
-                'required' => false,
-                'choices' => array(
-                    ContactInfoType::HOME => ContactInfoType::HOME,
-                    ContactInfoType::BUSINESS => ContactInfoType::BUSINESS
-                )
+            ->add('type', ContactInfoTypeType::class, array(
+                'required' => false
             ))
             ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
                 /** @var AppUserEmail $appUserEmail */
