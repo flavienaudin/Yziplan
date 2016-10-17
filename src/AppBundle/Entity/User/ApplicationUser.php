@@ -79,6 +79,9 @@ class ApplicationUser
 
     /**
      * @var ArrayCollection of Contact
+     *
+     * Cascade option is set inside Contact, to avoid to persist Contacts data when persisiting ApplicationUser for Event case (eg)
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\User\Contact", mappedBy="owner")
      */
     private $contacts;

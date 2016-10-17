@@ -75,7 +75,9 @@ class Contact
     /**
      * @var ApplicationUser Utilisateur ayant créé le contact (Relation Bidirectionnelle)
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User\ApplicationUser", inversedBy="contacts" )
+     * Cascade option is set inside Contact, to avoid to persist Contacts data when persisiting ApplicationUser for Event case (eg)
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User\ApplicationUser", inversedBy="contacts")
      * @ORM\JoinColumn(name="owner_id", referencedColumnName="id", nullable=false)
      */
     private $owner;
@@ -84,7 +86,7 @@ class Contact
      * @var ArrayCollection of ApplicationUser association entre un contact et les utilisateurs correspondants (Relation unidirectionnelle)
      * Il se peut qu'une personne physique (représentée par un Contact) aient plusieurs comptes, d'où l'association ManyToMany
      *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User\ApplicationUser" )
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\User\ApplicationUser", cascade={"persist"})
      * @ORM\JoinTable(name="user_contacts_linked")
      */
     private $linkeds;
@@ -99,7 +101,7 @@ class Contact
 
     /**
      * @var ArrayCollection of ContactEmail
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User\ContactEmail", mappedBy="contact")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User\ContactEmail", mappedBy="contact", cascade={"persist"})
      */
     private $contactEmails;
 
@@ -324,6 +326,7 @@ class Contact
     public function addContactEmail(ContactEmail $contactEmail)
     {
         $this->contactEmails[] = $contactEmail;
+        $contactEmail->setContact($this);
         return $this;
     }
 

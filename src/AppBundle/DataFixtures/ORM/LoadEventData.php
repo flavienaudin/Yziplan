@@ -13,13 +13,10 @@ use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
-use AppBundle\Entity\Module\ExpenseElement;
-use AppBundle\Entity\Module\ExpenseModule;
 use AppBundle\Entity\Module\PollElement;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalElement;
-use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Manager\GenerateursToken;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
@@ -29,11 +26,12 @@ use AppBundle\Utils\enum\PollElementType;
 use AppBundle\Utils\enum\PollModuleSortingType;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadEventData implements FixtureInterface, ContainerAwareInterface
+class LoadEventData implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
 
     /**
@@ -57,36 +55,10 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $userManager = $this->container->get('at.manager.user');
         $tokenManager = $this->container->get('at.service.gentoken');
 
-        /** @var $userprincipal AccountUser */
-        $userprincipal = $userManager->createUser();
-        $userprincipal->setUsername("user1@at.fr");
-        $userprincipal->setEmail('user1@at.fr');
-        $userprincipal->setPlainPassword('user1');
-        $userprincipal->setPasswordKnown(true);
-        $userprincipal->setEnabled(true);
-        $userprincipalAppEmail = new AppUserEmail();
-        $userprincipalAppEmail->setEmail("user1@at.fr");
-        $userprincipalAppEmail->setUseToReceiveEmail(true);
-        $userprincipal->getApplicationUser()->addAppUserEmail($userprincipalAppEmail);
-        $userprincipal->getApplicationUser()->getAppUserInformation()->setPublicName("User One");
-        // Update the user for password
-        $userManager->updateUser($userprincipal, true);
-
-
-        /** @var $userInvite AccountUser */
-        $userInvite = $userManager->createUser();
-        $userInvite->setUsername('user2@at.fr');
-        $userInvite->setEmail('user2@at.fr');
-        $userInvite->setPlainPassword('user2');
-        $userInvite->setPasswordKnown(true);
-        $userInvite->setEnabled(true);
-        $userInviteAppEmail = new AppUserEmail();
-        $userInviteAppEmail->setEmail("user2@at.fr");
-        $userInviteAppEmail->setUseToReceiveEmail(true);
-        $userInvite->getApplicationUser()->addAppUserEmail($userInviteAppEmail);
-        $userInvite->getApplicationUser()->getAppUserInformation()->setPublicName("User two");
-        // Update the user for password
-        $userManager->updateUser($userInvite, true);
+        /** @var AccountUser $userprincipal */
+        $userprincipal = $userManager->findUserByEmail(LoadUsers::USER_ONE_EMAIL);
+        /** @var AccountUser $userInvite */
+        $userInvite = $userManager->findUserByEmail(LoadUsers::USER_TWO_EMAIL);
 
         //Event
         $event1 = new Event();
@@ -164,7 +136,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $expenseModuleInvitation2->isCreator();
         $eventInvitationRaymond->addModuleInvitation($expenseModuleInvitation2);
         */
-
 
         // Module Poll
         $modulePoll = new Module();
@@ -287,5 +258,12 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
 
         $manager->persist($event2);
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        // the order in which fixtures will be loaded
+        // the lower the number, the sooner that this fixture is loaded
+        return 2;
     }
 }
