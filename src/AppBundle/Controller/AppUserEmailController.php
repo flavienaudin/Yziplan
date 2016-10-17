@@ -11,7 +11,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\AppEvents;
 use AppBundle\Entity\User\AppUserEmail;
-use AppBundle\Form\AppUserEmailType;
+use AppBundle\Form\User\AppUserEmailType;
 use AppBundle\Manager\ApplicationUserManager;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\FormUtils;

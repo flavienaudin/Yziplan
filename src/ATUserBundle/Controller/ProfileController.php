@@ -9,7 +9,7 @@
 namespace ATUserBundle\Controller;
 
 use AppBundle\Entity\User\AppUserEmail;
-use AppBundle\Form\AppUserEmailType;
+use AppBundle\Form\User\AppUserEmailType;
 use AppBundle\Manager\AppUserInformationManager;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\FormUtils;

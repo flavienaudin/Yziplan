@@ -6,7 +6,7 @@
  * Time: 16:31
  */
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Event;
 
 
 use AppBundle\Entity\Event\EventInvitation;

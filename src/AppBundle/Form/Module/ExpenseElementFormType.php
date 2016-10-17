@@ -6,7 +6,7 @@
  * Time: 12:12
  */
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Module;
 
 
 use AppBundle\Entity\Module\ExpenseElement;

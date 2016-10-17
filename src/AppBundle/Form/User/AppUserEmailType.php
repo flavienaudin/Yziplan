@@ -6,8 +6,7 @@
  * Time: 14:58
  */
 
-namespace AppBundle\Form;
-
+namespace AppBundle\Form\User;
 
 use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Utils\enum\ContactInfoType;

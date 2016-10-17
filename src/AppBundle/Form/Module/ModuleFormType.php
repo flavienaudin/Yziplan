@@ -6,7 +6,7 @@
  * Time: 15:20
  */
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Module;
 
 
 use AppBundle\Entity\Event\Module;

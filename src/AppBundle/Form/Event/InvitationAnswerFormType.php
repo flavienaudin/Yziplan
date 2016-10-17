@@ -6,7 +6,7 @@
  * Time: 15:21
  */
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Event;
 
 
 use AppBundle\Utils\enum\EventInvitationAnswer;

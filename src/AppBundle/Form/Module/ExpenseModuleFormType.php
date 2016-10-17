@@ -6,7 +6,7 @@
  * Time: 14:50
  */
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Module;
 
 use AppBundle\Entity\Module\ExpenseModule;
 use Symfony\Component\Form\AbstractType;

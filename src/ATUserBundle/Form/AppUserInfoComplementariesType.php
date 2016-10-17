@@ -9,10 +9,9 @@
 namespace ATUserBundle\Form;
 
 
+use AppBundle\Form\Type\MaritalStatusType;
 use AppBundle\Entity\User\AppUserInformation;
-use AppBundle\Utils\enum\MaritalStatus;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,13 +21,8 @@ class AppUserInfoComplementariesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("maritalStatus", ChoiceType::class, array(
-                "required" => false,
-                "choices" => array(
-                    MaritalStatus::SINGLE => MaritalStatus::SINGLE,
-                    MaritalStatus::COUPLE => MaritalStatus::COUPLE,
-                    MaritalStatus::MARRIED => MaritalStatus::MARRIED
-                )
+            ->add("maritalStatus", MaritalStatusType::class, array(
+                "required" => false
             ))
             ->add("biography", TextareaType::class, array(
                 "required" => false

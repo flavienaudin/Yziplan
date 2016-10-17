@@ -6,7 +6,7 @@
  * Time: 18:05
  */
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Event;
 
 use AppBundle\Entity\Event\Event;
 use Symfony\Component\Form\AbstractType;

@@ -10,11 +10,11 @@ namespace ATUserBundle\Form;
 
 
 use AppBundle\Entity\User\AppUserInformation;
-use AppBundle\Utils\enum\Gender;
+use AppBundle\Form\Type\GenderType;
+use AppBundle\Form\Type\LegalStatusType;
 use AppBundle\Utils\enum\LegalStatus;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -28,17 +28,13 @@ class AppUserInfoPersonalType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('legalStatus', ChoiceType::class, array(
-                'required' => false,
-                'choices' => array(
-                    LegalStatus::INDIVIDUAL => LegalStatus::INDIVIDUAL,
-                    LegalStatus::ORGANISATION => LegalStatus::ORGANISATION,
-                )
+            ->add('legalStatus', LegalStatusType::class, array(
+                'required' => false
             ))
             ->add('publicName', TextType::class, array(
                 'required' => true,
                 'constraints' => array(
-                    new NotBlank(), new Length(array('min'=> 2))
+                    new NotBlank(), new Length(array('min' => 2))
                 )
             ))
             ->add('firstName', TextType::class, array(
@@ -47,15 +43,10 @@ class AppUserInfoPersonalType extends AbstractType
             ->add('lastName', TextType::class, array(
                 'required' => false,
             ))
-            ->add('gender', ChoiceType::class, array(
-                'required' => false,
-                'choices' => array(
-                    Gender::MALE => Gender::MALE,
-                    Gender::FEMALE => Gender::FEMALE,
-                    Gender::OTHER => Gender::OTHER
-                )
+            ->add('gender', GenderType::class, array(
+                'required' => false
             ))
-            ->add('birthday', DateType::class, array(
+            ->add('birthday', BirthdayType::class, array(
                 'required' => false,
                 'html5' => false,
                 'widget' => 'single_text',

@@ -6,11 +6,11 @@
  * Time: 10:15
  */
 
-namespace AppBundle\Form;
+namespace AppBundle\Form\Module;
 
-use AppBundle\Utils\enum\PollElementType;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalElement;
+use AppBundle\Utils\enum\PollElementType;
 use Burgov\Bundle\KeyValueFormBundle\Form\Type\KeyValueType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -35,7 +35,7 @@ class PollProposalFormType extends AbstractType
                 'delete_empty' => true,
                 'prototype_name' => '__str_ppe__',
                 'attr' => array(
-                    'data-type'=> 'string'
+                    'data-type' => 'string'
                 )
             ))
             ->add("intPPElts", KeyValueType::class, array(
@@ -46,7 +46,7 @@ class PollProposalFormType extends AbstractType
                 'delete_empty' => true,
                 'prototype_name' => '__int_ppe__',
                 'attr' => array(
-                    'data-type'=> 'integer'
+                    'data-type' => 'integer'
                 )
             ))
             ->add("datetimePPElts", KeyValueType::class, array(
@@ -57,7 +57,7 @@ class PollProposalFormType extends AbstractType
                 'delete_empty' => true,
                 'prototype_name' => '__datetime_ppe__',
                 'attr' => array(
-                    'data-type'=> 'datetime'
+                    'data-type' => 'datetime'
                 ),
                 'value_options' => array(
                     'html5' => false,
@@ -74,12 +74,12 @@ class PollProposalFormType extends AbstractType
                 $intPPE = array();
                 $datetimePPE = array();
                 /** @var PollProposalElement $ppElt */
-                foreach($pollProposal->getPollProposalElements() as $ppElt){
-                    if($ppElt->getType() == PollElementType::STRING){
+                foreach ($pollProposal->getPollProposalElements() as $ppElt) {
+                    if ($ppElt->getType() == PollElementType::STRING) {
                         $strPPE[$ppElt->getName()] = $ppElt->getValString();
-                    }elseif($ppElt->getType() == PollElementType::INTEGER){
+                    } elseif ($ppElt->getType() == PollElementType::INTEGER) {
                         $intPPE[$ppElt->getName()] = $ppElt->getValInteger();
-                    }elseif($ppElt->getType() == PollElementType::DATE_TIME){
+                    } elseif ($ppElt->getType() == PollElementType::DATE_TIME) {
                         $datetimePPE[$ppElt->getName()] = $ppElt->getValDatetime();
                     }
                 }

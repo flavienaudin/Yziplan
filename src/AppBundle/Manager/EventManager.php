@@ -11,7 +11,8 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
-use AppBundle\Form\EventFormType;
+
+use AppBundle\Form\Event\EventFormType;
 use AppBundle\Form\InvitationsFormType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
