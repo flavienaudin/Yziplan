@@ -118,6 +118,7 @@
                                 <div class="fg-line">
                                     {{ form_widget(form_app_user_info_personals.publicName, {'attr':{'placeholder':"profile.show.profile_information.personal_information.publicname.placeholder"|trans}}) }}
                                 </div>
+                                {{ form_errors(form_app_user_info_personals.publicName) }}
                             </dd>
                         </dl>
                         <dl class=" dl-horizontal form-group">
@@ -126,6 +127,7 @@
                                 {{ form_widget(form_app_user_info_personals.legalStatus, {'attr':{
                                     'class':'selectpicker',
                                     'data-none-selected-text':'profile.show.profile_information.personal_information.legalstatus.none_selected_text'|trans,}}) }}
+                                {{ form_errors(form_app_user_info_personals.legalStatus) }}
                             </dd>
                         </dl>
                         <dl class=" dl-horizontal form-group">
@@ -134,6 +136,7 @@
                                 <div class="fg-line">
                                     {{ form_widget(form_app_user_info_personals.firstName, {'attr':{'placeholder': "profile.show.profile_information.personal_information.firstname.placeholder"|trans}} ) }}
                                 </div>
+                                {{ form_errors(form_app_user_info_personals.firstName) }}
                             </dd>
                         </dl>
                         <dl class=" dl-horizontal form-group">
@@ -142,6 +145,7 @@
                                 <div class="fg-line">
                                     {{ form_widget(form_app_user_info_personals.lastName, {'attr':{'placeholder': "profile.show.profile_information.personal_information.lastname.placeholder"|trans}} ) }}
                                 </div>
+                                {{ form_errors(form_app_user_info_personals.lastName) }}
                             </dd>
                         </dl>
                         <dl class=" dl-horizontal form-group">
@@ -150,6 +154,7 @@
                                 {{ form_widget(form_app_user_info_personals.gender, {'attr':{
                                     'class':'selectpicker',
                                     'data-none-selected-text':'profile.show.profile_information.personal_information.gender.none_selected_text'|trans}}) }}
+                                {{ form_errors(form_app_user_info_personals.gender) }}
                             </dd>
                         </dl>
                         <dl class=" dl-horizontal form-group">
@@ -158,6 +163,7 @@
                                 <div class="dtp-container dropdown fg-line">
                                     {{ form_widget(form_app_user_info_personals.birthday, {'attr':{'class':'date-picker', 'placeholder':'profile.show.profile_information.personal_information.birthday.placeholder'}}) }}
                                 </div>
+                                {{ form_errors(form_app_user_info_personals.birthday) }}
                             </dd>
                         </dl>
                         <dl class=" dl-horizontal form-group">
@@ -166,6 +172,7 @@
                                 <div class="fg-line">
                                     {{ form_widget(form_app_user_info_personals.nationality, {'attr':{'placeholder':'profile.show.profile_information.personal_information.nationality.placeholder'|trans }}) }}
                                 </div>
+                                {{ form_errors(form_app_user_info_personals.nationality) }}
                             </dd>
                         </dl>
                         <div class=" m-t-10 pull-right">

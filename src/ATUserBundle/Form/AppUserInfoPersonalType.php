@@ -17,8 +17,10 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Intl\Intl;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\LessThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AppUserInfoPersonalType extends AbstractType
 {
@@ -35,6 +37,9 @@ class AppUserInfoPersonalType extends AbstractType
             ))
             ->add('publicName', TextType::class, array(
                 'required' => true,
+                'constraints' => array(
+                    new NotBlank(), new Length(array('min'=> 2))
+                )
             ))
             ->add('firstName', TextType::class, array(
                 'required' => false,
@@ -54,7 +59,10 @@ class AppUserInfoPersonalType extends AbstractType
                 'required' => false,
                 'html5' => false,
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy'
+                'format' => 'dd/MM/yyyy',
+                'constraints' => array(
+                    new LessThan("today")
+                )
             ))
             ->add('nationality', TextType::class, array(
                 'required' => false
