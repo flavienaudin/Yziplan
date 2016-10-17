@@ -40,7 +40,7 @@ class ContactController extends Controller
                     $request->request->get("current", 1), $request->request->get("sort", array()));
                 return new JsonResponse($data, Response::HTTP_OK);
             } else {
-                $data[AppJsonResponse::FORM_ERRORS][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("global.error.unauthorized_access");
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("global.error.unauthorized_access");
                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             }
         } else {

@@ -46,7 +46,7 @@
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile-contacts">
                         {# User -> Contacts|ContactGroups #}
-                        {{ include('@ATUser/Profile/partials/profile_connections.html.twig', {
+                        {{ include('@ATUser/Profile/partials/profile_contacts.html.twig', {
                             'contacts': user.applicationUser.contacts,
                             'contactGroups': user.applicationUser.contactGroups}) }}
                     </div>
