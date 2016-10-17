@@ -17,6 +17,16 @@ use Doctrine\ORM\Query;
 class ContactRepository extends EntityRepository
 {
 
+    /**
+     * TODO : La requête doit être finalisée avec l'aiguille de recherche, l'ordre de tri
+     * Requête de recherche de contacts parmi les contacts enregistrés ($user.contacts) de l'utilisateur ($user), avec les paramètres d'affichage de la table
+     * @param AccountUser $user l'utilisateur conntecté
+     * @param null $search "aiguille" de recherche
+     * @param int $nbResult Nombre de résultats maximum à retourner
+     * @param int $pageIdx La page en cours d'affichage
+     * @param array $sort Les colonnes de la table selon laquelle les résultats doivent être triés
+     * @return array Tableau de contact à afficher selon les paramètres d'entrée
+     */
     public function findUserContacts(AccountUser $user, $search = null, $nbResult = 10, $pageIdx = 1, $sort = array())
     {
         $query = $this->createQueryBuilder('c');

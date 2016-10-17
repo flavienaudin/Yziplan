@@ -18,6 +18,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
+/**
+ * Class ContactController
+ * @package AppBundle\Controller
+ * @Route("/{_locale}/contacts")
+ */
 class ContactController extends Controller
 {
     /**
@@ -27,7 +32,7 @@ class ContactController extends Controller
      * - rowCount : n => nb de résultat par "page", -1 : tous les résultats
      * - sort[fieldname] = [asc|desc] => colonne ayant un tri activé
      * - searchPhrase : [''|string] Entrée du formulaire de recherche dans la table
-     * @Route("/{_locale}/get_contacts", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="getUserContacts", methods={"POST"})
+     * @Route("/get", name="getUserContacts", methods={"POST"})
      */
     public function getUserContactsAction(Request $request)
     {
@@ -50,7 +55,7 @@ class ContactController extends Controller
     }
 
     /**
-     * @Route("/{_locale}/add-contact", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="addContact", methods={"POST"})
+     * @Route("/add", name="addContact", methods={"POST"})
      */
     public function addContactAction(Request $request)
     {
@@ -88,15 +93,14 @@ class ContactController extends Controller
 
 
     /**
-     * @Route("/{_locale}/delete-contact", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="deleteContact", methods={"POST"})
+     * @Route("/delete", name="deleteContact", methods={"POST"})
      */
     public function deleteContactAction(Request $request)
     {
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-        if ($request->request->has("email-contact")) {
-            $emailToDelete = $request->request->get('email-contact');
+        if ($request->request->has("contact-id")) {
             $contactManager = $this->get("at.manager.contact");
-            if ($contactManager->removeContact($this->getUser(), $emailToDelete)) {
+            if ($contactManager->removeContact($this->getUser(), $request->request->get('contact-id'))) {
                 if ($request->isXmlHttpRequest()) {
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("contacts.message.remove_contact.success");
                     return new AppJsonResponse($data, Response::HTTP_OK);
@@ -106,10 +110,10 @@ class ContactController extends Controller
                 }
             } else {
                 if ($request->isXmlHttpRequest()) {
-                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get("translator")->trans("contacts.message.remove_contact.error");
-                    return new AppJsonResponse($data, Response::HTTP_OK);
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("contacts.message.remove_contact.error");
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else {
-                    $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get("translator.default")->trans("contacts.message.remove_contact.error"));
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator.default")->trans("contacts.message.remove_contact.error"));
                     return $this->redirectToRoute('fos_user_profile_show');
                 }
             }

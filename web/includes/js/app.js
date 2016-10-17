@@ -195,7 +195,7 @@ function jsPlugginActivation() {
         }
     });
     $('.selectpicker').selectpicker();
-    $('[data-toggle="tooltip"]').tooltip();
+    $('.toggle-tooltip, [data-toggle="tooltip"]').tooltip();
 }
 
 /**

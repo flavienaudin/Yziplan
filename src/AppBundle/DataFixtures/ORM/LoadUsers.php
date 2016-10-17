@@ -13,8 +13,10 @@ use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Entity\User\Contact;
 use AppBundle\Entity\User\ContactEmail;
 use AppBundle\Entity\User\ContactGroup;
+use AppBundle\Utils\enum\AppUserStatus;
 use AppBundle\Utils\enum\ContactInfoType;
 use AppBundle\Utils\enum\ContactStatus;
+use AppBundle\Utils\enum\LegalStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -58,6 +60,7 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFix
         $userOneAppEmail->setUseToReceiveEmail(true);
         $userOne->getApplicationUser()->addAppUserEmail($userOneAppEmail);
         $userOne->getApplicationUser()->getAppUserInformation()->setPublicName("User One");
+        $userOne->getApplicationUser()->getAppUserInformation()->setLegalStatus(LegalStatus::INDIVIDUAL);
         // Update the user for password
         $userManager->updateUser($userOne, true);
 
@@ -73,6 +76,7 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface, OrderedFix
         $userTwoAppEmail->setUseToReceiveEmail(true);
         $userTwo->getApplicationUser()->addAppUserEmail($userTwoAppEmail);
         $userTwo->getApplicationUser()->getAppUserInformation()->setPublicName("User two");
+        $userTwo->getApplicationUser()->getAppUserInformation()->setLegalStatus(LegalStatus::INDIVIDUAL);
         // Update the user for password
         $userManager->updateUser($userTwo, true);
 
