@@ -25,6 +25,9 @@ class ContactManager
     /** @var UserManager */
     private $userManager;
 
+    /** @var Contact $contact */
+    private $contact;
+
     /**
      * ContactManager constructor.
      *
@@ -37,20 +40,34 @@ class ContactManager
         $this->userManager = $userManager;
     }
 
+    /**
+     * @return Contact
+     */
+    public function getContact()
+    {
+        return $this->contact;
+    }
 
     /**
-     * Recherche la liste d'emails des utilisateurs ayant déjà été invité par l'utilisateur connecté.
-     * @param AccountUser $appUser l'utilisateur connecté
-     * @return array|null
+     * @param Contact $contact
+     * @return ContactManager
      */
-    public function getUserContactEmailsForAutocomplete(AccountUser $appUser)
+    public function setContact($contact)
     {
-        $emails = array();
-        /** @var ApplicationUser $appUser */
-        foreach ($appUser->getApplicationUser()->getContactsListAsUser() as $appUser) {
-            $emails[] = $appUser->getAppUserEmails();
-        }
-        return $emails;
+        $this->contact = $contact;
+        return $this;
+    }
+
+    /**
+     * Retrieve a Contact by its ID
+     * @param $contactId int Id of the contact to retrieve
+     * @return Contact|null
+     */
+    public function retrieveContact($contactId)
+    {
+        $this->contact = $this->entityManager->getRepository(Contact::class)->find($contactId);
+        return $this->contact;
+
     }
 
     /**
@@ -72,18 +89,19 @@ class ContactManager
         /** @var Contact $contact */
         foreach ($contactsList as $contact) {
             //$linked = $contact->getLinked();
-            $linkedAsArray = array();
-            $linkedAsArray['name'] = $contact->getFirstName() . ' ' . $contact->getLastName();
-            $linkedAsArray['avatar'] = null; // TODO
+            $contactsAsArray = array();
+            $contactsAsArray['id'] = $contact->getId();
+            $contactsAsArray['name'] = $contact->getFirstName() . ' ' . $contact->getLastName();
+            $contactsAsArray['avatar'] = null; // TODO
             /** @var ContactEmail $contactEmail */
             foreach ($contact->getContactEmails() as $contactEmail) {
-                $linkedAsArray['email'][] = $contactEmail->getEmail();
+                $contactsAsArray['emails'][] = $contactEmail->getEmail();
             }
             /** @var ContactGroup $group */
             foreach ($contact->getGroups() as $group) {
-                $linkedAsArray['groups'][] = $group->getName();
+                $contactsAsArray['groups'][] = $group->getName();
             }
-            $result['rows'][] = $linkedAsArray;
+            $result['rows'][] = $contactsAsArray;
         }
         $result['total'] = (int)$contactRepo->countUserContacts($user, $search);
         return $result;
@@ -148,26 +166,25 @@ class ContactManager
     }
 
     /**
-     * Supprime un utilisateur des contacts d'un autre utilisateur : passe à l'état ETAT_SUPPRIME
-     * @param AccountUser $owner L'utilisateur à qui supprimer le contact
-     * @param string $email Email de l'User à supprimer des contacts
+     * Supprime un Contact à l'utilisateur connecté : passe à l'état ContactStatus::DELETED
+     * @param AccountUser $userConnected L'utilisateur connecté à qui supprimer le contact
+     * @param int $contactId Id du contact à supprimer
      * @return bool true si l'opréation a réussi, false sinon
      */
-    public function removeContact(AccountUser $owner, $email)
+    public function removeContact(AccountUser $userConnected, $contactId)
     {
-        $userLinked = $this->userManager->findUserByEmail($email);
-        if ($userLinked != null) {
-            $contactRepository = $this->entityManager->getRepository("ATUserBundle:Contact");
-            /** @var Contact $existingContact */
-            $existingContact = $contactRepository->findOneBy(array('owner' => $owner, 'linked' => $userLinked));
-            if ($existingContact != null && $existingContact->getStatus() != Contact::STATUS_DELETED) {
-                $existingContact->setStatus(Contact::STATUS_DELETED);
-                $this->entityManager->persist($existingContact);
+        $this->retrieveContact($contactId);
+        if ($this->contact != null && $this->contact->getOwner() == $userConnected->getApplicationUser()) {
+            if ($this->contact->getStatus() != ContactStatus::DELETED) {
+                $this->contact->setStatus(ContactStatus::DELETED);
+                foreach($this->contact->getGroups() as $group){
+                    $this->contact->removeGroup($group);
+                }
+                $this->entityManager->persist($this->contact);
                 $this->entityManager->flush();
                 return true;
             }
         }
         return false;
     }
-
 }

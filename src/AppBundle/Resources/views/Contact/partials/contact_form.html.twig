@@ -1,0 +1,90 @@
+{# données d'entrée :
+- modalIdPrefix (string) Le prefixe à ajouter avant les identifiants liés à la modal
+- contact (Contact|null) The Conctact to edit OR null if adding a new one
+- form_contact (Form) The form
+#}
+
+<div id="{{ modalIdPrefix }}_formcontainer">
+    {% if contact is null %} {# Add Contact #}
+        {{ form_start(form_contact, {'action': path('addContact'), 'method': 'post', 'attr': {'id':'addContactForm', 'novalidate':'novalidate'}}) }}
+    {% else %} {# Edit Contact #}
+        {{ form_start(form_contact, {'action': "#", 'method': 'post', 'attr': {'id':'editContactForm'}}) }}
+        {# path('editContact', {'id':contact.id}) #}
+    {% endif %}
+    {{ form_row(form_contact.firstName, {
+        'label':'contacts.contact_modal.form.firstname.label',
+        'label_attr':{'class':'sr-only'},
+        'attr':{'placeholder':'contacts.contact_modal.form.firstname.placeholder'},
+        'fgline':true
+    }) }}
+    {{ form_row(form_contact.lastName, {
+        'label':'contacts.contact_modal.form.lastname.label',
+        'label_attr':{'class':'sr-only'},
+        'attr':{'placeholder':'contacts.contact_modal.form.lastname.placeholder'},
+        'fgline':true
+    }) }}
+    {{ form_row(form_contact.gender, {
+        'label':'contacts.contact_modal.form.gender.label',
+        'label_attr':{'class':'sr-only'},
+        'attr': {
+            'class':'selectpicker',
+            'data-none-selected-text':'contacts.contact_modal.form.gender.none-selected-text'|trans
+        }
+    }) }}
+    {{ form_row(form_contact.birthday, {
+        'label':'contacts.contact_modal.form.birthday.label',
+        'label_attr':{'class':'sr-only'},
+        'attr':{'placeholder':'contacts.contact_modal.form.birthday.placeholder'},
+        'fgline':true
+    }) }}
+    {{ form_row(form_contact.nationality, {
+        'label':'contacts.contact_modal.form.nationality.label',
+        'label_attr':{'class':'sr-only'},
+        'attr':{'placeholder':'contacts.contact_modal.form.nationality.placeholder'},
+        'fgline':true
+    }) }}
+
+    {{ form_rest(form_contact) }}
+
+    <div class="p-t-15 p-b-15 text-right">
+        {% if contact is not null %}
+            <a id="deleteContact_{{ contact.id }}" href="{{ path('deleteContact') }}" data-contact-id="{{ contact.id }}" class="text-danger">{{ "global.button.delete"|trans }}</a>
+            <script>
+                $('#deleteContact_{{ contact.id }}').on('click', function (e) {
+                    e.preventDefault();
+                    var link = $(this);
+                    swal({
+                        title: '{{ "profile.show.appuseremail.modal.delete.swal_title"|trans }}',
+                        text: '{{ "profile.show.appuseremail.modal.delete.swal_text"|trans }}',
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: '{{ "global.button.delete"|trans }}',
+                        closeOnConfirm: true,
+                        showLoaderOnConfirm: true
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            var data = {'contact-id': link.data('contact-id')};
+                            ajaxRequest(link, data, e, function (responseJSON, textStatus, jqXHR) {
+                                $('#contactsTable').bootgrid('reload');
+                                $('#{{ modalIdPrefix }}_modal').modal('toggle');
+                            }, null, null);
+                        }
+                    });
+                });
+            </script>
+        {% endif %}
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+        <button type="submit" class="btn btn-primary">{{ "global.button.save"|trans }}</button>
+    </div>
+    {{ form_end(form_contact) }}
+    <script>
+        $('form#addContactForm').on('submit', function (e) {
+            var $form = $(this);
+            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                $('#addContact_modal').modal('toggle');
+                $('#contactsTable').bootgrid('reload');
+            }, null, null);
+        });
+    </script>
+</div>

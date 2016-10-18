@@ -233,12 +233,9 @@ function getAnchor(url) {
 /** Ajax Request **/
 /*----------------*/
 // TODO remove for PROD
-// Attention au cas où une alerte de confirmation est demandé au préalable (e.preventDefault déclencé avant l'appel à la function)
-var disabledAjax = false;
+// Attention au cas où une alerte de confirmation doit être affichée : e.preventDefault() doit être appelé avant l'appel à la fonction de requête Ajax
+
 function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCallback) {
-    if (disabledAjax) {
-        return true;
-    }
     if (event != null) {
         event.preventDefault();
     }
@@ -282,15 +279,13 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
 }
 
 function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallback) {
-    if (disabledAjax) {
-        return true;
-    }
     if (event != null) {
         event.preventDefault();
     }
     var preloader = $('.at-global-preloader');
     $(preloader).show();
 
+    // On prévient de la double soumission d'un formulaire
     $(form).find('[type=submit]').each(function () {
         $(this).on('click', function (e) {
             e.preventDefault();
@@ -302,6 +297,7 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         }
     });
 
+    // TODO Pour retro-compatibilité : la bonne pratique est de ré-afficher tout le formulaire lui même contenant les erreurs de validation
     $('.has-error').each(function () {
         $(this).find("small.help-block").remove();
         $(this).removeClass("has-error");
@@ -319,9 +315,13 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
             doneCallback(responseJSON, textStatus, jqXHR);
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        var responseJSON = jqXHR.responseJSON;
-        if (responseJSON != undefined && responseJSON.formErrors) {
-            var formErrors = responseJSON.formErrors;
+        var responseJSON = jqXHR['responseJSON'];
+        if (responseJSON.hasOwnProperty('htmlContents')) {
+            treatHtmlContents(responseJSON['htmlContents']);
+        }
+        // TODO Pour retro-compatibilité : la bonne pratique est de ré-afficher tout le formulaire lui même contenant les erreurs de validation
+        if (responseJSON != undefined && responseJSON.hasOwnProperty('formErrors')) {
+            var formErrors = responseJSON['formErrors'];
             for (var fieldErrorName in formErrors) {
                 if (formErrors.hasOwnProperty(fieldErrorName)) {
                     var inputField = $('input[name*=' + escapeSelectorCharacters(fieldErrorName) + ']');

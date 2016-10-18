@@ -12,8 +12,8 @@
                         {{ "contacts.table.avatar.column_title"|trans }}
                     </th>
                     <th data-column-id="name" data-formatter="name" data-order="asc">{{ "contacts.table.contact"|trans }}</th>
-                    <th data-column-id="email" data-identifier="true">{{ "contacts.table.email"|trans }}</th>
-                    <th data-column-id="groups" data-sortable="false">{{ "contacts.table.groups"|trans }}</th>
+                    <th data-column-id="emails" data-formatter="emails" data-identifier="true">{{ "contacts.table.emails"|trans }}</th>
+                    <th data-column-id="groups" data-formatter="groups" data-sortable="false">{{ "contacts.table.groups"|trans }}</th>
                     <th data-column-id="commands" data-formatter="commands" data-sortable="false" data-visible-in-selection="false">{{ "contacts.table.commnads"|trans }}</th>
                 </tr>
                 </thead>
@@ -58,24 +58,60 @@
                 "name": function (column, row) {
                     return "<a href=\"#\" class=\"client-link\" title=\"{{ "contacts.table.avatar.title_attr"|trans }}\">" + row.name + "</a>";
                 },
+                "emails": function (column, row) {
+                    var emails = "";
+                    for (var email in row.emails) {
+                        if (row.emails.hasOwnProperty(email)) {
+                            if (emails != "") {
+                                emails += ", ";
+                            }
+                            emails += row.emails[email];
+                        }
+                    }
+                    if (emails.trim() === "") {
+                        emails = "-";
+                    }
+                    return emails;
+                },
+                "groups": function (column, row) {
+                    var groups = "";
+                    for (var group in row.groups) {
+                        if (row.groups.hasOwnProperty(group)) {
+                            if (groups != "") {
+                                groups += ", ";
+                            }
+                            groups += "<span class='badge'>" + row.groups[group] + "</span>";
+                        }
+                    }
+                    if (groups.trim() === "") {
+                        groups = "-";
+                    }
+                    return groups;
+                },
                 "commands": function (column, row) {
-                    return "<button type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.email + "\"><span class=\"zmdi zmdi-edit\"></span></button>" +
-                            "<a href='#deleteContact{#{{ path('deleteContact') }}#}' class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.email + "\">" +
+                    return "<button type=\"button\" class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi zmdi-edit\"></span></button>" +
+                            "<a href='{{ path('deleteContact') }}' class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\">" +
                             "<span class=\"zmdi zmdi-delete\"></span></a>";
                 }
             },
             labels: {
-                'search' : '{{ "contacts.table.label.search_contact"|trans }}',
-                'refresh' : '{{ "contacts.table.label.refresh"|trans }}',
+                'search': '{{ "contacts.table.label.search_contact"|trans }}',
+                'refresh': '{{ "contacts.table.label.refresh"|trans }}',
                 'noResults': '{{ "contacts.text.empty_contact_list"|trans }}'
             }
         }).on("loaded.rs.jquery.bootgrid", function () {
             /* Executes after data is loaded and rendered */
-            contactsBootgrid.find(".command-edit").on("click", function (e) {
+            contactsBootgrid
+                    .find(".command-edit").on("click", function (e) {
                 var email = $(this).data("row-id");
-            }).end().find(".command-delete").on("click", function (e) {
+
+
+
+
+            }).end()
+                    .find(".command-delete").on("click", function (e) {
                 var link = $(this);
-                var email = $(this).data("row-id");
+                var contactId = $(this).data("row-id");
                 e.preventDefault();
                 swal({
                     title: '{{ "contacts.alert.remove_contact_confirmation_title"|trans }}',
@@ -88,22 +124,13 @@
                     showLoaderOnConfirm: true
                 }, function (isConfirm) {
                     if (isConfirm) {
-                        ajaxRequest(link, {"email-contact": email}, e, function (responseJSON, textStatus, jqXHR) {
+                        ajaxRequest(link, {"contact-id": contactId}, e, function (responseJSON, textStatus, jqXHR) {
                             contactsBootgrid.bootgrid('reload');
                         }, null, null);
                     }
                 });
-            });
+            }).end();
         });
-
-        $('form#addContact-form').on('submit', function (e) {
-            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                var control = $emailsSelectize[0].selectize;
-                control.clear();
-                control.clearOptions();
-            }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-                contactsBootgrid.bootgrid('reload');
-            });
-        });
+;
     });
 </script>

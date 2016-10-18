@@ -201,10 +201,27 @@ contacts:
     import_contact:
       text: Import
       tooltip: Importer des contacts
-  add_form:
-    label: Rechercher un contact
-    placeholder: Ajouter les e-mails ici
-    submit: Ajouter
+  contact_modal:
+    title:
+      add: Ajouter un contact
+      edit: Modifier le contact
+    form:
+      firstname:
+        label: Prénom
+        placeholder: Prénom
+      lastname:
+        label: Nom
+        placeholder: Nom
+      gender:
+        label: Sexe
+        none-selected-text: Sexe
+      birthday:
+        label: Anniversaire
+        placeholder: Anniversaire
+      nationality:
+        label: Nationalité
+        placeholder: Nationalité
+
   table:
     label:
       search_contact: Rechercher un contact
@@ -213,7 +230,7 @@ contacts:
       column_title: Avatar
       title_attr: Fiche personnelle
     contact: Contact
-    email: E-mail
+    emails: E-mail
     groups: Groupes
     commnads: Actions
     delete: Supprimer
@@ -225,9 +242,12 @@ contacts:
     remove_contact_confirmation_title: Etes-vous sûr de vouloir supprimer ce contact ?
     remove_contact_confirmation_text: Cette action est irréversible
   message:
-    add_contacts:
-      success: Les contacts ont été ajoutés avec succès.
-      error: Certains contacts n'ont pas pu être ajoutés.
+    add_contact:
+      success: Le contact a été créé avec succès.
+      error: Le contact n'a pas pu être créé.
+    edit_contact:
+      success: Le contact a été modifié avec succès.
+      error: Le contact n'a pas pu être modifié.
     remove_contact:
       success: Le contact a été supprimé avec succès.
       error: Le contact n'a pas pu être supprimé correctement.

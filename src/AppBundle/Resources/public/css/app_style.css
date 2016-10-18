@@ -376,7 +376,9 @@ label.required:after{
 }
 
 .bootstrap-select .btn {
+    /* Désactivé en attendant de trouver une solution spécifique au cas de l'image (avatar)
     white-space: normal;
+    */
 }
 
 .insecable-white-space {

@@ -201,10 +201,27 @@ contacts:
     import_contact:
       text: Import
       tooltip: Import contacts
-  add_form:
-    label: Search contact
-    placeholder: Add email here
-    submit: Add
+  contact_modal:
+    title:
+      add: Add contact
+      edit: Edit contact
+    form:
+      firstname:
+        label: Firstname
+        placeholder: Firstname
+      lastname:
+        label: Lastname
+        placeholder: Lastname
+      gender:
+        label: Gender
+        none-selected-text: Gender
+      birthday:
+        label: Birthday
+        placeholder: Birthday
+      nationality:
+        label: Nationality
+        placeholder: Nationality
+
   table:
     label:
       search_contact: Search a contact
@@ -213,7 +230,7 @@ contacts:
       column_title: Avatar
       title_attr: Personnal record
     contact: Contact
-    email: Email
+    emails: Email
     groups: Groups
     commnads: Actions
     delete: Delete
@@ -225,9 +242,12 @@ contacts:
     remove_contact_confirmation_title: Are you sure you want to delete this contact?
     remove_contact_confirmation_text: This action is irreversible
   message:
-    add_contacts:
-      success: Contacts were all added successfully.
-      error: Some contacts could not be added.
+    add_contact:
+      success: Contact added successfully.
+      error: Contact could not be created.
+    edit_contact:
+      success: Contact has been updated successfully.
+      error: Contact has not been modified.
     remove_contact:
       success: The contact was deleted successfully.
       error: The contact was not successfully deleted.

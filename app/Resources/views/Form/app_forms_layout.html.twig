@@ -1,10 +1,33 @@
 {% use "bootstrap_3_layout.html.twig" %}
 
+{# Désactive la validation HTML5 par les navigateurs (DEV MOD #}
+{%- block form_start -%}
+    {% set attr = attr|merge({'novalidate':'novalidate'}) %}
+    {{- parent() -}}
+{%- endblock form_start -%}
+
 {% block form_widget_simple %}
     {# Désactiver de la touche entrée #}
     {#{% set attr = attr|merge({onkeypress: (attr.onkeypress|default('') ~ ' refuserToucheEntree(event);')|trim}) -%}#}
-    {{ parent() }}
+
+    {% if fgline is defined and fgline -%}
+        <div class="fg-line">
+            {{- parent() -}}
+        </div>
+    {% else %}
+        {{- parent() -}}
+    {% endif %}
 {% endblock %}
+
+{# Ajout d'une tooltip d'aide au niveau du label avec un icone "i"#}
+{% block form_label -%}
+    {% spaceless %}
+        {{- parent() -}}
+        {% if help is defined %}
+            <span class="m-l-5 zmdi zmdi-info" data-toggle="tooltip" data-placement="{{ data_placement|default('top') }}" title="{{ help }}"></span>
+        {% endif %}
+    {% endspaceless %}
+{%- endblock form_label %}
 
 {# Re-définition des input de date #}
 {% block datetime_widget -%}
@@ -19,25 +42,19 @@
     {%- endif %}
 {%- endblock datetime_widget %}
 
-{% block form_label -%}
-    {% spaceless %}
-        {{- parent() -}}
-        {% if help is defined %}
-            <span class="m-l-5 zmdi zmdi-info" data-toggle="tooltip" data-placement="{{ data_placement|default('top') }}" title="{{ help }}"></span>
-        {% endif %}
-    {% endspaceless %}
-{%- endblock form_label %}
 
 {%- block button_label -%}{%- endblock -%}
 
 {% block date_widget -%}
     {% if widget == 'single_text' %}
-        <div class="input-group date ag-date-picker datepicker">
+        <div class="dtp-container dropdown">
+            <div class="input-group date ag-date-picker datepicker">
             <span class="input-group-addon">
                 <span class="zmdi zmdi-calendar"></span>
             </span>
-            {% set attr = attr|merge({class: (attr.class|default('') ~ ' datepicker')|trim}) -%}
-            {{- block('form_widget_simple') -}}
+                {% set attr = attr|merge({class: (attr.class|default('') ~ ' datepicker')|trim}) -%}
+                {{- block('form_widget_simple') -}}
+            </div>
         </div>
     {% else -%}
         {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
@@ -54,7 +71,6 @@
         {%- endif -%}
     {% endif %}
 {%- endblock date_widget %}
-
 
 {% block time_widget -%}
     {% if widget == 'single_text' %}
@@ -79,14 +95,13 @@
 
 {% block choice_widget_expanded -%}
     {% if '-inline' in label_attr.class|default('') -%}
-        <div>
-            {%- for child in form %}
-                {{- form_widget(child, {
-                    parent_label_class: label_attr.class|default(''),
-                    translation_domain: choice_translation_domain,
-                }) -}}
-            {% endfor -%}
-        </div>
+        {%- for child in form %}
+            {{- form_widget(child, {
+                parent_label_class: label_attr.class|default(''),
+                translation_domain: choice_translation_domain,
+            }) -}}
+        {% endfor -%}
+        <div class="clearfix"></div>
     {% elseif attr.type is defined and attr.type == 'image' %}
         <ul {{ block('widget_container_attributes') }} class="list-inline">
             {% for child in form %}
@@ -248,10 +263,9 @@
         </div>
         <div class="col-md-4">
             <div class="btn-group" role="group">
-                <a href="#" class="btn btn-default collection-add"><i class="zmdi zmdi-plus"></i></a>
-                <a href="#" class="btn btn-default collection-remove"><i class="zmdi zmdi-delete"></i></a>
-                <a href="#" class="btn btn-default collection-up"><i class="zmdi zmdi-triangle-up"></i></a>
-                <a href="#" class="btn btn-default collection-down"><i class="zmdi zmdi-triangle-down"></i></a>
+                <a href="#" class="btn btn-default collection-add"><i class="zmdi zmdi-plus"></i></a> <a href="#" class="btn btn-default collection-remove"><i class="zmdi zmdi-delete"></i></a> <a
+                        href="#" class="btn btn-default collection-up"><i class="zmdi zmdi-triangle-up"></i></a> <a href="#" class="btn btn-default collection-down"><i
+                            class="zmdi zmdi-triangle-down"></i></a>
             </div>
         </div>
     </div>

@@ -5,6 +5,7 @@ namespace AppBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Contact
@@ -37,6 +38,7 @@ class Contact
      * @var string
      *
      * @ORM\Column(name="first_name", type="string", length=255, nullable=true)
+     * @Assert\NotBlank()
      */
     private $firstName;
 

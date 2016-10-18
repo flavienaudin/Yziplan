@@ -1,7 +1,6 @@
 {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register')}) }}
 
-
-<div class="input-group m-t-25 m-b-25 fg-float">
+<div class="input-group m-t-25 m-b-25 fg-float {% if (not form.publicName.vars.compound or form.publicName.vars.force_error|default(false)) and not form.publicName.vars.valid %} has-error{% endif %}">
     <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
     <div class="fg-line">
         {{ form_widget(form.publicName, {"attr":{"class":"input-lg","autocomplete":"off"}}) }}

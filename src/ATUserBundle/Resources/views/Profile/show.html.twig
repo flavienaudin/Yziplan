@@ -6,6 +6,7 @@
 - form_contact_details (Form|null) Le formulaire pour la partie "Coordonnées"
 - form_app_user_info_complementaries (Form|null) Le formulaire pour la partie "A propos de vous"
 - form_appuseremail (Form) Ajout d'un AppUserEmail au compte
+- form_add_contact (Form) Ajout d'un nouveau Contact
 #}
 
 {% block title %}
@@ -47,8 +48,9 @@
                     <div role="tabpanel" class="tab-pane" id="profile-contacts">
                         {# User -> Contacts|ContactGroups #}
                         {{ include('@ATUser/Profile/partials/profile_contacts.html.twig', {
-                            'contacts': user.applicationUser.contacts,
-                            'contactGroups': user.applicationUser.contactGroups}) }}
+                            'contacts':user.applicationUser.contacts,
+                            'contactGroups':user.applicationUser.contactGroups,
+                            'form_add_contact':form_add_contact }) }}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile-preferences">
                         Préférences
@@ -62,7 +64,8 @@
 
 {% block page_modal_container %}
     {{ parent() }}
-    <div id="editAppUserEmail_modalContainer">{# where  modals to add/edit AppUserEmail will be added by Ajax request #}</div>
+    <div id="editAppUserEmail_modalContainer">{# where  modals to edit AppUserEmail will be added by Ajax request #}</div>
+    <div id="editContactModalContainer">{# where  modals to edit Contact will be added by Ajax request #}</div>
 {% endblock page_modal_container %}
 
 {% block stylesheets %}

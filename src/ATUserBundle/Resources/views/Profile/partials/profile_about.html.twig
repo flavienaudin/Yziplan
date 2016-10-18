@@ -121,7 +121,7 @@
                                 {{ form_errors(form_app_user_info_personals.publicName) }}
                             </dd>
                         </dl>
-                        <dl class=" dl-horizontal form-group">
+                        <dl class="dl-horizontal form-group">
                             <dt class="p-t-10">{{ form_label(form_app_user_info_personals.legalStatus, 'profile.show.profile_information.personal_information.legalstatus.label'|trans) }}</dt>
                             <dd>
                                 {{ form_widget(form_app_user_info_personals.legalStatus, {'attr':{
@@ -130,7 +130,7 @@
                                 {{ form_errors(form_app_user_info_personals.legalStatus) }}
                             </dd>
                         </dl>
-                        <dl class=" dl-horizontal form-group">
+                        <dl class="dl-horizontal form-group">
                             <dt class="p-t-10">{{ form_label(form_app_user_info_personals.firstName, "profile.show.profile_information.personal_information.firstname.label") }}</dt>
                             <dd>
                                 <div class="fg-line">
@@ -139,7 +139,7 @@
                                 {{ form_errors(form_app_user_info_personals.firstName) }}
                             </dd>
                         </dl>
-                        <dl class=" dl-horizontal form-group">
+                        <dl class="dl-horizontal form-group">
                             <dt class="p-t-10">{{ form_label(form_app_user_info_personals.lastName, "profile.show.profile_information.personal_information.lastname.label") }}</dt>
                             <dd>
                                 <div class="fg-line">
@@ -148,7 +148,7 @@
                                 {{ form_errors(form_app_user_info_personals.lastName) }}
                             </dd>
                         </dl>
-                        <dl class=" dl-horizontal form-group">
+                        <dl class="dl-horizontal form-group">
                             <dt class="p-t-10">{{ form_label(form_app_user_info_personals.gender, 'profile.show.profile_information.personal_information.gender.label'|trans) }}</dt>
                             <dd>
                                 {{ form_widget(form_app_user_info_personals.gender, {'attr':{
@@ -157,16 +157,17 @@
                                 {{ form_errors(form_app_user_info_personals.gender) }}
                             </dd>
                         </dl>
-                        <dl class=" dl-horizontal form-group">
+                        <dl class="dl-horizontal form-group">
                             <dt class="p-t-10">{{ form_label(form_app_user_info_personals.birthday, 'profile.show.profile_information.personal_information.birthday.title'|trans) }}</dt>
                             <dd>
                                 <div class="dtp-container dropdown fg-line">
-                                    {{ form_widget(form_app_user_info_personals.birthday, {'attr':{'class':'date-picker', 'placeholder':'profile.show.profile_information.personal_information.birthday.placeholder'}}) }}
+                                    {{ form_widget(form_app_user_info_personals.birthday, {'attr':{
+                                        'class':'date-picker', 'placeholder':'profile.show.profile_information.personal_information.birthday.placeholder'}}) }}
                                 </div>
                                 {{ form_errors(form_app_user_info_personals.birthday) }}
                             </dd>
                         </dl>
-                        <dl class=" dl-horizontal form-group">
+                        <dl class="dl-horizontal form-group">
                             <dt class="p-t-10">{{ form_label(form_app_user_info_personals.nationality, 'profile.show.profile_information.personal_information.nationality.label'|trans) }}</dt>
                             <dd>
                                 <div class="fg-line">
@@ -175,7 +176,7 @@
                                 {{ form_errors(form_app_user_info_personals.nationality) }}
                             </dd>
                         </dl>
-                        <div class=" m-t-10 pull-right">
+                        <div class="m-t-10 pull-right">
                             <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
                             <button data-profile-action="reset" data-profile-action-target="#pmbblock_personal_information" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
                         </div>

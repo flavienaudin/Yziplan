@@ -9,7 +9,9 @@
 namespace ATUserBundle\Controller;
 
 use AppBundle\Entity\User\AppUserEmail;
+use AppBundle\Entity\User\Contact;
 use AppBundle\Form\User\AppUserEmailType;
+use AppBundle\Form\User\ContactType;
 use AppBundle\Manager\AppUserInformationManager;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\FormUtils;
@@ -64,12 +66,16 @@ class ProfileController extends BaseController
         /** @var FormInterface $appUserEmailForm */
         $appUserEmailForm = $this->createForm(AppUserEmailType::class, new AppUserEmail());
 
+        /** FORM : Contact Tab */
+        $addContactForm = $this->createForm(ContactType::class, new Contact());
+
         return $this->render('FOSUserBundle:Profile:show.html.twig', array(
             'user' => $user,
             'form_app_user_info_personals' => ($appUserInfoPersonalsForm != null ? $appUserInfoPersonalsForm->createView() : null),
             'form_contact_details' => ($appUserContactDetailsForm != null ? $appUserContactDetailsForm->createView() : null),
             'form_app_user_info_complementaries' => ($appUserInfoComplementariesForm != null ? $appUserInfoComplementariesForm->createView() : null),
-            'form_appuseremail' => $appUserEmailForm->createView()
+            'form_appuseremail' => $appUserEmailForm->createView(),
+            'form_add_contact' => $addContactForm->createView()
         ));
     }
 
@@ -98,7 +104,7 @@ class ProfileController extends BaseController
                 if ($personalInformationForm->isValid()) {
                     $appUserInformationManager->updateAppUserInformation($appUserInformation);
                     // TODO : Gérer le format de la date en fonction de la locale
-                    $data["data"] = array(
+                    $data[AppJsonResponse::DATA] = array(
                         'public-name' => (!empty($appUserInformation->getPublicName()) ? $appUserInformation->getPublicName() : '-'),
                         'legal-status' => ($appUserInformation->getLegalStatus() != null ? $this->get('translator')->trans($appUserInformation->getLegalStatus()) : '-'),
                         'firstname' => (!empty($appUserInformation->getFirstName()) ? $appUserInformation->getFirstName() : '-'),
@@ -107,7 +113,7 @@ class ProfileController extends BaseController
                         'birthday' => ($appUserInformation->getBirthday() != null ? $appUserInformation->getBirthday()->format("d/m/Y") : '-'),
                         'nationality' => (!empty($appUserInformation->getNationality()) ? $appUserInformation->getNationality() : '-')
                     );
-                    return new JsonResponse($data, Response::HTTP_OK);
+                    return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $data[AppJsonResponse::FORM_ERRORS] = array();
                     foreach ($personalInformationForm->getErrors(true) as $error) {
@@ -150,11 +156,11 @@ class ProfileController extends BaseController
             if ($request->isXmlHttpRequest()) {
                 if ($contactDetailsForm->isValid()) {
                     $appUserInformationManager->updateAppUserInformation($appUserInformation);
-                    $data["data"] = array(
+                    $data[AppJsonResponse::DATA] = array(
                         'living-country' => (!empty($appUserInformation->getLivingCountry()) ? Intl::getRegionBundle()->getCountryName($appUserInformation->getLivingCountry()) : '-'),
                         'living-city' => ($appUserInformation->getLivingCity() != null ? $appUserInformation->getLivingCity() : '-')
                     );
-                    return new JsonResponse($data, Response::HTTP_OK);
+                    return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $data["formErrors"] = array();
                     foreach ($contactDetailsForm->getErrors(true) as $error) {
@@ -199,14 +205,14 @@ class ProfileController extends BaseController
             if ($request->isXmlHttpRequest()) {
                 if ($biographyForm->isValid()) {
                     $appUserInformationManager->updateAppUserInformation($appUserInformation);
-                    $data["data"]["marital-status"] = empty($appUserInformation->getBiography()) ? "-" : $this->get("translator")->trans($appUserInformation->getMaritalStatus());
-                    $data["data"]["biography"] = nl2br(empty($appUserInformation->getBiography()) ?
+                    $data[AppJsonResponse::DATA]["marital-status"] = empty($appUserInformation->getBiography()) ? "-" : $this->get("translator")->trans($appUserInformation->getMaritalStatus());
+                    $data[AppJsonResponse::DATA]["biography"] = nl2br(empty($appUserInformation->getBiography()) ?
                         $this->get("translator")->trans("profile.show.profile_information.complementaries.biography.empty") : $appUserInformation->getBiography());
-                    $data["data"]["interets"] = nl2br(empty($appUserInformation->getInterests()) ?
+                    $data[AppJsonResponse::DATA]["interets"] = nl2br(empty($appUserInformation->getInterests()) ?
                         $this->get("translator")->trans("profile.show.profile_information.complementaries.interests.empty") : $appUserInformation->getInterests());
-                    $data["data"]["food-conveniences"] = nl2br(empty($appUserInformation->getFoodConveniences()) ?
+                    $data[AppJsonResponse::DATA]["food-conveniences"] = nl2br(empty($appUserInformation->getFoodConveniences()) ?
                         $this->get("translator")->trans("profile.show.profile_information.complementaries.food_conveniences.empty") : $appUserInformation->getFoodConveniences());
-                    return new JsonResponse($data, Response::HTTP_OK);
+                    return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $data["formErrors"] = array();
                     foreach ($biographyForm->getErrors(true) as $error) {

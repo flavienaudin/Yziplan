@@ -1,7 +1,9 @@
 {# Données d'entrée :
 - contacts (Array of Contact) Tableau des contacts à afficher
 - contactGroups (Array of ContactGroup) Tableau des groupes de contacts créés par l'utilisateur
+- form_add_contact (Form) Formulaire pour l'ajout de nouveau contact
 #}
+{% set addContactPrefix = "addContact" %}
 
 <div class="profile-tab">
     <div class="pm-overview c-overflow">
@@ -25,10 +27,10 @@
         <div class="pmb-block" id="pmbb-contacts">
             <div class="p-header">
                 <ul class="p-menu">
-                    <li><a href="#" class="c-black" data-toggle="tooltip" title="{{ "contacts.menu.add_contact.tooltip"|trans }}">
-                            <i class="zmdi zmdi-account-add"></i> {{ "contacts.menu.add_contact.text"|trans }}</a>
+                    <li><a href="#{{ addContactPrefix }}_modal" data-toggle="modal" class="toggle-tooltip c-black" title="{{ "contacts.menu.add_contact.tooltip"|trans }}"> <i
+                                    class="zmdi zmdi-account-add"></i> {{ "contacts.menu.add_contact.text"|trans }}</a>
                     </li>
-                    <li><a href="#" class="c-black" data-toggle="tooltip" title="{{ "contacts.menu.import_contact.tooltip"|trans }}">
+                    <li><a class="toggle-tooltip c-black" title="{{ "contacts.menu.import_contact.tooltip"|trans }}">
                             {{ "contacts.menu.import_contact.text"|trans }} <i class="zmdi zmdi-forward"></i></a>
                     </li>
                     {#<li class="pm-search">
@@ -53,8 +55,15 @@
                     </li>
                 </ul>#}
             </div>
-
+            {# Affichage dee contacts de l'utilisateur #}
             {{ include('@App/Contact/partials/display_contacts.html.twig', { 'contacts': contacts}) }}
         </div>
     </div> {# End div.pm-body #}
 </div> {# End div.profile-tab #}
+
+{# Ajout de la modal contenant le formulaire d'ajout d'un nouveau contact #}
+{{ include('@App/Contact/partials/modal_contact_form.html.twig', {
+    'modalIdPrefix':addContactPrefix,
+    'contact':null,
+    'form_contact':form_add_contact
+}) }}
