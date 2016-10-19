@@ -67,7 +67,6 @@ class ContactManager
     {
         $this->contact = $this->entityManager->getRepository(Contact::class)->find($contactId);
         return $this->contact;
-
     }
 
     /**
@@ -108,82 +107,59 @@ class ContactManager
     }
 
     /**
-     * Ajoute aux contacts d'un utilisateur un autre utilisateur
-     * @param AccountUser $owner L'utilisateur a qui ajouter le contact
-     * @param int|string $userLinkedId L'identifiant ou EMAIL de l'utilisateur à ajouter
-     * @return array|null [$id => Contact]|Contact
-     * @deprecated
+     * Créer un contact à l'utilisateur
+     * @param Contact $contact
+     * @param AccountUser $user
+     * @return Contact
      */
-    public function addContact(AccountUser $owner, $userLinkedId)
+    public function addContact(Contact $contact, AccountUser $user)
     {
-        return null;
-        if (is_array($userLinkedId)) {
-            $result = array();
-            foreach ($userLinkedId as $id) {
-                array_merge($result, $this->addContact($owner, $id));
-            }
-            return $result;
-        } else {
-            // TODO Revoir la gestion des contacts => ApplicationUser + AppUserEmail
-            if (is_numeric($userLinkedId)) {
-                $userLinked = $this->userManager->findUserBy(array('id' => $userLinkedId));
-            } else {
-                $userLinked = $this->userManager->findUserByEmail($userLinkedId);
-                if (false && $userLinked == null) {
-                    $userLinked = $this->userManager->createUserFromEmail($userLinkedId);
-                }
-            }
+        $this->contact = $contact;
+        $this->contact->setOwner($user->getApplicationUser());
+        $this->contact->setStatus(ContactStatus::VALID);
 
-            if ($userLinked != null && $owner != $userLinked) {
-                $contactRepository = $this->entityManager->getRepository("ATUserBundle:Contact");
-                /** @var Contact $existingContact */
-                $existingContact = $contactRepository->findOneBy(array('owner' => $owner, 'linked' => $userLinked));
-                if ($existingContact != null) {
-                    if ($existingContact->getStatus() != ContactStatus::VALID) {
-                        $existingContact->setStatus(ContactStatus::VALID);
-                        $this->entityManager->persist($existingContact);
-                    } else {
-                        return [$userLinkedId => null];
-                    }
-                } else {
-                    $existingContact = new Contact();
-                    $existingContact->addLinked($userLinked->getApplicationUser());
-                    $existingContact->setStatus(ContactStatus::VALID);
-                    $owner->getApplicationUser()->addContact($existingContact);
-                    $this->entityManager->persist($owner);
+        $this->entityManager->persist($this->contact);
+        $this->entityManager->flush();
+        return $this->contact;
+    }
 
-                    /* TODO Envoi d'email ?
-                    if (!$userLinked->getContactsListAsUser(false)->contains($owner)) {
-                        // Si le contact a déjà l'utilisateur dans ses contacts, pas d'envoi d'email
-                        //$this->emailManager->envoiNotificationAjoutAuxContacts($owner, $userLinked);
-                    }*/
-                }
-                $this->entityManager->flush();
-                return [$userLinkedId => $existingContact];
-            }
-            return [$userLinkedId => null];
+    /**
+     * Update un contact à l'utilisateur
+     * @param Contact $contact
+     * @param AccountUser $user
+     * @return Contact
+     */
+    public function updateContact(Contact $contact, AccountUser $user)
+    {
+        $this->contact = $contact;
+        if($this->contact->getOwner() == null) {
+            $this->contact->setOwner($user->getApplicationUser());
         }
+        $this->contact->setStatus(ContactStatus::VALID);
+        $this->entityManager->persist($contact);
+        $this->entityManager->flush();
+        return $this->contact;
     }
 
     /**
      * Supprime un Contact à l'utilisateur connecté : passe à l'état ContactStatus::DELETED
-     * @param AccountUser $userConnected L'utilisateur connecté à qui supprimer le contact
-     * @param int $contactId Id du contact à supprimer
+     *
+     * @param Contact $contact Optional the contact to remove from its owner
      * @return bool true si l'opréation a réussi, false sinon
      */
-    public function removeContact(AccountUser $userConnected, $contactId)
+    public function removeContact(Contact $contact = null)
     {
-        $this->retrieveContact($contactId);
-        if ($this->contact != null && $this->contact->getOwner() == $userConnected->getApplicationUser()) {
-            if ($this->contact->getStatus() != ContactStatus::DELETED) {
-                $this->contact->setStatus(ContactStatus::DELETED);
-                foreach($this->contact->getGroups() as $group){
-                    $this->contact->removeGroup($group);
-                }
-                $this->entityManager->persist($this->contact);
-                $this->entityManager->flush();
-                return true;
+        if($contact != null){
+            $this->contact = $contact;
+        }
+        if ($this->contact != null && $this->contact->getStatus() != ContactStatus::DELETED) {
+            $this->contact->setStatus(ContactStatus::DELETED);
+            foreach ($this->contact->getGroups() as $group) {
+                $this->contact->removeGroup($group);
             }
+            $this->entityManager->persist($this->contact);
+            $this->entityManager->flush();
+            return true;
         }
         return false;
     }

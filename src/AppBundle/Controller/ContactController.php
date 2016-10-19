@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User\Contact;
 use AppBundle\Entity\User\ContactEmail;
 use AppBundle\Form\User\ContactType;
+use AppBundle\Security\ContactVoter;
 use AppBundle\Utils\enum\ContactStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
@@ -60,31 +61,22 @@ class ContactController extends Controller
     }
 
     /**
-     * @Route("/manage/{id}", name="addContact", methods={"POST"})
-     * @ParamConverter("contact", class="AppBundle:User\Contact", options={"strip_null" : true})
+     * @Route("/add", name="addContact")
      */
-    public function addEditContactAction(Request $request, Contact $contact = null)
+    public function addContactAction(Request $request)
     {
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
         $user = $this->getUser();
         if ($user instanceof AccountUser) {
             $responseStatus = Response::HTTP_OK;
-            $actionKey = 'edit';
-            if ($contact == null) {
-                $contact = new Contact();
-                $actionKey = 'add';
-            }
-            $contactForm = $this->createForm(ContactType::class, $contact);
+            $contactForm = $this->createForm(ContactType::class, new Contact());
             $contactForm->handleRequest($request);
             if ($contactForm->isSubmitted()) {
                 if ($contactForm->isValid()) {
-                    // TODO transfert to manager.contact
-                    $contact->setOwner($user->getApplicationUser());
-                    $contact->setStatus(ContactStatus::VALID);
-                    $this->get('doctrine.orm.entity_manager')->persist($contact);
-                    $this->get('doctrine.orm.entity_manager')->flush();
+                    $contactManager = $this->get("at.manager.contact");
+                    $contact = $contactManager->addContact($contactForm->getData(), $user);
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('contacts.message.add_contact.success');
 
-                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('contacts.message.' . $actionKey . '_contact.success');
                     // Initialize new contactForm
                     $contactForm = $this->createForm(ContactType::class, new Contact());
                     $responseStatus = Response::HTTP_OK;
@@ -93,62 +85,8 @@ class ContactController extends Controller
                 }
             }
             if ($request->isXmlHttpRequest()) {
-                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#' . $actionKey . 'Contact_formcontainer'] =
-                    $this->renderView("@App/Contact/partials/contact_form.html.twig", [
-                        'modalIdPrefix' => $actionKey . 'Contact', 'contact' => (empty($contact->getId()) ? null : $contact), 'form_contact' => $contactForm->createView()
-                    ]);
-                return new AppJsonResponse($data, $responseStatus);
-            } else {
-                // Affichage du formulaire avec ou sans erreur dans une page spécifique
-                // TODO : Not Ajax request not supported yet
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
-                return $this->redirect($this->generateUrl("fos_user_profile_show") . '#profile-contacts');
-            }
-        }
-        if ($request->isXmlHttpRequest()) {
-            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("global.error.unauthorized_access");
-            return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
-        } else {
-            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("global.error.unauthorized_access"));
-            return $this->redirect($this->generateUrl("fos_user_profile_show") . '#profile-contacts');
-        }
-    }
-
-
-    /**
-     * @Route("/add", name="addContact", methods={"POST"})
-     * @deprecated
-     */
-    public function addContactAction(Request $request)
-    {
-        $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-        $user = $this->getUser();
-        if ($user instanceof AccountUser) {
-            $responseStatus = Response::HTTP_OK;
-            $contact = new Contact();
-            $addContactForm = $this->createForm(ContactType::class, $contact);
-            $addContactForm->handleRequest($request);
-            if ($addContactForm->isSubmitted()) {
-                if ($addContactForm->isValid()) {
-                    // TODO transfert to manager.contact
-                    $contact->setOwner($user->getApplicationUser());
-                    $contact->setStatus(ContactStatus::VALID);
-                    $this->get('doctrine.orm.entity_manager')->persist($contact);
-                    $this->get('doctrine.orm.entity_manager')->flush();
-
-                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('contacts.message.add_contact.success');
-                    // Initialize new addContact form
-                    $addContactForm = $this->createForm(ContactType::class, new Contact());
-                    $responseStatus = Response::HTTP_OK;
-                } else {
-                    $responseStatus = Response::HTTP_BAD_REQUEST;
-                }
-            }
-            if ($request->isXmlHttpRequest()) {
                 $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#addContact_formcontainer'] =
-                    $this->renderView("@App/Contact/partials/contact_form.html.twig", [
-                        'modalIdPrefix' => 'addContact', 'contact' => null, 'form_contact' => $addContactForm->createView()
-                    ]);
+                    $this->renderView("@App/Contact/partials/contact_form.html.twig", ['modalIdPrefix' => 'addContact', 'contact' => null, 'form_contact' => $contactForm->createView()]);
                 return new AppJsonResponse($data, $responseStatus);
             } else {
                 // Affichage du formulaire avec ou sans erreur dans une page spécifique
@@ -166,54 +104,47 @@ class ContactController extends Controller
         }
     }
 
+
     /**
-     * @Route("/edit/{id}", name="editContact", methods={"POST"})
-     * @ParamConverter("contact", class="AppBundle:User\Contact")
-     * @deprecated
+     * @Route("/edit/{id}", name="editContact",  defaults={"id" = null})
+     * @ParamConverter("contact", class="AppBundle:User\Contact", options={"strip_null" : true})
      */
-    public function editContactAction(Contact $contact, Request $request)
+    public function editContactAction(Contact $contact = null, $id = null, Request $request)
     {
-        $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-        $user = $this->getUser();
-        $data = array();
-
-        if ($contact != null && $user instanceof AccountUser) {
-            $addContactForm = $this->createForm(ContactType::class, $contact);
-            $addContactForm->handleRequest($request);
-            if ($request->isXmlHttpRequest()) {
-                if ($addContactForm->isSubmitted()) {
-                    if ($addContactForm->isValid()) {
-                        // TODO transfert to manager
-                        $contact->setOwner($user->getApplicationUser());
-                        $contact->setStatus(ContactStatus::VALID);
-                        $this->get('doctrine.orm.entity_manager')->persist($contact);
-                        $this->get('doctrine.orm.entity_manager')->flush();
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('contacts.message.add_contact.success');
-                        return new AppJsonResponse($data, Response::HTTP_OK);
-                    } else {
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#editContact_modal'] =
-                            $this->renderView("@App/Contact/partials/modal_contact_form.html.twig", [
-                                'modalIdPrefix' => 'editContact', 'contact' => $contact, 'form_contact' => $addContactForm->createView()
-                            ]);
-                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                    }
-                }
-
+        $contactManager = $this->get("at.manager.contact");
+        if ($contact == null && $request->request->has('contact-id')) {
+            $contact = $contactManager->retrieveContact($request->request->get('contact-id'));
+        }
+        $this->denyAccessUnlessGranted(ContactVoter::EDIT, $contact);
+        $contactForm = $this->createForm(ContactType::class, $contact);
+        $contactForm->handleRequest($request);
+        $responseStatus = Response::HTTP_OK;
+        if ($contactForm->isSubmitted()) {
+            if ($contactForm->isValid()) {
+                $contact = $contactManager->updateContact($contactForm->getData(), $this->getUser());
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('contacts.message.edit_contact.success');
+                $responseStatus = Response::HTTP_OK;
             } else {
-                // TODO : Not Ajax request not supported yet
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
-                return $this->redirect($this->generateUrl("fos_user_profile_show") . '#profile-contacts');
+                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#editContact_formcontainer'] =
+                    $this->renderView("@App/Contact/partials/contact_form.html.twig", [
+                        'modalIdPrefix' => 'editContact', 'contact' => $contact, 'form_contact' => $contactForm->createView()
+                    ]);
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             }
         }
         if ($request->isXmlHttpRequest()) {
-            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("global.error.unauthorized_access");
-            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#editContact_modalContainer'] =
+                $this->renderView("@App/Contact/partials/modal_contact_form.html.twig", [
+                    'modalIdPrefix' => 'editContact', 'contact' => $contact, 'form_contact' => $contactForm->createView()
+                ]);
+            return new AppJsonResponse($data, $responseStatus);
         } else {
-            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("global.error.unauthorized_access"));
+            // Affichage du formulaire avec ou sans erreur dans une page spécifique
+            // TODO : Not Ajax request not supported yet
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
             return $this->redirect($this->generateUrl("fos_user_profile_show") . '#profile-contacts');
         }
     }
-
 
     /**
      * @Route("/delete", name="deleteContact", methods={"POST"})
@@ -223,7 +154,8 @@ class ContactController extends Controller
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
         if ($request->request->has("contact-id")) {
             $contactManager = $this->get("at.manager.contact");
-            if ($contactManager->removeContact($this->getUser(), $request->request->get('contact-id'))) {
+            $this->denyAccessUnlessGranted(ContactVoter::DELETE, $contactManager->retrieveContact($request->request->get('contact-id')));
+            if ($contactManager->removeContact()) {
                 if ($request->isXmlHttpRequest()) {
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("contacts.message.remove_contact.success");
                     return new AppJsonResponse($data, Response::HTTP_OK);

@@ -163,16 +163,18 @@ class AppUserEmailController extends Controller
                             $this->renderView("@App/AppUserEmail/partials/display_appuseremail.html.twig", ['appuseremail' => $appUserEmail]);
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
-                        $data[AppJsonResponse::FORM_ERRORS] = array();
-                        foreach ($form->getErrors(true) as $error) {
-                            $data[AppJsonResponse::FORM_ERRORS][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                        }
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#editAppUserEmail_formcontainer"] =
+                            $this->renderView('@App/AppUserEmail/partials/appuseremail_form.html.twig', [
+                                    'modalIdPrefix' => 'editAppUserEmail',
+                                    'appuseremail' => $appUserEmail,
+                                    'form_appuseremail' => $form->createView()]
+                            );
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     }
                 }
                 $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]["#editAppUserEmail_modalContainer"] =
                     $this->renderView("@App/AppUserEmail/partials/modal_appuseremail_form.html.twig", [
-                        'modalIdPrefix' => "editAppUSerEmail",
+                        'modalIdPrefix' => "editAppUserEmail",
                         'appuseremail' => $appUserEmail,
                         'form_appuseremail' => $form->createView()
                     ]);

@@ -68,6 +68,12 @@ services:
     tags:
       - { name: security.voter }
 
+  at.voter.contact:
+    class: AppBundle\Security\ContactVoter
+    public: false
+    tags:
+      - { name: security.voter }
+
 # FormTypes
   at.form_type.invitation:
     class: AppBundle\Form\InvitationsFormType

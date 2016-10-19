@@ -8,7 +8,7 @@
     {% if contact is null %} {# Add Contact #}
         {{ form_start(form_contact, {'action': path('addContact'), 'method': 'post', 'attr': {'id': modalIdPrefix~'Form'}}) }}
     {% else %} {# Edit Contact #}
-        {{ form_start(form_contact, {'action': "#", 'method': 'post', 'attr': {'id':modalIdPrefix~'Form'}}) }}
+        {{ form_start(form_contact, {'action': path('editContact', {'id': contact.id}), 'method': 'post', 'attr': {'id': modalIdPrefix~'Form'}}) }}
     {% endif %}
     {{ form_row(form_contact.firstName, {
         'label':'contacts.contact_modal.form.firstname.label',
@@ -78,7 +78,6 @@
     {{ form_end(form_contact) }}
     <script>
         $('form#{{ modalIdPrefix }}Form').on('submit', function (e) {
-            var $form = $(this);
             ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                 $('#{{ modalIdPrefix }}_modal').modal('toggle');
                 $('#contactsTable').bootgrid('reload');

@@ -19,14 +19,14 @@
                     var moduleModalsContainer = $('#editAppUserEmail_modalContainer');
                     $(moduleModalsContainer).empty();
                     ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                        var editModal = $('#editAppUSerEmail_modal');
+                        var editModal = $('#editAppUserEmail_modal');
                         editModal.modal('show');
-                        $('form#editAppUserEmailForm').on('submit', function (e) {
+                        /*$('form#editAppUserEmailForm').on('submit', function (e) {
                             var $form = $(this);
                             ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                                $('#editAppUSerEmail_modal').modal('toggle');
+                                $('#editAppUserEmail_modal').modal('toggle');
                             }, null, null);
-                        });
+                        });*/
                     }, null, null);
                 });
             </script>

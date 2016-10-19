@@ -326,7 +326,7 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
                 if (formErrors.hasOwnProperty(fieldErrorName)) {
                     var inputField = $('input[name*=' + escapeSelectorCharacters(fieldErrorName) + ']');
                     inputField.closest('.form-group, .input-group').addClass("has-error");
-                    inputField.after('<small class="help-block">' + responseJSON.formErrors[fieldErrorName] + '</small>')
+                    inputField.after('<small class="help-block">' + formErrors[fieldErrorName] + '</small>')
                 }
             }
         }
