@@ -33,27 +33,7 @@
                     <li><a class="toggle-tooltip c-black" title="{{ "contacts.menu.import_contact.tooltip"|trans }}">
                             {{ "contacts.menu.import_contact.text"|trans }} <i class="zmdi zmdi-forward"></i></a>
                     </li>
-                    {#<li class="pm-search">
-                        <div class="pms-inner">
-                            <i class="zmdi zmdi-search"></i> <input type="text" placeholder="{{ "contacts.menu.search_contact.placeholder"|trans }}">
-                        </div>
-                    </li>#}
                 </ul>
-
-                {#<ul class="actions m-t-20 hidden-xs">
-                    <li class="dropdown">
-                        <a href="#" data-toggle="dropdown"> <i class="zmdi zmdi-more-vert"></i> </a>
-
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="#">Refresh</a>
-                            </li>
-                            <li>
-                                <a href="#">Settings</a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>#}
             </div>
             {# Affichage dee contacts de l'utilisateur #}
             {{ include('@App/Contact/partials/display_contacts.html.twig', { 'contacts': contacts}) }}

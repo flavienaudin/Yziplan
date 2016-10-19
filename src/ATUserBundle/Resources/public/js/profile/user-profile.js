@@ -30,33 +30,3 @@ $(document).ready(function () {
         });
     }
 });
-
-$('form#userPersonalInformation, form#userContactDetails, form#userComplementaryInformations').on("submit", function (e) {
-    var $form = $(this);
-    ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-        // update form's inputs
-        if (responseJSON.hasOwnProperty('data')) {
-            for (var inputTarget in responseJSON['data']) {
-                if (responseJSON['data'].hasOwnProperty(inputTarget)) {
-                    $('#pmb-view-' + inputTarget).html(responseJSON['data'][inputTarget]);
-                    /** Update information elsewhere in the page */
-                    $('.user-' + inputTarget).each(function () {
-                        $(this).html(responseJSON['data'][inputTarget]);
-                    });
-                }
-            }
-        }
-        // close edition block
-        var t = $form.data('profile-pmb-block-target');
-        $(t).removeClass('toggled');
-    }, null, null);
-});
-
-$('form#addAppUserEmailForm').on('submit', function (e) {
-    var $form = $(this);
-    ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-        $form[0].reset();
-        $form.find('.selectpicker').selectpicker('val', '');
-        $('#addAppUserEmail_modal').modal('toggle');
-    }, null, null);
-});

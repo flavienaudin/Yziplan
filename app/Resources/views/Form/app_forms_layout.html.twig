@@ -19,6 +19,18 @@
     {% endif %}
 {% endblock %}
 
+{% block form_row -%}
+    {% if dlhorizontal is defined and dlhorizontal %}
+        <dl class="dl-horizontal form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+            <dt class="p-t-10">{{- form_label(form) -}}</dt>
+            <dd>
+                {{- form_widget(form) -}}
+                {{- form_errors(form) -}}
+            </dd>
+        </dl>
+    {% else %}{{- parent() -}}{% endif %}
+{%- endblock form_row %}
+
 {# Ajout d'une tooltip d'aide au niveau du label avec un icone "i"#}
 {% block form_label -%}
     {% spaceless %}

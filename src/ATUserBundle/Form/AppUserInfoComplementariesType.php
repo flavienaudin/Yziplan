@@ -9,8 +9,8 @@
 namespace ATUserBundle\Form;
 
 
-use AppBundle\Form\Type\MaritalStatusType;
 use AppBundle\Entity\User\AppUserInformation;
+use AppBundle\Form\Type\MaritalStatusType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;

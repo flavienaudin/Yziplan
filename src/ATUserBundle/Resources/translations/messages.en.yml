@@ -86,6 +86,7 @@ profile:
       tooltip:
         account-email: Main email
         email: Associate email
+        remove: Removed
       modal:
         add:
           title: Associate a new email
@@ -106,6 +107,7 @@ profile:
             help: Receive notifications related to this email in its mailbox instead of the one of your email account.
           validation:
             email_already_used: This email address is already associated to another account
+
     profile_information:
       connexion_information:
         title: Connexion information

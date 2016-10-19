@@ -14,10 +14,8 @@ use AppBundle\Form\User\AppUserEmailType;
 use AppBundle\Form\User\ContactType;
 use AppBundle\Manager\AppUserInformationManager;
 use AppBundle\Utils\enum\FlashBagTypes;
-use AppBundle\Utils\FormUtils;
 use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
-use ATUserBundle\Form\AppUserInfoComplementariesType;
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\FOSUserEvents;
@@ -113,16 +111,17 @@ class ProfileController extends BaseController
                         'birthday' => ($appUserInformation->getBirthday() != null ? $appUserInformation->getBirthday()->format("d/m/Y") : '-'),
                         'nationality' => (!empty($appUserInformation->getNationality()) ? $appUserInformation->getNationality() : '-')
                     );
+                    $personalInformationForm = $appUserInformationManager->createPersonalInformationForm();
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userPersonals_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/personal_information_form.html.twig', ['form_app_user_info_personals' => $personalInformationForm->createView()]);
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $data[AppJsonResponse::FORM_ERRORS] = array();
-                    foreach ($personalInformationForm->getErrors(true) as $error) {
-                        $data[AppJsonResponse::FORM_ERRORS][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                    }
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userPersonals_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/personal_information_form.html.twig', ['form_app_user_info_personals' => $personalInformationForm->createView()]);
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             } else if ($personalInformationForm->isValid()) {
-                $appUserInformationManager->updateUserAbout($appUserInformation);
+                $appUserInformationManager->updateAppUserInformation($appUserInformation);
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");
             } else {
@@ -160,16 +159,17 @@ class ProfileController extends BaseController
                         'living-country' => (!empty($appUserInformation->getLivingCountry()) ? Intl::getRegionBundle()->getCountryName($appUserInformation->getLivingCountry()) : '-'),
                         'living-city' => ($appUserInformation->getLivingCity() != null ? $appUserInformation->getLivingCity() : '-')
                     );
+                    $contactDetailsForm = $appUserInformationManager->createContactDetailsForm();
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userContactDetails_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/contact_details_form.html.twig', ['form_contact_details' => $contactDetailsForm->createView()]);
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $data["formErrors"] = array();
-                    foreach ($contactDetailsForm->getErrors(true) as $error) {
-                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                    }
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userContactDetails_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/contact_details_form.html.twig', ['form_contact_details' => $contactDetailsForm->createView()]);
                     return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             } else if ($contactDetailsForm->isValid()) {
-                $appUserInformationManager->updateUserAbout($appUserInformation);
+                $appUserInformationManager->updateAppUserInformation($appUserInformation);
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");
             } else {
@@ -199,11 +199,11 @@ class ProfileController extends BaseController
             /** @var AppUserInformationManager $appUserInformationManager */
             $appUserInformationManager = $this->get("at.manager.app_user_information");
             $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($user);
-            $biographyForm = $this->createForm(AppUserInfoComplementariesType::class, $appUserInformation);
+            $complementaryInformationForm = $appUserInformationManager->createComplementaryInformationForm();
 
-            $biographyForm->handleRequest($request);
+            $complementaryInformationForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
-                if ($biographyForm->isValid()) {
+                if ($complementaryInformationForm->isValid()) {
                     $appUserInformationManager->updateAppUserInformation($appUserInformation);
                     $data[AppJsonResponse::DATA]["marital-status"] = empty($appUserInformation->getBiography()) ? "-" : $this->get("translator")->trans($appUserInformation->getMaritalStatus());
                     $data[AppJsonResponse::DATA]["biography"] = nl2br(empty($appUserInformation->getBiography()) ?
@@ -212,15 +212,17 @@ class ProfileController extends BaseController
                         $this->get("translator")->trans("profile.show.profile_information.complementaries.interests.empty") : $appUserInformation->getInterests());
                     $data[AppJsonResponse::DATA]["food-conveniences"] = nl2br(empty($appUserInformation->getFoodConveniences()) ?
                         $this->get("translator")->trans("profile.show.profile_information.complementaries.food_conveniences.empty") : $appUserInformation->getFoodConveniences());
+
+                    $complementaryInformationForm = $appUserInformationManager->createComplementaryInformationForm();
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userComplementaries_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/complementary_information_form.html.twig', ['form_app_user_info_complementaries' => $complementaryInformationForm->createView()]);
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $data["formErrors"] = array();
-                    foreach ($biographyForm->getErrors(true) as $error) {
-                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                    }
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userComplementaries_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/complementary_information_form.html.twig', ['form_app_user_info_complementaries' => $complementaryInformationForm->createView()]);
                     return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
-            } else if ($biographyForm->isValid()) {
+            } else if ($complementaryInformationForm->isValid()) {
                 $appUserInformationManager->updateAppUserInformation($appUserInformation);
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");

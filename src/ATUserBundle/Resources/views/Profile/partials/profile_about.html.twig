@@ -6,7 +6,7 @@
 #}
 
 <div class="profile-tab">
-    <div class="pm-overview c-overflow">
+    <div class="pm-overview">
         <div class="pmo-pic">
             <div class="p-relative">
                 {#TODO : user avatar#}
@@ -109,80 +109,7 @@
                 </div>
                 {% if form_app_user_info_personals is not null %}
                     <div class="pmbb-edit">
-                        {{ form_start(form_app_user_info_personals, {'method':'post', 'action':path('updateUserPersonalInformation'),
-                            'attr':{ 'id':'userPersonalInformation', 'data-profile-pmb-block-target':'#pmbblock_personal_information'} }) }}
-                        <dl class="dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.publicName, 'profile.show.profile_information.personal_information.publicname.label'|trans,
-                                {'help':"profile.show.profile_information.personal_information.publicname.help"|trans}) }}</dt>
-                            <dd>
-                                <div class="fg-line">
-                                    {{ form_widget(form_app_user_info_personals.publicName, {'attr':{'placeholder':"profile.show.profile_information.personal_information.publicname.placeholder"|trans}}) }}
-                                </div>
-                                {{ form_errors(form_app_user_info_personals.publicName) }}
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.legalStatus, 'profile.show.profile_information.personal_information.legalstatus.label'|trans) }}</dt>
-                            <dd>
-                                {{ form_widget(form_app_user_info_personals.legalStatus, {'attr':{
-                                    'class':'selectpicker',
-                                    'data-none-selected-text':'profile.show.profile_information.personal_information.legalstatus.none_selected_text'|trans,}}) }}
-                                {{ form_errors(form_app_user_info_personals.legalStatus) }}
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.firstName, "profile.show.profile_information.personal_information.firstname.label") }}</dt>
-                            <dd>
-                                <div class="fg-line">
-                                    {{ form_widget(form_app_user_info_personals.firstName, {'attr':{'placeholder': "profile.show.profile_information.personal_information.firstname.placeholder"|trans}} ) }}
-                                </div>
-                                {{ form_errors(form_app_user_info_personals.firstName) }}
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.lastName, "profile.show.profile_information.personal_information.lastname.label") }}</dt>
-                            <dd>
-                                <div class="fg-line">
-                                    {{ form_widget(form_app_user_info_personals.lastName, {'attr':{'placeholder': "profile.show.profile_information.personal_information.lastname.placeholder"|trans}} ) }}
-                                </div>
-                                {{ form_errors(form_app_user_info_personals.lastName) }}
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.gender, 'profile.show.profile_information.personal_information.gender.label'|trans) }}</dt>
-                            <dd>
-                                {{ form_widget(form_app_user_info_personals.gender, {'attr':{
-                                    'class':'selectpicker',
-                                    'data-none-selected-text':'profile.show.profile_information.personal_information.gender.none_selected_text'|trans}}) }}
-                                {{ form_errors(form_app_user_info_personals.gender) }}
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.birthday, 'profile.show.profile_information.personal_information.birthday.title'|trans) }}</dt>
-                            <dd>
-                                <div class="dtp-container dropdown fg-line">
-                                    {{ form_widget(form_app_user_info_personals.birthday, {'attr':{
-                                        'class':'date-picker', 'placeholder':'profile.show.profile_information.personal_information.birthday.placeholder'}}) }}
-                                </div>
-                                {{ form_errors(form_app_user_info_personals.birthday) }}
-                            </dd>
-                        </dl>
-                        <dl class="dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_personals.nationality, 'profile.show.profile_information.personal_information.nationality.label'|trans) }}</dt>
-                            <dd>
-                                <div class="fg-line">
-                                    {{ form_widget(form_app_user_info_personals.nationality, {'attr':{'placeholder':'profile.show.profile_information.personal_information.nationality.placeholder'|trans }}) }}
-                                </div>
-                                {{ form_errors(form_app_user_info_personals.nationality) }}
-                            </dd>
-                        </dl>
-                        <div class="m-t-10 pull-right">
-                            <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
-                            <button data-profile-action="reset" data-profile-action-target="#pmbblock_personal_information" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
-                        </div>
-                        {{ form_rest(form_app_user_info_personals) }}
-                        {{ form_end(form_app_user_info_personals) }}
-                        <div class="clearfix"></div>
+                        {{ include('@ATUser/Profile/partials/personal_information_form.html.twig',{'form_app_user_info_personals':form_app_user_info_personals }) }}
                     </div>
                 {% endif %}
             </div>
@@ -208,34 +135,7 @@
                 </div>
                 {% if form_contact_details is not null %}
                     <div class="pmbb-edit">
-                        {{ form_start(form_contact_details, {'action':path('updateUserContactDetails'), 'method':'post',
-                            'attr':{ 'id':'userContactDetails', 'data-profile-pmb-block-target':'#pmbblock_contact_details'} }) }}
-                        <dl class=" dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_contact_details.livingCountry, 'profile.show.profile_information.contact_details.living_country.label'|trans) }}</dt>
-                            <dd>
-                                {{ form_widget(form_contact_details.livingCountry, {'attr':{
-                                    'class':'selectpicker',
-                                    'data-none-selected-text':'profile.show.profile_information.contact_details.living_country.none_selected_text'|trans,
-                                    'data-live-search' : "true"
-                                }}) }}
-                            </dd>
-                        </dl>
-                        <dl class=" dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_contact_details.livingCity, 'profile.show.profile_information.contact_details.living_city.label'|trans) }}</dt>
-                            <dd>
-                                <div class="fg-line">
-                                    {{ form_widget(form_contact_details.livingCity, {'attr':{'placeholder':'profile.show.profile_information.contact_details.living_city.placeholder'|trans}}) }}
-                                </div>
-                            </dd>
-                        </dl>
-
-                        <div class=" m-t-10 pull-right">
-                            <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
-                            <button data-profile-action="reset" data-profile-action-target="#pmbblock_contact_details" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
-                        </div>
-                        {{ form_rest(form_contact_details) }}
-                        {{ form_end(form_contact_details) }}
-                        <div class="clearfix"></div>
+                        {{ include('@ATUser/Profile/partials/contact_details_form.html.twig',{'form_contact_details':form_contact_details}) }}
                     </div>
                 {% endif %}
             </div>
@@ -297,55 +197,7 @@
 
                 {% if form_app_user_info_complementaries is not null %}
                     <div class="pmbb-edit">
-                        {{ form_start(form_app_user_info_complementaries, {
-                            'action': path('updateUserComplementatyInformation'), 'method': 'post',
-                            'attr': {'id':'userComplementaryInformations','data-profile-pmb-block-target':'#pmbblock_complementaries'}}) }}
-                        <dl class=" dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.maritalStatus, 'profile.show.profile_information.complementaries.marital_status.label'|trans) }}</dt>
-                            <dd>
-                                {{ form_widget(form_app_user_info_complementaries.maritalStatus, {'attr':{
-                                    'class':'selectpicker',
-                                    'data-none-selected-text':'profile.show.profile_information.complementaries.marital_status.none_selected_text'|trans }}) }}
-                            </dd>
-                        </dl>
-                        <dl class=" dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.biography, 'profile.show.profile_information.complementaries.biography.label'|trans) }}</dt>
-                            <dd>
-                                <div class="fg-line">
-                                    {{ form_widget(form_app_user_info_complementaries.biography, {'attr':{
-                                        'rows':5,
-                                        'placeholder':'profile.show.profile_information.complementaries.biography.placeholder'|trans}} ) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl class=" dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.interests, 'profile.show.profile_information.complementaries.interests.label'|trans) }}</dt>
-                            <dd>
-                                <div class="fg-line">
-                                    {{ form_widget(form_app_user_info_complementaries.interests, {'attr':{
-                                        'rows':5,
-                                        'placeholder':'profile.show.profile_information.complementaries.interests.placeholder'|trans}} ) }}
-                                </div>
-                            </dd>
-                        </dl>
-                        <dl class=" dl-horizontal form-group">
-                            <dt class="p-t-10">{{ form_label(form_app_user_info_complementaries.foodConveniences, 'profile.show.profile_information.complementaries.food_conveniences.label'|trans) }}</dt>
-                            <dd>
-                                <div class="fg-line">
-                                    {{ form_widget(form_app_user_info_complementaries.foodConveniences, {'attr':{
-                                        'rows':5,
-                                        'placeholder':'profile.show.profile_information.complementaries.food_conveniences.placeholder'|trans}} ) }}
-                                </div>
-                            </dd>
-                        </dl>
-
-                        <div class="m-t-10 pull-right">
-                            <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
-                            <button data-profile-action="reset" data-profile-action-target="#pmbblock_complementaries" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
-                        </div>
-                        {{ form_rest(form_app_user_info_complementaries) }}
-                        {{ form_end(form_app_user_info_complementaries) }}
-                        <div class="clearfix"></div>
+                        {{ include('@ATUser/Profile/partials/complementary_information_form.html.twig', {'form_app_user_info_complementaries':form_app_user_info_complementaries}) }}
                     </div>
                 {% endif %}
             </div>

@@ -7,11 +7,6 @@
 <div class="modal fade" id="{{ modalIdPrefix }}_modal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="#{{ modalIdPrefix }}_title">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            {% if appuseremail is null %} {# Add AppUserEmail #}
-                {{ form_start(form_appuseremail, {'action': path('addAppUserEmail'), 'method': 'post', 'attr': {'id':'addAppUserEmailForm'}}) }}
-            {% else %} {# Edit AppUserEmail #}
-                {{ form_start(form_appuseremail, {'action': path('editAppUserEmail', {'id':appuseremail.id}), 'method': 'post', 'attr': {'id':'editAppUserEmailForm'}}) }}
-            {% endif %}
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="zmdi zmdi-close" aria-hidden="true"></span></button>
                 <h4 class="modal-title" id="{{ modalIdPrefix }}_title">
@@ -19,63 +14,12 @@
                 </h4>
             </div>
             <div class="modal-body">
-                {% if appuseremail is null %}
-                    <div class="form-group">
-                        {{ form_label(form_appuseremail.email, 'profile.show.appuseremail.modal.form.email.label', {'label_attr':{'class':'sr-only'}}) }}
-                        <div class="fg-line">
-                            {{ form_widget(form_appuseremail.email, {'attr':{'placeholder':'profile.show.appuseremail.modal.form.email.placeholder'}}) }}
-                        </div>
-                        {{ form_errors(form_appuseremail.email) }}
-                    </div>
-                {% endif %}
-                <div class="form-group">
-                    {{ form_label(form_appuseremail.type, 'profile.show.appuseremail.modal.form.type.label', {'label_attr':{'class':'sr-only'}}) }}
-                    {{ form_widget(form_appuseremail.type, {'attr':{
-                        'class':'selectpicker',
-                        'data-none-selected-text':'profile.show.appuseremail.modal.form.type.none-selected-text'|trans}}) }}
-                    {{ form_errors(form_appuseremail.type) }}
-                </div>
-                {% if form_appuseremail.useToReceiveEmail is defined %}
-                    <div class="form-group">
-                        {{ form_row(form_appuseremail.useToReceiveEmail, {
-                            'label' : 'profile.show.appuseremail.modal.form.use_to_receive_email.label'|trans,
-                            'attr':{'class':'md-toogle-switch'},
-                            'help': 'profile.show.appuseremail.modal.form.use_to_receive_email.help'|trans}) }}
-                    </div>
-                {% endif %}
-                {{ form_rest(form_appuseremail) }}
+                {{ include('@App/AppUserEmail/partials/appuseremail_form.html.twig', {
+                    'modalIdPrefix' : modalIdPrefix,
+                    'appuseremail' : appuseremail,
+                    'form_appuseremail' : form_appuseremail
+                }) }}
             </div>
-            <div class="modal-footer">
-                {% if appuseremail is not null and appuseremail.emailCanonical != appuseremail.applicationUser.accountUser.emailCanonical %}
-                    <a id="deleteAppUserEmail_{{ appuseremail.id }}" href="{{ path('deleteAppUserEmail', {'id':appuseremail.id}) }}" class="text-danger">{{ "global.button.delete"|trans }}</a>
-                    <script>
-                        $('#deleteAppUserEmail_{{ appuseremail.id }}').on('click', function (e) {
-                            e.preventDefault();
-                            var link = $(this);
-                            swal({
-                                title: '{{ "profile.show.appuseremail.modal.delete.swal_title"|trans }}',
-                                text: '{{ "profile.show.appuseremail.modal.delete.swal_text"|trans }}',
-                                type: "warning",
-                                showCancelButton: true,
-                                confirmButtonColor: "#DD6B55",
-                                confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                closeOnConfirm: true,
-                                showLoaderOnConfirm: true
-                            }, function (isConfirm) {
-                                if (isConfirm) {
-                                    ajaxRequest(link, null, e, function (responseJSON, textStatus, jqXHR) {
-                                        $("li#appuseremail_{{ appuseremail.id }}").remove();
-                                        $('#{{ modalIdPrefix }}_modal').modal('toggle');
-                                    }, null, null);
-                                }
-                            });
-                        });
-                    </script>
-                {% endif %}
-                <button type="button" class="btn btn-default" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
-                <button type="submit" class="btn btn-primary">{{ "global.button.save"|trans }}</button>
-            </div>
-            {{ form_end(form_appuseremail) }}
         </div>
     </div>
 </div>

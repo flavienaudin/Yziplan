@@ -49,34 +49,45 @@ class AppUserEmailController extends Controller
             $newAppUserEmail = new AppUserEmail();
             $appUserEmailForm = $this->createForm(AppUserEmailType::class, $newAppUserEmail);
             $appUserEmailForm->handleRequest($request);
-            if ($appUserEmailForm->isValid() && (($appUserEmail = $applicationUserManager->treatAddAppUserEmailForm($appUserEmailForm)) != null)) {
-                $formEvent = new FormEvent($appUserEmailForm, $request);
-                $eventDispatcher->dispatch(AppEvents::APPUSEREMAIL_ADD_SUCCESS, $formEvent);
-                $entityManager = $this->get('doctrine.orm.entity_manager');
-                $entityManager->persist($appUserEmail);
-                $entityManager->flush();
+            if ($appUserEmailForm->isValid()) {
+                $appUserEmailForm = $applicationUserManager->treatAddAppUserEmailForm($appUserEmailForm);
+                if (count($appUserEmailForm->getErrors(true)) === 0) {
+                    /** @var AppUserEmail $appUserEmail */
+                    $appUserEmail = $appUserEmailForm->getData();
+                    $formEvent = new FormEvent($appUserEmailForm, $request);
+                    $eventDispatcher->dispatch(AppEvents::APPUSEREMAIL_ADD_SUCCESS, $formEvent);
+                    $entityManager = $this->get('doctrine.orm.entity_manager');
+                    $entityManager->persist($appUserEmail);
+                    $entityManager->flush();
 
-                if ($request->isXmlHttpRequest()) {
-                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]["#ul-profile-appuseremails"] =
-                        $this->renderView("@App/AppUserEmail/partials/display_appuseremail.html.twig", ['appuseremail' => $appUserEmail]);
-                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] =
-                        $this->get("translator")->trans("appuseremail.associate.message.check_mailbox", ["%email%" => $appUserEmail->getEmail()]);
-                    return new AppJsonResponse($data, Response::HTTP_OK);
-                } else {
-                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("appuseremail.associate.message.check_mailbox", ["%email%" => $appUserEmail->getEmail()]));
-                    return $this->redirectToRoute("fos_user_profile_show");
-                }
-            } else {
-                if ($request->isXmlHttpRequest()) {
-                    $data[AppJsonResponse::FORM_ERRORS] = array();
-                    foreach ($appUserEmailForm->getErrors(true) as $error) {
-                        $data[AppJsonResponse::FORM_ERRORS][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
+                    if ($request->isXmlHttpRequest()) {
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]["#ul-profile-appuseremails"] =
+                            $this->renderView("@App/AppUserEmail/partials/display_appuseremail.html.twig", ['appuseremail' => $appUserEmail]);
+                        // Initialize a new Add Form for AppUserEmail
+                        $appUserEmailForm = $this->createForm(AppUserEmailType::class, new AppUserEmail());
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#addAppUserEmail_formcontainer"] =
+                            $this->renderView("@App/AppUserEmail/partials/appuseremail_form.html.twig", [
+                                'modalIdPrefix' => 'addAppUserEmail', 'appuseremail' => null, 'form_appuseremail' => $appUserEmailForm->createView()
+                            ]);
+
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] =
+                            $this->get("translator")->trans("appuseremail.associate.message.check_mailbox", ["%email%" => $appUserEmail->getEmail()]);
+                        return new AppJsonResponse($data, Response::HTTP_OK);
+                    } else {
+                        $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("appuseremail.associate.message.check_mailbox", ["%email%" => $appUserEmail->getEmail()]));
+                        return $this->redirectToRoute("fos_user_profile_show");
                     }
-                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                } else {
-                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
-                    return $this->redirectToRoute("fos_user_profile_show");
                 }
+            }
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#addAppUserEmail_formcontainer"] =
+                    $this->renderView("@App/AppUserEmail/partials/appuseremail_form.html.twig", [
+                        'modalIdPrefix' => 'addAppUserEmail', 'appuseremail' => null, 'form_appuseremail' => $appUserEmailForm->createView()
+                    ]);
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
+                return $this->redirectToRoute("fos_user_profile_show");
             }
         }
         if ($request->isXmlHttpRequest()) {

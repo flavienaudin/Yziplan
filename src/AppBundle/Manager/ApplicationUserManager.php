@@ -113,7 +113,7 @@ class ApplicationUserManager
 
     /**
      * @param FormInterface $appUserEmailForm
-     * @return AppUserEmail|null
+     * @return FormInterface
      */
     public function treatAddAppUserEmailForm(FormInterface $appUserEmailForm)
     {
@@ -124,14 +124,15 @@ class ApplicationUserManager
             if ($existingAppUserEmail != null) {
                 $appUserEmailForm->get('email')
                     ->addError(new FormError($this->translator->trans("profile.show.appuseremail.modal.form.validation.email_already_used")));
-                return null;
+                return $appUserEmailForm;
             }
             $newAppUserEmail->setEmailCanonical($this->emailCanonicalizer->canonicalize($newAppUserEmail->getEmail()));
             $this->applicationUser->addAppUserEmail($newAppUserEmail);
             $this->entityManager->persist($this->applicationUser);
             $this->entityManager->flush();
-            return $newAppUserEmail;
+            return $appUserEmailForm;
         }
-        return null;
+        $appUserEmailForm->addError(new FormError($this->translator->trans("profile.message.update.error")));
+        return $appUserEmailForm;
     }
 }

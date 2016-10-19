@@ -86,13 +86,14 @@ profile:
       tooltip:
         account-email: E-mail principal
         email: E-mail associé
+        remove: Supprimer
       modal:
         add:
           title: Associer un nouvel e-mail
         edit:
           title: Editer l'email "%email%"
         delete:
-          swal_title: Suppression d'un e-mail
+          swal_title: "Suppression d'un e-mail"
           swal_text: Êtes-vous sûre de vouloir supprimer cet email ?
         form:
           email:
@@ -125,7 +126,7 @@ profile:
           title: Nom public
           label: Nom public
           placeholder: Nom Public
-          help: Il s'agit de votre nom affiché publiquement par défault (par exempe pour les invitations ou votre profile public)
+          help: Il s'agit de votre nom affiché publiquement par défault (par exemple pour les invitations ou votre profil public)
         firstname:
           title: Prénom
           label: Prénom

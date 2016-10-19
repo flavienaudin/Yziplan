@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 
 class AppUserEmailType extends AbstractType
 {
@@ -32,7 +33,7 @@ class AppUserEmailType extends AbstractType
                 $appUserEmail = $formEvent->getData();
                 $form = $formEvent->getForm();
                 if (empty($appUserEmail->getId())) {
-                    $form->add('email', EmailType::class, array('required' => true));
+                    $form->add('email', EmailType::class, array('required' => true, 'constraints' => new Email()));
                 }
                 if ($appUserEmail->getApplicationUser() == null || $appUserEmail->getApplicationUser()->getAccountUser() == null
                     || $appUserEmail->getEmailCanonical() != $appUserEmail->getApplicationUser()->getAccountUser()->getEmailCanonical()
