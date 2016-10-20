@@ -15,7 +15,6 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  */
 class ExpenseElement
 {
-
     /** Active les timestamps automatiques pour la creation et la mise a jour */
     use TimestampableEntity;
 

@@ -11,7 +11,6 @@ namespace AppBundle\EventListener;
 
 use AppBundle\AppEvents;
 use AppBundle\Entity\User\AppUserEmail;
-use ATUserBundle\ATUserEvents;
 use ATUserBundle\Mailer\AtTwigSiwftMailer;
 use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Mailer\MailerInterface;
@@ -21,7 +20,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class AppUserEmailConfirmationListener implements EventSubscriberInterface
 {
-    /** @var AtTwigSiwftMailer $mailer  */
+    /** @var AtTwigSiwftMailer $mailer */
     private $mailer;
     private $tokenGenerator;
     private $router;
@@ -29,9 +28,9 @@ class AppUserEmailConfirmationListener implements EventSubscriberInterface
     /**
      * EmailConfirmationListener constructor.
      *
-     * @param MailerInterface         $mailer
+     * @param MailerInterface $mailer
      * @param TokenGeneratorInterface $tokenGenerator
-     * @param UrlGeneratorInterface   $router
+     * @param UrlGeneratorInterface $router
      */
     public function __construct(MailerInterface $mailer, TokenGeneratorInterface $tokenGenerator, UrlGeneratorInterface $router)
     {

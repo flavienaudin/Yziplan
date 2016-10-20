@@ -11,8 +11,6 @@ namespace AppBundle;
 
 class AppEvents
 {
-
-
     /**
      * The APPUSEREMAIL_ADD_SUCCESS event occurs when the creation of a new addAppUserEmail form is submitted successfully.
      *

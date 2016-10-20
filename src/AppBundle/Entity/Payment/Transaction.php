@@ -8,13 +8,13 @@ use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Transaction
- * 
+ *
  * Une transaction référence un "transfer" mangoPay, c'est le passage d'un Wallet à un autre.
  * On stockera ici tous les transfers, qu'ils soient fait, ou à faire.
  * Par exemple :
  * - Dans le cas ou le destinataire à un Wallet MangoPay de créer on transferera directement les fonds dessus
- * - Si le Wallet n'est pas crée (cas d'une cagnotte par exemple) chaque transfer sera enregistré chez nous, tagué "à faire" 
- * et sera effectué au moment de la création du wallet du destinataire. 
+ * - Si le Wallet n'est pas crée (cas d'une cagnotte par exemple) chaque transfer sera enregistré chez nous, tagué "à faire"
+ * et sera effectué au moment de la création du wallet du destinataire.
  *
  * @ORM\Table(name="payment_transaction")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Payment\TransactionRepository")
@@ -42,7 +42,7 @@ class Transaction
 
     /**
      * Reference l'ID d'un transfer mangopay, peut être null si le transfer n'a pas eu lieu et est "à faire"
-     * 
+     *
      * @var string
      * @ORM\Column(name="mangopay_transfer_id", type="string", length=255, nullable=true)
      */

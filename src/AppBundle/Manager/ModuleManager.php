@@ -16,8 +16,8 @@ use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalElement;
-use AppBundle\Form\ModuleFormType;
-use AppBundle\Form\PollProposalFormType;
+use AppBundle\Form\Module\ModuleFormType;
+use AppBundle\Form\Module\PollProposalFormType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\ModuleType;
@@ -165,15 +165,15 @@ class ModuleManager
         }
         $pollProposal->setPollModule($this->module->getPollModule());
         /** @var PollProposalElement $pollProposalElt */
-        foreach ($pollProposal->getPollProposalElements() as $pollProposalElt){
+        foreach ($pollProposal->getPollProposalElements() as $pollProposalElt) {
             $pollProposal->removePollProposalElement($pollProposalElt);
             $this->entityManager->remove($pollProposalElt);
         }
 
-        if($pollProposalAddForm->has('strPPElts')){
+        if ($pollProposalAddForm->has('strPPElts')) {
             $strPPElts = $pollProposalAddForm->get('strPPElts')->getData();
-            foreach ($strPPElts as $key => $value){
-                if(!empty($value)) {
+            foreach ($strPPElts as $key => $value) {
+                if (!empty($value)) {
                     $newPPE = new PollProposalElement();
                     $newPPE->setName($key);
                     $newPPE->setType(PollElementType::STRING);
@@ -182,10 +182,10 @@ class ModuleManager
                 }
             }
         }
-        if($pollProposalAddForm->has('intPPElts')){
+        if ($pollProposalAddForm->has('intPPElts')) {
             $intPPElts = $pollProposalAddForm->get('intPPElts')->getData();
-            foreach ($intPPElts as $key => $value){
-                if(!empty($value)) {
+            foreach ($intPPElts as $key => $value) {
+                if (!empty($value)) {
                     $newPPE = new PollProposalElement();
                     $newPPE->setName($key);
                     $newPPE->setType(PollElementType::INTEGER);
@@ -194,10 +194,10 @@ class ModuleManager
                 }
             }
         }
-        if($pollProposalAddForm->has('datetimePPElts')){
+        if ($pollProposalAddForm->has('datetimePPElts')) {
             $datetimePPElts = $pollProposalAddForm->get('datetimePPElts')->getData();
-            foreach ($datetimePPElts as $key => $value){
-                if(!empty($value)) {
+            foreach ($datetimePPElts as $key => $value) {
+                if (!empty($value)) {
                     $newPPE = new PollProposalElement();
                     $newPPE->setName($key);
                     $newPPE->setType(PollElementType::DATE_TIME);
@@ -216,7 +216,8 @@ class ModuleManager
      * @param PollProposal $pollProposal The PollProposal to remove
      * @return PollProposal
      */
-    public function removePollProposal(PollProposal $pollProposal){
+    public function removePollProposal(PollProposal $pollProposal)
+    {
         $pollProposal->setDeleted(true);
         $this->entityManager->persist($pollProposal);
         $this->entityManager->flush();
@@ -266,7 +267,7 @@ class ModuleManager
      */
     public function displayPollProposalRowPartial(PollProposal $pollProposal, EventInvitation $userEventInvitation)
     {
-        $userModuleInvitation = null ;
+        $userModuleInvitation = null;
         if ($userEventInvitation != null) {
             $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($pollProposal->getPollModule()->getModule());
         }

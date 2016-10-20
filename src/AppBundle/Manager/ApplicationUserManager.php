@@ -11,14 +11,13 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
 use ATUserBundle\Entity\AccountUser;
-use ATUserBundle\Mailer\AtTwigSiwftMailer;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
-use FOS\UserBundle\Mailer\MailerInterface;
 use FOS\UserBundle\Util\CanonicalizerInterface;
+use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
-use FOS\UserBundle\Util\TokenGeneratorInterface;
 
 class ApplicationUserManager
 {
@@ -33,6 +32,7 @@ class ApplicationUserManager
     private $applicationUser;
     /** @var TokenGeneratorInterface $tokenGenerator */
     private $tokenGenerator;
+
     /**
      * ApplicationUserManager constructor.
      * @param EntityManager $entityManager
@@ -79,18 +79,12 @@ class ApplicationUserManager
     }
 
     /**
-     * @param AccountUser|null $user
-     * @return \Doctrine\Common\Collections\Collection|null
+     * @param AccountUser $user
+     * @return Collection|null
      */
-    public function getUserEventInvitations(AccountUser $user = null)
+    public function getUserEventInvitations(AccountUser $user)
     {
-        if ($user instanceof AccountUser) {
-            $this->applicationUser = $user->getApplicationUser();
-        }
-        if ($this->applicationUser != null) {
-            return $this->applicationUser->getEventInvitations();
-        }
-        return null;
+        return $user->getApplicationUser()->getEventInvitations();
     }
 
     /**

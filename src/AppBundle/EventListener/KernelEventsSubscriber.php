@@ -9,8 +9,8 @@
 namespace AppBundle\EventListener;
 
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\Response\AppJsonResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
@@ -57,8 +57,8 @@ class KernelEventsSubscriber implements EventSubscriberInterface
             $request = $event->getRequest();
             if (empty($request->get('messages'))) {
                 if ($request->isXmlHttpRequest()) {
-                    $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("global.error.internal_server_error");
-                    $event->setResponse(new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR));
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("global.error.internal_server_error");
+                    $event->setResponse(new AppJsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR));
                 } else {
                     if ($request->hasSession()) {
                         $this->flashBag->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("global.error.internal_server_error"));
@@ -68,36 +68,33 @@ class KernelEventsSubscriber implements EventSubscriberInterface
         }
     }
 
-    public function onKernelException(GetResponseForExceptionEvent $event){
-        $exception  = $event->getException();
+    public function onKernelException(GetResponseForExceptionEvent $event)
+    {
+        $exception = $event->getException();
         if ($exception instanceof AccessDeniedHttpException) {
             $request = $event->getRequest();
             if (empty($request->get('messages'))) {
                 if ($request->isXmlHttpRequest()) {
-                    $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("global.exception.access_denied_http");
-                    $event->setResponse(new JsonResponse($data, Response::HTTP_UNAUTHORIZED));
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("global.exception.access_denied_http");
+                    $event->setResponse(new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED));
                 } else {
                     if ($request->hasSession()) {
                         $this->flashBag->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("global.exception.access_denied_http"));
                     }
-                    $url = $this->router->generate('home');
-                    $response = new RedirectResponse($url);
-                    $event->setResponse($response);
+                    $event->setResponse(new RedirectResponse($this->router->generate('home')));
                 }
             }
-        }elseif ($exception instanceof NotFoundHttpException || $exception instanceof MethodNotAllowedHttpException) {
+        } elseif ($exception instanceof NotFoundHttpException || $exception instanceof MethodNotAllowedHttpException) {
             $request = $event->getRequest();
             if (empty($request->get('messages'))) {
                 if ($request->isXmlHttpRequest()) {
-                    $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("global.exception.method_not_allowed_http");
-                    $event->setResponse(new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR));
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("global.exception.method_not_allowed_http");
+                    $event->setResponse(new AppJsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR));
                 } else {
                     if ($request->hasSession()) {
                         $this->flashBag->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("global.exception.method_not_allowed_http"));
                     }
-                    $url = $this->router->generate('home');
-                    $response = new RedirectResponse($url);
-                    $event->setResponse($response);
+                    $event->setResponse(new RedirectResponse($this->router->generate('home')));
                 }
             }
         }

@@ -17,11 +17,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class ModuleInvitationController
+ * @package AppBundle\Controller
+ * @Route("/{_locale}/module-invitation", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
+ */
 class ModuleInvitationController extends Controller
 {
-
     /**
-     * @Route("/{_locale}/answer-pollmodule", methods={"POST"}, defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="answerPollModuleProposal")
+     * @Route("/answer-pollmodule-proposal", name="answerPollModuleProposal", methods={"POST"})
      */
     public function answerPollModuleProposalAction(Request $request)
     {
@@ -29,13 +33,13 @@ class ModuleInvitationController extends Controller
             if ($request->request->has("pollProposalId") && $request->request->has('userModuleInvitationToken') && $request->request->has('value')) {
                 $moduleInvitationManager = $this->get("at.manager.module_invitation");
                 $moduleInvitation = $moduleInvitationManager->retrieveModuleInvitationByToken($request->request->get('userModuleInvitationToken'));
-                if($this->isGranted(ModuleInvitationVoter::EDIT, $moduleInvitation)){
+                if ($this->isGranted(ModuleInvitationVoter::EDIT, $moduleInvitation)) {
                     $pollroposalResponseManager = $this->get("at.manager.pollproposal_response");
                     $pollroposalResponseManager->answerPollModuleProposal($moduleInvitation, $request->request->get('pollProposalId'), $request->request->get('value'));
                     $data = array();
                     //$data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('global.success.data_saved');
                     return new JsonResponse($data, Response::HTTP_OK);
-                }else{
+                } else {
                     $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('moduleInvitation.error.message.unauthorized_access');
                     return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
                 }

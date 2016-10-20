@@ -4,8 +4,8 @@ namespace AppBundle\Entity\Payment;
 
 
 use AppBundle\Entity\Event\EventInvitation;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -21,7 +21,7 @@ class Wallet
 {
     /** Active les timestamps automatiques pour la creation et la mise a jour */
     use TimestampableEntity;
-    
+
     /**
      * @var int
      *
@@ -60,7 +60,6 @@ class Wallet
     private $eWalletPayOutAmount = 0;
 
 
-
     /* TODO  Stockage  ??
     private $payInId;
     private $payOutId;
@@ -77,7 +76,7 @@ class Wallet
      * @ORM\JoinColumn(name="wallet_id", referencedColumnName="id")
      */
     private $eventInvitation;
-    
+
     /**
      * Wallet sur lequel l'argent a été/sera retiré
      * @var ArrayCollection

@@ -9,7 +9,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Event\Event;
-use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
@@ -25,11 +24,17 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class EventController
+ * @package AppBundle\Controller
+ * @Route("/{_locale}/event", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
+ */
 class EventController extends Controller
 {
 
     /**
-     * @Route("/{_locale}/evenement-test", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="eventTest")
+     * @Route("/show-test", name="eventTest")
+     * @deprecated
      */
     public function eventTestAction(Request $request)
     {
@@ -38,7 +43,7 @@ class EventController extends Controller
 
 
     /**
-     * @Route("/{_locale}/evenement", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="createEvent")
+     * @Route("/new", name="createEvent")
      */
     public function createEventAction(Request $request)
     {
@@ -55,7 +60,7 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/{_locale}/evenement/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEvent")
+     * @Route("/show/{token}", name="displayEvent")
      * @ParamConverter("currentEvent", class="AppBundle:Event\Event")
      */
     public function displayEventAction(Event $currentEvent, Request $request)
@@ -141,7 +146,7 @@ class EventController extends Controller
         ////////////////////////////
         // Invitations management //
         ////////////////////////////
-        if ($this->isGranted(EventInvitationVoter::INVITE, $currentEvent) || $this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
+        if ($this->isGranted(EventInvitationVoter::INVITE, $currentEvent) || $this->isGranted(EventInvitationVoter::EDIT, $userEventInvitation)) {
             /** @var FormInterface $eventInvitationsForm */
             $eventInvitationsForm = $eventManager->createEventInvitationsForm();
             $eventInvitationsForm->handleRequest($request);
@@ -153,6 +158,7 @@ class EventController extends Controller
                         $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
                         $data['htmlContent'] = $this->renderView("@App/Event/partials/eventInvitations.html.twig", array(
                             'event' => $currentEvent,
+                            'userEventInvitation' => $userEventInvitation,
                             'eventInvitations' => $currentEvent->getEventInvitations(),
                             'invitationsForm' => $eventInvitationsForm->createView(),
                             'editEventMode' => true

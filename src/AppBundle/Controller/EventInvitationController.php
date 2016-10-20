@@ -15,6 +15,7 @@ use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Security\EventVoter;
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,13 +24,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
+/**
+ * Class EventInvitationController
+ * @package AppBundle\Controller
+ * @Route("/{_locale}/event-invitation", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
+ */
 class EventInvitationController extends Controller
 {
     /**
      * Action pour afficher sur un événement à partir d'un token eventInvitation qui est alors enregistré en session avant la redirection vers la page d'affichage de l'événement
      *
-     * @Route("/{_locale}/invitation/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayEventInvitation" )
-     * @ParamConverter("eventInvitation", class="AppBundle:Event/EventInvitation")
+     * @Route("/show/{token}", name="displayEventInvitation" )
+     * @ParamConverter("eventInvitation", class="AppBundle:Event\EventInvitation")
      */
     public function displayEventInvitationAction(EventInvitation $eventInvitation = null, Request $request)
     {
@@ -43,41 +49,43 @@ class EventInvitationController extends Controller
     }
 
     /**
-     * @Route("/{_locale}/disconnect-invitation/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="disconnectEventInvitation" )
+     * @Route("/disconnect/{eventToken}", name="disconnectEventInvitation" )
      */
-    public function disconnectEventInvitationAction($token, Request $request)
+    public function disconnectEventInvitationAction($eventToken, Request $request)
     {
         if ($request->hasSession()) {
             $request->getSession()->remove(EventInvitationManager::TOKEN_SESSION_KEY);
         }
-        return $this->redirectToRoute("displayEvent", array('token' => $token));
+        return $this->redirectToRoute("displayEvent", array('token' => $eventToken));
     }
 
     /**
-     * @Route("/{_locale}/cancel-invitation/{eventInvitationToken}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="cancelEventInvitation" )
-     * @ParamConverter("eventInvitation", class="AppBundle:EventInvitation", options={"mapping": {"eventInvitationToken":"token"}})
+     * @Route("/cancel/{userEventInvitationToken}/{eventInvitationTokenToCancel}", name="cancelEventInvitation" )
+     * @ParamConverter("userEventInvitation", class="AppBundle:Event\EventInvitation", options={"mapping": {"userEventInvitationToken":"token"}})
+     * @ParamConverter("eventInvitationToCancel", class="AppBundle:Event\EventInvitation", options={"mapping": {"eventInvitationTokenToCancel":"token"}})
      */
-    public function cancelEventInvitationAction(EventInvitation $eventInvitation, Request $request)
+    public function cancelEventInvitationAction(EventInvitation $userEventInvitation, EventInvitation $eventInvitationToCancel, Request $request)
     {
-        if ($this->isGranted(EventVoter::EDIT, $eventInvitation)) {
+        // Only creator/admnsitrators can cancel an EventInvitation
+        if ($this->isGranted(EventInvitationVoter::CANCEL, [$userEventInvitation, $eventInvitationToCancel])) {
             $eventInvitationManager = $this->get("at.manager.event_invitation");
-            if ($eventInvitationManager->cancelEventInvitation($eventInvitation)) {
+            if ($eventInvitationManager->cancelEventInvitation($eventInvitationToCancel)) {
                 if ($request->isXmlHttpRequest()) {
-                    $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("global.success.data_saved");
-                    return new JsonResponse($data, Response::HTTP_OK);
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("global.success.data_saved");
+                    return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("global.success.data_saved"));
-                    return $this->redirectToRoute("displayEvent", array("token" => $eventInvitation->getEvent()->getToken()));
+                    return $this->redirectToRoute("displayEvent", array("token" => $eventInvitationToCancel->getEvent()->getToken()));
                 }
             }
         }
         if ($request->isXmlHttpRequest()) {
-            $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access");
-            return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access");
+            return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access"));
-            if ($eventInvitation != null) {
-                return $this->redirectToRoute("displayEvent", array("token" => $eventInvitation->getEvent()->getToken()));
+            if ($eventInvitationToCancel != null) {
+                return $this->redirectToRoute("displayEvent", array("token" => $eventInvitationToCancel->getEvent()->getToken()));
             } else {
                 return $this->redirectToRoute("home");
             }
@@ -85,7 +93,7 @@ class EventInvitationController extends Controller
     }
 
     /**
-     * @Route("/{_locale}/mes-evenements", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="displayUserEvents")
+     * @Route("/show-all", name="displayUserEvents")
      */
     public function displayUserEventsAction(Request $request)
     {

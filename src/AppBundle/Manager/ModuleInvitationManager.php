@@ -9,11 +9,11 @@
 namespace AppBundle\Manager;
 
 
-use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 

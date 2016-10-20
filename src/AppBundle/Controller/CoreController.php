@@ -6,10 +6,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class CoreController
+ * @package AppBundle\Controller
+ * @Route("/{_locale}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
+ */
 class CoreController extends Controller
 {
     /**
-     * @Route("/{_locale}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="home")
+     * @Route("/", name="home")
      */
     public function indexAction(Request $request)
     {

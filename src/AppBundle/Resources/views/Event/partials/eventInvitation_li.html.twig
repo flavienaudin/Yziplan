@@ -1,14 +1,13 @@
 {# Données d'entrée :
 - event (Event) L'événement concerné
+- userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
 - eventInvitation (EventInvitation) L'invitation à l'événement à afficher
 - editEventMode (boolean) Si l'utilisateur a l'autorisation d'éditer l'événement
 #}
 
 {% spaceless %}
     <li id=eventInvitation_event_{{ eventInvitation.token }}>{{ eventInvitation.displayableName }}
-        {% if editEventMode and eventInvitation.creator %}
-            <a href="{{ path("cancelEventInvitation", {"eventInvitationToken":eventInvitation.token}) }}" data-toggle="tooltip"
-               data-original-title="{{ "invitations.display.remove_link"|trans({"%name%":eventInvitation.displayableName}) }}"> <i class="zmdi zmdi-close-circle-o"></i></a>
-        {% endif %}
+        <a href="{{ path("cancelEventInvitation", {'userEventInvitationToken': userEventInvitation.token ,'eventInvitationTokenToCancel':eventInvitation.token}) }}" data-toggle="tooltip"
+           data-original-title="{{ "invitations.display.remove_link"|trans({"%name%":eventInvitation.displayableName}) }}"> <i class="zmdi zmdi-close-circle-o"></i></a>
     </li>
 {% endspaceless %}

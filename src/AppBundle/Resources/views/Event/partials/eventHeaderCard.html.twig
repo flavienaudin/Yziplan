@@ -156,6 +156,7 @@
             <div class="col-sm-4">
                 {{ include('@App/Event/partials/eventInvitations.html.twig', {
                     'event': event,
+                    'userEventInvitation':userEventInvitation,
                     'eventInvitations':event.eventInvitations,
                     'invitationsForm':invitationsForm,
                     'editEventMode':(eventForm is not null)

@@ -8,9 +8,7 @@
 
 namespace AppBundle\Utils\enum;
 
-/**
- * Class ModuleStatus Défini les états possibles pour un module (status).
- */
+
 class ModuleStatus extends AbstractEnumType
 {
     /* Values */

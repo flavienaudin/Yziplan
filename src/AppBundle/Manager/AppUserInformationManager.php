@@ -12,8 +12,8 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserInformation;
 use ATUserBundle\Entity\AccountUser;
-use ATUserBundle\Form\AppUserInfoContactDetailsType;
 use ATUserBundle\Form\AppUserInfoComplementariesType;
+use ATUserBundle\Form\AppUserInfoContactDetailsType;
 use ATUserBundle\Form\AppUserInfoPersonalType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -60,14 +60,13 @@ class AppUserInformationManager
     }
 
     /**
-     * @param AppUserInformation $appUserInformation Information utilisateur à mettre à jour en base de données
-     * @return bool
+     * @return AppUserInformation Information utilisateur mises à jour
      */
-    public function updateAppUserInformation(AppUserInformation $appUserInformation)
+    public function updateAppUserInformation()
     {
-        $this->entityManager->persist($appUserInformation);
+        $this->entityManager->persist($this->appUserInformation);
         $this->entityManager->flush();
-        return true;
+        return $this->appUserInformation;
     }
 
     /**

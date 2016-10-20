@@ -21,11 +21,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class ModuleController
+ * @package AppBundle\Controller
+ * @Route("/{_locale}/event-module", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
+ */
 class ModuleController extends Controller
 {
 
     /**
-     * @Route("/{_locale}/add-event-module/{token}/{type}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="addEventModule")
+     * @Route("/add/{token}/{type}",  name="addEventModule")
      * @ParamConverter("event", class="AppBundle:Event\Event", options={"exclude":{"type"}})
      */
     public function addEventModuleAction(Event $event, $type, Request $request)
@@ -53,7 +58,7 @@ class ModuleController extends Controller
     }
 
     /**
-     * @Route("/{_locale}/remove-event-module/{token}", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"}, name="removeEventModule")
+     * @Route("/{remove/{token}", name="removeEventModule")
      * @ParamConverter("module", class="AppBundle:Module")
      */
     public function removeEventModuleAction(Module $module, Request $request)
@@ -79,5 +84,4 @@ class ModuleController extends Controller
             return $this->redirectToRoute('displayEvent', array('token' => $module->getEvent()->getToken()));
         }
     }
-
 }

@@ -12,7 +12,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
-use AppBundle\Form\EventInvitationFormType;
+use AppBundle\Form\Event\EventInvitationFormType;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use ATUserBundle\Entity\AccountUser;
@@ -232,10 +232,15 @@ class EventInvitationManager
 
     /**
      * Génère le formulaire d'édition des informations principales d'une EventInvitation (Réponse à un événement)
+     *
+     * @param EventInvitation|null $eventInvitation Les données du formulaire
      * @return FormInterface
      */
-    public function createEventInvitationForm()
+    public function createEventInvitationForm(EventInvitation $eventInvitation = null)
     {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
         return $this->formFactory->create(EventInvitationFormType::class, $this->eventInvitation);
     }
 

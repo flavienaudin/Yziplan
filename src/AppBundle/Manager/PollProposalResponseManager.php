@@ -9,9 +9,9 @@
 namespace AppBundle\Manager;
 
 
+use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalResponse;
-use AppBundle\Entity\Event\ModuleInvitation;
 use Doctrine\ORM\EntityManager;
 
 class PollProposalResponseManager
@@ -46,7 +46,7 @@ class PollProposalResponseManager
                 $this->pollProposalResponse->setAnswer($value);
             }
         }
-        if($this->pollProposalResponse == null) {
+        if ($this->pollProposalResponse == null) {
             $pollProposal = $moduleInvitation->getModule()->getPollModule()->getPollProposalById($pollProposalId);
             $this->initializePollProposalResponse($moduleInvitation, $pollProposal, $value);
         }

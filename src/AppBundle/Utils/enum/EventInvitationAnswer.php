@@ -8,8 +8,6 @@
 
 namespace AppBundle\Utils\enum;
 
-use AppBundle\Utils\enum\AbstractEnumType;
-
 class EventInvitationAnswer extends AbstractEnumType
 {
     const DONT_KNOW = "eventInvitation.answer.dont_know";

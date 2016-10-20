@@ -10,6 +10,7 @@ namespace AppBundle\Form\Event;
 
 
 use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Form\Type\InvitationAnswerType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -24,7 +25,7 @@ class EventInvitationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('answer', InvitationAnswerFormType::class);
+        $builder->add('answer', InvitationAnswerType::class);
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
             /** @var Form $form */
             $form = $formEvent->getForm();

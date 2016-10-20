@@ -100,7 +100,7 @@ class ProfileController extends BaseController
             $personalInformationForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
                 if ($personalInformationForm->isValid()) {
-                    $appUserInformationManager->updateAppUserInformation($appUserInformation);
+                    $appUserInformationManager->updateAppUserInformation();
                     // TODO : Gérer le format de la date en fonction de la locale
                     $data[AppJsonResponse::DATA] = array(
                         'public-name' => (!empty($appUserInformation->getPublicName()) ? $appUserInformation->getPublicName() : '-'),
@@ -121,7 +121,7 @@ class ProfileController extends BaseController
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             } else if ($personalInformationForm->isValid()) {
-                $appUserInformationManager->updateAppUserInformation($appUserInformation);
+                $appUserInformationManager->updateAppUserInformation();
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");
             } else {
@@ -154,7 +154,7 @@ class ProfileController extends BaseController
             $contactDetailsForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
                 if ($contactDetailsForm->isValid()) {
-                    $appUserInformationManager->updateAppUserInformation($appUserInformation);
+                    $appUserInformationManager->updateAppUserInformation();
                     $data[AppJsonResponse::DATA] = array(
                         'living-country' => (!empty($appUserInformation->getLivingCountry()) ? Intl::getRegionBundle()->getCountryName($appUserInformation->getLivingCountry()) : '-'),
                         'living-city' => ($appUserInformation->getLivingCity() != null ? $appUserInformation->getLivingCity() : '-')
@@ -169,7 +169,7 @@ class ProfileController extends BaseController
                     return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             } else if ($contactDetailsForm->isValid()) {
-                $appUserInformationManager->updateAppUserInformation($appUserInformation);
+                $appUserInformationManager->updateAppUserInformation();
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");
             } else {
@@ -204,7 +204,7 @@ class ProfileController extends BaseController
             $complementaryInformationForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
                 if ($complementaryInformationForm->isValid()) {
-                    $appUserInformationManager->updateAppUserInformation($appUserInformation);
+                    $appUserInformationManager->updateAppUserInformation();
                     $data[AppJsonResponse::DATA]["marital-status"] = empty($appUserInformation->getBiography()) ? "-" : $this->get("translator")->trans($appUserInformation->getMaritalStatus());
                     $data[AppJsonResponse::DATA]["biography"] = nl2br(empty($appUserInformation->getBiography()) ?
                         $this->get("translator")->trans("profile.show.profile_information.complementaries.biography.empty") : $appUserInformation->getBiography());
@@ -223,7 +223,7 @@ class ProfileController extends BaseController
                     return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             } else if ($complementaryInformationForm->isValid()) {
-                $appUserInformationManager->updateAppUserInformation($appUserInformation);
+                $appUserInformationManager->updateAppUserInformation();
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");
             } else {

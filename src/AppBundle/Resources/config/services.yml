@@ -76,16 +76,10 @@ services:
 
 # FormTypes
   at.form_type.invitation:
-    class: AppBundle\Form\InvitationsFormType
+    class: AppBundle\Form\Event\InvitationsFormType
     arguments: ['@security.authorization_checker', '@security.token_storage', '@validator']
     tags:
     - { name: form.type }
-
-  at.form_type.invitation_answer:
-    class: AppBundle\Form\InvitationAnswerFormType
-    arguments: ['@translator.default']
-    tags:
-      - { name: form.type }
 
 # Event Subscribers
   at.event_subscriber.kernel_events.:

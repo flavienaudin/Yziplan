@@ -8,7 +8,6 @@
 
 namespace AppBundle\Manager;
 
-use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\Contact;
 use AppBundle\Entity\User\ContactEmail;
 use AppBundle\Entity\User\ContactGroup;
@@ -132,7 +131,7 @@ class ContactManager
     public function updateContact(Contact $contact, AccountUser $user)
     {
         $this->contact = $contact;
-        if($this->contact->getOwner() == null) {
+        if ($this->contact->getOwner() == null) {
             $this->contact->setOwner($user->getApplicationUser());
         }
         $this->contact->setStatus(ContactStatus::VALID);
@@ -149,7 +148,7 @@ class ContactManager
      */
     public function removeContact(Contact $contact = null)
     {
-        if($contact != null){
+        if ($contact != null) {
             $this->contact = $contact;
         }
         if ($this->contact != null && $this->contact->getStatus() != ContactStatus::DELETED) {

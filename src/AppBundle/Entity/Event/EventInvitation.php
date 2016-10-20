@@ -3,8 +3,8 @@
 namespace AppBundle\Entity\Event;
 
 use AppBundle\Entity\Payment\Wallet;
-use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Entity\User\ApplicationUser;
+use AppBundle\Utils\enum\EventInvitationAnswer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -358,11 +358,11 @@ class EventInvitation
     public function getDisplayableEmail()
     {
         $displayableEmail = null;
-        if ($this->getApplicationUser() != null){
-            if($this->getApplicationUser()->getAppUserEmails()->count()>0){
+        if ($this->getApplicationUser() != null) {
+            if ($this->getApplicationUser()->getAppUserEmails()->count() > 0) {
                 $this->getApplicationUser()->getAppUserEmails()->first();
                 $displayableEmail = $this->getApplicationUser()->getAccountUser()->getEmail();
-            }elseif($this->getApplicationUser()->getAccountUser() != null) {
+            } elseif ($this->getApplicationUser()->getAccountUser() != null) {
                 $displayableEmail = $this->getApplicationUser()->getAccountUser()->getEmail();
             }
         }

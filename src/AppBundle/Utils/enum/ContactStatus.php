@@ -8,9 +8,7 @@
 
 namespace AppBundle\Utils\enum;
 
-/**
- * Class ContactStatus
- */
+
 class ContactStatus extends AbstractEnumType
 {
     /* Values */

@@ -2,7 +2,6 @@
 
 namespace AppBundle\Repository\User;
 
-use AppBundle\Entity\User\Contact;
 use AppBundle\Utils\enum\ContactStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\ORM\EntityRepository;

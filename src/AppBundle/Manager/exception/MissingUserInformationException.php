@@ -16,14 +16,14 @@ class MissingUserInformationException extends Exception
 
     const USERABOUTINFORMATION = "UserAboutInformation";
     const USERTYPE = "UserType";
-    
+
     const FIRSTNAME = "FirstName";
     const LASTNAME = "LastName";
     const BIRTHDAY = "Birthday";
     const NATIONALITY = "Nationality";
     const COUNTRYOFRESIDENCE = "CountryOfResidence";
     const EMAIL = "Email";
-    
+
     const BUSiNESSNAME = "BusinessName";
     const LEGALREPRESENTATIVE_FIRSTNAME = "LegalRepresentativeFirstName";
     const LEGALREPRESENTATIVE_LASTNAME = "LegalRepresentativeLastName";
@@ -31,19 +31,17 @@ class MissingUserInformationException extends Exception
     const LEGALREPRESENTATIVE_NATIONALITY = "LegalRepresentativeNationality";
     const LEGALREPRESENTATIVE_COUNTRYOFRESIDENCE = "LegalRepresentativeCountryOfResidence";
     const LEGALREPRESENTATIVE_EMAIL = "GenericBusinessEmail";
-    
+
     /**
      * @var array
      */
-    private
-    $missingInformations;
+    private $missingInformations;
 
     /**
      * MissingUserAboutInformationException constructor.
      * @param array $missingInformations
      */
-    public
-    function __construct(array $missingInformations)
+    public function __construct(array $missingInformations)
     {
         $this->missingInformations = $missingInformations;
     }
@@ -52,19 +50,11 @@ class MissingUserInformationException extends Exception
     /**
      * @return array
      */
-    public
-    function getMissingInformations()
+    public function getMissingInformations()
     {
         return $this->missingInformations;
     }
 
-    /**
-     * @param array $missingInformations
-     */
-    public
-    function setMissingInformations($missingInformations)
-    {
-        $this->missingInformations = $missingInformations;
-    }
+    // TODO add/remove 'setter'
 
 }
