@@ -71,37 +71,6 @@ class UserManager extends BaseManager
     }
 
     /**
-     * @param $email string Email to look for
-     * @return AppUserEmail|null
-     */
-    public function findAppUserEmailByEmail($email)
-    {
-        return $this->entityManager->getRepository(AppUserEmail::class)->findOneBy(['emailCanonical' => $this->emailCanonicalizer->canonicalize($email)]);
-    }
-
-
-    /**
-     * Create a user from the given email. The user is disabled and a random password is set.
-     *
-     * @param $email
-     * @return AccountUser
-     * @deprecated
-     * // TODO :  Revoir la gestion des contacts et Invitation
-     */
-    public function createUserFromEmail($email)
-    {
-        /** @var AccountUser $user */
-        $user = $this->createUser();
-        $user->setEmail($email);
-        $user->setUsername($email);
-        $user->setPlainPassword($this->tokenGenerateur->random(GenerateursToken::MOTDEPASSE_LONGUEUR));
-        $user->setEnabled(false);
-        $user->setPasswordKnown(false);
-        $this->updateUser($user);
-        return $user;
-    }
-
-    /**
      * @param AccountUser $user
      * @return FormInterface
      */

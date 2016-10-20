@@ -106,6 +106,28 @@ class ApplicationUserManager
     }
 
     /**
+     * Create an ApplicationUser with AppUserEmail from the given email. No AccountUser is created.
+     *
+     * /!\ Email should be used by another AppUserEmail.
+     *
+     * @param $email string
+     * @return ApplicationUser
+     */
+    public function createApplicationUserFromEmail($email)
+    {
+        /** @var ApplicationUser $applicationUser */
+        $this->applicationUser = new ApplicationUser();
+        $appUserEmail = new AppUserEmail();
+        $appUserEmail->setEmail($email);
+        $appUserEmail->setEmailCanonical($this->emailCanonicalizer->canonicalize($appUserEmail->getEmail()));
+        $appUserEmail->setUseToReceiveEmail(false);
+        $this->applicationUser->addAppUserEmail($appUserEmail);
+        $this->entityManager->persist($this->applicationUser);
+        $this->entityManager->flush();
+        return $this->applicationUser;
+    }
+
+    /**
      * @param FormInterface $appUserEmailForm
      * @return FormInterface
      */

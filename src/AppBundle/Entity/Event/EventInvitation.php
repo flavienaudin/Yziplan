@@ -359,9 +359,8 @@ class EventInvitation
     {
         $displayableEmail = null;
         if ($this->getApplicationUser() != null) {
-            if ($this->getApplicationUser()->getAppUserEmails()->count() > 0) {
-                $this->getApplicationUser()->getAppUserEmails()->first();
-                $displayableEmail = $this->getApplicationUser()->getAccountUser()->getEmail();
+            if ($this->getApplicationUser()->getAccountUser() == null &&  $this->getApplicationUser()->getAppUserEmails()->count() > 0) {
+                $displayableEmail = $this->getApplicationUser()->getAppUserEmails()->first()->getEmail();
             } elseif ($this->getApplicationUser()->getAccountUser() != null) {
                 $displayableEmail = $this->getApplicationUser()->getAccountUser()->getEmail();
             }

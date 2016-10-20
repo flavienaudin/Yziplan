@@ -17,7 +17,7 @@ services:
 
   at.manager.event_invitation:
     class: AppBundle\Manager\EventInvitationManager
-    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.user','@at.manager.module_invitation']
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.application_user','@at.manager.module_invitation']
 
   at.manager.module_invitation:
       class: AppBundle\Manager\ModuleInvitationManager
@@ -93,6 +93,13 @@ services:
     arguments: ['@at.mailer.twig_swift','@fos_user.util.token_generator','@router']
     tags:
       - { name: kernel.event_subscriber }
+
+# Validator Constraints
+  at.validator.email_not_belong_to_useraccount:
+    class: AppBundle\Validator\Constraints\EmailNotBelongToAccountUserValidator
+    arguments: ['@at.manager.application_user']
+    tags:
+      - { name: validator.constraint_validator }
 
 # Twig Extenstions
   at.twig_extension.country:

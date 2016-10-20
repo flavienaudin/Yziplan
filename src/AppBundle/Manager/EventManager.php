@@ -114,7 +114,7 @@ class EventManager
             $this->event->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
         $user = $this->tokenStorage->getToken()->getUser();
-        $this->eventInvitationManager->createCreatorEventInvitation($this->event, ($user instanceof AccountUser ? $user : null));
+        $this->eventInvitationManager->createCreatorEventInvitation($this->event, ($user instanceof AccountUser ? $user->getApplicationUser() : null));
 
         if (empty($this->getEvent()->getId())) {
             $this->entityManager->persist($this->getEvent());

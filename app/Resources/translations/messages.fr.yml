@@ -115,11 +115,11 @@ eventInvitations:
 eventInvitation:
   form:
     guestname:
-      label: Votre nom pour l'événement
+      label: Nom
       placeholder: Votre nom pour l'événement
     email:
-      label: Votre e-mail de contact
-      placeholder: Votre e-mail
+      label: E-mail
+      placeholder: Votre e-mail de contact
     answer:
       label: Serez-vous présent ?
       placeholder: Serez-vous présent ?
@@ -129,15 +129,19 @@ eventInvitation:
     interested: Intéressé
     dont_know: Je ne sais pas encore
   maindata.card:
-    title: A propos de votre invitation
+    title: Votre profil
     text:
       disconnect: Vous n'êtes pas %user% ?
     new_warning_alert:
       title: Quel est votre nom ?
       message: Merci de renseigner votre nom pour valider l'invitation.
       inputError: C'est mieux avec quelques lettres.
-  error.message:
-    unauthorized_access: Vous n'êtes pas inviter à cet événement.
+  message:
+    warning:
+      email_owned_by_accountuser: Attention! Cet e-mail est associée à un compte utilisateur. Connectez-vous avant de participer pour profiter de toutes les fonctionnalités.
+    error:
+      unauthorized_cancel: Vous n'avez pas les autorisations pour annuler cette invitation.
+      unauthorized_access: Vous n'êtes pas inviter à cet événement.
 
 invitations:
   display:

@@ -11,6 +11,7 @@ namespace AppBundle\Form\Event;
 
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Form\Type\InvitationAnswerType;
+use AppBundle\Validator\Constraints\EmailNotBelongToAccountUser;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -21,7 +22,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventInvitationFormType extends AbstractType
+class EventInvitationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -31,7 +32,6 @@ class EventInvitationFormType extends AbstractType
             $form = $formEvent->getForm();
             /** @var EventInvitation $eventInvitation */
             $eventInvitation = $formEvent->getData();
-
             $displayableName = $eventInvitation->getDisplayableName();
             $form
                 ->add('guestName', TextType::class, array(
@@ -46,7 +46,8 @@ class EventInvitationFormType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'data' => $email,
-                'disabled' => ($eventInvitation->getApplicationUser() != null)
+                'disabled' => ($eventInvitation->getApplicationUser() != null),
+                'constraints' => ($eventInvitation->getApplicationUser() == null ? new EmailNotBelongToAccountUser() : null)
             ));
         });
     }

@@ -40,7 +40,7 @@ class EventInvitationController extends Controller
     public function displayEventInvitationAction(EventInvitation $eventInvitation = null, Request $request)
     {
         if ($eventInvitation == null) {
-            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access"));
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         }
         $this->denyAccessUnlessGranted(EventInvitationVoter::EDIT, $eventInvitation);
@@ -80,10 +80,10 @@ class EventInvitationController extends Controller
             }
         }
         if ($request->isXmlHttpRequest()) {
-            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access");
+            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.message.error.unauthorized_cancel");
             return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
         } else {
-            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.error.message.unauthorized_access"));
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_cancel"));
             if ($eventInvitationToCancel != null) {
                 return $this->redirectToRoute("displayEvent", array("token" => $eventInvitationToCancel->getEvent()->getToken()));
             } else {

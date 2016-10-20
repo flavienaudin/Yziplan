@@ -47,7 +47,9 @@
 
         <div class="col-xs-12 col-sm-4">
             {% if userEventInvitation is defined %}
-                {{ include("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", {"userEventInvitation":userEventInvitation, 'userEventInvitationForm' : userEventInvitationForm}) }}
+                {{ include("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", {
+                    "userEventInvitation":userEventInvitation,
+                    'userEventInvitationForm' : userEventInvitationForm}) }}
             {% endif %}
             {{ include("@App/Event/partials/eventTechniqueDataCard.html.twig", {"event":event, 'userEventInvitation':userEventInvitation}) }}
         </div>
@@ -88,7 +90,7 @@
                     swal.showInputError("{{ "eventInvitation.maindata.card.new_warning_alert.inputError"|trans|raw }}");
                     return false
                 }
-                $('#event_invitation_form_guestName').val(inputValue);
+                $('#event_invitation_guestName').val(inputValue);
                 $('form#userEventInvitationAbout').submit();
                 swal.close();
             });
