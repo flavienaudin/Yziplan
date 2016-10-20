@@ -80,4 +80,13 @@ class UserManager extends BaseManager
         $userForm->setData($user);
         return $userForm;
     }
+
+    /**
+     * @param $email string Email to look for
+     * @return AppUserEmail|null
+     */
+    public function findAppUserEmailByEmail($email)
+    {
+        return $this->entityManager->getRepository(AppUserEmail::class)->findOneBy(['emailCanonical' => $this->emailCanonicalizer->canonicalize($email)]);
+    }
 }

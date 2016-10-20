@@ -107,12 +107,14 @@ class EventInvitationManager
                 $this->eventInvitation = null;
             }
         } else {
-            if ($this->session->has(self::TOKEN_SESSION_KEY)) {
+            // Un utilisateur connecté ne peut récupérer une invitation en session sinon il y a risque de récupération d'une invitation qui ne lui appartient pas
+            // De plus, un EventInvitation devrait déjà être créé pour lui s'il a déjà tenté de participer à l'événement (ou alors il n'était pas connecté , auquel cas
+            // une nouvelle invitation sera créée.
+            if ($user == null && $this->session->has(self::TOKEN_SESSION_KEY)) {
                 $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'token' => $this->session->get(self::TOKEN_SESSION_KEY)));
             }
             if ($this->eventInvitation != null) {
-                $auth = $this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation);
-                if (!$auth) {
+                if (!$this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
                     $this->eventInvitation = null;
                 }
             } else {
