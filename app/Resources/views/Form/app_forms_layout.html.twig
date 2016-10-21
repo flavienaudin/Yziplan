@@ -190,11 +190,11 @@
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
     {% if 'radio-inline' in parent_label_class %}
         <div class="radio radio-inline">
-            {{- form_label(form, null, { widget: block('radio_input_helper_widget')}) -}}
+            {{- form_label(form, null, { widget: block('radio_input_helper_widget'), required : false}) -}}
         </div>
     {% else -%}
         <div class="radio">
-            {{- form_label(form, null, { widget: block('radio_input_helper_widget') }) -}}
+            {{- form_label(form, null, { widget: block('radio_input_helper_widget'), required : false }) -}}
         </div>
     {%- endif %}
 {%- endblock radio_widget %}
