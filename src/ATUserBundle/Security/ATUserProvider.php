@@ -25,7 +25,7 @@ class ATUserProvider extends FOSUBUserProvider
 {
     /** @var GenerateursToken $tokenGenerateur */
     protected $tokenGenerateur;
-        /** @var EventDispatcherInterface $eventDispatcher */
+    /** @var EventDispatcherInterface $eventDispatcher */
     protected $eventDispatcher;
 
     /** @param GenerateursToken $tokenGenerateur */

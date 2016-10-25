@@ -2,10 +2,8 @@ services:
 # Services & Managers
     at.manager.user:
         class: ATUserBundle\Manager\UserManager
-        arguments: ['@security.encoder_factory', '@fos_user.util.username_canonicalizer', '@fos_user.util.email_canonicalizer', '@fos_user.object_manager', '%fos_user.model.user.class%' ]
+        arguments: ['@fos_user.util.password_updater', '@at.updater.canonical_fields', '@fos_user.object_manager', '%fos_user.model.user.class%' ]
         calls:
-            - [ setTokenGenerateur, ['@at.service.gentoken'] ]
-            - [ setEntityManager, ['@doctrine.orm.entity_manager'] ]
             - [ setFosUserProfileFormFactory, ['@fos_user.profile.form.factory'] ]
 
 # Provider

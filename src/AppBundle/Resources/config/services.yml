@@ -3,6 +3,14 @@ services:
   at.service.gentoken:
     class: AppBundle\Manager\GenerateursToken
 
+  at.updater.canonical_fields:
+    class: AppBundle\Utils\User\CanonicalFieldsUpdater
+    parent: fos_user.util.canonical_fields_updater
+
+#  at.uploader.file:
+#    class: AppBundle\Utils\File\FileUploader
+#    arguments: ['%kernel.root_dir%/../web/uploads/user/avatar']
+
   at.manager.mangopay:
     class: AppBundle\Manager\MangoPayManager
     arguments: ['%mangopay.client.id%', "%mangopay.client.password%", "%mangopay.temporary.folder%", "%mangopay.base.url%", '@doctrine.orm.entity_manager','@security.authorization_checker']
