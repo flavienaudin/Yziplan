@@ -93,6 +93,14 @@
 
 
 /*-----------------------------------
+    Avatar (Adapt Material Design Extebded Admin
+------------------------------------*/
+.avatar-img,
+.avatar-char {
+    border-radius: 0;
+}
+
+/*-----------------------------------
     Affichage d'avatar utilisateur
 -----------------------------------*/
 .avatar-container-list {

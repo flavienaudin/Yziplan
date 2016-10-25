@@ -5,23 +5,26 @@
 
 <div id="eventInvitationProfile_formContainer">
     {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationProfile'}}) }}
-    {{ form_row(userEventInvitationForm.guestName, {
-        'label':'eventInvitation.form.guestname.label'|trans,
-        'attr':{'placeholder':'eventInvitation.form.guestname.placeholder'},
-        'fgline' : true
-    }) }}
-    {{ form_row(userEventInvitationForm.email, {
-        'label':'eventInvitation.form.email.label',
-        'attr':{'placeholder':'eventInvitation.form.email.placeholder'},
-        'fgline' : true
-    }) }}
-    {{ form_row(userEventInvitationForm.answer, {
-        'label':'eventInvitation.form.answer.label',
-        'attr':{'placeholder':'eventInvitation.form.answer.placeholder'},
-        'fgline' : true
-    }) }}
+    <div class="row">
+        <div class="col-sm-7">
+            {{ form_row(userEventInvitationForm.guestName, {
+                'label':'eventInvitation.form.guestname.label'|trans,
+                'label_attr':{'class':'sr-only'},
+                'attr':{'placeholder':'eventInvitation.form.guestname.placeholder'},
+                'fgline' : true
+            }) }}
+            {{ form_row(userEventInvitationForm.email, {
+                'label':'eventInvitation.form.email.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'placeholder':'eventInvitation.form.email.placeholder'},
+                'fgline' : true
+            }) }}
+        </div>
+        <div class="col-sm-5">
+            <img src="{{ asset('uploads/user/avatar/flavien.jpg') }}" class="img-responsive">
+        </div>
+    </div>
     {{ form_rest(userEventInvitationForm) }}
-
     <div class="p-t-15 p-b-15 text-right">
         {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and (userEventInvitation.applicationUser is null or userEventInvitation.applicationUser.accountUser is null)
         and userEventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}

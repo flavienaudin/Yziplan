@@ -49,6 +49,20 @@
     {% endspaceless %}
 {%- endblock form_label %}
 
+{% block checkbox_label -%}
+    {# Toujours mettre le label pour chaque checkbox #}
+    {% set parent_label_class = (parent_label_class|default(''))|replace({'sr-only':''})|trim %}
+    {{- block('checkbox_radio_label', {'parent_label_class':parent_label_class}) -}}
+{%- endblock checkbox_label %}
+
+{% block radio_label -%}
+    {# Toujours mettre le label pour chaque radio #}
+    {% set parent_label_class = (parent_label_class|default(''))|replace({'sr-only':''})|trim %}
+    {{- block('checkbox_radio_label', {'parent_label_class':parent_label_class}) -}}
+{%- endblock radio_label %}
+
+{%- block button_label -%}{%- endblock -%}
+
 {# Re-définition des input de date #}
 {% block datetime_widget -%}
     {% if widget == 'single_text' %}
@@ -61,9 +75,6 @@
         {{- form_widget(form.time, { datetime: true } ) -}}
     {%- endif %}
 {%- endblock datetime_widget %}
-
-
-{%- block button_label -%}{%- endblock -%}
 
 {% block date_widget -%}
     {% if widget == 'single_text' %}

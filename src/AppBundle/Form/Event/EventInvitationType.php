@@ -26,7 +26,6 @@ class EventInvitationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('answer', InvitationAnswerType::class);
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
             /** @var Form $form */
             $form = $formEvent->getForm();
