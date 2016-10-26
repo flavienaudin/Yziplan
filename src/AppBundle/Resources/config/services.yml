@@ -7,9 +7,9 @@ services:
     class: AppBundle\Utils\User\CanonicalFieldsUpdater
     parent: fos_user.util.canonical_fields_updater
 
-#  at.uploader.file:
-#    class: AppBundle\Utils\File\FileUploader
-#    arguments: ['%kernel.root_dir%/../web/uploads/user/avatar']
+  at.uploader.file:
+    class: AppBundle\Utils\File\FileUploader
+    arguments: ['%avatar_directory%']
 
   at.manager.mangopay:
     class: AppBundle\Manager\MangoPayManager
@@ -45,7 +45,7 @@ services:
 
   at.manager.app_user_information:
       class: AppBundle\Manager\AppUserInformationManager
-      arguments: ['@doctrine.orm.entity_manager','@form.factory']
+      arguments: ['@doctrine.orm.entity_manager','@form.factory','@at.uploader.file']
 
   at.manager.contact:
       class: AppBundle\Manager\ContactManager
@@ -97,10 +97,18 @@ services:
       - { name: kernel.event_subscriber }
 
   at.event_listener.appuseremail_confirmation:
-    class: AppBundle\EventListener\AppUserEmailConfirmationListener
+    class: AppBundle\EventListener\AppUserEmailConfirmationSubscriber
     arguments: ['@at.mailer.twig_swift','@fos_user.util.token_generator','@router']
     tags:
       - { name: kernel.event_subscriber }
+
+  at.event_listener.avatar_upload:
+    class: AppBundle\EventListener\User\AvatarUploadListener
+    arguments: ['@at.uploader.file']
+    tags:
+      - { name: doctrine.event_listener, event: prePersist }
+      - { name: doctrine.event_listener, event: preUpdate }
+      - { name: doctrine.event_listener, event: postLoad }
 
 # Validator Constraints
   at.validator.email_not_belong_to_useraccount:

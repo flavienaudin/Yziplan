@@ -22,3 +22,5 @@ composer.lock
 *.php~
 bin/symfony_requirements
 web/config.php
+web/uploads/user/avatar/*
+!web/uploads/user/avatar/.gitkeep

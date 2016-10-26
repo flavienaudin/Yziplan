@@ -15,6 +15,7 @@ use AppBundle\Form\User\ContactType;
 use AppBundle\Manager\AppUserInformationManager;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
+use AppBundle\Utils\Response\FileInputJsonResponse;
 use ATUserBundle\Entity\AccountUser;
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Event\GetResponseUserEvent;
@@ -28,7 +29,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Intl\Intl;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
-
+/**
+ * Class ProfileController
+ * @package ATUserBundle\Controller
+ * @Route("/{_locale}/profile", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
+ */
 class ProfileController extends BaseController
 {
     /**
@@ -86,7 +91,7 @@ class ProfileController extends BaseController
     }
 
     /**
-     * @Route("/update-user-basic-information", name="updateUserPersonalInformation", methods={"POST"})
+     * @Route("/update/personals", name="updateUserPersonalInformation", methods={"POST"})
      */
     public function updateUserPersonalInformationAction(Request $request)
     {
@@ -140,7 +145,7 @@ class ProfileController extends BaseController
     }
 
     /**
-     * @Route("/update-user-contact-details", name="updateUserContactDetails", methods={"POST"})
+     * @Route("/update/contact-details", name="updateUserContactDetails", methods={"POST"})
      */
     public function updateUserContactDetailsAction(Request $request)
     {
@@ -188,7 +193,7 @@ class ProfileController extends BaseController
     }
 
     /**
-     * @Route("/update-user-biography", name="updateUserComplementatyInformation")
+     * @Route("/update/complementaries", name="updateUserComplementatyInformation")
      */
     public function updateUserComplementatyInformationAction(Request $request)
     {
@@ -238,6 +243,76 @@ class ProfileController extends BaseController
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
                 return $this->redirectToRoute("fos_user_profile_show");
             }
+        }
+    }
+
+    /**
+     * @Route("/update/avatar", name="updateUserAvatar")
+     */
+    public function updateUserAvatar(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $imageFile = $request->files->get('avatarImageInput');
+            /** @var AppUserInformationManager $appUserInformationManager */
+            $appUserInformationManager = $this->get("at.manager.app_user_information");
+            $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($this->getUser());
+            if ($appUserInformation->getAvatar() != null) {
+                $this->get('at.uploader.file')->delete($appUserInformation->getAvatar());
+            }
+            $appUserInformation->setAvatar($imageFile);
+            $appUserInformationManager->updateAppUserInformation();
+
+            // TODO : Supprimer après phase de TEST
+//             if ($appUserInformation->getAvatar() != null) {
+//                $baseUrl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath();
+//                $relDir = $this->get('at.uploader.file')->getWebRelativeTargetDir();
+//                $data[FileInputJsonResponse::INITIAL_PREVIEW] =
+//                    $baseUrl . '/' . $relDir . '/' . $appUserInformation->getAvatar();
+//                $data[FileInputJsonResponse::INITIAL_PREVIEW_CONFIG][] = [
+//                    FileInputJsonResponse::IPC_URL => $this->generateUrl('deleteUserAvatar', [], UrlGeneratorInterface::ABSOLUTE_URL),
+//                    FileInputJsonResponse::IPC_KEY => 100,
+//                    'overwriteInitial' => true
+//                ];
+//            } else {
+//                $data = array();
+//            }
+            $data = array();
+            return new FileInputJsonResponse($data, Response::HTTP_OK);
+
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
+            return $this->redirectToRoute('fos_user_profile_show');
+        }
+    }
+
+    /**
+     * @Route("/delete/user-avatar", name="deleteUserAvatar")
+     */
+    public function deleteUserAvatar(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            /** @var AppUserInformationManager $appUserInformationManager */
+            $appUserInformationManager = $this->get("at.manager.app_user_information");
+            $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($this->getUser());
+            if ($appUserInformation->getAvatar() != null) {
+                $this->get('at.uploader.file')->delete($appUserInformation->getAvatar());
+                $appUserInformation->setAvatar(null);
+            }
+            $appUserInformationManager->updateAppUserInformation();
+
+            $data[FileInputJsonResponse::INITIAL_PREVIEW] = [];
+            return new FileInputJsonResponse($data, Response::HTTP_OK);
+
+        } else {
+            /** @var AppUserInformationManager $appUserInformationManager */
+            $appUserInformationManager = $this->get("at.manager.app_user_information");
+            $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($this->getUser());
+            if ($appUserInformation->getAvatar() != null) {
+                $this->get('at.uploader.file')->delete($appUserInformation->getAvatar());
+                $appUserInformation->setAvatar(null);
+            }
+            $appUserInformationManager->updateAppUserInformation();
+            return $this->redirectToRoute('fos_user_profile_show');
         }
     }
 }

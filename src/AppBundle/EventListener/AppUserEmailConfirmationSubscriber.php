@@ -18,7 +18,7 @@ use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-class AppUserEmailConfirmationListener implements EventSubscriberInterface
+class AppUserEmailConfirmationSubscriber implements EventSubscriberInterface
 {
     /** @var AtTwigSiwftMailer $mailer */
     private $mailer;

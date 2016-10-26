@@ -4,6 +4,9 @@ namespace AppBundle\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 
 /**
  * AppUserInformation
@@ -114,6 +117,13 @@ class AppUserInformation
      * @ORM\Column(name="marital_status", type="enum_marital_status", nullable=true)
      */
     private $maritalStatus = null;
+
+    /**
+     * This attributes stores the filename of the file for the database, but also the File due to PostLoad event lstener to load the file (Cf. AvatarUploadListener class)
+     * @var string|File
+     * @ORM\Column(name="avatar_file_name", type="string", length=255, nullable=true)
+     */
+    private $avatar;
 
 
     /***********************************************************************
@@ -373,6 +383,24 @@ class AppUserInformation
     public function setMaritalStatus($maritalStatus)
     {
         $this->maritalStatus = $maritalStatus;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param mixed $avatar
+     * @return AppUserInformation
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
         return $this;
     }
 

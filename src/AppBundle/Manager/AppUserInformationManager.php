@@ -11,6 +11,7 @@ namespace AppBundle\Manager;
 
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserInformation;
+use AppBundle\Utils\File\FileUploader;
 use ATUserBundle\Entity\AccountUser;
 use ATUserBundle\Form\AppUserInfoComplementariesType;
 use ATUserBundle\Form\AppUserInfoContactDetailsType;
@@ -25,13 +26,17 @@ class AppUserInformationManager
     private $entityManager;
     /** @var FormFactoryInterface $formFactory */
     private $formFactory;
+    /** @var FileUploader */
+    private $avatarFileUpload;
     /** @var AppUserInformation $AppUserInformation */
     private $appUserInformation;
 
-    public function __construct(EntityManager $em, FormFactoryInterface $formFactory)
+
+    public function __construct(EntityManager $em, FormFactoryInterface $formFactory, FileUploader $avatarFileUpload)
     {
         $this->entityManager = $em;
         $this->formFactory = $formFactory;
+        $this->avatarFileUpload = $avatarFileUpload;
     }
 
     /**
