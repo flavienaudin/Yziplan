@@ -17,10 +17,88 @@
 {% endblock mainMenu_listItems %}
 
 {% block event_content %}
-    {{ include("@App/Event/partials/eventHeaderCard.html.twig", {'event':event, 'eventForm':eventForm, 'userEventInvitation':userEventInvitation, 'invitationsForm':invitationsForm}) }}
+    {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
+        {# TODO Positionner le menu s'ouvrant relativement au browser #}
+        <div class="dropdown add-module-menu">
+            <button class="btn btn-float btn-danger m-btn waves-effect waves-circle waves-float" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-plus"></i></button>
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-8" id="eventModulesContainer">
+            {#<a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>#}
+            <ul class="dropdown-menu pull-right">
+                <li>
+                    <a href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE')}) }}" id="addWhenPollModule">
+                        <i class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i><small>Sondage Quand ?</small>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="modal" href="#"><i class="waves-effect palette-Teal bg zmdi zmdi-map"></i>
+                        <small>Sondage Où ?</small>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="modal" href="#"><i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help"></i>
+                        <small>Sondage Quoi ?</small>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="modal" href="#"> <i class="waves-effect palette-Yellow-900 bg zmdi zmdi-money-box"></i>
+                        <small>Cagnotte</small>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="modal" href="#"><i class="waves-effect palette-Green bg zmdi zmdi-format-list-bulleted"></i>
+                        <small>Qui apporte quoi ?</small>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="modal" href="#"> <i class="waves-effect palette-Purple bg zmdi zmdi-balance-wallet"></i>
+                        <small>Comptes entre amis</small>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <script>
+            $('#addWhenPollModule').on('click', function (e) {
+                ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
+                    if (responseJSON.htmlContent) {
+                        var eventModulesContainer = $('#eventModulesContainer');
+                        eventModulesContainer.append(responseJSON.htmlContent);
+                        $(document).scrollTop($(eventModulesContainer).children().last().offset().top);
+                    }
+                }, null, null);
+            });
+        </script>
+    {% endif %}
+
+    <div class="grid row">
+        <!-- .grid-sizer empty element, only used for element sizing -->
+        <div class="grid-sizer col-xs-12 col-lg-4"></div>
+
+        <div class="grid-item col-xs-12 col-lg-8" id="eventModulesContainer">
+            {{ include("@App/Event/partials/event_header_card.html.twig", {'userEventInvitation':userEventInvitation, 'eventForm':eventForm}) }}
+        </div>
+
+        <div class="grid-item col-xs-12 col-lg-4">
+            <div class="row">
+                <div class="col-xs-12 col-md-6 col-lg-12">
+                    {{ include("@App/Event/partials/eventInvitation_profile_card.html.twig", {
+                        "userEventInvitation":userEventInvitation,
+                        'userEventInvitationForm' : userEventInvitationForm}) }}
+                </div>
+                <div class="col-xs-12 col-md-6 col-lg-12">
+                    {{ include("@App/Event/partials/eventInvitation_answerCard.html.twig", {"event":event, 'userEventInvitation':userEventInvitation}) }}
+                </div>
+
+                <div class="col-xs-12">
+                    {{ include('@App/Event/partials/eventInvitations_card.html.twig', {
+                        'userEventInvitation':userEventInvitation,
+                        'eventInvitations':event.eventInvitations,
+                        'invitationsForm':invitationsForm
+                    }) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-item col-xs-12 col-lg-8" id="eventModulesContainer">
             {% for moduleDescription in modules if moduleDescription.module.status != constant("AppBundle\\Utils\\enum\\ModuleStatus::DELETED") %}
                 {% if moduleDescription.module.pollModule is not null %}
                     {{ include('@App/Event/module/displayPollModule.html.twig', {
@@ -45,14 +123,6 @@
             {% endfor %}
         </div>
 
-        <div class="col-xs-12 col-sm-4">
-            {% if userEventInvitation is defined %}
-                {{ include("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", {
-                    "userEventInvitation":userEventInvitation,
-                    'userEventInvitationForm' : userEventInvitationForm}) }}
-            {% endif %}
-            {{ include("@App/Event/partials/eventTechniqueDataCard.html.twig", {"event":event, 'userEventInvitation':userEventInvitation}) }}
-        </div>
     </div>
 {% endblock event_content %}
 
@@ -72,13 +142,14 @@
 
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset("bundles/app/js/masonry.pkgd.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
 
     {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
         <script>
             swal({
-                title: "{{ "eventInvitation.maindata.card.new_warning_alert.title"|trans|raw }}",
-                text: "{{ "eventInvitation.maindata.card.new_warning_alert.message"|trans|raw }}",
+                title: "{{ "eventInvitation.profile.card.new_warning_alert.title"|trans|raw }}",
+                text: "{{ "eventInvitation.profile.card.new_warning_alert.message"|trans|raw }}",
                 type: "input",
                 showCancelButton: true,
                 closeOnConfirm: false,
@@ -87,7 +158,7 @@
             }, function (inputValue) {
                 if (inputValue === false) return false;
                 if (inputValue === "") {
-                    swal.showInputError("{{ "eventInvitation.maindata.card.new_warning_alert.inputError"|trans|raw }}");
+                    swal.showInputError("{{ "eventInvitation.profile.card.new_warning_alert.inputError"|trans|raw }}");
                     return false
                 }
                 $('#event_invitation_guestName').val(inputValue);

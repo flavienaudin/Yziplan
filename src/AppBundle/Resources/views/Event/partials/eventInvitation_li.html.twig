@@ -1,13 +1,14 @@
 {# Données d'entrée :
-- event (Event) L'événement concerné
 - userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
 - eventInvitation (EventInvitation) L'invitation à l'événement à afficher
-- editEventMode (boolean) Si l'utilisateur a l'autorisation d'éditer l'événement
 #}
 
 {% spaceless %}
     <li id=eventInvitation_event_{{ eventInvitation.token }}>{{ eventInvitation.displayableName }}
-        <a href="{{ path("cancelEventInvitation", {'userEventInvitationToken': userEventInvitation.token ,'eventInvitationTokenToCancel':eventInvitation.token}) }}" data-toggle="tooltip"
-           data-original-title="{{ "invitations.display.remove_link"|trans({"%name%":eventInvitation.displayableName}) }}"> <i class="zmdi zmdi-close-circle-o"></i></a>
+        {% if is_granted(constant('AppBundle\\Security\\EventInvitationVoter::CANCEL'), [userEventInvitation, eventInvitation]) %}
+            <a class="text-danger cancelInvitation" href="{{ path("cancelEventInvitation", {'eventInvitationTokenToCancel':eventInvitation.token}) }}" data-toggle="tooltip"
+               data-guestname="{{ eventInvitation.displayableName }}" data-original-title="{{ "invitations.display.cancel.link"|trans({"%name%":eventInvitation.displayableName}) }}"> <i
+                        class="zmdi zmdi-close-circle-o"></i></a>
+        {% endif %}
     </li>
 {% endspaceless %}

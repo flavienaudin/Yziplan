@@ -298,10 +298,10 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
     });
 
     // TODO Pour retro-compatibilité : la bonne pratique est de ré-afficher tout le formulaire lui même contenant les erreurs de validation
-    $('.has-error').each(function () {
+    /*$('.has-error').each(function () {
         $(this).find("small.help-block").remove();
         $(this).removeClass("has-error");
-    });
+    });*/
 
     $.ajax({
         url: $(form).attr('action'),
@@ -320,7 +320,7 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
             treatHtmlContents(responseJSON['htmlContents']);
         }
         // TODO Pour retro-compatibilité : la bonne pratique est de ré-afficher tout le formulaire lui même contenant les erreurs de validation
-        if (responseJSON != undefined && responseJSON.hasOwnProperty('formErrors')) {
+        /*if (responseJSON != undefined && responseJSON.hasOwnProperty('formErrors')) {
             var formErrors = responseJSON['formErrors'];
             for (var fieldErrorName in formErrors) {
                 if (formErrors.hasOwnProperty(fieldErrorName)) {
@@ -329,7 +329,7 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
                     inputField.after('<small class="help-block">' + formErrors[fieldErrorName] + '</small>')
                 }
             }
-        }
+        }*/
         if (failCallback) {
             failCallback(jqXHR, textStatus, errorThrown);
         }

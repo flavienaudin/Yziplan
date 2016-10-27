@@ -10,7 +10,6 @@ namespace AppBundle\Form\Event;
 
 
 use AppBundle\Entity\Event\EventInvitation;
-use AppBundle\Form\Type\InvitationAnswerType;
 use AppBundle\Validator\Constraints\EmailNotBelongToAccountUser;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -36,7 +35,6 @@ class EventInvitationType extends AbstractType
                 ->add('guestName', TextType::class, array(
                     'required' => false,
                     'data' => $displayableName
-
                 ))
                 ->add('token', HiddenType::class);
 

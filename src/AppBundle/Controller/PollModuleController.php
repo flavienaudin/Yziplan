@@ -12,7 +12,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Utils\enum\FlashBagTypes;
-use AppBundle\Utils\FormUtils;
 use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -42,32 +41,31 @@ class PollModuleController extends Controller
             $pollProposalEditionForm = $this->get("at.manager.pollproposal")->createModuleForm($pollProposal);
             $pollProposalEditionForm->handleRequest($request);
             if ($pollProposalEditionForm->isSubmitted()) {
+                $moduleManager = $this->get("at.manager.module");
                 if ($pollProposalEditionForm->isValid()) {
-                    $moduleManager = $this->get("at.manager.module");
                     $pollProposal = $moduleManager->treatPollProposalForm($pollProposalEditionForm, $pollProposal->getPollModule()->getModule());
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                    // TODO use AppJsonResponse::HTML_CONTENTS
-                    $data['htmlContent'] = $moduleManager->displayPollProposalRowPartial($pollProposal, $moduleInvitation->getEventInvitation());
+                    // TODO vérifier que ça marche
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pp_display_row_' . $pollProposal->getId()] =
+                        $moduleManager->displayPollProposalRowPartial($pollProposal, $moduleInvitation->getEventInvitation());
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
-                    // TODO use AppJsonResponse::HTML_CONTENTS to replace the FORM
-                    $data["formErrors"] = array();
-                    foreach ($pollProposalEditionForm->getErrors(true) as $error) {
-                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                    }
+                    // TODO vérifier que ça marche
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pp_display_row_' . $pollProposal->getId()] =
+                        $moduleManager->displayPollProposalRowPartial($pollProposal, $moduleInvitation->getEventInvitation());
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             }
-            // TODO use AppJsonResponse::HTML_CONTENTS
-            $data['htmlContent'] = $this->renderView(
-                '@App/Event/module/pollModulePartials/pollProposalFormModal.html.twig', array(
-                    'pollProposalForm' => $pollProposalEditionForm->createView(),
-                    'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
-                    'edition' => true,
-                    'pollProposal' => $pollProposal,
-                    'userModuleInvitation' => $moduleInvitation
-                )
-            );
+            // TODO vérifier que ça marche
+            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollProposalEdition_' . $pollProposal->getId() . '_modal_id'] =
+                $this->renderView('@App/Event/module/pollModulePartials/pollProposalFormModal.html.twig', array(
+                        'pollProposalForm' => $pollProposalEditionForm->createView(),
+                        'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
+                        'edition' => true,
+                        'pollProposal' => $pollProposal,
+                        'userModuleInvitation' => $moduleInvitation
+                    )
+                );
             return new AppJsonResponse($data, Response::HTTP_OK);
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));

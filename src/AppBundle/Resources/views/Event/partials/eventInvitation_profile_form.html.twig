@@ -21,7 +21,11 @@
             }) }}
         </div>
         <div class="col-sm-5">
-            <img src="{{ asset('uploads/user/avatar/flavien.jpg') }}" class="img-responsive">
+            {% if userEventInvitation.applicationUser is not null and userEventInvitation.applicationUser.appUserInformation.avatar is not null %}
+                <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar.filename) }}" class="img-responsive" width="100%">
+            {% else %}
+                <img src="{{ asset('bundles/app/img/user/avatar/avatar_default.png') }}" class="img-responsive" width="100%">
+            {% endif %}
         </div>
     </div>
     {{ form_rest(userEventInvitationForm) }}
@@ -29,7 +33,7 @@
         {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and (userEventInvitation.applicationUser is null or userEventInvitation.applicationUser.accountUser is null)
         and userEventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
             <i class="m-r-10"><a href="{{ path('disconnectEventInvitation', {'eventToken':userEventInvitation.event.token}) }}">
-                    {{ "eventInvitation.maindata.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}
+                    {{ "eventInvitation.profile.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}
                 </a></i>
         {% endif %}
         {% if userEventInvitationForm is defined %}

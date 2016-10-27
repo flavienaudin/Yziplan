@@ -6,10 +6,11 @@ Données d'entrée :
 
 <div class="card" id="user-event-invitation-card">
     <div class="card-header">
-        <h3>{{ "eventInvitation.maindata.card.title"|trans }}</h3>
+        <h3>{{ "eventInvitation.profile.card.title"|trans }}</h3>
     </div>
     <div class="card-body card-padding">
         {{ include('@App/Event/partials/eventInvitation_profile_form.html.twig',{
+            'userEventInvitation' : userEventInvitation,
             'userEventInvitationForm' : userEventInvitationForm
         }) }}
     </div>

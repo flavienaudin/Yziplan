@@ -63,10 +63,32 @@
 
 {%- block button_label -%}{%- endblock -%}
 
+
+{%- block textarea_widget -%}
+    {% if fgline is defined and fgline -%}
+        <div class="fg-line">
+            {{- parent() -}}
+        </div>
+    {% else %}
+        {{- parent() -}}
+    {% endif %}
+{%- endblock textarea_widget -%}
+
 {# Re-définition des input de date #}
 {% block datetime_widget -%}
     {% if widget == 'single_text' %}
         {{- block('form_widget_simple') -}}
+    {% elseif displayInRow is defined and displayInRow -%}
+        <div class="row">
+            <div class="col-sm-6">
+                {{- form_widget(form.date, { datetime: true } ) -}}
+                {{- form_errors(form.date) -}}
+            </div>
+            <div class="col-sm-6">
+                {{- form_widget(form.time, { datetime: true } ) -}}
+                {{- form_errors(form.time) -}}
+            </div>
+        </div>
     {% else -%}
         {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
         {{- form_errors(form.date) -}}
@@ -76,6 +98,7 @@
     {%- endif %}
 {%- endblock datetime_widget %}
 
+{# Surchage total du widget, copiant directement le code du parent #}
 {% block date_widget -%}
     {% if widget == 'single_text' %}
         <div class="dtp-container dropdown">
@@ -103,6 +126,7 @@
     {% endif %}
 {%- endblock date_widget %}
 
+{# Surchage total du widget, copiant directement le code du parent #}
 {% block time_widget -%}
     {% if widget == 'single_text' %}
         {%- set type = 'text' -%}
@@ -194,7 +218,6 @@
         <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} hidden="hidden"/> <label
                 for="{{ id }}" class="ts-helper"></label>&nbsp; {{ block('form_label') }}
     </div>
-    {{ form_errors(form) }}
 {%- endblock md_toggle_switch_widget %}
 
 {% block radio_widget -%}
@@ -264,6 +287,7 @@
 {% endblock checkbox_radio_label %}#}
 
 
+{# Surchage total du widget, copiant directement le code du parent #}
 {% block collection_widget %}
     {% spaceless %}
         {% if prototype is defined %}

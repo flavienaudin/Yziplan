@@ -11,14 +11,11 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
-use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
-use AppBundle\Security\EventVoter;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -60,15 +57,20 @@ class EventInvitationController extends Controller
     }
 
     /**
-     * @Route("/cancel/{userEventInvitationToken}/{eventInvitationTokenToCancel}", name="cancelEventInvitation" )
-     * @ParamConverter("userEventInvitation", class="AppBundle:Event\EventInvitation", options={"mapping": {"userEventInvitationToken":"token"}})
+     * @Route("/cancel/{eventInvitationTokenToCancel}", name="cancelEventInvitation" )
      * @ParamConverter("eventInvitationToCancel", class="AppBundle:Event\EventInvitation", options={"mapping": {"eventInvitationTokenToCancel":"token"}})
      */
-    public function cancelEventInvitationAction(EventInvitation $userEventInvitation, EventInvitation $eventInvitationToCancel, Request $request)
+    public function cancelEventInvitationAction(EventInvitation $eventInvitationToCancel, Request $request)
     {
+        $userEventInvitation = null;
+        $eventInvitationManager = $this->get("at.manager.event_invitation");
+        if ($eventInvitationToCancel != null) {
+            // Get the UserInvitation
+            $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($eventInvitationToCancel->getEvent(), false, false, $this->getUser());
+        }
+
         // Only creator/admnsitrators can cancel an EventInvitation
         if ($this->isGranted(EventInvitationVoter::CANCEL, [$userEventInvitation, $eventInvitationToCancel])) {
-            $eventInvitationManager = $this->get("at.manager.event_invitation");
             if ($eventInvitationManager->cancelEventInvitation($eventInvitationToCancel)) {
                 if ($request->isXmlHttpRequest()) {
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("global.success.data_saved");

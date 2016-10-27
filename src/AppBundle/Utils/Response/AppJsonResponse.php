@@ -32,20 +32,12 @@ class AppJsonResponse extends JsonResponse
      *      ),
      *      self::DATA => array( données à transmettre à la fonction JS callback (done/fail) pour effectuer des traitements spécifiques (mise à jour d'affichage,...)
      *
-     *      TODO Pour retro-compatibilité : la bonne pratique est de ré-afficher tout le formulaire lui même contenant les erreurs de validation
-     *      self::FORM_ERRORS => array( nom complet du champ du formulaire (Cf. FormUtils::getFullFormErrorFieldName(FormError)) => message d'erreur au champ )
-     *      ),
-     *
      * )
      */
 
     const MESSAGES = "messages";
     const HTML_CONTENTS = "htmlContents";
     const DATA = "data";
-
-    // TODO Pour retro-compatibilité : la bonne pratique est de ré-afficher tout le formulaire lui même contenant les erreurs de validation
-    // deprecated
-    const FORM_ERRORS = "formErrors";
 
     /** Replace the element by the content */
     const HTML_CONTENT_ACTION_REPLACE = "replaceWith";

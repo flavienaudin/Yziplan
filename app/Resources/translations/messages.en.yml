@@ -79,7 +79,7 @@ event:
       label: Change the picture
     description:
       label: Description
-      placeholder: Description
+      placeholder: Say more about your event
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline
@@ -124,11 +124,13 @@ eventInvitation:
       label: Your answer
       placeholder: Your answer
   answer:
+    card:
+      title: Your answer
     yes: Yes
     no: No
     interested: Interested
     dont_know: Don't know yet
-  maindata.card:
+  profile.card:
     title: Your profile
     text:
       disconnect: You are not %user%?
@@ -146,7 +148,11 @@ eventInvitation:
 invitations:
   display:
     title: Guests list
-    remove_link: Cancel %name%'s invitation
+    cancel:
+      link: Cancel %name%'s invitation
+      swal:
+        title: Cancellattion
+        text: Are you sure you want to cancel %name%'s invitation?
   form:
     invitations:
       label: Invite new people

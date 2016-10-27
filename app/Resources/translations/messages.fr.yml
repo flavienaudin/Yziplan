@@ -79,7 +79,7 @@ event:
       label: Changer l'image
     description:
       label: Description
-      placeholder: Description
+      placeholder: Dites-en plus au sujet de votre événement
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse
@@ -124,11 +124,13 @@ eventInvitation:
       label: Serez-vous présent ?
       placeholder: Serez-vous présent ?
   answer:
+    card:
+      title: Votre réponse
     yes: Oui
     no: Non
     interested: Intéressé
     dont_know: Je ne sais pas encore
-  maindata.card:
+  profile.card:
     title: Votre profil
     text:
       disconnect: Vous n'êtes pas %user% ?
@@ -146,7 +148,11 @@ eventInvitation:
 invitations:
   display:
     title: Liste des invités
-    remove_link: Annuler l'invitation de %name%
+    cancel:
+      link: Annuler l'invitation de %name%
+      swal:
+        title: Annulation
+        text: Êtes-vous sûre de vouloir annuler l'invitation de %name% ?
   form:
     invitations:
       label: Inviter de nouvelles personnes

@@ -88,7 +88,7 @@ class EventController extends Controller
                         // Update the form with the updated userEventInvitation
                         $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#user-event-invitation-card'] =
-                            $this->renderView("@App/Event/partials/eventInvitationUserMainDataCard.html.twig", array(
+                            $this->renderView("@App/Event/partials/eventInvitation_profile_card.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,
                                 'userEventInvitationForm' => $eventInvitationForm->createView()
                             ));
@@ -119,23 +119,24 @@ class EventController extends Controller
             if ($request->isXmlHttpRequest()) {
                 if ($eventForm->isSubmitted()) {
                     if ($eventForm->isValid()) {
-                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
-                        $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                        $eventInvitationsForm = $eventManager->createEventInvitationsForm();
-                        $data['htmlContent'] = $this->renderView("@App/Event/partials/eventHeaderCard.html.twig", array(
-                                'event' => $currentEvent,
-                                'userEventInvitation' => $userEventInvitation,
-                                'eventForm' => $eventForm->createView(),
-                                'invitationsForm' => $eventInvitationsForm->createView()
-                            )
-                        );
-                        return new JsonResponse($data, Response::HTTP_OK);
+                        $eventManager->treatEventFormSubmission($eventForm);
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#event-header-card'] =
+                            $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
+                                    'userEventInvitation' => $userEventInvitation,
+                                    'eventForm' => $eventForm->createView()
+                                )
+                            );
+                        return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
-                        $data["formErrors"] = array();
-                        foreach ($eventForm->getErrors(true) as $error) {
-                            $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                        }
-                        return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                        dump($eventForm);
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#event-header-card'] =
+                            $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
+                                    'userEventInvitation' => $userEventInvitation,
+                                    'eventForm' => $eventForm->createView(),
+                                )
+                            );
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     }
                 }
             } elseif ($eventForm->isValid()) {
@@ -144,6 +145,7 @@ class EventController extends Controller
             }
         }
 
+        // TODO Revoir le système d'invitation
         ////////////////////////////
         // Invitations management //
         ////////////////////////////
@@ -156,31 +158,33 @@ class EventController extends Controller
                     if ($eventInvitationsForm->isValid()) {
                         $currentEvent = $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm);
                         $eventInvitationsForm = $eventManager->createEventInvitationsForm();
-                        $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                        $data['htmlContent'] = $this->renderView("@App/Event/partials/eventInvitations.html.twig", array(
-                            'event' => $currentEvent,
-                            'userEventInvitation' => $userEventInvitation,
-                            'eventInvitations' => $currentEvent->getEventInvitations(),
-                            'invitationsForm' => $eventInvitationsForm->createView(),
-                            'editEventMode' => true
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitations-main-div'] =
+                            $this->renderView("@App/Event/partials/eventInvitations_card.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'eventInvitations' => $currentEvent->getEventInvitations(),
+                                'invitationsForm' => $eventInvitationsForm->createView()
 
-                        ));
-                        return new JsonResponse($data, Response::HTTP_OK);
+                            ));
+                        return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
-                        $data["formErrors"] = array();
-                        foreach ($eventInvitationsForm->getErrors(true) as $error) {
-                            $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                            $data["messages"][FlashBagTypes::WARNING_TYPE][] = $this->get("translator")->trans($error->getMessage());
-                        }
-                        return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitations-main-div'] =
+                            $this->renderView("@App/Event/partials/eventInvitations_card.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'eventInvitations' => $currentEvent->getEventInvitations(),
+                                'invitationsForm' => $eventInvitationsForm->createView()
+                            ));
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     }
                 }
             } elseif ($eventInvitationsForm->isValid()) {
                 $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm);
+                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("global.success.data_saved"));
                 return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
             }
         }
 
+        // TODO vérifier que ca marche
         ////////////////////////
         // modules management //
         ////////////////////////
@@ -195,15 +199,15 @@ class EventController extends Controller
                     if ($moduleForm->isSubmitted()) {
                         if ($moduleForm->isValid()) {
                             $currentModule = $moduleManager->treatUpdateFormModule($moduleForm);
-                            $data['messages'][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data['htmlContent'] = $moduleManager->displayModulePartial($currentModule, $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
-                            return new JsonResponse($data, Response::HTTP_OK);
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-'.$currentModule->getToken()] =
+                                $moduleManager->displayModulePartial($currentModule,$userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
+                            return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
-                            $data["formErrors"] = array();
-                            foreach ($moduleForm->getErrors(true) as $error) {
-                                $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                            }
-                            return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                            // TODO vérifier que ca marche
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-'.$moduleDescription['module']->getToken()] =
+                                $moduleManager->displayModulePartial($moduleDescription['module'],$userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
+                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     }
                 } else {
@@ -227,13 +231,14 @@ class EventController extends Controller
                         if ($pollProposalAddForm->isValid()) {
                             $pollProposal = $moduleManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data['htmlContent']['pollProposalRowDisplay'] = $moduleManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pp_display_row_' . $pollProposal->getId()] =
+                                $moduleManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
-                            $data["formErrors"] = array();
-                            foreach ($pollProposalAddForm->getErrors(true) as $error) {
-                                $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                            }
+                            // TODO vérifier que ca marche
+                            $pollProposal = $pollProposalAddForm->getData();
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pp_display_row_' . $pollProposal->getId()] =
+                                $moduleManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
                             return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     }
