@@ -21,4 +21,12 @@ class CoreController extends Controller
         return $this->render('AppBundle:Core:index.html.twig');
     }
 
+    /**
+     * @Route("/testindex", name="testhome")
+     */
+    public function testIndexAction(Request $request)
+    {
+        return $this->render('AppBundle:Core:testIndex.html.twig');
+    }
+
 }
