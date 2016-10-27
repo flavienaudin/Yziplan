@@ -13,7 +13,6 @@ use AppBundle\Entity\User\AppUserInformation;
 use AppBundle\Utils\File\FileUploader;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class AvatarUploadListener
@@ -36,18 +35,6 @@ class AvatarUploadListener
     {
         $entity = $args->getEntity();
         $this->uploadFile($entity);
-    }
-
-    public function postLoad(LifecycleEventArgs $args)
-    {
-        /** @var AppUserInformation $entity */
-        $entity = $args->getEntity();
-        if ($entity instanceof AppUserInformation) {
-            $fileName = $entity->getAvatar();
-            if (!empty($fileName)) {
-                $entity->setAvatar(new File($this->uploader->getTargetDir() . DIRECTORY_SEPARATOR . $fileName));
-            }
-        }
     }
 
     private function uploadFile($entity)

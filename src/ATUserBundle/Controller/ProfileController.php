@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Intl\Intl;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 /**
@@ -261,22 +262,17 @@ class ProfileController extends BaseController
             }
             $appUserInformation->setAvatar($imageFile);
             $appUserInformationManager->updateAppUserInformation();
-
-            // TODO : Supprimer après phase de TEST
-//             if ($appUserInformation->getAvatar() != null) {
-//                $baseUrl = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath();
-//                $relDir = $this->get('at.uploader.file')->getWebRelativeTargetDir();
-//                $data[FileInputJsonResponse::INITIAL_PREVIEW] =
-//                    $baseUrl . '/' . $relDir . '/' . $appUserInformation->getAvatar();
-//                $data[FileInputJsonResponse::INITIAL_PREVIEW_CONFIG][] = [
-//                    FileInputJsonResponse::IPC_URL => $this->generateUrl('deleteUserAvatar', [], UrlGeneratorInterface::ABSOLUTE_URL),
-//                    FileInputJsonResponse::IPC_KEY => 100,
-//                    'overwriteInitial' => true
-//                ];
-//            } else {
-//                $data = array();
-//            }
             $data = array();
+            // TODO : Supprimer après phase de TEST
+            if ($appUserInformation->getAvatar() != null) {
+                $avatarDirURL = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/' . $this->get('at.uploader.file')->getWebRelativeTargetDir();
+                $data[FileInputJsonResponse::INITIAL_PREVIEW] = $avatarDirURL . '/' . $appUserInformation->getAvatar();
+                $data[FileInputJsonResponse::INITIAL_PREVIEW_CONFIG][] = [
+                    FileInputJsonResponse::IPC_URL => $this->generateUrl('deleteUserAvatar', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    FileInputJsonResponse::IPC_KEY => 100,
+                    'overwriteInitial' => true
+                ];
+            }
             return new FileInputJsonResponse($data, Response::HTTP_OK);
 
         } else {
@@ -290,28 +286,19 @@ class ProfileController extends BaseController
      */
     public function deleteUserAvatar(Request $request)
     {
-        if ($request->isXmlHttpRequest()) {
-            /** @var AppUserInformationManager $appUserInformationManager */
-            $appUserInformationManager = $this->get("at.manager.app_user_information");
-            $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($this->getUser());
-            if ($appUserInformation->getAvatar() != null) {
-                $this->get('at.uploader.file')->delete($appUserInformation->getAvatar());
-                $appUserInformation->setAvatar(null);
-            }
-            $appUserInformationManager->updateAppUserInformation();
+        /** @var AppUserInformationManager $appUserInformationManager */
+        $appUserInformationManager = $this->get("at.manager.app_user_information");
+        $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($this->getUser());
+        if ($appUserInformation->getAvatar() != null) {
+            $this->get('at.uploader.file')->delete($appUserInformation->getAvatar());
+            $appUserInformation->setAvatar(null);
+        }
+        $appUserInformationManager->updateAppUserInformation();
 
+        if ($request->isXmlHttpRequest()) {
             $data[FileInputJsonResponse::INITIAL_PREVIEW] = [];
             return new FileInputJsonResponse($data, Response::HTTP_OK);
-
         } else {
-            /** @var AppUserInformationManager $appUserInformationManager */
-            $appUserInformationManager = $this->get("at.manager.app_user_information");
-            $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($this->getUser());
-            if ($appUserInformation->getAvatar() != null) {
-                $this->get('at.uploader.file')->delete($appUserInformation->getAvatar());
-                $appUserInformation->setAvatar(null);
-            }
-            $appUserInformationManager->updateAppUserInformation();
             return $this->redirectToRoute('fos_user_profile_show');
         }
     }

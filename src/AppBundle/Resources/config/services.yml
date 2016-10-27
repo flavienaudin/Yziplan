@@ -108,7 +108,6 @@ services:
     tags:
       - { name: doctrine.event_listener, event: prePersist }
       - { name: doctrine.event_listener, event: preUpdate }
-      - { name: doctrine.event_listener, event: postLoad }
 
 # Validator Constraints
   at.validator.email_not_belong_to_useraccount:

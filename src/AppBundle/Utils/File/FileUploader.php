@@ -40,7 +40,6 @@ class FileUploader
     public function getWebRelativeTargetDir()
     {
         return substr($this->targetDir, strpos($this->targetDir, 'web') + 4);
-
     }
 
     public function upload(UploadedFile $file)
@@ -53,9 +52,14 @@ class FileUploader
         return $fileName;
     }
 
-    public function delete(File $file)
+    public function delete($filename)
     {
+        $fileFullPath = $this->targetDir . DIRECTORY_SEPARATOR . $filename;
         $fs = new Filesystem();
-        $fs->remove($file->getRealPath());
+        if ($fs->exists($fileFullPath)) {
+            $fs->remove($fileFullPath);
+            return true;
+        }
+        return false;
     }
 }

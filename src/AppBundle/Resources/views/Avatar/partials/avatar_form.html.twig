@@ -61,7 +61,7 @@
                 };
 
                 {% if app.user.applicationUser.appUserInformation.avatar is not null %}
-                fileInputOptions['initialPreview'] = "{{ app.request.getSchemeAndHttpHost() ~ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar.filename) }}";
+                fileInputOptions['initialPreview'] = "{{ app.request.getSchemeAndHttpHost() ~ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}";
                 fileInputOptions['initialPreviewFileType'] = 'image';
                 fileInputOptions['initialPreviewShowDelete'] = true;
                 fileInputOptions['initialPreviewConfig'] = [{'url': "{{ path('deleteUserAvatar') }}", key: '1'}];

@@ -22,7 +22,7 @@
         </div>
         <div class="col-sm-5">
             {% if userEventInvitation.applicationUser is not null and userEventInvitation.applicationUser.appUserInformation.avatar is not null %}
-                <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar.filename) }}" class="img-responsive" width="100%">
+                <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}" class="img-responsive" width="100%">
             {% else %}
                 <img src="{{ asset('bundles/app/img/user/avatar/avatar_default.png') }}" class="img-responsive" width="100%">
             {% endif %}
