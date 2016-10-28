@@ -1,0 +1,327 @@
+{% use "bootstrap_3_layout.html.twig" %}
+
+{# Désactive la validation HTML5 par les navigateurs (DEV MOD #}
+{%- block form_start -%}
+    {% set attr = attr|merge({'novalidate':'novalidate'}) %}
+    {{- parent() -}}
+{%- endblock form_start -%}
+
+{% block form_widget_simple %}
+    {# Désactiver de la touche entrée #}
+    {#{% set attr = attr|merge({onkeypress: (attr.onkeypress|default('') ~ ' refuserToucheEntree(event);')|trim}) -%}#}
+
+    {% if fgline is defined and fgline -%}
+        <div class="fg-line">
+            {{- parent() -}}
+        </div>
+    {% else %}
+        {{- parent() -}}
+    {% endif %}
+{% endblock %}
+
+{% block form_row -%}
+    {% if dlhorizontal is defined and dlhorizontal %}
+        <dl class="dl-horizontal form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+            <dt class="p-t-10">{{- form_label(form) -}}</dt>
+            <dd>
+                {{- form_widget(form) -}}
+                {{- form_errors(form) -}}
+            </dd>
+        </dl>
+    {% elseif formHorizontal is defined and formHorizontal %}
+        <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+            {{- form_label(form, label, {'label_attr':{'class' : 'col-sm-2'}} ) -}}
+            <div class="col-sm-10">
+                {{- form_widget(form) -}}
+                {{- form_errors(form) -}}
+            </div>
+        </div>
+    {% else %}{{- parent() -}}{% endif %}
+{%- endblock form_row %}
+
+{# Ajout d'une tooltip d'aide au niveau du label avec un icone "i"#}
+{% block form_label -%}
+    {% spaceless %}
+        {{- parent() -}}
+        {% if help is defined %}
+            <span class="m-l-5 zmdi zmdi-info" data-toggle="tooltip" data-placement="{{ data_placement|default('top') }}" title="{{ help }}"></span>
+        {% endif %}
+    {% endspaceless %}
+{%- endblock form_label %}
+
+{% block checkbox_label -%}
+    {# Toujours mettre le label pour chaque checkbox #}
+    {% set parent_label_class = (parent_label_class|default(''))|replace({'sr-only':''})|trim %}
+    {{- block('checkbox_radio_label', {'parent_label_class':parent_label_class}) -}}
+{%- endblock checkbox_label %}
+
+{% block radio_label -%}
+    {# Toujours mettre le label pour chaque radio #}
+    {% set parent_label_class = (parent_label_class|default(''))|replace({'sr-only':''})|trim %}
+    {{- block('checkbox_radio_label', {'parent_label_class':parent_label_class}) -}}
+{%- endblock radio_label %}
+
+{%- block button_label -%}{%- endblock -%}
+
+
+{%- block textarea_widget -%}
+    {% if fgline is defined and fgline -%}
+        <div class="fg-line">
+            {{- parent() -}}
+        </div>
+    {% else %}
+        {{- parent() -}}
+    {% endif %}
+{%- endblock textarea_widget -%}
+
+{# Re-définition des input de date #}
+{% block datetime_widget -%}
+    {% if widget == 'single_text' %}
+        {{- block('form_widget_simple') -}}
+    {% elseif displayInRow is defined and displayInRow -%}
+        <div class="row">
+            <div class="col-sm-6">
+                {{- form_widget(form.date, { datetime: true } ) -}}
+                {{- form_errors(form.date) -}}
+            </div>
+            <div class="col-sm-6">
+                {{- form_widget(form.time, { datetime: true } ) -}}
+                {{- form_errors(form.time) -}}
+            </div>
+        </div>
+    {% else -%}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        {{- form_errors(form.date) -}}
+        {{- form_errors(form.time) -}}
+        {{- form_widget(form.date, { datetime: true } ) -}}
+        {{- form_widget(form.time, { datetime: true } ) -}}
+    {%- endif %}
+{%- endblock datetime_widget %}
+
+{# Surchage total du widget, copiant directement le code du parent #}
+{% block date_widget -%}
+    {% if widget == 'single_text' %}
+        <div class="dtp-container dropdown">
+            <div class="input-group date ag-date-picker datepicker">
+            <span class="input-group-addon">
+                <span class="zmdi zmdi-calendar"></span>
+            </span>
+                {% set attr = attr|merge({class: (attr.class|default('') ~ ' datepicker')|trim}) -%}
+                {{- block('form_widget_simple') -}}
+            </div>
+        </div>
+    {% else -%}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        {% if datetime is not defined or not datetime -%}
+            <div {{ block('widget_container_attributes') -}}>
+        {%- endif %}
+        {{- date_pattern|replace({
+            '{{ year }}': form_widget(form.year),
+            '{{ month }}': form_widget(form.month),
+            '{{ day }}': form_widget(form.day),
+        })|raw -}}
+        {% if datetime is not defined or not datetime -%}
+            </div>
+        {%- endif -%}
+    {% endif %}
+{%- endblock date_widget %}
+
+{# Surchage total du widget, copiant directement le code du parent #}
+{% block time_widget -%}
+    {% if widget == 'single_text' %}
+        {%- set type = 'text' -%}
+        <div class="input-group ag-time-picker clockpicker" data-autoclose="true">
+            <span class="input-group-addon">
+                <span class="zmdi zmdi-time"></span>
+            </span>
+            {{- block('form_widget_simple') -}}
+        </div>
+    {% else -%}
+        {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
+        {% if datetime is not defined or false == datetime -%}
+            <div {{ block('widget_container_attributes') -}}>
+        {%- endif -%}
+        {{- form_widget(form.hour) }}{% if with_minutes %}:{{ form_widget(form.minute) }}{% endif %}{% if with_seconds %}:{{ form_widget(form.second) }}{% endif %}
+        {% if datetime is not defined or false == datetime -%}
+            </div>
+        {%- endif -%}
+    {% endif %}
+{%- endblock time_widget %}
+
+{% block choice_widget_expanded -%}
+    {% if '-inline' in label_attr.class|default('') -%}
+        {%- for child in form %}
+            {{- form_widget(child, {
+                parent_label_class: label_attr.class|default(''),
+                translation_domain: choice_translation_domain,
+            }) -}}
+        {% endfor -%}
+        <div class="clearfix"></div>
+    {% elseif attr.type is defined and attr.type == 'image' %}
+        <ul {{ block('widget_container_attributes') }} class="list-inline">
+            {% for child in form %}
+                <li>
+                    {{- form_widget(child, {
+                        parent_label_class: label_attr.class|default(''),
+                        type : attr.type|default(''),
+                        translation_domain: choice_translation_domain,
+                    }) -}}
+                </li>
+            {% endfor %}
+        </ul>
+    {%- else -%}
+        <div {{ block('widget_container_attributes') }}>
+            {%- for child in form %}
+                {{- form_widget(child, {
+                    parent_label_class: label_attr.class|default(''),
+                    type : attr.type|default(''),
+                    translation_domain: choice_translation_domain,
+                }) -}}
+            {% endfor -%}
+        </div>
+    {%- endif %}
+{%- endblock choice_widget_expanded %}
+
+{% block checkbox_widget -%}
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {%- set widget_class = attr.class|default('') -%}
+    {% if 'i-checks' in parent_label_class %}
+        <div class="i-checks">
+            {{- form_label(form, null, { widget: block("icheck_checkbox_widget") }) -}}
+        </div>
+    {% elseif 'md-toogle-switch' in widget_class %}
+        {{ block('md_toggle_switch_widget') }}
+    {% else -%}
+        {% if 'checkbox-inline' in parent_label_class %}
+            {{- form_label(form, null, { widget: block('checkbox_helper_widget') }) -}}
+        {% else -%}
+            <div class="checkbox">
+                {{- form_label(form, null, { widget: block('checkbox_helper_widget') }) -}}
+            </div>
+        {%- endif %}
+    {% endif %}
+{%- endblock checkbox_widget %}
+
+{%- block checkbox_helper_widget -%}
+    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <i class="input-helper"></i>
+{%- endblock checkbox_helper_widget -%}
+
+{%- block icheck_checkbox_widget -%}
+    <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+{%- endblock icheck_checkbox_widget -%}
+
+{% block md_toggle_switch_widget -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) -%}
+    {%- set label_attr = label_attr|merge({class: (' ts-label')|trim}) -%}
+    <div class="toggle-switch">
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} hidden="hidden"/> <label
+                for="{{ id }}" class="ts-helper"></label>&nbsp; {{ block('form_label') }}
+    </div>
+{%- endblock md_toggle_switch_widget %}
+
+{% block radio_widget -%}
+    {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
+    {% if 'radio-inline' in parent_label_class %}
+        <div class="radio radio-inline">
+            {{- form_label(form, null, { widget: block('radio_input_helper_widget'), required : false}) -}}
+        </div>
+    {% else -%}
+        <div class="radio">
+            {{- form_label(form, null, { widget: block('radio_input_helper_widget'), required : false }) -}}
+        </div>
+    {%- endif %}
+{%- endblock radio_widget %}
+
+{%- block radio_input_helper_widget -%}
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <i class="input-helper"></i>
+{%- endblock radio_input_helper_widget -%}
+
+{#{% block checkbox_radio_label %}
+    #}{# Do not display the label if widget is not defined in order to prevent double label rendering #}{#
+    {% if widget is defined %}
+        {% if required %}
+            {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) %}
+        {% endif %}
+        {% if parent_label_class is defined %}
+            {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' ' ~ parent_label_class)|trim}) %}
+        {% endif %}
+        {% if help is defined %}
+            {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' checkbox_tooltip')|trim, "data-toggle":"tooltip", "data-placement":data_placement|default("top"), "title":
+            help }) %}
+        {% endif %}
+        {% if label is not same as(false) and label is empty %}
+            {%- if label_format is not empty -%}
+                {% set label = label_format|replace({
+                '%name%': name,
+                '%id%': id,
+                }) %}
+            {%- else -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+        {% endif %}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+        {% if type is defined and type == 'image' %}
+            <div class="cacher-radio image-radio" onclick="changeBackgroundImage('{{ asset(label) }}')">
+                {{- widget|raw }} <img src="{{ asset(label) }}" alt="label" onclick="changeBackgroundImage('{{ asset(label) }}')">
+            </div>
+        {% elseif type is defined and type == 'bouton' %}
+            <div class="cacher-radio bouton-radio">
+                {% if label == "Oui" %}
+                    {% set button_attr = 'btn btn-primary btn-outline btn-sm' %}
+                {% elseif label == "Non" %}
+                    {% set button_attr = 'btn btn-danger btn-outline btn-sm' %}
+                {% elseif label == "Peut_etre" %}
+                    {% set button_attr = 'btn btn-warning btn-outline btn-sm' %}
+                {% else %}
+                    {% set button_attr = 'btn btn-info btn-outline btn-sm' %}
+                {% endif %}
+                {{- widget|raw }} <a class="{{ button_attr }}"> {{ label is not same as(false) ? (translation_domain is same as(false) ? label : label|trans({}, translation_domain)) -}}</a>
+            </div>
+        {% else %}
+            {{- widget|raw }} {{ label is not same as(false) ? (translation_domain is same as(false) ? label : label|trans({}, translation_domain)) -}}
+        {% endif %}
+        </label>
+    {% endif %}
+{% endblock checkbox_radio_label %}#}
+
+
+{# Surchage total du widget, copiant directement le code du parent #}
+{% block collection_widget %}
+    {% spaceless %}
+        {% if prototype is defined %}
+            {% set attr = attr|merge({'data-prototype': form_row(prototype)}) %}
+            {% set attr = attr|merge({'data-prototype-name': prototype.vars.name}) %}
+        {% endif %}
+        {% set attr = attr|merge({'data-allow-add': allow_add ? 1 : 0}) %}
+        {% set attr = attr|merge({'data-allow-remove': allow_delete ? 1 : 0 }) %}
+        {% set attr = attr|merge({'data-name-prefix': full_name}) %}
+        {{ block('form_widget') }}
+    {% endspaceless %}
+{% endblock collection_widget %}
+
+{% block burgov_key_value_row_label %}
+{% endblock %}
+
+{% block burgov_key_value_row_widget %}
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form_widget(form.key) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_widget(form.value) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="btn-group" role="group">
+                <a href="#" class="btn btn-default collection-add"><i class="zmdi zmdi-plus"></i></a> <a href="#" class="btn btn-default collection-remove"><i class="zmdi zmdi-delete"></i></a> <a
+                        href="#" class="btn btn-default collection-up"><i class="zmdi zmdi-triangle-up"></i></a> <a href="#" class="btn btn-default collection-down"><i
+                            class="zmdi zmdi-triangle-down"></i></a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

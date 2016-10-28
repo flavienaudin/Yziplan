@@ -1,0 +1,79 @@
+{# Données d'entrée :
+-
+#}
+
+<div id="avatar_form_container">
+    <div id="avatar-errors" class="center-block" style="width:100%;display:none;"></div>
+    <input id="avatarImageInput" name="avatarImageInput" type="file" class="file-loading">
+
+    <script>
+        $(document).ready(function () {
+            /** Active FileInput pluggin #avatarImageInput */
+            var imageField = $('#avatarImageInput');
+            if (imageField[0]) {
+                var fileInputOptions = {
+                    // general settings
+                    uploadUrl: "{{ path('updateUserAvatar') }}",
+                    deleteUrl: "{{ path('deleteUserAvatar') }}",
+                    initialPreviewAsData: true,
+                    key: 1,
+                    allowedFileTypes: ['image'],
+                    maxFileSize: 1500,
+                    maxFileCount: 1,
+                    autoReplace: true,
+                    elErrorContainer: '#avatar-errors',
+
+                    // general display
+                    theme: 'zmdi',
+                    showCaption: false,
+                    showRemove: false,
+                    showUpload: true,
+                    showClose: false,
+                    showZoom: false,
+                    dropZoneEnabled: true,
+                    layoutTemplates: {
+                        modal: '',
+                        main2: '{preview} <div class="text-center">{remove} {browse} {upload}</div>',
+                        footer: '<div class="file-thumbnail-footer"> {actions}</div>',
+                        actions: '<div class="file-actions"><div class="file-footer-buttons">{delete}</div><div class="clearfix"></div></div>'
+                    },
+                    previewThumbTags: {},
+
+                    removeLabel: '',
+                    browseLabel: '',
+                    uploadLabel: '',
+                    uploadClass: 'btn btn-success',
+
+                    // resize image
+                    allowedFileExtensions: ["jpg", "png", "gif"],
+                    minImageWidth: 50,
+                    minImageHeight: 50,
+                    maxImageWidth: 200,
+                    maxImageHeight: 200,
+                    resizePreference: 'width',
+                    resizeImage: true,
+
+                    // Default Preview Content
+                    defaultPreviewContent: '<img src="{{ asset('bundles/app/img/user/avatar/avatar_default.png') }}" alt="avatar">',
+
+                    // Preview
+                    overwriteInitial: true
+                };
+
+                {% if app.user.applicationUser.appUserInformation.avatar is not null %}
+                fileInputOptions['initialPreview'] = "{{ app.request.getSchemeAndHttpHost() ~ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}";
+                fileInputOptions['initialPreviewFileType'] = 'image';
+                fileInputOptions['initialPreviewShowDelete'] = true;
+                fileInputOptions['initialPreviewConfig'] = [{'url': "{{ path('deleteUserAvatar') }}", key: '1'}];
+                {% endif %}
+
+                {% if app.request.attributes.has('_locale') %}
+                fileInputOptions['language'] = '{{ app.request.attributes.get('_locale') }}';
+                {% endif %}
+
+                // initialize with defaults
+                imageField.fileinput(fileInputOptions);
+            }
+        });
+    </script>
+</div>

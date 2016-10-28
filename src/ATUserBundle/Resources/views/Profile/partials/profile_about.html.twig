@@ -1,255 +1,205 @@
 {# Données d'entrée !
 - user (User) L'utilisateur dont on affiche le profil
-- form_mandatory_information (Form) Le formulaire des informations obligatoires
-- form_biography (Form|null) Le formulaire pour la partie "Biographie"
-- form_basic_information (Form|null) Le formulaire pour la partie "Information basique"
+- form_app_user_info_personals (Form|null) Le formulaire pour la partie "Information basique"
+- form_contact_details (Form|null) Le formulaire pour la partie "Coordonnées"
+- form_app_user_info_complementaries (Form|null) Le formulaire pour la partie "Informations complémentaires"
 #}
 
-<div class="pmb-block" id="mandatory_information">
-    <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-account m-r-5"></i> {{ "profile.show.about.mandatory_information.title"|trans }}</h2>
-        <ul class="actions">
-            <li><a data-profile-action="edit" data-profile-action-target="#mandatory_information" href="#"><i class="zmdi zmdi-edit"></i></a></li>
-        </ul>
-    </div>
+<div class="profile-tab">
+    <div class="pm-overview">
+        <div class="pmo-pic">
+            <div class="p-relative">
+                {{ include('@App/Avatar/partials/avatar_form.html.twig') }}
+                {#<div class="pmop-message">
+                    <a href="{{ path("fos_user_profile_edit") }}" class="btn palette-White bg btn-float z-depth-1"><i class="zmdi zmdi-edit"></i></a>
+                </div>#}
+            </div>
 
-    <div class="pmbb-body p-l-30">
-        <div class="pmbb-view">
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.about.mandatory_information.username.title"|trans }}</dt>
-                <dd id="pmb-view-username">{{ user.username }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.about.mandatory_information.email.title"|trans }}</dt>
-                <dd id="pmb-view-email">{{ user.email }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.about.mandatory_information.pseudo.title"|trans }}</dt>
-                <dd id="pmb-view-pseudo">{{ user.pseudo }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.about.mandatory_information.password.title"|trans }}</dt>
-                <dd>
-                    {% if user.passwordKnown %}
-                        <a href="{{ path('fos_user_change_password') }}">{{ "profile.show.about.mandatory_information.password.change"|trans }}</a>
-                    {% else %}
-                        <a href="{{ path('initializePassword') }}">{{ "profile.show.about.mandatory_information.password.init"|trans }}</a>
-                    {% endif %}
-                </dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.about.mandatory_information.social_network.title"|trans }}</dt>
-                <dd>
-                    {% if user.googleId is not empty %}
-                        <i class="zmdi zmdi-google-plus-box zmdi-hc-2x palette-Red text"></i>
-                    {% endif %}
-                    {% if user.facebookId is not empty %}
-                        <i class="zmdi zmdi-facebook-box zmdi-hc-2x  palette-Blue-A700 text"></i>
-                    {% endif %}
-                </dd>
-            </dl>
+            {#<div class="pmo-stat">
+                <h2 class="m-0 c-white">156</h2>
+                Total Invitations
+            </div>#}
         </div>
 
-        <div class="pmbb-edit">
-            {{ form_start(form_mandatory_information, { 'method': 'post', 'action': path('updateUserProfile'), 'attr':{'id':'userMandatoryInformation',
-                'data-profile-pmb-block-target':'#mandatory_information'} }) }}
-            <dl class="dl-horizontal">
-                <dt class="p-t-10">{{ form_label(form_mandatory_information.username, "profile.show.about.mandatory_information.username.label"|trans) }}</dt>
-                <dd>
-                    <div class="fg-line">
-                        {{ form_widget(form_mandatory_information.username, {'attr':{'placeholder': "profile.show.about.mandatory_information.username.placeholder"|trans}}) }}
-                    </div>
-                </dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt class="p-t-10">{{ form_label(form_mandatory_information.email, 'profile.show.about.mandatory_information.email.label'|trans) }}</dt>
-                <dd>
-                    <div class="fg-line">
-                        {{ form_widget(form_mandatory_information.email, {'attr':{'placeholder':'profile.show.about.mandatory_information.email.placeholder'|trans}}) }}
-                    </div>
-                </dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt class="p-t-10">{{ form_label(form_mandatory_information.pseudo, 'profile.show.about.mandatory_information.pseudo.label'|trans) }}</dt>
-                <dd>
-                    <div class="fg-line">
-                        {{ form_widget(form_mandatory_information.pseudo, {'attr':{'placeholder':"profile.show.about.mandatory_information.pseudo.placeholder"|trans}}) }}
-                    </div>
-                </dd>
-            </dl>
 
-            <div class="m-t-30 pull-right">
-                <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
-                <button data-profile-action="reset" data-profile-action-target="#mandatory_information" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
+        {# User -> AppUserEmails #}
+        {{ include('@App/AppUserEmail/partials/profile_appuseremails.html.twig', {
+            'appuseremails' : user.applicationUser.appUserEmails,
+            'form_appuseremail' : form_appuseremail }) }}
+    </div>
+
+    <div class="pm-body clearfix">
+        <div class="pmb-block" id="pmbblock_connexion_information">
+            <div class="pmbb-header">
+                <h2><i class="zmdi zmdi-account m-r-5"></i> {{ "profile.show.profile_information.connexion_information.title"|trans }}</h2>
             </div>
-            {{ form_rest(form_mandatory_information) }}
-            {{ form_end(form_mandatory_information) }}
-            <div class="clearfix"></div>
+
+            <div class="pmbb-body p-l-30">
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.connexion_information.email.title"|trans }}</dt>
+                        <dd id="pmb-view-email">{{ user.email }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.connexion_information.password.title"|trans }}</dt>
+                        <dd>
+                            {% if user.passwordKnown %}
+                                <a href="{{ path('fos_user_change_password') }}">{{ "profile.show.profile_information.connexion_information.password.change"|trans }}</a>
+                            {% else %}
+                                <a href="{{ path('init_password_request') }}">{{ "profile.show.profile_information.connexion_information.password.init"|trans }}</a>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                    {% if user.googleId is not empty or  user.facebookId is not empty %}
+                        <dl class="dl-horizontal">
+                            <dt>{{ "profile.show.profile_information.connexion_information.social_network.title"|trans }}</dt>
+                            <dd>
+                                {% if user.googleId is not empty %}
+                                    <i class="zmdi zmdi-google-plus-box zmdi-hc-2x palette-Red text"></i>
+                                {% endif %}
+                                {% if user.facebookId is not empty %}
+                                    <i class="zmdi zmdi-facebook-box zmdi-hc-2x  palette-Blue-A700 text"></i>
+                                {% endif %}
+                            </dd>
+                        </dl>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="pmb-block" id="pmbblock_personal_information">
+            <div class="pmbb-header">
+                <h2><i class="zmdi zmdi-account m-r-5"></i> {{ "profile.show.profile_information.personal_information.title"|trans }}</h2>
+                <ul class="actions">
+                    <li><a data-profile-action="edit" data-profile-action-target="#pmbblock_personal_information" href="#"><i class="zmdi zmdi-edit"></i></a></li>
+                </ul>
+            </div>
+
+            <div class="pmbb-body p-l-30">
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.publicname.title"|trans }}</dt>
+                        <dd id="pmb-view-public-name">{{ user.applicationUser.appUserInformation.publicName is not empty?user.applicationUser.appUserInformation.publicName:"-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.legalstatus.title"|trans }}</dt>
+                        <dd id="pmb-view-legal-status">{{ user.applicationUser.appUserInformation.legalStatus is not empty?user.applicationUser.appUserInformation.legalStatus|trans:"-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.firstname.title"|trans }}</dt>
+                        <dd id="pmb-view-firstname">{{ user.applicationUser.appUserInformation.firstName is not empty? user.applicationUser.appUserInformation.firstName:"-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.lastname.title"|trans }}</dt>
+                        <dd id="pmb-view-lastname">{{ user.applicationUser.appUserInformation.lastName is not empty ? user.applicationUser.appUserInformation.lastName: "-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.gender.title"|trans }}</dt>
+                        <dd id="pmb-view-gender">{{ user.applicationUser.appUserInformation.gender is not empty ? user.applicationUser.appUserInformation.gender|trans():"-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.birthday.title"|trans }}</dt>
+                        <dd id="pmb-view-birthday">{{ user.applicationUser.appUserInformation.birthday is not null?user.applicationUser.appUserInformation.birthday|localizeddate('short', 'none'):"-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.personal_information.nationality.title"|trans }}</dt>
+                        <dd id="pmb-view-nationality">{{ user.applicationUser.appUserInformation.nationality is not null?user.applicationUser.appUserInformation.nationality : "-" }}</dd>
+                    </dl>
+                </div>
+                {% if form_app_user_info_personals is not null %}
+                    <div class="pmbb-edit">
+                        {{ include('@ATUser/Profile/partials/personal_information_form.html.twig',{'form_app_user_info_personals':form_app_user_info_personals }) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="pmb-block" id="pmbblock_contact_details">
+            <div class="pmbb-header">
+                <h2><i class="zmdi zmdi-pin m-r-5"></i> {{ "profile.show.profile_information.contact_details.title"|trans }}</h2>
+                <ul class="actions">
+                    <li><a data-profile-action="edit" data-profile-action-target="#pmbblock_contact_details" href="#"><i class="zmdi zmdi-edit"></i></a></li>
+                </ul>
+            </div>
+            <div class="pmbb-body p-l-30">
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.contact_details.living_country.title"|trans }}</dt>
+                        <dd id="pmb-view-living-country">{{ user.applicationUser.appUserInformation.livingCountry is not empty ? user.applicationUser.appUserInformation.livingCountry|country : "-" }}</dd>
+                    </dl>
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.contact_details.living_city.title"|trans }}</dt>
+                        <dd id="pmb-view-living-city">{{ user.applicationUser.appUserInformation.livingCity is not empty ? user.applicationUser.appUserInformation.livingCity : "-" }}</dd>
+                    </dl>
+                </div>
+                {% if form_contact_details is not null %}
+                    <div class="pmbb-edit">
+                        {{ include('@ATUser/Profile/partials/contact_details_form.html.twig',{'form_contact_details':form_contact_details}) }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="pmb-block" id="pmbblock_complementaries">
+            <div class="pmbb-header">
+                <h2><i class="zmdi zmdi-face m-r-5"></i> {{ "profile.show.profile_information.complementaries.title"|trans }}</h2>
+                <ul class="actions">
+                    <li><a data-profile-action="edit" data-profile-action-target="#pmbblock_complementaries" href="#"><i class="zmdi zmdi-edit"></i></a></li>
+                </ul>
+            </div>
+            <div class="pmbb-body p-l-30">
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.complementaries.marital_status.title"|trans }}</dt>
+                        <dd id="pmb-view-marital-status">{{ user.applicationUser.appUserInformation.maritalStatus is not empty ? user.applicationUser.appUserInformation.maritalStatus|trans : "-" }}</dd>
+                    </dl>
+                </div>
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.complementaries.biography.title"|trans }}</dt>
+                        <dd id="pmb-view-biography">
+                            {% if user.applicationUser.appUserInformation.biography is not empty %}
+                                {% set biography = user.applicationUser.appUserInformation.biography|nl2br %}
+                                {{ biography|raw }}
+                            {% else %}
+                                {{ "profile.show.profile_information.complementaries.biography.empty"|trans }}
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.complementaries.interests.title"|trans }}</dt>
+                        <dd id="pmb-view-interets">
+                            {% if user.applicationUser.appUserInformation.interests is not empty %}
+                                {% set interests = user.applicationUser.appUserInformation.interests|nl2br %}
+                                {{ interests|raw }}
+                            {% else %}
+                                {{ "profile.show.profile_information.complementaries.interests.empty"|trans }}
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+                <div class="pmbb-view">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "profile.show.profile_information.complementaries.food_conveniences.title"|trans }}</dt>
+                        <dd id="pmb-view-food-conveniences">
+                            {% if user.applicationUser.appUserInformation.foodConveniences is not empty %}
+                                {% set foodConveniences = user.applicationUser.appUserInformation.foodConveniences|nl2br %}
+                                {{ foodConveniences|raw }}
+                            {% else %}
+                                {{ "profile.show.profile_information.complementaries.food_conveniences.empty"|trans }}
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+
+                {% if form_app_user_info_complementaries is not null %}
+                    <div class="pmbb-edit">
+                        {{ include('@ATUser/Profile/partials/complementary_information_form.html.twig', {'form_app_user_info_complementaries':form_app_user_info_complementaries}) }}
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
-
-<div class="pmb-block" id="basic_information">
-    <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-account m-r-5"></i> {{ "profile.show.about.basic_information.title"|trans }}</h2>
-        <ul class="actions">
-            <li><a data-profile-action="edit" data-profile-action-target="#basic_information" href="#"><i class="zmdi zmdi-edit"></i></a></li>
-        </ul>
-    </div>
-
-    <div class="pmbb-body p-l-30">
-        <div class="pmbb-view">
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.about.basic_information.fullname.title"|trans }}</dt>
-                <dd id="pmb-view-fullname">{{ user.userAbout.fullname is not empty ? user.userAbout.fullname : "-" }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.about.basic_information.gender.title"|trans }}</dt>
-                <dd id="pmb-view-gender">{{ user.userAbout.gender is not empty ? ("global.gender."~user.userAbout.gender)|trans():"-" }}</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>{{ "profile.show.about.basic_information.birthday.title"|trans }}</dt>
-                <dd id="pmb-view-birthday">{{ user.userAbout.birthday is not null?user.userAbout.birthday|localizeddate('short', 'none'):"-" }}</dd>
-            </dl>
-        </div>
-        {% if form_basic_information is not null %}
-            <div class="pmbb-edit">
-                {{ form_start(form_basic_information, {'method':'post', 'action':path('updateUserBasicInformation'), 'attr':{'id':'userBasicInformation',
-                    'data-profile-pmb-block-target':'#basic_information'} }) }}
-                <dl class="dl-horizontal">
-                    <dt class="p-t-10">{{ form_label(form_basic_information.fullname, "profile.show.about.basic_information.fullname.label") }}</dt>
-                    <dd>
-                        <div class="fg-line">
-                            {{ form_widget(form_basic_information.fullname, {'attr':{'placeholder': "profile.show.about.basic_information.fullname.placeholder"|trans}} ) }}
-                        </div>
-                    </dd>
-                </dl>
-                <dl class="dl-horizontal">
-                    <dt class="p-t-10">{{ form_label(form_basic_information.gender, 'profile.show.about.basic_information.gender.label'|trans) }}</dt>
-                    <dd>
-                        <div class="fg-line">
-                            {{ form_widget(form_basic_information.gender, {'attr':{'class':'selectpicker', 'placeholder':'profile.show.about.basic_information.gender.placeholder'|trans}}) }}
-                        </div>
-                    </dd>
-                </dl>
-                <dl class="dl-horizontal">
-                    <dt class="p-t-10">{{ form_label(form_basic_information.birthday, 'profile.show.about.basic_information.birthday.title'|trans) }}</dt>
-                    <dd>
-                        <div class="dtp-container dropdown fg-line">
-                            {{ form_widget(form_basic_information.birthday, {'attr':{'class':'date-picker', 'placeholder':'profile.show.about.basic_information.birthday.placeholder'}}) }}
-                        </div>
-                    </dd>
-                </dl>
-
-                <div class="m-t-30 pull-right">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
-                    <button data-profile-action="reset" data-profile-action-target="#basic_information" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
-                </div>
-                {{ form_rest(form_basic_information) }}
-                {{ form_end(form_basic_information) }}
-                <div class="clearfix"></div>
-            </div>
-        {% endif %}
-    </div>
-</div>
-
-<div class="pmb-block" id="pmb-biography">
-    <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-face m-r-5"></i> {{ "profile.show.about.biography.title"|trans }}</h2>
-        <ul class="actions">
-            <li><a data-profile-action="edit" data-profile-action-target="#pmb-biography" href="#"><i class="zmdi zmdi-edit"></i></a></li>
-        </ul>
-    </div>
-    <div class="pmbb-body p-l-30">
-        <div class="pmbb-view" id="pmb-view-biography">
-            {{ user.userAbout.biography is not empty?user.userAbout.biography:"profile.show.about.biography.empty"|trans }}
-        </div>
-
-        {% if form_biography is not null %}
-            <div class="pmbb-edit">
-                {{ form_start(form_biography, {'method': 'post', 'action': path('updateUserBiography'), 'attr': {'id':'userBiography','data-profile-pmb-block-target':'#pmb-biography'}}) }}
-                <div class="fg-line">
-                    {{ form_label(form_biography.biography, 'profile.show.about.biography.label', {'label_attr':{'class':'sr-only'}} ) }}
-                    {{ form_widget(form_biography.biography, {'attr':{'rows':5,'placeholder':'profile.show.about.biography.placeholder'|trans}} ) }}
-                </div>
-                <div class="m-t-10 pull-right">
-                    <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
-                    <button data-profile-action="reset" data-profile-action-target="#pmb-biography" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
-                </div>
-                {{ form_rest(form_biography) }}
-                {{ form_end(form_biography) }}
-                <div class="clearfix"></div>
-            </div>
-        {% endif %}
-    </div>
-</div>
-
-{#<div class="pmb-block" id="contact_info">
-    <div class="pmbb-header">
-        <h2><i class="zmdi zmdi-phone m-r-5"></i> Contact Information</h2>
-
-        <ul class="actions">
-            <li><a data-profile-action="edit" data-profile-action-target="#contact_info" href="#"><i class="zmdi zmdi-edit"></i></a></li>
-        </ul>
-    </div>
-    <div class="pmbb-body p-l-30">
-        <div class="pmbb-view">
-            <dl class="dl-horizontal">
-                <dt>Mobile Phone</dt>
-                <dd>00971 12345678 9</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>Email Address</dt>
-                <dd>malinda.h@gmail.com</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>Twitter</dt>
-                <dd>@malinda</dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt>Skype</dt>
-                <dd>malinda.hollaway</dd>
-            </dl>
-        </div>
-
-        <div class="pmbb-edit">
-            <dl class="dl-horizontal">
-                <dt class="p-t-10">Mobile Phone</dt>
-                <dd>
-                    <div class="fg-line">
-                        <input type="text" class="form-control" placeholder="eg. 00971 12345678 9">
-                    </div>
-                </dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt class="p-t-10">Email Address</dt>
-                <dd>
-                    <div class="fg-line">
-                        <input type="email" class="form-control" placeholder="eg. malinda.h@gmail.com">
-                    </div>
-                </dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt class="p-t-10">Twitter</dt>
-                <dd>
-                    <div class="fg-line">
-                        <input type="text" class="form-control" placeholder="eg. @malinda">
-                    </div>
-                </dd>
-            </dl>
-            <dl class="dl-horizontal">
-                <dt class="p-t-10">Skype</dt>
-                <dd>
-                    <div class="fg-line">
-                        <input type="text" class="form-control" placeholder="eg. malinda.hollaway">
-                    </div>
-                </dd>
-            </dl>
-
-            <div class="m-t-30">
-                <button class="btn btn-primary btn-sm">Save</button>
-                <button data-profile-action="reset" data-profile-action-target="#contact_info" class="btn btn-link btn-sm">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>#}

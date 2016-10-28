@@ -3,7 +3,7 @@
 
 base:
   page:
-    meta_title: Prototype 2
+    meta_title: Yziplan
   ie_warning:
     browser:
       chrome: Chrome
@@ -17,7 +17,7 @@ base:
     home: Home
 
 navbar:
-  brand: Plany
+  brand: YziPlan
   subtitle: Version beta 2
   search:
     placeholder: Search for contact, event...
@@ -45,6 +45,31 @@ landing_page:
       title: Vacation between friends ?
       text: Organize yourself with your friends to know where and when to go on weekends or holidays !
 
+appuseremail:
+  associate:
+    message:
+      check_mailbox: Please check the "%email%" mailbox to validate the association.
+      association_validated: The association with the email %email% is confirmed.
+      not_found: The associated email with given token does not exist
+      wrong_user: The email is not associated with the account.
+    confirmationAppUserEmail_email:
+      subject: Yziplan Confirmation - Email association
+      message: |
+        Hello %username%!
+
+        To finish associating the email %email% - please visit %confirmationUrl%
+
+        Regards,
+        The Team.
+  edit:
+    message:
+      error: Impossible to edit this association.
+  delete:
+    message:
+      error:
+        default: An error occured while deleting the associated email.
+        main_email: Sorry, it is not allowed to delete your main email address.
+
 event:
   form:
     name:
@@ -54,7 +79,7 @@ event:
       label: Change the picture
     description:
       label: Description
-      placeholder: Description
+      placeholder: Say more about your event
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline
@@ -89,35 +114,45 @@ eventInvitations:
 
 eventInvitation:
   form:
-    name:
-      label: Your event name
+    guestname:
+      label: Name
       placeholder: Your event name
     email:
-      label: Your contact email
-      placeholder: Your email
+      label: Email
+      placeholder: Your contact email
     answer:
       label: Your answer
       placeholder: Your answer
   answer:
+    card:
+      title: Your answer
     yes: Yes
     no: No
     interested: Interested
     dont_know: Don't know yet
-  maindata.card:
-    title: About your invitation
+  profile.card:
+    title: Your profile
     text:
       disconnect: You are not %user%?
     new_warning_alert:
       title: What's your name ?
       message: Please, fill in your name to validate your invitation.
       inputError: It's better with non-empty name
-  error.message:
-    unauthorized_access: You are ot invited to this event.
+  message:
+    warning:
+      email_owned_by_accountuser: Warning! This email address is associated to a user account. Please, login before participating to enjoy all the features.
+    error:
+      unauthorized_cancel: You are not allowed to cancel this invitation.
+      unauthorized_access: You are ot invited to this event.
 
 invitations:
   display:
     title: Guests list
-    remove_link: Cancel %name%'s invitation
+    cancel:
+      link: Cancel %name%'s invitation
+      swal:
+        title: Cancellattion
+        text: Are you sure you want to cancel %name%'s invitation?
   form:
     invitations:
       label: Invite new people
@@ -188,17 +223,14 @@ moduleInvitation:
 # Globals
 global:
   event: Event
-  gender:
-    0: "-"
-    1: Male
-    2: Female
-    3: Other
+  user_anonyme: YsiPlanor anonyme
   link:
     top: Top
   button:
     valid: Validate
     cancel: Cancel
     submit: Submit
+    edit: Edit
     save: Save
     nextStep: Next step
     delete: Delete
@@ -216,6 +248,21 @@ global:
     access_denied_http: You do not have access to these information. Please, connect with the appropriate user.
     method_not_allowed_http: This request is not allowed. Take care.
 
+# Enums
+gender:
+  male: Male
+  female: Female
+  other: Other
+
+legal_status:
+  individual: Individual
+  organisation: Organisation
+
+marital_status:
+  single: Single
+  couple: Couple
+  married: Married
+
 status:
   in_creation: Being created
   in_organization: Being organized
@@ -225,3 +272,7 @@ status:
   archived: Archived
   deprogrammed: Deprogrammed
   cancelled: Cancelled
+
+contact_info_type:
+  home: Home
+  business: Business

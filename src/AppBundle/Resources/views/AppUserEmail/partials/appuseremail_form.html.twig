@@ -1,0 +1,79 @@
+{# données d'entrée :
+- modalIdPrefix (string) Le prefixe à ajouter avant les identifiants liés à la modal
+- appuseremail (AppUserEmail|null) The AppUSerEmail to edit (only the type is editable) OR null if adding a new one
+- form_appuseremail (Form) The form
+#}
+
+<div id="{{ modalIdPrefix }}_formcontainer">
+    {% if appuseremail is null %} {# Add AppUserEmail #}
+        {{ form_start(form_appuseremail, {'action': path('addAppUserEmail'), 'method': 'post', 'attr': {'id':modalIdPrefix~'Form'}}) }}
+    {% else %} {# Edit AppUserEmail #}
+        {{ form_start(form_appuseremail, {'action': path('editAppUserEmail', {'id':appuseremail.id}), 'method': 'post', 'attr': {'id':modalIdPrefix~'Form'}}) }}
+    {% endif %}
+    {% if appuseremail is null %}
+        {{ form_row(form_appuseremail.email, {
+            'label': 'profile.show.appuseremail.modal.form.email.label',
+            'label_attr':{'class':'sr-only'},
+            'attr':{
+                'placeholder':'profile.show.appuseremail.modal.form.email.placeholder'|trans},
+            'fgline':true
+        }) }}
+    {% endif %}
+    {{ form_row(form_appuseremail.type, {
+        'label': 'profile.show.appuseremail.modal.form.type.label',
+        'label_attr':{'class':'sr-only'},
+        'attr':{
+            'class':'selectpicker',
+            'data-none-selected-text':'profile.show.appuseremail.modal.form.type.none-selected-text'|trans}
+    }) }}
+    {% if form_appuseremail.useToReceiveEmail is defined %}
+        <div class="form-group">
+            {{ form_row(form_appuseremail.useToReceiveEmail, {
+                'label' : 'profile.show.appuseremail.modal.form.use_to_receive_email.label'|trans,
+                'attr':{'class':'md-toogle-switch'},
+                'help': 'profile.show.appuseremail.modal.form.use_to_receive_email.help'|trans}) }}
+        </div>
+    {% endif %}
+
+    {{ form_rest(form_appuseremail) }}
+
+    <div class="p-t-15 p-b-15 text-right">
+        {% if appuseremail is not null and appuseremail.emailCanonical != appuseremail.applicationUser.accountUser.emailCanonical %}
+            <a id="deleteAppUserEmail_{{ appuseremail.id }}" href="{{ path('deleteAppUserEmail', {'id':appuseremail.id}) }}" class="text-danger">{{ "global.button.delete"|trans }}</a>
+            <script>
+                $('#deleteAppUserEmail_{{ appuseremail.id }}').on('click', function (e) {
+                    e.preventDefault();
+                    var link = $(this);
+                    swal({
+                        title: '{{ "profile.show.appuseremail.modal.delete.swal_title"|trans }}',
+                        text: '{{ "profile.show.appuseremail.modal.delete.swal_text"|trans }}',
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: '{{ "global.button.delete"|trans }}',
+                        closeOnConfirm: true,
+                        showLoaderOnConfirm: true
+                    }, function (isConfirm) {
+                        if (isConfirm) {
+                            ajaxRequest(link, null, e, function (responseJSON, textStatus, jqXHR) {
+                                $("li#appuseremail_{{ appuseremail.id }}").remove();
+                                $('#{{ modalIdPrefix }}_modal').modal('toggle');
+                            }, null, null);
+                        }
+                    });
+                });
+            </script>
+        {% endif %}
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+        <button type="submit" class="btn btn-primary">{{ "global.button.save"|trans }}</button>
+    </div>
+    {{ form_end(form_appuseremail) }}
+    <script>
+        $('form#{{ modalIdPrefix }}Form').on('submit', function (e) {
+            var $form = $(this);
+            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                $('#{{ modalIdPrefix }}_modal').modal('toggle');
+            }, null, null);
+        });
+    </script>
+</div>

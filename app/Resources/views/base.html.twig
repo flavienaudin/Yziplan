@@ -7,24 +7,26 @@
     <meta name="author" content="ArdTeam">
     {% block meta_data %}{% endblock %}
 
-    <title>{% block title %}{{ 'base.page.meta_title'|trans }}{% endblock %}</title>
+    <title>{% block title %}{{ "base.page.meta_title"|trans }}{% endblock %}</title>
 
     {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery-ui.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-3.3.6-dist/bootstrap.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery-ui.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/animate.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/waves.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/material-design-iconic-font.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/waves.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/material-design-iconic-font.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootgrid.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.mCustomScrollbar.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootgrid.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select-1.10.0/bootstrap-select.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.min.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/palette.css") }}">
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
         <link rel="stylesheet" href="{{ asset("bundles/app/css/toastr.min.css") }}">
-
+        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select.min.css") }}">
     {% endblock %}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/app.min.1.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/app.min.2.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/at_style.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/app_style.css") }}">
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
@@ -36,9 +38,9 @@
 </noscript>
 
 {% block top_javascripts %}
-    <script src="{{ asset("bundles/app/js/jquery.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery-3.1.1.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jquery-ui.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-3.3.6-dist/bootstrap.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap.min.js") }}"></script>
 {% endblock top_javascripts %}
 
 {% block header_body %}
@@ -74,9 +76,14 @@
                     {# TODO : style : alignement vertical : hm-profile #}
                     <a data-toggle="dropdown" href="#">
                         {# TODO : mettre l'avatar de l'utilisateur #}
-                        <i class="hm-icon zmdi zmdi-account-circle"></i> </a>
+                        {% if app.user.applicationUser.appUserInformation.avatar is not null %}
+                            <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}">
+                        {% else %}
+                            <img src="{{ asset('bundles/app/img/user/avatar/menu_avatar_default.png') }}">
+                        {% endif %}
+                    </a>
                     <ul class="dropdown-menu pull-right dm-icon" role="menu">
-                        <li role="presentation"><a>{{ app.user.displayableName }}</a></li>
+                        <li role="presentation"><a class="user-public-name">{{ app.user.displayableName is not empty ? app.user.displayableName:"global.user_anonyme"|trans }}</a></li>
                         <li role="separator" class="divider"></li>
                         <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a></li>
                         <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a></li>
@@ -98,8 +105,6 @@
             </form>
         </div>
     </header>
-    {{ render(controller('ATUserBundle:Security:login', {"parentRequest":app.request, "display":"modal"})) }}
-    {{ render(controller('ATUserBundle:Registration:register', {"parentRequest":app.request, "display":"modal"})) }}
 {% endblock %}
 
 <!-- CONTENT -->
@@ -177,6 +182,14 @@
     </svg>
 </div>
 
+<div id="page_modal_container">
+    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        {{ render(controller('ATUserBundle:Security:login', {"parentRequest":app.request, "display":"modal"})) }}
+        {{ render(controller('ATUserBundle:Registration:register', {"parentRequest":app.request, "display":"modal"})) }}
+    {% endif %}
+    {% block page_modal_container %}{% endblock %}
+</div>
+
 <!-- Older IE warning message --><!--[if lt IE 9]>
 <div class="ie-warning">
     <h1 class="c-white">Warning!!</h1>
@@ -214,21 +227,29 @@
 </div><![endif]-->
 
 {% block javascripts %}
-    <script src="{{ asset("bundles/app/js/bootstrap-select-1.10.0/bootstrap-select.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/waves.js") }}"></script>
     <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/salvattore.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/autosize.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery.bootstrap.wizard.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/waves.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery.bootgrid-updated.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-datetimepicker.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/palette.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/toastr.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/sweetalert.min.js") }}"></script>
 
-    <!-- Placeholder for IE9 --><!--[if IE 9 ]>
+    <script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/autosize.min.js") }}"></script>
+
+    <!-- Placeholder for IE9 -->
+    <!--[if IE 9 ]>
     <script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->
 
-    <script src="{{ asset("bundles/app/js/functions.js") }}"></script>
+    {# /!\ en cas d'ajout de nouveaux widgets venant du Template AdminExtended, vérifier dans le fichier ci-dessus
+    les functions appelées et les ajouter au fichier "app.js" au cas par cas
+    <script src="{{ asset("bundles/app/js/functions.js") }}"></script>#}
     <script src="{{ asset("bundles/app/js/actions.js") }}"></script>
-    <script src="{{ asset("includes/js/at-app.js") }}"></script>
+    <script src="{{ asset("includes/js/app.js") }}"></script>
 
     <!-- Connexion/Registration Modals -->
     <script>
@@ -245,7 +266,6 @@
     </script>
 
     <!-- Base : Config pluggin Toastr -->
-    <script src="{{ asset("bundles/app/js/toastr.min.js") }}"></script>
     <script>
         // Configuration des notifcations via le pluggin TOASTR
         toastr.options = {

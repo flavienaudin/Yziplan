@@ -1,0 +1,80 @@
+{# Données d'entrée :
+- form_app_user_info_personals (Form) Formulaire à afficher
+#}
+
+<div id="userPersonals_form_container">
+    {{ form_start(form_app_user_info_personals, {'method':'post', 'action':path('updateUserPersonalInformation'),
+        'attr':{ 'id':'userPersonalInformation', 'data-profile-pmb-block-target':'#pmbblock_personal_information'} }) }}
+
+    {{ form_row(form_app_user_info_personals.publicName, {
+        'label': 'profile.show.profile_information.personal_information.publicname.label'|trans,
+        'help':"profile.show.profile_information.personal_information.publicname.help"|trans,
+        'attr':{'placeholder':"profile.show.profile_information.personal_information.publicname.placeholder"|trans},
+        'dlhorizontal':true, 'fgline':true
+    }) }}
+    {{ form_row(form_app_user_info_personals.legalStatus, {
+        'label':'profile.show.profile_information.personal_information.legalstatus.label'|trans,
+        'attr':{
+            'class':'selectpicker',
+            'data-none-selected-text':'profile.show.profile_information.personal_information.legalstatus.none_selected_text'|trans
+        },
+        'dlhorizontal':true
+    }) }}
+    {{ form_row(form_app_user_info_personals.firstName, {
+        'label':'profile.show.profile_information.personal_information.firstname.label'|trans,
+        'attr':{'placeholder': "profile.show.profile_information.personal_information.firstname.placeholder"|trans},
+        'dlhorizontal':true, 'fgline':true
+    }) }}
+    {{ form_row(form_app_user_info_personals.lastName, {
+        'label':'profile.show.profile_information.personal_information.lastname.label'|trans,
+        'attr':{'placeholder': "profile.show.profile_information.personal_information.lastname.placeholder"|trans},
+        'dlhorizontal':true, 'fgline':true
+    }) }}
+    {{ form_row(form_app_user_info_personals.gender, {
+        'label':'profile.show.profile_information.personal_information.gender.label'|trans,
+        'attr':{
+            'class':'selectpicker',
+            'data-none-selected-text':'profile.show.profile_information.personal_information.gender.none_selected_text'|trans
+        },
+        'dlhorizontal':true, 'fgline':true
+    }) }}
+    {{ form_row(form_app_user_info_personals.birthday, {
+        'label':'profile.show.profile_information.personal_information.birthday.label'|trans,
+        'attr':{'class':'date-picker', 'placeholder': "profile.show.profile_information.personal_information.birthday.placeholder"|trans},
+        'dlhorizontal':true, 'fgline':true
+    }) }}
+    {{ form_row(form_app_user_info_personals.nationality, {
+        'label':'profile.show.profile_information.personal_information.nationality.label'|trans,
+        'attr':{'placeholder': "profile.show.profile_information.personal_information.nationality.placeholder"|trans},
+        'dlhorizontal':true, 'fgline':true
+    }) }}
+    <div class="m-t-10 pull-right">
+        <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>
+        <button data-profile-action="reset" data-profile-action-target="#pmbblock_personal_information" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
+    </div>
+    {{ form_rest(form_app_user_info_personals) }}
+    {{ form_end(form_app_user_info_personals) }}
+    <div class="clearfix"></div>
+    <script>
+        $('form#userPersonalInformation').on("submit", function (e) {
+            var $form = $(this);
+            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                // update form's inputs
+                if (responseJSON.hasOwnProperty('data')) {
+                    for (var inputTarget in responseJSON['data']) {
+                        if (responseJSON['data'].hasOwnProperty(inputTarget)) {
+                            $('#pmb-view-' + inputTarget).html(responseJSON['data'][inputTarget]);
+                            /** Update information elsewhere in the page */
+                            $('.user-' + inputTarget).each(function () {
+                                $(this).html(responseJSON['data'][inputTarget]);
+                            });
+                        }
+                    }
+                }
+                // close edition block
+                var t = $form.data('profile-pmb-block-target');
+                $(t).removeClass('toggled');
+            }, null, null);
+        });
+    </script>
+</div>

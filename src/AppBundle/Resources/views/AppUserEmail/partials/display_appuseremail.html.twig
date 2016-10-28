@@ -1,0 +1,61 @@
+{# Données d'entrée :
+- appuseremail (AppUserEmail) l'appUserEmail à afficher
+#}
+
+{% set isAccountEmail = (appuseremail.applicationUser.accountUser.emailCanonical == appuseremail.emailCanonical) %}
+<li id="appuseremail_{{ appuseremail.id }}">
+    {% if appuseremail.confirmationToken is null %}
+        <span>
+            <a href="{{ path('editAppUserEmail',{"id":appuseremail.id}) }}" id="editAppUserEmail_{{ appuseremail.id }}">
+                <i class="zmdi zmdi-{{ isAccountEmail ?'account-box-mail':'email' }}" data-toggle="tooltip"
+                   title="{{ ("profile.show.appuseremail.tooltip."~(isAccountEmail?'account-')~"email")|trans }}"></i></a>
+            {{ appuseremail.email }} {{ appuseremail.type is not null?'('~(appuseremail.type|trans)~')' }}
+            {% if not isAccountEmail and appuseremail.useToReceiveEmail %}
+                <span class="zmdi zmdi-notifications-active" data-toggle="tooltip" title="{{ "profile.show.appuseremail.modal.form.use_to_receive_email.help"|trans }}"></span>
+            {% endif %}
+            <script>
+                $('#editAppUserEmail_{{ appuseremail.id }}').on('click', function (e) {
+                    e.preventDefault();
+                    var moduleModalsContainer = $('#editAppUserEmail_modalContainer');
+                    $(moduleModalsContainer).empty();
+                    ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
+                        var editModal = $('#editAppUserEmail_modal');
+                        editModal.modal('show');
+                        /*$('form#editAppUserEmailForm').on('submit', function (e) {
+                            var $form = $(this);
+                            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                                $('#editAppUserEmail_modal').modal('toggle');
+                            }, null, null);
+                        });*/
+                    }, null, null);
+                });
+            </script>
+        </span>
+    {% else %}
+        <i class="zmdi zmdi-help-outline" data-toggle="tooltip" title="{{ "profile.show.appuseremail.waiting_validation"|trans }}"></i> {{ appuseremail.email }}{{ appuseremail.type is not null?' ('~(appuseremail.type|trans)~')' }}
+        <a href="{{ path('deleteAppUserEmail', {'id':appuseremail.id}) }}" id="deleteAppUserEmail_{{ appuseremail.id }}" class="text-danger">
+            <span class="zmdi zmdi-close-circle-o" data-toggle="tooltip" title="{{ "profile.show.appuseremail.tooltip.remove"|trans }}"></span></a>
+        <script>
+            $('#deleteAppUserEmail_{{ appuseremail.id }}').on('click', function (e) {
+                e.preventDefault();
+                var link = $(this);
+                swal({
+                    title: "{{ "profile.show.appuseremail.modal.delete.swal_title"|trans }}",
+                    text: '{{ "profile.show.appuseremail.modal.delete.swal_text"|trans }}',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: '{{ "global.button.delete"|trans }}',
+                    closeOnConfirm: true,
+                    showLoaderOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        ajaxRequest(link, null, e, function (responseJSON, textStatus, jqXHR) {
+                            $("li#appuseremail_{{ appuseremail.id }}").remove();
+                        }, null, null);
+                    }
+                });
+            });
+        </script>
+    {% endif %}
+</li>

@@ -1,0 +1,12 @@
+
+{% block subject %}
+{% autoescape false %}
+{{ 'register.lossAppUserEmail_email.subject'|trans({'%username%': username, '%email%': email}) }}
+{% endautoescape %}
+{% endblock %}
+{% block body_text %}
+{% autoescape false %}
+{{ 'register.lossAppUserEmail_email.message'|trans({'%username%': username, '%email%': email}) }}
+{% endautoescape %}
+{% endblock %}
+{% block body_html %}{% endblock %}

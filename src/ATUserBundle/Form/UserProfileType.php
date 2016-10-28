@@ -8,31 +8,33 @@
 
 namespace ATUserBundle\Form;
 
+use ATUserBundle\Entity\AccountUser;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UserProfileType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("pseudo", TextType::class, array(
-                'required' => false
-            ))
-            // Suppression du mot de passe pour pouvoir modifier son profil (pour les compte ReseauSoc notamment)
-            ->remove("current_password");
+            ->add('email', EmailType::class, array(
+                'required' => true
+            ));
     }
 
-    public function getParent()
+    public function configureOptions(OptionsResolver $resolver)
     {
-        return 'FOS\UserBundle\Form\Type\ProfileFormType';
+        $resolver->setDefaults(array(
+            'data_class' => AccountUser::class,
+            'csrf_token_id' => 'profile'
+        ));
     }
 
     public function getBlockPrefix()
     {
-        return 'user_user_profile';
+        return 'user_profile';
     }
 
     // For Symfony 2.x

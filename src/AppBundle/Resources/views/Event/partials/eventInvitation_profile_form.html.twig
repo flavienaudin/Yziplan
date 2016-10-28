@@ -1,0 +1,49 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) Invitation de l'utilisateur de l'utilisateur
+- userEventInvitationForm (Form) Formulaire du profil de l'invité pour l'invitation
+#}
+
+<div id="eventInvitationProfile_formContainer">
+    {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationProfile'}}) }}
+    <div class="row">
+        <div class="col-sm-7">
+            {{ form_row(userEventInvitationForm.guestName, {
+                'label':'eventInvitation.form.guestname.label'|trans,
+                'label_attr':{'class':'sr-only'},
+                'attr':{'placeholder':'eventInvitation.form.guestname.placeholder'},
+                'fgline' : true
+            }) }}
+            {{ form_row(userEventInvitationForm.email, {
+                'label':'eventInvitation.form.email.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'placeholder':'eventInvitation.form.email.placeholder'},
+                'fgline' : true
+            }) }}
+        </div>
+        <div class="col-sm-5">
+            {% if userEventInvitation.applicationUser is not null and userEventInvitation.applicationUser.appUserInformation.avatar is not null %}
+                <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}" class="img-responsive" width="100%">
+            {% else %}
+                <img src="{{ asset('bundles/app/img/user/avatar/avatar_default.png') }}" class="img-responsive" width="100%">
+            {% endif %}
+        </div>
+    </div>
+    {{ form_rest(userEventInvitationForm) }}
+    <div class="p-t-15 p-b-15 text-right">
+        {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and (userEventInvitation.applicationUser is null or userEventInvitation.applicationUser.accountUser is null)
+        and userEventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
+            <i class="m-r-10"><a href="{{ path('disconnectEventInvitation', {'eventToken':userEventInvitation.event.token}) }}">
+                    {{ "eventInvitation.profile.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}
+                </a></i>
+        {% endif %}
+        {% if userEventInvitationForm is defined %}
+            <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+        {% endif %}
+    </div>
+    {{ form_end(userEventInvitationForm) }}
+    <script>
+        $('form#userEventInvitationProfile').on("submit", function (e) {
+            ajaxFormSubmission(this, e, null, null, null);
+        });
+    </script>
+</div>

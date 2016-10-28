@@ -8,24 +8,33 @@
 
 namespace ATUserBundle\Controller;
 
-use AppBundle\Utils\FlashBagTypes;
-use AppBundle\Utils\FormUtils;
-use ATUserBundle\Entity\User;
-use ATUserBundle\Form\UserAboutBiographyType;
-use ATUserBundle\Manager\UserAboutManager;
-use ATUserBundle\Manager\UserManager;
+use AppBundle\Entity\User\AppUserEmail;
+use AppBundle\Entity\User\Contact;
+use AppBundle\Form\User\AppUserEmailType;
+use AppBundle\Form\User\ContactType;
+use AppBundle\Manager\AppUserInformationManager;
+use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\Response\AppJsonResponse;
+use AppBundle\Utils\Response\FileInputJsonResponse;
+use ATUserBundle\Entity\AccountUser;
 use FOS\UserBundle\Controller\ProfileController as BaseController;
-use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\FOSUserEvents;
-use FOS\UserBundle\Event\FormEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Intl\Intl;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
-
+/**
+ * Class ProfileController
+ * @package ATUserBundle\Controller
+ * @Route("/{_locale}/profile", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
+ */
 class ProfileController extends BaseController
 {
     /**
@@ -33,12 +42,15 @@ class ProfileController extends BaseController
      */
     public function showAction(Request $request = null)
     {
+        $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
+
         $user = $this->getUser();
-        if (!is_object($user) || !$user instanceof User) {
+        if (!is_object($user) || !$user instanceof AccountUser) {
             throw $this->createAccessDeniedException('This user does not have access to this section.');
         }
+
         /** Profile edition */
-        /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+        /** @var $dispatcher EventDispatcherInterface */
         $dispatcher = $this->get('event_dispatcher');
         $event = new GetResponseUserEvent($user, $request);
         $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_INITIALIZE, $event);
@@ -47,20 +59,27 @@ class ProfileController extends BaseController
             return $event->getResponse();
         }
 
-        /** User Profile */
-        $userForm = $this->get("at.manager.user")->createProfileForm($user);
+        /** FORMs : AppUserInformation */
+        $appUserInformationManager = $this->get("at.manager.app_user_information");
+        $appUserInformationManager->retrieveAppUserInformation($user);
+        $appUserInfoPersonalsForm = $appUserInformationManager->createPersonalInformationForm();
+        $appUserContactDetailsForm = $appUserInformationManager->createContactDetailsForm();
+        $appUserInfoComplementariesForm = $appUserInformationManager->createComplementaryInformationForm();
 
-        /** User About */
-        $userAboutManager = $this->get("at.manager.user_about");
-        $userAboutManager->retrieveUserAbout($user);
-        $biographyForm = $userAboutManager->createBiographyForm();
-        $basicInformationForm = $userAboutManager->createBasicInformationForm();
+        /** FORM : AppUserEmail */
+        /** @var FormInterface $appUserEmailForm */
+        $appUserEmailForm = $this->createForm(AppUserEmailType::class, new AppUserEmail());
+
+        /** FORM : Contact Tab */
+        $addContactForm = $this->createForm(ContactType::class, new Contact());
 
         return $this->render('FOSUserBundle:Profile:show.html.twig', array(
             'user' => $user,
-            'form_mandatory_information' => $userForm->createView(),
-            'form_biography' => ($biographyForm != null ? $biographyForm->createView() : null),
-            'form_basic_information' => ($basicInformationForm != null ? $basicInformationForm->createView() : $basicInformationForm)
+            'form_app_user_info_personals' => ($appUserInfoPersonalsForm != null ? $appUserInfoPersonalsForm->createView() : null),
+            'form_contact_details' => ($appUserContactDetailsForm != null ? $appUserContactDetailsForm->createView() : null),
+            'form_app_user_info_complementaries' => ($appUserInfoComplementariesForm != null ? $appUserInfoComplementariesForm->createView() : null),
+            'form_appuseremail' => $appUserEmailForm->createView(),
+            'form_add_contact' => $addContactForm->createView()
         ));
     }
 
@@ -73,145 +92,42 @@ class ProfileController extends BaseController
     }
 
     /**
-     * @Route("/update-user-profile", name="updateUserProfile")
+     * @Route("/update/personals", name="updateUserPersonalInformation", methods={"POST"})
      */
-    public function updateUserProfileAction(Request $request)
+    public function updateUserPersonalInformationAction(Request $request)
     {
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
         $user = $this->getUser();
         $data = array();
-        if ($user instanceof User) {
-            /** @var UserManager $userManager */
-            $userManager = $this->get("at.manager.user");
-            /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
-            $dispatcher = $this->get('event_dispatcher');
-
-            $userForm = $userManager->createProfileForm($user);
-            $userForm->handleRequest($request);
+        if ($user instanceof AccountUser) {
+            $appUserInformationManager = $this->get("at.manager.app_user_information");
+            $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($user);
+            $personalInformationForm = $appUserInformationManager->createPersonalInformationForm();
+            $personalInformationForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
-                if ($userForm->isValid()) {
-                    $event = new FormEvent($userForm, $request);
-                    $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
-
-                    $userManager->updateUser($user);
-
-                    $data['data']['username'] = $user->getUsername();
-                    $data['data']['email'] = $user->getEmail();
-                    $data['data']['pseudo'] = $user->getPseudo();
-
-                    $response = new JsonResponse($data, Response::HTTP_OK);
-                    $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
-
-                    if ($request->hasSession()) {
-                        // Pas de flashbag message sinon ils seraient affichés sur une page ultérieurement
-                        $this->get('session')->getFlashBag()->clear();
-                    }
-                    return $response;
-                } else {
-                    $data["formErrors"] = array();
-                    foreach ($userForm->getErrors(true) as $error) {
-                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                    }
-                    return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
-                }
-            } else if ($userForm->isValid()) {
-                $event = new FormEvent($userForm, $request);
-                $dispatcher->dispatch(FOSUserEvents::PROFILE_EDIT_SUCCESS, $event);
-                $userManager->updateUser($user);
-                return $this->redirectToRoute("fos_user_profile_show");
-            } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
-                return $this->redirectToRoute("fos_user_profile_show");
-            }
-        } else {
-            if ($request->isXmlHttpRequest()) {
-                $data[FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("profile.message.update.error");
-                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
-            } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
-                return $this->redirectToRoute('fos_user_profile_show');
-            }
-        }
-    }
-
-    /**
-     * @Route("/update-user-biography", name="updateUserBiography")
-     */
-    public function updateUserBiographyAction(Request $request)
-    {
-        $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-        $user = $this->getUser();
-        $data = array();
-        if ($user instanceof User) {
-            /** @var UserAboutManager $userAboutManager */
-            $userAboutManager = $this->get("at.manager.user_about");
-            $userAbout = $userAboutManager->retrieveUserAbout($user);
-            $biographyForm = $this->createForm(UserAboutBiographyType::class, $userAbout);
-
-            $biographyForm->handleRequest($request);
-            if ($request->isXmlHttpRequest()) {
-                if ($biographyForm->isValid()) {
-                    $userAboutManager->updateUserAbout($userAbout);
-                    $data["data"]["biography"] = nl2br(empty($userAbout->getBiography()) ? $this->get("translator")->trans("profile.show.about.biography.empty") : $userAbout->getBiography());
-                    return new JsonResponse($data, Response::HTTP_OK);
-                } else {
-                    $data["formErrors"] = array();
-                    foreach ($biographyForm->getErrors(true) as $error) {
-                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                    }
-                    return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
-                }
-            } else if ($biographyForm->isValid()) {
-                $userAboutManager->updateUserAbout($userAbout);
-                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
-                return $this->redirectToRoute("fos_user_profile_show");
-            } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
-                return $this->redirectToRoute("fos_user_profile_show");
-            }
-        } else {
-            if ($request->isXmlHttpRequest()) {
-                $data[FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("profile.message.update.error");
-                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
-            } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
-                return $this->redirectToRoute("fos_user_profile_show");
-            }
-        }
-    }
-
-    /**
-     * @Route("/update-user-basic-information", name="updateUserBasicInformation")
-     */
-    public function updateUserBasicInformationAction(Request $request)
-    {
-        $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-        $user = $this->getUser();
-        $data = array();
-        if ($user instanceof User) {
-            $userAboutManager = $this->get("at.manager.user_about");
-            $userAbout = $userAboutManager->retrieveUserAbout($user);
-            $basicInformationForm = $userAboutManager->createBasicInformationForm();
-            $basicInformationForm->handleRequest($request);
-            if ($request->isXmlHttpRequest()) {
-                if ($basicInformationForm->isValid()) {
-                    $userAboutManager->updateUserAbout($userAbout);
+                if ($personalInformationForm->isValid()) {
+                    $appUserInformationManager->updateAppUserInformation();
                     // TODO : Gérer le format de la date en fonction de la locale
-                    $data["data"] = array(
-                        'fullname' => (!empty($userAbout->getFullname()) ? $userAbout->getFullname() : '-'),
-                        'gender' => ($userAbout->getGender() != null ? $this->get('translator')->trans("global.gender." . $userAbout->getGender()) : '-'),
-                        'birthday' => ($userAbout->getBirthday() != null ? $userAbout->getBirthday()->format("d/m/Y") : '-')
+                    $data[AppJsonResponse::DATA] = array(
+                        'public-name' => (!empty($appUserInformation->getPublicName()) ? $appUserInformation->getPublicName() : '-'),
+                        'legal-status' => ($appUserInformation->getLegalStatus() != null ? $this->get('translator')->trans($appUserInformation->getLegalStatus()) : '-'),
+                        'firstname' => (!empty($appUserInformation->getFirstName()) ? $appUserInformation->getFirstName() : '-'),
+                        'lastname' => (!empty($appUserInformation->getLastName()) ? $appUserInformation->getLastName() : '-'),
+                        'gender' => ($appUserInformation->getGender() != null ? $this->get('translator')->trans($appUserInformation->getGender()) : '-'),
+                        'birthday' => ($appUserInformation->getBirthday() != null ? $appUserInformation->getBirthday()->format("d/m/Y") : '-'),
+                        'nationality' => (!empty($appUserInformation->getNationality()) ? $appUserInformation->getNationality() : '-')
                     );
-                    return new JsonResponse($data, Response::HTTP_OK);
+                    $personalInformationForm = $appUserInformationManager->createPersonalInformationForm();
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userPersonals_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/personal_information_form.html.twig', ['form_app_user_info_personals' => $personalInformationForm->createView()]);
+                    return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $data["formErrors"] = array();
-                    foreach ($basicInformationForm->getErrors(true) as $error) {
-                        $data["formErrors"][FormUtils::getFullFormErrorFieldName($error)] = $error->getMessage();
-                    }
-                    return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userPersonals_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/personal_information_form.html.twig', ['form_app_user_info_personals' => $personalInformationForm->createView()]);
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
-            } else if ($basicInformationForm->isValid()) {
-                $userAboutManager->updateUserAbout($userAbout);
+            } else if ($personalInformationForm->isValid()) {
+                $appUserInformationManager->updateAppUserInformation();
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");
             } else {
@@ -226,6 +142,164 @@ class ProfileController extends BaseController
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
                 return $this->redirectToRoute("fos_user_profile_show");
             }
+        }
+    }
+
+    /**
+     * @Route("/update/contact-details", name="updateUserContactDetails", methods={"POST"})
+     */
+    public function updateUserContactDetailsAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
+        $user = $this->getUser();
+        $data = array();
+        if ($user instanceof AccountUser) {
+            $appUserInformationManager = $this->get("at.manager.app_user_information");
+            $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($user);
+            $contactDetailsForm = $appUserInformationManager->createContactDetailsForm();
+            $contactDetailsForm->handleRequest($request);
+            if ($request->isXmlHttpRequest()) {
+                if ($contactDetailsForm->isValid()) {
+                    $appUserInformationManager->updateAppUserInformation();
+                    $data[AppJsonResponse::DATA] = array(
+                        'living-country' => (!empty($appUserInformation->getLivingCountry()) ? Intl::getRegionBundle()->getCountryName($appUserInformation->getLivingCountry()) : '-'),
+                        'living-city' => ($appUserInformation->getLivingCity() != null ? $appUserInformation->getLivingCity() : '-')
+                    );
+                    $contactDetailsForm = $appUserInformationManager->createContactDetailsForm();
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userContactDetails_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/contact_details_form.html.twig', ['form_contact_details' => $contactDetailsForm->createView()]);
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userContactDetails_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/contact_details_form.html.twig', ['form_contact_details' => $contactDetailsForm->createView()]);
+                    return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                }
+            } else if ($contactDetailsForm->isValid()) {
+                $appUserInformationManager->updateAppUserInformation();
+                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
+                return $this->redirectToRoute("fos_user_profile_show");
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
+                return $this->redirectToRoute("fos_user_profile_show");
+            }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+                $data[FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("profile.message.update.error");
+                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
+                return $this->redirectToRoute("fos_user_profile_show");
+            }
+        }
+    }
+
+    /**
+     * @Route("/update/complementaries", name="updateUserComplementatyInformation")
+     */
+    public function updateUserComplementatyInformationAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
+        $user = $this->getUser();
+        $data = array();
+        if ($user instanceof AccountUser) {
+            /** @var AppUserInformationManager $appUserInformationManager */
+            $appUserInformationManager = $this->get("at.manager.app_user_information");
+            $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($user);
+            $complementaryInformationForm = $appUserInformationManager->createComplementaryInformationForm();
+
+            $complementaryInformationForm->handleRequest($request);
+            if ($request->isXmlHttpRequest()) {
+                if ($complementaryInformationForm->isValid()) {
+                    $appUserInformationManager->updateAppUserInformation();
+                    $data[AppJsonResponse::DATA]["marital-status"] = empty($appUserInformation->getBiography()) ? "-" : $this->get("translator")->trans($appUserInformation->getMaritalStatus());
+                    $data[AppJsonResponse::DATA]["biography"] = nl2br(empty($appUserInformation->getBiography()) ?
+                        $this->get("translator")->trans("profile.show.profile_information.complementaries.biography.empty") : $appUserInformation->getBiography());
+                    $data[AppJsonResponse::DATA]["interets"] = nl2br(empty($appUserInformation->getInterests()) ?
+                        $this->get("translator")->trans("profile.show.profile_information.complementaries.interests.empty") : $appUserInformation->getInterests());
+                    $data[AppJsonResponse::DATA]["food-conveniences"] = nl2br(empty($appUserInformation->getFoodConveniences()) ?
+                        $this->get("translator")->trans("profile.show.profile_information.complementaries.food_conveniences.empty") : $appUserInformation->getFoodConveniences());
+
+                    $complementaryInformationForm = $appUserInformationManager->createComplementaryInformationForm();
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userComplementaries_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/complementary_information_form.html.twig', ['form_app_user_info_complementaries' => $complementaryInformationForm->createView()]);
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#userComplementaries_form_container'] =
+                        $this->renderView('@ATUser/Profile/partials/complementary_information_form.html.twig', ['form_app_user_info_complementaries' => $complementaryInformationForm->createView()]);
+                    return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                }
+            } else if ($complementaryInformationForm->isValid()) {
+                $appUserInformationManager->updateAppUserInformation();
+                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
+                return $this->redirectToRoute("fos_user_profile_show");
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
+                return $this->redirectToRoute("fos_user_profile_show");
+            }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+                $data[FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("profile.message.update.error");
+                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
+                return $this->redirectToRoute("fos_user_profile_show");
+            }
+        }
+    }
+
+    /**
+     * @Route("/update/avatar", name="updateUserAvatar")
+     */
+    public function updateUserAvatar(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $imageFile = $request->files->get('avatarImageInput');
+            /** @var AppUserInformationManager $appUserInformationManager */
+            $appUserInformationManager = $this->get("at.manager.app_user_information");
+            $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($this->getUser());
+            if ($appUserInformation->getAvatar() != null) {
+                $this->get('at.uploader.file')->delete($appUserInformation->getAvatar());
+            }
+            $appUserInformation->setAvatar($imageFile);
+            $appUserInformationManager->updateAppUserInformation();
+            $data = array();
+            // TODO : Supprimer après phase de TEST
+            if ($appUserInformation->getAvatar() != null) {
+                $avatarDirURL = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/' . $this->get('at.uploader.file')->getWebRelativeTargetDir();
+                $data[FileInputJsonResponse::INITIAL_PREVIEW] = $avatarDirURL . '/' . $appUserInformation->getAvatar();
+                $data[FileInputJsonResponse::INITIAL_PREVIEW_CONFIG][] = [
+                    FileInputJsonResponse::IPC_URL => $this->generateUrl('deleteUserAvatar', [], UrlGeneratorInterface::ABSOLUTE_URL),
+                    FileInputJsonResponse::IPC_KEY => 100,
+                    'overwriteInitial' => true
+                ];
+            }
+            return new FileInputJsonResponse($data, Response::HTTP_OK);
+
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
+            return $this->redirectToRoute('fos_user_profile_show');
+        }
+    }
+
+    /**
+     * @Route("/delete/user-avatar", name="deleteUserAvatar")
+     */
+    public function deleteUserAvatar(Request $request)
+    {
+        /** @var AppUserInformationManager $appUserInformationManager */
+        $appUserInformationManager = $this->get("at.manager.app_user_information");
+        $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($this->getUser());
+        if ($appUserInformation->getAvatar() != null) {
+            $this->get('at.uploader.file')->delete($appUserInformation->getAvatar());
+            $appUserInformation->setAvatar(null);
+        }
+        $appUserInformationManager->updateAppUserInformation();
+
+        if ($request->isXmlHttpRequest()) {
+            $data[FileInputJsonResponse::INITIAL_PREVIEW] = [];
+            return new FileInputJsonResponse($data, Response::HTTP_OK);
+        } else {
+            return $this->redirectToRoute('fos_user_profile_show');
         }
     }
 }

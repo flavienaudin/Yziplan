@@ -9,29 +9,29 @@
 namespace AppBundle\DataFixtures\ORM;
 
 
-use AppBundle\Entity\enum\EventInvitationStatus;
-use AppBundle\Entity\enum\EventStatus;
-use AppBundle\Entity\enum\ModuleInvitationStatus;
-use AppBundle\Entity\enum\ModuleStatus;
-use AppBundle\Entity\enum\PollModuleSortingType;
-use AppBundle\Entity\enum\PollProposalElementType;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\EventInvitation;
-use AppBundle\Entity\Module;
-use AppBundle\Entity\module\ExpenseModule;
-use AppBundle\Entity\module\ExpenseProposal;
-use AppBundle\Entity\module\PollModule;
-use AppBundle\Entity\module\PollProposal;
-use AppBundle\Entity\module\PollProposalElement;
-use AppBundle\Entity\ModuleInvitation;
+use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Entity\Event\Module;
+use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Entity\Module\PollElement;
+use AppBundle\Entity\Module\PollModule;
+use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Manager\GenerateursToken;
-use ATUserBundle\Entity\User;
+use AppBundle\Utils\enum\EventInvitationStatus;
+use AppBundle\Utils\enum\EventStatus;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
+use AppBundle\Utils\enum\ModuleStatus;
+use AppBundle\Utils\enum\PollElementType;
+use AppBundle\Utils\enum\PollModuleSortingType;
+use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LoadEventData implements FixtureInterface, ContainerAwareInterface
+class LoadEventData implements FixtureInterface, ContainerAwareInterface, OrderedFixtureInterface
 {
 
     /**
@@ -54,67 +54,48 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         // Get our userManager, you must implement `ContainerAwareInterface`
         $userManager = $this->container->get('at.manager.user');
         $tokenManager = $this->container->get('at.service.gentoken');
-        $eventManager = $this->container->get('at.manager.event');
 
-        /** @var $userprincipal User */
-        $userprincipal = $userManager->createUser();
-        $userprincipal->setUsername("user1@at.fr");
-        $userprincipal->setEmail('user1@at.fr');
-        $userprincipal->setPlainPassword('user1');
-        $userprincipal->setPasswordKnown(true);
-        $userprincipal->setEnabled(true);
-        // Update the user for password
-        $userManager->updateUser($userprincipal, true);
+        /** @var AccountUser $userprincipal */
+        $userprincipal = $userManager->findUserByEmail(LoadUsers::USER_ONE_EMAIL);
+        /** @var AccountUser $userInvite */
+        $userInvite = $userManager->findUserByEmail(LoadUsers::USER_TWO_EMAIL);
 
-
-        /** @var $userInvite User */
-        $userInvite = $userManager->createUser();
-        $userInvite->setUsername('user2@at.fr');
-        $userInvite->setEmail('user2@at.fr');
-        $userInvite->setPlainPassword('user2');
-        $userInvite->setPasswordKnown(true);
-        $userInvite->setEnabled(true);
-        // Update the user for password
-        $userManager->updateUser($userInvite, true);
-
-        
         //Event
-        $event = new Event();
-        $event->setName("Test d'evenement");
-        $event->setToken("123456789");
-        $event->setTokenEdition("987654321");
-        $event->setStatus(EventStatus::IN_ORGANIZATION);
-        $event->setDescription("Nouvel événément super cool de test. C'est donc sa description");
-        $event->setGuestsCanAddModule(true);
+        $event1 = new Event();
+        $event1->setName("Evenement de la soirée");
+        $event1->setToken("123456789");
+        $event1->setStatus(EventStatus::IN_ORGANIZATION);
+        $event1->setDescription("On se fait une soirée. on va s'éclater");
+        $event1->setInvitationOnly(false);
+        $event1->setGuestsCanInvite(true);
+        $event1->setGuestsCanAddModule(true);
 
         //EventInvitation Creator
         $eventInvitationCreator = new EventInvitation();
-        $eventInvitationCreator->setName("Jacky");
+        $eventInvitationCreator->setGuestName("Jacky");
         $eventInvitationCreator->setStatus(EventInvitationStatus::VALID);
         $eventInvitationCreator->setToken('azerty');
-        $eventInvitationCreator->setTokenEdition('ytreza');
-        $userprincipal->getAppUser()->addEventInvitation($eventInvitationCreator);
-        $event->addEventInvitation($eventInvitationCreator);
-        $event->setCreator($eventInvitationCreator);
+        $eventInvitationCreator->setCreator(true);
+        $userprincipal->getApplicationUser()->addEventInvitation($eventInvitationCreator);
+        $event1->addEventInvitation($eventInvitationCreator);
 
         //EventInvitation Invite
         $eventInvitationRaymond = new EventInvitation();
-        $eventInvitationRaymond->setName("Raymond");
+        $eventInvitationRaymond->setGuestName("Raymond");
         $eventInvitationRaymond->setStatus(EventInvitationStatus::VALID);
         $eventInvitationRaymond->setToken('qsdfgh');
-        $eventInvitationRaymond->setTokenEdition('hgfdsq');
-        $userInvite->getAppUser()->addEventInvitation($eventInvitationRaymond);
-        $event->addEventInvitation($eventInvitationRaymond);
+        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationRaymond);
+        $event1->addEventInvitation($eventInvitationRaymond);
 
-        //Module
+        /*
+        //Module Expense
         $moduleExpense = new Module();
-        $event->addModule($moduleExpense);
+        $event1->addModule($moduleExpense);
         $moduleExpense->setName("Test Expense Module");
         $moduleExpense->setDescription("Ceci est une super description.
 
         Avec un saut à la ligne!");
         $moduleExpense->setToken("12345");
-        $moduleExpense->setTokenEdition("543221");
         $moduleExpense->setStatus(EventStatus::IN_ORGANIZATION);
         $moduleExpense->setOrderIndex(2);
 
@@ -122,17 +103,17 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $expenseModule = new ExpenseModule();
         $moduleExpense->setExpenseModule($expenseModule);
 
-        $expenseProposal = new ExpenseProposal();
-        $expenseProposal->setName("Restaurant");
-        $expenseProposal->setAmount(12);
-        $expenseProposal->setExpenseDate(new \DateTime());
-        $expenseProposal->setCreator($eventInvitationCreator);
-        $expenseProposal->setPayer($eventInvitationCreator);
-        $expenseProposal->addListOfParticipant($eventInvitationCreator);
-        $expenseProposal->addListOfParticipant($eventInvitationRaymond);
-        $expenseModule->addExpenseProposal($expenseProposal);
+        $expenseElement = new ExpenseElement();
+        $expenseElement->setName("Restaurant");
+        $expenseElement->setAmount(12);
+        $expenseElement->setExpenseDate(new \DateTime());
+        $expenseElement->setCreator($eventInvitationCreator);
+        $expenseElement->setPayer($eventInvitationCreator);
+        $expenseElement->addListOfParticipant($eventInvitationCreator);
+        $expenseElement->addListOfParticipant($eventInvitationRaymond);
+        $expenseModule->addExpenseElement($expenseElement);
         
-        $expenseProposal2 = new ExpenseProposal();
+        $expenseProposal2 = new ExpenseElement();
         $expenseProposal2->setName("Restaurant2");
         $expenseProposal2->setAmount(36);
         $expenseProposal2->setExpenseDate(new \DateTime());
@@ -140,70 +121,76 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $expenseProposal2->setPayer($eventInvitationRaymond);
         $expenseProposal2->addListOfParticipant($eventInvitationCreator);
         $expenseProposal2->addListOfParticipant($eventInvitationRaymond);
-        $expenseModule->addExpenseProposal($expenseProposal2);
+        $expenseModule->addExpenseElement($expenseProposal2);
 
         $expenseModuleInvitation1 = new ModuleInvitation();
         $expenseModuleInvitation1->setModule($moduleExpense);
         $expenseModuleInvitation1->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
         $expenseModuleInvitation1->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $expenseModuleInvitation1->setTokenEdition($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $eventInvitationCreator->addModuleInvitation($expenseModuleInvitation1);
 
         $expenseModuleInvitation2 = new ModuleInvitation();
         $expenseModuleInvitation2->setModule($moduleExpense);
         $expenseModuleInvitation2->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
         $expenseModuleInvitation2->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $expenseModuleInvitation2->setTokenEdition($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $moduleExpense->setCreator($expenseModuleInvitation2);
+        $expenseModuleInvitation2->isCreator();
         $eventInvitationRaymond->addModuleInvitation($expenseModuleInvitation2);
-
+        */
 
         // Module Poll
         $modulePoll = new Module();
-        $event->addModule($modulePoll);
-        $modulePoll->setName("Module Quand");
-        $modulePoll->setDescription("C'est un chouette module");
-        $modulePoll->setToken("quand123");
-        $modulePoll->setTokenEdition("quand321");
-        $modulePoll->setStatus(EventStatus::IN_ORGANIZATION);
+        $event1->addModule($modulePoll);
+        $modulePoll->setName("Quoi qu'on fait ?");
+        $modulePoll->setDescription("On veut savoir ce qu'on fait");
+        $modulePoll->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
+        $modulePoll->setStatus(ModuleStatus::IN_ORGANIZATION);
         $modulePoll->setOrderIndex(1);
 
         $pollModule = new PollModule();
         $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
         $modulePoll->setPollModule($pollModule);
 
+        $pollElementAct1 = new PollElement();
+        $pollModule->addPollElement($pollElementAct1);
+        $pollElementAct1->setName("Activité 1");
+        $pollElementAct1->setType(PollElementType::STRING);
+        $pollElementAct1->setOrderIndex(1);
+
+        $pollElementAct2 = new PollElement();
+        $pollModule->addPollElement($pollElementAct2);
+        $pollElementAct2->setName("Activité 2");
+        $pollElementAct2->setType(PollElementType::STRING);
+        $pollElementAct2->setOrderIndex(2);
+
         $pollProposal1 = new PollProposal();
-        $pollProposalElement1 = new PollProposalElement();
-        $pollProposalElement1->setName("Occasion");
-        $pollProposalElement1->setType(PollProposalElementType::STRING);
-        $pollProposalElement1->setValString("Crémaillère");
-        $pollProposal1->addPollProposalElement($pollProposalElement1);
-        $pollProposalElement2 = new PollProposalElement();
-        $pollProposalElement2->setName("Complt.");
-        $pollProposalElement2->setType(PollProposalElementType::STRING);
-        $pollProposalElement2->setValString("Party");
-        $pollProposal1->addPollProposalElement($pollProposalElement2);
+        $pollProposal1->setDescription("Ca va être sportif!!!");
+        $pollProposal1Act1 = new PollProposalElement();
+        $pollProposal1Act1->setValString("Match de rugby");
+        $pollElementAct1->addPollProposalElement($pollProposal1Act1);
+        $pollProposal1->addPollProposalElement($pollProposal1Act1);
+        $pollProposal1Act2 = new PollProposalElement();
+        $pollProposal1Act2->setValString("3ième mi-temps");
+        $pollElementAct2->addPollProposalElement($pollProposal1Act2);
+        $pollProposal1->addPollProposalElement($pollProposal1Act2);
         $pollModule->addPollProposal($pollProposal1);
 
         $pollProposal2 = new PollProposal();
-        $pollProposalElement11 = new PollProposalElement();
-        $pollProposalElement11->setName("Occasion");
-        $pollProposalElement11->setType(PollProposalElementType::STRING);
-        $pollProposalElement11->setValString("Anniversaire");
-        $pollProposal2->addPollProposalElement($pollProposalElement11);
-        $pollProposalElement22 = new PollProposalElement();
-        $pollProposalElement22->setName("Complt.");
-        $pollProposalElement22->setType(PollProposalElementType::STRING);
-        $pollProposalElement22->setValString("30 ans");
-        $pollProposal2->addPollProposalElement($pollProposalElement22);
+        $pollProposal2->setDescription("Ca va être ludique");
+        $pollProposal2Act1 = new PollProposalElement();
+        $pollProposal2Act1->setValString("Carcassonne");
+        $pollElementAct2->addPollProposalElement($pollProposal2Act1);
+        $pollProposal2->addPollProposalElement($pollProposal2Act1);
+        $pollProposal2Act2 = new PollProposalElement();
+        $pollProposal2Act2->setValString("7 wxonders");
+        $pollElementAct2->addPollProposalElement($pollProposal2Act2);
+        $pollProposal2->addPollProposalElement($pollProposal2Act2);
         $pollModule->addPollProposal($pollProposal2);
 
         $moduleInvitation1 = new ModuleInvitation();
         $moduleInvitation1->setModule($modulePoll);
         $moduleInvitation1->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
         $moduleInvitation1->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $moduleInvitation1->setTokenEdition($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $modulePoll->setCreator($moduleInvitation1);
+        $moduleInvitation1->setCreator(true);
         $moduleInvitation1->initPollModuleResponse();
         $eventInvitationCreator->addModuleInvitation($moduleInvitation1);
 
@@ -214,19 +201,16 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         $moduleInvitation2->setModule($modulePoll);
         $moduleInvitation2->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
         $moduleInvitation2->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $moduleInvitation2->setTokenEdition($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $moduleInvitation2->initPollModuleResponse();
         $eventInvitationRaymond->addModuleInvitation($moduleInvitation2);
 
-        $manager->persist($event);
+        $manager->persist($event1);
         $manager->flush();
-
 
         //Event 2
         $event2 = new Event();
         $event2->setName("Evénement 2");
         $event2->setToken("012345678");
-        $event2->setTokenEdition("876543210");
         $event2->setStatus(EventStatus::IN_ORGANIZATION);
         $event2->setDescription("Evénément 2 organisé par un utilisateur anonyme");
         $event2->setGuestsCanInvite(false);
@@ -235,18 +219,16 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
 
         //EventInvitation Creator
         $event2InvitationCreator = new EventInvitation();
-        $event2InvitationCreator->setName("Anon. 1");
+        $event2InvitationCreator->setGuestName("Anon. 1");
         $event2InvitationCreator->setStatus(EventInvitationStatus::VALID);
         $event2InvitationCreator->setToken('0azerty');
-        $event2InvitationCreator->setTokenEdition('ytreza0');
+        $event2InvitationCreator->setCreator(true);
         $event2->addEventInvitation($event2InvitationCreator);
-        $event2->setCreator($event2InvitationCreator);
 
         // Module Event 2
         $moduleEvent2 = new Module();
         $moduleEvent2->setStatus(ModuleStatus::IN_CREATION);
         $moduleEvent2->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $moduleEvent2->setTokenEdition($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $pollModuleEvent2 = new PollModule();
         $pollModuleEvent2->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
         $moduleEvent2->setPollModule($pollModuleEvent2);
@@ -255,29 +237,33 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface
         // Module Event 2 Invitation Creator
         $moduleEvent2InvitationCreator = new ModuleInvitation();
         $moduleEvent2InvitationCreator->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $moduleEvent2InvitationCreator->setTokenEdition($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $moduleEvent2InvitationCreator->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
         $moduleEvent2->addModuleInvitation($moduleEvent2InvitationCreator);
-        $moduleEvent2->setCreator($moduleEvent2InvitationCreator);
+        $moduleEvent2InvitationCreator->isCreator();
         $event2InvitationCreator->addModuleInvitation($moduleEvent2InvitationCreator);
 
         //EventInvitation Guest 1
         $event2InvitationGuest1 = new EventInvitation();
-        $event2InvitationGuest1->setName("Guest anon. 1");
+        $event2InvitationGuest1->setGuestName("Guest anon. 1");
         $event2InvitationGuest1->setStatus(EventInvitationStatus::VALID);
         $event2InvitationGuest1->setToken('guest1');
-        $event2InvitationGuest1->setTokenEdition('1guest');
         $event2->addEventInvitation($event2InvitationGuest1);
 
         // Module Event 2 Invitation Creator
         $moduleEvent2InvitationGuest1 = new ModuleInvitation();
         $moduleEvent2InvitationGuest1->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $moduleEvent2InvitationGuest1->setTokenEdition($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $moduleEvent2InvitationGuest1->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
         $moduleEvent2->addModuleInvitation($moduleEvent2InvitationGuest1);
         $event2InvitationGuest1->addModuleInvitation($moduleEvent2InvitationGuest1);
 
         $manager->persist($event2);
         $manager->flush();
+    }
+
+    public function getOrder()
+    {
+        // the order in which fixtures will be loaded
+        // the lower the number, the sooner that this fixture is loaded
+        return 2;
     }
 }

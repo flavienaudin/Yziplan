@@ -8,84 +8,52 @@
 
 namespace ATUserBundle\Manager;
 
-use AppBundle\Manager\GenerateursToken;
-use ATUserBundle\Entity\User;
+use AppBundle\Entity\User\AppUserEmail;
+use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Doctrine\UserManager as BaseManager;
 use FOS\UserBundle\Form\Factory\FormFactory;
-use FOS\UserBundle\Util\CanonicalizerInterface;
+use FOS\UserBundle\Util\CanonicalFieldsUpdater;
+use FOS\UserBundle\Util\PasswordUpdaterInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserManager extends BaseManager
 {
-    /** @var GenerateursToken */
-    protected $tokenGenerateur;
-    /** @var  EntityManager */
-    protected $entityManager;
+    /** @var CanonicalFieldsUpdater Surcharge de l'attribut de la classe parente */
+    protected $canonicalFieldsUpdater;
     /** @var FormFactory */
     private $fosUserProfileFormFactory;
 
-    public function __construct(EncoderFactoryInterface $encoderFactory, CanonicalizerInterface $usernameCanonicalizer, CanonicalizerInterface $emailCanonicalizer, ObjectManager $om, $class)
+    public function __construct(PasswordUpdaterInterface $passwordUpdater, CanonicalFieldsUpdater $canonicalFieldsUpdater, ObjectManager $om, $class)
     {
-        parent::__construct($encoderFactory, $usernameCanonicalizer, $emailCanonicalizer, $om, $class);
-
-    }
-
-    /**
-     * @param GenerateursToken $tokenGenerateur
-     */
-    public function setTokenGenerateur(GenerateursToken $tokenGenerateur)
-    {
-        $this->tokenGenerateur = $tokenGenerateur;
-    }
-
-    /**
-     * @param EntityManager $entityManager
-     */
-    public function setEntityManager(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
+        parent::__construct($passwordUpdater, $canonicalFieldsUpdater, $om, $class);
     }
 
     /**
      * @param FormFactory $formFactory
      */
-    public function setFosUserProfileFormFactory(FormFactory $formFactory){
+    public function setFosUserProfileFormFactory(FormFactory $formFactory)
+    {
         $this->fosUserProfileFormFactory = $formFactory;
     }
 
     /**
-     * Create a user from the given email. The user is disabled and a random password is set.
-     * 
-     * @param $email
-     * @return User
+     * @param AccountUser $user
+     * @return FormInterface
      */
-    public function createUserFromEmail($email){
-        /** @var User $user */
-        $user = $this->createUser();
-        $user->setEmail($email);
-        $user->setUsername($email);
-
-        if($user instanceof User) {
-            $user->setPseudo(explode("@", $email)[0]);
-        }
-        $user->setPlainPassword($this->tokenGenerateur->random(GenerateursToken::MOTDEPASSE_LONGUEUR));
-        $user->setEnabled(false);
-        $user->setPasswordKnown(false);
-        $this->updateUser($user);
-        return $user;
+    public function createProfileForm(AccountUser $user)
+    {
+        $userForm = $this->fosUserProfileFormFactory->createForm();
+        $userForm->setData($user);
+        return $userForm;
     }
 
     /**
-     * @param User $user
-     * @return FormInterface
+     * @param $email string Email to look for
+     * @return AppUserEmail|null
      */
-    public function createProfileForm(User $user)
+    public function findAppUserEmailByEmail($email)
     {
-        $userForm =  $this->fosUserProfileFormFactory->createForm();
-        $userForm->setData($user);
-        return $userForm;
+        return $this->objectManager->getRepository(AppUserEmail::class)->findOneBy(['emailCanonical' => $this->canonicalFieldsUpdater->canonicalizeEmail($email)]);
     }
 }

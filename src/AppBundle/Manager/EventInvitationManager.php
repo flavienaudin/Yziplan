@@ -9,15 +9,15 @@
 namespace AppBundle\Manager;
 
 
-use AppBundle\Entity\enum\EventInvitationStatus;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\EventInvitation;
-use AppBundle\Entity\Module;
-use AppBundle\Form\EventInvitationFormType;
-use AppBundle\Form\InvitationsFormType;
+use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Entity\Event\Module;
+use AppBundle\Entity\User\ApplicationUser;
+use AppBundle\Entity\User\AppUserEmail;
+use AppBundle\Form\Event\EventInvitationType;
 use AppBundle\Security\EventInvitationVoter;
-use ATUserBundle\Entity\User;
-use ATUserBundle\Manager\UserManager;
+use AppBundle\Utils\enum\EventInvitationStatus;
+use ATUserBundle\Entity\AccountUser;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -30,7 +30,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 class EventInvitationManager
 {
     const TOKEN_SESSION_KEY = "user/eventInvitation/token";
-    const TOKEN_EDITION_SESSION_KEY = "user/eventInvitation/tokenEdition";
 
     /** @var EntityManager */
     private $entityManager;
@@ -47,8 +46,8 @@ class EventInvitationManager
     /** @var SessionInterface */
     private $session;
 
-    /** @var UserManager */
-    private $userManager;
+    /** @var ApplicationUserManager */
+    private $applicationUserManager;
 
     /** @var  ModuleInvitationManager */
     private $moduleInvitationManager;
@@ -57,14 +56,14 @@ class EventInvitationManager
     private $eventInvitation;
 
 
-    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, UserManager $userManager, ModuleInvitationManager $moduleInvitationManager)
+    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, ApplicationUserManager $applicationUserManager, ModuleInvitationManager $moduleInvitationManager)
     {
         $this->entityManager = $doctrine;
         $this->authorizationChecker = $authorizationChecker;
         $this->formFactory = $formFactory;
         $this->generateursToken = $generateurToken;
         $this->session = $session;
-        $this->userManager = $userManager;
+        $this->applicationUserManager = $applicationUserManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
     }
 
@@ -93,23 +92,25 @@ class EventInvitationManager
      * @param $event Event L'événement concerné
      * @param $saveInSession boolean If the session is impacted by the search of the User EventInvitation
      * @param $initializeIfNotExists boolean If true and the EventInvitation doesn't already exist, a new one is initialised
-     * @param $user User|null L'utilisateur connecté ou non
+     * @param $user AccountUser|null L'utilisateur connecté ou non
      * @return EventInvitation|null
      */
-    public function retrieveUserEventInvitation(Event $event, $saveInSession, $initializeIfNotExists, User $user = null)
+    public function retrieveUserEventInvitation(Event $event, $saveInSession, $initializeIfNotExists, AccountUser $user = null)
     {
         $this->eventInvitation = null;
-        $eventInvitationRepo = $this->entityManager->getRepository("AppBundle:EventInvitation");
-        if ($user instanceof User && $this->authorizationChecker->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED, $user)) {
-            $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'appUser' => $user->getAppUser()));
+        $eventInvitationRepo = $this->entityManager->getRepository(EventInvitation::class);
+        if ($user instanceof AccountUser && $this->authorizationChecker->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED, $user)) {
+            $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'applicationUser' => $user->getApplicationUser()));
         }
         if ($this->eventInvitation != null) {
-            if ($this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
-            } else {
+            if (!$this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
                 $this->eventInvitation = null;
             }
         } else {
-            if ($this->session->has(self::TOKEN_SESSION_KEY)) {
+            // Un utilisateur connecté ne peut récupérer une invitation en session sinon il y a risque de récupération d'une invitation qui ne lui appartient pas
+            // De plus, un EventInvitation devrait déjà être créé pour lui s'il a déjà tenté de participer à l'événement (ou alors il n'était pas connecté , auquel cas
+            // une nouvelle invitation sera créée.
+            if ($user == null && $this->session->has(self::TOKEN_SESSION_KEY)) {
                 $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'token' => $this->session->get(self::TOKEN_SESSION_KEY)));
             }
             if ($this->eventInvitation != null) {
@@ -118,7 +119,7 @@ class EventInvitationManager
                 }
             } else {
                 if ($initializeIfNotExists && $this->authorizationChecker->isGranted(EventInvitationVoter::CREATE, $event)) {
-                    $this->eventInvitation = $this->initializeEventInvitation($event, ($user instanceof User ? $user : null));
+                    $this->eventInvitation = $this->initializeEventInvitation($event, ($user instanceof AccountUser ? $user->getApplicationUser() : null));
                     $this->updateEventInvitation();
                 } else {
                     $this->eventInvitation = null;
@@ -141,17 +142,19 @@ class EventInvitationManager
      * @param string $email The email of the guest to search the EventInvitation for
      * @return EventInvitation
      */
-    public function getGuestEventInvitation(Event $event, $email){
+    public function getGuestEventInvitation(Event $event, $email)
+    {
         $this->eventInvitation = null;
-        $guestUser = $this->userManager->findUserByEmail($email);
-        if($guestUser instanceof User){
-            $eventInvitationRepo = $this->entityManager->getRepository("AppBundle:EventInvitation");
-            $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'appUser' => $guestUser->getAppUser()));
-        }else{
-            $guestUser = $this->userManager->createUserFromEmail($email);
+        /** @var AppUserEmail $existingAppUserEmail */
+        $existingAppUserEmail = $this->applicationUserManager->findAppUserEmailByEmail($email);
+        if ($existingAppUserEmail != null) {
+            $applicationUser = $existingAppUserEmail->getApplicationUser();
+            $this->eventInvitation = $this->entityManager->getRepository(EventInvitation::class)->findOneBy(array('event' => $event, 'applicationUser' => $applicationUser));
+        } else {
+            $applicationUser = $this->applicationUserManager->createApplicationUserFromEmail($email);
         }
-        if($this->eventInvitation == null) {
-             $this->initializeEventInvitation($event, $guestUser);
+        if ($this->eventInvitation == null) {
+            $this->initializeEventInvitation($event, $applicationUser);
         }
 
         return $this->eventInvitation;
@@ -160,35 +163,30 @@ class EventInvitationManager
     /**
      * Create an EventInvitation and set it as creator of the event
      * @param Event $event
-     * @param User|null $user
+     * @param ApplicationUser|null $applicationUser
      * @return EventInvitation|null If null, the creator is already set
      */
-    public function createCreatorEventInvitation(Event $event, User $user = null)
+    public function createCreatorEventInvitation(Event $event, ApplicationUser $applicationUser = null)
     {
-        if ($event->getCreator() != null) {
-            $this->eventInvitation = null;
-        } else {
-            $this->initializeEventInvitation($event, $user);
-            $event->setCreator($this->eventInvitation);
-        }
+        $this->initializeEventInvitation($event, $applicationUser);
+        $this->eventInvitation->setCreator(true);
         return $this->eventInvitation;
     }
 
     /**
-     * Initialise une EventInvitation pour un événement et d'un utilisateur (connecté ou non).
+     * Initialise une EventInvitation pour un événement et un ApplicationUser (connecté ou non).
      * L'EventInvitation n'est pas persistée en base de données.
      * @param Event $event
-     * @param User|null $user
+     * @param ApplicationUser|null $applicationUser
      * @return EventInvitation
      */
-    public function initializeEventInvitation(Event $event, User $user = null)
+    public function initializeEventInvitation(Event $event, ApplicationUser $applicationUser = null)
     {
         $this->eventInvitation = new EventInvitation();
         $this->eventInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        $this->eventInvitation->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
-        if ($user != null) {
-            $this->eventInvitation->setAppUser($user->getAppUser());
+        if ($applicationUser != null) {
+            $this->eventInvitation->setApplicationUser($applicationUser);
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
         }
         $event->addEventInvitation($this->eventInvitation);
@@ -229,7 +227,6 @@ class EventInvitationManager
         if ($this->eventInvitation != null) {
             $this->entityManager->persist($this->eventInvitation);
             $this->entityManager->flush();
-            $this->session->set(self::TOKEN_SESSION_KEY, $this->eventInvitation->getToken());
             return true;
         }
         return false;
@@ -237,35 +234,43 @@ class EventInvitationManager
 
     /**
      * Génère le formulaire d'édition des informations principales d'une EventInvitation (Réponse à un événement)
+     *
+     * @param EventInvitation|null $eventInvitation Les données du formulaire
      * @return FormInterface
      */
-    public function createEventInvitationForm()
+    public function createEventInvitationForm(EventInvitation $eventInvitation = null)
     {
-        return $this->formFactory->create(EventInvitationFormType::class, $this->eventInvitation);
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        return $this->formFactory->create(EventInvitationType::class, $this->eventInvitation);
     }
 
     /**
-     * Traite la soumission du formulaire d'EventInvitationFormType (Réponse à un événement) en créant un AppUser et User si besoin
-     * @param Form $evtForm
-     * @return EventInvitation|mixed
+     * Traite la soumission du formulaire d'EventInvitationType (Réponse à un événement) en créant un ApplicationUser et User si besoin
+     * @param Form $evtInvitForm
+     * @return EventInvitation
      */
-    public function treatEventInvitationFormSubmission(Form $evtForm)
+    public function treatEventInvitationFormSubmission(Form $evtInvitForm)
     {
-        $this->eventInvitation = $evtForm->getData();
+        $this->eventInvitation = $evtInvitForm->getData();
         if (!empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
         }
 
-        $guestEmailForm = $evtForm->get("email");
-        if ($this->eventInvitation->getAppUser() == null) {
+        $guestEmailForm = $evtInvitForm->get("email");
+        if ($this->eventInvitation->getApplicationUser() == null) {
             $guestEmailData = $guestEmailForm->getData();
             if (!empty($guestEmailData)) {
-                $guest = $this->userManager->findUserByEmail($guestEmailData);
-                if ($guest == null) {
-                    $guest = $this->userManager->createUserFromEmail($guestEmailData);
+                /** @var AppUserEmail $appUserEmail */
+                $appUserEmail = $this->applicationUserManager->findAppUserEmailByEmail($guestEmailData);
+                if ($appUserEmail != null) {
+                    $applicationUser = $appUserEmail->getApplicationUser();
+                }else{
+                    $applicationUser = $this->applicationUserManager->createApplicationUserFromEmail($guestEmailData);
                 }
-                $guest->getAppUser()->addEventInvitation($this->eventInvitation);
-
+                // If an AppUserEmail exists, it can't be associated to AccountUser due to EmailNotBelongToAccountUser constraint
+                $applicationUser->addEventInvitation($this->eventInvitation);
             }
         }
         $this->updateEventInvitation();

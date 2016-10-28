@@ -1,0 +1,25 @@
+{# données d'entrée :
+- modalIdPrefix (string) Le prefixe à ajouter avant les identifiants liés à la modal
+- contact (Contact|null) The Conctact to edit OR null if adding a new one
+- form_contact (Form) The form
+#}
+
+<div class="modal fade" id="{{ modalIdPrefix }}_modal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="#{{ modalIdPrefix }}_title">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="zmdi zmdi-close" aria-hidden="true"></span></button>
+                <h4 class="modal-title" id="{{ modalIdPrefix }}_title">
+                    {{ contact is null?"contacts.contact_modal.title.add"|trans:"contacts.contact_modal.title.edit"|trans }}
+                </h4>
+            </div>
+            <div class="modal-body">
+                {{ include('@App/Contact/partials/contact_form.html.twig', {
+                    'modalIdPrefix':modalIdPrefix,
+                    'contact':contact,
+                    'form_contact':form_contact
+                }) }}
+            </div>
+        </div>
+    </div>
+</div>

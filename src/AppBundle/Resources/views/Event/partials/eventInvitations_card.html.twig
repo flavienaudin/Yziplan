@@ -1,0 +1,122 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
+- eventInvitations ([EventInvitation]) Les invitations de l'événements
+- invitationsForm (Form|null) Formulaire permettant d'inviter (renseignement des e-mails des invités)
+#}
+
+
+<div class="card" id="eventInvitations-main-div">
+    <div class="card-header">
+        <h2>{{ "invitations.display.title"|trans }}
+            <small class="d-block">Todo : design + user avatar</small>
+        </h2>
+    </div>
+    <div class="card-body card-padding p-t-25" id="eventinvitation-body-card">
+        <div class="well-sm z-depth-2 palette-Grey-200 bg m-b-20">
+            <ul class="list-inline" id="eventInvitations_list">
+                {% for eventInvitation in eventInvitations if eventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::VALID') %}
+                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
+                {% endfor %}
+            </ul>
+        </div>
+        {% if invitationsForm is not null %}
+            {# TODO Implémenter les invitations #}
+            {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),'attr':{'id':'eventInvitations'}}) }}
+            {{ form_row(invitationsForm.invitations, {'id':'eventInvitations_newEmails','label':'invitations.form.invitations.label','attr':{'class':'contacts'}}) }}
+            <div class="text-center">
+                {#<button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}"
+                        data-original-text="{{ "invitations.button.send_invitation"|trans }}">
+                    {{ "invitations.button.send_invitation"|trans }}
+                </button>#}
+            </div>
+            {{ form_end(invitationsForm) }}
+
+            <span style="font-size:11px" id="eventLink">http://www.ardganisateur.com</span>
+
+            <button class="btn btn-social btn-facebook" id="shareEventFB" name="provider">
+                Invitez via Facebook
+            </button>
+        {% endif %}
+    </div>
+    <script>
+        {% if invitationsForm is not null %}
+        $('#eventInvitations_newEmails').selectize({
+            persist: false,
+            maxItems: null,
+            placeholder: "{{ "invitations.form.invitations.placeholder"|trans }}",
+            valueField: 'value',
+            labelField: 'text',
+            searchField: ['text', 'value'],
+            hideSelected: true,
+            render: {
+                item: renderUserAsItem,
+                option: renderUserAsOption,
+                option_create: renderOptionCreate
+            },
+            createFilter: createFilterEmail,
+            create: createUser
+        });
+
+        $('form#eventInvitations').on('submit', function (e) {
+            e.preventDefault();
+            /*ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+             if (responseJSON.htmlContent) {
+             $('#eventInvitations-main-div').replaceWith(responseJSON.htmlContent);
+             }
+             }, null, null);*/
+        });
+        {% endif %}
+
+        {#{% if editEventMode %}#}
+        $('#eventInvitations_list').find('li > a.cancelInvitation').each(function () {
+            var link = $(this);
+            $(this).on('click', function (e) {
+                e.preventDefault();
+                var text = "{{ "invitations.display.cancel.swal.text"|trans }}";
+                if (link.data('guestname') != "") {
+                    text = text.replace('%name%', link.data('guestname'));
+                }
+                swal({
+                    title: "{{ "invitations.display.cancel.swal.title"|trans }}",
+                    text: text,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: '{{ "global.button.delete"|trans }}',
+                    closeOnConfirm: true,
+                    showLoaderOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
+                            $(link).parent().remove();
+                        }, null, null);
+                    }
+                });
+            });
+        });
+        {#{% endif %}#}
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Initialize invitation via facebook
+            $.ajaxSetup({cache: true});
+            $.getScript('//connect.facebook.net/fr_FR/all.js', function () {
+                FB.init({
+                    appId: '232326430490812',
+                    xfbml      : true,
+                    version    : 'v2.6'
+                });
+            });
+
+            // React to the invite via facebook button
+            $('#shareEventFB').click(function () {
+                var pageLink = $('#eventLink').text();
+
+                FB.ui({
+                    method: 'send',
+                    link: pageLink
+                });
+            });
+        });
+    </script>
+</div>

@@ -1,10 +1,12 @@
 {% extends "ATUserBundle::layout_cboxed.html.twig" %}
 
-{# Données d'entrée !
-- user (User) L'utilisateur dont on affiche le profil
-- form_mandatory_information (Form) Le formulaire des informations obligatoires
-- form_biography (Form|null) Le formulaire pour la partie "Biographie"
-- form_basic_information (Form|null) Le formulaire pour la partie "Information basique"
+{# Données d'entrée :
+- user (AccountUser) L'utilisateur dont on affiche le profil
+- form_contact_details (Form|null) Le formulaire pour la partie "Informations Personnelles"
+- form_contact_details (Form|null) Le formulaire pour la partie "Coordonnées"
+- form_app_user_info_complementaries (Form|null) Le formulaire pour la partie "A propos de vous"
+- form_appuseremail (Form) Ajout d'un AppUserEmail au compte
+- form_add_contact (Form) Ajout d'un nouveau Contact
 #}
 
 {% block title %}
@@ -13,71 +15,46 @@
 
 
 {% block fos_user_content %}
-    <div class="c-header">
-        <h2>{{ user }}
-            <small>{{ user.email }}</small>
-        </h2>
-    </div>
-
-    <div class="card" id="profile-main">
-        <div class="pm-overview c-overflow">
-            <div class="pmo-pic">
-                <div class="p-relative">
-                    {# TODO : user avatar #}
-                    <a href="#"> <img class="img-responsive" src="{{ asset('bundles/atuser/profile/avatar_default.png') }}" alt="AVATAR"> </a>
-
-                    {#<div class="pmop-message">
-                        <a href="{{ path("fos_user_profile_edit") }}" class="btn palette-White bg btn-float z-depth-1"><i class="zmdi zmdi-edit"></i></a>
-                    </div>#}
-
-                    <a href="#" class="pmop-edit"> <i class="zmdi zmdi-camera"></i> <span class="hidden-xs">{{ "profile.show.page.avatar_update"|trans }}</span> </a>
-                </div>
-
-                <div class="pmo-stat">
-                    <h2 class="m-0 c-white">156</h2>
-                    Total Invitations
-                </div>
-
-                {#<div class="pmo-block pmo-contact hidden-xs">
-                    <h2>Contact</h2>
-
-                    <ul>
-                        <li><i class="zmdi zmdi-email"></i> {{ app.user.email }}</li>
-                        <li><i class="zmdi zmdi-phone"></i> 00971 12345678 9</li>
-                        <li><i class="zmdi zmdi-facebook-box"></i> malinda.hollaway</li>
-                        <li><i class="zmdi zmdi-google"></i> malinda.hollaway</li>
-                        <li>
-                            <i class="zmdi zmdi-pin"></i>
-                            <address class="m-b-0 ng-binding">
-                                44-46 Morningside Road,<br> Edinburgh,<br> Scotland
-                            </address>
-                        </li>
-                    </ul>
-                </div>#}
-            </div>
+    <div class="card" id="profile-card">
+        <div class="card-header">
+            <h2><span class="user-public-name">{{ user.displayableName }}</span>
+                <small class="user-email">{{ user.email }}</small>
+            </h2>
         </div>
 
-        <div class="pm-body clearfix">
+        <div class="card-body">
             <div role="tabpanel">
-                <ul class="tab-nav tn-justified">
-                    <li class="waves-effect"><a href="#profile-about" aria-controls="profile-about" role="tab" data-toggle="tab">About</a></li>
-                    <li class="active waves-effect"><a href="#profile-connections" aria-controls="profile-connections" role="tab" data-toggle="tab">Connections</a></li>
-                    <li class="waves-effect"><a href="#profile-preferences" aria-controls="profile-preferences" role="tab" data-toggle="tab">Preferences</a></li>
+                <ul id="profile-tabs" class="tab-nav tn-justified" role="tablist">
+                    <li id="tab-profile-information" class="waves-effect">
+                        <a href="#profile-information" aria-controls="profile-information" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_information"|trans }}</a>
+                    </li>
+                    <li id="tab-profile-contacts" class="waves-effect">
+                        <a href="#profile-contacts" aria-controls="profile-contacts" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_contacts"|trans }}</a>
+                    </li>
+                    <li id="tab-profile-preferences" class="waves-effect">
+                        <a href="#profile-preferences" aria-controls="profile-preferences" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_preferences"|trans }}</a>
+                    </li>
                 </ul>
+
                 <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane" id="profile-about">
+                    <div role="tabpanel" class="tab-pane" id="profile-information">
                         {{ include('@ATUser/Profile/partials/profile_about.html.twig', {
                             'user':user,
-                            'form_mandatory_information':form_mandatory_information,
-                            'form_biography':form_biography,
-                            'form_basic_information':form_basic_information
+                            'form_app_user_info_personals':form_app_user_info_personals,
+                            'form_contact_details':form_contact_details,
+                            'form_app_user_info_complementaries':form_app_user_info_complementaries
                         }) }}
                     </div>
-                    <div role="tabpanel" class="tab-pane active" id="profile-connections">
-                        {{ include('@ATUser/Contact/partials/display_contacts.html.twig', {'contacts':user.contacts}) }}
+                    <div role="tabpanel" class="tab-pane" id="profile-contacts">
+                        {# User -> Contacts|ContactGroups #}
+                        {{ include('@ATUser/Profile/partials/profile_contacts.html.twig', {
+                            'contacts':user.applicationUser.contacts,
+                            'contactGroups':user.applicationUser.contactGroups,
+                            'form_add_contact':form_add_contact }) }}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile-preferences">
-                        {{ include('@ATUser/Profile/partials/profile_preferences.html.twig') }}
+                        Préférences
+                        {#{{ include('@ATUser/Profile/partials/profile_preferences.html.twig') }}#}
                     </div>
                 </div>
             </div>
@@ -85,25 +62,47 @@
     </div>
 {% endblock fos_user_content %}
 
+{% block page_modal_container %}
+    {{ parent() }}
+    <div id="editAppUserEmail_modalContainer">{# where  modals to edit AppUserEmail will be added by Ajax request #}</div>
+    <div id="editContact_modalContainer">{# where  modals to edit Contact will be added by Ajax request #}</div>
+{% endblock page_modal_container %}
+
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootgrid.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/fileinput.min.css") }}">
 {% endblock stylesheets %}
 
 {% block top_javascripts %}
     {{ parent() }}
-    <script src="{{ asset("bundles/app/js/jquery.bootgrid.updated.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/selectize.js") }}"></script>
-    <script src="{{ asset("includes/js/at-selectize.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/sweetalert.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery.bootgrid-updated.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/at-selectize.js") }}"></script>
+
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/app/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script src="{{ asset('bundles/atuser/js/profile/at-about.js') }}"></script>
+    <!-- canvas-to-blob.min.js is only needed if you wish to resize images before upload.
+     This must be loaded before fileinput.min.js -->
+    <script src="{{ asset("bundles/app/js/fileinput_dep/canvas-to-blob.min.js") }}" type="text/javascript"></script>
+    <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
+         This must be loaded before fileinput.min.js -->
+    <script src="{{ asset("bundles/app/js/fileinput_dep/sortable.min.js") }}" type="text/javascript"></script>
+    <!-- purify.min.js is only needed if you wish to purify HTML content in your preview for HTML files.
+         This must be loaded before fileinput.min.js -->
+    <script src="{{ asset("bundles/app/js/fileinput_dep/purify.min.js") }}" type="text/javascript"></script>
+    <!-- the main fileinput plugin file -->
+    <script src="{{ asset('bundles/app/js/fileinput.js') }}"></script>#}
+    <!-- optionally if you need a theme like "Material Design" theme  -->
+    <script src="{{ asset('bundles/app/js/fileinput_dep/theme_zmdi.js') }}"></script>
+    {% if app.request.attributes.get('_locale') == 'fr' %}
+        <!-- optionally if you need translation for your language -->
+        <script src="{{ asset('bundles/app/js/fileinput_dep/fr.js') }}"></script>
+    {% endif %}
+
+    <script src="{{ asset('bundles/atuser/js/profile/user-profile.js') }}"></script>
 {% endblock javascripts %}

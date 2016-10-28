@@ -1,9 +1,18 @@
 {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register')}) }}
 
-<div class="input-group m-t-25 m-b-25 fg-float {% if (not form.email.vars.compound or form.email.vars.force_error|default(false)) and not form.email.vars.valid %} has-error{% endif %}">
+<div class="input-group m-t-25 m-b-25 fg-float {% if (not form.publicName.vars.compound or form.publicName.vars.force_error|default(false)) and not form.publicName.vars.valid %} has-error{% endif %}">
+    <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
+    <div class="fg-line">
+        {{ form_widget(form.publicName, {"attr":{"class":"input-lg","autocomplete":"off"}}) }}
+        {{ form_label(form.publicName, "register.form_field.publicName", {"label_attr":{"class":"fg-label"}}) }}
+    </div>
+    {{ form_errors(form.publicName) }}
+</div>
+
+<div class="input-group m-b-25 fg-float {% if (not form.email.vars.compound or form.email.vars.force_error|default(false)) and not form.email.vars.valid %} has-error{% endif %}">
     <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
     <div class="fg-line">
-        {{ form_widget(form.email, {"attr":{"class":"input-lg"}}) }}
+        {{ form_widget(form.email, {"attr":{"class":"input-lg","autocomplete":"off"}}) }}
         {{ form_label(form.email, "register.form_field.email",  {"label_attr":{"class":"fg-label"}}) }}
     </div>
     {{ form_errors(form.email) }}
@@ -19,22 +28,12 @@
             {% set password_label = "form.password_confirmation"|trans({}, 'FOSUserBundle') %}
         {% endif %}
         <div class="fg-line">
-            {{ form_widget(passwordField, {"attr":{"class":"input-lg"}}) }}
+            {{ form_widget(passwordField, {"attr":{"class":"input-lg","autocomplete":"off"}}) }}
             {{ form_label(passwordField, null,  {"label_attr":{"class":"fg-label"}}) }}
         </div>
         {{ form_errors(passwordField) }}
     </div>
 {% endfor %}
-
-<div class="input-group m-b-25 fg-float">
-    <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
-    <div class="fg-line">
-        {{ form_widget(form.pseudo, {"attr":{"class":"input-lg"}}) }}
-        {{ form_label(form.pseudo, "register.form_field.pseudo", {"label_attr":{"class":"fg-label"}}) }}
-    </div>
-
-    {{ form_errors(form.pseudo) }}
-</div>
 
 <div class="row">
     <div class="col-xs-12 m-b-30">
@@ -45,8 +44,8 @@
 </div>
 
 <div class="text-center m-b-25">
-    <em><a {% if modal is defined and modal %}data-toggle="modal" href="#modalLogin"{% else %}href="{{ path('fos_user_security_login') }}{% endif %}">{{ "register.text.already_an_account"|trans
-            }}</a></em>
+    <em><a {% if modal is defined and modal %}data-toggle="modal" href="#modalLogin" {% else %}href="{{ path('fos_user_security_login') }}{% endif %}">
+            {{ "register.text.already_an_account"|trans }}</a> </em>
 </div>
 
 {{ form_rest(form) }}

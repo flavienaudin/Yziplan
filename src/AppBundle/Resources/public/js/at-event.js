@@ -3,6 +3,12 @@
  */
 
 $(document).ready(function () {
+    $('.grid').masonry({
+        // options
+        itemSelector: '.grid-item',
+        columnWidth: '.grid-sizer',
+        percentPosition: true
+    });
 
     autosize($('textarea'));
 
@@ -66,8 +72,8 @@ $("[id^='event-data-table']").bootgrid({
             } catch (error) {
             }
             return resultat;
-        },
-    },
+        }
+    }
 });
 
 

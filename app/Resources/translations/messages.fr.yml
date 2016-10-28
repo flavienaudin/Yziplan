@@ -3,7 +3,7 @@
 
 base:
   page:
-    meta_title: Prototype 2
+    meta_title: Yziplan
   ie_warning:
     browser:
       chrome: Chrome
@@ -17,7 +17,7 @@ base:
     home: Accueil
 
 navbar:
-  brand: Plany
+  brand: YziPlan
   subtitle: Version beta 2
   search:
     placeholder: Rechercher un contact, un événement...
@@ -45,6 +45,31 @@ landing_page:
       title: Retrouvailles entre amis ?
       text: Organisez-vous avec vos amis pour savoir où et quand partir en week-end ou vacances !
 
+appuseremail:
+  associate:
+    message:
+      check_mailbox: Merci de vérifier la boîte de réception de "%email%" pour valider l'association.
+      association_validated: L'association de l'e-mail %email% est confirmée.
+      not_found: L'e-mail associé avec le token donné n'existe pas.
+      wrong_user: L'e-mail n'est pas associé à ce compte.
+    confirmationAppUserEmail_email:
+      subject: Yziplan Confirmation - Association d'un e-mail
+      message: |
+        Bonjour %username% !
+
+        Pour valider l'association de l'email %email%, merci de vous rendre sur %confirmationUrl%
+
+        Cordialement,
+        L'équipe.
+  edit:
+    message:
+      error: Impossible de modifier cette association.
+  delete:
+    message:
+      error:
+        default: Une erreur est survenue lors de la suppression de l'e-mail associé.
+        main_email: Désolé, il n'est pas possible de supprimer votre adresse principale.
+
 event:
   form:
     name:
@@ -54,7 +79,7 @@ event:
       label: Changer l'image
     description:
       label: Description
-      placeholder: Description
+      placeholder: Dites-en plus au sujet de votre événement
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse
@@ -89,35 +114,45 @@ eventInvitations:
 
 eventInvitation:
   form:
-    name:
-      label: Votre nom pour l'événement
+    guestname:
+      label: Nom
       placeholder: Votre nom pour l'événement
     email:
-      label: Votre e-mail de contact
-      placeholder: Votre e-mail
+      label: E-mail
+      placeholder: Votre e-mail de contact
     answer:
       label: Serez-vous présent ?
       placeholder: Serez-vous présent ?
   answer:
+    card:
+      title: Votre réponse
     yes: Oui
     no: Non
     interested: Intéressé
     dont_know: Je ne sais pas encore
-  maindata.card:
-    title: A propos de votre invitation
+  profile.card:
+    title: Votre profil
     text:
       disconnect: Vous n'êtes pas %user% ?
     new_warning_alert:
       title: Quel est votre nom ?
       message: Merci de renseigner votre nom pour valider l'invitation.
       inputError: C'est mieux avec quelques lettres.
-  error.message:
-    unauthorized_access: Vous n'êtes pas inviter à cet événement.
+  message:
+    warning:
+      email_owned_by_accountuser: Attention! Cet e-mail est associée à un compte utilisateur. Connectez-vous avant de participer pour profiter de toutes les fonctionnalités.
+    error:
+      unauthorized_cancel: Vous n'avez pas les autorisations pour annuler cette invitation.
+      unauthorized_access: Vous n'êtes pas inviter à cet événement.
 
 invitations:
   display:
     title: Liste des invités
-    remove_link: Annuler l'invitation de %name%
+    cancel:
+      link: Annuler l'invitation de %name%
+      swal:
+        title: Annulation
+        text: Êtes-vous sûre de vouloir annuler l'invitation de %name% ?
   form:
     invitations:
       label: Inviter de nouvelles personnes
@@ -179,7 +214,6 @@ pollmodule:
       title: Etes-vous sûr de vouloir supprimer cette proposition ?
       message: Cette action est irréversible
 
-
 moduleInvitation:
   empty_displayable_name: Vous
   error.message:
@@ -189,17 +223,14 @@ moduleInvitation:
 # Globals
 global:
   event: événement
-  gender:
-    0: "-"
-    1: Homme
-    2: Femme
-    3: Autre
+  user_anonyme: YsiPlaneur anonyme
   link:
     top: Haut
   button:
     valid: Valider
     cancel: Annuler
     submit: Soumettre
+    edit: Editer
     save: Sauver
     nextStep: Prochaine étape
     delete: Supprimer
@@ -217,6 +248,22 @@ global:
     access_denied_http: Vous n'avez pas accès à ces données. Connectez-vous avec l'utilisateur adéquate.
     method_not_allowed_http: Cette requête n'est pas autorisée. Faites attention.
 
+# Enums
+gender:
+  0: "-"
+  male: Homme
+  female: Femme
+  other: Autre
+
+legal_status:
+  individual: Personne
+  organisation: Organisation
+
+marital_status:
+  single: Célibataire
+  couple: En couple
+  married: Marié
+
 status:
   in_creation: En cours de création
   in_organization: En cours d'organisation
@@ -226,3 +273,7 @@ status:
   archived: Archivé
   deprogrammed: Déprogrammé
   cancelled: Annulé
+
+contact_info_type:
+  home: Personnelle
+  business: Professionelle

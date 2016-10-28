@@ -21,13 +21,23 @@ register:
     already_an_account: Déjà un compte ?
   form_field:
     email: E-mail
-    pseudo: Pseudo
+    publicName: Votre nom public
   validation:
     email_already_used: Cet adresse e-mail est déjà utilisée
   check_email:
     page:
       meta_title: E-mail envoyé
       title: E-mail envoyé
+  lossAppUserEmail_email:
+    subject: Yziplan Avertissement - Inscription à partir d''une adresse e-mail que vous possédez
+    message: |
+        Bonjour %username%!
+
+        Nous avons enregistré un inscription avec l'adresse %email% que vous avez attaché à votre compte. Cet e-mail va être transférer au nouveau compte.
+        Si vous n'êtes pas à l'initiative de cette inscription, vérifiez immédiatement la boîte e-mail correspondante et annulez la demande.
+
+        Cordialement,
+        L'équipe.
 
 confirmed:
   page:
@@ -65,46 +75,113 @@ profile:
       meta_title: Mon profil
       title: Mon profil
       avatar_update: Mettre à jour votre avatar
-    about:
-      mandatory_information:
-        title: Champs Obligatoires
-        username:
-          title: Nom d'utilisateur
-          label: Nom d'utilisateur
-          placeholder: Nom d'utilisateur
+    tab:
+      profile_information: Profil
+      profile_contacts: Contacts
+      profile_preferences: Préférences
+    appuseremail:
+      title: Vos e-mails associés
+      add_link: Associer un nouvel email
+      waiting_validation: En attente de validation
+      tooltip:
+        account-email: E-mail principal
+        email: E-mail associé
+        remove: Supprimer
+      modal:
+        add:
+          title: Associer un nouvel e-mail
+        edit:
+          title: Editer l'email "%email%"
+        delete:
+          swal_title: "Suppression d'un e-mail"
+          swal_text: Êtes-vous sûre de vouloir supprimer cet email ?
+        form:
+          email:
+            label: E-mail
+            placeholder: E-mail
+          type:
+            label: Type
+            none-selected-text: Type
+          use_to_receive_email:
+            label: Recevoir les notifications
+            help: Recevoir les notifications liées à cet e-mail dans sa boîte de réception plutôt que dans celle de l'e-mail de votre compte utilisateur.
+          validation:
+            email_already_used: Cet adresse e-mail est déjà associée à un compte
+    profile_information:
+      connexion_information:
+        title: Informations de connexion
         email:
           title: E-mail
           label: E-mail
           placeholder: E-mail
-        pseudo:
-          title: Pseudo
-          label: Pseudo
-          placeholder: Pseudo
         password:
           title: Mot de passe
           change: Modifier votre mot de passe
           init: Initialiser votre mot de passe
         social_network:
           title: Réseaux sociaux
-      biography:
-        title: Biographie
-        label: Biographie
-        placeholder: Quelques mots à propos de vous ...
-        empty: Vous n'avez pas encore renseignée votre biographie
-      basic_information:
+      personal_information:
         title: Informations Personnelles
-        fullname:
+        publicname:
+          title: Nom public
+          label: Nom public
+          placeholder: Nom Public
+          help: Il s'agit de votre nom affiché publiquement par défault (par exemple pour les invitations ou votre profil public)
+        firstname:
+          title: Prénom
+          label: Prénom
+          placeholder: Prénom
+        lastname:
           title: Nom
           label: Nom
           placeholder: Nom
+        legalstatus:
+          title: Status légal
+          label: Status légal
+          none_selected_text: Status légal
         gender:
           title: Sexe
           label: Sexe
-          placeholder: Sexe
+          none_selected_text: Sexe
         birthday:
           title: Anniversaire
           label: Anniversaire
           placeholder: Cliquez ici...
+        nationality:
+          title: Nationalité
+          label: Nationalité
+          placeholder: Nationalité
+      contact_details:
+        title: Coordonnées
+        living_country:
+          title: Pays
+          label: Pays
+          none_selected_text: Pays
+        living_city:
+          title: Ville
+          label: Ville
+          placeholder: Ville
+      complementaries:
+        title: A propos de vous
+        marital_status:
+          title: Situation Familiale
+          label: Situation Familiale
+          none_selected_text: Situation Familiale
+        biography:
+          title: Biographie
+          label: Biographie
+          placeholder: Quelques mots à propos de vous ...
+          empty: Vous n'avez pas encore renseigné votre biographie
+        interests:
+          title: Centres d'intérêts
+          label: Centres d'intérêts
+          placeholder: Quels sont vos centres d'intérêts...
+          empty: Vous n'avez pas encore renseigné vos centres d'intérêts
+        food_conveniences:
+          title: Commodités Alimentaires
+          label: Commodités Alimentaires
+          placeholder: Renseignez vos préférences et allergies alimentaires...
+          empty: Vous n'avez pas encore renseigné vos commodités alimentaires
   message:
     update:
       success: Informations mises à jour
@@ -113,16 +190,48 @@ profile:
       already_init: Cette action est interdite car vous devriez déjà connaître votre mot de passe.
 
 contacts:
-  add_form:
-    label: Rechercher un contact
-    placeholder: Ajouter les e-mails ici
-    submit: Ajouter
+  left-menu:
+    title: Vos groupes
+    all_contacts: Tous vos contacts
+    add_group:
+      label: Nouveau
+  menu:
+    add_contact:
+      text: Nouveau
+      tooltip: Ajouter un nouveau contact
+    import_contact:
+      text: Import
+      tooltip: Importer des contacts
+  contact_modal:
+    title:
+      add: Ajouter un contact
+      edit: Modifier le contact
+    form:
+      firstname:
+        label: Prénom
+        placeholder: Prénom
+      lastname:
+        label: Nom
+        placeholder: Nom
+      gender:
+        label: Sexe
+        none-selected-text: Sexe
+      birthday:
+        label: Anniversaire
+        placeholder: Anniversaire
+      nationality:
+        label: Nationalité
+        placeholder: Nationalité
+
   table:
+    label:
+      search_contact: Rechercher un contact
+      refresh: Rafraichir
     avatar:
       column_title: Avatar
       title_attr: Fiche personnelle
     contact: Contact
-    email: E-mail
+    emails: E-mail
     groups: Groupes
     commnads: Actions
     delete: Supprimer
@@ -134,9 +243,12 @@ contacts:
     remove_contact_confirmation_title: Etes-vous sûr de vouloir supprimer ce contact ?
     remove_contact_confirmation_text: Cette action est irréversible
   message:
-    add_contacts:
-      success: Les contacts ont été ajoutés avec succès.
-      error: Certains contacts n'ont pas pu être ajoutés.
+    add_contact:
+      success: Le contact a été créé avec succès.
+      error: Le contact n'a pas pu être créé.
+    edit_contact:
+      success: Le contact a été modifié avec succès.
+      error: Le contact n'a pas pu être modifié.
     remove_contact:
       success: Le contact a été supprimé avec succès.
       error: Le contact n'a pas pu être supprimé correctement.

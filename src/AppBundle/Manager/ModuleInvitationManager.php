@@ -9,12 +9,11 @@
 namespace AppBundle\Manager;
 
 
-use AppBundle\Entity\enum\ModuleInvitationStatus;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\EventInvitation;
-use AppBundle\Entity\Module;
-use AppBundle\Entity\module\PollProposalResponse;
-use AppBundle\Entity\ModuleInvitation;
+use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Entity\Event\Module;
+use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -94,8 +93,8 @@ class ModuleInvitationManager
             $this->moduleInvitation = new ModuleInvitation();
         }
         $this->moduleInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        $this->moduleInvitation->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         $this->moduleInvitation->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
+        $this->moduleInvitation->setCreator(false);
         $module->addModuleInvitation($this->moduleInvitation);
         $eventInvitation->addModuleInvitation($this->moduleInvitation);
         return $this->moduleInvitation;

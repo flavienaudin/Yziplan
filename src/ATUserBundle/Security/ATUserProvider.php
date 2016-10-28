@@ -8,25 +8,40 @@
 
 namespace ATUserBundle\Security;
 
+use AppBundle\Entity\User\ApplicationUser;
+use AppBundle\Entity\User\AppUserEmail;
+use AppBundle\Envent\AppUserEmailEvent;
 use AppBundle\Manager\GenerateursToken;
-use ATUserBundle\Entity\User;
+use ATUserBundle\ATUserEvents;
+use ATUserBundle\Entity\AccountUser;
 use HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 
 class ATUserProvider extends FOSUBUserProvider
 {
-    /** @var GenerateursToken */
+    /** @var GenerateursToken $tokenGenerateur */
     protected $tokenGenerateur;
+    /** @var EventDispatcherInterface $eventDispatcher */
+    protected $eventDispatcher;
 
-    /**
-     * @param GenerateursToken $tokenGenerateur
-     */
+    /** @param GenerateursToken $tokenGenerateur */
     public function setTokenGenerateur(GenerateursToken $tokenGenerateur)
     {
         $this->tokenGenerateur = $tokenGenerateur;
     }
+
+    /**
+     * @param EventDispatcherInterface $eventDispatcher
+     */
+    public function setEventDispatcher(EventDispatcherInterface $eventDispatcher)
+    {
+        $this->eventDispatcher = $eventDispatcher;
+    }
+
 
     /**
      * {@inheritDoc}
@@ -76,13 +91,37 @@ class ATUserProvider extends FOSUBUserProvider
                     $user->setEmail($response->getEmail());
                 }
                 $user->setPlainPassword($this->tokenGenerateur->random(GenerateursToken::MOTDEPASSE_LONGUEUR));
-                if ($user instanceof User) {
+                if ($user instanceof AccountUser) {
                     $user->setPasswordKnown(false);
+
+                    /** @var AppUserEmail $appUserEmail */
+                    $appUserEmail = $this->userManager->findAppUserEmailByEmail($response->getEmail());
+                    if ($appUserEmail == null) {
+                        $appUserEmail = new AppUserEmail();
+                        $appUserEmail->setEmail($response->getEmail());
+                        $appUserEmail->setUseToReceiveEmail(true);
+                        $applicationUser = new ApplicationUser();
+                        $applicationUser->addAppUserEmail($appUserEmail);
+                        $user->setApplicationUser($applicationUser);
+                        $applicationUser->setAccountUser($user);
+                    } elseif ($appUserEmail->getApplicationUser()->getAccountUser() == null) {
+                        $appUserEmail->setUseToReceiveEmail(true);
+                        $appUserEmail->setApplicationUser($user->getApplicationUser());
+                        $user->setApplicationUser($appUserEmail->getApplicationUser());
+                    } elseif ($appUserEmail->getApplicationUser()->getAccountUser()->getEmail() != $response->getEmail()) {
+                        // L'email de la nouvelle inscription OAuth est déjà rattaché à un autre compte => envoi d'email d'avertissement.
+                        $userEmailEvent = new AppUserEmailEvent($appUserEmail);
+                        $this->eventDispatcher->dispatch(ATUserEvents::OAUTH_REGISTRATION_SUCCESS, $userEmailEvent);
+
+                        $appUserEmail->setType(null);
+                        $appUserEmail->setUseToReceiveEmail(true);
+                        $user->getApplicationUser()->addAppUserEmail($appUserEmail);
+                    }
                 }
             }
 
-            if ($response instanceof PathUserResponse && $user instanceof User) {
-                $user->setPseudo($response->getNickname());
+            if ($response instanceof PathUserResponse && $user instanceof AccountUser) {
+                $user->getApplicationUser()->getAppUserInformation()->setPublicName($response->getNickname());
             }
 
             $user->setEnabled(true);

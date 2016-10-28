@@ -24,7 +24,7 @@ class UserChecker extends BaseUserChecker
             if (!$user instanceof User) {
                 throw $disExp;
             }
-            // Si l'utilisateur est désactivé parce qu'il a été créé par l'ardganisateur lors d'une inviation (par exemple)
+            // Si l'utilisateur est désactivé parce qu'il a été créé automatiquement lors d'une invitation (par exemple)
             if (empty($user->getConfirmationToken())) {
                 // L'utilisateur est désactivé et son confirmationToken est vide (non en attente de confirmation par email)
                 $ex = new BadCredentialsException();

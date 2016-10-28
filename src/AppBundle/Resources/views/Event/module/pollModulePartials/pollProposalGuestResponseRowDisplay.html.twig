@@ -1,15 +1,21 @@
+{# Données d'entrée :
+- pollProposal (PollProposal) La proposition à afficher
+- moduleInvitations ([ModuleInvitaion]) les invitations du module
+- userModuleInvitation (ModuleInvitaion) L'invitation du module de l'utilisateur
+#}
+
 <div class="pc-ligne" id="pp_display_row_{{ pollProposal.id }}">
     <div class="pcl-celulle ">
         {% for ppElt in pollProposal.pollProposalElements %}
-            {% set val = attribute(ppElt, 'val'~ppElt.type) %}
-            {{ ppElt.name }} : {{ ppElt.type==constant('AppBundle\\Entity\\enum\\PollProposalElementType::DATE_TIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
+            {% set val = attribute(ppElt, 'val'~ppElt.pollElement.type) %}
+            {{ ppElt.pollElement.name }} : {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATE_TIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
         {% endfor %}
     </div>
     {% if userModuleInvitation is defined and userModuleInvitation is not null %}
         <div class="pcl-celulle">
             {% set responseValue = null %}
             {% for ppResponse in userModuleInvitation.pollProposalResponses if ppResponse.pollProposal == pollProposal %}
-                {% set responseValue = (ppResponse.value is not empty?ppResponse.value:null) %}
+                {% set responseValue = (ppResponse.answer is not empty?ppResponse.answer:null) %}
             {% endfor %}
             <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
                 <label class="btn palette-Light-Green bg waves-effect {{ responseValue == "yes"?'active' }}">
@@ -69,7 +75,7 @@
     {% for moduleInvitation in moduleInvitations if (userModuleInvitation is not defined or userModuleInvitation is null or moduleInvitation.id != userModuleInvitation.id) %}
         <div class="pcl-celulle">
             {% for ppResponse in moduleInvitation.pollProposalResponses if ppResponse.pollProposal == pollProposal %}
-                {{ ppResponse.value is empty?'?':ppResponse.value }}
+                {{ ppResponse.answer is empty?'?':ppResponse.answer }}
             {% else %}
                 ?
             {% endfor %}

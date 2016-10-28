@@ -1,0 +1,17 @@
+{# Tuile d'affichage de l'invitation en cours sur la page d'événement pour que l'utilisateur renseigne ses informations
+Données d'entrée :
+- userEventInvitation (EventInvitation) Invitation de l'utilisateur de l'utilisateur
+- userEventInvitationForm (Form) Formulaire permettant de répondre à l'invitation
+#}
+
+<div class="card" id="user-event-invitation-card">
+    <div class="card-header">
+        <h3>{{ "eventInvitation.profile.card.title"|trans }}</h3>
+    </div>
+    <div class="card-body card-padding">
+        {{ include('@App/Event/partials/eventInvitation_profile_form.html.twig',{
+            'userEventInvitation' : userEventInvitation,
+            'userEventInvitationForm' : userEventInvitationForm
+        }) }}
+    </div>
+</div>

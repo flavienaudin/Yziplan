@@ -3,6 +3,14 @@ services:
   at.service.gentoken:
     class: AppBundle\Manager\GenerateursToken
 
+  at.updater.canonical_fields:
+    class: AppBundle\Utils\User\CanonicalFieldsUpdater
+    parent: fos_user.util.canonical_fields_updater
+
+  at.uploader.file:
+    class: AppBundle\Utils\File\FileUploader
+    arguments: ['%avatar_directory%']
+
   at.manager.mangopay:
     class: AppBundle\Manager\MangoPayManager
     arguments: ['%mangopay.client.id%', "%mangopay.client.password%", "%mangopay.temporary.folder%", "%mangopay.base.url%", '@doctrine.orm.entity_manager','@security.authorization_checker']
@@ -17,7 +25,7 @@ services:
 
   at.manager.event_invitation:
     class: AppBundle\Manager\EventInvitationManager
-    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.user','@at.manager.module_invitation']
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.application_user','@at.manager.module_invitation']
 
   at.manager.module_invitation:
       class: AppBundle\Manager\ModuleInvitationManager
@@ -31,8 +39,17 @@ services:
       class: AppBundle\Manager\PollProposalResponseManager
       arguments: ['@doctrine.orm.entity_manager']
 
-  at.manager.app_user:
-    class: AppBundle\Manager\AppUserManager
+  at.manager.application_user:
+    class: AppBundle\Manager\ApplicationUserManager
+    arguments: ['@doctrine.orm.entity_manager','@fos_user.util.email_canonicalizer','@translator.default','@fos_user.util.token_generator']
+
+  at.manager.app_user_information:
+      class: AppBundle\Manager\AppUserInformationManager
+      arguments: ['@doctrine.orm.entity_manager','@form.factory','@at.uploader.file']
+
+  at.manager.contact:
+      class: AppBundle\Manager\ContactManager
+      arguments: ['@doctrine.orm.entity_manager','@at.manager.user']
 
 # Voters
   at.voter.event:
@@ -59,18 +76,18 @@ services:
     tags:
       - { name: security.voter }
 
+  at.voter.contact:
+    class: AppBundle\Security\ContactVoter
+    public: false
+    tags:
+      - { name: security.voter }
+
 # FormTypes
   at.form_type.invitation:
-    class: AppBundle\Form\InvitationsFormType
+    class: AppBundle\Form\Event\InvitationsFormType
     arguments: ['@security.authorization_checker', '@security.token_storage', '@validator']
     tags:
     - { name: form.type }
-
-  at.form_type.invitation_answer:
-    class: AppBundle\Form\InvitationAnswerFormType
-    arguments: ['@translator.default']
-    tags:
-      - { name: form.type }
 
 # Event Subscribers
   at.event_subscriber.kernel_events.:
@@ -78,3 +95,30 @@ services:
     arguments: ['@translator.default','@session.flash_bag','@router']
     tags:
       - { name: kernel.event_subscriber }
+
+  at.event_listener.appuseremail_confirmation:
+    class: AppBundle\EventListener\AppUserEmailConfirmationSubscriber
+    arguments: ['@at.mailer.twig_swift','@fos_user.util.token_generator','@router']
+    tags:
+      - { name: kernel.event_subscriber }
+
+  at.event_listener.avatar_upload:
+    class: AppBundle\EventListener\User\AvatarUploadListener
+    arguments: ['@at.uploader.file']
+    tags:
+      - { name: doctrine.event_listener, event: prePersist }
+      - { name: doctrine.event_listener, event: preUpdate }
+
+# Validator Constraints
+  at.validator.email_not_belong_to_useraccount:
+    class: AppBundle\Validator\Constraints\EmailNotBelongToAccountUserValidator
+    arguments: ['@at.manager.application_user']
+    tags:
+      - { name: validator.constraint_validator }
+
+# Twig Extenstions
+  at.twig_extension.country:
+        class: AppBundle\Twig\CountryExtension
+        public: false
+        tags:
+            - { name: twig.extension }

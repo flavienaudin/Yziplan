@@ -9,26 +9,25 @@
 namespace AppBundle\Manager;
 
 
-use AppBundle\Entity\enum\ModuleStatus;
-use AppBundle\Entity\enum\ModuleType;
-use AppBundle\Entity\enum\PollModuleSortingType;
-use AppBundle\Entity\enum\PollProposalElementType;
-use AppBundle\Entity\Event;
-use AppBundle\Entity\EventInvitation;
-use AppBundle\Entity\Module;
-use AppBundle\Entity\module\PollModule;
-use AppBundle\Entity\module\PollProposal;
-use AppBundle\Entity\module\PollProposalElement;
-use AppBundle\Entity\ModuleInvitation;
-use AppBundle\Form\ModuleFormType;
-use AppBundle\Form\PollProposalFormType;
+use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Entity\Event\Module;
+use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Entity\Module\PollModule;
+use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Entity\Module\PollProposalElement;
+use AppBundle\Form\Module\ModuleFormType;
+use AppBundle\Form\Module\PollProposalFormType;
 use AppBundle\Security\ModuleVoter;
+use AppBundle\Utils\enum\ModuleStatus;
+use AppBundle\Utils\enum\ModuleType;
+use AppBundle\Utils\enum\PollElementType;
+use AppBundle\Utils\enum\PollModuleSortingType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -101,14 +100,13 @@ class ModuleManager
         $this->module = new Module();
         $this->module->setStatus(ModuleStatus::IN_CREATION);
         $this->module->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        $this->module->setTokenEdition($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         if ($type == ModuleType::POLL_MODULE) {
             $pollModule = new PollModule();
             $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
             $this->module->setPollModule($pollModule);
         }
         $moduleInvitation = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
-        $this->module->setCreator($moduleInvitation);
+        $moduleInvitation->setCreator(true);
         $event->addModule($this->module);
         return $this->module;
     }
@@ -133,7 +131,7 @@ class ModuleManager
      */
     public function createModuleForm(Module $module)
     {
-        return $this->formFactory->createNamed("module_form_" . $module->getTokenEdition(), ModuleFormType::class, $module);
+        return $this->formFactory->createNamed("module_form_" . $module->getToken(), ModuleFormType::class, $module);
     }
 
     /**
@@ -167,42 +165,42 @@ class ModuleManager
         }
         $pollProposal->setPollModule($this->module->getPollModule());
         /** @var PollProposalElement $pollProposalElt */
-        foreach ($pollProposal->getPollProposalElements() as $pollProposalElt){
+        foreach ($pollProposal->getPollProposalElements() as $pollProposalElt) {
             $pollProposal->removePollProposalElement($pollProposalElt);
             $this->entityManager->remove($pollProposalElt);
         }
 
-        if($pollProposalAddForm->has('strPPElts')){
+        if ($pollProposalAddForm->has('strPPElts')) {
             $strPPElts = $pollProposalAddForm->get('strPPElts')->getData();
-            foreach ($strPPElts as $key => $value){
-                if(!empty($value)) {
+            foreach ($strPPElts as $key => $value) {
+                if (!empty($value)) {
                     $newPPE = new PollProposalElement();
                     $newPPE->setName($key);
-                    $newPPE->setType(PollProposalElementType::STRING);
+                    $newPPE->setType(PollElementType::STRING);
                     $newPPE->setValString($value);
                     $pollProposal->addPollProposalElement($newPPE);
                 }
             }
         }
-        if($pollProposalAddForm->has('intPPElts')){
+        if ($pollProposalAddForm->has('intPPElts')) {
             $intPPElts = $pollProposalAddForm->get('intPPElts')->getData();
-            foreach ($intPPElts as $key => $value){
-                if(!empty($value)) {
+            foreach ($intPPElts as $key => $value) {
+                if (!empty($value)) {
                     $newPPE = new PollProposalElement();
                     $newPPE->setName($key);
-                    $newPPE->setType(PollProposalElementType::INTEGER);
+                    $newPPE->setType(PollElementType::INTEGER);
                     $newPPE->setValInteger($value);
                     $pollProposal->addPollProposalElement($newPPE);
                 }
             }
         }
-        if($pollProposalAddForm->has('datetimePPElts')){
+        if ($pollProposalAddForm->has('datetimePPElts')) {
             $datetimePPElts = $pollProposalAddForm->get('datetimePPElts')->getData();
-            foreach ($datetimePPElts as $key => $value){
-                if(!empty($value)) {
+            foreach ($datetimePPElts as $key => $value) {
+                if (!empty($value)) {
                     $newPPE = new PollProposalElement();
                     $newPPE->setName($key);
-                    $newPPE->setType(PollProposalElementType::DATE_TIME);
+                    $newPPE->setType(PollElementType::DATE_TIME);
                     $newPPE->setValDatetime($value);
                     $pollProposal->addPollProposalElement($newPPE);
                 }
@@ -218,7 +216,8 @@ class ModuleManager
      * @param PollProposal $pollProposal The PollProposal to remove
      * @return PollProposal
      */
-    public function removePollProposal(PollProposal $pollProposal){
+    public function removePollProposal(PollProposal $pollProposal)
+    {
         $pollProposal->setDeleted(true);
         $this->entityManager->persist($pollProposal);
         $this->entityManager->flush();
@@ -268,7 +267,7 @@ class ModuleManager
      */
     public function displayPollProposalRowPartial(PollProposal $pollProposal, EventInvitation $userEventInvitation)
     {
-        $userModuleInvitation = null ;
+        $userModuleInvitation = null;
         if ($userEventInvitation != null) {
             $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($pollProposal->getPollModule()->getModule());
         }

@@ -1,0 +1,25 @@
+{# données d'entrée :
+- modalIdPrefix (string) Le prefixe à ajouter avant les identifiants liés à la modal
+- appuseremail (AppUserEmail|null) The AppUSerEmail to edit (only the type is editable) OR null if adding a new one
+- form_appuseremail (Form) The form
+#}
+
+<div class="modal fade" id="{{ modalIdPrefix }}_modal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="#{{ modalIdPrefix }}_title">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="zmdi zmdi-close" aria-hidden="true"></span></button>
+                <h4 class="modal-title" id="{{ modalIdPrefix }}_title">
+                    {{ appuseremail is null?"profile.show.appuseremail.modal.add.title"|trans:"profile.show.appuseremail.modal.edit.title"|trans({'%email%':appuseremail.email}) }}
+                </h4>
+            </div>
+            <div class="modal-body">
+                {{ include('@App/AppUserEmail/partials/appuseremail_form.html.twig', {
+                    'modalIdPrefix' : modalIdPrefix,
+                    'appuseremail' : appuseremail,
+                    'form_appuseremail' : form_appuseremail
+                }) }}
+            </div>
+        </div>
+    </div>
+</div>

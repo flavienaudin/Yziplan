@@ -2,26 +2,17 @@ services:
 # Services & Managers
     at.manager.user:
         class: ATUserBundle\Manager\UserManager
-        arguments: ['@security.encoder_factory', '@fos_user.util.username_canonicalizer', '@fos_user.util.email_canonicalizer', '@fos_user.object_manager', '%fos_user.model.user.class%' ]
+        arguments: ['@fos_user.util.password_updater', '@at.updater.canonical_fields', '@fos_user.object_manager', '%fos_user.model.user.class%' ]
         calls:
-            - [ setTokenGenerateur, ['@at.service.gentoken'] ]
-            - [ setEntityManager, ['@doctrine.orm.entity_manager'] ]
             - [ setFosUserProfileFormFactory, ['@fos_user.profile.form.factory'] ]
-
-    at.manager.user_about:
-        class: ATUserBundle\Manager\UserAboutManager
-        arguments: ['@doctrine.orm.entity_manager','@form.factory']
-
-    at.manager.contact:
-        class: ATUserBundle\Manager\ContactManager
-        arguments: ['@doctrine.orm.entity_manager','@at.manager.user']
 
 # Provider
     at.provider.user:
         class: ATUserBundle\Security\ATUserProvider
-        arguments: ['@fos_user.user_manager.default',{facebook: facebookId, google: googleId}]
+        arguments: ['@at.manager.user', {facebook: facebookId, google: googleId}]
         calls:
             - [ setTokenGenerateur, ['@at.service.gentoken'] ]
+            - [ setEventDispatcher, ['@event_dispatcher'] ]
 
 # Security services
     at.security.ajax_authentication_handler:
@@ -31,36 +22,42 @@ services:
 # EventListeners
     at.event_listener.inscription:
         class: ATUserBundle\EventListener\InscriptionListener
+        arguments: ['@at.manager.application_user', '@at.mailer.twig_swift']
         tags:
             - { name: kernel.event_subscriber }
+
     at.event_listener.resetting:
         class: ATUserBundle\EventListener\ResettingListener
         tags:
             - { name: kernel.event_subscriber }
 
 # FormTypes
-    at.form_type.user_profile:
-        class: ATUserBundle\Form\UserProfileType
-        tags:
-            - { name: form.type, alias: user_user_profile}
-
     at.form_type.inscription:
         class: ATUserBundle\Form\InscriptionType
         tags:
             - { name: form.type, alias: at_user_registration }
-
-    at.form_type.userabout_biography:
-        class: ATUserBundle\Form\UserAboutBiographyType
+    at.form_type.user_profile:
+        class: ATUserBundle\Form\UserProfileType
         tags:
-            - { name: form.type, alias: userabout_biography}
-
-    at.form_type.userabout_basicinformation:
-        class: ATUserBundle\Form\UserAboutBasicInformationType
+            - { name: form.type, alias: user_profile}
+    at.form_type.appuserinfo_personals:
+        class: ATUserBundle\Form\AppUserInfoPersonalType
         tags:
-            - { name: form.type, alias: userabout_basicinformation}
+            - { name: form.type, alias: appuserinfo_personals}
+    at.form_type.appuserinfo_complementaries:
+        class: ATUserBundle\Form\AppUserInfoComplementariesType
+        tags:
+            - { name: form.type, alias: appuserinfo_complementaries}
+    at.form_type.appuserinfo_contactdetails:
+        class: ATUserBundle\Form\AppUserInfoContactDetailsType
+        tags:
+            - { name: form.type, alias: appuserinfo_contactdetails}
 
 # UserChecker
     at.user_checker:
         class: ATUserBundle\Security\UserChecker
 
-# Voters
+# Mailer
+    at.mailer.twig_swift:
+        class: ATUserBundle\Mailer\AtTwigSiwftMailer
+        parent: fos_user.mailer.twig_swift
