@@ -13,7 +13,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/index.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/morphtext.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/morphext.css") }}">
 {% endblock %}
 
 {% block content_body %}
@@ -35,12 +35,20 @@
                 </div>
             </div>
             <div id="topcontent">
-                <p>A chaque sortie son organisation! <br/>
-                    Organise <span id="rotate-event">ta soirée,tes activités,tes vacances,ton anniversaire</span>.
-                </p>
+                <p class="p-index-topcontent text-center">A chaque sortie son organisation! </p>
+                <div class="row">
+                    <div class="col-sm-6 text-right">
+                        <p class="p-index-topcontent">Organise</p>
+                    </div>
+                    <div class="col-sm-6 text-left">
+                        <p class="p-index-topcontent"><span id="rotate-event" class="">ta soirée,tes activités,tes vacances,ton anniversaire</span></p>
+                    </div>
+                </div>
+
                 <span class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">Créer votre événement</a></span>
                 <br/>
-                <p><i class="zmdi zmdi-chevron-down zmdi-hc-2x"></i></p>
+                <p class="p-index-topcontent"><i class="zmdi zmdi-chevron-down zmdi-hc-2x"></i>
+                <p class="p-index-topcontent">
             </div>
         </div>
     </div>
@@ -258,46 +266,53 @@
 
         </div>
         <div class="card-body card-padding c-boxed">
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Teal bg waves-effect text-center m-10">
-                    <i class="zmdi zmdi-cocktail zmdi-hc-5x"></i></br>
-                    Afterwork
-                </button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Yellow-900 bg waves-effect text-center m-10">
-                    <i class="zmdi zmdi-cake zmdi-hc-5x"></i></br>
-                    Anniversaire
-                </button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Purple bg waves-effect text-center m-10">
-                    <i class="zmdi zmdi-movie-alt zmdi-hc-5x"></i></br>
-                    Cinémas
-                </button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Green bg waves-effect text-center m-10">
-                    <i class="zmdi zmdi-flight-takeoff zmdi-hc-5x"></i></br>
-                    Vacances entre amis
-                </button>
-            </a>
 
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Blue bg waves-effect text-center m-10"><i class="zmdi zmdi-calendar zmdi-hc-3x"></i></br>Sondage Quand ?</button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Teal bg waves-effect text-center m-10"><i class="zmdi zmdi-map zmdi-hc-3x"></i></br>Sondage Où ?</button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Deep-Orange bg waves-effect text-center m-10"><i class="zmdi zmdi-pin-help zmdi-hc-3x"></i></br>Sondage Quoi ?</button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Green bg waves-effect text-center m-10"><i class="zmdi zmdi-check-square zmdi-hc-3x"></i></br>Qui apporte quoi ?</button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Purple bg waves-effect text-center m-10"><i class="zmdi zmdi-balance-wallet zmdi-hc-3x"></i></br>Comptes entre amis</button>
-            </a>
+            <div class="rotation_card_wrapper">
+                <div class="rotation_card effect__random" data-id="1">
+                    <div class="rotation_card__front bg palette-Blue z-depth-3">
+                        <div class="rotation_card__text"><i class="zmdi zmdi-calendar zmdi-hc-3x"></i></div>
+                    </div>
+                    <div class="rotation_card__back bg palette-White z-depth-3">
+                        <div class="rotation_card__text">Sondage Quand ?</div>
+                    </div>
+                </div><!-- /card -->
+
+                <div class="rotation_card effect__random" data-id="2">
+                    <div class="rotation_card__front bg palette-Green z-depth-3">
+                        <span class="rotation_card__text"><i class="zmdi zmdi-map zmdi-hc-3x"></i></span>
+                    </div>
+                    <div class="rotation_card__back bg palette-White z-depth-3">
+                        <span class="rotation_card__text">Sondage Où ?</span>
+                    </div>
+                </div><!-- /card -->
+
+                <div class="rotation_card effect__random" data-id="3">
+                    <div class="rotation_card__front bg palette-Pink z-depth-3">
+                        <span class="rotation_card__text"><i class="zmdi zmdi-pin-help zmdi-hc-3x"></i></span>
+                    </div>
+                    <div class="rotation_card__back bg palette-White z-depth-3">
+                        <span class="rotation_card__text">Sondage Quoi ?</span>
+                    </div>
+                </div><!-- /card -->
+
+                <div class="rotation_card effect__random" data-id="4">
+                    <div class="rotation_card__front bg palette-Purple z-depth-3">
+                        <span class="rotation_card__text"><i class="zmdi zmdi-check-square zmdi-hc-3x"></i></span>
+                    </div>
+                    <div class="rotation_card__back bg palette-White z-depth-3">
+                        <span class="rotation_card__text">Qui apporte quoi ?</span>
+                    </div>
+                </div><!-- /card -->
+
+                <div class="rotation_card effect__random" data-id="5">
+                    <div class="rotation_card__front bg palette-Red z-depth-3">
+                        <span class="rotation_card__text"><i class="zmdi zmdi-balance-wallet zmdi-hc-3x"></i></span>
+                    </div>
+                    <div class="rotation_card__back bg palette-White z-depth-3">
+                        <span class="rotation_card__text">Comptes entre amis</span>
+                    </div>
+                </div><!-- /card -->
+            </div>
         </div>
     </div>
 
@@ -400,10 +415,46 @@
             // An array of phrases to rotate are created based on this separator. Change it if you wish to separate the phrases differently (e.g. So Simple | Very Doge | Much Wow | Such Cool).
             separator: ",",
             // The delay between the changing of each phrase in milliseconds.
-            speed: 3000,
+            speed: 1500,
             complete: function () {
                 // Called after the entrance animation is executed.
             }
         });
+    </script>
+    <script>
+        (function () {
+            // cache vars
+            var cards = document.querySelectorAll(".rotation_card.effect__random");
+            var timeMin = 1;
+            var timeMax = 10;
+            var timeouts = [];
+
+            // loop through cards
+            for (var i = 0, len = cards.length; i < len; i++) {
+                var card = cards[i];
+                var cardID = card.getAttribute("data-id");
+                var id = "timeoutID" + cardID;
+                var time = randomNum(timeMin, timeMax) * 1000;
+                cardsTimeout(id, time, card);
+            }
+
+            // timeout listener
+            function cardsTimeout(id, time, card) {
+                if (id in timeouts) {
+                    clearTimeout(timeouts[id]);
+                }
+                timeouts[id] = setTimeout(function () {
+                    var c = card.classList;
+                    var newTime = randomNum(timeMin, timeMax) * 1000;
+                    c.contains("flipped") === true ? c.remove("flipped") : c.add("flipped");
+                    cardsTimeout(id, newTime, card);
+                }, time);
+            }
+
+            // random number generator given min and max
+            function randomNum(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+        })();
     </script>
 {% endblock %}

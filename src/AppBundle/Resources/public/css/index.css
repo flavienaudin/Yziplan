@@ -3,7 +3,7 @@
 }*/
 
 .wrapper-video {
-    width:100%;
+    width: 100%;
     height: calc(100vh - 200px);
     overflow: hidden;
 }
@@ -12,40 +12,86 @@
     /*object-fit: contain;*/
     /*       object-fit: fill; */
     object-fit: cover;
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
 }
 
 #topcontent {
     margin: 0;
     position: absolute;
     z-index: 2;
-    top:50%;
-    transform:translateY(-50%);
+    top: 50%;
+    transform: translateY(-50%);
     width: 100%;
     text-align: center;
 }
 
-#topcontent > p{
+.p-index-topcontent {
     font-family: sans-serif;
-    color:white;
+    color: white;
     font-size: 5vmin;
-    text-align: center;
-    text-shadow:4px 4px 0 rgba(0,0,0,0.4);
+    text-shadow: 4px 4px 0 rgba(0, 0, 0, 0.4);
 }
-
-
 
 video::-webkit-media-controls {
-    display:none !important;
+    display: none !important;
 }
 
-.c-boxed{
+.c-boxed {
     max-width: 1200px;
-    margin : auto;
+    margin: auto;
 }
 
-.card{
-    margin-bottom:0 !important;
-    margin-top:0 !important;
+.card {
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Deuxieme partie : cartes rotatives */
+.rotation_card_wrapper {
+    text-align: center;
+}
+
+.rotation_card {
+    position: relative;
+    display: inline-block;
+    margin: 10px;
+    width: 100px;
+    height: 100px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.rotation_card__front,
+.rotation_card__back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display:inline-block;
+    vertical-align: middle;
+}
+
+.rotation_card__front,
+.rotation_card__back {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transition: -webkit-transform 0.6s;
+    transition: transform 0.6s;
+}
+
+.rotation_card__back {
+    -webkit-transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
+}
+
+.rotation_card.effect__random.flipped .rotation_card__front {
+    -webkit-transform: rotateY(-180deg);
+    transform: rotateY(-180deg);
+}
+
+.rotation_card.effect__random.flipped .rotation_card__back {
+    -webkit-transform: rotateY(0deg);
+    transform: rotateY(0deg);
 }
