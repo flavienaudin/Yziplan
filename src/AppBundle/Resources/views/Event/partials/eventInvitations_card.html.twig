@@ -31,7 +31,11 @@
             </div>
             {{ form_end(invitationsForm) }}
 
-            <div id="shareEventFB" class="fb-send" data-href="http://www.ardganisateur.com"></div> {# TODO : mettre le lien de partage de l'evenement #}
+            <span style="font-size:11px" id="eventLink">http://www.ardganisateur.com</span>
+            
+            <button class="btn btn-social btn-facebook" id="shareEventFB" name="provider">
+                Invitez via Facebook
+            </button>
         {% endif %}
     </div>
     <script>
@@ -91,5 +95,28 @@
             });
         });
         {#{% endif %}#}
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Initialize invitation via facebook
+            $.ajaxSetup({cache: true});
+            $.getScript('//connect.facebook.net/fr_FR/all.js', function () {
+                FB.init({
+                    appId: '232326430490812',
+                    xfbml      : true,
+                    version    : 'v2.6'
+                });
+            });
+
+            // React to the invite via facebook button
+            $('#shareEventFB').click(function () {
+                var pageLink = $('#eventLink').text();
+
+                FB.ui({
+                    method: 'send',
+                    link: pageLink
+                });
+            });
+        });
     </script>
 </div>
