@@ -124,6 +124,16 @@ class EventManager
     }
 
     /**
+     * @return Event The Event updated
+     */
+    public function persistEvent()
+    {
+        $this->entityManager->persist($this->event);
+        $this->entityManager->flush();
+        return $this->event;
+    }
+
+    /**
      * @return Form Formulaire de création/édition d'un événement
      */
     public function initEventForm()

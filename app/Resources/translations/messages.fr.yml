@@ -71,12 +71,16 @@ appuseremail:
         main_email: Désolé, il n'est pas possible de supprimer votre adresse principale.
 
 event:
+  picture:
+    link: Changer l'image
+    update_modal:
+      title: Charger une image
+      button:
+        submit_title: Transférer l'image et utiliser pour l'événement
   form:
     name:
       label: Titre
       placeholder: Titre de l'événement
-    image:
-      label: Changer l'image
     description:
       label: Description
       placeholder: Dites-en plus au sujet de votre événement

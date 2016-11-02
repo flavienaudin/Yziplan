@@ -7,9 +7,13 @@ services:
     class: AppBundle\Utils\User\CanonicalFieldsUpdater
     parent: fos_user.util.canonical_fields_updater
 
-  at.uploader.file:
+  at.uploader.avatar:
     class: AppBundle\Utils\File\FileUploader
-    arguments: ['%avatar_directory%']
+    arguments: ['%avatar_directory%', 'avatar']
+
+  at.uploader.event_picture:
+    class: AppBundle\Utils\File\FileUploader
+    arguments: ['%event_picture_directory%', 'event_picture']
 
   at.manager.mangopay:
     class: AppBundle\Manager\MangoPayManager
@@ -45,7 +49,7 @@ services:
 
   at.manager.app_user_information:
       class: AppBundle\Manager\AppUserInformationManager
-      arguments: ['@doctrine.orm.entity_manager','@form.factory','@at.uploader.file']
+      arguments: ['@doctrine.orm.entity_manager','@form.factory','@at.uploader.avatar']
 
   at.manager.contact:
       class: AppBundle\Manager\ContactManager
@@ -104,7 +108,14 @@ services:
 
   at.event_listener.avatar_upload:
     class: AppBundle\EventListener\User\AvatarUploadListener
-    arguments: ['@at.uploader.file']
+    arguments: ['@at.uploader.avatar']
+    tags:
+      - { name: doctrine.event_listener, event: prePersist }
+      - { name: doctrine.event_listener, event: preUpdate }
+
+  at.event_listener.event_picture_upload:
+    class: AppBundle\EventListener\Event\EventUploadListener
+    arguments: ['@at.uploader.event_picture']
     tags:
       - { name: doctrine.event_listener, event: prePersist }
       - { name: doctrine.event_listener, event: preUpdate }

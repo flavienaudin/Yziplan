@@ -1,0 +1,18 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
+- editEvent (boolean) If true : link to change the event picture is displayed
+#}
+
+<div id="event-header-card-header" class="card-header ch-img"
+     style="background-image: url({{ userEventInvitation.event.picture is not null ? asset("uploads/events/pictures/"~userEventInvitation.event.picture) :
+     asset("uploads/events/default/evt-img1.jpg") }});height:250px;">
+    <h1 id="event-name" class="c-white">{{ userEventInvitation.event.name }}</h1>
+    {% if editEvent %}
+        <a href="#event_picture_update_modal" class="c-white" data-toggle="modal">
+                <span class="zmdi-hc-stack zmdi-hc-2x">
+                    <i class="zmdi zmdi-square-o zmdi-hc-stack-2x"></i>
+                    <i class="zmdi zmdi-camera-add zmdi-hc-stack-1x"></i></span>
+            {{ 'event.picture.link'|trans }}</a>
+        {{ include('@App/Event/partials/event_picture_update_modal.html.twig', {'userEventInvitation':userEventInvitation}) }}
+    {% endif %}
+</div>

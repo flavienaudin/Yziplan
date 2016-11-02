@@ -10,6 +10,7 @@ imports:
 parameters:
     locale: fr
     avatar_directory: '%kernel.root_dir%/../web/uploads/user/avatar'
+    event_picture_directory: '%kernel.root_dir%/../web/uploads/events/pictures'
 
 framework:
     #esi:             ~

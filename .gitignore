@@ -24,3 +24,5 @@ bin/symfony_requirements
 web/config.php
 web/uploads/user/avatar/*
 !web/uploads/user/avatar/.gitkeep
+web/uploads/events/pictures/*
+!web/uploads/events/pictures/.gitkeep

@@ -43,6 +43,13 @@ class Event
     private $description;
 
     /**
+     * This attributes stores the filename of the file for the database
+     * @var string
+     * @ORM\Column(name="picture_filename", type="string", length=255, nullable=true)
+     */
+    private $picture;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="token", type="string", length=128, unique=true)
@@ -171,6 +178,24 @@ class Event
     public function setDescription($description)
     {
         $this->description = $description;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    /**
+     * @param string $picture
+     * @return Event
+     */
+    public function setPicture($picture)
+    {
+        $this->picture = $picture;
         return $this;
     }
 

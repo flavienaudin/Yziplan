@@ -71,12 +71,16 @@ appuseremail:
         main_email: Sorry, it is not allowed to delete your main email address.
 
 event:
+  picture:
+    link: Change the picture
+    update_modal:
+      title: Upload a picture
+      button:
+        submit_title: Upload the picture and use it for the event
   form:
     name:
       label: Title
       placeholder: Event title
-    image:
-      label: Change the picture
     description:
       label: Description
       placeholder: Say more about your event

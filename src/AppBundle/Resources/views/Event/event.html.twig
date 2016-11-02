@@ -20,13 +20,15 @@
     {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
         {# TODO Positionner le menu s'ouvrant relativement au browser #}
         <div class="dropdown add-module-menu">
-            <button class="btn btn-float btn-danger m-btn waves-effect waves-circle waves-float" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-plus"></i></button>
+            <button class="btn btn-float btn-danger m-btn waves-effect waves-circle waves-float" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-plus"></i>
+            </button>
 
             {#<a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>#}
             <ul class="dropdown-menu pull-right">
                 <li>
-                    <a href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE')}) }}" id="addWhenPollModule">
-                        <i class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i><small>Sondage Quand ?</small>
+                    <a href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE')}) }}" id="addWhenPollModule"> <i
+                                class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i>
+                        <small>Sondage Quand ?</small>
                     </a>
                 </li>
                 <li>
@@ -128,9 +130,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.css") }}">
+    {# Necessaire ? <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.css") }}">#}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/fileinput.min.css") }}">
 {% endblock stylesheets %}
 
 {% block top_javascripts %}
@@ -143,6 +146,25 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset("bundles/app/js/masonry.pkgd.min.js") }}"></script>
+
+    <!-- canvas-to-blob.min.js is only needed if you wish to resize images before upload.
+     This must be loaded before fileinput.min.js -->
+    <script src="{{ asset("bundles/app/js/fileinput_dep/canvas-to-blob.min.js") }}" type="text/javascript"></script>
+    <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
+         This must be loaded before fileinput.min.js -->
+    <script src="{{ asset("bundles/app/js/fileinput_dep/sortable.min.js") }}" type="text/javascript"></script>
+    <!-- purify.min.js is only needed if you wish to purify HTML content in your preview for HTML files.
+         This must be loaded before fileinput.min.js -->
+    <script src="{{ asset("bundles/app/js/fileinput_dep/purify.min.js") }}" type="text/javascript"></script>
+    <!-- the main fileinput plugin file -->
+    <script src="{{ asset('bundles/app/js/fileinput.js') }}"></script>#}
+    <!-- optionally if you need a theme like "Material Design" theme  -->
+    <script src="{{ asset('bundles/app/js/fileinput_dep/theme_zmdi.js') }}"></script>
+    {% if app.request.attributes.get('_locale') == 'fr' %}
+        <!-- optionally if you need translation for your language -->
+        <script src="{{ asset('bundles/app/js/fileinput_dep/fr.js') }}"></script>
+    {% endif %}
+
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
 
     {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}

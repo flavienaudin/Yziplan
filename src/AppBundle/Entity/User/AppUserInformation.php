@@ -119,9 +119,9 @@ class AppUserInformation
     private $maritalStatus = null;
 
     /**
-     * This attributes stores the filename of the file for the database, but also the File due to PostLoad event lstener to load the file (Cf. AvatarUploadListener class)
+     * This attributes stores the filename of the file for the database
      * @var string|File
-     * @ORM\Column(name="avatar_file_name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="avatar_filename", type="string", length=255, nullable=true)
      */
     private $avatar;
 

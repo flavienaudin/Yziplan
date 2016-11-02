@@ -1,0 +1,76 @@
+{# données d'entrée :
+- userEventInvitation (EventInvitation) The EventInvitation of the user
+#}
+
+<div class="modal fade" id="event_picture_update_modal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="#event_picture_update_modal_title">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span class="zmdi zmdi-close" aria-hidden="true"></span></button>
+                <h4 class="modal-title" id="event_picture_update_modal_title">
+                    {{ "event.picture.update_modal.title"|trans }}
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="kv-avatar-errors-1" class="center-block" style="width:95%; display:none"></div>
+
+                <div class="kv-avatar center-block" style="width:100%">
+                    <input id="eventPictureInput" name="eventPictureInput" type="file" class="file-loading">
+                </div>
+
+                <script>
+                    $(document).ready(function () {
+                        var fileInputOptions = {
+                            uploadUrl: "{{ path('updateEventPicture', {"token":userEventInvitation.event.token}) }}",
+
+                            browseOnZoneClick: true,
+                            overwriteInitial: true,
+                            maxFileSize: 2000,
+                            showClose: false,
+                            fileActionSettings: {
+                                showUpload: false,
+                                showZoom: false,
+                                showDrag: false
+                            },
+                            showCaption: false,
+                            browseLabel: '',
+                            removeLabel: '',
+                            uploadTitle: "{{ 'event.picture.update_modal.button.submit_title'|trans }}",
+                            uploadLabel: "{{ 'global.button.save'|trans }}",
+                            //browseIcon: '<i class="zmdi zmdi-folder"></i>',
+                            //removeIcon: '<i class="zmdi zmdi-delete"></i>',
+                            //removeTitle: 'Cancel or reset changes',
+                            elErrorContainer: '#kv-avatar-errors-1',
+                            msgErrorClass: 'alert alert-block alert-danger',
+                            defaultPreviewContent: '<i class="zmdi zmdi-image-o zmdi-hc-5x"></i>',
+                            layoutTemplates: {
+                                main2: '{preview} <div class="text-center">{remove} {browse} {upload}</div>'
+                            },
+                            allowedFileExtensions: ["jpg", "png", "gif"]
+                        };
+
+
+                        {% if app.request.attributes.has('_locale') %}
+                        fileInputOptions['language'] = '{{ app.request.attributes.get('_locale') }}';
+                        {% endif %}
+
+                        // initialize with defaults
+                        $('#eventPictureInput').fileinput(fileInputOptions)
+                                .on('fileuploaded', function (event, data, previewId, index) {
+                                    if (data['response'].hasOwnProperty('data')) {
+                                        var styleAttr = 'background-image: url(' + data['response']['data'] + '); height:250px;';
+                                        $('#event-header-card-header').attr('style', styleAttr);
+                                        $('#event_picture_update_modal').modal('toggle');
+                                        $(this).fileinput('clear');
+                                        $(this).fileinput('enable');
+                                    }
+                                    /*if (data.hasOwnProperty('htmlContents')) {
+                                     treatHtmlContents(data['htmlContents']);
+                                     }*/
+                                });
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
