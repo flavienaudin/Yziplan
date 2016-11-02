@@ -14,13 +14,14 @@ use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Security\EventVoter;
 use AppBundle\Utils\enum\FlashBagTypes;
-use AppBundle\Utils\FormUtils;
 use AppBundle\Utils\Response\AppJsonResponse;
+use AppBundle\Utils\Response\FileInputJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,7 +38,7 @@ class EventController extends Controller
      * @Route("/show-test", name="eventTest")
      * @deprecated
      */
-    public function eventTestAction(Request $request)
+    public function eventTestAction()
     {
         return $this->render('AppBundle:Event/proto:test-event.html.twig');
     }
@@ -200,13 +201,13 @@ class EventController extends Controller
                         if ($moduleForm->isValid()) {
                             $currentModule = $moduleManager->treatUpdateFormModule($moduleForm);
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-'.$currentModule->getToken()] =
-                                $moduleManager->displayModulePartial($currentModule,$userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-' . $currentModule->getToken()] =
+                                $moduleManager->displayModulePartial($currentModule, $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
                             // TODO vérifier que ca marche
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-'.$moduleDescription['module']->getToken()] =
-                                $moduleManager->displayModulePartial($moduleDescription['module'],$userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-' . $moduleDescription['module']->getToken()] =
+                                $moduleManager->displayModulePartial($moduleDescription['module'], $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     }
@@ -260,5 +261,43 @@ class EventController extends Controller
             'userEventInvitation' => $userEventInvitation,
             'userEventInvitationForm' => $eventInvitationForm->createView()
         ));
+    }
+
+
+    /**
+     * @Route("/picture/update/{token}", name="updateEventPicture")
+     * @ParamConverter("event" , class="AppBundle:Event\Event")
+     * @param Event $event The current event
+     * @return AppJsonResponse|FileInputJsonResponse|RedirectResponse
+     */
+    public function updateEventPictureAction(Event $event, Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $eventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
+            if (!$this->isGranted(EventVoter::EDIT, $eventInvitation)) {
+                $data[FileInputJsonResponse::ERROR] = $this->get('translator')->trans("global.error.unauthorized_access");
+                return new FileInputJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            }
+
+            $imageFile = $request->files->get('eventPictureInput');
+            /** @var EventManager $eventManager */
+            $eventManager = $this->get("at.manager.event");
+            $eventManager->setEvent($event);
+            if ($event->getPicture() != null) {
+                $this->get('at.uploader.event_picture')->delete($event->getPicture());
+            }
+            $event->setPicture($imageFile);
+            $eventManager->persistEvent();
+            $data = array();
+            if ($event->getPicture() != null) {
+                $avatarDirURL = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/' . $this->get('at.uploader.event_picture')->getWebRelativeTargetDir();
+                $data[AppJsonResponse::DATA] = $avatarDirURL . '/' . $event->getPicture();
+            }
+            return new AppJsonResponse($data, Response::HTTP_OK);
+
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
+            return $this->redirectToRoute('fos_user_profile_show');
+        }
     }
 }

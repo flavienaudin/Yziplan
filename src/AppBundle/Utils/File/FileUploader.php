@@ -10,7 +10,6 @@ namespace AppBundle\Utils\File;
 
 
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploader
@@ -20,9 +19,15 @@ class FileUploader
      */
     private $targetDir;
 
-    public function __construct($targetDir)
+    /**
+     * @var string String to use for generating uniqueid for the filename
+     */
+    private $fileprefix;
+
+    public function __construct($targetDir, $fileprefix)
     {
         $this->targetDir = $targetDir;
+        $this->fileprefix = $fileprefix;
     }
 
     /**
@@ -45,7 +50,7 @@ class FileUploader
     public function upload(UploadedFile $file)
     {
         // Generate a unique name for the file before saving it
-        $fileName = md5(uniqid('avatar_')) . '.' . $file->guessExtension();
+        $fileName = md5(uniqid($this->fileprefix)) . '.' . $file->guessExtension();
         // Move the file t  o the directory where brochures are stored
         $file->move($this->targetDir, $fileName);
 

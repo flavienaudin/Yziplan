@@ -160,6 +160,26 @@
     height: 50px;
 }
 
+
+/*----------------------------------
+    Event Picture
+-----------------------------------*/
+
+#event_picture_update_modal .kv-avatar .file-preview-frame, .kv-avatar .file-preview-frame:hover {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    text-align: center;
+}
+
+#event_picture_update_modal .kv-avatar .file-input {
+    display: block;
+    width: 95%;
+    min-height: 150px;
+    margin: 0 auto;
+}
+
 /*----------------------------------
     Add Module
 -----------------------------------*/

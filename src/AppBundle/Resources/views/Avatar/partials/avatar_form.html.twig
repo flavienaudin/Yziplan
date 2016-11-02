@@ -23,6 +23,9 @@
                     autoReplace: true,
                     elErrorContainer: '#avatar-errors',
 
+                    // TODO : check this option
+                    // showUploadedThumbs : false
+
                     // general display
                     theme: 'zmdi',
                     showCaption: false,
@@ -36,6 +39,11 @@
                         main2: '{preview} <div class="text-center">{remove} {browse} {upload}</div>',
                         footer: '<div class="file-thumbnail-footer"> {actions}</div>',
                         actions: '<div class="file-actions"><div class="file-footer-buttons">{delete}</div><div class="clearfix"></div></div>'
+                        // TODO vérifier si besoin des emplates Actions avec "fileActionSettings"
+                    },
+                    fileActionSettings:{
+                        showZoom: false,
+                        showDrag: false
                     },
                     previewThumbTags: {},
 

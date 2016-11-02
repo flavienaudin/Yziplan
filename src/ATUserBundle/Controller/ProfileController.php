@@ -106,7 +106,7 @@ class ProfileController extends BaseController
             $personalInformationForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
                 if ($personalInformationForm->isValid()) {
-                    $appUserInformationManager->updateAppUserInformation();
+                    $appUserInformationManager->persistAppUserInformation();
                     // TODO : Gérer le format de la date en fonction de la locale
                     $data[AppJsonResponse::DATA] = array(
                         'public-name' => (!empty($appUserInformation->getPublicName()) ? $appUserInformation->getPublicName() : '-'),
@@ -127,7 +127,7 @@ class ProfileController extends BaseController
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             } else if ($personalInformationForm->isValid()) {
-                $appUserInformationManager->updateAppUserInformation();
+                $appUserInformationManager->persistAppUserInformation();
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");
             } else {
@@ -160,7 +160,7 @@ class ProfileController extends BaseController
             $contactDetailsForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
                 if ($contactDetailsForm->isValid()) {
-                    $appUserInformationManager->updateAppUserInformation();
+                    $appUserInformationManager->persistAppUserInformation();
                     $data[AppJsonResponse::DATA] = array(
                         'living-country' => (!empty($appUserInformation->getLivingCountry()) ? Intl::getRegionBundle()->getCountryName($appUserInformation->getLivingCountry()) : '-'),
                         'living-city' => ($appUserInformation->getLivingCity() != null ? $appUserInformation->getLivingCity() : '-')
@@ -175,7 +175,7 @@ class ProfileController extends BaseController
                     return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             } else if ($contactDetailsForm->isValid()) {
-                $appUserInformationManager->updateAppUserInformation();
+                $appUserInformationManager->persistAppUserInformation();
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");
             } else {
@@ -210,7 +210,7 @@ class ProfileController extends BaseController
             $complementaryInformationForm->handleRequest($request);
             if ($request->isXmlHttpRequest()) {
                 if ($complementaryInformationForm->isValid()) {
-                    $appUserInformationManager->updateAppUserInformation();
+                    $appUserInformationManager->persistAppUserInformation();
                     $data[AppJsonResponse::DATA]["marital-status"] = empty($appUserInformation->getBiography()) ? "-" : $this->get("translator")->trans($appUserInformation->getMaritalStatus());
                     $data[AppJsonResponse::DATA]["biography"] = nl2br(empty($appUserInformation->getBiography()) ?
                         $this->get("translator")->trans("profile.show.profile_information.complementaries.biography.empty") : $appUserInformation->getBiography());
@@ -229,7 +229,7 @@ class ProfileController extends BaseController
                     return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                 }
             } else if ($complementaryInformationForm->isValid()) {
-                $appUserInformationManager->updateAppUserInformation();
+                $appUserInformationManager->persistAppUserInformation();
                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("profile.message.update.success"));
                 return $this->redirectToRoute("fos_user_profile_show");
             } else {
@@ -258,14 +258,14 @@ class ProfileController extends BaseController
             $appUserInformationManager = $this->get("at.manager.app_user_information");
             $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($this->getUser());
             if ($appUserInformation->getAvatar() != null) {
-                $this->get('at.uploader.file')->delete($appUserInformation->getAvatar());
+                $this->get('at.uploader.avatar')->delete($appUserInformation->getAvatar());
             }
             $appUserInformation->setAvatar($imageFile);
-            $appUserInformationManager->updateAppUserInformation();
+            $appUserInformationManager->persistAppUserInformation();
             $data = array();
             // TODO : Supprimer après phase de TEST
             if ($appUserInformation->getAvatar() != null) {
-                $avatarDirURL = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/' . $this->get('at.uploader.file')->getWebRelativeTargetDir();
+                $avatarDirURL = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/' . $this->get('at.uploader.avatar')->getWebRelativeTargetDir();
                 $data[FileInputJsonResponse::INITIAL_PREVIEW] = $avatarDirURL . '/' . $appUserInformation->getAvatar();
                 $data[FileInputJsonResponse::INITIAL_PREVIEW_CONFIG][] = [
                     FileInputJsonResponse::IPC_URL => $this->generateUrl('deleteUserAvatar', [], UrlGeneratorInterface::ABSOLUTE_URL),
@@ -290,10 +290,10 @@ class ProfileController extends BaseController
         $appUserInformationManager = $this->get("at.manager.app_user_information");
         $appUserInformation = $appUserInformationManager->retrieveAppUserInformation($this->getUser());
         if ($appUserInformation->getAvatar() != null) {
-            $this->get('at.uploader.file')->delete($appUserInformation->getAvatar());
+            $this->get('at.uploader.avatar')->delete($appUserInformation->getAvatar());
             $appUserInformation->setAvatar(null);
         }
-        $appUserInformationManager->updateAppUserInformation();
+        $appUserInformationManager->persistAppUserInformation();
 
         if ($request->isXmlHttpRequest()) {
             $data[FileInputJsonResponse::INITIAL_PREVIEW] = [];

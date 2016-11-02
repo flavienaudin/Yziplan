@@ -4,13 +4,8 @@
 #}
 
 <div class="card" id="event-header-card">
-    <div class="card-header ch-img" style="background-image: url({{ asset("uploads/events/default/evt-img1.jpg") }}); height:250px;">
-        <h1 class="c-white">{{ userEventInvitation.event.name }}</h1>
-        {% if eventForm is not null %}
-            <a class="c-white"> <span class="zmdi-hc-stack zmdi-hc-2x"><i class="zmdi zmdi-square-o zmdi-hc-stack-2x"></i><i class="zmdi zmdi-camera-add zmdi-hc-stack-1x"></i></span>
-                {{ 'event.form.image.label'|trans }}</a>
-        {% endif %}
-    </div>
+    {{ include('@App/Event/partials/event_header_card_header.html.twig', {'userEventInvitation':userEventInvitation, 'editEvent' : eventForm is not null }) }}
+
     <div class="card-body card-padding p-t-25">
         {% if eventForm is not null %}
             {{ form_start(eventForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'eventHeader'}}) }}
@@ -46,9 +41,13 @@
             {{ form_end(eventForm) }}
             <script>
                 $('form#eventHeader').on("submit", function (e) {
-                    ajaxFormSubmission(this, e, null, null, function(){
+                    ajaxFormSubmission(this, e, null, null, function () {
                         $('.grid').masonry('layout');
                     });
+                });
+                // Update the Event name while editing the form field
+                $('#event_form_name').on('input', function () {
+                   $('#event-name').html($(this).val());
                 });
             </script>
         {% else %}

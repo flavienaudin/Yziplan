@@ -67,7 +67,7 @@ class AppUserInformationManager
     /**
      * @return AppUserInformation Information utilisateur mises à jour
      */
-    public function updateAppUserInformation()
+    public function persistAppUserInformation()
     {
         $this->entityManager->persist($this->appUserInformation);
         $this->entityManager->flush();
