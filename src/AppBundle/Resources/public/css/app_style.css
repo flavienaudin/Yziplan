@@ -17,7 +17,7 @@
     top: 10px;
     left: 50%;
     width: 40px;
-    margin-left: -20px ;
+    margin-left: -20px;
 }
 
 .at-global-preloader .plc-path {
@@ -35,6 +35,7 @@
     left: 0;
     right: 0;
 }
+
 .at-alert-no-js:hover {
     opacity: 0.25;
 }
@@ -57,6 +58,14 @@
 
 .card.c-dark .card-header > .media > .media-body > h2 small {
     color: rgba(255, 255, 255, 0.7);
+}
+
+.card-body + .card-body {
+    padding-top: 0 !important;
+}
+
+.card-body + .card-footer {
+    padding-top: 0 !important;
 }
 
 .card-footer.card-padding {
@@ -90,7 +99,6 @@
     width: 18px;
     text-align: center;
 }
-
 
 /*-----------------------------------
     Avatar (Adapt Material Design Extebded Admin
@@ -159,7 +167,6 @@
     width: 50px;
     height: 50px;
 }
-
 
 /*----------------------------------
     Event Picture
@@ -246,14 +253,12 @@
     transform: rotate(-360deg);
 }
 
-
 /*---------------------------------
     Poll Proposal Response
 ----------------------------------*/
-.pollproposal-response > label.active{
+.pollproposal-response > label.active {
     border: red 1px solid;
 }
-
 
 /*---------------------------------
     Colored Header
@@ -344,11 +349,11 @@
     background-color: transparent;
 }
 
-.clockpicker-popover{
-    z-index : 1100;
+.clockpicker-popover {
+    z-index: 1100;
 }
 
-label.required:after{
+label.required:after {
     content: " *";
 }
 
@@ -416,7 +421,6 @@ label.required:after{
 .insecable-white-space {
     white-space: nowrap;
 }
-
 
 /*---------------------------------
     Profile page

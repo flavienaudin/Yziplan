@@ -156,7 +156,7 @@
     <div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
         {% block moduleBody %}{% endblock moduleBody %}
     </div>
-    <div class="card-footer">
+    <div class="{% block moduleFooterClass %}card-footer{% endblock moduleFooterClass %}">
         {% block moduleFooter %}{% endblock moduleFooter %}
     </div>
 

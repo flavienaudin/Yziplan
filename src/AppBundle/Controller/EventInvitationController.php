@@ -14,6 +14,7 @@ use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
+use ATUserBundle\Entity\AccountUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,6 +42,25 @@ class EventInvitationController extends Controller
             return $this->redirectToRoute("home");
         }
         $this->denyAccessUnlessGranted(EventInvitationVoter::EDIT, $eventInvitation);
+
+        if ($eventInvitation->getApplicationUser() == null && $this->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED)) {
+            // Si l'invitation n'est pas affecté à un ApplicationUser et l'utilisateur est connecté
+            // Alors on essaye d'affectater l'invitation à l'utilisateur si celui-ci n'a pas déjà une invitation pour cet événement
+            /** @var AccountUser $user */
+            $user = $this->getUser();
+            $eventInvitationManager = $this->get('at.manager.event_invitation');
+            $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($eventInvitation->getEvent(), false, false, $user);
+            if($userEventInvitation == null) {
+                $eventInvitation->setApplicationUser($user->getApplicationUser());
+                $eventInvitationManager
+                    ->setEventInvitation($eventInvitation)
+                    ->persistEventInvitation();
+            }else {
+                $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans("eventInvitation.message.warning.another_invitation_already_exists_for_user"));
+                $eventInvitation = $userEventInvitation;
+            }
+        }
+
         $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $eventInvitation->getToken());
         return $this->redirectToRoute("displayEvent", array('token' => $eventInvitation->getEvent()->getToken()));
     }

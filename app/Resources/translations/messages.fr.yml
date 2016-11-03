@@ -139,6 +139,10 @@ eventInvitation:
     text: Conserver ce lien pour revenir sur cette page
   profile.card:
     title: Votre profil
+    badge:
+      guest: Invité
+      creator: Créateur
+      administrator: Administrateur
     text:
       disconnect: Vous n'êtes pas %user% ?
     new_warning_alert:
@@ -148,6 +152,7 @@ eventInvitation:
   message:
     warning:
       email_owned_by_accountuser: Attention! Cet e-mail est associée à un compte utilisateur. Connectez-vous avant de participer pour profiter de toutes les fonctionnalités.
+      another_invitation_already_exists_for_user: Vous avez déjà une inivitation pour cet événement, vous avez été redirigé vers celle-ci.
     error:
       unauthorized_cancel: Vous n'avez pas les autorisations pour annuler cette invitation.
       unauthorized_access: Vous n'êtes pas inviter à cet événement.

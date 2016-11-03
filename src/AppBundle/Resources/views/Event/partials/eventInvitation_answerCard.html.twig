@@ -9,18 +9,8 @@
     <div class="card-body card-padding">
         {# TODO : gestion de la réponse : exemple de présentation à modifier ou implémenter sous forme de Form symfony #}
         <div class="btn-group btn-group-lg btn-group-justified" data-toggle="buttons" role="group">
-            <label class="btn btn-success"><input type="radio" name="answer" autocomplete="off">Oui</label> <label class="btn btn-danger"> <input type="radio" name="answer"
-                                                                                                                                                  autocomplete="off">Non</label>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label text-info" for="url_user_invitation">{{ "eventInvitation.url.text"|trans }}&nbsp;: </label> <span class="input-group">
-                <input id="url_user_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}">
-                <span class="input-group-btn">
-                    <button id="btn-copy-invitation-url" class="btn btn-primary" data-clipboard-target="#url_user_invitation"><i class="zmdi zmdi-copy"></i> {{ "global.button.copy"|trans }}</button>
-                    <a href="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}" class="btn btn-info">{{ "global.button.go_to"|trans }} <i class="zmdi zmdi-square-right"></i></a>
-                </span>
-            </span>
+            <label class="btn btn-success"><input type="radio" name="answer" autocomplete="off">Oui</label>
+            <label class="btn btn-danger"> <input type="radio" name="answer" autocomplete="off">Non</label>
         </div>
     </div>
 </div>

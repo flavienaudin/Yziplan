@@ -120,7 +120,7 @@ class EventInvitationManager
             } else {
                 if ($initializeIfNotExists && $this->authorizationChecker->isGranted(EventInvitationVoter::CREATE, $event)) {
                     $this->eventInvitation = $this->initializeEventInvitation($event, ($user instanceof AccountUser ? $user->getApplicationUser() : null));
-                    $this->updateEventInvitation();
+                    $this->persistEventInvitation();
                 } else {
                     $this->eventInvitation = null;
                 }
@@ -213,7 +213,7 @@ class EventInvitationManager
         }
         if ($this->eventInvitation != null) {
             $this->eventInvitation->setStatus(EventInvitationStatus::CANCELLED);
-            return $this->updateEventInvitation();
+            return $this->persistEventInvitation();
         }
         return false;
     }
@@ -222,7 +222,7 @@ class EventInvitationManager
      * Persist the EventInvitation into the database and save into the session the Token
      * @return bool true if the eventInvitaiton has been persisted false otherwise
      */
-    public function updateEventInvitation()
+    public function persistEventInvitation()
     {
         if ($this->eventInvitation != null) {
             $this->entityManager->persist($this->eventInvitation);
@@ -273,7 +273,7 @@ class EventInvitationManager
                 $applicationUser->addEventInvitation($this->eventInvitation);
             }
         }
-        $this->updateEventInvitation();
+        $this->persistEventInvitation();
 
         return $this->eventInvitation;
     }

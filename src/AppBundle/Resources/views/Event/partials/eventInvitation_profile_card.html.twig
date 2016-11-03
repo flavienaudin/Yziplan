@@ -6,7 +6,16 @@ Données d'entrée :
 
 <div class="card" id="user-event-invitation-card">
     <div class="card-header">
-        <h3>{{ "eventInvitation.profile.card.title"|trans }}</h3>
+        <h3>{{ "eventInvitation.profile.card.title"|trans }}
+            {% if userEventInvitation.creator %}
+                <span class="badge">{{ "eventInvitation.profile.card.badge.creator"|trans }}</span>
+            {% elseif userEventInvitation.administrator %}
+                <span class="badge">{{ "eventInvitation.profile.card.badge.administrator"|trans }}</span>
+            {% else %}
+                <span class="badge">{{ "eventInvitation.profile.card.badge.guest"|trans }}</span>
+            {% endif %}
+        </h3>
+
     </div>
     <div class="card-body card-padding">
         {{ include('@App/Event/partials/eventInvitation_profile_form.html.twig',{
@@ -14,4 +23,18 @@ Données d'entrée :
             'userEventInvitationForm' : userEventInvitationForm
         }) }}
     </div>
+
+    {% if userEventInvitation.applicationUser is null or userEventInvitation.applicationUser.accountUser is null %}
+        <div class="card-footer card-padding">
+            <label class="control-label text-info" for="url_user_invitation">{{ "eventInvitation.url.text"|trans }}&nbsp;: </label>
+            <div class="input-group">
+                <input id="url_user_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}"> <span
+                        class="input-group-btn">
+                    <button type="button" id="btn-copy-invitation-url" class="btn btn-primary" data-clipboard-target="#url_user_invitation"><i
+                                class="zmdi zmdi-copy"></i> {{ "global.button.copy"|trans }}</button>
+                    <a href="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}" class="btn btn-info">{{ "global.button.go_to"|trans }} <i class="zmdi zmdi-square-right"></i></a>
+                </span>
+            </div>
+        </div>
+    {% endif %}
 </div>
