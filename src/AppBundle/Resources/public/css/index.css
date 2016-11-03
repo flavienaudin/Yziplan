@@ -56,10 +56,10 @@ video::-webkit-media-controls {
     position: relative;
     display: inline-block;
     margin: 10px;
-    width: 100px;
-    height: 100px;
+    padding: 10px;
+    width: 150px;
+    height: 150px;
     text-align: center;
-    vertical-align: middle;
 }
 
 .rotation_card__front,
@@ -69,8 +69,13 @@ video::-webkit-media-controls {
     left: 0;
     width: 100%;
     height: 100%;
-    display:inline-block;
+    display: table;
+}
+
+.rotation_card__text {
+    display: table-cell;
     vertical-align: middle;
+    text-align: center;
 }
 
 .rotation_card__front,
@@ -94,4 +99,29 @@ video::-webkit-media-controls {
 .rotation_card.effect__random.flipped .rotation_card__back {
     -webkit-transform: rotateY(0deg);
     transform: rotateY(0deg);
+}
+
+.quote-img {
+    height: 100px;
+    width: 100px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+}
+
+.quote-table {
+    display: table;
+    width: 100%;
+}
+
+.quote-tr {
+    display: table-row;
+    width: 100%;
+}
+
+.quote-td {
+    display: table-cell;
 }
