@@ -34,7 +34,9 @@ $(document).ready(function () {
         }
     });
 
-    new Clipboard('#btn-copy-invitation-url');
+    new Clipboard("#btn_url_event_public_invitation");
+    new Clipboard('#btn_copy_invitation_url');
+
 });
 
 //Basic Example

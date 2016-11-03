@@ -16,7 +16,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class EventFormType extends AbstractType
+class EventType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -38,9 +38,6 @@ class EventFormType extends AbstractType
                 'required' => false
             ))
             ->add("guestsCanInvite", CheckboxType::class, array(
-                'required' => false
-            ))
-            ->add("guestsCanAddModule", CheckboxType::class, array(
                 'required' => false
             ));
     }

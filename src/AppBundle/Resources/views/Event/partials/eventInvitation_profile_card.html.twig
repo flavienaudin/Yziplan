@@ -7,13 +7,15 @@ Données d'entrée :
 <div class="card" id="user-event-invitation-card">
     <div class="card-header">
         <h3>{{ "eventInvitation.profile.card.title"|trans }}
-            {% if userEventInvitation.creator %}
-                <span class="badge">{{ "eventInvitation.profile.card.badge.creator"|trans }}</span>
-            {% elseif userEventInvitation.administrator %}
-                <span class="badge">{{ "eventInvitation.profile.card.badge.administrator"|trans }}</span>
-            {% else %}
-                <span class="badge">{{ "eventInvitation.profile.card.badge.guest"|trans }}</span>
-            {% endif %}
+            <small>
+                {% if userEventInvitation.creator %}
+                    <span class="label label-danger">{{ "eventInvitation.profile.card.badge.creator"|trans }}</span>
+                {% elseif userEventInvitation.administrator %}
+                    <span class="label label-warning">{{ "eventInvitation.profile.card.badge.administrator"|trans }}</span>
+                {% else %}
+                    <span class="label label-success">{{ "eventInvitation.profile.card.badge.guest"|trans }}</span>
+                {% endif %}
+            </small>
         </h3>
 
     </div>
@@ -30,7 +32,7 @@ Données d'entrée :
             <div class="input-group">
                 <input id="url_user_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}"> <span
                         class="input-group-btn">
-                    <button type="button" id="btn-copy-invitation-url" class="btn btn-primary" data-clipboard-target="#url_user_invitation"><i
+                    <button type="button" id="btn_copy_invitation_url" class="btn btn-primary" data-clipboard-target="#url_user_invitation"><i
                                 class="zmdi zmdi-copy"></i> {{ "global.button.copy"|trans }}</button>
                     <a href="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}" class="btn btn-info">{{ "global.button.go_to"|trans }} <i class="zmdi zmdi-square-right"></i></a>
                 </span>

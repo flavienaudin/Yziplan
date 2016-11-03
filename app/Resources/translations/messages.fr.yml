@@ -89,21 +89,26 @@ event:
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse
+    status:
+      label: Etat
+      placeholder: Etat de l'événement
     invitationOnly:
       label: Seulement sur invitation
       placeholder: Seulement sur invitation
       text.true: Seuls les invités peuvent participer (événement privé)
       text.false: Tout le monde peut participer (événement public)
+    public_invitation:
+      label: Transmettez le lien suivant pour inviter des amis :
     guestsCanInvite:
       label: Autoriser les invités à inviter
       placeholder: Autoriser les invités à inviter
       text.true: Les invités peuvent inviter d'autres personnes
       text.false: Les invités ne peuvent pas inviter d'autres personnes
-    guestsCanAddModule:
-      label: Autoriser les invités à ajouter un module
-      placeholder: Autoriser les invités à ajouter un module
-      text.true: Les invités peuvent ajouter un module
-      text.false: Les invités ne peuvent pas ajouter un module
+#    guestsCanAddModule:
+#      label: Autoriser les invités à ajouter un module
+#      placeholder: Autoriser les invités à ajouter un module
+#      text.true: Les invités peuvent ajouter un module
+#      text.false: Les invités ne peuvent pas ajouter un module
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement.
     unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
@@ -266,7 +271,6 @@ global:
 
 # Enums
 gender:
-  0: "-"
   male: Homme
   female: Femme
   other: Autre
@@ -280,16 +284,27 @@ marital_status:
   couple: En couple
   married: Marié
 
-status:
+eventstatus:
   in_creation: En cours de création
   in_organization: En cours d'organisation
   awaiting_validation: En attente de validation
-  valid: Valide
   validated: Validé
   archived: Archivé
   deprogrammed: Déprogrammé
-  cancelled: Annulé
+
+modulestatus:
+  in_creation: En cours de création
+  in_organization: En cours d'organisation
+  awaiting_validation: En attente de validation
+  validated: Validé
+  archived: Archivé
+  deleted: Annulé
 
 contact_info_type:
   home: Personnelle
   business: Professionelle
+
+appuser:
+  status:
+    main: Princpal
+    merged: Fusionné

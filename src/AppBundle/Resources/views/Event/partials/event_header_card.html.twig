@@ -27,9 +27,18 @@
                 'fgline':true, 'displayInRow' : true
             }) }}
 
-            {{ form_row(eventForm.invitationOnly, {'label':'event.form.invitationOnly.label','attr':{'class':'md-toogle-switch'}}) }}
-            {{ form_row(eventForm.guestsCanInvite, {'label':'event.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
-            {{ form_row(eventForm.guestsCanAddModule, {'label':'event.form.guestsCanAddModule.label','attr':{'class':'md-toogle-switch'}}) }}
+            <div class="row">
+                <div class="col-xs-12 col-sm-6">
+                    {{ form_row(eventForm.invitationOnly, {'label':'event.form.invitationOnly.label','attr':{'class':'md-toogle-switch'}}) }}
+                    {{ form_row(eventForm.guestsCanInvite, {'label':'event.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
+                </div>
+                <div class="col-xs-12 col-sm-6">
+                    <dl class="dl-horizontal">
+                        <dt>{{ "event.form.status.label"|trans }}</dt>
+                        <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span></dd>
+                    </dl>
+                </div>
+            </div>
 
             {{ form_rest(eventForm) }}
             <div class="text-right">
@@ -46,7 +55,10 @@
                 });
                 // Update the Event name while editing the form field
                 $('#event_form_name').on('input', function () {
-                   $('#event-name').html($(this).val());
+                    $('#event-name').html($(this).val());
+                });
+                $('#event_invitationOnly').on('change', function (e) {
+                    $('#event_public_invitation_display').fadeToggle();
                 });
             </script>
         {% else %}
@@ -55,9 +67,11 @@
                 <dd>{{ userEventInvitation.event.description }}</dd>
                 <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
                 <dd>{{ userEventInvitation.event.responseDeadline|localizeddate }}</dd>
+                <dt>{{ "event.form.status.label"|trans }}</dt>
+                <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span></dd>
                 <dt></dt>
                 <dd>
-                    {% if event.invitationOnly %}
+                    {% if userEventInvitation.event.invitationOnly %}
                         <div class="text-danger">
                             <i class="zmdi zmdi-close-circle"></i> {{ "event.form.invitationOnly.text.true"|trans }}
                         </div>
@@ -69,25 +83,13 @@
                 </dd>
                 <dt></dt>
                 <dd>
-                    {% if event.guestsCanInvite %}
+                    {% if userEventInvitation.event.guestsCanInvite %}
                         <div class="text-success">
                             <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
                         </div>
                     {% else %}
                         <div class="text-danger">
                             <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
-                        </div>
-                    {% endif %}
-                </dd>
-                <dt></dt>
-                <dd>
-                    {% if event.guestsCanAddModule %}
-                        <div class="text-success">
-                            <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanAddModule.text.true"|trans }} (à garder ?)
-                        </div>
-                    {% else %}
-                        <div class="text-danger">
-                            <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanAddModule.text.false"|trans }} (à garder ?)
                         </div>
                     {% endif %}
                 </dd>

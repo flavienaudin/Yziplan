@@ -11,7 +11,7 @@
             <small class="d-block">Todo : design + user avatar</small>
         </h2>
     </div>
-    <div class="card-body card-padding p-t-25" id="eventinvitation-body-card">
+    <div class="card-body card-padding" id="eventinvitation-body-card">
         <div class="well-sm z-depth-2 palette-Grey-200 bg m-b-20">
             <ul class="list-inline" id="eventInvitations_list">
                 {% for eventInvitation in eventInvitations if eventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::VALID') %}
@@ -19,7 +19,22 @@
                 {% endfor %}
             </ul>
         </div>
+
+        {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly %}
+            <div id="event_public_invitation_display" class="form-group animated">
+                <label class="control-label text-info" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
+                <div class="input-group">
+                    <input id="url_event_public_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}"> <span
+                            class="input-group-btn">
+                                <button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation">
+                                    <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button>
+                            </span>
+                </div>
+            </div>
+        {% endif %}
+
         {% if invitationsForm is not null %}
+
             {# TODO Implémenter les invitations #}
             {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),'attr':{'id':'eventInvitations'}}) }}
             {{ form_row(invitationsForm.invitations, {'id':'eventInvitations_newEmails','label':'invitations.form.invitations.label','attr':{'class':'contacts'}}) }}
@@ -39,6 +54,12 @@
         {% endif %}
     </div>
     <script>
+        {% if userEventInvitation.creator or userEventInvitation.administrator %}
+        {% if userEventInvitation.event.invitationOnly %}
+        $('#event_public_invitation_display').hide();
+        {% endif %}
+        {% endif %}
+
         {% if invitationsForm is not null %}
         $('#eventInvitations_newEmails').selectize({
             persist: false,
@@ -103,8 +124,8 @@
             $.getScript('//connect.facebook.net/fr_FR/all.js', function () {
                 FB.init({
                     appId: '232326430490812',
-                    xfbml      : true,
-                    version    : 'v2.6'
+                    xfbml: true,
+                    version: 'v2.6'
                 });
             });
 

@@ -11,7 +11,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
-use AppBundle\Form\Event\EventFormType;
+use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsFormType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
@@ -138,7 +138,7 @@ class EventManager
      */
     public function initEventForm()
     {
-        return $this->formFactory->create(EventFormType::class, $this->event);
+        return $this->formFactory->create(EventType::class, $this->event);
     }
 
 

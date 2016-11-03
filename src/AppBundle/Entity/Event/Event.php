@@ -88,7 +88,7 @@ class Event
      * @var boolean
      * @ORM\Column(name="guests_can_add_module", type="boolean")
      */
-    private $guestsCanAddModule = false;
+    private $guestsCanAddModule = true;
 
 
     /***********************************************************************

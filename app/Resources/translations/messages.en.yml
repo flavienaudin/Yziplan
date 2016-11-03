@@ -89,21 +89,26 @@ event:
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline
+    status:
+      label: Status
+      placeholder: Event status
     invitationOnly:
       label: Invitation only
       placeholder: Invitation only
       text.true: An invitation is required to participate (private event)
       text.false: Everyone can participate (public event)
+    public_invitation:
+      label: Send this link to invite friends :
     guestsCanInvite:
       label: Guests can invite
       placeholder: Guests can invite
       text.true: Guests can invite other people
       text.false: Guests can not invite other people
-    guestsCanAddModule:
-      label: Guests can add module
-      placeholder: Guests can add module
-      text.true: Guests can add module to the event
-      text.false: Guests can not add module to the event
+#    guestsCanAddModule:
+#      label: Guests can add module
+#      placeholder: Guests can add module
+#      text.true: Guests can add module to the event
+#      text.false: Guests can not add module to the event
   error.message:
     creation: An error occured while creating an event.
     unauthorized_access: You have no right to access this event.
@@ -279,7 +284,7 @@ marital_status:
   couple: Couple
   married: Married
 
-status:
+eventstatus:
   in_creation: Being created
   in_organization: Being organized
   awaiting_validation: Awaiting validation
@@ -289,6 +294,19 @@ status:
   deprogrammed: Deprogrammed
   cancelled: Cancelled
 
+modulestatus:
+  in_creation: Being created
+  in_organization: Being organized
+  awaiting_validation: Awaiting validation
+  validated: Validated
+  archived: Archived
+  deleted: Deleted
+
 contact_info_type:
   home: Home
   business: Business
+
+appuser:
+  status:
+    main: Main
+    merged: Merged
