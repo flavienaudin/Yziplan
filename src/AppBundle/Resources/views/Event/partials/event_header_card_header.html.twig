@@ -6,7 +6,15 @@
 <div id="event-header-card-header" class="card-header ch-img"
      style="background-image: url({{ userEventInvitation.event.picture is not null ? asset("uploads/events/pictures/"~userEventInvitation.event.picture) :
      asset("uploads/events/default/evt-img1.jpg") }});height:250px;">
-    <h1 id="event-name" class="c-white">{{ userEventInvitation.event.name }}</h1>
+    <h1 class="c-white"><span id="event-name">{{ userEventInvitation.event.name }}</span>
+        {% set creatorsNames = "" %}
+        {% for creatorInvitation in userEventInvitation.event.creators %}
+            {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
+        {% endfor %}
+        {% if creatorsNames is not empty %}
+            <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}</small>
+        {% endif %}
+    </h1>
     {% if editEvent %}
         <a href="#event_picture_update_modal" class="c-white" data-toggle="modal">
                 <span class="zmdi-hc-stack zmdi-hc-2x">

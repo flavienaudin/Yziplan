@@ -399,7 +399,7 @@ class Event
 
     /**
      * Retrieve EventInvitation with creator = true
-     * @return Collection
+     * @return Collection of EventInvitation
      */
     public function getCreators()
     {

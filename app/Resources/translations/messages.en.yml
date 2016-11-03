@@ -71,6 +71,8 @@ appuseremail:
         main_email: Sorry, it is not allowed to delete your main email address.
 
 event:
+  header:
+    organised_by: "Organised by %creator%"
   picture:
     link: Change the picture
     update_modal:

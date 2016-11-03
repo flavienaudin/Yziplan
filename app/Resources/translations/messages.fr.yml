@@ -71,6 +71,8 @@ appuseremail:
         main_email: Désolé, il n'est pas possible de supprimer votre adresse principale.
 
 event:
+  header:
+    organised_by: "Organisé par %creator%"
   picture:
     link: Changer l'image
     update_modal:
