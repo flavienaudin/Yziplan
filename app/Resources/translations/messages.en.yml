@@ -96,7 +96,7 @@ event:
       label: Invitation only
       placeholder: Invitation only
       text.true: An invitation is required to participate (private event)
-      text.false: Everyone can participate (public event)
+      text.false: Makes the event accessible to all persons receiving the link
     public_invitation:
       label: Send this link to invite friends :
     guestsCanInvite:

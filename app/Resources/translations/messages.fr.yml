@@ -195,7 +195,7 @@ module:
       label: Seulement sur invitation
       placeholder: Seulement sur invitation
       text.true: Seuls les invités peuvent participer (événement privé)
-      text.false: Tout le monde peut participer (événement public)
+      text.false: Rend l'événement accessible à toutes les personnes recevant le lien
     guestsCanInvite:
       label: Autoriser les invités à inviter
       placeholder: Autoriser les invités à inviter
