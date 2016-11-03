@@ -31,11 +31,8 @@ Données d'entrée :
             <label class="control-label text-info" for="url_user_invitation">{{ "eventInvitation.url.text"|trans }}&nbsp;: </label>
             <div class="input-group">
                 <input id="url_user_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}"> <span
-                        class="input-group-btn">
-                    <button type="button" id="btn_copy_invitation_url" class="btn btn-primary" data-clipboard-target="#url_user_invitation"><i
-                                class="zmdi zmdi-copy"></i> {{ "global.button.copy"|trans }}</button>
-                    <a href="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}" class="btn btn-info">{{ "global.button.go_to"|trans }} <i class="zmdi zmdi-square-right"></i></a>
-                </span>
+                        class="input-group-btn"><button type="button" id="btn_copy_invitation_url" class="btn btn-primary" data-clipboard-target="#url_user_invitation">
+                        <i class="zmdi zmdi-copy"></i> {{ "global.button.copy"|trans }}</button></span>
             </div>
         </div>
     {% endif %}
