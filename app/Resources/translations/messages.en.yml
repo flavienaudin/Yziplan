@@ -92,6 +92,9 @@ event:
     status:
       label: Status
       placeholder: Event status
+      swal:
+        title: Validation
+        text: The event is going to be validated...qu'est ce que ça va changer ?
     invitationOnly:
       label: Invitation only
       placeholder: Invitation only
@@ -288,11 +291,9 @@ eventstatus:
   in_creation: Being created
   in_organization: Being organized
   awaiting_validation: Awaiting validation
-  valid: Valid
   validated: Validated
   archived: Archived
   deprogrammed: Deprogrammed
-  cancelled: Cancelled
 
 modulestatus:
   in_creation: Being created

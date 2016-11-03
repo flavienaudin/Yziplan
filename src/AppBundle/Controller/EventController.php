@@ -13,6 +13,7 @@ use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Security\EventVoter;
+use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use AppBundle\Utils\Response\FileInputJsonResponse;
@@ -130,7 +131,6 @@ class EventController extends Controller
                             );
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
-                        dump($eventForm);
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#event-header-card'] =
                             $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
                                     'userEventInvitation' => $userEventInvitation,
@@ -298,6 +298,41 @@ class EventController extends Controller
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
             return $this->redirectToRoute('fos_user_profile_show');
+        }
+    }
+
+
+    /**
+     * @Route("/status/validated/{token}", name="validateEvent")
+     * @ParamConverter("event" , class="AppBundle:Event\Event")
+     * @param Event $event The current event
+     * @return AppJsonResponse|FileInputJsonResponse|RedirectResponse
+     */
+    public function validateEventAction(Event $event, Request $request)
+    {
+        $eventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
+        if (!$this->isGranted(EventVoter::EDIT, $eventInvitation)) {
+            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
+            return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+        }
+
+        $eventManager = $this->get("at.manager.event");
+        $event->setStatus(EventStatus::VALIDATED);
+        $eventManager->setEvent($event)->persistEvent();
+
+        if($request->isXmlHttpRequest()) {
+            /** @var Form $eventForm */
+            $eventForm = $eventManager->initEventForm();
+            $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#event-header-card'] =
+                $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
+                        'userEventInvitation' => $eventInvitation,
+                        'eventForm' => $eventForm->createView()
+                    )
+                );
+            return new AppJsonResponse($data, Response::HTTP_OK);
+        }else{
+            return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
         }
     }
 }

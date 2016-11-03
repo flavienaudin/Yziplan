@@ -153,6 +153,9 @@ class EventManager
         if (empty($this->event->getToken())) {
             $this->event->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
+        if($this->event->getStatus() == EventStatus::IN_CREATION){
+            $this->event->setStatus(EventStatus::IN_ORGANIZATION);
+        }
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
 

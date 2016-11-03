@@ -92,6 +92,9 @@ event:
     status:
       label: Etat
       placeholder: Etat de l'événement
+      swal:
+        title: Validation
+        text: L'événement va être validé...qu'est ce que ça va changer ?
     invitationOnly:
       label: Seulement sur invitation
       placeholder: Seulement sur invitation
