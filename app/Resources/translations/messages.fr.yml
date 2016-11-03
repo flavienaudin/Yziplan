@@ -134,6 +134,9 @@ eventInvitation:
     no: Non
     interested: Intéressé
     dont_know: Je ne sais pas encore
+  url:
+    label: Votre invitation
+    text: Conserver ce lien pour revenir sur cette page
   profile.card:
     title: Votre profil
     text:
@@ -240,6 +243,8 @@ global:
     delete: Supprimer
     add: Ajouter
     loading: En cours...
+    copy: Copier
+    go_to: Aller à
   success:
     data_saved: Données sauvegardées
   error:

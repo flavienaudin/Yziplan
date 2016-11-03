@@ -33,6 +33,8 @@ $(document).ready(function () {
             vertical: 'auto'
         }
     });
+
+    new Clipboard('#btn-copy-invitation-url');
 });
 
 //Basic Example

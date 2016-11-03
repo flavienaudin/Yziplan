@@ -134,6 +134,9 @@ eventInvitation:
     no: No
     interested: Interested
     dont_know: Don't know yet
+  url:
+    label: Your invitation
+    text: Keep this link to come back here
   profile.card:
     title: Your profile
     text:
@@ -240,6 +243,8 @@ global:
     delete: Delete
     add: Add
     loading: In progress...
+    copy: Copy
+    go_to: Go to
   success:
     data_saved: Information saved
   error:
