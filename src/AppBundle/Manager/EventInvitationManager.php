@@ -14,6 +14,7 @@ use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
+use AppBundle\Form\Event\EventInvitationAnswerType;
 use AppBundle\Form\Event\EventInvitationType;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
@@ -273,6 +274,33 @@ class EventInvitationManager
                 $applicationUser->addEventInvitation($this->eventInvitation);
             }
         }
+        $this->persistEventInvitation();
+
+        return $this->eventInvitation;
+    }
+
+    /**
+     * Génère le formulaire pour répondre à une EventInvitation (Réponse à un événement)
+     *
+     * @param EventInvitation|null $eventInvitation Les données du formulaire
+     * @return FormInterface
+     */
+    public function createEventInvitationAnswerForm(EventInvitation $eventInvitation = null)
+    {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        return $this->formFactory->create(EventInvitationAnswerType::class, $this->eventInvitation);
+    }
+
+    /**
+     * Traite la soumission du formulaire d'EventInvitationAnswerType (Réponse à un événement)
+     * @param Form $evtInvitAnswerForm
+     * @return EventInvitation
+     */
+    public function treatEventInvitationAnswerFormSubmission(Form $evtInvitAnswerForm)
+    {
+        $this->eventInvitation = $evtInvitAnswerForm->getData();
         $this->persistEventInvitation();
 
         return $this->eventInvitation;

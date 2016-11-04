@@ -1,11 +1,13 @@
 {% extends "@App/Event/layout.html.twig" %}
+
 {# Données d'entrée :
 - event (Event) L'évenement à afficher
 - eventForm (Form|null) Formulaire d'édition des information général de l'événement (si les droits le permettent)
 - invitationsForm (Form|null) Formulaire permettant d'inviter (renseignement des e-mails des invités)
 - modules (array) Tableau des modules de l'événement. Chaque module est décrit un tableau de données (Cf. EventManager:getModulesToDisplay(...) )
 - userEventInvitation (EventInvitation) L'invitation à afficher
-- userEventInvitationForm (Form) Formulaire de réponse à l'invitation
+- userEventInvitationForm (Form) Formulaire de réponse à l'invitation : données de profil
+- userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
 
@@ -87,7 +89,7 @@
                         'userEventInvitationForm' : userEventInvitationForm}) }}
                 </div>
                 <div class="col-xs-12 col-md-6 col-lg-12">
-                    {{ include("@App/Event/partials/eventInvitation_answerCard.html.twig", {"event":event, 'userEventInvitation':userEventInvitation}) }}
+                    {{ include("@App/Event/partials/eventInvitation_answerCard.html.twig", {'userEventInvitation':userEventInvitation,'userEventInvitationAnswerForm':userEventInvitationAnswerForm}) }}
                 </div>
 
                 <div class="col-xs-12">

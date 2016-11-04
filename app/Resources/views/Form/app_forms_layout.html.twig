@@ -149,7 +149,17 @@
 {%- endblock time_widget %}
 
 {% block choice_widget_expanded -%}
-    {% if '-inline' in label_attr.class|default('') -%}
+    {% if attr.type is defined and attr.type == 'answer' -%}
+        <div class="btn-group btn-group-lg btn-group-justified" data-toggle="buttons" role="group">
+            {%- for child in form %}
+                {% set label_attr = label_attr|merge({'class': "btn"}) %}
+                {{- form_widget(child, {
+                    parent_label_class: label_attr.class|default(''),
+                    translation_domain: choice_translation_domain,
+                }) -}}
+            {% endfor -%}
+        </div>
+    {% elseif '-inline' in label_attr.class|default('') -%}
         {%- for child in form %}
             {{- form_widget(child, {
                 parent_label_class: label_attr.class|default(''),
@@ -222,7 +232,10 @@
 
 {% block radio_widget -%}
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
-    {% if 'radio-inline' in parent_label_class %}
+    {% if 'btn' in parent_label_class %}
+        {% set label_attr = label_attr|merge({'class': " "~attr.dataclass~(checked?' active':'')}) %}
+        {{- form_label(form, null, { label_attr: label_attr, widget: block('radio_btn_widget'), required : false}) -}}
+    {% elseif 'radio-inline' in parent_label_class %}
         <div class="radio radio-inline">
             {{- form_label(form, null, { widget: block('radio_input_helper_widget'), required : false}) -}}
         </div>
@@ -237,6 +250,10 @@
     <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
     <i class="input-helper"></i>
 {%- endblock radio_input_helper_widget -%}
+
+{%- block radio_btn_widget -%}
+    <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} autocomplete="off"/>
+{%- endblock radio_btn_widget -%}
 
 {#{% block checkbox_radio_label %}
     #}{# Do not display the label if widget is not defined in order to prevent double label rendering #}{#
@@ -285,7 +302,6 @@
         </label>
     {% endif %}
 {% endblock checkbox_radio_label %}#}
-
 
 {# Surchage total du widget, copiant directement le code du parent #}
 {% block collection_widget %}

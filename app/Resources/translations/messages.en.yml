@@ -143,6 +143,7 @@ eventInvitation:
     yes: Yes
     no: No
     interested: Interested
+    not_interested: Not interested
     dont_know: Don't know yet
   url:
     label: Your invitation

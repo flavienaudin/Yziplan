@@ -143,7 +143,8 @@ eventInvitation:
     yes: Oui
     no: Non
     interested: Intéressé
-    dont_know: Je ne sais pas encore
+    not_interested: Non Intéressé
+    dont_know: Peut-être
   url:
     label: Votre invitation
     text: Conserver ce lien pour revenir sur cette page

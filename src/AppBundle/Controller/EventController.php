@@ -107,6 +107,37 @@ class EventController extends Controller
                 $eventInvitationManager->treatEventInvitationFormSubmission($eventInvitationForm);
                 return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
             }
+
+
+            $eventInvitationAnswerForm = $eventInvitationManager->createEventInvitationAnswerForm();
+            $eventInvitationAnswerForm->handleRequest($request);
+            if ($request->isXmlHttpRequest()) {
+                if ($eventInvitationAnswerForm->isSubmitted()) {
+                    if ($eventInvitationAnswerForm->isValid()) {
+                        $userEventInvitation = $eventInvitationManager->treatEventInvitationAnswerFormSubmission($eventInvitationAnswerForm);
+                        // Update the form with the updated userEventInvitation
+                        /*$eventInvitationAnswerForm = $eventInvitationManager->createEventInvitationAnswerForm();
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#user-event-invitation-card'] =
+                            $this->renderView("@App/Event/partials/eventInvitation_answerCard.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView()
+                            ));*/
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('global.success.data_saved');
+                        return new AppJsonResponse($data, Response::HTTP_OK);
+                    } else {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation-answer-card'] =
+                            $this->renderView('@App/Event/partials/eventInvitation_answerCard.html.twig', array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView()
+                            ));
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    }
+                }
+            } else if ($eventInvitationAnswerForm->isValid()) {
+                $eventInvitationManager->treatEventInvitationAnswerFormSubmission($eventInvitationAnswerForm);
+                return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+            }
         }
 
         ////////////////////////
@@ -259,7 +290,8 @@ class EventController extends Controller
             'invitationsForm' => ($eventInvitationsForm != null ? $eventInvitationsForm->createView() : null),
             'modules' => $modules,
             'userEventInvitation' => $userEventInvitation,
-            'userEventInvitationForm' => $eventInvitationForm->createView()
+            'userEventInvitationForm' => $eventInvitationForm->createView(),
+            'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView()
         ));
     }
 
@@ -320,7 +352,7 @@ class EventController extends Controller
         $event->setStatus(EventStatus::VALIDATED);
         $eventManager->setEvent($event)->persistEvent();
 
-        if($request->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest()) {
             /** @var Form $eventForm */
             $eventForm = $eventManager->initEventForm();
             $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
@@ -331,7 +363,7 @@ class EventController extends Controller
                     )
                 );
             return new AppJsonResponse($data, Response::HTTP_OK);
-        }else{
+        } else {
             return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
         }
     }

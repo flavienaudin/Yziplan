@@ -1,5 +1,6 @@
 {# Données d'entrée :
 - userEventInvitation : EventInvitation de l'utilisateur
+- userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
 <div class="card" id="eventInvitation-answer-card">
@@ -7,10 +8,21 @@
         <h2>{{ "eventInvitation.answer.card.title"|trans }}</h2>
     </div>
     <div class="card-body card-padding">
-        {# TODO : gestion de la réponse : exemple de présentation à modifier ou implémenter sous forme de Form symfony #}
-        <div class="btn-group btn-group-lg btn-group-justified" data-toggle="buttons" role="group">
-            <label class="btn btn-success"><input type="radio" name="answer" autocomplete="off">Oui</label>
-            <label class="btn btn-danger"> <input type="radio" name="answer" autocomplete="off">Non</label>
-        </div>
+        {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
+        {{ form_row(userEventInvitationAnswerForm.answer,{
+            'label_attr':{'class' : 'sr-only'},
+            'attr':{'type' : 'answer'}
+        }) }}
+
+        {{ form_rest(userEventInvitationAnswerForm) }}
+        {{ form_end(userEventInvitationAnswerForm) }}
+        <script>
+            $("input[name='event_invitation_anwser[answer]']").on('change', function (e) {
+                $(this).closest('form').submit();
+            });
+            $('form#userEventInvitationAnswer').on('submit', function (e) {
+                ajaxFormSubmission(this, e, null, null, null);
+            });
+        </script>
     </div>
 </div>

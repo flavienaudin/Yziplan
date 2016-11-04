@@ -188,6 +188,15 @@
 }
 
 /*----------------------------------
+    Event Invitation Answer
+-----------------------------------*/
+
+.answer-form .btn.active,
+.answer-form .btn:active{
+    border: 2px #00a5bb solid;
+}
+
+/*----------------------------------
     Add Module
 -----------------------------------*/
 
