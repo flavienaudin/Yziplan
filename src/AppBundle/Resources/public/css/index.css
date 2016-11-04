@@ -76,6 +76,7 @@ video::-webkit-media-controls {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
+    color: white;
 }
 
 .rotation_card__front,
