@@ -30,7 +30,7 @@ $(document).ready(function () {
         },
         widgetPositioning: {
             horizontal: 'auto',
-            vertical: 'auto'
+            vertical: 'bottom'
         }
     });
 
