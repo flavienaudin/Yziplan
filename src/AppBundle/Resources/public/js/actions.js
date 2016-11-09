@@ -17,7 +17,7 @@ $(document).ready(function () {
                 var target = $(this).data('ma-target');
 
                 $this.addClass('toggled');
-                $('#main').append('<div data-ma-action="sidebar-close" class="sidebar-backdrop animated fadeIn" />')
+                $('.main-section').append('<div data-ma-action="sidebar-close" class="sidebar-backdrop animated fadeIn" />')
                 
                 if (target == 'main-menu') {
                     $('#s-main-menu').addClass('toggled');

@@ -62,11 +62,15 @@
         </div>
 
         <ul class="pull-right h-menu">
-            <li class="hm-search-trigger">
-                {# Commande d'ouverture de la zone de recherche pour les petits écrans (<992px) #}
+            {#<li class="hm-search-trigger">
+                #}{# Commande d'ouverture de la zone de recherche pour les petits écrans (<992px) #}{#
                 <a href="#" data-ma-action="search-open"> <i class="hm-icon zmdi zmdi-search"></i> </a>
-            </li>
+            </li>#}
             {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
+                <li data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                    <a href="#"><i class="hm-icon zmdi zmdi-email"></i></a>
+                </li>
                 {# Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
                 <li data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
                     <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
@@ -99,18 +103,18 @@
             {% endif %}
         </ul>
 
-        <div class="media-body h-search">
+        {#<div class="media-body h-search">
             <form class="p-relative">
                 <input type="text" class="hs-input" placeholder="{{ "navbar.search.placeholder"|trans }}"> <i class="zmdi zmdi-search hs-reset" data-ma-action="search-clear"></i>
             </form>
-        </div>
+        </div>#}
     </header>
 {% endblock %}
 
 <!-- CONTENT -->
 {# Pour avoir une page AVEC un menu latéral : conserver section#main et redéfinir le block "s_main_menu" #}
 {# Pour avoir une page SANS menu latéral : redfinir le block "main_section_id" et définir les blocks "s_main_menu" et "sidebar_collapse_cmd" vides #}
-<section id="{% block main_section_id %}main{% endblock %}">
+<section id="{% block main_section_id %}main{% endblock %}" class="main-section">
     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
         {# Panneaux d'affichage des "Notifications utilisateur" ouverts via l'icone #}
         <aside id="s-user-alerts" class="sidebar">
