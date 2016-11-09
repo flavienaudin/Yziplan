@@ -228,9 +228,12 @@ class EventController extends Controller
                                 $moduleManager->displayModulePartial($currentModule, $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
-                            // TODO vérifier que ca marche
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-' . $moduleDescription['module']->getToken()] =
-                                $moduleManager->displayModulePartial($moduleDescription['module'], $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module_info_form_' . $moduleDescription['module']->getToken()] =
+                                $this->renderView('@App/Event/module/displayModule_form.html.twig', array(
+                                    'module' => $moduleDescription['module'],
+                                    'moduleForm' => $moduleForm->createView(),
+                                    'userModuleInvitation' => $userEventInvitation->getModuleInvitationForModule($moduleDescription['module'])
+                                ));
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     }
@@ -260,7 +263,6 @@ class EventController extends Controller
                                 $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
-                            // TODO vérifier que ca marche
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
                                 $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
                                     'userModuleInvitation' => $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']),

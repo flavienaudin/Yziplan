@@ -24,9 +24,7 @@
                         {% endfor %}
                         {% if creatorsNames is not empty %}
                             <h2><span id="module_{{ module.token }}_name">{{ module.name is not empty?module.name }}</span>
-                                {% if creatorsNames is not empty %}
-                                    <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}</small>
-                                {% endif %}
+                                <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }} <span class="label label-default">{{ module.status|trans }}</span></small>
                             </h2>
                         {% endif %}
                     {% endblock mhMediaBody %}
@@ -54,96 +52,33 @@
                     </div>
                     <div id="collapse-mInfo-PH-{{ module.token }}" class="collapse" role="tabpanel" aria-labelledby="mInfo-PH-{{ module.token }}">
                         <div class="panel-body">
-                            {% if moduleForm is not null %}
-                                {{ form_start(moduleForm, {'action':path('displayEvent', {'token':module.event.token}), 'attr':{'id':"moduleForm-"~module.token} }) }}
-                            {% endif %}
-
                             <ul class="tab-nav tn-icon" role="tablist">
                                 <li role="presentation" class="active">
-                                    <a href="#tab-infoG_{{ module.token }}" aria-controls="#tab-infoG_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-home icon-tab"></i> </a>
+                                    <a href="#tab_info_{{ module.token }}" aria-controls="#tab_info_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-home icon-tab"></i></a>
                                 </li>
                                 <li role="presentation">
-                                    <a href="#tab-modQui_{{ module.token }}" aria-controls="#tab-modQui_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-accounts-list-alt
-                                    icon-tab"></i> </a>
+                                    <a href="#tab_module_guest_{{ module.token }}" aria-controls="#tab_module_guest_{{ module.token }}" role="tab" data-toggle="tab"> <i
+                                                class="zmdi zmdi-accounts-list-alt icon-tab"></i></a>
                                 </li>
-                                {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
-                                    <li role="presentation">
-                                        <a href="#tab-admin_{{ module.token }}" aria-controls="#tab-admin_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-settings icon-tab"></i>
-                                        </a>
-                                    </li>
-                                {% endif %}
                             </ul>
                             <div class="tab-content p-20 b-b-w">
-                                <div role="tabpanel" class="tab-pane animated fadeIn in active" id="tab-infoG_{{ module.token }}">
+                                <div role="tabpanel" class="tab-pane animated fadeIn in active" id="tab_info_{{ module.token }}">
                                     {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
-                                        <div class="form-group">
-                                            {{ form_label(moduleForm.name, 'module.form.name.label', {'label_attr':{'class':'sr-only'}}) }}
-                                            <div class="fg-line">
-                                                {{ form_widget(moduleForm.name, {'attr':{'placeholder':'module.form.name.placeholder'}}) }}
-                                                {{ form_errors(moduleForm.name) }}
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            {{ form_label(moduleForm.description, 'module.form.description.label', {'label_attr':{'class':'sr-only'}}) }}
-                                            <div class="fg-line">
-                                                {{ form_widget(moduleForm.description, {'attr':{'rows':3,'placeholder':'module.form.description.placeholder'}}) }}
-                                                {{ form_errors(moduleForm.description) }}
-                                            </div>
-                                        </div>
+                                        {{ include('@App/Event/module/displayModule_form.html.twig',{'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation}) }}
                                     {% else %}
                                         <dl>
                                             <dt>Description</dt>
                                             <dd>{{ module.description|nl2br|raw }}</dd>
                                         </dl>
-                                        {% if module.paymentModule is not null %}
-                                            {#{{ include("@App/Event/module/displayPaymentModule.html.twig", {"module":module}) }}#}
-                                        {% endif %}
+                                        {#{% if module.paymentModule is not null %}
+                                            {{ include("@App/Event/module/displayPaymentModule.html.twig", {"module":module}) }}
+                                        {% endif %}#}
                                     {% endif %}
                                 </div>
-                                <div role="tabpanel" class="tab-pane animated fadeIn" id="tab-modQui_{{ module.token }}">
+                                <div role="tabpanel" class="tab-pane animated fadeIn" id="tab_module_guest_{{ module.token }}">
                                     <h2>Liste des invités</h2>
                                 </div>
-
-                                {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
-                                    <div role="tabpanel" class="tab-pane animated fadeIn" id="tab-admin_{{ module.token }}">
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    {{ form_label(moduleForm.responseDeadline, 'module.form.responseDeadline.label') }}
-                                                    <div class="form-inline fg-line">
-                                                        {{ form_widget(moduleForm.responseDeadline, {
-                                                            'attr':{'placeholder':'module.form.responseDeadline.placeholder'},
-                                                            'displayInRow' : true
-                                                        }) }}
-                                                    </div>
-                                                    {{ form_errors(moduleForm.responseDeadline) }}
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                {{ form_row(moduleForm.invitationOnly, {'label':'module.form.invitationOnly.label', 'label_attr':{'class' : 'radio radio-inline'}}) }}
-                                                {{ form_row(moduleForm.guestsCanInvite, {'label':'module.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
-                                            </div>
-                                        </div>
-                                        <dl class="dl-horizontal">
-                                            <dt>Status</dt>
-                                            <dd>{{ module.status|trans }}</dd>
-                                        </dl>
-                                    </div>
-                                {% endif %}
                             </div>
-                            <div class="pull-right m-b-20 m-r-20">
-                                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-                                    <a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"
-                                       class="text-danger">{{ "global.button.delete"|trans }}</a>
-                                {% endif %}
-                                {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
-                                    <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
-                                {% endif %}
-                            </div>
-                            {% if moduleForm is not null %}
-                                {{ form_rest(moduleForm) }}
-                                {{ form_end(moduleForm) }}
-                            {% endif %}
                         </div>
                     </div>
                 {% endblock moduleInformation %}
@@ -162,50 +97,5 @@
         {% block module_modal_container %}{% endblock %}
     </div>
 
-    {% block JSmodule %}
-        <script>
-            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-            $('#removeModule{{ module.token }}').on('click', function (e) {
-                e.preventDefault();
-                var removeModuleLink = $(this);
-                swal({
-                    title: '{{ "module.alert.confirm_deletion.title"|trans }}',
-                    text: '{{ "module.alert.confirm_deletion.message"|trans }}',
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: '{{ "global.button.delete"|trans }}',
-                    closeOnConfirm: true,
-                    showLoaderOnConfirm: true
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                            if (responseJSON.actionResult === true) {
-                                $('#module-{{ module.token }}').remove();
-                                $('.grid').masonry('layout');
-                            }
-                        }, null, null);
-                    }
-                });
-            });
-            {% endif %}
-
-            {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
-            // Update the Event name while editing the form field
-            $('#module_form_{{ module.token }}_name').on('input', function () {
-                var moduleName = $(this).val();
-                if (moduleName == "") {
-                    moduleName = "{{ "module.form.name.label"|trans }}";
-                }
-                $('#module_{{ module.token }}_name').html(moduleName);
-            });
-
-            $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
-                ajaxFormSubmission(this, e, null, null, function () {
-                    $('.grid').masonry('layout');
-                });
-            });
-            {% endif %}
-        </script>
-    {% endblock %}
+    {% block JSmodule %}{% endblock %}
 </div>
