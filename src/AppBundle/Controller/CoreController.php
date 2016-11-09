@@ -18,7 +18,7 @@ class CoreController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->render('AppBundle:Core:testIndex.html.twig');
+        return $this->render('AppBundle:Core:index.html.twig');
     }
 
     /**
@@ -26,7 +26,15 @@ class CoreController extends Controller
      */
     public function testIndexAction(Request $request)
     {
-        return $this->render('AppBundle:Core:index.html.twig');
+        return $this->render('AppBundle:Core:testIndex.html.twig');
+    }
+
+    /**
+     * @Route("/testindex2", name="testhome2")
+     */
+    public function testIndex2Action(Request $request)
+    {
+        return $this->render('AppBundle:Core:testIndex2.html.twig');
     }
 
 }

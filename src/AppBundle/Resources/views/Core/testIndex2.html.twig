@@ -1,0 +1,384 @@
+{% extends "::base.html.twig" %}
+
+{# LAYOUT : une colonne centrale #}
+
+{# Vidage du menu latéral #}
+{% block sidebar_collapse_cmd %}{% endblock %}
+{% block s_main_menu %}{% endblock s_main_menu %}
+
+{% block main_section_id %}{% endblock %}
+{% block main_content_class %}{{ parent() }}{% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/index.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/morphext.css") }}">
+{% endblock %}
+
+{% block content_body %}
+
+    <div class="card">
+        <div class="card-body">
+
+        </div>
+    </div>
+
+    <div class="card palette-White-100 bg">
+        <div class="card-header c-boxed text-center">
+            <h1><strong>Organise toi avec tes amis!</strong></h1>
+            <h1><strong>Ou</strong></h1>
+            <div class="row no-padding">
+                <div class="col-xs-4 text-right">
+                    <h1><strong>Organise </strong></h1>
+                </div>
+                <div class="col-xs-4 text-center">
+                    <h1><strong><span id="rotate-event" class="">ta soirée,tes activités,tes vacances,ton anniversaire</span></strong></h1>
+                </div>
+                <div class="col-xs-4 text-left">
+                    <h1><strong><span id="rotate-event" class=""> avec tes amis !</span></strong></h1>
+                </div>
+            </div>
+        </div>
+        <div class="card-body card-padding c-boxed index-header">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="card p-30 z-depth-3">
+                        <div class="card-body">
+                            <form class="row" role="form">
+                                <div class="col-sm-8">
+                                    <div class="input-group fg-float">
+                                        <span class="input-group-addon"><i class="zmdi zmdi-border-color"></i></span>
+                                        <div class="fg-line">
+                                            <input class="form-control" type="text">
+                                            <label class="fg-label">Nom de mon événement</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="submit" class="btn palette-Teal bg m-t-5 waves-effect">C'est parti !</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card palette-Grey-100 bg">
+        <div class="card-body card-padding c-boxed index-header">
+            <div class="row no-padding no-margin">
+                <div class="col-xs-12 col-sm-6 col-md-6 p-5">
+                    <div class="index-header-img" style="background-image: url({{ asset('bundles/app/img/index/fun-1673255_960_720.jpg') }}); height: 305px;">
+                        <p class="p-index-topcontent text-center">Soirée</p>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <div class="row no-padding no-margin">
+                        <div class="col-xs-6 col-sm-6 col-md-6 p-t-5 p-b-5">
+                            <div class="index-header-img" style="background-image: url({{ asset('bundles/app/img/index/event-holidays.jpg') }}); height: 150px;">Vacances</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 p-t-5 p-b-5">
+                            <div class="index-header-img" style="background-image: url({{ asset('bundles/app/img/index/event-birthday.jpg') }}); height: 150px;">Anniversaire</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 p-t-5 p-b-5">
+                            <div class="index-header-img" style="background-image: url({{ asset('bundles/app/img/index/event-birthday.jpg') }}); height: 150px;"></div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 p-t-5 p-b-5">
+                            <div class="index-header-img" style="background-image: url({{ asset('bundles/app/img/index/event-afterwork.jpg') }}); height: 150px;">Atfer-work</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row no-padding no-margin">
+                <div class="col-xs-6 col-sm-3 col-md-3">
+                    <div class="row no-padding no-margin">
+                        <div class="col-xs-12 p-t-5 p-b-5">
+                            <div class="index-header-img" style="background-image: url({{ asset('bundles/app/img/index/event-holidays.jpg') }}); height: 150px;">Vacances</div>
+                        </div>
+                        <div class="col-xs-12 p-t-5 p-b-5">
+                            <div class="index-header-img" style="background-image: url({{ asset('bundles/app/img/index/event-birthday.jpg') }}); height: 150px;">Anniversaire</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6 p-5">
+                    <div class="index-header-img" style="background-image: url({{ asset('bundles/app/img/index/event-bbq.jpg') }}); height: 305px;">
+                        <p class="p-index-topcontent text-center">Barbecue</p>
+                    </div>
+                </div>
+                <div class="col-xs-6 col-sm-3 col-md-3">
+                    <div class="row no-padding no-margin">
+                        <div class="col-xs-12 p-t-5 p-b-5">
+                            <div class="index-header-img" style="background-image: url({{ asset('bundles/app/img/index/fun-1673255_960_720.jpg') }}); height: 150px;"></div>
+                        </div>
+                        <div class="col-xs-12 p-t-5 p-b-5">
+                            <div class="index-header-img" style="background-image: url({{ asset('bundles/app/img/index/event-bbq.jpg') }}); height: 150px;">Atfer-work</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card palette-Yellow-50 bg z-depth-3">
+        <div class="card-header c-boxed text-center">
+            <h1><strong>Pourquoi Yziplan ?</strong></h1>
+        </div>
+        <div class="card-body card-padding c-boxed">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="card z-depth-3">
+                        <div class="card-header text-center">
+                            <h3><strong>Organise toi sans Yziplan</strong></h3>
+                        </div>
+                        <div class="card-body card-padding index-header-img" style="background-image: url({{ asset('bundles/app/img/index/avant.png') }}); height: 300px"></div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-5">
+                    <div class="card z-depth-3">
+                        <div class="card-header text-center">
+                            <h3><strong>Organise toi avec Yziplan</strong></h3>
+                        </div>
+                        <div class="card-body card-padding index-header-img" style="background-image: url({{ asset('bundles/app/img/index/apres.png') }}); height: 300px"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card palette-Blue-50 bg z-depth-3">
+        <div class="card-header c-boxed text-center">
+            <h1><strong>Comment ça marche?</strong></h1>
+        </div>
+        <div class="card-body card-padding c-boxed">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card z-depth-3">
+                        <div class="card-header text-center">
+                            <h3><strong><i class="zmdi zmdi-border-color zmdi-hc-2x"></i><br>Créez votre évènement</strong></h3>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p>Vous organisez un événement ou une activité ?</p>
+                            <p><strong>Pas de panique Yziplan est fait pour vous!</strong></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card z-depth-3 m-t-50">
+                        <div class="card-header text-center">
+                            <h3><strong><i class="zmdi zmdi-account-add zmdi-hc-2x"></i><br>Invitez vos amis.</strong></h3>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p>Partagez vos informations, vos choix et vos envies.</p>
+                            <p>L'organisation se fait naturellement.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card z-depth-3 m-t-100">
+                        <div class="card-header text-center">
+                            <h3><strong><i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Profitez de l'évènement</strong></h3>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p><strong>Il ne vous reste plus qu'à vous amuser avec vos amis!</strong></p>
+
+                            <p>Et retrouvez bientôt de nouvelles fonctionnalités pour gérer l'après événement :</p>
+                            <div class="list-md-icon m-b-10">
+                                <ul>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card palette-Pink-50 bg">
+        <div class="card-header c-boxed">
+            <h1><strong>Fonctionnalités</strong><br/></h1>
+            <i>Découvrez nos événements pré-configurés!</i>
+
+        </div>
+        <div class="card-body card-padding c-boxed">
+            <div class="list-md-icon m-b-10">
+                <ul>
+                    <li class="ng-binding"><i class="zmdi zmdi-help-outline"></i>On fait quoi ?</li>
+                    <li class="ng-binding"><i class="zmdi zmdi-calendar"></i>Vous êtes disponible quand ?</li>
+                    <li class="ng-binding"><i class="zmdi zmdi-pin"></i>On part où ?</li>
+                    <li class="ng-binding"><i class="zmdi zmdi-accounts"></i>Qui vient?</li>
+                    <li class="ng-binding"><i class="zmdi zmdi-check-all"></i>Qui apporte quoi ?</li>
+                    <li class="ng-binding"><i class="zmdi zmdi-image"></i>Partage de photos</li>
+                    <li class="ng-binding"><i class="zmdi zmdi-balance-wallet"></i></i>Remboursements</li>
+                    <li class="ng-binding">...</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card palette-Blue-50 bg ">
+        <div class="card-header c-boxed">
+            <h1><strong>Exemples d'évènement</strong><br/></h1>
+            <i>Découvrez nos événements pré-configurés!</i>
+        </div>
+        <div class="card-body card-padding c-boxed">
+            <div class="row">
+                <div class="col-sm-4 p-20">
+                    <div class="card z-depth-3">
+                        <div class="card-header ch-img" style="background-image: url({{ asset('bundles/app/img/index/fun-1673255_960_720.jpg') }}); height: 250px;"></div>
+                        <div class="card-header">
+                            <h2>
+                                Pellentesque Ligula Fringilla
+
+                                <small>by Malinda Hollaway on 19th June 2015 at 09:10 AM</small>
+                            </h2>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p>Donec ullamcorper nulla non metus auctor fringilla. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris
+                                condimentum nibh, ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra </p>
+
+                            <a href="" class="view-more"><i class="zmdi zmdi-long-arrow-right"></i> Voir l'événement</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 p-20">
+                    <div class="card z-depth-3">
+                        <div class="card-header ch-img" style="background-image: url({{ asset('bundles/app/img/index/adventure-842584_960_720.jpg') }}); height: 250px;"></div>
+                        <div class="card-header">
+                            <h2>
+                                Pellentesque Ligula Fringilla
+
+                                <small>by Malinda Hollaway on 19th June 2015 at 09:10 AM</small>
+                            </h2>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p>Donec ullamcorper nulla non metus auctor fringilla. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris
+                                condimentum nibh, ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra </p>
+
+                            <a href="" class="view-more"><i class="zmdi zmdi-long-arrow-right"></i> Voir l'événement</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 p-20">
+                    <div class="card z-depth-3">
+                        <div class="card-header ch-img" style="background-image: url({{ asset('bundles/app/img/index/beer-1585467_960_720.jpg') }}); height: 250px;"></div>
+                        <div class="card-header">
+                            <h2>
+                                Pellentesque Ligula Fringilla
+
+                                <small>by Malinda Hollaway on 19th June 2015 at 09:10 AM</small>
+                            </h2>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p>Donec ullamcorper nulla non metus auctor fringilla. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris
+                                condimentum nibh, ut fermentum massa justo sit amet risus. Vestibulum id ligula porta felis euismod semper. Nulla vitae elit libero, a pharetra </p>
+
+                            <a href="" class="view-more"><i class="zmdi zmdi-long-arrow-right"></i> Voir l'événement</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card palette-Green-50 bg z-depth-3">
+        <div class="card-header c-boxed">
+            <h1>Ils en parlent</h1>
+        </div>
+        <div class="card-body c-boxed card-padding">
+            <blockquote class="blockquote m-b-25">
+                <div class="quote-table">
+                    <div class="quote-tr">
+                        <div class="quote-img quote-td" style="background-image: url({{ asset('bundles/app/img/index/quote-mi.jpg') }})"></div>
+                        <div class="quote-td p-l-10">
+                            <p>On devait organiser une mission d'infiltration.<br>On pensait que c'était mission impossible, puis on a découvert Yziplan.</p>
+                            <footer>Ethan Hunt - <cite title="Source Title">Mission Impossible</cite></footer>
+                        </div>
+                    </div>
+                </div>
+            </blockquote>
+            <blockquote class="blockquote-reverse m-b-25">
+                <div class="quote-table">
+                    <div class="quote-tr">
+                        <div class="quote-td p-r-10">
+                            <p>J'aime quand un plan se déroule sans accroc. </p>
+                            <footer>Hannibal - <cite title="Source Title">Agence tous risques</cite></footer>
+                        </div>
+                        <div class="quote-img quote-td" style="background-image: url({{ asset('bundles/app/img/index/quote-hannibal.jpg') }})"></div>
+                    </div>
+                </div>
+            </blockquote>
+            <blockquote class="blockquote m-b-25">
+                <div class="quote-table">
+                    <div class="quote-tr">
+                        <div class="quote-img quote-td" style="background-image: url({{ asset('bundles/app/img/index/quote-ocean.jpg') }})"></div>
+                        <div class="quote-td p-l-10">
+                            <p>On se demandait comment on allait pouvoir cambrioler 3 casinos simultanément.<br>Yziplan nous a permis d'atteindre notre objectif en toute sérénité !</p>
+                            <footer>Daniel "Danny" Ocean - <cite title="Source Title">Ocean's Eleven</cite></footer>
+                        </div>
+                    </div>
+                </div>
+            </blockquote>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("bundles/app/js/morphext.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/masonry.pkgd.min.js") }}"></script>
+    <script>
+        $("#rotate-event").Morphext({
+            // The [in] animation type. Refer to Animate.css for a list of available animations.
+            animation: "fadeInDown",
+            // An array of phrases to rotate are created based on this separator. Change it if you wish to separate the phrases differently (e.g. So Simple | Very Doge | Much Wow | Such Cool).
+            separator: ",",
+            // The delay between the changing of each phrase in milliseconds.
+            speed: 1500,
+            complete: function () {
+                // Called after the entrance animation is executed.
+            }
+        });
+    </script>
+    <script>
+        (function () {
+            // cache vars
+            var cards = document.querySelectorAll(".rotation_card.effect__random");
+            var timeMin = 1;
+            var timeMax = 10;
+            var timeouts = [];
+
+            // loop through cards
+            for (var i = 0, len = cards.length; i < len; i++) {
+                var card = cards[i];
+                var cardID = card.getAttribute("data-id");
+                var id = "timeoutID" + cardID;
+                var time = randomNum(timeMin, timeMax) * 1000;
+                cardsTimeout(id, time, card);
+            }
+
+            // timeout listener
+            function cardsTimeout(id, time, card) {
+                if (id in timeouts) {
+                    clearTimeout(timeouts[id]);
+                }
+                timeouts[id] = setTimeout(function () {
+                    var c = card.classList;
+                    var newTime = randomNum(timeMin, timeMax) * 1000;
+                    c.contains("flipped") === true ? c.remove("flipped") : c.add("flipped");
+                    cardsTimeout(id, newTime, card);
+                }, time);
+            }
+
+            // random number generator given min and max
+            function randomNum(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+        })();
+    </script>
+{% endblock %}
