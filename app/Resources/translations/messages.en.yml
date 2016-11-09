@@ -185,6 +185,8 @@ invitations:
     send_invitation: Send invitations
 
 module:
+  main_information:
+    title: General Information
   form:
     name:
       label: Module name
@@ -217,6 +219,9 @@ module:
     add: You must set your name on your invitation.
 
 pollmodule:
+  add_link:
+    what: What ?
+    when: When ?
   display:
     no_proposal: No proposal yet
   modal:
@@ -303,6 +308,10 @@ modulestatus:
   validated: Validated
   archived: Archived
   deleted: Deleted
+
+pollmoduletype:
+  when: When
+  what: What
 
 contact_info_type:
   home: Home

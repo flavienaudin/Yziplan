@@ -1,5 +1,13 @@
 {% extends "@App/Event/module/displayModule.html.twig" %}
 
+{# Données d'entrée :
+- module (Module) Le module à afficher
+- moduleForm (Form|null) Le formulaire d'édition du module
+- userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
+- pollProposalAddForm (Form|null) Le formulaire d'ajout d'une proposition
+#}
+
+
 {% set maxColModule = 10 %}
 {% set add_pp_form_modal_prefix = 'add_pp_fm_'~module.token %}
 
@@ -51,19 +59,18 @@
                             </div>
                         </div>
                         <div class="pc-groupe-ligne palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
-                            {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted %}
+                            {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
                                 {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
                                     "pollProposal":pollProposal,
                                     "userModuleInvitation":(userModuleInvitation is defined?userModuleInvitation:null),
                                     "moduleInvitations":module.moduleInvitations|slice(0,maxColModule)
                                 }) }}
-                            {% else %}
-                                <div class="pc-ligne" id="pp-empty-{{ module.token }}">
-                                    <div class="pcl-celulle w-100">
-                                        {{ "pollmodule.display.no_proposal"|trans }}
-                                    </div>
-                                </div>
                             {% endfor %}
+                            <div class="pc-ligne pc-ligne-empty" id="pp-empty-{{ module.token }}">
+                                <div class="pcl-celulle w-100">
+                                    {{ "pollmodule.display.no_proposal"|trans }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -77,7 +84,8 @@
 {% block module_modal_container %}
     {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
         {# TODO Check authorization to addPollProposal #}
-        {{ include('@App/Event/module/pollModulePartials/pollProposalFormModal.html.twig', {
+        {{ include('@App/Event/module/pollModulePartials/pollProposal_form_modal.html.twig', {
+            'userModuleInvitation' : userModuleInvitation,
             'pollProposalForm' : pollProposalAddForm,
             'pp_form_modal_prefix' : add_pp_form_modal_prefix,
             'edition' : false

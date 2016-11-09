@@ -8,7 +8,7 @@
     <div class="pcl-celulle ">
         {% for ppElt in pollProposal.pollProposalElements %}
             {% set val = attribute(ppElt, 'val'~ppElt.pollElement.type) %}
-            {{ ppElt.pollElement.name }} : {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATE_TIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
+            {{ ppElt.pollElement.name|trans }} : {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
         {% endfor %}
     </div>
     {% if userModuleInvitation is defined and userModuleInvitation is not null %}
@@ -18,18 +18,15 @@
                 {% set responseValue = (ppResponse.answer is not empty?ppResponse.answer:null) %}
             {% endfor %}
             <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
-                <label class="btn palette-Light-Green bg waves-effect {{ responseValue == "yes"?'active' }}">
-                    <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="yes" {{ responseValue == "yes"?'checked="checked"' }}>
-                    <i class="zmdi zmdi-thumb-up"></i>
-                </label>
-                <label class="btn palette-Amber bg waves-effect {{ responseValue == "maybe"?'active' }}">
-                    <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="maybe" {{ responseValue == "maybe"?'checked="checked"' }}>
-                    <i class="zmdi zmdi-thumb-up-down"></i>
-                </label>
-                <label class="btn palette-Red bg waves-effect {{ responseValue == "no"?'active' }}">
-                    <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="no" {{ responseValue == "no"?'checked="checked"' }}>
-                    <i class="zmdi zmdi-thumb-down"></i>
-                </label>
+                <label class="btn palette-Light-Green bg waves-effect {{ responseValue == "yes"?'active' }}"> <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}"
+                                                                                                                     value="yes" {{ responseValue == "yes"?'checked="checked"' }}> <i
+                            class="zmdi zmdi-thumb-up"></i> </label> <label class="btn palette-Amber bg waves-effect {{ responseValue == "maybe"?'active' }}"> <input type="radio" autocomplete="off"
+                                                                                                                                                                      name="pollProposalReponse_{{ pollProposal.id }}"
+                                                                                                                                                                      value="maybe" {{ responseValue == "maybe"?'checked="checked"' }}>
+                    <i class="zmdi zmdi-thumb-up-down"></i> </label> <label class="btn palette-Red bg waves-effect {{ responseValue == "no"?'active' }}"> <input type="radio" autocomplete="off"
+                                                                                                                                                                 name="pollProposalReponse_{{ pollProposal.id }}"
+                                                                                                                                                                 value="no" {{ responseValue == "no"?'checked="checked"' }}>
+                    <i class="zmdi zmdi-thumb-down"></i> </label>
             </div>
         </div>
         <script>
@@ -83,12 +80,11 @@
     {% endfor %}
     <div class="pcl-celulle">
         {% if userModuleInvitation is defined and userModuleInvitation is not null and pollProposal.creator == userModuleInvitation %}
-            <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}"
-               id="getPPEditionForm_{{ pollProposal.id}}">Edition</a>
+            <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" id="getPPEditionForm_{{ pollProposal.id }}">Edition</a>
             <a href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" class="text-danger"
-               id="removePP_{{ pollProposal.id}}">Supprimer</a>
+               id="removePP_{{ pollProposal.id }}">Supprimer</a>
             <script>
-                $('#getPPEditionForm_{{ pollProposal.id}}').on('click', function (e){
+                $('#getPPEditionForm_{{ pollProposal.id }}').on('click', function (e) {
                     e.preventDefault();
                     var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
                     var modals = $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id');
@@ -96,17 +92,11 @@
                         $(modals).first().modal('toggle');
                     } else {
                         ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                            if (responseJSON.htmlContent) {
-                                var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
-                                moduleModalsContainer.append(responseJSON.htmlContent);
-                                $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
-                                    $(this).modal('show');
-                                });
-                            }
+                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
                         }, null, null);
                     }
                 });
-                $('#removePP_{{ pollProposal.id}}').on('click', function(e){
+                $('#removePP_{{ pollProposal.id }}').on('click', function (e) {
                     e.preventDefault();
                     var removePPLink = $(this);
                     swal({
@@ -124,7 +114,7 @@
                                 if (responseJSON.actionResult) {
                                     $('#pp_display_row_{{ pollProposal.id }}').remove();
                                     var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
-                                    $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function(){
+                                    $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
                                         $(this).remove();
                                     });
                                 }

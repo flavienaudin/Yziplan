@@ -6,6 +6,8 @@ use AppBundle\Entity\Module\ExpenseModule;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Payment\PaymentModule;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -404,5 +406,29 @@ class Module
         $expenseModule->setModule($this);
 
         return $this;
+    }
+
+    /***********************************************************************
+     *                      Helpers
+     ***********************************************************************/
+
+    /**
+     * Retrieve EventInvitation with creator = true
+     * @return Collection of EventInvitation
+     */
+    public function getCreators()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("creator", true));
+        return $this->moduleInvitations->matching($criteria);
+    }
+
+    /**
+     * Retrieve EventInvitation with administrator = true
+     * @return Collection
+     */
+    public function getAdministrators()
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("administrator", true));
+        return $this->moduleInvitations->matching($criteria);
     }
 }

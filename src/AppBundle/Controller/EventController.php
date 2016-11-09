@@ -114,14 +114,7 @@ class EventController extends Controller
             if ($request->isXmlHttpRequest()) {
                 if ($eventInvitationAnswerForm->isSubmitted()) {
                     if ($eventInvitationAnswerForm->isValid()) {
-                        $userEventInvitation = $eventInvitationManager->treatEventInvitationAnswerFormSubmission($eventInvitationAnswerForm);
-                        // Update the form with the updated userEventInvitation
-                        /*$eventInvitationAnswerForm = $eventInvitationManager->createEventInvitationAnswerForm();
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#user-event-invitation-card'] =
-                            $this->renderView("@App/Event/partials/eventInvitation_answerCard.html.twig", array(
-                                'userEventInvitation' => $userEventInvitation,
-                                'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView()
-                            ));*/
+                        $eventInvitationManager->treatEventInvitationAnswerFormSubmission($eventInvitationAnswerForm);
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('global.success.data_saved');
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
@@ -216,7 +209,6 @@ class EventController extends Controller
             }
         }
 
-        // TODO vérifier que ca marche
         ////////////////////////
         // modules management //
         ////////////////////////
@@ -261,22 +253,27 @@ class EventController extends Controller
                 if ($request->isXmlHttpRequest()) {
                     if ($pollProposalAddForm->isSubmitted()) {
                         if ($pollProposalAddForm->isValid()) {
-                            $pollProposal = $moduleManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
+                            $pollProposalManager = $this->get('at.manager.pollproposal');
+                            $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pp_display_row_' . $pollProposal->getId()] =
-                                $moduleManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#pp-row-group-' . $moduleDescription['module']->getToken()] =
+                                $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
                             // TODO vérifier que ca marche
-                            $pollProposal = $pollProposalAddForm->getData();
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pp_display_row_' . $pollProposal->getId()] =
-                                $moduleManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
+                                $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
+                                    'userModuleInvitation' => $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']),
+                                    'pollProposalForm' => $pollProposalAddForm,
+                                    'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
+                                    'edition' => false
+                                ));
                             return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     }
                 } else {
                     if ($pollProposalAddForm->isValid()) {
-                        $moduleManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
+                        $this->get('at.manager.pollproposal')->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
                         return $this->redirect($this->generateUrl('displayEvent', array('token' => $currentEvent->getToken())) . '#module-' . $moduleDescription['module']->getToken());
                     }
                 }

@@ -43,7 +43,7 @@ class PollProposalElement
     private $valInteger;
 
     /**
-     * Contient la valeur si le type == PollElementType::DATE_TIME
+     * Contient la valeur si le type == PollElementType::DATETIME
      *
      * @var \DateTime
      *

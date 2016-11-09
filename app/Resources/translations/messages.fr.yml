@@ -185,6 +185,8 @@ invitations:
     send_invitation: Envoyer les invitations
 
 module:
+  main_information:
+    title: Informations générales
   form:
     name:
       label: Nom du module
@@ -217,8 +219,11 @@ module:
     add: Vous devez renseigner votre nom sur l'invitation.
 
 pollmodule:
+  add_link:
+    what: Quoi ?
+    when: Quand ?
   display:
-    no_proposal: Pas encore de propositoin
+    no_proposal: Pas encore de proposition
   modal:
     addPollProposal:
       title: Ajouter une proposition
@@ -303,6 +308,10 @@ modulestatus:
   validated: Validé
   archived: Archivé
   deleted: Annulé
+
+pollmoduletype:
+  when: Quand
+  what: Quoi
 
 contact_info_type:
   home: Personnelle

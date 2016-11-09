@@ -21,26 +21,27 @@
 {% block event_content %}
     {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
         {# TODO Positionner le menu s'ouvrant relativement au browser #}
-        <div class="dropdown add-module-menu">
+        <div class="dropup add-module-menu">
             <button class="btn btn-float btn-danger m-btn waves-effect waves-circle waves-float" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-plus"></i>
             </button>
 
             {#<a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>#}
-            <ul class="dropdown-menu pull-right">
+            <ul class="dropdown-menu dropdown-menu-right">
                 <li>
-                    <a href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE')}) }}" id="addWhenPollModule"> <i
-                                class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i>
-                        <small>Sondage Quand ?</small>
-                    </a>
+                    <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                        'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHAT')}) }}" id="addWhatPollModule">
+                        <small>{{ "pollmodule.add_link.what"|trans }}</small>
+                        <i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help"></i> </a>
                 </li>
                 <li>
+                    <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                        'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHEN')}) }}" id="addWhenPollModule">
+                        <small>{{ "pollmodule.add_link.when"|trans }}</small>
+                        <i class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i> </a>
+                </li>
+                {#<li>
                     <a data-toggle="modal" href="#"><i class="waves-effect palette-Teal bg zmdi zmdi-map"></i>
                         <small>Sondage Où ?</small>
-                    </a>
-                </li>
-                <li>
-                    <a data-toggle="modal" href="#"><i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help"></i>
-                        <small>Sondage Quoi ?</small>
                     </a>
                 </li>
                 <li>
@@ -57,17 +58,15 @@
                     <a data-toggle="modal" href="#"> <i class="waves-effect palette-Purple bg zmdi zmdi-balance-wallet"></i>
                         <small>Comptes entre amis</small>
                     </a>
-                </li>
+                </li>#}
             </ul>
         </div>
         <script>
-            $('#addWhenPollModule').on('click', function (e) {
+            $('.add-pollmodule-link').on('click', function (e) {
                 ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
-                    if (responseJSON.htmlContent) {
-                        var eventModulesContainer = $('#eventModulesContainer');
-                        eventModulesContainer.append(responseJSON.htmlContent);
-                        $(document).scrollTop($(eventModulesContainer).children().last().offset().top);
-                    }
+                    var eventModulesContainer = $('#eventModulesContainer');
+                    $('.grid').masonry('layout');
+                    $(document).scrollTop($(eventModulesContainer).children().last().offset().top);
                 }, null, null);
             });
         </script>
@@ -77,7 +76,7 @@
         <!-- .grid-sizer empty element, only used for element sizing -->
         <div class="grid-sizer col-xs-12 col-lg-4"></div>
 
-        <div class="grid-item col-xs-12 col-lg-8" id="eventModulesContainer">
+        <div class="grid-item col-xs-12 col-lg-8">
             {{ include("@App/Event/partials/event_header_card.html.twig", {'userEventInvitation':userEventInvitation, 'eventForm':eventForm}) }}
         </div>
 
@@ -108,8 +107,8 @@
                     {{ include('@App/Event/module/displayPollModule.html.twig', {
                         'module':moduleDescription.module,
                         'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
-                        'pollProposalAddForm':(moduleDescription.pollProposalAddForm is defined?moduleDescription.pollProposalAddForm:null ),
-                        'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module)
+                        'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module),
+                        'pollProposalAddForm':(moduleDescription.pollProposalAddForm is defined?moduleDescription.pollProposalAddForm:null )
                     }) }}
                 {% elseif moduleDescription.module.expenseModule is not null %}
                     {{ include('@App/Event/module/displayExpenseModule.html.twig', {
@@ -189,7 +188,7 @@
                     return false
                 }
                 $('#event_invitation_guestName').val(inputValue);
-                $('form#userEventInvitationAbout').submit();
+                $('form#event_invitation').submit();
                 swal.close();
             });
         </script>

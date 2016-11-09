@@ -1,0 +1,54 @@
+{# Données d'entrée :
+- userModuleInvitation (ModueInvitation) Le ModuleInvitation de l'utilisateur connecté
+- pollProposalForm (FormInterface) Le formulaire d'ajout/édition d'un PollProposal
+- pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
+- edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
+#}
+
+
+<div id="{{ pp_form_modal_prefix }}_formContainer">
+    {% if edition %}
+        {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
+            'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
+    {% else %}
+        {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
+    {% endif %}
+    <div>
+        {{ form_label(pollProposalForm.pollProposalElements, null, {'label_attr':{'class':'sr-only'}}) }}
+        {{ form_errors(pollProposalForm.pollProposalElements) }}
+
+        {% for pollProposalElement in pollProposalForm.pollProposalElements %}
+            {{ form_errors(pollProposalElement) }}
+            {{ form_widget(pollProposalElement, {
+                'fgline' : true, 'displayInRow' : true
+            }) }}
+        {% endfor %}
+        {{ form_rest(pollProposalForm) }}
+    </div>
+
+    <div class="pull-right">
+        <button class="btn btn-danger waves-effect" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+        <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
+    </div>
+    {{ form_end(pollProposalForm) }}
+
+    <script type="text/javascript">
+        $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
+            var $form = $(this);
+            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                        {% if not edition %}
+                        $form[0].reset();
+                        {% endif %}
+                        $('#{{ pp_form_modal_prefix }}_modal_id').modal('toggle');
+                    },
+                    null,
+                    function () {
+                        $('.grid').masonry('layout');
+                    }
+            );
+        });
+    </script>
+</div>
+
+
+

@@ -68,6 +68,7 @@ doctrine:
             enum_eventinvitation_answer: AppBundle\Utils\enum\EventInvitationAnswer
             enum_module_status: AppBundle\Utils\enum\ModuleStatus
             enum_moduleinvitation_status: AppBundle\Utils\enum\ModuleInvitationStatus
+            enum_pollmodule_type: AppBundle\Utils\enum\PollModuleType
             enum_pollmodule_sortingtype: AppBundle\Utils\enum\PollModuleSortingType
             enum_pollproposal_elementtype: AppBundle\Utils\enum\PollElementType
             enum_expenseelement_type: AppBundle\Utils\enum\ExpenseElementType

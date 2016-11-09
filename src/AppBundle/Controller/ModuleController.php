@@ -14,6 +14,7 @@ use AppBundle\Entity\Event\Module;
 use AppBundle\Security\EventVoter;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,23 +31,25 @@ class ModuleController extends Controller
 {
 
     /**
-     * @Route("/add/{token}/{type}",  name="addEventModule")
-     * @ParamConverter("event", class="AppBundle:Event\Event", options={"exclude":{"type"}})
+     * @Route("/add/{token}/{type}/{subtype}",  name="addEventModule")
+     * @ParamConverter("event", class="AppBundle:Event\Event", options={"exclude":{"type","subtype"}})
      */
-    public function addEventModuleAction(Event $event, $type, Request $request)
+    public function addEventModuleAction(Event $event, $type, $subtype = null, Request $request)
     {
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
         $this->denyAccessUnlessGranted(EventVoter::ADD_EVENT_MODULE, $userEventInvitation);
         $eventManager = $this->get("at.manager.event");
         $eventManager->setEvent($event);
-        $module = $eventManager->addModule($type);
+        $module = $eventManager->addModule($type, $subtype);
         if ($request->isXmlHttpRequest()) {
             if ($module != null) {
                 $moduleManager = $this->get('at.manager.module');
-                return new JsonResponse(array('htmlContent' => $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module))), Response::HTTP_OK);
+                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#eventModulesContainer'] =
+                    $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module));
+                return new AppJsonResponse($data, Response::HTTP_OK);
             } else {
-                $responseData['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('module.error.message.add');
-                return new JsonResponse($responseData, Response::HTTP_BAD_REQUEST);
+                $responseData[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('module.error.message.add');
+                return new AppJsonResponse($responseData, Response::HTTP_BAD_REQUEST);
             }
         } else {
             if ($module == null) {
@@ -59,25 +62,25 @@ class ModuleController extends Controller
 
     /**
      * @Route("/{remove/{token}", name="removeEventModule")
-     * @ParamConverter("module", class="AppBundle:Module")
+     * @ParamConverter("module", class="AppBundle:Event\Module")
      */
     public function removeEventModuleAction(Module $module, Request $request)
     {
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($module->getEvent(), false, false, $this->getUser());
         $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
         if ($request->isXmlHttpRequest()) {
-            if ($this->isGranted(ModuleVoter::DELETE, array($module, $userModuleInvitation))) {
+            if ($this->isGranted(ModuleVoter::DELETE, $userModuleInvitation)) {
                 $moduleManager = $this->get("at.manager.module");
                 $moduleManager->setModule($module);
                 $moduleManager->removeModule();
                 $responseData['actionResult'] = true;
                 return new JsonResponse($responseData, Response::HTTP_OK);
             } else {
-                $responseData['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
-                return new JsonResponse($responseData, Response::HTTP_UNAUTHORIZED);
+                $responseData[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
+                return new AppJsonResponse($responseData, Response::HTTP_UNAUTHORIZED);
             }
         } else {
-            $this->denyAccessUnlessGranted(ModuleVoter::DELETE, array($module, $userModuleInvitation));
+            $this->denyAccessUnlessGranted(ModuleVoter::DELETE, $userModuleInvitation);
             $moduleManager = $this->get("at.manager.module");
             $moduleManager->setModule($module);
             $moduleManager->removeModule();

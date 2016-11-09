@@ -44,6 +44,9 @@ class EventManager
     /** @var ModuleManager */
     private $moduleManager;
 
+    /** @var PollProposalManager */
+    private $pollProposalManager;
+
     /** @var  EventInvitationManager */
     private $eventInvitationManager;
 
@@ -53,7 +56,9 @@ class EventManager
     /** @var Event L'événement en cours de traitement */
     private $event;
 
-    public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory, GenerateursToken $generateurToken, ModuleManager $moduleManager, EventInvitationManager $eventInvitationManager, ModuleInvitationManager $moduleInvitationManager)
+    public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory,
+                                GenerateursToken $generateurToken, ModuleManager $moduleManager, PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager,
+                                ModuleInvitationManager $moduleInvitationManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -61,6 +66,7 @@ class EventManager
         $this->formFactory = $formFactory;
         $this->generateursToken = $generateurToken;
         $this->moduleManager = $moduleManager;
+        $this->pollProposalManager = $pollProposalManager;
         $this->eventInvitationManager = $eventInvitationManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
     }
@@ -153,7 +159,7 @@ class EventManager
         if (empty($this->event->getToken())) {
             $this->event->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
-        if($this->event->getStatus() == EventStatus::IN_CREATION){
+        if ($this->event->getStatus() == EventStatus::IN_CREATION) {
             $this->event->setStatus(EventStatus::IN_ORGANIZATION);
         }
         $this->entityManager->persist($this->event);
@@ -184,10 +190,11 @@ class EventManager
 
     /**
      * Crée et ajoute un module à l'événement
-     * @param $type string Le type du module à créer et à ajouter à l'événement
+     * @param $type string Le type du module à créer et à ajouter à l'événement (Cf. ModuleType)
+     * @param $type string Le sous-type du module en fonction du type (Cf. PollModuleType et autre)
      * @return Module le module créé
      */
-    public function addModule($type)
+    public function addModule($type, $subtype)
     {
         $user = $this->tokenStorage->getToken()->getUser();
         if (!$user instanceof AccountUser) {
@@ -198,7 +205,7 @@ class EventManager
             return null;
         }
 
-        $module = $this->moduleManager->createModule($this->event, $type, $userEventInvitation);
+        $module = $this->moduleManager->createModule($this->event, $type, $subtype, $userEventInvitation);
         // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator).
         $this->moduleInvitationManager->initializeModuleInvitationsForEvent($this->event, $module);
         $this->entityManager->persist($this->event);
@@ -227,12 +234,12 @@ class EventManager
                     $moduleDescription = array();
                     $moduleDescription['module'] = $module;
                     $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
-                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
+                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
                         $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
                     }
                     if ($module->getPollModule() != null) {
                         // TODO Vérifier les autorisations d'ajouter des propositions au module
-                        $moduleDescription['pollProposalAddForm'] = $this->moduleManager->createPollProposalAddForm($module, $userModuleInvitation);
+                        $moduleDescription['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation);
                     }
                     $modules[$module->getId()] = $moduleDescription;
                 }

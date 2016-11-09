@@ -11,20 +11,10 @@ namespace AppBundle\Utils\enum;
 
 class PollElementType extends AbstractEnumType
 {
-    // Text value
-    const STRING = "string";
-    // Number value
-    const INTEGER = "integer";
-    // Datetime value
-    const DATE_TIME = "datetime";
 
-    // TODO : futur types
-    // const FLOAT = "float";
-    // const BOOLEAN = "boolean";
-    // Place value
-    // const PLACE = "place";
+    // Values already in AbstractEnumType's constantes
 
     protected $name = 'enum_pollproposal_elementtype';
-    protected $values = array(self::STRING, self::INTEGER, self::DATE_TIME);
+    protected $values = array(self::STRING, self::INTEGER, self::DATETIME);
 
 }

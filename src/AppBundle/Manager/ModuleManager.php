@@ -13,16 +13,15 @@ use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Entity\Module\PollElement;
 use AppBundle\Entity\Module\PollModule;
-use AppBundle\Entity\Module\PollProposal;
-use AppBundle\Entity\Module\PollProposalElement;
-use AppBundle\Form\Module\ModuleFormType;
-use AppBundle\Form\Module\PollProposalFormType;
+use AppBundle\Form\Module\ModuleType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\ModuleStatus;
-use AppBundle\Utils\enum\ModuleType;
+use AppBundle\Utils\enum\ModuleType as EnumModuleType;
 use AppBundle\Utils\enum\PollElementType;
 use AppBundle\Utils\enum\PollModuleSortingType;
+use AppBundle\Utils\enum\PollModuleType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -55,11 +54,14 @@ class ModuleManager
     /** @var ModuleInvitationManager */
     private $moduleInvitationManager;
 
+    /** @var PollProposalManager */
+    private $pollProposalManager;
+
     /** @var Module Le module en cours de traitement */
     private $module;
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory,
-                                GenerateursToken $generateurToken, EngineInterface $templating, ModuleInvitationManager $moduleInvitationManager)
+                                GenerateursToken $generateurToken, EngineInterface $templating, ModuleInvitationManager $moduleInvitationManager, PollProposalManager $pollProposalManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -68,6 +70,7 @@ class ModuleManager
         $this->generateursToken = $generateurToken;
         $this->templating = $templating;
         $this->moduleInvitationManager = $moduleInvitationManager;
+        $this->pollProposalManager = $pollProposalManager;
     }
 
     /**
@@ -92,18 +95,30 @@ class ModuleManager
      * Create a module and set required data.
      * @param Event $event The event which is added the module.
      * @param $type
+     * @param $subtype
      * @param EventInvitation $creatorEventInvitation The user's eventInvitation to set the module creator
      * @return Module The module added to the event
      */
-    public function createModule(Event $event, $type, EventInvitation $creatorEventInvitation)
+    public function createModule(Event $event, $type, $subtype, EventInvitation $creatorEventInvitation)
     {
         $this->module = new Module();
         $this->module->setStatus(ModuleStatus::IN_CREATION);
         $this->module->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        if ($type == ModuleType::POLL_MODULE) {
+        if ($type == EnumModuleType::POLL_MODULE) {
             $pollModule = new PollModule();
+            $pollElement = new PollElement();
+            $pollElement->setName($subtype);
+            $pollElement->setOrderIndex(0);
+            if ($subtype == PollModuleType::WHEN) {
+                $pollElement->setType(PollElementType::DATETIME);
+            } elseif ($subtype == PollModuleType::WHAT) {
+                $pollElement->setType(PollElementType::STRING);
+            }
+            $pollModule->addPollElement($pollElement);
+
             $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
             $this->module->setPollModule($pollModule);
+
         }
         $moduleInvitation = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
         $moduleInvitation->setCreator(true);
@@ -131,7 +146,7 @@ class ModuleManager
      */
     public function createModuleForm(Module $module)
     {
-        return $this->formFactory->createNamed("module_form_" . $module->getToken(), ModuleFormType::class, $module);
+        return $this->formFactory->createNamed("module_form_" . $module->getToken(), ModuleType::class, $module);
     }
 
     /**
@@ -155,75 +170,6 @@ class ModuleManager
         return $this->module;
     }
 
-    public function treatPollProposalForm(FormInterface $pollProposalAddForm, Module $module)
-    {
-        $this->module = $module;
-        /** @var PollProposal $pollProposal */
-        $pollProposal = $pollProposalAddForm->getData();
-        if ($this->module == null or $pollProposal == null) {
-            return null;
-        }
-        $pollProposal->setPollModule($this->module->getPollModule());
-        /** @var PollProposalElement $pollProposalElt */
-        foreach ($pollProposal->getPollProposalElements() as $pollProposalElt) {
-            $pollProposal->removePollProposalElement($pollProposalElt);
-            $this->entityManager->remove($pollProposalElt);
-        }
-
-        if ($pollProposalAddForm->has('strPPElts')) {
-            $strPPElts = $pollProposalAddForm->get('strPPElts')->getData();
-            foreach ($strPPElts as $key => $value) {
-                if (!empty($value)) {
-                    $newPPE = new PollProposalElement();
-                    $newPPE->setName($key);
-                    $newPPE->setType(PollElementType::STRING);
-                    $newPPE->setValString($value);
-                    $pollProposal->addPollProposalElement($newPPE);
-                }
-            }
-        }
-        if ($pollProposalAddForm->has('intPPElts')) {
-            $intPPElts = $pollProposalAddForm->get('intPPElts')->getData();
-            foreach ($intPPElts as $key => $value) {
-                if (!empty($value)) {
-                    $newPPE = new PollProposalElement();
-                    $newPPE->setName($key);
-                    $newPPE->setType(PollElementType::INTEGER);
-                    $newPPE->setValInteger($value);
-                    $pollProposal->addPollProposalElement($newPPE);
-                }
-            }
-        }
-        if ($pollProposalAddForm->has('datetimePPElts')) {
-            $datetimePPElts = $pollProposalAddForm->get('datetimePPElts')->getData();
-            foreach ($datetimePPElts as $key => $value) {
-                if (!empty($value)) {
-                    $newPPE = new PollProposalElement();
-                    $newPPE->setName($key);
-                    $newPPE->setType(PollElementType::DATE_TIME);
-                    $newPPE->setValDatetime($value);
-                    $pollProposal->addPollProposalElement($newPPE);
-                }
-            }
-        }
-
-        $this->entityManager->persist($pollProposal);
-        $this->entityManager->flush();
-        return $pollProposal;
-    }
-
-    /**
-     * @param PollProposal $pollProposal The PollProposal to remove
-     * @return PollProposal
-     */
-    public function removePollProposal(PollProposal $pollProposal)
-    {
-        $pollProposal->setDeleted(true);
-        $this->entityManager->persist($pollProposal);
-        $this->entityManager->flush();
-        return $pollProposal;
-    }
-
     /**
      * @param Module $module Le module à afficher
      * @param ModuleInvitation|null $userModuleInvitation
@@ -232,7 +178,7 @@ class ModuleManager
     public function displayModulePartial(Module $module, ModuleInvitation $userModuleInvitation = null)
     {
         $moduleForm = null;
-        if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
+        if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
             /** @var FormInterface $moduleForm */
             $moduleForm = $this->createModuleForm($module);
         }
@@ -241,7 +187,7 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
-                'pollProposalAddForm' => $this->createPollProposalAddForm($module, $userModuleInvitation)->createView(),
+                'pollProposalAddForm' => $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation)->createView(),
                 'userModuleInvitation' => $userModuleInvitation
             ));
         } elseif ($module->getExpenseModule() != null) {
@@ -260,33 +206,4 @@ class ModuleManager
     }
 
 
-    /**
-     * @param PollProposal $pollProposal
-     * @param EventInvitation $userEventInvitation
-     * @return string
-     */
-    public function displayPollProposalRowPartial(PollProposal $pollProposal, EventInvitation $userEventInvitation)
-    {
-        $userModuleInvitation = null;
-        if ($userEventInvitation != null) {
-            $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($pollProposal->getPollModule()->getModule());
-        }
-        return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig", array(
-            'pollProposal' => $pollProposal,
-            'moduleInvitations' => $pollProposal->getPollModule()->getModule()->getModuleInvitations(),
-            'userModuleInvitation' => $userModuleInvitation
-        ));
-    }
-
-    /**
-     * @param Module $module
-     * @param ModuleInvitation $userModuleInvitation
-     * @return FormInterface
-     */
-    public function createPollProposalAddForm(Module $module, ModuleInvitation $userModuleInvitation = null)
-    {
-        $newPollProposal = new PollProposal();
-        $newPollProposal->setCreator($userModuleInvitation);
-        return $this->formFactory->createNamed("add_poll_proposal_form_" . $module->getToken(), PollProposalFormType::class, $newPollProposal);
-    }
 }

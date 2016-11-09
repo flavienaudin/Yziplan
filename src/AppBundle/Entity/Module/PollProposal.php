@@ -230,4 +230,21 @@ class PollProposal
     {
         $this->pollProposalResponses->removeElement($pollProposalResponse);
     }
+
+
+    /***********************************************************************
+     *                      Helpers
+     ***********************************************************************/
+
+    public function initializeWithPollModule(PollModule $pollModule)
+    {
+        foreach ($pollModule->getPollElements() as $pollElement)
+        {
+            $ppElt = new PollProposalElement();
+            $ppElt->setPollElement($pollElement);
+            $this->addPollProposalElement($ppElt);
+        }
+        //$pollModule->addPollProposal($this);
+    }
+
 }

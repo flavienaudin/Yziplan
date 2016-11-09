@@ -6,19 +6,6 @@
     {{- parent() -}}
 {%- endblock form_start -%}
 
-{% block form_widget_simple %}
-    {# Désactiver de la touche entrée #}
-    {#{% set attr = attr|merge({onkeypress: (attr.onkeypress|default('') ~ ' refuserToucheEntree(event);')|trim}) -%}#}
-
-    {% if fgline is defined and fgline -%}
-        <div class="fg-line">
-            {{- parent() -}}
-        </div>
-    {% else %}
-        {{- parent() -}}
-    {% endif %}
-{% endblock %}
-
 {% block form_row -%}
     {% if dlhorizontal is defined and dlhorizontal %}
         <dl class="dl-horizontal form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
@@ -39,6 +26,10 @@
     {% else %}{{- parent() -}}{% endif %}
 {%- endblock form_row %}
 
+
+{# --------------
+    LABELS
+-------------- #}
 {# Ajout d'une tooltip d'aide au niveau du label avec un icone "i"#}
 {% block form_label -%}
     {% spaceless %}
@@ -64,6 +55,22 @@
 {%- block button_label -%}{%- endblock -%}
 
 
+{# --------------
+    WIDGETS
+-------------- #}
+{% block form_widget_simple %}
+    {# Désactiver de la touche entrée #}
+    {#{% set attr = attr|merge({onkeypress: (attr.onkeypress|default('') ~ ' refuserToucheEntree(event);')|trim}) -%}#}
+
+    {% if fgline is defined and fgline -%}
+        <div class="fg-line">
+            {{- parent() -}}
+        </div>
+    {% else %}
+        {{- parent() -}}
+    {% endif %}
+{% endblock %}
+
 {%- block textarea_widget -%}
     {% if fgline is defined and fgline -%}
         <div class="fg-line">
@@ -76,9 +83,7 @@
 
 {# Re-définition des input de date #}
 {% block datetime_widget -%}
-    {% if widget == 'single_text' %}
-        {{- block('form_widget_simple') -}}
-    {% elseif displayInRow is defined and displayInRow -%}
+    {% if displayInRow is defined and displayInRow -%}
         <div class="row">
             <div class="col-sm-6">
                 {{- form_widget(form.date, { datetime: true } ) -}}
@@ -89,6 +94,8 @@
                 {{- form_errors(form.time) -}}
             </div>
         </div>
+    {% elseif widget == 'single_text' %}
+        {{- block('form_widget_simple') -}}
     {% else -%}
         {% set attr = attr|merge({class: (attr.class|default('') ~ ' form-inline')|trim}) -%}
         {{- form_errors(form.date) -}}
@@ -221,15 +228,6 @@
     <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
 {%- endblock icheck_checkbox_widget -%}
 
-{% block md_toggle_switch_widget -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) -%}
-    {%- set label_attr = label_attr|merge({class: (' ts-label')|trim}) -%}
-    <div class="toggle-switch">
-        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} hidden="hidden"/> <label
-                for="{{ id }}" class="ts-helper"></label>&nbsp; {{ block('form_label') }}
-    </div>
-{%- endblock md_toggle_switch_widget %}
-
 {% block radio_widget -%}
     {%- set parent_label_class = parent_label_class|default(label_attr.class|default('')) -%}
     {% if 'btn' in parent_label_class %}
@@ -255,8 +253,23 @@
     <input type="radio" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} autocomplete="off"/>
 {%- endblock radio_btn_widget -%}
 
-{#{% block checkbox_radio_label %}
-    #}{# Do not display the label if widget is not defined in order to prevent double label rendering #}{#
+{% block md_toggle_switch_widget -%}
+    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) -%}
+    {%- set label_attr = label_attr|merge({class: (' ts-label')|trim}) -%}
+    <div class="toggle-switch">
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} hidden="hidden"/> <label
+                for="{{ id }}" class="ts-helper"></label>&nbsp; {{ block('form_label') }}
+    </div>
+{%- endblock md_toggle_switch_widget %}
+
+
+
+
+{# --------------
+    Sauvegardes : A supprimer si non utilisés plus tard
+-------------- #}
+{#{% block checkbox_radio_label %} #}
+{# Do not display the label if widget is not defined in order to prevent double label rendering #}{#
     {% if widget is defined %}
         {% if required %}
             {% set label_attr = label_attr|merge({class: (label_attr.class|default('') ~ ' required')|trim}) %}
@@ -303,8 +316,9 @@
     {% endif %}
 {% endblock checkbox_radio_label %}#}
 
+{# Destion des collection forms #}
 {# Surchage total du widget, copiant directement le code du parent #}
-{% block collection_widget %}
+{#{% block collection_widget %}
     {% spaceless %}
         {% if prototype is defined %}
             {% set attr = attr|merge({'data-prototype': form_row(prototype)}) %}
@@ -341,3 +355,4 @@
         </div>
     </div>
 {% endblock %}
+#}

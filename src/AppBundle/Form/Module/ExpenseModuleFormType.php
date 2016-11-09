@@ -18,7 +18,7 @@ class ExpenseModuleFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options){
         $builder
-            ->add('module', ModuleFormType::class, array(
+            ->add('module', ModuleType::class, array(
                 'required' => true
             ))
             ->add('expenseElements', CollectionType::class, array(

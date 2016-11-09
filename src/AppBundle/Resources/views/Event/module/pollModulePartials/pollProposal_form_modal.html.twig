@@ -1,0 +1,29 @@
+{# Données d'entrée :
+- userModuleInvitation (ModueInvitation) Le ModuleInvitation de l'utilisateur connecté
+- pollProposalForm (FormInterface) Le formulaire d'ajout/édition d'un PollProposal
+- pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
+- edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
+#}
+
+<div class="modal fade" id="{{ pp_form_modal_prefix }}_modal_id" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="#{{ pp_form_modal_prefix }}_modal_title">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="{{ pp_form_modal_prefix }}_modal_title">
+                    <h2>{{ (edition?"pollmodule.modal.editPollProposal.title":"pollmodule.modal.addPollProposal.title")|trans }}</h2>
+                </div>
+            </div>
+            <div class="modal-body">
+                {{ include('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', {
+                    'userModuleInvitation' : userModuleInvitation,
+                    'pollProposalForm' : pollProposalForm,
+                    'pp_form_modal_prefix' : pp_form_modal_prefix,
+                    'edition' : edition
+                }) }}
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

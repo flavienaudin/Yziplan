@@ -21,11 +21,11 @@ services:
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
-    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.event_invitation','@at.manager.module_invitation']
+    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation']
 
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
-    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation']
+    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation','@at.manager.pollproposal']
 
   at.manager.event_invitation:
     class: AppBundle\Manager\EventInvitationManager
@@ -37,7 +37,8 @@ services:
 
   at.manager.pollproposal:
       class: AppBundle\Manager\PollProposalManager
-      arguments: ['@form.factory']
+      arguments: ['@doctrine.orm.entity_manager','@form.factory','@templating']
+      lazy:  true
 
   at.manager.pollproposal_response:
       class: AppBundle\Manager\PollProposalResponseManager
