@@ -191,7 +191,7 @@ function jsPlugginActivation() {
         },
         widgetPositioning: {
             horizontal: 'auto',
-            vertical: 'auto'
+            vertical: 'bottom'
         }
     });
     $('.selectpicker').selectpicker();
