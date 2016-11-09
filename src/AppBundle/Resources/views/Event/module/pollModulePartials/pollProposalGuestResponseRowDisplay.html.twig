@@ -111,7 +111,7 @@
                     }, function (isConfirm) {
                         if (isConfirm) {
                             ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                if (responseJSON.actionResult) {
+                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
                                     $('#pp_display_row_{{ pollProposal.id }}').remove();
                                     var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
                                     $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {

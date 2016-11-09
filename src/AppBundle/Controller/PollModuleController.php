@@ -85,7 +85,7 @@ class PollModuleController extends Controller
             if ($request->isXmlHttpRequest()) {
                 $pollProposalManager = $this->get("at.manager.pollproposal");
                 $pollProposalManager->removePollProposal($pollProposal);
-                $data['actionResult'] = true;
+                $data[AppJsonResponse::DATA]['actionResult'] = true;
                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
                 return new AppJsonResponse($data, Response::HTTP_OK);
             } else {

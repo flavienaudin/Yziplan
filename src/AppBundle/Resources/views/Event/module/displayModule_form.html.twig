@@ -60,7 +60,7 @@
             }, function (isConfirm) {
                 if (isConfirm) {
                     ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                        if (responseJSON.actionResult === true) {
+                        if (responseJSON.hasOwnProperty('data')  && responseJSON['data'].actionResult === true) {
                             $('#module-{{ module.token }}').remove();
                             $('.grid').masonry('layout');
                         }

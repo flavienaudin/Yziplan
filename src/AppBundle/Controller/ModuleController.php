@@ -73,7 +73,7 @@ class ModuleController extends Controller
                 $moduleManager = $this->get("at.manager.module");
                 $moduleManager->setModule($module);
                 $moduleManager->removeModule();
-                $responseData['actionResult'] = true;
+                $responseData[AppJsonResponse::DATA]['actionResult'] = true;
                 return new JsonResponse($responseData, Response::HTTP_OK);
             } else {
                 $responseData[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
