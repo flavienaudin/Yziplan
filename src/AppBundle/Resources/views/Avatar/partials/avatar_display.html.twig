@@ -1,0 +1,61 @@
+{# Données d'entrée :
+- invitation (EventInvitation|ModuleInvitation) L'invitation concernée
+- size (int) : taille en pixel de l'avatar (= height et width)
+#}
+
+{# Dans le cas d'une invitation de module on récupère l'eventInvitation liée #}
+{% set eventInvitation = (invitation.eventInvitation is defined ? invitation.eventInvitation : invitation) %}
+
+{% if size is not defined %}
+    {% set size = '100%' %}
+{% else %}
+    {% set size = size~'px' %}
+{% endif %}
+
+{% set hasAppUser = (eventInvitation.applicationUser is not null) %}
+
+{# Définition de l'avatar #}
+{% set avatar = null %}
+{% if hasAppUser and eventInvitation.applicationUser.appUserInformation.avatar is not null %}
+    {% set avatar = eventInvitation.applicationUser.appUserInformation.avatar %}
+{% endif %}
+
+
+    {# TODO : style : alignement vertical : hm-profile #}
+<div class="avatar-img-container hm-profile">
+    <a data-toggle="dropdown" href="#">
+        {# TODO : mettre l'avatar de l'utilisateur #}
+        {% if avatar is not null %}
+            <img class="avatar-img" src="{{ asset('uploads/user/avatar/'~avatar) }}" height="{{ size }}" width="{{ size }}">
+        {% else %}
+            <span class="di-block avatar-char palette-Teal bg" title="{{ eventInvitation.displayableName }}">{{ eventInvitation.displayableName|slice(0,1)|upper }}</span>
+        {% endif %}
+    </a>
+    <ul class="dropdown-menu dm-icon" role="menu">
+        <li role="presentation"><a class="user-public-name">{{ eventInvitation.displayableName }}</a></li>
+        {% if hasAppUser and app.user %} {# Si les deux utilisateurs on un compte #}
+            <li role="separator" class="divider"></li>
+            {# TODO : Affichage profil et ajour amis #}
+            <li role="presentation"><a href="{#{{ path('displayUserEvents') }}#}">{{ "avatar.add_friend"|trans }}</a></li>
+            <li role="presentation"><a href="{#{{ path('fos_user_profile_show') }}#}">{{ "avatar.show_profil"|trans }}</a></li>
+            <li role="presentation"><a href="{#{{ path('fos_user_profile_show') }}#}">{{ "avatar.send_message"|trans }}</a></li>
+        {% endif %}
+    </ul>
+</div>
+{#
+<script type="text/javascript">
+    $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
+        var $form = $(this);
+        ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                    {% if not edition %}
+                    $form[0].reset();
+                    {% endif %}
+                    $('#{{ pp_form_modal_prefix }}_modal_id').modal('toggle');
+                },
+                null,
+                function () {
+                    $('.grid').masonry('layout');
+                }
+        );
+    });
+</script>#}

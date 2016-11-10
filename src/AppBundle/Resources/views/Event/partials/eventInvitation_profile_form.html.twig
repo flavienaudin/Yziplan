@@ -21,6 +21,7 @@
             }) }}
         </div>
         <div class="col-sm-5">
+            {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userEventInvitation, size : "100"}) }}
             {% if userEventInvitation.applicationUser is not null and userEventInvitation.applicationUser.appUserInformation.avatar is not null %}
                 <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}" class="img-responsive" width="100%">
             {% else %}
