@@ -103,25 +103,28 @@
 
         <div class="grid-item col-xs-12 col-lg-8" id="eventModulesContainer">
             {% for moduleDescription in modules if moduleDescription.module.status != constant("AppBundle\\Utils\\enum\\ModuleStatus::DELETED") %}
-                {% if moduleDescription.module.pollModule is not null %}
-                    {{ include('@App/Event/module/displayPollModule.html.twig', {
-                        'module':moduleDescription.module,
-                        'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
-                        'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module),
-                        'pollProposalAddForm':(moduleDescription.pollProposalAddForm is defined?moduleDescription.pollProposalAddForm:null )
-                    }) }}
-                {% elseif moduleDescription.module.expenseModule is not null %}
-                    {{ include('@App/Event/module/displayExpenseModule.html.twig', {
-                        'module':moduleDescription.module,
-                        'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
-                        'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module)
-                    }) }}
-                {% else %}
-                    {{ include('@App/Event/module/displayModule.html.twig', {
-                        'module':moduleDescription.module,
-                        'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
-                        'userModuleInvitation':userEventInvitation.getModuleInvitationForModule(moduleDescription.module)
-                    }) }}
+                {% set userModuleInvitation = userEventInvitation.getModuleInvitationForModule(moduleDescription.module) %}
+                {% if userModuleInvitation != null %}
+                    {% if moduleDescription.module.pollModule is not null %}
+                        {{ include('@App/Event/module/displayPollModule.html.twig', {
+                            'module':moduleDescription.module,
+                            'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
+                            'userModuleInvitation':userModuleInvitation,
+                            'pollProposalAddForm':(moduleDescription.pollProposalAddForm is defined?moduleDescription.pollProposalAddForm:null )
+                        }) }}
+                    {% elseif moduleDescription.module.expenseModule is not null %}
+                        {{ include('@App/Event/module/displayExpenseModule.html.twig', {
+                            'module':moduleDescription.module,
+                            'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
+                            'userModuleInvitation':userModuleInvitation
+                        }) }}
+                    {% else %}
+                        {{ include('@App/Event/module/displayModule.html.twig', {
+                            'module':moduleDescription.module,
+                            'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
+                            'userModuleInvitation':userModuleInvitation
+                        }) }}
+                    {% endif %}
                 {% endif %}
             {% endfor %}
         </div>
@@ -177,7 +180,7 @@
                 title: "{{ "eventInvitation.profile.card.new_warning_alert.title"|trans|raw }}",
                 text: "{{ "eventInvitation.profile.card.new_warning_alert.message"|trans|raw }}",
                 type: "input",
-                showCancelButton: true,
+                showCancelButton: false,
                 closeOnConfirm: false,
                 animation: "slide-from-top",
                 inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}"
@@ -188,7 +191,7 @@
                     return false
                 }
                 $('#event_invitation_guestName').val(inputValue);
-                $('form#event_invitation').submit();
+                $('form#userEventInvitationProfile').submit();
                 swal.close();
             });
         </script>

@@ -57,24 +57,25 @@ doctrine:
     dbal:
         default_connection:   default
         types:
+            enum_appuser_status: AppBundle\Utils\enum\AppUserStatus
+            enum_contactinfo_type: AppBundle\Utils\enum\ContactInfoType
+            enum_contact_status: AppBundle\Utils\enum\ContactStatus
+            enum_eventinvitation_answer: AppBundle\Utils\enum\EventInvitationAnswer
+            enum_eventinvitation_status: AppBundle\Utils\enum\EventInvitationStatus
+            enum_event_status: AppBundle\Utils\enum\EventStatus
+            enum_expenseelement_type: AppBundle\Utils\enum\ExpenseElementType
+            enum_payment_feeapplication: AppBundle\Utils\enum\FeeApplication
             enum_gender: AppBundle\Utils\enum\Gender
             enum_legal_status: AppBundle\Utils\enum\LegalStatus
             enum_marital_status: AppBundle\Utils\enum\MaritalStatus
-            enum_contactinfo_type: AppBundle\Utils\enum\ContactInfoType
-            enum_contact_status: AppBundle\Utils\enum\ContactStatus
-            enum_appuser_status: AppBundle\Utils\enum\AppUserStatus
-            enum_event_status: AppBundle\Utils\enum\EventStatus
-            enum_eventinvitation_status: AppBundle\Utils\enum\EventInvitationStatus
-            enum_eventinvitation_answer: AppBundle\Utils\enum\EventInvitationAnswer
-            enum_module_status: AppBundle\Utils\enum\ModuleStatus
             enum_moduleinvitation_status: AppBundle\Utils\enum\ModuleInvitationStatus
-            enum_pollmodule_type: AppBundle\Utils\enum\PollModuleType
-            enum_pollmodule_sortingtype: AppBundle\Utils\enum\PollModuleSortingType
+            enum_module_status: AppBundle\Utils\enum\ModuleStatus
             enum_pollproposal_elementtype: AppBundle\Utils\enum\PollElementType
-            enum_expenseelement_type: AppBundle\Utils\enum\ExpenseElementType
-            enum_payment_feeapplication: AppBundle\Utils\enum\FeeApplication
-            enum_payment_transactiontrigger: AppBundle\Utils\enum\TransactionTrigger
+            enum_pollproposal_response: AppBundle\Utils\enum\PollProposalResponse
+            enum_pollmodule_sortingtype: AppBundle\Utils\enum\PollModuleSortingType
+            enum_pollmodule_type: AppBundle\Utils\enum\PollModuleType
             enum_transaction_status: AppBundle\Utils\enum\TransactionStatus
+            enum_payment_transactiontrigger: AppBundle\Utils\enum\TransactionTrigger
         connections:
             default:
                 driver:   pdo_mysql

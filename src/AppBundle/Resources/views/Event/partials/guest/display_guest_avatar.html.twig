@@ -1,0 +1,14 @@
+{#
+    Affiche l'avatar d'une EventInvitation
+Données d'entrée :
+- invitation (EventInvitation|ModuleInvitation) L'invitation concernée
+
+#}
+
+{% set eventInvitation = (invitation.eventInvitation is defined?invitation.eventInvitation:invitation) %}
+
+{% if eventInvitation.applicationUser is not null and eventInvitation.applicationUser.appUserInformation.avatar is not null %}
+    <img class="avatar-img" src="{{ asset('uploads/user/avatar/'~eventInvitation.applicationUser.appUserInformation.avatar) }}" alt="">
+{% else %}
+    <span class="di-block avatar-char palette-Teal bg" title="{{ eventInvitation.displayableName }}">{{ eventInvitation.displayableName|slice(0,1)|upper }}</span>
+{% endif %}

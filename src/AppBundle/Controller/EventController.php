@@ -94,6 +94,7 @@ class EventController extends Controller
                                 'userEventInvitation' => $userEventInvitation,
                                 'userEventInvitationForm' => $eventInvitationForm->createView()
                             ));
+                        $data[AppJsonResponse::DATA]['userDisplayableName'] = $userEventInvitation->getDisplayableName();
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitationProfile_formContainer'] =

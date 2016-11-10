@@ -28,7 +28,7 @@ class PollProposalResponse
 
     /**
      * @var String
-     * @ORM\Column(name="answer", type="string", length=255, nullable=true)
+     * @ORM\Column(name="answer", type="enum_pollproposal_response", nullable=true)
      */
     private $answer;
 

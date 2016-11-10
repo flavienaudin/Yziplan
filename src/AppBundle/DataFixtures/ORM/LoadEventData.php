@@ -188,7 +188,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
 
         $moduleInvitation1 = new ModuleInvitation();
         $moduleInvitation1->setModule($modulePoll);
-        $moduleInvitation1->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
+        $moduleInvitation1->setStatus(ModuleInvitationStatus::VALID);
         $moduleInvitation1->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $moduleInvitation1->setCreator(true);
         $moduleInvitation1->initPollModuleResponse();
@@ -199,7 +199,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
 
         $moduleInvitation2 = new ModuleInvitation();
         $moduleInvitation2->setModule($modulePoll);
-        $moduleInvitation2->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
+        $moduleInvitation2->setStatus(ModuleInvitationStatus::VALID);
         $moduleInvitation2->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $moduleInvitation2->initPollModuleResponse();
         $eventInvitationRaymond->addModuleInvitation($moduleInvitation2);
@@ -237,7 +237,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         // Module Event 2 Invitation Creator
         $moduleEvent2InvitationCreator = new ModuleInvitation();
         $moduleEvent2InvitationCreator->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $moduleEvent2InvitationCreator->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
+        $moduleEvent2InvitationCreator->setStatus(ModuleInvitationStatus::VALID);
         $moduleEvent2->addModuleInvitation($moduleEvent2InvitationCreator);
         $moduleEvent2InvitationCreator->isCreator();
         $event2InvitationCreator->addModuleInvitation($moduleEvent2InvitationCreator);
@@ -252,7 +252,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         // Module Event 2 Invitation Creator
         $moduleEvent2InvitationGuest1 = new ModuleInvitation();
         $moduleEvent2InvitationGuest1->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $moduleEvent2InvitationGuest1->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
+        $moduleEvent2InvitationGuest1->setStatus(ModuleInvitationStatus::VALID);
         $moduleEvent2->addModuleInvitation($moduleEvent2InvitationGuest1);
         $event2InvitationGuest1->addModuleInvitation($moduleEvent2InvitationGuest1);
 

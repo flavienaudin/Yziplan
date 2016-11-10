@@ -20,6 +20,6 @@ class FlashBagTypes extends AbstractEnumType
     const WARNING_TYPE = "warning";
     const ERROR_TYPE = "error";
 
-    protected $name = 'enum_module_type';
+    protected $name = 'enum_flashbag_type';
     protected $values = array(self::SUCCESS_TYPE, self::INFO_TYPE, self::WARNING_TYPE, self::ERROR_TYPE);
 }
