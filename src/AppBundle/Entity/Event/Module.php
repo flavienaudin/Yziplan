@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Event;
 use AppBundle\Entity\Module\ExpenseModule;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Payment\PaymentModule;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -429,6 +430,32 @@ class Module
     public function getAdministrators()
     {
         $criteria = Criteria::create()->where(Criteria::expr()->eq("administrator", true));
+        return $this->moduleInvitations->matching($criteria);
+    }
+
+    /**
+     * @param int $maxResult
+     * @param array $excludedModuleInvitations
+     * @return Collection
+     */
+    public function getFilteredModuleInvitations($maxResult = 0, $excludedModuleInvitations = array())
+    {
+
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", ModuleInvitationStatus::VALID));
+
+        if ($excludedModuleInvitations != null) {
+            $excludedModuleInvitationsId = array();
+            foreach ($excludedModuleInvitations as $moduleInvitation) {
+                if ($moduleInvitation instanceof ModuleInvitation) {
+                    $excludedModuleInvitationsId[] = $moduleInvitation->getId();
+                }
+            }
+            $criteria->andWhere(Criteria::expr()->notIn('id', $excludedModuleInvitationsId));
+        }
+
+        if ($maxResult > 0) {
+            $criteria->setMaxResults($maxResult);
+        }
         return $this->moduleInvitations->matching($criteria);
     }
 }

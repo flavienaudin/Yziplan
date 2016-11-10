@@ -11,65 +11,68 @@
             {{ ppElt.pollElement.name|trans }} : {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
         {% endfor %}
     </div>
-    {% if userModuleInvitation is defined and userModuleInvitation is not null %}
-        <div class="pcl-celulle">
-            {% set responseValue = null %}
-            {% for ppResponse in userModuleInvitation.pollProposalResponses if ppResponse.pollProposal == pollProposal %}
-                {% set responseValue = (ppResponse.answer is not empty?ppResponse.answer:null) %}
-            {% endfor %}
-            <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
-                <label class="btn palette-Light-Green bg waves-effect {{ responseValue == "yes"?'active' }}"> <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                     value="yes" {{ responseValue == "yes"?'checked="checked"' }}> <i
-                            class="zmdi zmdi-thumb-up"></i> </label> <label class="btn palette-Amber bg waves-effect {{ responseValue == "maybe"?'active' }}"> <input type="radio" autocomplete="off"
-                                                                                                                                                                      name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                                                                      value="maybe" {{ responseValue == "maybe"?'checked="checked"' }}>
-                    <i class="zmdi zmdi-thumb-up-down"></i> </label> <label class="btn palette-Red bg waves-effect {{ responseValue == "no"?'active' }}"> <input type="radio" autocomplete="off"
-                                                                                                                                                                 name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                                                                 value="no" {{ responseValue == "no"?'checked="checked"' }}>
-                    <i class="zmdi zmdi-thumb-down"></i> </label>
-            </div>
+
+    <div class="pcl-celulle">
+        {% set responseValue = null %}
+        {% for ppResponse in userModuleInvitation.pollProposalResponses if ppResponse.pollProposal == pollProposal %}
+            {% set responseValue = (ppResponse.answer is not empty?ppResponse.answer:null) %}
+        {% endfor %}
+        <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
+            <label class="btn palette-Light-Green bg waves-effect {{ responseValue == "yes"?'active' }}">
+                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="yes" {{ responseValue == "yes"?'checked="checked"' }}>
+                <i class="zmdi zmdi-thumb-up"></i>
+            </label>
+            <label class="btn palette-Amber bg waves-effect {{ responseValue == "maybe"?'active' }}">
+                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="maybe" {{ responseValue == "maybe"?'checked="checked"' }}>
+                <i class="zmdi zmdi-thumb-up-down"></i>
+            </label>
+            <label class="btn palette-Red bg waves-effect {{ responseValue == "no"?'active' }}">
+                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="no" {{ responseValue == "no"?'checked="checked"' }}>
+                <i class="zmdi zmdi-thumb-down"></i>
+            </label>
         </div>
-        <script>
-            $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('change', function () {
-                var $data = {
-                    'pollProposalId': {{ pollProposal.id }},
-                    'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
-                    'value': $(this).val()
-                };
-                var icon = $(this).parent("label");
-                var preloader = $('.at-global-preloader');
-                $(preloader).show();
-                $.ajax({
-                    url: "{{ path('answerPollModuleProposal') }}",
-                    method: "POST",
-                    data: $data
-                }).done(function (responseJSON, textStatus, jqXHR) {
-                    var animation = 'bounceIn';
-                    icon.addClass('animated ' + animation);
-                    setTimeout(function () {
-                        icon.removeClass(animation);
-                    }, 1000);
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                }).always(function (responseDataOrJSON) {
-                    if (responseDataOrJSON.responseJSON) {
-                        responseDataOrJSON = responseDataOrJSON.responseJSON;
-                    }
-                    if (responseDataOrJSON.messages) {
-                        var messages = responseDataOrJSON.messages;
-                        for (var messageType in messages) {
-                            if (messages.hasOwnProperty(messageType)) {
-                                messages[messageType].forEach(function (mess) {
-                                    toastr[messageType](mess);
-                                });
-                            }
+    </div>
+    <script>
+        $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('change', function () {
+            var $data = {
+                'pollProposalId': {{ pollProposal.id }},
+                'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
+                'value': $(this).val()
+            };
+            var icon = $(this).parent("label");
+            var preloader = $('.at-global-preloader');
+            $(preloader).show();
+            $.ajax({
+                url: "{{ path('answerPollModuleProposal') }}",
+                method: "POST",
+                data: $data
+            }).done(function (responseJSON, textStatus, jqXHR) {
+                var animation = 'bounceIn';
+                icon.addClass('animated ' + animation);
+                setTimeout(function () {
+                    icon.removeClass(animation);
+                }, 1000);
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+            }).always(function (responseDataOrJSON) {
+                if (responseDataOrJSON.responseJSON) {
+                    responseDataOrJSON = responseDataOrJSON.responseJSON;
+                }
+                if (responseDataOrJSON.messages) {
+                    var messages = responseDataOrJSON.messages;
+                    for (var messageType in messages) {
+                        if (messages.hasOwnProperty(messageType)) {
+                            messages[messageType].forEach(function (mess) {
+                                toastr[messageType](mess);
+                            });
                         }
                     }
-                    $(preloader).hide();
-                });
+                }
+                $(preloader).hide();
             });
-        </script>
-    {% endif %}
-    {% for moduleInvitation in moduleInvitations if (userModuleInvitation is not defined or userModuleInvitation is null or moduleInvitation.id != userModuleInvitation.id) %}
+        });
+    </script>
+
+    {% for moduleInvitation in moduleInvitations %}
         <div class="pcl-celulle">
             {% for ppResponse in moduleInvitation.pollProposalResponses if ppResponse.pollProposal == pollProposal %}
                 {{ ppResponse.answer is empty?'?':ppResponse.answer }}
@@ -79,7 +82,7 @@
         </div>
     {% endfor %}
     <div class="pcl-celulle">
-        {% if userModuleInvitation is defined and userModuleInvitation is not null and pollProposal.creator == userModuleInvitation %}
+        {% if pollProposal.creator == userModuleInvitation %}
             <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" id="getPPEditionForm_{{ pollProposal.id }}">Edition</a>
             <a href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" class="text-danger"
                id="removePP_{{ pollProposal.id }}">Supprimer</a>

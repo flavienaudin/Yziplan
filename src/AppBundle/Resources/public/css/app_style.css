@@ -117,11 +117,11 @@
 ------------------------------------*/
 .avatar-img,
 .avatar-char {
-    border-radius: 0;
+    border-radius: 10%;
 }
 
 .hm-profile > a img {
-    border-radius: 0;
+    border-radius: 10%;
 }
 
 /*-----------------------------------
@@ -205,7 +205,7 @@
 
 .answer-form .btn.active,
 .answer-form .btn:active{
-    border: 2px #00a5bb solid;
+    border: 2px teal solid;
 }
 
 /*----------------------------------
@@ -285,7 +285,7 @@
     Poll Proposal Response
 ----------------------------------*/
 .pollproposal-response > label.active {
-    border: red 1px solid;
+    border: teal 1px solid;
 }
 
 /*---------------------------------

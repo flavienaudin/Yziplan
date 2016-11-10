@@ -8,7 +8,7 @@
 #}
 
 
-{% set maxColModule = 10 %}
+{% set maxColModule = 5 %}
 {% set add_pp_form_modal_prefix = 'add_pp_fm_'~module.token %}
 
 {% block moduleCardClass %}c-dark{% endblock moduleCardClass %}
@@ -29,23 +29,21 @@
 {% block moduleBody %}
     {{ parent() }}
     {% if module.pollModule is not null %}
+        {% set modulesInvitationsButUserMI = module.filteredModuleInvitations(maxColModule, [userModuleInvitation]) %}
         <div class="panel">
             <div class="panel-body">
                 <div class="p-5">
                     <div class="poll-container">
                         <div class="pc-ligne">
                             <div class="pcl-celulle"></div>
-                            {% if userModuleInvitation is defined and userModuleInvitation is not null %}
+                            <div class="pcl-celulle">
+                                <span class="userInvitation-avatar">
+                                    {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig', {'invitation':userModuleInvitation}) }}
+                                </span>
+                            </div>
+                            {% for moduleInvitation in modulesInvitationsButUserMI %}
                                 <div class="pcl-celulle">
-                                    <span class="text-warning">
-                                        {{ userModuleInvitation.displayableName is not empty?userModuleInvitation.displayableName:'moduleInvitation.empty_displayable_name'|trans }}
-                                    </span>
-                                </div>
-                            {% endif %}
-                            {% for moduleInvitation in module.moduleInvitations|slice(0,maxColModule) if userModuleInvitation is not defined or userModuleInvitation is null
-                            or moduleInvitation.id != userModuleInvitation.id %}
-                                <div class="pcl-celulle">
-                                    {{ moduleInvitation.displayableName is not empty?moduleInvitation.displayableName:'-' }}
+                                    {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig', {'invitation':moduleInvitation}) }}
                                 </div>
                             {% endfor %}
                             <div class="pcl-celulle">
@@ -62,8 +60,8 @@
                             {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
                                 {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
                                     "pollProposal":pollProposal,
-                                    "userModuleInvitation":(userModuleInvitation is defined?userModuleInvitation:null),
-                                    "moduleInvitations":module.moduleInvitations|slice(0,maxColModule)
+                                    "userModuleInvitation":userModuleInvitation,
+                                    "moduleInvitations":modulesInvitationsButUserMI
                                 }) }}
                             {% endfor %}
                             <div class="pc-ligne pc-ligne-empty" id="pp-empty-{{ module.token }}">

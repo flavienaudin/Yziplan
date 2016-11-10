@@ -93,7 +93,7 @@ class ModuleInvitationManager
             $this->moduleInvitation = new ModuleInvitation();
         }
         $this->moduleInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        $this->moduleInvitation->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
+        $this->moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
         $this->moduleInvitation->setCreator(false);
         $module->addModuleInvitation($this->moduleInvitation);
         $eventInvitation->addModuleInvitation($this->moduleInvitation);

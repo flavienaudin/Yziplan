@@ -4,11 +4,15 @@
 #}
 
 {% spaceless %}
-    <li id=eventInvitation_event_{{ eventInvitation.token }}>{{ eventInvitation.displayableName }}
-        {% if is_granted(constant('AppBundle\\Security\\EventInvitationVoter::CANCEL'), [userEventInvitation, eventInvitation]) %}
-            <a class="text-danger cancelInvitation" href="{{ path("cancelEventInvitation", {'eventInvitationTokenToCancel':eventInvitation.token}) }}" data-toggle="tooltip"
-               data-guestname="{{ eventInvitation.displayableName }}" data-original-title="{{ "invitations.display.cancel.link"|trans({"%name%":eventInvitation.displayableName}) }}"> <i
-                        class="zmdi zmdi-close-circle-o"></i></a>
-        {% endif %}
+    <li>
+        <div class="{{ userEventInvitation == eventInvitation?"userInvitation-avatar" }}">
+            {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig',{'invitation':eventInvitation}) }}
+
+            {% if is_granted(constant('AppBundle\\Security\\EventInvitationVoter::CANCEL'), [userEventInvitation, eventInvitation]) %}
+                <a class="text-danger cancelInvitation" href="{{ path("cancelEventInvitation", {'eventInvitationTokenToCancel':eventInvitation.token}) }}" data-toggle="tooltip"
+                   data-guestname="{{ eventInvitation.displayableName }}" data-original-title="{{ "invitations.display.cancel.link"|trans({"%name%":eventInvitation.displayableName}) }}"> <i
+                            class="zmdi zmdi-close-circle-o"></i></a>
+            {% endif %}
+        </div>
     </li>
 {% endspaceless %}
