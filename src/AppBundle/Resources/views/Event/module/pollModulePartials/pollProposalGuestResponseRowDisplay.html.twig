@@ -18,16 +18,19 @@
             {% set responseValue = (ppResponse.answer is not empty?ppResponse.answer:null) %}
         {% endfor %}
         <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
-            <label class="btn palette-Light-Green bg waves-effect {{ responseValue == "yes"?'active' }}">
-                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="yes" {{ responseValue == "yes"?'checked="checked"' }}>
+            <label class="btn palette-Light-Green bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}">
+                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"
+                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'checked="checked"' }}>
                 <i class="zmdi zmdi-thumb-up"></i>
             </label>
-            <label class="btn palette-Amber bg waves-effect {{ responseValue == "maybe"?'active' }}">
-                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="maybe" {{ responseValue == "maybe"?'checked="checked"' }}>
+            <label class="btn palette-Amber bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}">
+                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"
+                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'checked="checked"' }}>
                 <i class="zmdi zmdi-thumb-up-down"></i>
             </label>
             <label class="btn palette-Red bg waves-effect {{ responseValue == "no"?'active' }}">
-                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="no" {{ responseValue == "no"?'checked="checked"' }}>
+                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"
+                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'checked="checked"' }}>
                 <i class="zmdi zmdi-thumb-down"></i>
             </label>
         </div>
@@ -75,7 +78,16 @@
     {% for moduleInvitation in moduleInvitations %}
         <div class="pcl-celulle">
             {% for ppResponse in moduleInvitation.pollProposalResponses if ppResponse.pollProposal == pollProposal %}
-                {{ ppResponse.answer is empty?'?':ppResponse.answer }}
+                {% if ppResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
+                    <span class="answer-thumb palette-Light-Green bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                {% elseif ppResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
+                    <span class="answer-thumb palette-Amber bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                {% elseif ppResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
+                    <span class="answer-thumb palette-Red bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                {% else %}
+                    <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline"></i></span>
+                {% endif %}
+                {#{{ ppResponse.answer is empty?'?':ppResponse.answer }}#}
             {% else %}
                 ?
             {% endfor %}

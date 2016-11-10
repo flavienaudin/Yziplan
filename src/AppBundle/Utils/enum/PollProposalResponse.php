@@ -16,5 +16,5 @@ class PollProposalResponse extends AbstractEnumType
     const MAYBE = "pollproposalresponse.maybe";
 
     protected $name = 'enum_pollproposal_response';
-    protected $values = array(self::YES, self::NO, self::MAYBE);
+    protected $values = array(null, self::YES, self::NO, self::MAYBE);
 }
