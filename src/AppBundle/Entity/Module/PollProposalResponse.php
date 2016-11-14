@@ -27,8 +27,8 @@ class PollProposalResponse
     private $id;
 
     /**
-     * @var String
-     * @ORM\Column(name="answer", type="enum_pollproposal_response", nullable=true)
+     * @var String Peut être une chaine de caractère (key), un nombre (note, quantité)
+     * @ORM\Column(name="answer", type="string", nullable=true)
      */
     private $answer;
 
