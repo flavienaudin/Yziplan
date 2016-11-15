@@ -8,7 +8,7 @@
 #}
 
 
-{% set maxColModule = 5 %}
+{% set maxColModule = constant("AppBundle\\Manager\\ModuleInvitationManager::MAX_COLUMN_DISPLAYABLE") %}
 {% set add_pp_form_modal_prefix = 'add_pp_fm_'~module.token %}
 
 {% block moduleCardClass %}c-dark{% endblock moduleCardClass %}
@@ -29,10 +29,64 @@
 {% block moduleBody %}
     {{ parent() }}
     {% if module.pollModule is not null %}
-        {% set modulesInvitationsButUserMI = module.filteredModuleInvitations(maxColModule, [userModuleInvitation]) %}
+        {% set modulesInvitationsExceptUserMI = module.filteredModuleInvitations(maxColModule, [userModuleInvitation]) %}
         <div class="panel">
             <div class="panel-body">
-                <div class="p-5">
+                <div class="w-100 poll-container">
+                    <table id="pollmodule-table-{{ module.token }}" class="stripe hover compact" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <td></td>
+                            <td class="dt-head-center">
+                                <span class="userInvitation-avatar">
+                                    {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig', {'invitation':userModuleInvitation}) }}
+                                </span>
+                            </td>
+                            {% for moduleInvitation in modulesInvitationsExceptUserMI %}
+                                <td>
+                                    {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig', {'invitation':moduleInvitation}) }}
+                                </td>
+                            {% endfor %}
+                            <td>
+                                {% if module.moduleInvitations|length > maxColModule %}
+                                    {# TODO implement "display more"-functionnality #}
+                                    <span class="zmdi-hc-stack zmdi-hc-lg">
+                                        <i class="zmdi zmdi-circle zmdi-hc-stack-2x"></i>
+                                        <i class="zmdi zmdi-more zmdi-hc-stack-1x zmdi-hc-inverse"></i>
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody class="palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
+                        {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
+                            {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
+                                "pollProposal":pollProposal,
+                                "userModuleInvitation":userModuleInvitation,
+                                "moduleInvitations":modulesInvitationsExceptUserMI
+                            }) }}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <script>
+                        $(document).ready(function () {
+                            $('#pollmodule-table-{{ module.token }}').DataTable({
+                                responsive: true,
+                                paging: false,
+                                ordering: false,
+                                info: false,
+                                searching: false,
+                                columnDefs: [
+                                    { responsivePriority: 1, targets: 0 },
+                                    { responsivePriority: 2, targets: 1 },
+                                    { responsivePriority: 3, targets: -1 }
+                                ]
+                            });
+                        });
+                    </script>
+                </div>
+
+                {#<div class="p-5 o-auto">
                     <div class="poll-container">
                         <div class="pc-ligne">
                             <div class="pcl-celulle"></div>
@@ -41,14 +95,14 @@
                                     {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig', {'invitation':userModuleInvitation}) }}
                                 </span>
                             </div>
-                            {% for moduleInvitation in modulesInvitationsButUserMI %}
+                            {% for moduleInvitation in modulesInvitationsExceptUserMI %}
                                 <div class="pcl-celulle">
                                     {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig', {'invitation':moduleInvitation}) }}
                                 </div>
                             {% endfor %}
                             <div class="pcl-celulle">
                                 {% if module.moduleInvitations|length > maxColModule %}
-                                    {# TODO implement "display more"-functionnality #}
+                                    #}{# TODO implement "display more"-functionnality #}{#
                                     <span class="zmdi-hc-stack zmdi-hc-lg">
                                         <i class="zmdi zmdi-circle zmdi-hc-stack-2x"></i>
                                         <i class="zmdi zmdi-more zmdi-hc-stack-1x zmdi-hc-inverse"></i>
@@ -61,7 +115,7 @@
                                 {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
                                     "pollProposal":pollProposal,
                                     "userModuleInvitation":userModuleInvitation,
-                                    "moduleInvitations":modulesInvitationsButUserMI
+                                    "moduleInvitations":modulesInvitationsExceptUserMI
                                 }) }}
                             {% endfor %}
                             <div class="pc-ligne pc-ligne-empty" id="pp-empty-{{ module.token }}">
@@ -71,7 +125,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>#}
             </div>
         </div>
     {% endif %}

@@ -403,7 +403,30 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
-.poll-container {
+
+.poll-container{}
+
+.poll-container table.dataTable.compact thead th,
+.poll-container table.dataTable.compact thead td {
+    padding : 0 1px;
+}
+
+.poll-container table.dataTable.compact tbody th,
+.poll-container table.dataTable.compact tbody td {
+    padding: 0;
+}
+
+.poll-container table.dataTable > tbody > tr.child ul li {
+    display: inline-block;
+}
+.poll-container table.dataTable > tbody > tr.child ul li>span {
+    display: block;
+}
+.poll-container table.dataTable > tbody > tr.child ul li>span.dtr-title {
+    min-width: 0;
+}
+
+/*.poll-container {
     display: table;
     table-layout: auto;
     border-collapse: separate;
@@ -422,22 +445,19 @@ label.required:after {
 .poll-container .pc-ligne .pcl-celulle {
     display: table-cell;
     text-align: center;
-    padding: 5px 10px;
+    padding: 0 1px;
     vertical-align: middle;
 }
 
-.poll-container .pc-ligne .pcl-end-spacer {
-    display: table-cell;
-}
-
 .poll-container .pc-ligne .pcl-celulle:not(:first-child) {
-    width: 30px;
+    width: 40px;
+    max-width: 40px;
 }
 
 .poll-container .pc-ligne .pcl-celulle:first-child:not(:last-child) {
     text-align: left;
     font-weight: bold;
-    min-width: 100px;
+    min-width: 150px;
 }
 
 .poll-container .pc-groupe-ligne .pc-ligne-empty {
@@ -446,7 +466,7 @@ label.required:after {
 
 .poll-container .pc-groupe-ligne .pc-ligne-empty:first-child:last-child {
     display: table-row;
-}
+}*/
 
 /*---------------------------------
     User select

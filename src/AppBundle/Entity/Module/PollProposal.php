@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Module;
 
 use AppBundle\Entity\Event\ModuleInvitation;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -236,15 +237,36 @@ class PollProposal
      *                      Helpers
      ***********************************************************************/
 
+    /**
+     * Create all PollProposalElement for this proposal , based on the PollModule configuration
+     * Do not add this PollProposal to the PollModule to avoid displaying non finished proposal
+     * @param PollModule $pollModule
+     */
     public function initializeWithPollModule(PollModule $pollModule)
     {
-        foreach ($pollModule->getPollElements() as $pollElement)
-        {
+        foreach ($pollModule->getPollElements() as $pollElement) {
             $ppElt = new PollProposalElement();
             $ppElt->setPollElement($pollElement);
             $this->addPollProposalElement($ppElt);
         }
-        //$pollModule->addPollProposal($this);
     }
 
+    /**
+     * Return PollProposalReponses concerning the PollProposal, of the ModuleInvitation
+     * @param $moduleInvitations
+     */
+    public function getPollProposalResponsesOfModuleInvitations($moduleInvitations)
+    {
+        $pollProposalResponses = array();
+        /** @var ModuleInvitation $moduleInvitation */
+        foreach ($moduleInvitations as $moduleInvitation) {
+            $miPollProposalResponse = $moduleInvitation->getPollProposalResponses();
+            $criteria = Criteria::create()->where(Criteria::expr()->eq("pollProposal", $this));
+            $criteria->setMaxResults(1);
+            $response = $miPollProposalResponse->matching($criteria);
+            $pollProposalResponses[] = $response[0];
+
+        }
+        return $pollProposalResponses;
+    }
 }
