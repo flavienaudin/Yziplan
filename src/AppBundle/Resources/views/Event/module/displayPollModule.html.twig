@@ -8,7 +8,7 @@
 #}
 
 
-{% set maxColModule = 5 %}
+{% set maxColModule = constant("AppBundle\\Manager\\ModuleInvitationManager::MAX_COLUMN_DISPLAYABLE") %}
 {% set add_pp_form_modal_prefix = 'add_pp_fm_'~module.token %}
 
 {% block moduleCardClass %}c-dark{% endblock moduleCardClass %}
@@ -29,13 +29,14 @@
 {% block moduleBody %}
     {{ parent() }}
     {% if module.pollModule is not null %}
-        {% set modulesInvitationsButUserMI = module.filteredModuleInvitations(maxColModule, [userModuleInvitation]) %}
+        {% set modulesInvitationsExceptUserMI = module.filteredModuleInvitations(maxColModule, [userModuleInvitation]) %}
         <div class="panel">
             <div class="panel-body">
-                <div class="p-5">
-                    <div class="poll-container">
+                <div class="poll-container-outer">
+                <div class="p-5 poll-container-inner">
+                    <div class="poll-container-table">
                         <div class="pc-ligne">
-                            <div class="pcl-celulle"></div>
+                            <div class="pcl-celulle pcl-first-cellule"></div>
                             <div class="pcl-celulle">
                                 <span class="userInvitation-avatar">
                                     <div class="avatar-img-container-sm center-block">
@@ -43,7 +44,7 @@
                                     </div>
                                 </span>
                             </div>
-                            {% for moduleInvitation in modulesInvitationsButUserMI %}
+                            {% for moduleInvitation in modulesInvitationsExceptUserMI %}
                                 <div class="pcl-celulle">
                                     <div class="avatar-img-container-sm center-block">
                                         {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
@@ -59,13 +60,14 @@
                                     </span>
                                 {% endif %}
                             </div>
+                            <div class="pcl-celulle pclc-end"></div>
                         </div>
                         <div class="pc-groupe-ligne palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
                             {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
                                 {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
                                     "pollProposal":pollProposal,
                                     "userModuleInvitation":userModuleInvitation,
-                                    "moduleInvitations":modulesInvitationsButUserMI
+                                    "moduleInvitations":modulesInvitationsExceptUserMI
                                 }) }}
                             {% endfor %}
                             <div class="pc-ligne pc-ligne-empty" id="pp-empty-{{ module.token }}">
@@ -75,6 +77,7 @@
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
         </div>
