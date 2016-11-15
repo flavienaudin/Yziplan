@@ -21,12 +21,9 @@
             }) }}
         </div>
         <div class="col-sm-5">
-            {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userEventInvitation, size : "100"}) }}
-            {% if userEventInvitation.applicationUser is not null and userEventInvitation.applicationUser.appUserInformation.avatar is not null %}
-                <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}" class="img-responsive" width="100%">
-            {% else %}
-                <img src="{{ asset('bundles/app/img/user/avatar/avatar_default.png') }}" class="img-responsive" width="100%">
-            {% endif %}
+            <div class="avatar-img-container-md center-block">
+                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userEventInvitation}) }}
+            </div>
         </div>
     </div>
     {{ form_rest(userEventInvitationForm) }}
@@ -44,8 +41,8 @@
     {{ form_end(userEventInvitationForm) }}
     <script>
         $('form#userEventInvitationProfile').on("submit", function (e) {
-            ajaxFormSubmission(this, e, function(responseJSON, textStatus, jqXHR){
-                if(responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
+            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
                     $('.userInvitation-avatar .avatar-char').html(responseJSON['data']['userDisplayableName'].charAt(0).toUpperCase());
                 }
             }, null, null);

@@ -38,12 +38,16 @@
                             <div class="pcl-celulle"></div>
                             <div class="pcl-celulle">
                                 <span class="userInvitation-avatar">
-                                    {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig', {'invitation':userModuleInvitation}) }}
+                                    <div class="avatar-img-container-sm center-block">
+                                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userModuleInvitation}) }}
+                                    </div>
                                 </span>
                             </div>
                             {% for moduleInvitation in modulesInvitationsButUserMI %}
                                 <div class="pcl-celulle">
-                                    {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig', {'invitation':moduleInvitation}) }}
+                                    <div class="avatar-img-container-sm center-block">
+                                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                    </div>
                                 </div>
                             {% endfor %}
                             <div class="pcl-celulle">

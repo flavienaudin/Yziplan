@@ -116,7 +116,8 @@
     Avatar (Adapt Material Design Extebded Admin
 ------------------------------------*/
 .avatar-img,
-.avatar-char {
+.avatar-char,
+.yzi-avatar-img{
     border-radius: 10%;
 }
 
@@ -141,7 +142,8 @@
 
 .avatar-img-container,
 .avatar-img-container-xs,
-.avatar-img-container-md {
+.avatar-img-container-sm,
+.avatar-img-container-md{
     position: relative;
     text-align: center;
     float: left;
@@ -154,6 +156,11 @@
     height: 20px;
 }
 
+.avatar-img-container-sm {
+    width: 35px;
+    height: 35px;
+}
+
 .avatar-img-container-md {
     width: 100px;
     height: 100px;
@@ -161,9 +168,10 @@
 
 .avatar-img-container img,
 .avatar-img-container-xs img,
-.avatar-img-container-md img {
+.avatar-img-container-sm img,
+.avatar-img-container-md img{
     object-fit: cover;
-    position: absolute;
+    position: relative;
     width: 100%;
     height: 100%;
 }
@@ -172,6 +180,12 @@
     position: relative;
     width: 20px;
     height: 20px;
+}
+
+.avatar-img-container-sm img {
+    position: relative;
+    width: 35px;
+    height: 35px;
 }
 
 .avatar-img-container img {
