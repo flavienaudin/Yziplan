@@ -403,48 +403,72 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
-.poll-container {
+.poll-container-outer {
+    position:relative;
+    width:100%;
+}
+
+.poll-container-inner {
+    overflow: auto;
+    margin-left:150px;
+}
+
+.poll-container-inner .poll-container-table {
     display: table;
     table-layout: auto;
     border-collapse: separate;
     border-spacing: 0 2px;
-    margin: 0 auto;
+    /*margin: 0 auto;*/
+    width: 100%;
+    *margin-left: -150px;/*ie7*/
 }
 
-.poll-container .pc-groupe-ligne {
+.poll-container-inner .poll-container-table .pc-groupe-ligne {
     display: table-row-group;
 }
 
-.poll-container .pc-ligne {
+.poll-container-inner .poll-container-table .pc-ligne {
     display: table-row;
 }
 
-.poll-container .pc-ligne .pcl-celulle {
+.poll-container-inner .poll-container-table .pc-ligne .pcl-celulle.pclc-end{
+    max-width:100%;
+    width:100%;
+}
+
+.poll-container-inner .poll-container-table .pc-ligne .pcl-celulle {
     display: table-cell;
     text-align: center;
-    padding: 5px 10px;
+    padding: 0 1px;
     vertical-align: middle;
+
+    max-width:40px;
+    width:40px;
 }
 
-.poll-container .pc-ligne .pcl-end-spacer {
-    display: table-cell;
+.poll-container-inner .poll-container-table .pc-ligne .pcl-celulle.pcl-first-cellule {
+    padding-left: 10px;
+
+    position:absolute;
+    *position: relative; /*ie7*/
+    left:0;
+    max-width:150px;
+    width:150px;
 }
 
-.poll-container .pc-ligne .pcl-celulle:not(:first-child) {
-    width: 30px;
-}
-
-.poll-container .pc-ligne .pcl-celulle:first-child:not(:last-child) {
+.poll-container-inner .poll-container-table .pc-ligne .pcl-celulle:first-child:not(:last-child) {
     text-align: left;
     font-weight: bold;
-    min-width: 100px;
+    min-width: 150px;
 }
 
-.poll-container .pc-groupe-ligne .pc-ligne-empty {
+/** Ligne non affichée si la table contient une autre pc-ligne */
+.poll-container-inner .poll-container-table .pc-groupe-ligne .pc-ligne-empty {
     display: none;
 }
 
-.poll-container .pc-groupe-ligne .pc-ligne-empty:first-child:last-child {
+/** Ligne affichée si la table est vide */
+.poll-container-inner .poll-container-table .pc-groupe-ligne .pc-ligne-empty:first-child:last-child {
     display: table-row;
 }
 

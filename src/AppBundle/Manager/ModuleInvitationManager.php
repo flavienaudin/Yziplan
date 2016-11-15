@@ -19,6 +19,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class ModuleInvitationManager
 {
+    /** Define the number of columns (ModuleInvitation) to display when displaying PollModule participations */
+    const MAX_COLUMN_DISPLAYABLE = 20;
 
     /** @var EntityManager */
     private $entityManager;
