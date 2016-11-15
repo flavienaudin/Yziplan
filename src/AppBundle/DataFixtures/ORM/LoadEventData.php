@@ -87,6 +87,70 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $userInvite->getApplicationUser()->addEventInvitation($eventInvitationRaymond);
         $event1->addEventInvitation($eventInvitationRaymond);
 
+        //EventInvitation Invite
+        $eventInvitationGerard = new EventInvitation();
+        $eventInvitationGerard->setGuestName("Gerard");
+        $eventInvitationGerard->setStatus(EventInvitationStatus::VALID);
+        $eventInvitationGerard->setToken('qsdfgh2');
+        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationGerard);
+        $event1->addEventInvitation($eventInvitationGerard);
+
+        //EventInvitation Invite
+        $eventInvitationGertrude = new EventInvitation();
+        $eventInvitationGertrude->setGuestName("Gertrude");
+        $eventInvitationGertrude->setStatus(EventInvitationStatus::VALID);
+        $eventInvitationGertrude->setToken('qsdfgh3');
+        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationGertrude);
+        $event1->addEventInvitation($eventInvitationGertrude);
+
+        //EventInvitation Invite
+        $eventInvitationNobert = new EventInvitation();
+        $eventInvitationNobert->setGuestName("Nobert");
+        $eventInvitationNobert->setStatus(EventInvitationStatus::VALID);
+        $eventInvitationNobert->setToken('qsdfgh4');
+        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationNobert);
+        $event1->addEventInvitation($eventInvitationNobert);
+
+        //EventInvitation Invite
+        $eventInvitationSimon = new EventInvitation();
+        $eventInvitationSimon->setGuestName("Simon");
+        $eventInvitationSimon->setStatus(EventInvitationStatus::VALID);
+        $eventInvitationSimon->setToken('qsdfgh5');
+        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationSimon);
+        $event1->addEventInvitation($eventInvitationSimon);
+
+        //EventInvitation Invite
+        $eventInvitationTyrion = new EventInvitation();
+        $eventInvitationTyrion->setGuestName("Tyrion");
+        $eventInvitationTyrion->setStatus(EventInvitationStatus::VALID);
+        $eventInvitationTyrion->setToken('qsdfgh6');
+        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationTyrion);
+        $event1->addEventInvitation($eventInvitationTyrion);
+
+        //EventInvitation Invite
+        $eventInvitationPikachu = new EventInvitation();
+        $eventInvitationPikachu->setGuestName("Pikachu");
+        $eventInvitationPikachu->setStatus(EventInvitationStatus::VALID);
+        $eventInvitationPikachu->setToken('qsdfgh7');
+        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationPikachu);
+        $event1->addEventInvitation($eventInvitationPikachu);
+
+        //EventInvitation Invite
+        $eventInvitationJeanPaul = new EventInvitation();
+        $eventInvitationJeanPaul->setGuestName("Jean Paul");
+        $eventInvitationJeanPaul->setStatus(EventInvitationStatus::VALID);
+        $eventInvitationJeanPaul->setToken('qsdfgh8');
+        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationJeanPaul);
+        $event1->addEventInvitation($eventInvitationJeanPaul);
+
+        //EventInvitation Invite
+        $eventInvitationTeddy = new EventInvitation();
+        $eventInvitationTeddy->setGuestName("Teddy");
+        $eventInvitationTeddy->setStatus(EventInvitationStatus::VALID);
+        $eventInvitationTeddy->setToken('qsdfgh9');
+        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationTeddy);
+        $event1->addEventInvitation($eventInvitationTeddy);
+
         /*
         //Module Expense
         $moduleExpense = new Module();
@@ -203,6 +267,62 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $moduleInvitation2->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $moduleInvitation2->initPollModuleResponse();
         $eventInvitationRaymond->addModuleInvitation($moduleInvitation2);
+
+        $moduleInvitation3 = new ModuleInvitation();
+        $moduleInvitation3->setModule($modulePoll);
+        $moduleInvitation3->setStatus(ModuleInvitationStatus::VALID);
+        $moduleInvitation3->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
+        $moduleInvitation3->initPollModuleResponse();
+        $eventInvitationGerard->addModuleInvitation($moduleInvitation3);
+
+        $moduleInvitation4 = new ModuleInvitation();
+        $moduleInvitation4->setModule($modulePoll);
+        $moduleInvitation4->setStatus(ModuleInvitationStatus::VALID);
+        $moduleInvitation4->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
+        $moduleInvitation4->initPollModuleResponse();
+        $eventInvitationGertrude->addModuleInvitation($moduleInvitation4);
+
+        $moduleInvitation5 = new ModuleInvitation();
+        $moduleInvitation5->setModule($modulePoll);
+        $moduleInvitation5->setStatus(ModuleInvitationStatus::VALID);
+        $moduleInvitation5->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
+        $moduleInvitation5->initPollModuleResponse();
+        $eventInvitationNobert->addModuleInvitation($moduleInvitation5);
+
+        $moduleInvitation6 = new ModuleInvitation();
+        $moduleInvitation6->setModule($modulePoll);
+        $moduleInvitation6->setStatus(ModuleInvitationStatus::VALID);
+        $moduleInvitation6->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
+        $moduleInvitation6->initPollModuleResponse();
+        $eventInvitationSimon->addModuleInvitation($moduleInvitation6);
+
+        $moduleInvitation7 = new ModuleInvitation();
+        $moduleInvitation7->setModule($modulePoll);
+        $moduleInvitation7->setStatus(ModuleInvitationStatus::VALID);
+        $moduleInvitation7->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
+        $moduleInvitation7->initPollModuleResponse();
+        $eventInvitationTyrion->addModuleInvitation($moduleInvitation7);
+
+        $moduleInvitation8 = new ModuleInvitation();
+        $moduleInvitation8->setModule($modulePoll);
+        $moduleInvitation8->setStatus(ModuleInvitationStatus::VALID);
+        $moduleInvitation8->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
+        $moduleInvitation8->initPollModuleResponse();
+        $eventInvitationPikachu->addModuleInvitation($moduleInvitation8);
+
+        $moduleInvitation9 = new ModuleInvitation();
+        $moduleInvitation9->setModule($modulePoll);
+        $moduleInvitation9->setStatus(ModuleInvitationStatus::VALID);
+        $moduleInvitation9->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
+        $moduleInvitation9->initPollModuleResponse();
+        $eventInvitationJeanPaul->addModuleInvitation($moduleInvitation9);
+
+        $moduleInvitation10 = new ModuleInvitation();
+        $moduleInvitation10->setModule($modulePoll);
+        $moduleInvitation10->setStatus(ModuleInvitationStatus::VALID);
+        $moduleInvitation10->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
+        $moduleInvitation10->initPollModuleResponse();
+        $eventInvitationTeddy->addModuleInvitation($moduleInvitation10);
 
         $manager->persist($event1);
         $manager->flush();
