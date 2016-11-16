@@ -32,8 +32,7 @@
         {% set modulesInvitationsExceptUserMI = module.filteredModuleInvitations(maxColModule, [userModuleInvitation]) %}
         <div class="panel">
             <div class="panel-body">
-                <div class="poll-container-outer">
-                <div class="p-5 poll-container-inner">
+                <div class="p-5 poll-container">
                     <div class="poll-container-table">
                         <div class="pc-ligne">
                             <div class="pcl-celulle pcl-first-cellule"></div>
@@ -60,7 +59,6 @@
                                     </span>
                                 {% endif %}
                             </div>
-                            <div class="pcl-celulle pclc-end"></div>
                         </div>
                         <div class="pc-groupe-ligne palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
                             {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
@@ -77,7 +75,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
         </div>

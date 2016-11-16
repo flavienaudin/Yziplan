@@ -5,7 +5,7 @@
 #}
 
 <div class="pc-ligne" id="pp_display_row_{{ pollProposal.id }}">
-    <div class="pcl-celulle  pcl-first-cellule palette-Grey-100 bg">
+    <div class="pcl-celulle">
         {% for ppElt in pollProposal.pollProposalElements %}
             {% set val = attribute(ppElt, 'val'~ppElt.pollElement.type) %}
             {{ ppElt.pollElement.name|trans }} : {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
@@ -19,17 +19,14 @@
             {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:null) %}
         {% endif %}
         <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
-            <label class="btn palette-Light-Green bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}"> <input type="radio" autocomplete="off"
-                                                                                                                                                                         name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                                                                         value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"
-                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up"></i> </label> <label
-                    class="btn palette-Amber bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}"> <input type="radio" autocomplete="off"
-                                                                                                                                                                      name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                                                                      value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"
-                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up-down"></i> </label> <label
-                    class="btn palette-Red bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}"> <input type="radio" autocomplete="off"
-                                                                                                                                                                 name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                                                                 value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"
+            <label class="btn palette-Light-Green bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}">
+                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"
+                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up"></i> </label>
+            <label class="btn palette-Amber bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}">
+                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"
+                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up-down"></i> </label>
+            <label class="btn palette-Red bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}">
+                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"
                         {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-down"></i> </label>
         </div>
     </div>
@@ -77,25 +74,32 @@
         <div class="pcl-celulle">
             {% if otherGuestPollProposalResponse is not null %}
                 {% if otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
-                    <span class="answer-thumb palette-Light-Green bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                    <span class="answer-thumb palette-Light-Green bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
                 {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
-                    <span class="answer-thumb palette-Amber bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                    <span class="answer-thumb palette-Amber bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
                 {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
-                    <span class="answer-thumb palette-Red bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                    <span class="answer-thumb palette-Red bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
                 {% else %}
-                    <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline"></i></span>
+                    <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
                 {% endif %}
             {% else %}
-                <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline"></i></span>
+                <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
             {% endif %}
             {#{{ otherGuestPollProposalResponse.answer is empty?'?':otherGuestPollProposalResponse.answer }}#}
         </div>
     {% endfor %}
     <div class="pcl-celulle ">
         {% if pollProposal.creator == userModuleInvitation %}
-            <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" id="getPPEditionForm_{{ pollProposal.id }}">Edition</a>
-            <a href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" class="text-danger"
-               id="removePP_{{ pollProposal.id }}">Supprimer</a>
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle btn btn-default waves-effect" data-toggle="dropdown" aria-expanded="false"><i class="zmdi zmdi-more-vert"></i></a>
+                <ul class="dropdown-menu dm-icon pull-right">
+                    <li role="presentation"><a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="menuitem"
+                                               tabindex="-1" id="getPPEditionForm_{{ pollProposal.id }}"><i class="zmdi zmdi-edit"></i> {{ "global.button.edit"|trans }}</a></li>
+                    <li role="presentation"><a href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="menuitem"
+                                               tabindex="-1" id="removePP_{{ pollProposal.id }}" class="c-red"><i class="zmdi zmdi-delete"></i> {{ "global.button.delete"|trans }}</a></li>
+                </ul>
+            </div>
+
             <script>
                 $('#getPPEditionForm_{{ pollProposal.id }}').on('click', function (e) {
                     e.preventDefault();
@@ -138,5 +142,4 @@
             </script>
         {% endif %}
     </div>
-    <div class="pcl-celulle pclc-end"></div>
 </div>
