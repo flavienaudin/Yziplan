@@ -33,7 +33,7 @@
         <div class="panel">
             <div class="panel-body">
                 <div class="w-100 poll-container">
-                    <table id="pollmodule-table-{{ module.token }}" class="stripe hover compact" cellspacing="0" width="100%">
+                    <table id="pollmodule-table-{{ module.token }}" class="compact stripe hover row-border" cellspacing="0" width="100%">
                         <thead>
                         <tr>
                             <td></td>
@@ -71,15 +71,17 @@
                     <script>
                         $(document).ready(function () {
                             $('#pollmodule-table-{{ module.token }}').DataTable({
-                                responsive: true,
                                 paging: false,
                                 ordering: false,
                                 info: false,
                                 searching: false,
+                                responsive: {
+                                    details: {}
+                                },
                                 columnDefs: [
-                                    { responsivePriority: 1, targets: 0 },
-                                    { responsivePriority: 2, targets: 1 },
-                                    { responsivePriority: 3, targets: -1 }
+                                    {targets: 0, responsivePriority: 1, width: 130},
+                                    {targets: 1, responsivePriority: 2},
+                                    {targets: -1, responsivePriority: 3}
                                 ]
                             });
                         });
