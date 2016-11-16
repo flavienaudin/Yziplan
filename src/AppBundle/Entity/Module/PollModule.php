@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Module;
 
 use AppBundle\Entity\Event\Module;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -205,5 +206,16 @@ class PollModule
             }
         }
         return null;
+    }
+
+    public function getValidPollProposal(){
+        //if not pollProposal.deleted and pollProposal.id is not null
+        $criteria = Criteria::create()->where(
+            Criteria::expr()->andX(
+                Criteria::expr()->eq("deleted", false),
+                Criteria::expr()->neq("id",null)
+            )
+        );
+        return $this->pollProposals->matching($criteria);
     }
 }

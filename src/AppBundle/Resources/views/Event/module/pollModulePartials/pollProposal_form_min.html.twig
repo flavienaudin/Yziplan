@@ -1,0 +1,46 @@
+{# Données d'entrée :
+- userModuleInvitation (ModueInvitation) Le ModuleInvitation de l'utilisateur connecté
+- pollProposalForm (FormInterface) Le formulaire d'ajout/édition d'un PollProposal
+- pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
+#}
+
+
+<div id="{{ pp_form_modal_prefix }}_formContainer">
+    {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
+
+    <h4>{{ "pollmodule.modal.addPollProposal.title"|trans }}</h4>
+    <div>{{ form_errors(pollProposalForm.pollProposalElements) }}</div>
+    <div class="m-t-20 w-100" style="display: table">
+        <div class="row" style="display: table-row">
+            {% for pollProposalElement in pollProposalForm.pollProposalElements %}
+                <div class="col-xs-12 col-sm-4" style="display: table-cell">
+                    {{ form_widget(pollProposalElement, {'widget_options':{
+                        'fgline' : true,
+                        'fgfloat':(pollProposalElement.valDatetime is not defined),
+                        'fgfline':(pollProposalElement.valDatetime is defined)
+                    }} ) }}
+                </div>
+            {% endfor %}
+            <div class="col-xs-12 col-sm-2 text-center" style="display: table-cell">
+                <button type="submit" class="btn btn-primary"><i class="zmdi zmdi-plus-circle zmdi-hc-fw"></i> {{ "global.button.add"|trans }}</button>
+            </div>
+        </div>
+    </div>
+    {{ form_rest(pollProposalForm) }}
+    {{ form_end(pollProposalForm) }}
+
+    <script type="text/javascript">
+        $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
+            var $form = $(this);
+            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                        $form[0].reset();
+                    }, null, function () {
+                        $('.grid').masonry('layout');
+                    }
+            );
+        });
+    </script>
+</div>
+
+
+
