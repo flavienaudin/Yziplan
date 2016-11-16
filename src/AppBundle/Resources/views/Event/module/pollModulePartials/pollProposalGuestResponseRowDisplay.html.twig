@@ -6,10 +6,12 @@
 
 <div class="pc-ligne" id="pp_display_row_{{ pollProposal.id }}">
     <div class="pcl-celulle">
+        <span {% if pollProposal.description is not empty %}data-toggle="tooltip" title="{{ pollProposal.description }}"{% endif %}>
         {% for ppElt in pollProposal.pollProposalElements %}
             {% set val = attribute(ppElt, 'val'~ppElt.pollElement.type) %}
             {{ ppElt.pollElement.name|trans }} : {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
         {% endfor %}
+        </span>
     </div>
 
     <div class="pcl-celulle">
