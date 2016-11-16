@@ -20,7 +20,7 @@
         {% for pollProposalElement in pollProposalForm.pollProposalElements %}
             {{ form_errors(pollProposalElement) }}
             {{ form_widget(pollProposalElement, {
-                'fgline' : true, 'displayInRow' : true
+            'widget_options':{'fgline' : true, 'displayInRow' : true}
             }) }}
         {% endfor %}
         {{ form_rest(pollProposalForm) }}
