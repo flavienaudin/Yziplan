@@ -222,6 +222,7 @@ pollmodule:
   add_link:
     what: What ?
     when: When ?
+    whobringswhat: Who brings what ?
   display:
     no_proposal: No proposal yet
   modal:
@@ -312,6 +313,7 @@ modulestatus:
 pollmoduletype:
   when: When
   what: What
+  whobringswhat: What do you need ?
 
 contact_info_type:
   home: Home

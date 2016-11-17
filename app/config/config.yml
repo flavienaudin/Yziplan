@@ -72,7 +72,7 @@ doctrine:
             enum_module_status: AppBundle\Utils\enum\ModuleStatus
             enum_pollproposal_elementtype: AppBundle\Utils\enum\PollElementType
             enum_pollproposal_response: AppBundle\Utils\enum\PollProposalResponse
-            enum_pollmodule_sortingtype: AppBundle\Utils\enum\PollModuleSortingType
+            enum_pollmodule_votingtype: AppBundle\Utils\enum\PollModuleVotingType
             enum_pollmodule_type: AppBundle\Utils\enum\PollModuleType
             enum_transaction_status: AppBundle\Utils\enum\TransactionStatus
             enum_payment_transactiontrigger: AppBundle\Utils\enum\TransactionTrigger

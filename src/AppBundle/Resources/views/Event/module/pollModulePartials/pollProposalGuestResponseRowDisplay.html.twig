@@ -9,7 +9,8 @@
         <span {% if pollProposal.description is not empty %}data-toggle="tooltip" title="{{ pollProposal.description }}"{% endif %}>
         {% for ppElt in pollProposal.pollProposalElements %}
             {% set val = attribute(ppElt, 'val'~ppElt.pollElement.type) %}
-            {{ ppElt.pollElement.name|trans }} : {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?val|localizeddate:val }}{% if not loop.last %}<br>{% endif %}
+            {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?val|localizeddate:val }}{% if not loop.last %}
+            <br>{% endif %}
         {% endfor %}
         </span>
     </div>
@@ -20,74 +21,71 @@
         {% if userPPResponse|length == 1 %}
             {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:null) %}
         {% endif %}
-        <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
-            <label class="btn palette-Light-Green bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}">
-                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"
-                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up"></i> </label>
-            <label class="btn palette-Amber bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}">
-                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"
-                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up-down"></i> </label>
-            <label class="btn palette-Red bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}">
-                <input type="radio" autocomplete="off" name="pollProposalReponse_{{ pollProposal.id }}" value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"
-                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-down"></i> </label>
-        </div>
+        {% if pollProposal.pollModule.votingType in [constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO'), constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE')] %}
+            {% set sendRequestEvent = "change" %}
+            <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
+                <label class="btn palette-Light-Green bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}"> <input type="radio"
+                                                                                                                                                                             autocomplete="off"
+                                                                                                                                                                             name="pollProposalReponse_{{ pollProposal.id }}"
+                                                                                                                                                                             value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"
+                            {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up"></i> </label>
+                {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE') %}
+                    <label class="btn palette-Amber bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}"> <input type="radio"
+                                                                                                                                                                             autocomplete="off"
+                                                                                                                                                                             name="pollProposalReponse_{{ pollProposal.id }}"
+                                                                                                                                                                             value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"
+                                {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up-down"></i> </label>
+                {% endif %}
+                <label class="btn palette-Red bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}"> <input type="radio" autocomplete="off"
+                                                                                                                                                                    name="pollProposalReponse_{{ pollProposal.id }}"
+                                                                                                                                                                    value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"
+                            {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-down"></i> </label>
+            </div>
+        {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
+            {% set sendRequestEvent = "blur" %}
+            <label for="pollProposalReponse_{{ pollProposal.id }}" class="sr-only">{{ pollProposal.pollModule.votingType }}</label>
+            <input type="number" class="w-100" name="pollProposalReponse_{{ pollProposal.id }}" min="0" value="{{ responseValue }}">
+        {% endif %}
     </div>
     <script>
-        $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('change', function () {
-            var $data = {
+        $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('{{ sendRequestEvent }}', function (e) {
+            var data = {
                 'pollProposalId': {{ pollProposal.id }},
                 'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
                 'value': $(this).val()
             };
             var icon = $(this).parent("label");
-            var preloader = $('.at-global-preloader');
-            $(preloader).show();
-            $.ajax({
-                url: "{{ path('answerPollModuleProposal') }}",
-                method: "POST",
-                data: $data
-            }).done(function (responseJSON, textStatus, jqXHR) {
+            var urlTarget = "{{ path('answerPollModuleProposal') }}";
+            ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
+                {# autre façon d'animer ? #}
                 var animation = 'bounceIn';
                 icon.addClass('animated ' + animation);
                 setTimeout(function () {
                     icon.removeClass(animation);
                 }, 1000);
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-            }).always(function (responseDataOrJSON) {
-                if (responseDataOrJSON.responseJSON) {
-                    responseDataOrJSON = responseDataOrJSON.responseJSON;
-                }
-                if (responseDataOrJSON.messages) {
-                    var messages = responseDataOrJSON.messages;
-                    for (var messageType in messages) {
-                        if (messages.hasOwnProperty(messageType)) {
-                            messages[messageType].forEach(function (mess) {
-                                toastr[messageType](mess);
-                            });
-                        }
-                    }
-                }
-                $(preloader).hide();
-            });
+            }, null, null);
         });
     </script>
 
     {% for otherGuestPollProposalResponse in pollProposal.pollProposalResponsesOfModuleInvitations(moduleInvitations) %}
         <div class="pcl-celulle">
-            {% if otherGuestPollProposalResponse is not null %}
-                {% if otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
-                    <span class="answer-thumb palette-Light-Green bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
-                {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
-                    <span class="answer-thumb palette-Amber bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
-                {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
-                    <span class="answer-thumb palette-Red bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
+            {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
+                {{ otherGuestPollProposalResponse is null or otherGuestPollProposalResponse.answer is null?0:otherGuestPollProposalResponse.answer }}
+            {% else %}
+                {% if otherGuestPollProposalResponse is not null %}
+                    {% if otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
+                        <span class="answer-thumb palette-Light-Green bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
+                    {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
+                        <span class="answer-thumb palette-Amber bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
+                    {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
+                        <span class="answer-thumb palette-Red bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
+                    {% else %}
+                        <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
+                    {% endif %}
                 {% else %}
                     <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
                 {% endif %}
-            {% else %}
-                <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
             {% endif %}
-            {#{{ otherGuestPollProposalResponse.answer is empty?'?':otherGuestPollProposalResponse.answer }}#}
         </div>
     {% endfor %}
     <div class="pcl-celulle ">

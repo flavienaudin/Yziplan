@@ -36,23 +36,6 @@ $(document).ready(function () {
         }
     }
 
-    /* --------------------------------------------------------
-     Top Search
-     ----------------------------------------------------------*/
-    /* Bring search reset icon when focused */
-    $body.on('focus', '.hs-input', function () {
-        $('.h-search').addClass('focused');
-    });
-
-    /* Take off reset icon if input length is 0, when blurred */
-    $body.on('blur', '.hs-input', function () {
-        var x = $(this).val();
-
-        if (!x.length > 0) {
-            $('.h-search').removeClass('focused');
-        }
-    });
-
 
     /* --------------------------------------------------------
      User Alerts
@@ -62,11 +45,10 @@ $(document).ready(function () {
 
         var u = $(this).data('user-alert');
         $('.' + u).tab('show');
-
     });
 
     /* --------------------------------------------------------
-     Text Feild
+     Text Fields
      ----------------------------------------------------------*/
 
     //Add blue animated border and remove with condition when focus and blur
@@ -232,7 +214,6 @@ function getAnchor(url) {
 /*----------------*/
 /** Ajax Request **/
 /*----------------*/
-// TODO remove for PROD
 // Attention au cas où une alerte de confirmation doit être affichée : e.preventDefault() doit être appelé avant l'appel à la fonction de requête Ajax
 
 function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCallback) {
@@ -241,8 +222,16 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
     }
     var preloader = $('.at-global-preloader');
     $(preloader).show();
+
+    var urlTarget;
+    if (typeof target == 'string') {
+        urlTarget = target;
+    }else{
+        urlTarget = $(target).attr('href');
+    }
+
     $.ajax({
-        url: $(target).attr("href"),
+        url: urlTarget,
         type: 'post',
         data: data
     }).done(function (responseJSON, textStatus, jqXHR) {
@@ -297,12 +286,6 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         }
     });
 
-    // TODO Pour retro-compatibilité : la bonne pratique est de ré-afficher tout le formulaire lui même contenant les erreurs de validation
-    /*$('.has-error').each(function () {
-        $(this).find("small.help-block").remove();
-        $(this).removeClass("has-error");
-    });*/
-
     $.ajax({
         url: $(form).attr('action'),
         type: $(form).attr('method'),
@@ -319,17 +302,6 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         if (responseJSON.hasOwnProperty('htmlContents')) {
             treatHtmlContents(responseJSON['htmlContents']);
         }
-        // TODO Pour retro-compatibilité : la bonne pratique est de ré-afficher tout le formulaire lui même contenant les erreurs de validation
-        /*if (responseJSON != undefined && responseJSON.hasOwnProperty('formErrors')) {
-            var formErrors = responseJSON['formErrors'];
-            for (var fieldErrorName in formErrors) {
-                if (formErrors.hasOwnProperty(fieldErrorName)) {
-                    var inputField = $('input[name*=' + escapeSelectorCharacters(fieldErrorName) + ']');
-                    inputField.closest('.form-group, .input-group').addClass("has-error");
-                    inputField.after('<small class="help-block">' + formErrors[fieldErrorName] + '</small>')
-                }
-            }
-        }*/
         if (failCallback) {
             failCallback(jqXHR, textStatus, errorThrown);
         }
