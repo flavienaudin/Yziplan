@@ -25,50 +25,61 @@
         {% set modulesInvitationsExceptUserMI = module.filteredModuleInvitations(maxColModule, [userModuleInvitation]) %}
         <div class="panel">
             <div class="panel-body">
-                <div class="p-5 poll-container">
-                    <div class="poll-container-table">
-                        <div class="pc-ligne">
-                            <div class="pcl-celulle pcl-first-cellule"></div>
-                            <div class="pcl-celulle">
+                <div class="w-100 poll-container">
+                    <table id="pollmodule-table-{{ module.token }}" class="compact stripe hover row-border" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <td></td>
+                            <td class="dt-head-center">
                                 <span class="userInvitation-avatar">
                                     <div class="avatar-img-container-sm center-block">
                                         {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userModuleInvitation}) }}
                                     </div>
                                 </span>
-                            </div>
+                            </td>
                             {% for moduleInvitation in modulesInvitationsExceptUserMI %}
-                                <div class="pcl-celulle">
-                                    <div class="avatar-img-container-sm center-block">
-                                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
-                                    </div>
-                                </div>
+                                <td class="dt-center">
+                                    {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig', {'invitation':moduleInvitation}) }}
+                                </td>
                             {% endfor %}
-                            <div class="pcl-celulle">
-                                {% if module.moduleInvitations|length > maxColModule %}
-                                    {# TODO implement "display more"-functionnality #}
-                                    <span class="zmdi-hc-stack zmdi-hc-lg">
-                                        <i class="zmdi zmdi-circle zmdi-hc-stack-2x"></i>
-                                        <i class="zmdi zmdi-more zmdi-hc-stack-1x zmdi-hc-inverse"></i>
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="pc-groupe-ligne palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
-                            {% for pollProposal in module.pollModule.validPollProposal %}
-                                {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
-                                    "pollProposal":pollProposal,
-                                    "userModuleInvitation":userModuleInvitation,
-                                    "moduleInvitations":modulesInvitationsExceptUserMI
-                                }) }}
-                            {% endfor %}
-                            <div class="pc-ligne pc-ligne-empty" id="pp-empty-{{ module.token }}">
-                                <div class="pcl-celulle w-100">
-                                    {{ "pollmodule.display.no_proposal"|trans }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                            <td></td>
+                        </tr>
+                        </thead>
+                        <tbody class="palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
+                        {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
+                            {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
+                                "pollProposal":pollProposal,
+                                "userModuleInvitation":userModuleInvitation,
+                                "moduleInvitations":modulesInvitationsExceptUserMI
+                            }) }}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <script>
+                        $(document).ready(function () {
+                            $('#pollmodule-table-{{ module.token }}').DataTable({
+                                /*dom: "rt",*/
+                                paging: false,
+                                ordering: false,
+                                info: false,
+                                searching: false,
+                                scrollX: true,
+                                stateSave: true,
+                                fixedColumns: {
+                                    leftColumns: 2,
+                                    rightColumns: 1
+                                },
+                                buttons: false/*[{extend: 'colvis',columns: ':not(:first-child):not(:nth-child(2)):not(:last-child())'}]*/,
+                                columnDefs: [
+                                    {targets: 0, responsivePriority: 1, width: 130},
+                                    {targets: 1, responsivePriority: 2, width: 40},
+                                    {targets: -1, responsivePriority: 3}
+                                ]
+                            });
+                        });
+                    </script>
                 </div>
+
                 {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
                     {{ include('@App/Event/module/pollModulePartials/pollProposal_form_min.html.twig', {
                         'userModuleInvitation' : userModuleInvitation,

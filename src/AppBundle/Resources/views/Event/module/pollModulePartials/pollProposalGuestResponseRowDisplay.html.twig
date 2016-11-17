@@ -4,8 +4,9 @@
 - moduleInvitations ([ModuleInvitaion]) les invitations (excepté celle de l'utilisateur) du module
 #}
 
-<div class="pc-ligne" id="pp_display_row_{{ pollProposal.id }}">
-    <div class="pcl-celulle">
+
+<tr id="pp_display_row_{{ pollProposal.id }}">
+    <td class="dt-body-nowrap">
         <span {% if pollProposal.description is not empty %}data-toggle="tooltip" title="{{ pollProposal.description }}"{% endif %}>
         {% for ppElt in pollProposal.pollProposalElements %}
             {% set val = attribute(ppElt, 'val'~ppElt.pollElement.type) %}
@@ -13,9 +14,9 @@
             <br>{% endif %}
         {% endfor %}
         </span>
-    </div>
+    </td>
 
-    <div class="pcl-celulle">
+    <td class="dt-body-center">
         {% set responseValue = null %}
         {% set userPPResponse = pollProposal.pollProposalResponsesOfModuleInvitations([userModuleInvitation]) %}
         {% if userPPResponse|length == 1 %}
@@ -46,7 +47,7 @@
             <label for="pollProposalReponse_{{ pollProposal.id }}" class="sr-only">{{ pollProposal.pollModule.votingType }}</label>
             <input type="number" class="w-100" name="pollProposalReponse_{{ pollProposal.id }}" min="0" value="{{ responseValue }}">
         {% endif %}
-    </div>
+    </td>
     <script>
         $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('{{ sendRequestEvent }}', function (e) {
             var data = {
@@ -68,27 +69,27 @@
     </script>
 
     {% for otherGuestPollProposalResponse in pollProposal.pollProposalResponsesOfModuleInvitations(moduleInvitations) %}
-        <div class="pcl-celulle">
+        <td class="dt-body-center">
             {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
                 {{ otherGuestPollProposalResponse is null or otherGuestPollProposalResponse.answer is null?0:otherGuestPollProposalResponse.answer }}
             {% else %}
                 {% if otherGuestPollProposalResponse is not null %}
                     {% if otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
-                        <span class="answer-thumb palette-Light-Green bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
+                        <span class="answer-thumb palette-Light-Green bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
                     {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
-                        <span class="answer-thumb palette-Amber bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
+                        <span class="answer-thumb palette-Amber bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
                     {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
-                        <span class="answer-thumb palette-Red bg c-white"><i class="zmdi zmdi-thumb-up-down zmdi-hc-fw"></i></span>
+                        <span class="answer-thumb palette-Red bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
                     {% else %}
                         <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
                     {% endif %}
                 {% else %}
-                    <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
+                    <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline"></i></span>
                 {% endif %}
             {% endif %}
-        </div>
+        </td>
     {% endfor %}
-    <div class="pcl-celulle ">
+    <td>
         {% if pollProposal.creator == userModuleInvitation %}
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle btn btn-default waves-effect" data-toggle="dropdown" aria-expanded="false"><i class="zmdi zmdi-more-vert"></i></a>
@@ -99,7 +100,6 @@
                                                tabindex="-1" id="removePP_{{ pollProposal.id }}" class="c-red"><i class="zmdi zmdi-delete"></i> {{ "global.button.delete"|trans }}</a></li>
                 </ul>
             </div>
-
             <script>
                 $('#getPPEditionForm_{{ pollProposal.id }}').on('click', function (e) {
                     e.preventDefault();
@@ -141,5 +141,5 @@
                 });
             </script>
         {% endif %}
-    </div>
-</div>
+    </td>
+</tr>

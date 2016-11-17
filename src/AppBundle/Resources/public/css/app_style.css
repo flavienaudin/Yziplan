@@ -347,12 +347,23 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
-.poll-container {
-    width: auto;
-    overflow-x: auto;
+/* Fix : au dessus des éléments .active */
+.DTFC_LeftWrapper{
+    z-index:5;
 }
 
-.poll-container-table {
+.poll-container table.dataTable.compact thead th,
+.poll-container table.dataTable.compact thead td {
+    padding : 0 1px;
+}
+
+.poll-container table.dataTable.compact tbody th,
+.poll-container table.dataTable.compact tbody td {
+    padding: 0;
+}
+
+
+/*.poll-container {
     display: table;
     table-layout: auto;
     border-collapse: separate;
@@ -376,6 +387,13 @@ label.required:after {
 .poll-container-table .pc-ligne .pcl-celulle:not(:first-child) {
     text-align: center;
     padding: 0 1px;
+    text-align: center;
+    padding: 0 1px;
+    vertical-align: middle;
+}
+
+.poll-container .pc-ligne .pcl-celulle:not(:first-child) {
+    width: 40px;
     max-width: 40px;
 }
 
@@ -384,17 +402,18 @@ label.required:after {
     min-width: 150px;
     text-align: left;
     font-weight: bold;
+    min-width: 150px;
 }
 
 /** Ligne non affichée si la table contient une autre pc-ligne */
-.poll-container-table .pc-groupe-ligne .pc-ligne-empty {
+/*.poll-container-table .pc-groupe-ligne .pc-ligne-empty {
     display: none;
-}
+}*/
 
 /** Ligne affichée si la table est vide */
-.poll-container-table .pc-groupe-ligne .pc-ligne-empty:first-child:last-child {
+/*.poll-container-table .pc-groupe-ligne .pc-ligne-empty:first-child:last-child {
     display: table-row;
-}
+}*/
 
 /*---------------------------------
     Poll Proposal Response
