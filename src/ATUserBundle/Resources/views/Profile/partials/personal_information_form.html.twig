@@ -10,7 +10,7 @@
         'label': 'profile.show.profile_information.personal_information.publicname.label'|trans,
         'help':"profile.show.profile_information.personal_information.publicname.help"|trans,
         'attr':{'placeholder':"profile.show.profile_information.personal_information.publicname.placeholder"|trans},
-        'dlhorizontal':true, 'fgline':true
+        'widget_options':{'dlhorizontal':true, 'fgline':true}
     }) }}
     {{ form_row(form_app_user_info_personals.legalStatus, {
         'label':'profile.show.profile_information.personal_information.legalstatus.label'|trans,
@@ -18,17 +18,17 @@
             'class':'selectpicker',
             'data-none-selected-text':'profile.show.profile_information.personal_information.legalstatus.none_selected_text'|trans
         },
-        'dlhorizontal':true
+        'widget_options':{'dlhorizontal':true}
     }) }}
     {{ form_row(form_app_user_info_personals.firstName, {
         'label':'profile.show.profile_information.personal_information.firstname.label'|trans,
         'attr':{'placeholder': "profile.show.profile_information.personal_information.firstname.placeholder"|trans},
-        'dlhorizontal':true, 'fgline':true
+        'widget_options':{'dlhorizontal':true, 'fgline':true}
     }) }}
     {{ form_row(form_app_user_info_personals.lastName, {
         'label':'profile.show.profile_information.personal_information.lastname.label'|trans,
         'attr':{'placeholder': "profile.show.profile_information.personal_information.lastname.placeholder"|trans},
-        'dlhorizontal':true, 'fgline':true
+        'widget_options':{'dlhorizontal':true, 'fgline':true}
     }) }}
     {{ form_row(form_app_user_info_personals.gender, {
         'label':'profile.show.profile_information.personal_information.gender.label'|trans,
@@ -36,17 +36,17 @@
             'class':'selectpicker',
             'data-none-selected-text':'profile.show.profile_information.personal_information.gender.none_selected_text'|trans
         },
-        'dlhorizontal':true, 'fgline':true
+        'widget_options':{'dlhorizontal':true, 'fgline':true}
     }) }}
     {{ form_row(form_app_user_info_personals.birthday, {
         'label':'profile.show.profile_information.personal_information.birthday.label'|trans,
         'attr':{'class':'date-picker', 'placeholder': "profile.show.profile_information.personal_information.birthday.placeholder"|trans},
-        'dlhorizontal':true, 'fgline':true
+        'widget_options':{'dlhorizontal':true, 'fgline':true}
     }) }}
     {{ form_row(form_app_user_info_personals.nationality, {
         'label':'profile.show.profile_information.personal_information.nationality.label'|trans,
         'attr':{'placeholder': "profile.show.profile_information.personal_information.nationality.placeholder"|trans},
-        'dlhorizontal':true, 'fgline':true
+        'widget_options':{'dlhorizontal':true, 'fgline':true}
     }) }}
     <div class="m-t-10 pull-right">
         <button type="submit" class="btn btn-primary btn-sm waves-effect">{{ "global.button.save"|trans }}</button>

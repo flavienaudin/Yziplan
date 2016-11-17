@@ -11,7 +11,7 @@
         {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
             'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
     {% else %}
-        {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
+        {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
     {% endif %}
     <div>
         {{ form_label(pollProposalForm.pollProposalElements, null, {'label_attr':{'class':'sr-only'}}) }}
@@ -20,14 +20,14 @@
         {% for pollProposalElement in pollProposalForm.pollProposalElements %}
             {{ form_errors(pollProposalElement) }}
             {{ form_widget(pollProposalElement, {
-                'fgline' : true, 'displayInRow' : true
+            'widget_options':{'fgline' : true, 'displayInRow' : true}
             }) }}
         {% endfor %}
         {{ form_rest(pollProposalForm) }}
     </div>
 
     <div class="pull-right">
-        <button class="btn btn-danger waves-effect" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+        <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
         <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
     </div>
     {{ form_end(pollProposalForm) }}

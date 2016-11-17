@@ -6,24 +6,41 @@
     {{- parent() -}}
 {%- endblock form_start -%}
 
+{# Surcharge complète du block #}
 {% block form_row -%}
-    {% if dlhorizontal is defined and dlhorizontal %}
+    {% set widget_options = widget_options|default({}) %}
+    {% if widget_options.dlhorizontal is defined and widget_options.dlhorizontal %}
         <dl class="dl-horizontal form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             <dt class="p-t-10">{{- form_label(form) -}}</dt>
             <dd>
-                {{- form_widget(form) -}}
-                {{- form_errors(form) -}}
+                {% if widget_options.fgline is defined and widget_options.fgline %}<div class="fg-line">{% endif %}
+                    {{- form_widget(form,{'widget_options':widget_options}) -}}
+                    {{- form_errors(form) -}}
+                {% if widget_options.fgline is defined and widget_options.fgline %}</div>{% endif %}
             </dd>
         </dl>
-    {% elseif formHorizontal is defined and formHorizontal %}
+    {% elseif widget_options.formHorizontal is defined and widget_options.formHorizontal %}
         <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             {{- form_label(form, label, {'label_attr':{'class' : 'col-sm-2'}} ) -}}
             <div class="col-sm-10">
-                {{- form_widget(form) -}}
-                {{- form_errors(form) -}}
+                {% if widget_options.fgline is defined and widget_options.fgline %}<div class="fg-line">{% endif %}
+                    {{- form_widget(form,{'widget_options':widget_options}) -}}
+                    {{- form_errors(form) -}}
+                {% if widget_options.fgline is defined and widget_options.fgline %}</div>{% endif %}
             </div>
         </div>
-    {% else %}{{- parent() -}}{% endif %}
+    {% else %}
+        {% set fgfloat = widget_options.fgfloat is defined and widget_options.fgfloat %}
+        {% set label_attr = label_attr|default({})|merge({'class':label_attr.class|default('')~(fgfloat?' fg-label':'')}) %}
+        {% set attr = attr|default({})|merge({'class':attr.class|default('')~(fgfloat?' fg-input':'')}) %}
+        <div class="form-group {{ fgfloat?'fg-float' }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+            {% if widget_options.fgline is defined and widget_options.fgline %}<div class="fg-line">{% endif %}
+                {{- form_label(form, null, {'label_attr':label_attr}) -}}
+                {{- form_widget(form,{'attr':attr}) -}}
+                {{- form_errors(form) -}}
+            {% if widget_options.fgline is defined and widget_options.fgline %}</div>{% endif %}
+        </div>
+    {% endif %}
 {%- endblock form_row %}
 
 
@@ -58,32 +75,18 @@
 {# --------------
     WIDGETS
 -------------- #}
+
 {% block form_widget_simple %}
     {# Désactiver de la touche entrée #}
     {#{% set attr = attr|merge({onkeypress: (attr.onkeypress|default('') ~ ' refuserToucheEntree(event);')|trim}) -%}#}
-
-    {% if fgline is defined and fgline -%}
-        <div class="fg-line">
-            {{- parent() -}}
-        </div>
-    {% else %}
-        {{- parent() -}}
-    {% endif %}
+    {{- parent() -}}
 {% endblock %}
-
-{%- block textarea_widget -%}
-    {% if fgline is defined and fgline -%}
-        <div class="fg-line">
-            {{- parent() -}}
-        </div>
-    {% else %}
-        {{- parent() -}}
-    {% endif %}
-{%- endblock textarea_widget -%}
 
 {# Re-définition des input de date #}
 {% block datetime_widget -%}
-    {% if displayInRow is defined and displayInRow -%}
+    {% set widget_options = widget_options|default({}) %}
+    {% if widget_options.displayInRow is defined and widget_options.displayInRow -%}
+        {#{% if displayInRow is defined and displayInRow -%}#}
         <div class="row">
             <div class="col-sm-6">
                 {{- form_widget(form.date, { datetime: true } ) -}}
@@ -263,6 +266,15 @@
 {%- endblock md_toggle_switch_widget %}
 
 
+{# Support #}
+
+{# Surchage complète du block #}
+{%- block form_rows -%}
+    {% set widget_options = widget_options|default({}) %}
+    {% for child in form %}
+        {{- form_row(child, {'widget_options':widget_options}) -}}
+    {% endfor %}
+{%- endblock form_rows -%}
 
 
 {# --------------

@@ -12,20 +12,20 @@
                 'label': 'module.form.name.label',
                 'label_attr':{'class':'sr-only'},
                 'attr':{'placeholder':'module.form.name.placeholder'},
-                'fgline':true
+                'widget_options':{'fgline':true}
             }) }}
             {{ form_row(moduleForm.description, {
                 'label':'module.form.description.label',
                 'label_attr':{'class':'sr-only'},
                 'attr':{'placeholder':'module.form.description.placeholder','rows':3},
-                'fgline':true
+                'widget_options':{'fgline':true}
             }) }}
         </div>
         <div class="col-sm-6">
             {{ form_row(moduleForm.responseDeadline, {
                 'label':'module.form.responseDeadline.label',
                 'attr':{'placeholder':'module.form.responseDeadline.placeholder'},
-                'fgline':true, 'displayInRow' : true
+                'widget_options':{'fgline':true, 'displayInRow' : true}
             }) }}
             {{ form_row(moduleForm.invitationOnly, {'label':'module.form.invitationOnly.label', 'label_attr':{'class' : 'radio radio-inline'}}) }}
             {{ form_row(moduleForm.guestsCanInvite, {'label':'module.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}

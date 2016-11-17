@@ -15,14 +15,7 @@
 {% block moduleHeaderClass %}palette-Red bg{% endblock moduleHeaderClass %}
 {% block moduleHeaderAttributs %}{% endblock moduleHeaderAttributs %}
 
-{% block mhBtnFloat %}
-    {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
-        {# TODO Check authorization to addPollProposal #}
-        <a data-toggle="modal" href="#{{ add_pp_form_modal_prefix }}_modal_id">
-            <button class="btn palette-Red-A700 bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
-        </a>
-    {% endif %}
-{% endblock mhBtnFloat %}
+{% block mhBtnFloat %}{% endblock mhBtnFloat %}
 
 {#{% block moduleBodyClass %}{% endblock %}#}
 {#{% block moduleBodyAttributs %}{% endblock %}#}
@@ -32,8 +25,7 @@
         {% set modulesInvitationsExceptUserMI = module.filteredModuleInvitations(maxColModule, [userModuleInvitation]) %}
         <div class="panel">
             <div class="panel-body">
-                <div class="poll-container-outer">
-                <div class="p-5 poll-container-inner">
+                <div class="p-5 poll-container">
                     <div class="poll-container-table">
                         <div class="pc-ligne">
                             <div class="pcl-celulle pcl-first-cellule"></div>
@@ -60,10 +52,9 @@
                                     </span>
                                 {% endif %}
                             </div>
-                            <div class="pcl-celulle pclc-end"></div>
                         </div>
                         <div class="pc-groupe-ligne palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
-                            {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
+                            {% for pollProposal in module.pollModule.validPollProposal %}
                                 {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
                                     "pollProposal":pollProposal,
                                     "userModuleInvitation":userModuleInvitation,
@@ -78,7 +69,13 @@
                         </div>
                     </div>
                 </div>
-                </div>
+                {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
+                    {{ include('@App/Event/module/pollModulePartials/pollProposal_form_min.html.twig', {
+                        'userModuleInvitation' : userModuleInvitation,
+                        'pollProposalForm' : pollProposalAddForm,
+                        'pp_form_modal_prefix' : add_pp_form_modal_prefix
+                    }) }}
+                {% endif %}
             </div>
         </div>
     {% endif %}
@@ -86,14 +83,4 @@
 
 {% block moduleFooter %}{% endblock moduleFooter %}
 
-{% block module_modal_container %}
-    {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
-        {# TODO Check authorization to addPollProposal #}
-        {{ include('@App/Event/module/pollModulePartials/pollProposal_form_modal.html.twig', {
-            'userModuleInvitation' : userModuleInvitation,
-            'pollProposalForm' : pollProposalAddForm,
-            'pp_form_modal_prefix' : add_pp_form_modal_prefix,
-            'edition' : false
-        }) }}
-    {% endif %}
-{% endblock module_modal_container %}
+{% block module_modal_container %}{% endblock module_modal_container %}
