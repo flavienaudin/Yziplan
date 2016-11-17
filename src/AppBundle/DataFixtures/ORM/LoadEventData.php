@@ -92,7 +92,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $eventInvitationGerard->setGuestName("Gerard");
         $eventInvitationGerard->setStatus(EventInvitationStatus::VALID);
         $eventInvitationGerard->setToken('qsdfgh2');
-        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationGerard);
         $event1->addEventInvitation($eventInvitationGerard);
 
         //EventInvitation Invite
@@ -100,7 +99,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $eventInvitationGertrude->setGuestName("Gertrude");
         $eventInvitationGertrude->setStatus(EventInvitationStatus::VALID);
         $eventInvitationGertrude->setToken('qsdfgh3');
-        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationGertrude);
         $event1->addEventInvitation($eventInvitationGertrude);
 
         //EventInvitation Invite
@@ -108,7 +106,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $eventInvitationNobert->setGuestName("Nobert");
         $eventInvitationNobert->setStatus(EventInvitationStatus::VALID);
         $eventInvitationNobert->setToken('qsdfgh4');
-        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationNobert);
         $event1->addEventInvitation($eventInvitationNobert);
 
         //EventInvitation Invite
@@ -116,7 +113,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $eventInvitationSimon->setGuestName("Simon");
         $eventInvitationSimon->setStatus(EventInvitationStatus::VALID);
         $eventInvitationSimon->setToken('qsdfgh5');
-        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationSimon);
         $event1->addEventInvitation($eventInvitationSimon);
 
         //EventInvitation Invite
@@ -124,7 +120,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $eventInvitationTyrion->setGuestName("Tyrion");
         $eventInvitationTyrion->setStatus(EventInvitationStatus::VALID);
         $eventInvitationTyrion->setToken('qsdfgh6');
-        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationTyrion);
         $event1->addEventInvitation($eventInvitationTyrion);
 
         //EventInvitation Invite
@@ -132,7 +127,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $eventInvitationPikachu->setGuestName("Pikachu");
         $eventInvitationPikachu->setStatus(EventInvitationStatus::VALID);
         $eventInvitationPikachu->setToken('qsdfgh7');
-        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationPikachu);
         $event1->addEventInvitation($eventInvitationPikachu);
 
         //EventInvitation Invite
@@ -140,7 +134,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $eventInvitationJeanPaul->setGuestName("Jean Paul");
         $eventInvitationJeanPaul->setStatus(EventInvitationStatus::VALID);
         $eventInvitationJeanPaul->setToken('qsdfgh8');
-        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationJeanPaul);
         $event1->addEventInvitation($eventInvitationJeanPaul);
 
         //EventInvitation Invite
@@ -148,7 +141,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $eventInvitationTeddy->setGuestName("Teddy");
         $eventInvitationTeddy->setStatus(EventInvitationStatus::VALID);
         $eventInvitationTeddy->setToken('qsdfgh9');
-        $userInvite->getApplicationUser()->addEventInvitation($eventInvitationTeddy);
         $event1->addEventInvitation($eventInvitationTeddy);
 
         /*

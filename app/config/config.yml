@@ -151,17 +151,19 @@ hwi_oauth:
             scope:          "email profile"
             options:
                 csrf: true
+                display: popup
         facebook:
             type:           facebook
             client_id:      '%oauth.facebook.id%'
             client_secret:  '%oauth.facebook.secret%'
             scope:          "email"
-            infos_url:      "https://graph.facebook.com/me?fields=id,name,email,picture.type(square)"
+            infos_url:      "https://graph.facebook.com/me?fields=id,name,email,picture.type(large)"
             paths:
                 email:          email
                 profilepicture: picture.data.url
             options:
                 csrf: true
+                display: popup
 
     fosub:
         # try 30 times to check if a username is available (foo, foo1, foo2 etc)

@@ -46,12 +46,11 @@ class AvatarUploadListener
 
         $file = $entity->getAvatar();
 
-        // only upload new files
-        if (!$file instanceof UploadedFile) {
+        $fileName = $this->uploader->upload($file);
+        if($fileName != null){
+            $entity->setAvatar($fileName);
+        }else{
             return;
         }
-
-        $fileName = $this->uploader->upload($file);
-        $entity->setAvatar($fileName);
     }
 }

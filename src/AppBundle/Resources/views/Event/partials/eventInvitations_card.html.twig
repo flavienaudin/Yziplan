@@ -46,9 +46,7 @@
             </div>
             {{ form_end(invitationsForm) }}
 
-            <span style="font-size:11px" id="eventLink">http://www.ardganisateur.com</span>
-
-            <button class="btn btn-social btn-facebook" id="shareEventFB" name="provider">
+            <button class="btn btn-primary btn-facebook" id="shareEventFB" name="provider">
                 Invitez via Facebook
             </button>
         {% endif %}
@@ -131,7 +129,7 @@
 
             // React to the invite via facebook button
             $('#shareEventFB').click(function () {
-                var pageLink = $('#eventLink').text();
+                var pageLink = document.getElementById("url_event_public_invitation").value;
 
                 FB.ui({
                     method: 'send',
