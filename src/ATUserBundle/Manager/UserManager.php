@@ -27,6 +27,7 @@ class UserManager extends BaseManager
     public function __construct(PasswordUpdaterInterface $passwordUpdater, CanonicalFieldsUpdater $canonicalFieldsUpdater, ObjectManager $om, $class)
     {
         parent::__construct($passwordUpdater, $canonicalFieldsUpdater, $om, $class);
+        $this->canonicalFieldsUpdater = $canonicalFieldsUpdater;
     }
 
     /**

@@ -10,6 +10,7 @@ namespace AppBundle\Utils\File;
 
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploader
@@ -47,14 +48,35 @@ class FileUploader
         return substr($this->targetDir, strpos($this->targetDir, 'web') + 4);
     }
 
-    public function upload(UploadedFile $file)
+    /**
+     * @param $file UploadedFile or URL
+     * @return string|null
+     */
+    public function upload($file)
     {
-        // Generate a unique name for the file before saving it
-        $fileName = md5(uniqid($this->fileprefix)) . '.' . $file->guessExtension();
-        // Move the file t  o the directory where brochures are stored
-        $file->move($this->targetDir, $fileName);
+        // only upload new files
+        if ($file instanceof UploadedFile) {
+            // Generate a unique name for the file before saving it
+            $fileName = md5(uniqid($this->fileprefix)) . '.' . $file->guessExtension();
+            // Move the file to the directory where brochures are stored
+            $file->move($this->targetDir, $fileName);
 
-        return $fileName;
+            return $fileName;
+
+        } else {
+            if (!filter_var($file, FILTER_VALIDATE_URL) === false) {
+                $fileName = md5(uniqid($this->fileprefix));
+                file_put_contents($this->targetDir . $fileName, file_get_contents($file));
+                $file = new File($this->targetDir . $fileName);
+                $fileName = $fileName . '.' . $file->guessExtension();
+                $file->move($this->targetDir, $fileName);
+
+                return $fileName;
+
+            } else {
+                return null;
+            }
+        }
     }
 
     public function delete($filename)

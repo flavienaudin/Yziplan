@@ -119,9 +119,25 @@ class ATUserProvider extends FOSUBUserProvider
                     }
                 }
             }
-
             if ($response instanceof PathUserResponse && $user instanceof AccountUser) {
-                $user->getApplicationUser()->getAppUserInformation()->setPublicName($response->getNickname());
+                // On récupère ce qu'on peut du profil.
+                // On verifie que le PublicName n'est pas sull, car il est possible de se connecter via OAuth après avoir créer un compte,
+                // donc il ne faut pas écraser les informations.
+                if($user->getApplicationUser()->getAppUserInformation()->getPublicName() == null){
+                    $user->getApplicationUser()->getAppUserInformation()->setPublicName($response->getNickname());
+                }
+                if($response->getProfilePicture()!=null && $user->getApplicationUser()->getAppUserInformation()->getAvatar() == null){
+                    $user->getApplicationUser()->getAppUserInformation()->setAvatar($response->getProfilePicture());
+                }
+                if($response->getFirstName()!=null && $user->getApplicationUser()->getAppUserInformation()->getFirstName() == null){
+                    $user->getApplicationUser()->getAppUserInformation()->setFirstName($response->getFirstName());
+                }
+                if($response->getLastName()!=null && $user->getApplicationUser()->getAppUserInformation()->getLastName() == null){
+                    $user->getApplicationUser()->getAppUserInformation()->setLastName($response->getLastName());
+                }
+                if($response->getUsername()!=null && $user->getApplicationUser()->getAppUserInformation()->getLastName() == null){
+                    $user->getApplicationUser()->getAppUserInformation()->setLastName($response->getLastName());
+                }
             }
 
             $user->setEnabled(true);
