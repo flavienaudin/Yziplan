@@ -404,6 +404,11 @@ label.required:after {
     PollModule
 ---------------------------------*/
 
+/* Fix : au dessus des éléments .active */
+.DTFC_LeftWrapper{
+    z-index:5;
+}
+
 .poll-container{}
 
 .poll-container table.dataTable.compact thead th,

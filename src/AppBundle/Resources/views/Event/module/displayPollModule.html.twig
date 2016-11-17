@@ -71,13 +71,23 @@
                     <script>
                         $(document).ready(function () {
                             $('#pollmodule-table-{{ module.token }}').DataTable({
+                                dom: "Brt",
                                 paging: false,
                                 ordering: false,
                                 info: false,
                                 searching: false,
-                                responsive: {
-                                    details: {}
+                                scrollX: true,
+                                stateSave: true,
+                                fixedColumns: {
+                                    leftColumns: 2,
+                                    rightColumns: 1
                                 },
+                                buttons: [
+                                    {
+                                        extend: 'colvis',
+                                        columns: ':not(:first-child):not(:nth-child(2)):not(:last-child())'
+                                    }
+                                ],
                                 columnDefs: [
                                     {targets: 0, responsivePriority: 1, width: 130},
                                     {targets: 1, responsivePriority: 2},
