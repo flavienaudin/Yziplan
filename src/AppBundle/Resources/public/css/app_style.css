@@ -142,7 +142,7 @@
 .avatar-container-list .avatar-img-container,
 .avatar-container-list .avatar-img-container-xs,
 .avatar-container-list .avatar-img-container-sm,
-.avatar-container-list .avatar-img-container-md{
+.avatar-container-list .avatar-img-container-md {
     float: left;
 }
 
@@ -354,20 +354,31 @@ label.required:after {
     PollModule
 ---------------------------------*/
 /* Fix : au dessus des éléments .active */
-.DTFC_LeftWrapper{
-    z-index:5;
+.DTFC_LeftWrapper {
+    z-index: 5;
 }
 
-.poll-container table.dataTable.compact thead th,
-.poll-container table.dataTable.compact thead td {
-    padding : 0 1px;
+/* Surcharge datatable.css */
+table.dataTable.compact thead th,
+table.dataTable.compact thead td,
+table.dataTable.compact tbody th,
+table.dataTable.compact tbody td {
+    padding: 0 1px;
 }
 
-.poll-container table.dataTable.compact tbody th,
-.poll-container table.dataTable.compact tbody td {
-    padding: 0;
+.poll-container table td {
+    min-width: 40px;
+    max-width: 40px;
 }
 
+.poll-container table td:first-child {
+    min-width: 130px;
+}
+
+.poll-container .dataTables_scroll table td:last-child {
+    min-width: 0;
+    max-width: none;
+}
 
 /*---------------------------------
     Poll Proposal Response

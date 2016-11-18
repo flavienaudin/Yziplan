@@ -30,7 +30,7 @@
                         <thead>
                         <tr>
                             <td></td>
-                            <td class="dt-head-center">
+                            <td class="dt-head-center" style="width:40px">
                                 <span class="userInvitation-avatar">
                                     <div class="avatar-img-container-sm center-block">
                                         {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userModuleInvitation}) }}
@@ -38,8 +38,10 @@
                                 </span>
                             </td>
                             {% for moduleInvitation in modulesInvitationsExceptUserMI %}
-                                <td class="dt-center">
-                                    {{ include('@App/Event/partials/guest/display_guest_avatar.html.twig', {'invitation':moduleInvitation}) }}
+                                <td class="dt-center" style="width:40px">
+                                    <div class="avatar-img-container-sm center-block">
+                                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                    </div>
                                 </td>
                             {% endfor %}
                             <td></td>
@@ -65,16 +67,9 @@
                                 searching: false,
                                 scrollX: true,
                                 stateSave: true,
-                                fixedColumns: {
-                                    leftColumns: 2,
-                                    rightColumns: 1
-                                },
-                                buttons: false/*[{extend: 'colvis',columns: ':not(:first-child):not(:nth-child(2)):not(:last-child())'}]*/,
-                                columnDefs: [
-                                    {targets: 0, responsivePriority: 1, width: 130},
-                                    {targets: 1, responsivePriority: 2, width: 40},
-                                    {targets: -1, responsivePriority: 3}
-                                ]
+                                fixedColumns: {leftColumns: 2},
+                                buttons: false,
+                                columnDefs: [/*{targets: 0, width: 130},*/ {targets: -1, width: 'auto'}]
                             });
                         });
                     </script>

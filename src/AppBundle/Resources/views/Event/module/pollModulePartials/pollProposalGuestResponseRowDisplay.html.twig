@@ -6,14 +6,69 @@
 
 
 <tr id="pp_display_row_{{ pollProposal.id }}">
-    <td class="dt-body-nowrap">
-        <span {% if pollProposal.description is not empty %}data-toggle="tooltip" title="{{ pollProposal.description }}"{% endif %}>
-        {% for ppElt in pollProposal.pollProposalElements %}
-            {% set val = attribute(ppElt, 'val'~ppElt.pollElement.type) %}
-            {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?val|localizeddate:val }}{% if not loop.last %}
-            <br>{% endif %}
-        {% endfor %}
-        </span>
+    <td class="dt-body-nowrap p-l-5 p-r-5">
+        {% if pollProposal.creator == userModuleInvitation %}
+            <div class="pull-right">
+                <div class="btn-group-vertical btn-group-xs" role="group" aria-label="...">
+                    <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="button"
+                       id="getPPEditionForm_{{ pollProposal.id }}" class="btn btn-default"> <i class="zmdi zmdi-edit"></i></a> <a
+                            href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="button"
+                            id="removePP_{{ pollProposal.id }}" class="btn btn-default c-red"> <i class="zmdi zmdi-delete"></i></a>
+                </div>
+                <script>
+                    $('#getPPEditionForm_{{ pollProposal.id }}').on('click', function (e) {
+                        e.preventDefault();
+                        var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
+                        var modals = $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id');
+                        if ($(modals).length > 0) {
+                            $(modals).first().modal('toggle');
+                        } else {
+                            ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
+                                $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
+                            }, null, null);
+                        }
+                    });
+                    $('#removePP_{{ pollProposal.id }}').on('click', function (e) {
+                        e.preventDefault();
+                        var removePPLink = $(this);
+                        swal({
+                            title: '{{ "pollmodule.alert.confirm_proposal_deletion.title"|trans }}',
+                            text: '{{ "pollmodule.alert.confirm_proposal_deletion.message"|trans }}',
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#DD6B55",
+                            confirmButtonText: '{{ "global.button.delete"|trans }}',
+                            closeOnConfirm: true,
+                            showLoaderOnConfirm: true
+                        }, function (isConfirm) {
+                            if (isConfirm) {
+                                ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
+                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
+                                        $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable()
+                                                .row($('#pp_display_row_{{ pollProposal.id }}'))
+                                                .remove().draw();
+                                        //$('#pp_display_row_{{ pollProposal.id }}').remove();
+                                        var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
+                                        $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
+                                            $(this).remove();
+                                        });
+                                    }
+                                }, null, function () {
+                                    $('.grid').masonry('layout');
+                                });
+                            }
+                        });
+                    });
+                </script>
+            </div>
+        {% endif %}
+        <div {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
+            {% for ppElt in pollProposal.pollProposalElements %}
+                {% set val = attribute(ppElt, 'val'~ppElt.pollElement.type) %}
+                {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?val|localizeddate:val }}{% if not loop.last %}
+                <br>{% endif %}
+            {% endfor %}
+        </div>
     </td>
 
     <td class="dt-body-center">
@@ -89,57 +144,5 @@
             {% endif %}
         </td>
     {% endfor %}
-    <td>
-        {% if pollProposal.creator == userModuleInvitation %}
-            <div class="dropdown">
-                <a href="#" class="dropdown-toggle btn btn-default waves-effect" data-toggle="dropdown" aria-expanded="false"><i class="zmdi zmdi-more-vert"></i></a>
-                <ul class="dropdown-menu dm-icon pull-right">
-                    <li role="presentation"><a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="menuitem"
-                                               tabindex="-1" id="getPPEditionForm_{{ pollProposal.id }}"><i class="zmdi zmdi-edit"></i> {{ "global.button.edit"|trans }}</a></li>
-                    <li role="presentation"><a href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="menuitem"
-                                               tabindex="-1" id="removePP_{{ pollProposal.id }}" class="c-red"><i class="zmdi zmdi-delete"></i> {{ "global.button.delete"|trans }}</a></li>
-                </ul>
-            </div>
-            <script>
-                $('#getPPEditionForm_{{ pollProposal.id }}').on('click', function (e) {
-                    e.preventDefault();
-                    var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
-                    var modals = $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id');
-                    if ($(modals).length > 0) {
-                        $(modals).first().modal('toggle');
-                    } else {
-                        ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
-                        }, null, null);
-                    }
-                });
-                $('#removePP_{{ pollProposal.id }}').on('click', function (e) {
-                    e.preventDefault();
-                    var removePPLink = $(this);
-                    swal({
-                        title: '{{ "pollmodule.alert.confirm_proposal_deletion.title"|trans }}',
-                        text: '{{ "pollmodule.alert.confirm_proposal_deletion.message"|trans }}',
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: '{{ "global.button.delete"|trans }}',
-                        closeOnConfirm: true,
-                        showLoaderOnConfirm: true
-                    }, function (isConfirm) {
-                        if (isConfirm) {
-                            ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                    $('#pp_display_row_{{ pollProposal.id }}').remove();
-                                    var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
-                                    $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
-                                        $(this).remove();
-                                    });
-                                }
-                            }, null, null);
-                        }
-                    });
-                });
-            </script>
-        {% endif %}
-    </td>
+    <td></td>
 </tr>

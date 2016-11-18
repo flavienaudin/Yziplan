@@ -260,9 +260,8 @@ class EventController extends Controller
                             $pollProposalManager = $this->get('at.manager.pollproposal');
                             $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
 
-                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#pp-row-group-' . $moduleDescription['module']->getToken()] =
-                                $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
+                            /*$data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");*/
+                            $data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
 
                             $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']);
                             $pollProposalAddForm = $this->get('at.manager.pollproposal')->createPollProposalAddForm($moduleDescription['module']->getPollModule(),  $userModuleInvitation);
