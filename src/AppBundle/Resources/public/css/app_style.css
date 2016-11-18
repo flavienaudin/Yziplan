@@ -139,13 +139,19 @@
     overflow: hidden;
 }
 
+.avatar-container-list .avatar-img-container,
+.avatar-container-list .avatar-img-container-xs,
+.avatar-container-list .avatar-img-container-sm,
+.avatar-container-list .avatar-img-container-md{
+    float: left;
+}
+
 .avatar-img-container,
 .avatar-img-container-xs,
 .avatar-img-container-sm,
 .avatar-img-container-md {
     position: relative;
     text-align: center;
-    float: left;
     width: 50px;
     height: 50px;
 }
@@ -362,58 +368,6 @@ label.required:after {
     padding: 0;
 }
 
-
-/*.poll-container {
-    display: table;
-    table-layout: auto;
-    border-collapse: separate;
-    border-spacing: 0 2px;
-    width: 100%;
-}
-
-.poll-container-table .pc-groupe-ligne {
-    display: table-row-group;
-}
-
-.poll-container-table .pc-ligne {
-    display: table-row;
-}
-
-.poll-container-table .pc-ligne .pcl-celulle {
-    display: table-cell;
-    vertical-align: middle;
-}
-
-.poll-container-table .pc-ligne .pcl-celulle:not(:first-child) {
-    text-align: center;
-    padding: 0 1px;
-    text-align: center;
-    padding: 0 1px;
-    vertical-align: middle;
-}
-
-.poll-container .pc-ligne .pcl-celulle:not(:first-child) {
-    width: 40px;
-    max-width: 40px;
-}
-
-.poll-container-table .pc-ligne .pcl-celulle:first-child {
-    padding-left: 10px;
-    min-width: 150px;
-    text-align: left;
-    font-weight: bold;
-    min-width: 150px;
-}
-
-/** Ligne non affichée si la table contient une autre pc-ligne */
-/*.poll-container-table .pc-groupe-ligne .pc-ligne-empty {
-    display: none;
-}*/
-
-/** Ligne affichée si la table est vide */
-/*.poll-container-table .pc-groupe-ligne .pc-ligne-empty:first-child:last-child {
-    display: table-row;
-}*/
 
 /*---------------------------------
     Poll Proposal Response
