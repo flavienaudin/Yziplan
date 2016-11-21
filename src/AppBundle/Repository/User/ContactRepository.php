@@ -34,20 +34,21 @@ class ContactRepository extends EntityRepository
             $query->expr()->neq("c.status", $query->expr()->literal(ContactStatus::DELETED))
         ));
         $query->setParameter('appuser', $user->getApplicationUser());
-        /*$query->leftJoin('c.linked', 'linked');*/
-        /*if (!(empty($search))) {
+
+
+        if (!(empty($search))) {
             $search = "%" . trim($search) . "%";
             $query
                 ->andWhere(
                     $query->expr()->orX(
-                        $query->expr()->like("linked.pseudo", ':search'),
-                        $query->expr()->like("linked.username", ':search')
+                        $query->expr()->like("c.firstName", ':search'),
+                        $query->expr()->like("c.lastName", ':search')
                     )
                 )
                 ->setParameter('search', $search);
-        }*/
+        }
 
-        if (is_array($sort)) {
+        /*if (is_array($sort)) {
             foreach ($sort as $key => $value) {
                 if ($key == 'name') {
                     //$query->addOrderBy('displayableName', $value);
@@ -55,7 +56,7 @@ class ContactRepository extends EntityRepository
 
                 }
             }
-        }
+        }*/
 
         if ($nbResult > 0) {
             $query

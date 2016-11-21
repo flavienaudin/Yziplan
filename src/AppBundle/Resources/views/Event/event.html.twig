@@ -31,13 +31,19 @@
                     <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                         'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHAT')}) }}" id="addWhatPollModule">
                         <small>{{ "pollmodule.add_link.what"|trans }}</small>
-                        <i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help"></i> </a>
+                        <i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help zmdi-hc-fw"></i> </a>
                 </li>
                 <li>
                     <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                         'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHEN')}) }}" id="addWhenPollModule">
                         <small>{{ "pollmodule.add_link.when"|trans }}</small>
-                        <i class="waves-effect palette-Blue bg zmdi zmdi-calendar"></i> </a>
+                        <i class="waves-effect palette-Blue bg zmdi zmdi-calendar zmdi-hc-fw"></i> </a>
+                </li>
+                <li>
+                    <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                        'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHO_BRINGS_WHAT')}) }}" id="addWhoBringsWhatPollModule">
+                        <small>{{ "pollmodule.add_link.whobringswhat"|trans }}</small>
+                        <i class="waves-effect palette-Blue bg zmdi zmdi-format-list-bulleted zmdi-hc-fw"></i> </a>
                 </li>
                 {#<li>
                     <a data-toggle="modal" href="#"><i class="waves-effect palette-Teal bg zmdi zmdi-map"></i>
@@ -138,6 +144,8 @@
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/fileinput.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/datatables.min.css") }}"/>
+
 {% endblock stylesheets %}
 
 {% block top_javascripts %}
@@ -145,6 +153,7 @@
     <script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>
     <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/at-selectize.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/datatables.min.js") }}"></script>
 {% endblock %}
 
 {% block javascripts %}

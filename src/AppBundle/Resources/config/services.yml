@@ -89,7 +89,7 @@ services:
 
 # FormTypes
   at.form_type.invitation:
-    class: AppBundle\Form\Event\InvitationsFormType
+    class: AppBundle\Form\Event\InvitationsType
     arguments: ['@security.authorization_checker', '@security.token_storage', '@validator']
     tags:
     - { name: form.type }

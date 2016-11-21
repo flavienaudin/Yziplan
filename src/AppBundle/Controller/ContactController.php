@@ -47,9 +47,43 @@ class ContactController extends Controller
             $user = $this->getUser();
             if ($user instanceof AccountUser) {
                 $contactManager = $this->get("at.manager.contact");
-                $data = $contactManager->getFilteredContactsOfUser($user, $request->request->get("searchPhrase", ""), $request->request->get("rowCount", 10),
+                $data = $contactManager->getFilteredContactsOfUserAsArray($user, $request->request->get("searchPhrase", ""), $request->request->get("rowCount", 10),
                     $request->request->get("current", 1), $request->request->get("sort", array()));
                 return new JsonResponse($data, Response::HTTP_OK);
+            } else {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("global.error.unauthorized_access");
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+            }
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("global.error.not_ajax_request"));
+            return $this->redirectToRoute('home');
+        }
+    }
+
+
+    /**
+     * Get the contacts list of the User to invite
+     * Post Request : query (string)
+     * @Route("/search/", name="searchContacts", methods={"POST"})
+     */
+    public function searchContactsAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
+        if ($request->isXmlHttpRequest()) {
+            $user = $this->getUser();
+            if ($user instanceof AccountUser) {
+                $contactManager = $this->get('at.manager.contact');
+                $search = $request->get('search');
+                $contacts = $contactManager->searchContactsOfUser($user, $search);
+                $data = array();
+                /** @var Contact $contact */
+                foreach($contacts as $contact){
+                    $contactAsArray = array();
+                    $contactAsArray['text'] = $contact->getDisplayableName();
+                    $contactAsArray['value'] = $contact->getEmailToContact();
+                    $data[] = $contactAsArray;
+                }
+                return new AppJsonResponse($data, Response::HTTP_OK);
             } else {
                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("global.error.unauthorized_access");
                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);

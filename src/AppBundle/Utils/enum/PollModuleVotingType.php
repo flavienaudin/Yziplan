@@ -9,7 +9,7 @@
 namespace AppBundle\Utils\enum;
 
 
-class PollModuleSortingType extends AbstractEnumType
+class PollModuleVotingType extends AbstractEnumType
 {
     /** Réponse => yes/no */
     const YES_NO = "yes_no";
@@ -19,7 +19,9 @@ class PollModuleSortingType extends AbstractEnumType
     const NOTATION = "notation";
     /** Réponse => classement des réponses entre elles  */
     const RANKING = "ranking";
+    /** Réponse => nombre entier positif sans limite max */
+    const AMOUNT = "amount";
 
-    protected $name = 'enum_pollmodule_sortingtype';
-    protected $values = array(self::YES_NO, self::YES_NO_MAYBE, self::NOTATION, self::RANKING);
+    protected $name = 'enum_pollmodule_votingtype';
+    protected $values = array(self::YES_NO, self::YES_NO_MAYBE, self::NOTATION, self::RANKING, self::AMOUNT);
 }

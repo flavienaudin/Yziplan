@@ -12,7 +12,7 @@ use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Form\Event\EventType;
-use AppBundle\Form\Event\InvitationsFormType;
+use AppBundle\Form\Event\InvitationsType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleStatus;
@@ -170,7 +170,7 @@ class EventManager
 
     public function createEventInvitationsForm()
     {
-        return $this->formFactory->create(InvitationsFormType::class);
+        return $this->formFactory->create(InvitationsType::class);
     }
 
     public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm)
@@ -178,7 +178,6 @@ class EventManager
         if ($this->event != null) {
             $emailsData = $eventInvitationsForm->get("invitations")->getData();
             foreach ($emailsData as $email) {
-                // TODO check getGuestEventInvitation() ==> AppUserEmail
                 $this->eventInvitationManager->getGuestEventInvitation($this->event, $email);
             }
             $this->entityManager->persist($this->event);

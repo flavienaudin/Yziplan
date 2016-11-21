@@ -23,7 +23,7 @@ use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\PollElementType;
-use AppBundle\Utils\enum\PollModuleSortingType;
+use AppBundle\Utils\enum\PollModuleVotingType;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
@@ -203,7 +203,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $modulePoll->setOrderIndex(1);
 
         $pollModule = new PollModule();
-        $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
+        $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
         $modulePoll->setPollModule($pollModule);
 
         $pollElementAct1 = new PollElement();
@@ -342,7 +342,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $moduleEvent2->setStatus(ModuleStatus::IN_CREATION);
         $moduleEvent2->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
         $pollModuleEvent2 = new PollModule();
-        $pollModuleEvent2->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
+        $pollModuleEvent2->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
         $moduleEvent2->setPollModule($pollModuleEvent2);
         $event2->addModule($moduleEvent2);
 

@@ -181,6 +181,7 @@ invitations:
       label: Invite new people
       placeholder: Emails of your guests
       invalid_message: Valid email address required
+      help: Hit "Return" after each email to validate it
   button:
     send_invitation: Send invitations
 
@@ -222,6 +223,7 @@ pollmodule:
   add_link:
     what: What ?
     when: When ?
+    whobringswhat: Who brings what ?
   display:
     no_proposal: No proposal yet
   modal:
@@ -312,6 +314,7 @@ modulestatus:
 pollmoduletype:
   when: When
   what: What
+  whobringswhat: What do you need ?
 
 contact_info_type:
   home: Home

@@ -13,6 +13,7 @@ use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -95,7 +96,11 @@ class ModuleInvitationManager
             $this->moduleInvitation = new ModuleInvitation();
         }
         $this->moduleInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        $this->moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
+        if ($eventInvitation->getStatus() == EventInvitationStatus::VALID) {
+            $this->moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
+        } else {
+            $this->moduleInvitation->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
+        }
         $this->moduleInvitation->setCreator(false);
         $module->addModuleInvitation($this->moduleInvitation);
         $eventInvitation->addModuleInvitation($this->moduleInvitation);

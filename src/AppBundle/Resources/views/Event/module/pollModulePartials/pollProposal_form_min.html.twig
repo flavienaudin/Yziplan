@@ -34,7 +34,11 @@
             var $form = $(this);
             ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                         $form[0].reset();
-                    }, null, function () {
+                        if(responseJSON.hasOwnProperty('data')) {
+                            $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable().row.add($(responseJSON['data'])).draw();
+                        }
+                    }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                        $('#module-{{ userModuleInvitation.module.token }}').trigger("resize");
                         $('.grid').masonry('layout');
                     }
             );

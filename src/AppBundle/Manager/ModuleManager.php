@@ -20,7 +20,7 @@ use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\ModuleType as EnumModuleType;
 use AppBundle\Utils\enum\PollElementType;
-use AppBundle\Utils\enum\PollModuleSortingType;
+use AppBundle\Utils\enum\PollModuleVotingType;
 use AppBundle\Utils\enum\PollModuleType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
@@ -109,14 +109,22 @@ class ModuleManager
             $pollElement = new PollElement();
             $pollElement->setName($subtype);
             $pollElement->setOrderIndex(0);
+
+            // default config
+            $pollElement->setType(PollElementType::STRING);
+            $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
+
             if ($subtype == PollModuleType::WHEN) {
                 $pollElement->setType(PollElementType::DATETIME);
             } elseif ($subtype == PollModuleType::WHAT) {
                 $pollElement->setType(PollElementType::STRING);
+            } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
+                $pollElement->setType(PollElementType::STRING);
+                $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
             }
             $pollModule->addPollElement($pollElement);
 
-            $pollModule->setSortingType(PollModuleSortingType::YES_NO_MAYBE);
+
             $this->module->setPollModule($pollModule);
 
         }

@@ -76,7 +76,7 @@ class ContactManager
      * @param array $sorts
      * @return mixed
      */
-    public function getFilteredContactsOfUser(AccountUser $user, $search = null, $nbResult = 10, $pageIdx = 1, $sorts = array())
+    public function getFilteredContactsOfUserAsArray(AccountUser $user, $search = null, $nbResult = 10, $pageIdx = 1, $sorts = array())
     {
         $result['current'] = (int)$pageIdx;
         $result['rowCount'] = (int)$nbResult;
@@ -103,6 +103,12 @@ class ContactManager
         }
         $result['total'] = (int)$contactRepo->countUserContacts($user, $search);
         return $result;
+    }
+
+
+    public function searchContactsOfUser(AccountUser $user, $search = null)
+    {
+        return $this->entityManager->getRepository(Contact::class)->findUserContacts($user, $search, 0);
     }
 
     /**

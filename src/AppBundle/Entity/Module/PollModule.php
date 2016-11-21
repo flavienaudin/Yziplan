@@ -32,9 +32,9 @@ class PollModule
     /**
      * @var string
      *
-     * @ORM\Column(name="sorting_type", type="enum_pollmodule_sortingtype")
+     * @ORM\Column(name="voting_type", type="enum_pollmodule_votingtype")
      */
-    private $sortingType;
+    private $votingType;
 
 
     /***********************************************************************
@@ -90,18 +90,18 @@ class PollModule
     /**
      * @return string
      */
-    public function getSortingType()
+    public function getVotingType()
     {
-        return $this->sortingType;
+        return $this->votingType;
     }
 
     /**
-     * @param string $sortingType
+     * @param string $votingType
      * @return PollModule
      */
-    public function setSortingType($sortingType)
+    public function setVotingType($votingType)
     {
-        $this->sortingType = $sortingType;
+        $this->votingType = $votingType;
         return $this;
     }
 

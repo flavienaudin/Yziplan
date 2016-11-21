@@ -9,6 +9,8 @@
 namespace AppBundle\Form\Event;
 
 
+use AppBundle\Entity\User\Contact;
+use ATUserBundle\Entity\AccountUser;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,10 +19,11 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class InvitationsFormType extends AbstractType
+class InvitationsType extends AbstractType
 {
 
     /** @var AuthorizationCheckerInterface */
@@ -46,27 +49,22 @@ class InvitationsFormType extends AbstractType
                 /** @var FormInterface $form */
                 $form = $formEvent->getForm();
 
-                $userContactsUser = array();
-                /* TODO Get user's contacts
+                /*$userContactsUser = array();
                 if ($this->authorizationChecker->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED)) {
                     $user = $this->tokenStorage->getToken()->getUser();
-                    if ($user instanceof User) {
-                        /** @var User $userContact *
-                         foreach ($user->get as $userContact) {
-                            $emailChoices[] = $userContact;
-                        }
+                    if ($user instanceof AccountUser) {
+                        $userContactsUser = $user->getApplicationUser()->getValidContacts();
                     }
-                }
-                */
+                }*/
 
                 $form
                     ->add('invitations', ChoiceType::class, array(
                         'mapped' => false,
                         'required' => false,
-                        'multiple' => true,
+                        'multiple' => true/*,
                         'choices' => $userContactsUser,
                         'choice_label' => 'displayableName',
-                        'choice_value' => 'email'
+                        'choice_value' => 'emailToContact'*/
                     ));
             })
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $formEvent) {

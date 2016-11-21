@@ -178,9 +178,10 @@ invitations:
         text: Êtes-vous sûre de vouloir annuler l'invitation de %name% ?
   form:
     invitations:
-      label: Inviter de nouvelles personnes
+      label: Invitez de nouvelles personnes
       placeholder: E-mails de vos invités
       invalid_message: Veuillez renseigner des e-mails valides
+      help: Appuyez sur "entrée" après chaque e-mail pour la valider
   button:
     send_invitation: Envoyer les invitations
 
@@ -222,6 +223,7 @@ pollmodule:
   add_link:
     what: Quoi ?
     when: Quand ?
+    whobringswhat: Qui apporte quoi ?
   display:
     no_proposal: Pas encore de proposition
   modal:
@@ -312,6 +314,7 @@ modulestatus:
 pollmoduletype:
   when: Quand
   what: Quoi
+  whobringswhat: Qu'est-ce qu'il faut ?
 
 contact_info_type:
   home: Personnelle

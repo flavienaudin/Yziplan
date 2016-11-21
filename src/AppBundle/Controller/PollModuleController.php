@@ -86,7 +86,7 @@ class PollModuleController extends Controller
                 $pollProposalManager = $this->get("at.manager.pollproposal");
                 $pollProposalManager->removePollProposal($pollProposal);
                 $data[AppJsonResponse::DATA]['actionResult'] = true;
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                /*$data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");*/
                 return new AppJsonResponse($data, Response::HTTP_OK);
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));

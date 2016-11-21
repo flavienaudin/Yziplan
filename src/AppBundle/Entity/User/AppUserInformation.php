@@ -432,7 +432,7 @@ class AppUserInformation
         $displayableName = $this->publicName;
         if (empty($displayableName)) {
             // TODO check preferences before using other data
-            // $displayableName = $this->firstName . " " . $this->lastName;
+            $displayableName = $this->firstName . " " . $this->lastName;
         }
         return $displayableName;
     }
