@@ -87,7 +87,7 @@
         {% endif %}
 
         {#{% if editEventMode %}#}
-        $('#eventInvitations_list').find('li > a.cancelInvitation').each(function () {
+        $('#eventInvitations_list').find('li a.cancelInvitation').each(function () {
             var link = $(this);
             $(this).on('click', function (e) {
                 e.preventDefault();
