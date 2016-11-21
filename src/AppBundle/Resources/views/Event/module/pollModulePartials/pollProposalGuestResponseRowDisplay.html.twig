@@ -6,7 +6,7 @@
 
 
 <tr id="pp_display_row_{{ pollProposal.id }}">
-    <td class="dt-body-nowrap p-l-5 p-r-5">
+    <td class="dt-body-nowrap p-l-5 p-r-5" style="width: 150px;">
         {% if pollProposal.creator == userModuleInvitation %}
             <div class="pull-right">
                 <div class="btn-group-vertical btn-group-xs" role="group" aria-label="...">
@@ -62,16 +62,16 @@
                 </script>
             </div>
         {% endif %}
-        <div {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
+        <span {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
             {% for ppElt in pollProposal.pollProposalElements %}
                 {% set val = attribute(ppElt, 'val'~ppElt.pollElement.type) %}
                 {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?val|localizeddate:val }}{% if not loop.last %}
                 <br>{% endif %}
             {% endfor %}
-        </div>
+        </span>
     </td>
 
-    <td class="dt-body-center">
+    <td class="">
         {% set responseValue = null %}
         {% set userPPResponse = pollProposal.pollProposalResponsesOfModuleInvitations([userModuleInvitation]) %}
         {% if userPPResponse|length == 1 %}
@@ -124,7 +124,7 @@
     </script>
 
     {% for otherGuestPollProposalResponse in pollProposal.pollProposalResponsesOfModuleInvitations(moduleInvitations) %}
-        <td class="dt-body-center">
+        <td class="">
             {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
                 {{ otherGuestPollProposalResponse is null or otherGuestPollProposalResponse.answer is null?0:otherGuestPollProposalResponse.answer }}
             {% else %}
@@ -144,5 +144,5 @@
             {% endif %}
         </td>
     {% endfor %}
-    <td></td>
+    <td></td>{#end spacer#}
 </tr>

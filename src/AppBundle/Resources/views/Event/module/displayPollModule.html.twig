@@ -29,7 +29,7 @@
                     <table id="pollmodule-table-{{ module.token }}" class="compact stripe hover row-border" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <td></td>
+                            <td style="width: 150px;"></td>
                             <td class="dt-head-center" style="width:40px">
                                 <span class="userInvitation-avatar">
                                     <div class="avatar-img-container-sm center-block">
@@ -44,7 +44,7 @@
                                     </div>
                                 </td>
                             {% endfor %}
-                            <td></td>
+                            <td></td>{#end spacer#}
                         </tr>
                         </thead>
                         <tbody class="palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
@@ -69,7 +69,7 @@
                                 stateSave: true,
                                 fixedColumns: {leftColumns: 2},
                                 buttons: false,
-                                columnDefs: [/*{targets: 0, width: 130},*/ {targets: -1, width: 'auto'}]
+                                columnDefs: [{targets: 0, width: "150px"}, {targets: 1, width: "50px"}, {targets: -1, width: "auto"}]
                             });
                         });
                     </script>
