@@ -1,10 +1,11 @@
 <script src="https://apis.google.com/js/client.js"></script>
+<script src="https://apis.google.com/js/client.js"></script>
 <script>
     var GMAIL_CONTACTS = new Array();
 
     function authClick() {
-// Your Client ID is retrieved from your project
-//in the Developer Console => https://console.developers.google.com
+        // Your Client ID is retrieved from your project
+        //in the Developer Console => https://console.developers.google.com
         var CLIENT_ID = '97577591330-rnga2ufsqktnn69e8urbupu12rcc889e.apps.googleusercontent.com';
         var SCOPES = ["https://www.googleapis.com/auth/contacts.readonly"];
 
@@ -36,22 +37,19 @@
     function loadPeopleApi() {
         gapi.client.load('https://people.googleapis.com/$discovery/rest',
                 'v1',
-                displayContacts);
+                loadContacts);
     }
 
-    function displayContacts() {
-        /**
-         * [id][[photo][displayName][email]]
-         */
-        loadContacts(null);
-
-    }
+    /*  function displayContacts() {
+     loadContacts(null);
+     }*/
 
     function loadContacts(pageToken) {
+        pageToken = typeof pageToken !== 'undefined' ? pageToken : null;
         var request = null;
         if (pageToken != null) {
             request = gapi.client.people.people.connections.list({
-                'pageToken': "'" + pageToken + "'",
+                'pageToken': pageToken,
                 'resourceName': 'people/me',
                 'pageSize': 50,
                 'sortOrder': 'FIRST_NAME_ASCENDING',
@@ -102,7 +100,11 @@
      */
     function showContacts() {
         if (GMAIL_CONTACTS.length > 0) {
-            var _Html = "<table><tr><th>Photos</th><th>Name</th><th>Email</th></tr>";
+            var _Html = "<table id='tab-gmail-contact' class='table table-condensed table-hover table-striped table-vmiddle'><thead><tr>" +
+                    "<th data-column-id='avatar' data-formatter='avatar' data-sortable='false' data-align='center'>Photos</th>" +
+                    "<th data-column-id='name'>Name</th>" +
+                    "<th data-column-id='email' data-identifier='true'>Email</th>" +
+                    "</tr></thead><tbody>";
             var _EmptyCell = "<td> - </td>";
 
             for (i = 0; i < GMAIL_CONTACTS.length; i++) {
@@ -110,7 +112,7 @@
                 _Html += "<tr>";
 
                 if (person[0] != null)
-                    _Html += "<td><div class='avatar-img-container-sm center-block'><img class='yzi-avatar-img' src='" + person[0] + "'></div></td>";
+                    _Html += "<td>" + person[0] + "</td>";
                 else
                     _Html += _EmptyCell;
 
@@ -120,20 +122,52 @@
 
                 _Html += "</tr>";
             }
-            _Html += "</table>";
+            _Html += "</tbody></table>";
             divtableresult.innerHTML = "Contacts found : <br>" + _Html;
+            $("#tab-gmail-contact").bootgrid({
+                multiSort: true,
+                selection: true,
+                multiSelect: true,
+                rowSelect: false,
+                keepSelection: true,
+                formatters: {
+                    "avatar": function (column, row) {
+                        if (row.avatar && row.avatar.trim() != "") {
+                            return "<div class='avatar-img-container-sm center-block'><img class='yzi-avatar-img' src='" + row.avatar + "'></div>";
+                        }
+                    }
+                }
+            });
         } else {
             divtableresult.innerHTML = "";
             divauthresult.innerText = "No Contacts found!";
         }
+        document.getElementById('gmail-contact-container').style.display = 'block';
     }
 </script>
-<h3>Get your contacts using People API</h3>
+<h3>Test Gmail</h3>
 <p>
-    Press button to Authorize and Download your Contacts in JSON
     <br/>
-    <br/>
-    <button onclick="authClick(event)">Load Contacts</button>
+    <button onclick="authClick(event)">Inviter via contact Gmail</button>
 </p>
 <div id="divauthresult"></div>
-<div id="divtableresult"></div>
+<div >
+    <div class="modal fade in" id="gmail-contact-container" tabindex="-1" role="dialog" aria-hidden="true" style="display: none; padding-right: 17px;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Contact Gmail</h4>
+                </div>
+                <div id="divtableresult" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link waves-effect">Inviter</button>
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Inviter et enregistrer dans les contacts</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
