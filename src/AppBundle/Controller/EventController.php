@@ -175,7 +175,8 @@ class EventController extends Controller
         ////////////////////////////
         // Invitations management //
         ////////////////////////////
-        if ($this->isGranted(EventInvitationVoter::INVITE, $currentEvent) || $this->isGranted(EventInvitationVoter::EDIT, $userEventInvitation)) {
+        // L'utilisateur peut inviter si la configuration de l'événement le permet ou si l'utilisateur est organisateur ou administrateur
+        if ($this->isGranted(EventInvitationVoter::INVITE, $currentEvent) || $userEventInvitation->isCreator() || $userEventInvitation->isAdministrator()) {
             /** @var FormInterface $eventInvitationsForm */
             $eventInvitationsForm = $eventManager->createEventInvitationsForm();
             $eventInvitationsForm->handleRequest($request);
@@ -264,7 +265,7 @@ class EventController extends Controller
                             $data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
 
                             $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']);
-                            $pollProposalAddForm = $this->get('at.manager.pollproposal')->createPollProposalAddForm($moduleDescription['module']->getPollModule(),  $userModuleInvitation);
+                            $pollProposalAddForm = $this->get('at.manager.pollproposal')->createPollProposalAddForm($moduleDescription['module']->getPollModule(), $userModuleInvitation);
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
                                 $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form_min.html.twig', array(
                                     'userModuleInvitation' => $userModuleInvitation,

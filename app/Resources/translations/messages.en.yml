@@ -181,6 +181,7 @@ invitations:
       label: Invite new people
       placeholder: Emails of your guests
       invalid_message: Valid email address required
+      help: Hit "Return" after each email to validate it
   button:
     send_invitation: Send invitations
 

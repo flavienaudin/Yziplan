@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\User;
 
+use AppBundle\Utils\enum\AppUserStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -340,6 +341,38 @@ class Contact
     {
         $this->contactEmails->removeElement($contactEmail);
         return $this;
+    }
+
+
+    /***********************************************************************
+     *                      Helpers
+     ***********************************************************************/
+
+    public function getDisplayableName()
+    {
+        return $this->firstName . " " . $this->lastName;
+    }
+
+    /**
+     * Retourne l'email pour écrire au contact
+     * // TODO A confirmer si on utilise l'adresse du AccountUser ou quel contactEmail (?) selon les préférentes de l'utilisateur associé (et/ou propriétaire)
+     * @return null|string
+     */
+    public function getEmailToContact()
+    {
+        /** @var ApplicationUser $applicationUserLinked */
+        foreach ($this->getLinkeds() as $applicationUserLinked) {
+            if ($applicationUserLinked->getStatus() == AppUserStatus::MAIN && $applicationUserLinked->getAccountUser() != null) {
+                return $applicationUserLinked->getAccountUser()->getEmail();
+            }
+        }
+        /** @var ContactEmail $contactEmail */
+        foreach ($this->getContactEmails() as $contactEmail) {
+            if (!empty($contactEmail->getEmail())) {
+                return $contactEmail->getEmail();
+            }
+        }
+        return null;
     }
 }
 

@@ -34,21 +34,27 @@
         {% endif %}
 
         {% if invitationsForm is not null %}
-
-            {# TODO Implémenter les invitations #}
-            {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),'attr':{'id':'eventInvitations'}}) }}
-            {{ form_row(invitationsForm.invitations, {'id':'eventInvitations_newEmails','label':'invitations.form.invitations.label','attr':{'class':'contacts'}}) }}
-            <div class="text-center">
-                {#<button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}"
-                        data-original-text="{{ "invitations.button.send_invitation"|trans }}">
-                    {{ "invitations.button.send_invitation"|trans }}
-                </button>#}
+            <div class="palette-Teal-50 bg p-15">
+                {# TODO Implémenter les invitations #}
+                {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),'attr':{'id':'eventInvitations'}}) }}
+                {{ form_row(invitationsForm.invitations, {
+                    'id':'eventInvitations_newEmails',
+                    'label':'invitations.form.invitations.label',
+                    'attr':{'class':'contacts'},
+                    'help':'invitations.form.invitations.help'|trans
+                }) }}
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}"
+                            data-original-text="{{ "invitations.button.send_invitation"|trans }}">
+                        {{ "invitations.button.send_invitation"|trans }}
+                    </button>
+                </div>
+                {{ form_end(invitationsForm) }}
             </div>
-            {{ form_end(invitationsForm) }}
 
-            <button class="btn btn-primary btn-facebook" id="shareEventFB" name="provider">
-                Invitez via Facebook
-            </button>
+            <div class="m-t-10">
+                <button class="btn btn-primary btn-facebook" id="shareEventFB" name="provider">Invitez via Facebook</button>
+            </div>
         {% endif %}
     </div>
     <script>
@@ -67,22 +73,32 @@
             labelField: 'text',
             searchField: ['text', 'value'],
             hideSelected: true,
+            createOnBlur: true,
             render: {
                 item: renderUserAsItem,
                 option: renderUserAsOption,
                 option_create: renderOptionCreate
             },
             createFilter: createFilterEmail,
-            create: createUser
+            create: createUser,
+            preload: 'focus',
+            load: function (query, callback) {
+                $.ajax({
+                    url: '{{ path('searchContacts') }}',
+                    data: {'search': query},
+                    type: 'POST',
+                    error: function () {
+                        callback();
+                    },
+                    success: function (res) {
+                        callback(res.slice(0,15));
+                    }
+                });
+            }
         });
 
         $('form#eventInvitations').on('submit', function (e) {
-            e.preventDefault();
-            /*ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-             if (responseJSON.htmlContent) {
-             $('#eventInvitations-main-div').replaceWith(responseJSON.htmlContent);
-             }
-             }, null, null);*/
+            ajaxFormSubmission(this, e, null, null, null);
         });
         {% endif %}
 
