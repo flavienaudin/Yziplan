@@ -440,9 +440,7 @@ class Module
      */
     public function getFilteredModuleInvitations($maxResult = 0, $excludedModuleInvitations = array())
     {
-
         $criteria = Criteria::create()->where(Criteria::expr()->eq("status", ModuleInvitationStatus::VALID));
-
         if ($excludedModuleInvitations != null) {
             $excludedModuleInvitationsId = array();
             foreach ($excludedModuleInvitations as $moduleInvitation) {

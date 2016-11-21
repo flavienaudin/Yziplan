@@ -12,12 +12,14 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
+use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Form\Event\EventInvitationAnswerType;
 use AppBundle\Form\Event\EventInvitationType;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
@@ -257,6 +259,13 @@ class EventInvitationManager
         $this->eventInvitation = $evtInvitForm->getData();
         if (!empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
+
+            /** @var ModuleInvitation $moduleInvitation */
+            foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
+                if($moduleInvitation->getStatus() == ModuleInvitationStatus::AWAITING_ANSWER) {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
+                }
+            }
         }
 
         $guestEmailForm = $evtInvitForm->get("email");
