@@ -216,6 +216,12 @@ class EventInvitationManager
         }
         if ($this->eventInvitation != null) {
             $this->eventInvitation->setStatus(EventInvitationStatus::CANCELLED);
+
+            /** @var ModuleInvitation $moduleInvitation */
+            foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
+                $moduleInvitation->setStatus(ModuleInvitationStatus::CANCELLED);
+            }
+
             return $this->persistEventInvitation();
         }
         return false;
