@@ -108,6 +108,8 @@ event:
       placeholder: Guests can invite
       text.true: Guests can invite other people
       text.false: Guests can not invite other people
+  button:
+    facebook_invitation: Facebook invitation
 #    guestsCanAddModule:
 #      label: Guests can add module
 #      placeholder: Guests can add module
@@ -191,6 +193,11 @@ invitations:
       help: Hit "Return" after each email to validate it
   button:
     send_invitation: Send invitations
+
+contactsgmail:
+  title: Gmail contacts
+  invitation: Invite
+  invitation_and_add: Invite and add to contacts
 
 module:
   main_information:

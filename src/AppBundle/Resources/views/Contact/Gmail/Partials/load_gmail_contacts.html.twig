@@ -100,12 +100,12 @@
      */
     function showContacts() {
         if (GMAIL_CONTACTS.length > 0) {
-            var _Html = "<table id='tab-gmail-contact' class='table table-condensed table-hover table-striped table-vmiddle'><thead><tr>" +
-                    "<th data-column-id='avatar' data-formatter='avatar' data-sortable='false' data-align='center'>Photos</th>" +
-                    "<th data-column-id='name'>Name</th>" +
-                    "<th data-column-id='email' data-identifier='true'>Email</th>" +
+            var _Html = "<table id='tab-gmail-contact' class='table table-condensed table-hover table-striped'><thead><tr>" +
+                    "<th data-column-id='avatar' data-formatter='avatar' data-sortable='false' data-align='center'>{{ "contacts.table.avatar.column_title"|trans }}</th>" +
+                    "<th data-column-id='name'>{{ "contacts.table.contact"|trans }}</th>" +
+                    "<th data-column-id='email' data-identifier='true'>{{ "contacts.table.emails"|trans }}</th>" +
                     "</tr></thead><tbody>";
-            var _EmptyCell = "<td> - </td>";
+            var _EmptyCell = "<td> </td>";
 
             for (i = 0; i < GMAIL_CONTACTS.length; i++) {
                 var person = GMAIL_CONTACTS[i];
@@ -117,13 +117,11 @@
                     _Html += _EmptyCell;
 
                 _Html += "<td>" + person[1] + "</td>";
-
                 _Html += "<td>" + person[2] + "</td>";
-
                 _Html += "</tr>";
             }
             _Html += "</tbody></table>";
-            divtableresult.innerHTML = "Contacts found : <br>" + _Html;
+            divtableresult.innerHTML = _Html;
             $("#tab-gmail-contact").bootgrid({
                 multiSort: true,
                 selection: true,
@@ -138,36 +136,57 @@
                     }
                 }
             });
+            document.getElementById('gmail-preloader').style.display = 'none'
         } else {
             divtableresult.innerHTML = "";
             divauthresult.innerText = "No Contacts found!";
         }
-        document.getElementById('gmail-contact-container').style.display = 'block';
+        //document.getElementById('gmail-contact-container').style.display = 'block';
     }
 </script>
-<h3>Test Gmail</h3>
-<p>
-    <br/>
-    <button onclick="authClick(event)">Inviter via contact Gmail</button>
-</p>
-<div id="divauthresult"></div>
-<div >
+<a data-toggle="modal" href="#gmail-contact-container" class="btn btn-lg btn-block btn-danger waves-effect" onclick="authClick(event)">
+    <i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> Inviter via contact Gmail
+</a>
+
+<div>
     <div class="modal fade in" id="gmail-contact-container" tabindex="-1" role="dialog" aria-hidden="true" style="display: none; padding-right: 17px;">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Contact Gmail</h4>
+                <div class="modal-header z-depth-3-bottom palette-Red bg">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                    <h4 class="modal-title"><i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "contactsgmail.title"|trans }}</h4>
                 </div>
-                <div id="divtableresult" class="modal-body">
+                <div class="fit-width">
+                    <div id="gmail-preloader" class="preloader pl-lg center-block">
+                        <svg class="pl-circular" viewBox="25 25 50 50">
+                            <circle class="plc-path" cx="50" cy="50" r="20"></circle>
+                        </svg>
+                    </div>
+                </div>
+                <div id="divauthresult"></div>
+                <div class="table-responsive">
+                    <div id="divtableresult" class="modal-body">
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-link waves-effect">Inviter</button>
-                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Inviter et enregistrer dans les contacts</button>
+                    <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}"
+                            data-original-text="{{ "contactsgmail.invitation"|trans }}">
+                        {{ "contactsgmail.invitation"|trans }}
+                    </button>
+                    <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}"
+                            data-original-text="{{ "contactsgmail.invitation_and_add"|trans }}">
+                        {{ "contactsgmail.invitation_and_add"|trans }}
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
+
 
 
 

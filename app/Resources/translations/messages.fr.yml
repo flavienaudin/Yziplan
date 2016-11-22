@@ -108,6 +108,8 @@ event:
       placeholder: Autoriser les invités à inviter
       text.true: Les invités peuvent inviter d'autres personnes
       text.false: Les invités ne peuvent pas inviter d'autres personnes
+  button:
+    facebook_invitation: Inviter via Facebook
 #    guestsCanAddModule:
 #      label: Autoriser les invités à ajouter un module
 #      placeholder: Autoriser les invités à ajouter un module
@@ -191,6 +193,11 @@ invitations:
       help: Appuyez sur "entrée" après chaque e-mail pour la valider
   button:
     send_invitation: Envoyer les invitations
+
+contactsgmail:
+  title: Contacts Gmail
+  invitation: Inviter
+  invitation_and_add: Inviter et ajouter aux contacts
 
 module:
   main_information:
