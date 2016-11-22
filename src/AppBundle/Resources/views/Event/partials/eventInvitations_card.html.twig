@@ -91,8 +91,9 @@
                 option_create: renderOptionCreate
             },
             createFilter: createFilterEmail,
-            create: createUser,
-            preload: 'focus',
+            create: createUser
+            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            , preload: 'focus',
             load: function (query, callback) {
                 $.ajax({
                     url: '{{ path('searchContacts') }}',
@@ -106,6 +107,7 @@
                     }
                 });
             }
+            {% endif %}
         });
 
         $('form#eventInvitations').on('submit', function (e) {
