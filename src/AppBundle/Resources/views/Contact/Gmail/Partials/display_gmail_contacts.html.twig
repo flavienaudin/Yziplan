@@ -1,0 +1,139 @@
+{# Données d'entrée
+- contacts (Array of Contact) Tableau des contacts à afficher
+#}
+
+<div class="contacts-list">
+    <form id="selectionContacts" method="post" action="#">
+        <div class="table-responsive">
+            <table id="contactsTable" class="table table-condensed table-hover table-striped table-vmiddle" role="grid">
+                <thead>
+                <tr>
+                    <th data-column-id="avatar" data-formatter="avatar" data-sortable="false" data-align="center" data-visible-in-selection="false">
+                        {{ "contacts.table.avatar.column_title"|trans }}
+                    </th>
+                    <th data-column-id="name" data-formatter="name" data-order="asc">{{ "contacts.table.contact"|trans }}</th>
+                    <th data-column-id="emails" data-formatter="emails" data-identifier="true">{{ "contacts.table.emails"|trans }}</th>
+                    <th data-column-id="groups" data-formatter="groups" data-sortable="false">{{ "contacts.table.groups"|trans }}</th>
+                    <th data-column-id="commands" data-formatter="commands" data-sortable="false" data-visible-in-selection="false">{{ "contacts.table.commnads"|trans }}</th>
+                </tr>
+                </thead>
+                <tbody class="f-10">
+                <noscript>
+                    {% for contact in contacts %}
+                        {{ include('@App/Contact/partials/contact_table_row.html.twig', {
+                            'contact' : contact
+                        }) }}
+                    {% endfor %}
+                </noscript>
+                </tbody>
+            </table>
+        </div>
+        <div class="text-center">
+            <p>{{ "contacts.text.selection_action"|trans }} : </p>
+            <input type="submit" disabled="disabled" class="btn btn-default" value="{{ "contacts.text.selection_button"|trans }}">
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var contactsBootgrid = $('#contactsTable').bootgrid({
+            multiSort: true,
+            selection: true,
+            multiSelect: true,
+            rowSelect: false,
+            keepSelection: true,
+            delay: 200,
+            characters: 2,
+            ajax: true,
+            url: "{{ path('getUserContacts') }}",
+            formatters: {
+                "avatar": function (column, row) {
+                    if (row.avatar && row.avatar.trim() != "") {
+                        return "<span class=\"zmdi zmdi-account zmdi-hc-2x text-center\"></span>";
+                    } else {
+                        return "<span class=\"zmdi zmdi-account-circle zmdi-hc-2x text-center\"></span>";
+                    }
+                },
+                "name": function (column, row) {
+                    return "<a href=\"#\" class=\"client-link\" title=\"{{ "contacts.table.avatar.title_attr"|trans }}\">" + row.name + "</a>";
+                },
+                "emails": function (column, row) {
+                    var emails = "";
+                    for (var email in row.emails) {
+                        if (row.emails.hasOwnProperty(email)) {
+                            if (emails != "") {
+                                emails += ", ";
+                            }
+                            emails += row.emails[email];
+                        }
+                    }
+                    if (emails.trim() === "") {
+                        emails = "-";
+                    }
+                    return emails;
+                },
+                "groups": function (column, row) {
+                    var groups = "";
+                    for (var group in row.groups) {
+                        if (row.groups.hasOwnProperty(group)) {
+                            if (groups != "") {
+                                groups += ", ";
+                            }
+                            groups += "<span class='badge'>" + row.groups[group] + "</span>";
+                        }
+                    }
+                    if (groups.trim() === "") {
+                        groups = "-";
+                    }
+                    return groups;
+                },
+                "commands": function (column, row) {
+                    return "<a href='{{ path('editContact') }}'class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi " +
+                            "zmdi-edit\"></span></button>" +
+                            "<a href='{{ path('deleteContact') }}' class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\">" +
+                            "<span class=\"zmdi zmdi-delete\"></span></a>";
+                }
+            },
+            labels: {
+                'search': '{{ "contacts.table.label.search_contact"|trans }}',
+                'refresh': '{{ "contacts.table.label.refresh"|trans }}',
+                'noResults': '{{ "contacts.text.empty_contact_list"|trans }}'
+            }
+        }).on("loaded.rs.jquery.bootgrid", function () {
+            /* Executes after data is loaded and rendered */
+            contactsBootgrid
+                    .find(".command-edit").on("click", function (e) {
+                e.preventDefault();
+                var moduleModalsContainer = $('#editContact_modalContainer');
+                $(moduleModalsContainer).empty();
+                var contactId = $(this).data("row-id");
+                ajaxRequest($(this), {'contact-id': contactId}, e, function (responseJSON, textStatus, jqXHR) {
+                    var editModal = $('#editContact_modal');
+                    editModal.modal('show');
+                }, null, null);
+            }).end()
+                    .find(".command-delete").on("click", function (e) {
+                var link = $(this);
+                var contactId = $(this).data("row-id");
+                e.preventDefault();
+                swal({
+                    title: '{{ "contacts.alert.remove_contact_confirmation_title"|trans }}',
+                    text: '{{ "contacts.alert.remove_contact_confirmation_text"|trans }}',
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: '{{ "global.button.delete"|trans }}',
+                    closeOnConfirm: true,
+                    showLoaderOnConfirm: true
+                }, function (isConfirm) {
+                    if (isConfirm) {
+                        ajaxRequest(link, {"contact-id": contactId}, e, function (responseJSON, textStatus, jqXHR) {
+                            contactsBootgrid.bootgrid('reload');
+                        }, null, null);
+                    }
+                });
+            }).end();
+        });
+    });
+</script>

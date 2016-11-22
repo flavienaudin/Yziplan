@@ -1,0 +1,173 @@
+<script src="https://apis.google.com/js/client.js"></script>
+<script src="https://apis.google.com/js/client.js"></script>
+<script>
+    var GMAIL_CONTACTS = new Array();
+
+    function authClick() {
+        // Your Client ID is retrieved from your project
+        //in the Developer Console => https://console.developers.google.com
+        var CLIENT_ID = '97577591330-rnga2ufsqktnn69e8urbupu12rcc889e.apps.googleusercontent.com';
+        var SCOPES = ["https://www.googleapis.com/auth/contacts.readonly"];
+
+        gapi.auth.authorize(
+                {client_id: CLIENT_ID, scope: SCOPES, immediate: false}, authResult);
+
+        return false;
+    }
+
+    /**
+     * Handle response from authorization server.
+     * @param {Object} authResult Authorization result.
+     */
+    function authResult(_Result) {
+        var _Div = document.getElementById('divauthresult');
+        if (_Result && !_Result.error) {
+            // Auth OK! => load API.
+            _Div.style.display = 'none';
+            loadPeopleApi();
+        } else {
+            // Auth Error, allowing the user to initiate authorization by
+            _Div.innerText = ':( Authtentication Error : ' + _Result.error;
+        }
+    }
+
+    /**
+     * Load Google People client library. List Contact requested info
+     */
+    function loadPeopleApi() {
+        gapi.client.load('https://people.googleapis.com/$discovery/rest',
+                'v1',
+                loadContacts);
+    }
+
+    /*  function displayContacts() {
+     loadContacts(null);
+     }*/
+
+    function loadContacts(pageToken) {
+        pageToken = typeof pageToken !== 'undefined' ? pageToken : null;
+        var request = null;
+        if (pageToken != null) {
+            request = gapi.client.people.people.connections.list({
+                'pageToken': pageToken,
+                'resourceName': 'people/me',
+                'pageSize': 50,
+                'sortOrder': 'FIRST_NAME_ASCENDING',
+                'requestMask.includeField': 'person.photos,person.email_addresses,person.names'
+            });
+        } else {
+            request = gapi.client.people.people.connections.list({
+                'resourceName': 'people/me',
+                'pageSize': 50,
+                'sortOrder': 'FIRST_NAME_ASCENDING',
+                'requestMask.includeField': 'person.photos,person.email_addresses,person.names'
+            });
+        }
+
+        request.execute(function (resp) {
+            var connections = resp.connections;
+
+            if (connections != null && connections.length > 0) {
+                for (i = 0; i < connections.length; i++) {
+                    var person = connections[i];
+                    if (person.emailAddresses && person.emailAddresses.length > 0) {
+                        var contact = new Array();
+                        if (person.photos && person.photos.length > 0)
+                            contact.push(person.photos[0].url);
+                        else
+                            contact.push(null);
+
+                        if (person.names && person.names.length > 0)
+                            contact.push(person.names[0].displayName);
+                        else
+                            contact.push('');
+
+                        contact.push(person.emailAddresses[0].value);
+                        GMAIL_CONTACTS.push(contact);
+                    }
+                }
+            }
+            if (resp.nextPageToken != null) {
+                loadContacts(resp.nextPageToken)
+            } else {
+                showContacts();
+            }
+        });
+    }
+
+    /**
+     * Show Contacts Details display on a table pagesize = 100 connections.
+     */
+    function showContacts() {
+        if (GMAIL_CONTACTS.length > 0) {
+            var _Html = "<table id='tab-gmail-contact' class='table table-condensed table-hover table-striped table-vmiddle'><thead><tr>" +
+                    "<th data-column-id='avatar' data-formatter='avatar' data-sortable='false' data-align='center'>Photos</th>" +
+                    "<th data-column-id='name'>Name</th>" +
+                    "<th data-column-id='email' data-identifier='true'>Email</th>" +
+                    "</tr></thead><tbody>";
+            var _EmptyCell = "<td> - </td>";
+
+            for (i = 0; i < GMAIL_CONTACTS.length; i++) {
+                var person = GMAIL_CONTACTS[i];
+                _Html += "<tr>";
+
+                if (person[0] != null)
+                    _Html += "<td>" + person[0] + "</td>";
+                else
+                    _Html += _EmptyCell;
+
+                _Html += "<td>" + person[1] + "</td>";
+
+                _Html += "<td>" + person[2] + "</td>";
+
+                _Html += "</tr>";
+            }
+            _Html += "</tbody></table>";
+            divtableresult.innerHTML = "Contacts found : <br>" + _Html;
+            $("#tab-gmail-contact").bootgrid({
+                multiSort: true,
+                selection: true,
+                multiSelect: true,
+                rowSelect: false,
+                keepSelection: true,
+                formatters: {
+                    "avatar": function (column, row) {
+                        if (row.avatar && row.avatar.trim() != "") {
+                            return "<div class='avatar-img-container-sm center-block'><img class='yzi-avatar-img' src='" + row.avatar + "'></div>";
+                        }
+                    }
+                }
+            });
+        } else {
+            divtableresult.innerHTML = "";
+            divauthresult.innerText = "No Contacts found!";
+        }
+        document.getElementById('gmail-contact-container').style.display = 'block';
+    }
+</script>
+<h3>Test Gmail</h3>
+<p>
+    <br/>
+    <button onclick="authClick(event)">Inviter via contact Gmail</button>
+</p>
+<div id="divauthresult"></div>
+<div >
+    <div class="modal fade in" id="gmail-contact-container" tabindex="-1" role="dialog" aria-hidden="true" style="display: none; padding-right: 17px;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Contact Gmail</h4>
+                </div>
+                <div id="divtableresult" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link waves-effect">Inviter</button>
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal">Inviter et enregistrer dans les contacts</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
