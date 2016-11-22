@@ -7,7 +7,7 @@
     <meta name="author" content="ArdTeam">
     {% block meta_data %}{% endblock %}
 
-    <title>{% block title %}{{ "base.page.meta_title"|trans }}{% endblock %}</title>
+    <title>{% block title %}{{ "global.project_name"|trans }}{% endblock %}</title>
 
     {% block stylesheets %}
         <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery-ui.min.css") }}">
@@ -46,7 +46,7 @@
 {% block header_body %}
     <header id="header" class="media">
         <div class="pull-left h-logo">
-            <a href="{{ path('home') }}" class="{#hidden-xs#}">{{ "navbar.brand"|trans }}
+            <a href="{{ path('home') }}" class="{#hidden-xs#}">{{ "global.project_name"|trans }}
                 <small>{{ "navbar.subtitle"|trans }}</small>
             </a>
 

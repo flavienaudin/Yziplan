@@ -138,7 +138,6 @@ class EventController extends Controller
         // Edition management //
         ////////////////////////
         $eventForm = null;
-        $eventInvitationsForm = null;
         if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
             /** @var Form $eventForm */
             $eventForm = $eventManager->initEventForm();
@@ -172,6 +171,7 @@ class EventController extends Controller
         }
 
         // TODO Revoir le système d'invitation
+        $eventInvitationsForm = null;
         ////////////////////////////
         // Invitations management //
         ////////////////////////////

@@ -3,7 +3,6 @@
 
 base:
   page:
-    meta_title: Yziplan
   ie_warning:
     browser:
       chrome: Chrome
@@ -17,7 +16,6 @@ base:
     home: Accueil
 
 navbar:
-  brand: YziPlan
   subtitle: Version beta 2
   search:
     placeholder: Rechercher un contact, un événement...
@@ -71,6 +69,9 @@ appuseremail:
         main_email: Désolé, il n'est pas possible de supprimer votre adresse principale.
 
 event:
+  page:
+    meta_title:
+      new_event: Nouvel événement
   header:
     organised_by: "Organisé par %creator%"
   picture:
@@ -171,7 +172,7 @@ eventInvitation:
     txt:
       subject: "[Yziplan] Vous avez reçu une invitation"
       body:
-        hello: "Hello %username%!"
+        hello: "Bonjour %username%!"
         paragraph: "Vous êtes invités à \"%event_name%\". Cliquez sur le lien ci-dessous pour répondre:"
 
 invitations:
@@ -258,6 +259,7 @@ moduleInvitation:
 
 # Globals
 global:
+  project_name: YziPlan
   event: événement
   user_anonyme: YsiPlaneur anonyme
   link:
@@ -334,3 +336,4 @@ appuser:
 # Emails
 email:
   salutation: Cordialement
+  organisers: Les yzi-organisateurs

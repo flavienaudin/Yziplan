@@ -90,7 +90,7 @@ services:
 # FormTypes
   at.form_type.invitation:
     class: AppBundle\Form\Event\InvitationsType
-    arguments: ['@security.authorization_checker', '@security.token_storage', '@validator']
+    arguments: ['@security.authorization_checker', '@security.token_storage', '@validator', '@translator.default']
     tags:
     - { name: form.type }
 
@@ -132,6 +132,7 @@ services:
   app.mailer.twig_swift:
     class: AppBundle\Mailer\AppTwigSiwftMailer
     parent: fos_user.mailer.twig_swift
+    public: true
 
 # Twig Extenstions
   at.twig_extension.country:

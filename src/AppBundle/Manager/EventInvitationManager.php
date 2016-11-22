@@ -265,7 +265,18 @@ class EventInvitationManager
     public function treatEventInvitationFormSubmission(Form $evtInvitForm)
     {
         $this->eventInvitation = $evtInvitForm->getData();
-        if (!empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+        if(empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::VALID){
+            // Si le nom est vide => l'invitation revient en attente de réponse
+            $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
+
+            /** @var ModuleInvitation $moduleInvitation */
+            foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
+                if ($moduleInvitation->getStatus() == ModuleInvitationStatus::VALID) {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
+                }
+            }
+        } elseif (!empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+            // Si le nom n'est pas vide => l'invitation devient valide
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
 
             /** @var ModuleInvitation $moduleInvitation */

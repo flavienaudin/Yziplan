@@ -434,7 +434,7 @@ class AppUserInformation
             // TODO check preferences before using other data
             $displayableName = $this->firstName . " " . $this->lastName;
         }
-        return $displayableName;
+        return trim($displayableName);
     }
 
 }

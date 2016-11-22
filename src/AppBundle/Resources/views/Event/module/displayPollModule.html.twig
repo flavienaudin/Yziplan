@@ -11,9 +11,9 @@
 {% set maxColModule = constant("AppBundle\\Manager\\ModuleInvitationManager::MAX_COLUMN_DISPLAYABLE") %}
 {% set add_pp_form_modal_prefix = 'add_pp_fm_'~module.token %}
 
-{% block moduleCardClass %}c-dark{% endblock moduleCardClass %}
-{% block moduleHeaderClass %}palette-Red bg{% endblock moduleHeaderClass %}
-{% block moduleHeaderAttributs %}{% endblock moduleHeaderAttributs %}
+{% block moduleCardClass %}{{ parent() }}{% endblock moduleCardClass %}
+{% block moduleHeaderClass %}{{ parent() }}{% endblock moduleHeaderClass %}
+{% block moduleHeaderAttributs %}{{ parent() }}{% endblock moduleHeaderAttributs %}
 
 {% block mhBtnFloat %}{% endblock mhBtnFloat %}
 
@@ -70,7 +70,7 @@
                                 fixedColumns: {leftColumns: 2},
                                 buttons: false,
                                 columnDefs: [{targets: 0, width: "150px"}, {targets: 1, width: "50px"}, {targets: -1, width: "auto"}],
-                                language:{
+                                language: {
                                     "emptyTable": "{{ "pollmodule.display.no_proposal"|trans }}"
                                 }
                             });

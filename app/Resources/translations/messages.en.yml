@@ -3,7 +3,6 @@
 
 base:
   page:
-    meta_title: Yziplan
   ie_warning:
     browser:
       chrome: Chrome
@@ -17,7 +16,6 @@ base:
     home: Home
 
 navbar:
-  brand: YziPlan
   subtitle: Version beta 2
   search:
     placeholder: Search for contact, event...
@@ -71,6 +69,9 @@ appuseremail:
         main_email: Sorry, it is not allowed to delete your main email address.
 
 event:
+  page:
+    meta_title:
+      new_event: New event
   header:
     organised_by: "Organised by %creator%"
   picture:
@@ -172,7 +173,7 @@ eventInvitation:
       subject: "[Yziplan] You received an invitation"
       body:
         hello: "Hi %username%!"
-        paragraph: "You are invited to \"%event_name%\". Follow this link bellow to answer:"
+        paragraph: "You are invited to \"%event_name%\". Follow the link bellow to answer:"
 
 invitations:
   display:
@@ -258,6 +259,7 @@ moduleInvitation:
 
 # Globals
 global:
+  project_name: YziPlan
   event: Event
   user_anonyme: YsiPlanor anonyme
   link:
@@ -334,3 +336,4 @@ appuser:
 # Emails
 email:
   salutation: Cordially
+  organisers: The yzi-organisers

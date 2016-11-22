@@ -4,8 +4,8 @@
 - userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
 #}
 
-<div class="card {% block moduleCardClass %}{% endblock %}" id="module-{{ module.token }}">
-    <div class="card-header {% block moduleHeaderClass %}{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
+<div class="card {% block moduleCardClass %}c-dark{% endblock %}" id="module-{{ module.token }}">
+    <div class="card-header {% block moduleHeaderClass %}palette-Teal bg{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
         {% block moduleHeader %}
             <div class="media">
                 <div class="pull-left">
@@ -13,7 +13,7 @@
                 </div>
                 <div class="pull-right">
                     {% block mhMediaRight %}
-                        <a href="#">{{ "global.link.top"|trans }}</a>
+                        <a href="#" class="c-white">{{ "global.link.top"|trans }}</a>
                     {% endblock mhMediaRight %}
                 </div>
                 <div class="media-body">

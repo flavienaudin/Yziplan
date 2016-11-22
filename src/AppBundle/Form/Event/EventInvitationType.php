@@ -20,6 +20,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class EventInvitationType extends AbstractType
 {
@@ -33,8 +34,9 @@ class EventInvitationType extends AbstractType
             $displayableName = $eventInvitation->getDisplayableName();
             $form
                 ->add('guestName', TextType::class, array(
-                    'required' => false,
-                    'data' => $displayableName
+                    'required' => true,
+                    'data' => $displayableName,
+                    'constraints' => new NotBlank()
                 ))
                 ->add('token', HiddenType::class);
 

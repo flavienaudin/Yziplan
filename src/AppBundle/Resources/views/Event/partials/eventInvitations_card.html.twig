@@ -14,7 +14,7 @@
     <div class="card-body card-padding" id="eventinvitation-body-card">
         <div class="well-sm z-depth-2 palette-Grey-200 bg m-b-20">
             <ul class="list-inline" id="eventInvitations_list">
-                {% for eventInvitation in eventInvitations if eventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::VALID') %}
+                {% for eventInvitation in eventInvitations if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED') %}
                     {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
                 {% endfor %}
             </ul>
