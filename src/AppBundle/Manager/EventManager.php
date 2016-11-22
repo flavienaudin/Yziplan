@@ -13,6 +13,7 @@ use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
+use AppBundle\Mailer\AppTwigSiwftMailer;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleStatus;
@@ -53,12 +54,15 @@ class EventManager
     /** @var ModuleInvitationManager */
     private $moduleInvitationManager;
 
+    /** @var AppTwigSiwftMailer */
+    private $appTwigSiwftMailer;
+
     /** @var Event L'événement en cours de traitement */
     private $event;
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory,
                                 GenerateursToken $generateurToken, ModuleManager $moduleManager, PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager,
-                                ModuleInvitationManager $moduleInvitationManager)
+                                ModuleInvitationManager $moduleInvitationManager, AppTwigSiwftMailer $appTwigSiwftMailer)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -69,6 +73,7 @@ class EventManager
         $this->pollProposalManager = $pollProposalManager;
         $this->eventInvitationManager = $eventInvitationManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
+        $this->appTwigSiwftMailer = $appTwigSiwftMailer;
     }
 
     /**
@@ -178,7 +183,8 @@ class EventManager
         if ($this->event != null) {
             $emailsData = $eventInvitationsForm->get("invitations")->getData();
             foreach ($emailsData as $email) {
-                $this->eventInvitationManager->getGuestEventInvitation($this->event, $email);
+                $eventInvitation = $this->eventInvitationManager->getGuestEventInvitation($this->event, $email);
+                $this->appTwigSiwftMailer->sendEventInvitationEmail($eventInvitation);
             }
             $this->entityManager->persist($this->event);
             $this->entityManager->flush();

@@ -167,6 +167,12 @@ eventInvitation:
     error:
       unauthorized_cancel: You are not allowed to cancel this invitation.
       unauthorized_access: You are ot invited to this event.
+  email:
+    txt:
+      subject: "[Yziplan] You received an invitation"
+      body:
+        hello: "Hi %username%!"
+        paragraph: "You are invited to \"%event_name%\". Follow this link bellow to answer:"
 
 invitations:
   display:
@@ -324,3 +330,7 @@ appuser:
   status:
     main: Main
     merged: Merged
+
+# Emails
+email:
+  salutation: Cordially

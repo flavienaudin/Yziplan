@@ -11,13 +11,6 @@
 #}
 
 
-{% block mainMenu_listItems %}
-    <li><a href="#event-header-card">{{ "global.event"|trans|capitalize }}</a></li>
-    {% for moduleDescription in modules if moduleDescription.module.name is not empty and moduleDescription.module.status != constant("AppBundle\\Utils\\enum\\ModuleStatus::DELETED") %}
-        <li><a href="#module-{{ moduleDescription.module.token }}">{{ moduleDescription.module.name|capitalize }}</a></li>
-    {% endfor %}
-{% endblock mainMenu_listItems %}
-
 {% block event_content %}
     {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
         {# TODO Positionner le menu s'ouvrant relativement au browser #}
@@ -45,26 +38,6 @@
                         <small>{{ "pollmodule.add_link.whobringswhat"|trans }}</small>
                         <i class="waves-effect palette-Blue bg zmdi zmdi-format-list-bulleted zmdi-hc-fw"></i> </a>
                 </li>
-                {#<li>
-                    <a data-toggle="modal" href="#"><i class="waves-effect palette-Teal bg zmdi zmdi-map"></i>
-                        <small>Sondage Où ?</small>
-                    </a>
-                </li>
-                <li>
-                    <a data-toggle="modal" href="#"> <i class="waves-effect palette-Yellow-900 bg zmdi zmdi-money-box"></i>
-                        <small>Cagnotte</small>
-                    </a>
-                </li>
-                <li>
-                    <a data-toggle="modal" href="#"><i class="waves-effect palette-Green bg zmdi zmdi-format-list-bulleted"></i>
-                        <small>Qui apporte quoi ?</small>
-                    </a>
-                </li>
-                <li>
-                    <a data-toggle="modal" href="#"> <i class="waves-effect palette-Purple bg zmdi zmdi-balance-wallet"></i>
-                        <small>Comptes entre amis</small>
-                    </a>
-                </li>#}
             </ul>
         </div>
         <script>

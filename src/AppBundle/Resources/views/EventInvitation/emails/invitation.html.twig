@@ -1,0 +1,26 @@
+{# Données :
+- eventInvitation (EventInvitation) L'invitation à envoyer
+#}
+
+{% block subject %}
+    {% autoescape false %}
+        {{ 'eventInvitation.email.txt.subject'|trans }}
+    {% endautoescape %}
+{% endblock %}
+{% block body_text %}
+    {% autoescape false %}
+        {{ 'eventInvitation.email.txt.body.hello'|trans({'%username%': eventInvitation.displayableName}) }}
+        {{ 'eventInvitation.email.txt.body.paragraph'|trans }}
+        {{ url('displayEventInvitation',{'token':eventInvitation.token}) }}
+        {{ "email.salutation"|trans }},
+
+        {% set creatorsNames = "" %}
+        {% for creatorInvitation in eventInvitation.event.creators %}
+            {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
+        {% endfor %}
+        {% if creatorsNames is not empty %}
+            {{ creatorsNames }}
+        {% endif %}
+    {% endautoescape %}
+{% endblock %}
+{% block body_html %}{% endblock %}

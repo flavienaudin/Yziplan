@@ -21,7 +21,7 @@ services:
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
-    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation']
+    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation','@app.mailer.twig_swift']
 
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
@@ -127,6 +127,11 @@ services:
     arguments: ['@at.manager.application_user']
     tags:
       - { name: validator.constraint_validator }
+
+# Mailer
+  app.mailer.twig_swift:
+    class: AppBundle\Mailer\AppTwigSiwftMailer
+    parent: fos_user.mailer.twig_swift
 
 # Twig Extenstions
   at.twig_extension.country:

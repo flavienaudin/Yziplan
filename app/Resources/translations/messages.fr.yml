@@ -167,6 +167,12 @@ eventInvitation:
     error:
       unauthorized_cancel: Vous n'avez pas les autorisations pour annuler cette invitation.
       unauthorized_access: Vous n'êtes pas inviter à cet événement.
+  email:
+    txt:
+      subject: "[Yziplan] Vous avez reçu une invitation"
+      body:
+        hello: "Hello %username%!"
+        paragraph: "Vous êtes invités à \"%event_name%\". Cliquez sur le lien ci-dessous pour répondre:"
 
 invitations:
   display:
@@ -324,3 +330,7 @@ appuser:
   status:
     main: Princpal
     merged: Fusionné
+
+# Emails
+email:
+  salutation: Cordialement
