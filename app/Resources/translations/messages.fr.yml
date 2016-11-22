@@ -107,6 +107,8 @@ event:
       placeholder: Autoriser les invités à inviter
       text.true: Les invités peuvent inviter d'autres personnes
       text.false: Les invités ne peuvent pas inviter d'autres personnes
+  button:
+    facebook_invitation: Inviter via Facebook
 #    guestsCanAddModule:
 #      label: Autoriser les invités à ajouter un module
 #      placeholder: Autoriser les invités à ajouter un module
@@ -324,3 +326,8 @@ appuser:
   status:
     main: Princpal
     merged: Fusionné
+
+contactsgmail:
+  title: Contacts Gmail
+  invitation: Inviter
+  invitation_and_add: Inviter et ajouter aux contacts

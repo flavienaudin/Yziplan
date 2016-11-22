@@ -5,8 +5,8 @@
 #}
 
 
-<div class="card" id="eventInvitations-main-div">
-    <div class="card-header">
+<div class="card z-depth-2" id="eventInvitations-main-div">
+    <div class="card-header well-sm z-depth-2-bottom bg palette-Teal m-b-20">
         <h2>{{ "invitations.display.title"|trans }}
             <small class="d-block">Todo : design + user avatar</small>
         </h2>
@@ -21,20 +21,19 @@
         </div>
 
         {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly %}
-            <div id="event_public_invitation_display" class="form-group animated">
-                <label class="control-label text-info" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
-                <div class="input-group">
-                    <input id="url_event_public_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}"> <span
-                            class="input-group-btn">
-                                <button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation">
-                                    <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button>
-                            </span>
-                </div>
+            <div class="m-t-10 fit-width">
+                <button class="btn btn-lg btn-block palette-Blue-A700 bg" id="shareEventFB" name="provider">
+                    <i class="zmdi zmdi-facebook zmdi-hc-lg"></i> {{ "event.button.facebook_invitation"|trans }}
+                </button>
+            </div>
+            <div class="m-t-10 fit-width">
+                {{ include('@App/Contact/Gmail/Partials/load_gmail_contacts.html.twig') }}
             </div>
         {% endif %}
 
+
         {% if invitationsForm is not null %}
-            <div class="palette-Teal-50 bg p-15">
+            <div class="m-t-10 palette-Teal-50 bg p-15">
                 {# TODO Implémenter les invitations #}
                 {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),'attr':{'id':'eventInvitations'}}) }}
                 {{ form_row(invitationsForm.invitations, {
@@ -51,11 +50,23 @@
                 </div>
                 {{ form_end(invitationsForm) }}
             </div>
+        {% endif %}
 
-            <div class="m-t-10">
-                <button class="btn btn-primary btn-facebook" id="shareEventFB" name="provider">Invitez via Facebook</button>
+        {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly %}
+            <div class="m-t-10 palette-Teal-50 bg p-15">
+                <div id="event_public_invitation_display" class="form-group animated">
+                    <label class="control-label text-info" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
+                    <div class="input-group">
+                        <input id="url_event_public_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}"> <span
+                                class="input-group-btn">
+                                <button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation">
+                                    <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button>
+                            </span>
+                    </div>
+                </div>
             </div>
         {% endif %}
+
     </div>
     <script>
         {% if userEventInvitation.creator or userEventInvitation.administrator %}
@@ -91,7 +102,7 @@
                         callback();
                     },
                     success: function (res) {
-                        callback(res.slice(0,15));
+                        callback(res.slice(0, 15));
                     }
                 });
             }
@@ -154,6 +165,5 @@
             });
         });
     </script>
-    {{ include('@App/Contact/Gmail/Partials/load_gmail_contacts.html.twig') }}
 </div>
 

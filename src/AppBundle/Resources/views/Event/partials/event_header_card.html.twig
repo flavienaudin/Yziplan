@@ -3,7 +3,7 @@
 - eventForm (Form|null) Formulaire d'édition des information général de l'événement (si les droits le permettent)
 #}
 
-<div class="card" id="event-header-card">
+<div class="card z-depth-2" id="event-header-card">
     {{ include('@App/Event/partials/event_header_card_header.html.twig', {'userEventInvitation':userEventInvitation, 'editEvent' : eventForm is not null }) }}
 
     <div class="card-body card-padding p-t-25">
