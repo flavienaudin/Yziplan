@@ -369,10 +369,13 @@ table.dataTable.compact tbody td {
 .poll-container table td {
     min-width: 40px;
     max-width: 40px;
+    text-align:center;
 }
 
 .poll-container table td:first-child {
-    min-width: 130px;
+    text-align: left;
+    font-weight: bold;
+    min-width: 150px;
 }
 
 .poll-container .dataTables_scroll table td:last-child {
