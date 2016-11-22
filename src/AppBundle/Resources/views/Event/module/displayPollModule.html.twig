@@ -69,7 +69,10 @@
                                 stateSave: true,
                                 fixedColumns: {leftColumns: 2},
                                 buttons: false,
-                                columnDefs: [{targets: 0, width: "150px"}, {targets: 1, width: "50px"}, {targets: -1, width: "auto"}]
+                                columnDefs: [{targets: 0, width: "150px"}, {targets: 1, width: "50px"}, {targets: -1, width: "auto"}],
+                                language:{
+                                    "emptyTable": "{{ "pollmodule.display.no_proposal"|trans }}"
+                                }
                             });
                         });
                     </script>

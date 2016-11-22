@@ -358,6 +358,10 @@ label.required:after {
     z-index: 5;
 }
 
+table.dataTable td.dataTables_empty {
+    text-align: center !important;
+}
+
 /* Surcharge datatable.css */
 table.dataTable.compact thead th,
 table.dataTable.compact thead td,
