@@ -672,3 +672,7 @@ table.dataTable.compact tbody td {
 .profile-tab .pmo-items a img {
     width: 100%;
 }
+
+.z-depth-btn {
+    box-shadow: 0 27px 24px rgba(0, 0, 0, 0.2), 0 40px 77px rgba(0, 0, 0, 0.22) !important;
+}

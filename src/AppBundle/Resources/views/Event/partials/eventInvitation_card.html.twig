@@ -1,25 +1,22 @@
 {# Données d'entrée :
 - userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
-- eventInvitations ([EventInvitation]) Les invitations de l'événements
 - invitationsForm (Form|null) Formulaire permettant d'inviter (renseignement des e-mails des invités)
 #}
 
 
-<div class="card z-depth-2" id="eventInvitations-main-div">
-    <div class="card-header well-sm z-depth-2-bottom bg palette-Teal m-b-20">
-        <h2>{{ "invitations.display.title"|trans }}
-            <small class="d-block">Todo : design + user avatar</small>
-        </h2>
+<div class="card c-dark z-depth-2" id="eventInvitations-main-div">
+    <div class="card-header well-sm bg palette-Teal m-b-20">
+        <div class="media">
+            <div class="pull-left"></div>
+            <div class="pull-right"></div>
+            <div class="media-body">
+                <h2><span>{{ "invitations.display.title"|trans }}</span>
+                    <small class="d-block">Todo : design + user avatar</small>
+                </h2>
+            </div>
+        </div>
     </div>
     <div class="card-body card-padding" id="eventinvitation-body-card">
-        <div class="well-sm z-depth-2 palette-Grey-200 bg m-b-20">
-            <ul class="list-inline" id="eventInvitations_list">
-                {% for eventInvitation in eventInvitations if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED') %}
-                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
-                {% endfor %}
-            </ul>
-        </div>
-
         {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly %}
             <div class="m-t-10 fit-width">
                 <button class="btn btn-lg btn-block palette-Blue-A700 bg" id="shareEventFB" name="provider">

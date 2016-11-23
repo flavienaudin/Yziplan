@@ -16,8 +16,9 @@
 {% block event_content %}
     {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
         {# TODO Positionner le menu s'ouvrant relativement au browser #}
-        <div class="dropup add-module-menu">
-            <button class="btn btn-float btn-danger m-btn waves-effect waves-circle waves-float" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="zmdi zmdi-plus"></i>
+        <div class="dropup add-module-menu z-depth-5">
+            <button class="btn btn-float btn-danger m-btn waves-effect waves-circle waves-float z-depth-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="zmdi zmdi-plus"></i>
             </button>
 
             {#<a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>#}
@@ -73,9 +74,15 @@
                 </div>
 
                 <div class="col-xs-12">
-                    {{ include('@App/Event/partials/eventInvitations_card.html.twig', {
+                    {{ include('@App/Event/partials/eventInvitation_list_card.html.twig', {
                         'userEventInvitation':userEventInvitation,
-                        'eventInvitations':event.eventInvitations,
+                        'eventInvitations':event.eventInvitations
+                    }) }}
+                </div>
+
+                <div class="col-xs-12">
+                    {{ include('@App/Event/partials/eventInvitation_card.html.twig', {
+                        'userEventInvitation':userEventInvitation,
                         'invitationsForm':invitationsForm
                     }) }}
                 </div>

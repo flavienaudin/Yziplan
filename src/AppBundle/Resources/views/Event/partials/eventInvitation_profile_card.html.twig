@@ -4,20 +4,25 @@ Données d'entrée :
 - userEventInvitationForm (Form) Formulaire permettant de répondre à l'invitation
 #}
 
-<div class="card z-depth-2" id="user-event-invitation-card">
-    <div class="card-header">
-        <h3>{{ "eventInvitation.profile.card.title"|trans }}
-            <small>
-                {% if userEventInvitation.creator %}
-                    <span class="label label-danger">{{ "eventInvitation.profile.card.badge.creator"|trans }}</span>
-                {% elseif userEventInvitation.administrator %}
-                    <span class="label label-warning">{{ "eventInvitation.profile.card.badge.administrator"|trans }}</span>
-                {% else %}
-                    <span class="label label-success">{{ "eventInvitation.profile.card.badge.guest"|trans }}</span>
-                {% endif %}
-            </small>
-        </h3>
-
+<div class="card c-dark z-depth-2" id="user-event-invitation-card">
+    <div class="card-header palette-Teal-300 bg m-b-20">
+        <div class="media">
+            <div class="pull-left"></div>
+            <div class="pull-right">
+                    {% if userEventInvitation.creator %}
+                        <span class="label label-danger">{{ "eventInvitation.profile.card.badge.creator"|trans }}</span>
+                    {% elseif userEventInvitation.administrator %}
+                        <span class="label label-warning">{{ "eventInvitation.profile.card.badge.administrator"|trans }}</span>
+                    {% else %}
+                        <span class="label label-success">{{ "eventInvitation.profile.card.badge.guest"|trans }}</span>
+                    {% endif %}
+            </div>
+            <div class="media-body">
+                <h2><span>{{ "eventInvitation.profile.card.title"|trans }}</span>
+                    <small></small>
+                </h2>
+            </div>
+        </div>
     </div>
     <div class="card-body card-padding">
         {{ include('@App/Event/partials/eventInvitation_profile_form.html.twig',{

@@ -3,9 +3,17 @@
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
-<div class="card z-depth-2" id="eventInvitation-answer-card">
-    <div class="card-header palette-Teal bg z-depth-2-bottom">
-        <h2>{{ "eventInvitation.answer.card.title"|trans }}</h2>
+<div class="card c-dark z-depth-2" id="eventInvitation-answer-card">
+    <div class="card-header palette-Teal bg">
+        <div class="media">
+            <div class="pull-left"></div>
+            <div class="pull-right"></div>
+            <div class="media-body">
+                <h2><span>{{ "eventInvitation.answer.card.title"|trans }}</span>
+                    <small></small>
+                </h2>
+            </div>
+        </div>
     </div>
     <div class="card-body card-padding m-t-20">
         {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
