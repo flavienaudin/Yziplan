@@ -29,8 +29,8 @@
                     <table id="pollmodule-table-{{ module.token }}" class="compact stripe hover row-border" cellspacing="0" width="100%">
                         <thead>
                         <tr>
-                            <td style="width: 150px;"></td>
-                            <td class="dt-head-center" style="width:40px">
+                            <th class="pollproposal-column" style="width: 50px"></th>
+                            <td class="voting-column dt-head-center">
                                 <span class="userInvitation-avatar">
                                     <div class="avatar-img-container-sm center-block">
                                         {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userModuleInvitation}) }}
@@ -38,13 +38,13 @@
                                 </span>
                             </td>
                             {% for moduleInvitation in modulesInvitationsExceptUserMI %}
-                                <td class="dt-center" style="width:40px">
+                                <td class="dt-head-center" style="width: 40px">
                                     <div class="avatar-img-container-sm center-block">
                                         {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
                                     </div>
                                 </td>
                             {% endfor %}
-                            <td></td>{#end spacer#}
+                            <td class="end-spacer"></td>{#end spacer#}
                         </tr>
                         </thead>
                         <tbody class="palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
@@ -60,19 +60,23 @@
                     <script>
                         $(document).ready(function () {
                             $('#pollmodule-table-{{ module.token }}').DataTable({
-                                /*dom: "rt",*/
                                 paging: false,
                                 ordering: false,
                                 info: false,
                                 searching: false,
                                 scrollX: true,
-                                stateSave: true,
-                                fixedColumns: {leftColumns: 2},
-                                buttons: false,
-                                columnDefs: [{targets: 0, width: "150px"}, {targets: 1, width: "50px"}, {targets: -1, width: "auto"}],
+                                /*stateSave: true,*/
+                                autoWidth: true,
+                                columnDefs: [
+                                    {targets: 0, width: "150px"},
+                                    {targets: 1, width: "50px"},
+                                    {targets: -1, width: "auto"},
+                                    {targets: '_all', width: "40px"}
+                                ],
                                 language: {
                                     "emptyTable": "{{ "pollmodule.display.no_proposal"|trans }}"
                                 }
+                                /*,fixedColumns: {leftColumns: 2}*/
                             });
                         });
                     </script>
