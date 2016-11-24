@@ -5,7 +5,7 @@ Données d'entrée :
 #}
 
 <div class="card c-dark z-depth-2" id="user-event-invitation-card">
-    <div class="card-header palette-Teal-300 bg m-b-20">
+    <div class="card-header palette-Teal bg m-b-20">
         <div class="media">
             <div class="pull-left"></div>
             <div class="pull-right">
@@ -32,7 +32,7 @@ Données d'entrée :
     </div>
 
     {% if userEventInvitation.applicationUser is null or userEventInvitation.applicationUser.accountUser is null %}
-        <div class="card-footer card-padding">
+        <div class="card-body card-padding">
             <label class="control-label text-info" for="url_user_invitation">{{ "eventInvitation.url.text"|trans }}&nbsp;: </label>
             <div class="input-group">
                 <input id="url_user_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}"> <span
@@ -41,4 +41,23 @@ Données d'entrée :
             </div>
         </div>
     {% endif %}
+
+    <div class="card-footer card-padding">
+        {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
+        {{ form_row(userEventInvitationAnswerForm.answer,{
+            'label_attr':{'class' : 'sr-only'},
+            'attr':{'type' : 'answer'}
+        }) }}
+
+        {{ form_rest(userEventInvitationAnswerForm) }}
+        {{ form_end(userEventInvitationAnswerForm) }}
+        <script>
+            $("input[name='event_invitation_anwser[answer]']").on('change', function (e) {
+                $(this).closest('form').submit();
+            });
+            $('form#userEventInvitationAnswer').on('submit', function (e) {
+                ajaxFormSubmission(this, e, null, null, null);
+            });
+        </script>
+    </div>
 </div>

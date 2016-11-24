@@ -52,6 +52,27 @@ class Event
     /**
      * @var string
      *
+     * @ORM\Column(name="where_name", type="string", length=255, nullable=true)
+     */
+    private $whereName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="where_google_place_id", type="string", length=255, nullable=true)
+     */
+    private $whereGooglePlaceId;
+
+   /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="when", type="datetime", nullable=true)
+     */
+    //private $when;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="token", type="string", length=128, unique=true)
      */
     private $token;
@@ -158,6 +179,7 @@ class Event
         return $this;
     }
 
+
     /**
      * Get description
      *
@@ -198,6 +220,56 @@ class Event
         $this->picture = $picture;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getWhereName()
+    {
+        return $this->whereName;
+    }
+
+    /**
+     * @param string $whereName
+     */
+    public function setWhereName($whereName)
+    {
+        $this->whereName = $whereName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWhereGooglePlaceId()
+    {
+        return $this->whereGooglePlaceId;
+    }
+
+    /**
+     * @param string $whereGooglePlaceId
+     */
+    public function setWhereGooglePlaceId($whereGooglePlaceId)
+    {
+        $this->whereGooglePlaceId = $whereGooglePlaceId;
+    }
+
+    /**
+     * @return \DateTime
+     */
+  /*  public function getWhen()
+    {
+        return $this->when;
+    }*/
+
+    /**
+     * @param \DateTime $when
+     */
+   /* public function setWhen($when)
+    {
+        $this->when = $when;
+    }*/
+
+
 
     /**
      * Get token

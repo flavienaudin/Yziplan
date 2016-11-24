@@ -590,51 +590,51 @@ table.dataTable.compact tbody td {
     left: 88px;
 }
 
-.profile-tab .pmb-block {
+.pmb-block {
     margin-bottom: 20px;
 }
 
 @media (min-width: 1200px) {
-    .profile-tab .pmb-block {
+    .pmb-block {
         padding: 40px 42px 0;
     }
 }
 
 @media (max-width: 1199px) {
-    .profile-tab .pmb-block {
+    .pmb-block {
         padding: 30px 20px 0;
     }
 }
 
-.profile-tab .pmb-block:last-child {
+.pmb-block:last-child {
     margin-bottom: 50px;
 }
 
-.profile-tab .pmb-block .pmbb-header {
+.pmb-block .pmbb-header {
     margin-bottom: 25px;
     position: relative;
 }
 
-.profile-tab .pmb-block .pmbb-header .actions {
+.pmb-block .pmbb-header .actions {
     position: absolute;
     top: -2px;
     right: 0;
 }
 
-.profile-tab .pmb-block .pmbb-header h2 {
+.pmb-block .pmbb-header h2 {
     margin: 0;
     font-weight: 100;
     font-size: 20px;
 }
 
-.profile-tab .pmb-block .pmbb-edit {
+.pmb-block .pmbb-edit {
     position: relative;
     z-index: 1;
     display: none;
 }
 
-.profile-tab .pmb-block .pmbb-edit,
-.profile-tab .pmb-block .pmbb-view {
+.pmb-block .pmbb-edit,
+.pmb-block .pmbb-view {
     -webkit-animation-name: fadeIn;
     animation-name: fadeIn;
     -webkit-animation-duration: 1000ms;
@@ -643,11 +643,11 @@ table.dataTable.compact tbody td {
     animation-fill-mode: both;
 }
 
-.profile-tab .pmb-block.toggled .pmbb-edit {
+.pmb-block.toggled .pmbb-edit {
     display: block;
 }
 
-.profile-tab .pmb-block.toggled .pmbb-view {
+.pmb-block.toggled .pmbb-view {
     display: none;
 }
 

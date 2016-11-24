@@ -80,5 +80,24 @@ $("[id^='event-data-table']").bootgrid({
     }
 });
 
+$(document).ready(function () {
+    /** Profile About Edit Toggle */
+    if ($('[data-event-header-action]')[0]) {
+        $('body').on('click', '[data-event-header-action]', function (e) {
+            e.preventDefault();
+            var d = $(this).data('event-header-action');
+            var t = $(this).data('event-header-action-target');
+
+            if (d === "edit") {
+                $(t).toggleClass('toggled');
+                $('.grid').masonry('layout');
+            }
+            if (d === "reset") {
+                $(t).removeClass('toggled');
+                $('.grid').masonry('layout');
+            }
+        });
+    }
+});
 
 

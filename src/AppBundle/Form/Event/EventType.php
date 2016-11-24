@@ -13,6 +13,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,6 +28,21 @@ class EventType extends AbstractType
                     'required' => false
                 )
             )
+            ->add("whereName", TextType::class, array(
+                    'required' => false
+                )
+            )
+            ->add("whereGooglePlaceId", TextType::class, array(
+                    'required' => false
+                )
+            )
+            /*->add("when", DateTimeType::class, array(
+                "required" => false,
+                'html5' => false,
+                'date_widget' => 'single_text',
+                'time_widget' => 'single_text',
+                'date_format' => 'dd/MM/yyyy'
+            ))*/
             ->add("responseDeadline", DateTimeType::class, array(
                 "required" => false,
                 'html5' => false,

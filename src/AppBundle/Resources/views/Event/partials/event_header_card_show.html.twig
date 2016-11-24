@@ -1,0 +1,36 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
+#}
+
+<dl class="dl-horizontal">
+    <dt>{{ "event.form.description.label"|trans }}</dt>
+    <dd>{{ userEventInvitation.event.description }}</dd>
+    <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
+    <dd>{{ userEventInvitation.event.responseDeadline|localizeddate }}</dd>
+    <dt>{{ "event.form.status.label"|trans }}</dt>
+    <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span></dd>
+    <dt></dt>
+    <dd>
+        {% if userEventInvitation.event.invitationOnly %}
+            <div class="text-danger">
+                <i class="zmdi zmdi-close-circle"></i> {{ "event.form.invitationOnly.text.true"|trans }}
+            </div>
+        {% else %}
+            <div class="text-success">
+                <i class="zmdi zmdi-check"></i> {{ "event.form.invitationOnly.text.false"|trans }}
+            </div>
+        {% endif %}
+    </dd>
+    <dt></dt>
+    <dd>
+        {% if userEventInvitation.event.guestsCanInvite %}
+            <div class="text-success">
+                <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
+            </div>
+        {% else %}
+            <div class="text-danger">
+                <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
+            </div>
+        {% endif %}
+    </dd>
+</dl>
