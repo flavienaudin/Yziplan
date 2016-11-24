@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Event;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
@@ -64,11 +65,11 @@ class Event
     private $whereGooglePlaceId;
 
    /**
-     * @var \DateTime
+     * @var DateTime
      *
-     * @ORM\Column(name="when", type="datetime", nullable=true)
+     * @ORM\Column(name="when_event", type="datetime", unique=false, nullable=true)
      */
-    //private $when;
+    private $when;
 
     /**
      * @var string
@@ -84,7 +85,7 @@ class Event
     private $status;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(name="response_deadline", type="datetime", unique=false, nullable=true)
      */
     private $responseDeadline;
@@ -254,20 +255,20 @@ class Event
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-  /*  public function getWhen()
+    public function getWhen()
     {
         return $this->when;
-    }*/
+    }
 
     /**
-     * @param \DateTime $when
+     * @param DateTime $when
      */
-   /* public function setWhen($when)
+    public function setWhen($when)
     {
         $this->when = $when;
-    }*/
+    }
 
 
 
@@ -320,7 +321,7 @@ class Event
     /**
      * Get responseDeadline
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getResponseDeadline()
     {
@@ -330,7 +331,7 @@ class Event
     /**
      * Set responseDeadline
      *
-     * @param \DateTime $responseDeadline
+     * @param DateTime $responseDeadline
      *
      * @return Event
      */
