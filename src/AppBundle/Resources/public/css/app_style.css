@@ -358,10 +358,6 @@ label.required:after {
     z-index: 5;
 }
 
-table.dataTable td.dataTables_empty {
-    text-align: center !important;
-}
-
 /* Surcharge datatable.css */
 table.dataTable.compact thead th,
 table.dataTable.compact thead td,
@@ -373,19 +369,38 @@ table.dataTable.compact tbody td {
 .poll-container table td {
     min-width: 40px;
     max-width: 40px;
+    width: 40px;
     text-align:center;
 }
 
-.poll-container table td:first-child {
+.poll-container table th.pollproposal-column {
     text-align: left;
     font-weight: bold;
-    min-width: 150px;
+    min-width: 150px !important;
+    max-width: 300px !important;
 }
 
-.poll-container .dataTables_scroll table td:last-child {
+.poll-container table td.voting-column {
+    min-width: 40px;
+    max-width: 50px;
+}
+
+.poll-container table td.end-spacer {
     min-width: 0;
     max-width: none;
+    width: auto;
 }
+
+
+table.dataTable td.dataTables_empty {
+    text-align: center !important;
+    width: 100% !important;
+}
+
+/*.poll-container .dataTables_scroll table td:last-child {
+    min-width: 0;
+    max-width: none;
+}*/
 
 /*---------------------------------
     Poll Proposal Response
