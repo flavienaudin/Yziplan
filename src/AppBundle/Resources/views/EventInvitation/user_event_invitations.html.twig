@@ -1,4 +1,4 @@
-{% extends "@App/EventInvitation/layout_cboxed.html.twig" %}
+{% extends "@App/EventInvitation/layout.html.twig" %}
 
 {#
 TODO Commentaires dev : - Choix du layout modifiable. Définir le menu de gauche si besoin, les alerts et autres paneau de notifications
@@ -9,6 +9,16 @@ Données d'entrée :
 #}
 
 {% block title %}{{ 'eventInvitations.page.meta_title'|trans }}{% endblock %}
+
+{% block mainMenu_listItems %}
+    {# TODO : pour tester le layout avec le menu gauche#}
+    <li class="active">
+        <a ><i class="zmdi zmdi-home"></i> Test menu</a>
+    </li>
+    <li class="">
+        <a ><i class="zmdi zmdi-google"></i> Test Menu 2</a>
+    </li>
+{% endblock %}
 
 {% block event_invitations_content %}
     <div class="card">

@@ -28,6 +28,9 @@
     <link rel="stylesheet" href="{{ asset("bundles/app/css/app.min.2.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/app_style.css") }}">
 
+    {#Only for pint purpose #}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/print_style.css") }}" media="print">
+
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
 <body data-ma-header="teal">
@@ -43,80 +46,78 @@
     <script src="{{ asset("bundles/app/js/bootstrap.min.js") }}"></script>
 {% endblock top_javascripts %}
 
+
 {% block header_body %}
-    <header id="header" class="media">
-        <div class="pull-left h-logo">
-            <a href="{{ path('home') }}" class="{#hidden-xs#}">{{ "global.project_name"|trans }}
-                <small>{{ "navbar.subtitle"|trans }}</small>
-            </a>
-
-            {% block sidebar_collapse_cmd %}
-                <div class="menu-collapse" data-ma-action="sidebar-open" data-ma-target="main-menu">
-                    <div class="mc-wrap">
-                        <div class="mcw-line top palette-White bg"></div>
-                        <div class="mcw-line center palette-White bg"></div>
-                        <div class="mcw-line bottom palette-White bg"></div>
+    <header id="header" class="media header-fixed-top palette-Teal bg z-depth-2-bottom">
+        <div class="container {% block header_class %}{% endblock %}">
+            <div class="pull-left h-logo">
+                {% block sidebar_collapse_cmd %}
+                    <div class="menu-collapse" data-ma-action="sidebar-open" data-ma-target="main-menu">
+                        <div class="mc-wrap">
+                            <div class="mcw-line top palette-White bg"></div>
+                            <div class="mcw-line center palette-White bg"></div>
+                            <div class="mcw-line bottom palette-White bg"></div>
+                        </div>
                     </div>
-                </div>
-            {% endblock sidebar_collapse_cmd %}
+                {% endblock sidebar_collapse_cmd %}
+
+                <a href="{{ path('home') }}" class="di-block"><img src="{{ asset('includes/img/logo/logo_prop3_inv_header.png') }}" class="img-responsive" alt="{{ "global.project_name"|trans }}"> </a>
+            </div>
+
+            <div class="pull-right h-menu-wrapper">
+                <ul class="h-menu">
+                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                        {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
+                        <li data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                            <a href="#"><i class="hm-icon zmdi zmdi-email"></i></a>
+                        </li>
+                        {# Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
+                        <li data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                            <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
+                        </li>
+                        {# Menu dropwdown du profil Utilisateur #}
+                        <li class="dropdown hm-profile">
+                            {# TODO : style : alignement vertical : hm-profile #}
+                            <a data-toggle="dropdown" href="#">
+                                {# TODO : mettre l'avatar de l'utilisateur #}
+                                {% if app.user.applicationUser.appUserInformation.avatar is not null %}
+                                    <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}">
+                                {% else %}
+                                    <img src="{{ asset('bundles/app/img/user/avatar/menu_avatar_default.png') }}">
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu pull-right dm-icon" role="menu">
+                                <li role="presentation"><a class="user-public-name">{{ app.user.displayableName is not empty ? app.user.displayableName:"global.user_anonyme"|trans }}</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a></li>
+                                <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a></li>
+                                <li role="separator" class="divider"></li>
+                                {# TODO : définir le menu déroulant de l'utilisateur connecté : profil, déconnexion, ... #}
+                                <li role="presentation"><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li><a data-toggle="modal" href="#modalRegistration" class="navbar-btn">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a data-toggle="modal" href="#modalLogin" class="navbar-btn">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            <div class="media-body h-title hidden-xs">
+                <span>{{ "global.project_name"|trans|upper }}<br>
+                    <small>{{ "navbar.subtitle"|trans|upper }}</small></span>
+            </div>
         </div>
-
-        <ul class="pull-right h-menu">
-            {#<li class="hm-search-trigger">
-                #}{# Commande d'ouverture de la zone de recherche pour les petits écrans (<992px) #}{#
-                <a href="#" data-ma-action="search-open"> <i class="hm-icon zmdi zmdi-search"></i> </a>
-            </li>#}
-            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
-                <li data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
-                    <a href="#"><i class="hm-icon zmdi zmdi-email"></i></a>
-                </li>
-                {# Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
-                <li data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
-                    <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
-                </li>
-                {# Menu dropwdown du profil Utilisateur #}
-                <li class="dropdown hm-profile">
-                    {# TODO : style : alignement vertical : hm-profile #}
-                    <a data-toggle="dropdown" href="#">
-                        {# TODO : mettre l'avatar de l'utilisateur #}
-                        {% if app.user.applicationUser.appUserInformation.avatar is not null %}
-                            <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}">
-                        {% else %}
-                            <img src="{{ asset('bundles/app/img/user/avatar/menu_avatar_default.png') }}">
-                        {% endif %}
-                    </a>
-                    <ul class="dropdown-menu pull-right dm-icon" role="menu">
-                        <li role="presentation"><a class="user-public-name">{{ app.user.displayableName is not empty ? app.user.displayableName:"global.user_anonyme"|trans }}</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a></li>
-                        <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a></li>
-                        <li role="separator" class="divider"></li>
-                        {# TODO : définir le menu déroulant de l'utilisateur connecté : profil, déconnexion, ... #}
-                        <li role="presentation"><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
-                    </ul>
-                </li>
-            {% else %}
-                <li><a data-toggle="modal" href="#modalRegistration" class="navbar-btn">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></li>
-                <li role="separator" class="divider"></li>
-                <li><a data-toggle="modal" href="#modalLogin" class="navbar-btn">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
-            {% endif %}
-        </ul>
-
-        {#<div class="media-body h-search">
-            <form class="p-relative">
-                <input type="text" class="hs-input" placeholder="{{ "navbar.search.placeholder"|trans }}"> <i class="zmdi zmdi-search hs-reset" data-ma-action="search-clear"></i>
-            </form>
-        </div>#}
     </header>
 {% endblock %}
 
 <!-- CONTENT -->
-{# Pour avoir une page AVEC un menu latéral : conserver section#main et redéfinir le block "s_main_menu" #}
-{# Pour avoir une page SANS menu latéral : redfinir le block "main_section_id" et définir les blocks "s_main_menu" et "sidebar_collapse_cmd" vides #}
-<section id="{% block main_section_id %}main{% endblock %}" class="main-section">
+{# Pour avoir une page AVEC un menu latéral : conserver section.with-s-main-menu et redéfinir le block "s_main_menu" ou juste "mainMenu_listItems" #}
+{# Pour avoir une page SANS menu latéral : redéfinir(vider) le block "main_section_clss" et définir les blocks "s_main_menu" et "sidebar_collapse_cmd" vides #}
+<section id="main" class="{% block main_section_class %}with-s-main-menu{% endblock %}">
     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-        {# Panneaux d'affichage des "Notifications utilisateur" ouverts via l'icone #}
+        {# Panneaux d'affichage des "Notifications utilisateur" ouverts via les icones de la navbar #}
         <aside id="s-user-alerts" class="sidebar">
             <ul class="tab-nav tn-justified tn-icon m-t-10" data-tab-color="teal">
                 <li><a class="sua-messages" href="#sua-messages" data-toggle="tab"><i class="zmdi zmdi-email"></i></a></li>
@@ -126,7 +127,7 @@
             <div class="tab-content">
                 <div class="tab-pane fade" id="sua-messages">
                     <ul class="sua-menu list-inline list-unstyled palette-Light-Blue bg">
-                        <li>Utilisateur</li>
+                        <li>Messages</li>
                         <li><a href="" data-ma-action="sidebar-close"><i class="zmdi zmdi-close"></i> Close</a></li>
                     </ul>
                     {# TODO Messages de l'utilisateur à afficher #}
@@ -144,19 +145,13 @@
 
 
     <!-- SIDEBAR -->
-    {# Menu principal latéral #}
+    {# Menu principal latéral (optionnel)#}
     {% block s_main_menu %}
-        {# Alerts tab : panneaux d'affichage commandés par le block "alerts_menu" #}
-        {% block alerts_tabs %}{% endblock %}
-
         <aside id="s-main-menu" class="sidebar">
             {# En-tête du menu quand il est replié (largeur < 1280px) #}
             <div class="smm-header">
                 <i class="zmdi zmdi-long-arrow-left" data-ma-action="sidebar-close"></i>
             </div>
-
-            {# Alerts menu : commandes des panneaux d'affichage (block "alerts_tabs" #}
-            {% block alerts_menu %}{% endblock %}
 
             <ul class="main-menu">
                 {% block mainMenu_listItems %}{% endblock %}

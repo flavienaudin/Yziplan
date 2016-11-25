@@ -17,7 +17,7 @@ $(document).ready(function () {
                 var target = $(this).data('ma-target');
 
                 $this.addClass('toggled');
-                $('.main-section').append('<div data-ma-action="sidebar-close" class="sidebar-backdrop animated fadeIn" />')
+                $('#main').append('<div data-ma-action="sidebar-close" class="sidebar-backdrop animated fadeIn" />')
                 
                 if (target == 'main-menu') {
                     $('#s-main-menu').addClass('toggled');
@@ -25,10 +25,6 @@ $(document).ready(function () {
                 if (target == 'user-alerts') {
                     $('#s-user-alerts').addClass('toggled');
                 }
-                if (target == 'event-alerts') {
-                    $('#s-event-alerts').addClass('toggled');
-                }
-
 
                 $('body').addClass('o-hidden');
                 

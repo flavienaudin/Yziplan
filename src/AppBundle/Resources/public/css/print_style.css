@@ -1,0 +1,183 @@
+/** Must be loaded only for PRINT Purpose : <link rel="stylesheet" type="text/css" href="" media="print" /> */
+/******************/
+/** app.1.min.css */
+/******************/
+
+/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
+
+*,
+*:before,
+*:after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+a,
+a:visited {
+    text-decoration: underline;
+}
+
+a[href]:after {
+    content: " (" attr(href) ")";
+}
+
+abbr[title]:after {
+    content: " (" attr(title) ")";
+}
+
+a[href^="#"]:after,
+a[href^="javascript:"]:after {
+    content: "";
+}
+
+pre,
+blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+}
+
+thead {
+    display: table-header-group;
+}
+
+tr,
+img {
+    page-break-inside: avoid;
+}
+
+img {
+    max-width: 100% !important;
+}
+
+p,
+h2,
+h3 {
+    orphans: 3;
+    widows: 3;
+}
+
+h2,
+h3 {
+    page-break-after: avoid;
+}
+
+.navbar {
+    display: none;
+}
+
+.btn > .caret,
+.dropup > .btn > .caret {
+    border-top-color: #000 !important;
+}
+
+.label {
+    border: 1px solid #000;
+}
+
+.table {
+    border-collapse: collapse !important;
+}
+
+.table td,
+.table th {
+    background-color: #fff !important;
+}
+
+.table-bordered th,
+.table-bordered td {
+    border: 1px solid #ddd !important;
+}
+
+
+.visible-print {
+    display: block !important;
+}
+
+table.visible-print {
+    display: table !important;
+}
+
+tr.visible-print {
+    display: table-row !important;
+}
+
+th.visible-print,
+td.visible-print {
+    display: table-cell !important;
+}
+
+.visible-print-block {
+    display: block !important;
+}
+
+.visible-print-inline {
+    display: inline !important;
+}
+
+.visible-print-inline-block {
+    display: inline-block !important;
+}
+
+.hidden-print {
+    display: none !important;
+}
+
+
+/******************/
+/** app.2.min.css */
+/******************/
+
+@page {
+    margin: 0;
+    size: auto;
+}
+
+body {
+    margin: 0mm 0mm 0mm 0mm !important;
+    padding: 0mm !important;
+}
+
+#header,
+.c-header,
+#footer,
+#s-user-alerts,
+#s-main-menu,
+#chat,
+.growl-animated,
+.m-btn {
+    display: none !important;
+}
+
+/*
+* INVOICE
+*/
+.invoice {
+    padding: 30px !important;
+    -webkit-print-color-adjust: exact !important;
+}
+
+.invoice .card-header {
+    background: #eee !important;
+    padding: 20px;
+    margin-bottom: 20px;
+    margin: -10px -30px 25px -30px;
+}
+
+.invoice .block-header {
+    display: none;
+}
+
+.invoice .highlight {
+    background: #eee !important;
+}
+
+
+
+
+
+
+
+
+

@@ -1,58 +1,8 @@
 {% extends "::base.html.twig" %}
 
-{# LAYOUT : Menu latéral + une colonne pour le contenu #}
-{% block alerts_tabs %}
-    <aside id="s-event-alerts" class="sidebar">
-        <ul class="tab-nav tn-justified tn-icon m-t-10" data-tab-color="teal">
-            <li><a class="sua-event-messages" href="#sua-event-messages" data-toggle="tab"><i class="zmdi zmdi-email"></i></a></li>
-            <li><a class="sua-event-notifications" href="#sua-event-notifications" data-toggle="tab"><i class="zmdi zmdi-notifications"></i></a></li>
-        </ul>
-
-        <div class="tab-content">
-            <div class="tab-pane fade" id="sua-event-messages">
-                <ul class="sua-menu list-inline list-unstyled palette-Light-Blue bg">
-                    <li>Evénements</li>
-                    <li><a href="" data-ma-action="sidebar-close"><i class="zmdi zmdi-close"></i> Close</a></li>
-                </ul>
-                {# TODO Messages de l'utilisateur à afficher #}
-            </div>
-            <div class="tab-pane fade" id="sua-event-notifications">
-                <ul class="sua-menu list-inline list-unstyled palette-Orange bg">
-                    <li>Evenement</li>
-                    <li><a href="" data-ma-action="sidebar-close"><i class="zmdi zmdi-close"></i> Close</a></li>
-                </ul>
-                {# TODO Notifications à afficher #}
-            </div>
-        </div>
-    </aside>
-{% endblock alerts_tabs %}
-
-{% block alerts_menu %}
-    <ul class="smm-alerts">
-        {# Menu de notifications d'un événément : icones pour ouvrir #}
-        <li data-user-alert="sua-event-messages" data-ma-action="sidebar-open" data-ma-target="event-alerts">
-            <i class="zmdi zmdi-email"></i>
-        </li>
-        <li data-user-alert="sua-event-notifications" data-ma-action="sidebar-open" data-ma-target="event-alerts">
-            <i class="zmdi zmdi-notifications"></i>
-        </li>
-    </ul>
-{% endblock alerts_menu %}
-
+{# LAYOUT : Menu latéral (s-main-menu) + une colonne pour le contenu #}
 {% block content_body %}
-    {# TODO ajouter la comande d'ouverture des notifications de l'événement (si menu latéral plié) #}
     {% block event_invitations_content %}{% endblock %}
 {% endblock content_body %}
 
-
-{% block javascripts %}
-    {{ parent() }}
-    {#<script>
-        $('body').on('click', '[data-user-alert]', function(e) {
-            e.preventDefault();
-
-            var u = $(this).data('user-alert');
-            $('.'+u).tab('show');
-        });
-    </script>#}
-{% endblock %}
+{% block javascripts %}{{ parent() }}{% endblock %}

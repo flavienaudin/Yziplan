@@ -16,9 +16,7 @@ base:
     home: Home
 
 navbar:
-  subtitle: Version beta 2
-  search:
-    placeholder: Search for contact, event...
+  subtitle: To organise you, it's IZI !
 
 main_menu:
 
