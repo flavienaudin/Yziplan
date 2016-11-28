@@ -110,24 +110,21 @@
 </script>
 
 <script>
-    var mapArdGan2 = null;
-    var bounds = null;
+    var mapEventEdit = null;
+    var boundsEventShow = null;
 
     $(document).ready(function () {
         var inputId = /** @type {!HTMLInputElement} */(
                 document.getElementById('event_whereName'));
-        //document.getElementById(newFormDiv.find('input:first').attr('id')));
         var autocomplete = new google.maps.places.Autocomplete(inputId);
-
 
         var marker = null;
         google.maps.event.addListener(autocomplete, 'place_changed', function onPlaceChanged() {
             var infowindow = new google.maps.InfoWindow();
             // On enregistre les points pour definir la zone visible de la map
-            /*if (bounds == null) {
-                bounds = new google.maps.LatLngBounds();
+            if (boundsEventShow == null) {
+                boundsEventShow = new google.maps.LatLngBounds();
             }
-            */
 
             infowindow.close();
             var place = autocomplete.getPlace();
@@ -135,27 +132,27 @@
                 //window.alert("Autocomplete's returned place contains no geometry");
                 return;
             }
-            /*
-            var zoomChangeBoundsListener = google.maps.event.addListener(mapArdGan, 'bounds_changed', function (event) {
-                if (mapArdGan.getZoom() > 15 && mapArdGan.initialZoom == true) {
+
+            var zoomChangeBoundsListener = google.maps.event.addListener(mapEventEdit, 'bounds_changed', function (event) {
+                if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom == true) {
                     // Change max/min zoom here
-                    mapArdGan.setZoom(15);
-                    mapArdGan.initialZoom = false;
+                    mapEventEdit.setZoom(15);
+                    mapEventEdit.initialZoom = false;
                 }
                 google.maps.event.removeListener(zoomChangeBoundsListener);
             });
-            mapArdGan.initialZoom = true;
-            bounds.extend(place.geometry.location)
-            mapArdGan.fitBounds(bounds);
+            mapEventEdit.initialZoom = true;
+            boundsEventShow.extend(place.geometry.location)
+            mapEventEdit.fitBounds(boundsEventShow);
 
             marker = new google.maps.Marker({
-                map: mapArdGan,
+                map: mapEventEdit,
                 position: place.geometry.location
             });
             google.maps.event.addListener(marker, 'click', function () {
                 infowindow.setContent(place.name);
-                infowindow.open(mapArdGan, this);
-            });*/
+                infowindow.open(mapEventEdit, this);
+            });
 
             var inputHidden = /** @type {!HTMLInputElement} */(
                     document.getElementById('event_whereGooglePlaceId'));
@@ -166,14 +163,11 @@
     function initEventEditMap() {
         var mapDiv = document.getElementById('eventEditGoogleMap');
         if (mapDiv != null) {
-            /*mapArdGan2 =*/ new google.maps.Map(mapDiv, {
+            mapEventEdit = new google.maps.Map(mapDiv, {
                 center: {lat: 47, lng: 2.30},
                 zoom: 6,
                 scrollwheel: false
             });
-
-            /* bounds = new google.maps.LatLngBounds();
-             var service = new google.maps.places.PlacesService(mapArdGan);*/
         }
     }
 
