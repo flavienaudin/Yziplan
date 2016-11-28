@@ -96,8 +96,11 @@ $(document).ready(function () {
                 $(t).removeClass('toggled');
                 $('.grid').masonry('layout');
             }
+
+            initEventEditMap();
         });
     }
 });
+
 
 

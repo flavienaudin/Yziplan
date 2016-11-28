@@ -36,84 +36,65 @@
             </dd>
         </dl>
     </div>
- {#   <div class="col-xs-12 col-md-6">
-        <div style="height: 400px;">
-            <div id="map"></div>
-        </div>
-    </div>#}
+    <div class="col-xs-12 col-md-6">
+        <div id="eventShowGoogleMap" style="height: 300px;"></div>
+    </div>
 </div>
 
 
-
-{#
 <script>
-    var mapArdGan = null;
-    var bounds = null;
+    var mapEventShow = null;
+    var boundsEventShow = null;
 
-    $(document).ready(function () {
-        var inputId = /** @type {!HTMLInputElement} */(
-                document.getElementById(newFormDiv.find('input:first').attr('id')));
-        var autocomplete = new google.maps.places.Autocomplete(inputId);
-    });
 
-    function initMap() {
-        var mapDiv = document.getElementById('map');
+    function initEventShowMap() {
+        var mapDiv = document.getElementById('eventShowGoogleMap');
         if (mapDiv != null) {
-            mapArdGan = new google.maps.Map(mapDiv, {
+            mapEventShow = new google.maps.Map(mapDiv, {
                 center: {lat: 47, lng: 2.30},
                 zoom: 6,
                 scrollwheel: false
             });
 
-            bounds = new google.maps.LatLngBounds();
-            var service = new google.maps.places.PlacesService(mapArdGan);
+            boundsEventShow = new google.maps.LatLngBounds();
+            var service = new google.maps.places.PlacesService(mapEventShow);
 
-#}
-{#{% for proposition in evenement.ouPropositions %}
-            {% if proposition.googlePlaceId != null %}#}{#
+            {% if userEventInvitation.event.whereGooglePlaceId != null %}
 
             var infowindow = new google.maps.InfoWindow();
             service.getDetails({
-                placeId: #}
-{#'{{ proposition.googlePlaceId }}'#}{#
-''
-            }, function (place, status) {
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    var marker = new google.maps.Marker({
-                        map: mapArdGan,
-                        position: place.geometry.location
-                    });
-                    #}
-{# Permet de s'assurer que la map est pas trop zoomée, a priori  le zoom du firbounds se fait en asynchrone,
-                    donc il faut choper un event, et ne le fait que au premier passage#}{#
+                        placeId: '{{ userEventInvitation.event.whereGooglePlaceId }}'
+                    }
+                    ,
+                    function (place, status) {
+                        if (status === google.maps.places.PlacesServiceStatus.OK) {
+                            var marker = new google.maps.Marker({
+                                map: mapEventShow,
+                                position: place.geometry.location
+                            });
+                            {# Permet de s'assurer que la map est pas trop zoomée, a priori  le zoom du firbounds se fait en asynchrone,
+                                                donc il faut choper un event, et ne le fait que au premier passage#}
 
-                    google.maps.event.addListener(mapArdGan, 'bounds_changed', function (event) {
-                        if (mapArdGan.getZoom() > 15 && mapArdGan.initialZoom == true) {
-                            // Change max/min zoom here
-                            mapArdGan.setZoom(15);
-                            mapArdGan.initialZoom = false;
+                            google.maps.event.addListener(mapEventShow, 'bounds_changed', function (event) {
+                                if (mapEventShow.getZoom() > 15 && mapEventShow.initialZoom == true) {
+                                    // Change max/min zoom here
+                                    mapEventShow.setZoom(15);
+                                    mapEventShow.initialZoom = false;
+                                }
+                            });
+                            mapEventShow.initialZoom = true;
+                            // Rendre le marker clickable avec le nom
+                            google.maps.event.addListener(marker, 'click', function () {
+                                infowindow.setContent(place.name);
+                                infowindow.open(mapEventShow, this);
+                            });
+                            boundsEventShow.extend(place.geometry.location)
+                            mapEventShow.fitBounds(boundsEventShow);
                         }
-                    });
-                    mapArdGan.initialZoom = true;
-                    // Rendre le marker clickable avec le nom
-                    google.maps.event.addListener(marker, 'click', function () {
-                        infowindow.setContent(place.name);
-                        infowindow.open(mapArdGan, this);
-                    });
-                    bounds.extend(place.geometry.location)
-                    mapArdGan.fitBounds(bounds);
-                }
-            });
-            #}
-{#{% endif %}
-            {% endfor %}#}{#
-
+                    }
+            );
+            {% endif %}
         }
     }
 </script>
 
-<script type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgWzdQsBnEburxWzop05K33T7HQZITMnw&libraries=places&sensor=false&callback=initMap"
-        async defer>
-</script>
-#}
