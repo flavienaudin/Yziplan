@@ -44,9 +44,9 @@ class EventInvitationAnswerType extends AbstractType
                         ),
                         'choice_attr' =>function($val, $key, $index) {
                             if($val == EventInvitationAnswer::INTERESTED) {
-                                $data_class = 'btn-success';
+                                $data_class = 'btn-answer-true';
                             }else{
-                                $data_class = 'btn-danger';
+                                $data_class = 'btn-answer-false';
                             }
                             return ['dataclass' => $data_class];
                         }
