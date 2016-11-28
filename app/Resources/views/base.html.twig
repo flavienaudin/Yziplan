@@ -48,7 +48,7 @@
 
 
 {% block header_body %}
-    <header id="header" class="media header-fixed-top palette-Teal bg z-depth-2-bottom">
+    <header id="header" class="media header-fixed-top palette-Teal bg z-depth-3-bottom">
         <div class="container {% block header_class %}{% endblock %}">
             <div class="pull-left h-logo">
                 {% block sidebar_collapse_cmd %}
@@ -81,14 +81,25 @@
                             <a data-toggle="dropdown" href="#">
                                 {# TODO : mettre l'avatar de l'utilisateur #}
                                 {% if app.user.applicationUser.appUserInformation.avatar is not null %}
-                                    <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}">
+                                    <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}" class="avatar-img">
                                 {% else %}
-                                    <img src="{{ asset('bundles/app/img/user/avatar/menu_avatar_default.png') }}">
+                                    <img src="{{ asset('bundles/app/img/user/avatar/menu_avatar_default.png') }}" class="avatar-img">
                                 {% endif %}
                             </a>
                             <ul class="dropdown-menu pull-right dm-icon" role="menu">
                                 <li role="presentation"><a class="user-public-name">{{ app.user.displayableName is not empty ? app.user.displayableName:"global.user_anonyme"|trans }}</a></li>
                                 <li role="separator" class="divider"></li>
+                                <li role="presentation" class="hmp-alerts">
+                                    {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
+                                    <div class="hmp-alert" data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                                        <a href="#"><i class="hm-icon zmdi zmdi-email"></i></a>
+                                    </div>
+                                    {# Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
+                                    <div class="hmp-alert" data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                                        <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
+                                    </div>
+                                </li>
+                                <li role="separator" class="hmp-alerts divider"></li>
                                 <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a></li>
                                 <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a></li>
                                 <li role="separator" class="divider"></li>
@@ -105,7 +116,7 @@
             </div>
 
             <div class="media-body h-title hidden-xs">
-                <span>{{ "global.project_name"|trans|upper }}<br>
+                <span>{{ "global.project_name"|trans|upper }}
                     <small>{{ "navbar.subtitle"|trans|upper }}</small></span>
             </div>
         </div>

@@ -119,10 +119,6 @@
     border-radius: 10%;
 }
 
-.hm-profile > a img {
-    border-radius: 10%;
-}
-
 /*-----------------------------------
     Affichage d'avatar utilisateur
 -----------------------------------*/
@@ -369,7 +365,7 @@ table.dataTable.compact tbody td {
     min-width: 40px;
     max-width: 40px;
     width: 40px;
-    text-align:center;
+    text-align: center;
 }
 
 .poll-container table th.pollproposal-column {
@@ -389,7 +385,6 @@ table.dataTable.compact tbody td {
     max-width: none;
     width: auto;
 }
-
 
 table.dataTable td.dataTables_empty {
     text-align: center !important;
