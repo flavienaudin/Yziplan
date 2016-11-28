@@ -60,13 +60,13 @@
 {% block checkbox_label -%}
     {# Toujours mettre le label pour chaque checkbox #}
     {% set parent_label_class = (parent_label_class|default(''))|replace({'sr-only':''})|trim %}
-    {{- block('checkbox_radio_label', {'parent_label_class':parent_label_class}) -}}
+    {{- block('checkbox_radio_label') -}}
 {%- endblock checkbox_label %}
 
 {% block radio_label -%}
     {# Toujours mettre le label pour chaque radio #}
     {% set parent_label_class = (parent_label_class|default(''))|replace({'sr-only':''})|trim %}
-    {{- block('checkbox_radio_label', {'parent_label_class':parent_label_class}) -}}
+    {{- block('checkbox_radio_label') -}}
 {%- endblock radio_label %}
 
 {%- block button_label -%}{%- endblock -%}
