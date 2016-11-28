@@ -2,6 +2,7 @@
 Données d'entrée :
 - userEventInvitation (EventInvitation) Invitation de l'utilisateur de l'utilisateur
 - userEventInvitationForm (Form) Formulaire permettant de répondre à l'invitation
+- userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
 <div class="card c-dark z-depth-2" id="user-event-invitation-card">
@@ -25,7 +26,7 @@ Données d'entrée :
         </div>
     </div>
     <div class="card-body card-padding">
-        {{ include('@App/Event/partials/eventInvitation_profile_form.html.twig',{
+        {{ include('@App/Event/partials/profile/eventInvitation_profile_form.html.twig',{
             'userEventInvitation' : userEventInvitation,
             'userEventInvitationForm' : userEventInvitationForm
         }) }}
@@ -43,21 +44,9 @@ Données d'entrée :
     {% endif %}
 
     <div class="card-footer card-padding">
-        {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
-        {{ form_row(userEventInvitationAnswerForm.answer,{
-            'label_attr':{'class' : 'sr-only'},
-            'attr':{'type' : 'answer'}
+        {{ include('@App/Event/partials/profile/eventInvitation_profile_answer_form.html.twig',{
+            'userEventInvitation' : userEventInvitation,
+            'userEventInvitationAnswerForm' : userEventInvitationAnswerForm
         }) }}
-
-        {{ form_rest(userEventInvitationAnswerForm) }}
-        {{ form_end(userEventInvitationAnswerForm) }}
-        <script>
-            $("input[name='event_invitation_anwser[answer]']").on('change', function (e) {
-                $(this).closest('form').submit();
-            });
-            $('form#userEventInvitationAnswer').on('submit', function (e) {
-                ajaxFormSubmission(this, e, null, null, null);
-            });
-        </script>
     </div>
 </div>
