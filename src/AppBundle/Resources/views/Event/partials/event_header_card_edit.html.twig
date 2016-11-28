@@ -5,69 +5,88 @@
 
 {{ form_start(eventForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),
     'attr':{'id':'eventHeader', 'data-event-header-pmb-block-target':'#pmbblock_event_header'}}) }}
-
-{{ form_row(eventForm.name, {
-    'label':'event.form.name.label',
-    'label_attr':{'class':'sr-only'},
-    'attr':{'placeholder':'event.form.name.placeholder'},
-    'widget_options':{'fgline':true}
-}) }}
-{{ form_row(eventForm.description, {
-    'label':'event.form.description.label',
-    'attr':{'placeholder':'event.form.description.placeholder','rows':3},
-    'widget_options':{'fgline':true}
-}) }}
-{{ form_row(eventForm.responseDeadline, {
-    'label':'event.form.responseDeadline.label',
-    'attr':{'placeholder':'event.form.responseDeadline.placeholder'},
-    'widget_options':{'fgline':true, 'displayInRow' : true}
-}) }}
-
 <div class="row">
-    <div class="col-xs-12 col-sm-6">
-        {{ form_row(eventForm.invitationOnly, {'label':'event.form.invitationOnly.label','attr':{'class':'md-toogle-switch'}}) }}
-        {{ form_row(eventForm.guestsCanInvite, {'label':'event.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
-    </div>
-    <div class="col-xs-12 col-sm-6">
-        <dl class="dl-horizontal">
-            <dt>{{ "event.form.status.label"|trans }}</dt>
-            <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span>
-                {% if userEventInvitation.event.status == constant("AppBundle\\Utils\\enum\\EventStatus::IN_CREATION")
-                or userEventInvitation.event.status == constant ("AppBundle\\Utils\\enum\\EventStatus::IN_ORGANIZATION") %}
-                    <a id="validateEventLink" href="{{ path('validateEvent', {'token' : userEventInvitation.event.token }) }}" class="btn btn-success">
-                        {{ "global.button.valid"|trans }}
-                    </a>
-                    <script>
-                        $(document).ready(function () {
-                            $('#validateEventLink').on('click', function (e) {
-                                e.preventDefault();
-                                var link = $(this);
-                                swal({
-                                    title: "{{ "event.form.status.swal.title"|trans }}",
-                                    text: "{{ "event.form.status.swal.text"|trans }}",
-                                    type: "info",
-                                    showCancelButton: true,
-                                    //confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: '{{ "global.button.valid"|trans }}',
-                                    closeOnConfirm: true,
-                                    showLoaderOnConfirm: true
-                                }, function (isConfirm) {
-                                    if (isConfirm) {
-                                        ajaxRequest(link, null, e, null, null, null);
-                                        // close edition block
-                                        var t = $form.data('event-header-pmb-block-target');
-                                        $(t).removeClass('toggled');
-                                    }
+    <div class="col-xs-12 col-md-6">
+        {{ form_row(eventForm.name, {
+            'label':'event.form.name.label',
+            'label_attr':{'class':'sr-only'},
+            'attr':{'placeholder':'event.form.name.placeholder'},
+            'widget_options':{'fgline':true}
+        }) }}
+        {{ form_row(eventForm.description, {
+            'label':'event.form.description.label',
+            'attr':{'placeholder':'event.form.description.placeholder','rows':3},
+            'widget_options':{'fgline':true}
+        }) }}
+        {{ form_row(eventForm.responseDeadline, {
+            'label':'event.form.responseDeadline.label',
+            'attr':{'placeholder':'event.form.responseDeadline.placeholder'},
+            'widget_options':{'fgline':true, 'displayInRow' : true}
+        }) }}
+        {{ form_row(eventForm.whereName, {
+            'label':'event.form.whereName.label',
+            'attr':{'placeholder':'event.form.whereName.placeholder'},
+            'widget_options':{'fgline':true, 'displayInRow' : true}
+        }) }}
+        {{ form_row(eventForm.whereGooglePlaceId) }}
+        {{ form_row(eventForm.when, {
+            'label':'event.form.when.label',
+            'attr':{'placeholder':'event.form.when.placeholder'},
+            'widget_options':{'fgline':true, 'displayInRow' : true}
+        }) }}
+
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                {{ form_row(eventForm.invitationOnly, {'label':'event.form.invitationOnly.label','attr':{'class':'md-toogle-switch'}}) }}
+                {{ form_row(eventForm.guestsCanInvite, {'label':'event.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
+            </div>
+            <div class="col-xs-12 col-sm-6">
+                <dl class="dl-horizontal">
+                    <dt>{{ "event.form.status.label"|trans }}</dt>
+                    <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span>
+                        {% if userEventInvitation.event.status == constant("AppBundle\\Utils\\enum\\EventStatus::IN_CREATION")
+                        or userEventInvitation.event.status == constant ("AppBundle\\Utils\\enum\\EventStatus::IN_ORGANIZATION") %}
+                            <a id="validateEventLink" href="{{ path('validateEvent', {'token' : userEventInvitation.event.token }) }}" class="btn btn-success">
+                                {{ "global.button.valid"|trans }}
+                            </a>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#validateEventLink').on('click', function (e) {
+                                        e.preventDefault();
+                                        var link = $(this);
+                                        swal({
+                                            title: "{{ "event.form.status.swal.title"|trans }}",
+                                            text: "{{ "event.form.status.swal.text"|trans }}",
+                                            type: "info",
+                                            showCancelButton: true,
+                                            //confirmButtonColor: "#DD6B55",
+                                            confirmButtonText: '{{ "global.button.valid"|trans }}',
+                                            closeOnConfirm: true,
+                                            showLoaderOnConfirm: true
+                                        }, function (isConfirm) {
+                                            if (isConfirm) {
+                                                ajaxRequest(link, null, e, null, null, null);
+                                                // close edition block
+                                                var t = $form.data('event-header-pmb-block-target');
+                                                $(t).removeClass('toggled');
+                                            }
+                                        });
+                                    });
                                 });
-                            });
-                        });
-                    </script>
-                {% endif %}
-            </dd>
-        </dl>
+                            </script>
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        {{ form_rest(eventForm) }}
+    </div>
+    <div class="col-xs-12 col-md-6">
+        <div style="height: 400px;">
+            <div id="eventGoogleMap"></div>
+        </div>
     </div>
 </div>
-{{ form_rest(eventForm) }}
 <div class="text-right">
     <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
         {{ "global.button.save"|trans }}
@@ -90,4 +109,77 @@
             $('#event_public_invitation_display').fadeToggle();
         });
     });
+</script>
+
+<script>
+    var mapArdGan = null;
+    var bounds = null;
+
+    $(document).ready(function () {
+        var inputId = /** @type {!HTMLInputElement} */(
+                document.getElementById('event_whereName'));
+        //document.getElementById(newFormDiv.find('input:first').attr('id')));
+        var autocomplete = new google.maps.places.Autocomplete(inputId);
+
+        var marker = null;
+        /*google.maps.event.addListener(autocomplete, 'place_changed', function onPlaceChanged() {
+            var infowindow = new google.maps.InfoWindow();
+            // On enregistre les points pour definir la zone visible de la map
+            if (bounds == null) {
+                bounds = new google.maps.LatLngBounds();
+            }
+
+            infowindow.close();
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                //window.alert("Autocomplete's returned place contains no geometry");
+                return;
+            }
+
+            var zoomChangeBoundsListener = google.maps.event.addListener(mapArdGan, 'bounds_changed', function (event) {
+                if (mapArdGan.getZoom() > 15 && mapArdGan.initialZoom == true) {
+                    // Change max/min zoom here
+                    mapArdGan.setZoom(15);
+                    mapArdGan.initialZoom = false;
+                }
+                google.maps.event.removeListener(zoomChangeBoundsListener);
+            });
+            mapArdGan.initialZoom = true;
+            bounds.extend(place.geometry.location)
+            mapArdGan.fitBounds(bounds);
+
+            marker = new google.maps.Marker({
+                map: mapArdGan,
+                position: place.geometry.location
+            });
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(place.name);
+                infowindow.open(mapArdGan, this);
+            });
+
+            var inputHidden = /!** @type {!HTMLInputElement} *!/(
+                    document.getElementById('event_whereGooglePlaceId'));
+            inputHidden.value = place.place_id;
+        });*/
+    });
+
+    function initMap() {
+        var mapDiv = document.getElementById('eventGoogleMap');
+        if (mapDiv != null) {
+            mapArdGan = new google.maps.Map(mapDiv, {
+                center: {lat: 47, lng: 2.30},
+                zoom: 6,
+                scrollwheel: false
+            });
+
+           /* bounds = new google.maps.LatLngBounds();
+            var service = new google.maps.places.PlacesService(mapArdGan);*/
+        }
+    }
+</script>
+
+
+<script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD85iLilkz3ywzsN6VZKA-HEz2SLTEFIOE&libraries=places&sensor=false&callback=initMap"
+        async defer>
 </script>

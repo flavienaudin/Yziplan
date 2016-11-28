@@ -1,36 +1,119 @@
 {# Données d'entrée :
 - userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
 #}
+<div class="row">
+    <div class="col-xs-12 col-md-6">
+        <dl class="dl-horizontal">
+            <dt>{{ "event.form.description.label"|trans }}</dt>
+            <dd>{{ userEventInvitation.event.description }}</dd>
+            <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
+            <dd>{{ userEventInvitation.event.responseDeadline|localizeddate }}</dd>
+            <dt>{{ "event.form.status.label"|trans }}</dt>
+            <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span></dd>
+            <dt></dt>
+            <dd>
+                {% if userEventInvitation.event.invitationOnly %}
+                    <div class="text-danger">
+                        <i class="zmdi zmdi-close-circle"></i> {{ "event.form.invitationOnly.text.true"|trans }}
+                    </div>
+                {% else %}
+                    <div class="text-success">
+                        <i class="zmdi zmdi-check"></i> {{ "event.form.invitationOnly.text.false"|trans }}
+                    </div>
+                {% endif %}
+            </dd>
+            <dt></dt>
+            <dd>
+                {% if userEventInvitation.event.guestsCanInvite %}
+                    <div class="text-success">
+                        <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
+                    </div>
+                {% else %}
+                    <div class="text-danger">
+                        <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
+                    </div>
+                {% endif %}
+            </dd>
+        </dl>
+    </div>
+ {#   <div class="col-xs-12 col-md-6">
+        <div style="height: 400px;">
+            <div id="map"></div>
+        </div>
+    </div>#}
+</div>
 
-<dl class="dl-horizontal">
-    <dt>{{ "event.form.description.label"|trans }}</dt>
-    <dd>{{ userEventInvitation.event.description }}</dd>
-    <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
-    <dd>{{ userEventInvitation.event.responseDeadline|localizeddate }}</dd>
-    <dt>{{ "event.form.status.label"|trans }}</dt>
-    <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span></dd>
-    <dt></dt>
-    <dd>
-        {% if userEventInvitation.event.invitationOnly %}
-            <div class="text-danger">
-                <i class="zmdi zmdi-close-circle"></i> {{ "event.form.invitationOnly.text.true"|trans }}
-            </div>
-        {% else %}
-            <div class="text-success">
-                <i class="zmdi zmdi-check"></i> {{ "event.form.invitationOnly.text.false"|trans }}
-            </div>
-        {% endif %}
-    </dd>
-    <dt></dt>
-    <dd>
-        {% if userEventInvitation.event.guestsCanInvite %}
-            <div class="text-success">
-                <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
-            </div>
-        {% else %}
-            <div class="text-danger">
-                <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
-            </div>
-        {% endif %}
-    </dd>
-</dl>
+
+
+{#
+<script>
+    var mapArdGan = null;
+    var bounds = null;
+
+    $(document).ready(function () {
+        var inputId = /** @type {!HTMLInputElement} */(
+                document.getElementById(newFormDiv.find('input:first').attr('id')));
+        var autocomplete = new google.maps.places.Autocomplete(inputId);
+    });
+
+    function initMap() {
+        var mapDiv = document.getElementById('map');
+        if (mapDiv != null) {
+            mapArdGan = new google.maps.Map(mapDiv, {
+                center: {lat: 47, lng: 2.30},
+                zoom: 6,
+                scrollwheel: false
+            });
+
+            bounds = new google.maps.LatLngBounds();
+            var service = new google.maps.places.PlacesService(mapArdGan);
+
+#}
+{#{% for proposition in evenement.ouPropositions %}
+            {% if proposition.googlePlaceId != null %}#}{#
+
+            var infowindow = new google.maps.InfoWindow();
+            service.getDetails({
+                placeId: #}
+{#'{{ proposition.googlePlaceId }}'#}{#
+''
+            }, function (place, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    var marker = new google.maps.Marker({
+                        map: mapArdGan,
+                        position: place.geometry.location
+                    });
+                    #}
+{# Permet de s'assurer que la map est pas trop zoomée, a priori  le zoom du firbounds se fait en asynchrone,
+                    donc il faut choper un event, et ne le fait que au premier passage#}{#
+
+                    google.maps.event.addListener(mapArdGan, 'bounds_changed', function (event) {
+                        if (mapArdGan.getZoom() > 15 && mapArdGan.initialZoom == true) {
+                            // Change max/min zoom here
+                            mapArdGan.setZoom(15);
+                            mapArdGan.initialZoom = false;
+                        }
+                    });
+                    mapArdGan.initialZoom = true;
+                    // Rendre le marker clickable avec le nom
+                    google.maps.event.addListener(marker, 'click', function () {
+                        infowindow.setContent(place.name);
+                        infowindow.open(mapArdGan, this);
+                    });
+                    bounds.extend(place.geometry.location)
+                    mapArdGan.fitBounds(bounds);
+                }
+            });
+            #}
+{#{% endif %}
+            {% endfor %}#}{#
+
+        }
+    }
+</script>
+
+<script type="text/javascript"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAgWzdQsBnEburxWzop05K33T7HQZITMnw&libraries=places&sensor=false&callback=initMap"
+        async defer>
+</script>
+#}

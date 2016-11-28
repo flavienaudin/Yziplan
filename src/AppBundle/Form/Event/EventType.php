@@ -12,6 +12,7 @@ use AppBundle\Entity\Event\Event;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -32,7 +33,7 @@ class EventType extends AbstractType
                     'required' => false
                 )
             )
-            ->add("whereGooglePlaceId", TextType::class, array(
+            ->add("whereGooglePlaceId", HiddenType::class, array(
                     'required' => false
                 )
             )
