@@ -89,8 +89,8 @@ class EventController extends Controller
                         $userEventInvitation = $eventInvitationManager->treatEventInvitationFormSubmission($eventInvitationForm);
                         // Update the form with the updated userEventInvitation
                         $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#user-event-invitation-card'] =
-                            $this->renderView("@App/Event/partials/eventInvitation_profile_card.html.twig", array(
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitationProfile_formContainer'] =
+                            $this->renderView("@App/Event/partials/profile/eventInvitation_profile_form.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,
                                 'userEventInvitationForm' => $eventInvitationForm->createView()
                             ));
@@ -98,7 +98,7 @@ class EventController extends Controller
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitationProfile_formContainer'] =
-                            $this->renderView('@App/Event/partials/eventInvitation_profile_form.html.twig', array(
+                            $this->renderView('@App/Event/partials/profile/eventInvitation_profile_form.html.twig', array(
                                 'userEventInvitationForm' => $eventInvitationForm->createView(),
                                 'userEventInvitation' => $userEventInvitation,));
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
@@ -120,8 +120,8 @@ class EventController extends Controller
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation-answer-card'] =
-                            $this->renderView('@App/Event/partials/eventInvitation_answerCard.html.twig', array(
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation-answer-panel'] =
+                            $this->renderView('@App/Event/partials/profile/eventInvitation_profile_answer_form.html.twig', array(
                                 'userEventInvitation' => $userEventInvitation,
                                 'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView()
                             ));
