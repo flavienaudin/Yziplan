@@ -61,18 +61,18 @@
                     </div>
                 {% endblock sidebar_collapse_cmd %}
 
-                <a href="{{ path('home') }}" class="di-block"><img src="{{ asset('includes/img/logo/logo_prop3_inv_header.png') }}" class="img-responsive" alt="{{ "global.project_name"|trans }}"> </a>
+                <a href="{{ path('home') }}" class="di-block"><img src="{{ asset('includes/img/logo/logo_prop3_transp_header.png') }}" class="img-responsive" alt="{{ "global.project_name"|trans }}"> </a>
             </div>
 
             <div class="pull-right h-menu-wrapper">
                 <ul class="h-menu">
                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                         {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
-                        <li data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                        <li class="hm-alert" data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
                             <a href="#"><i class="hm-icon zmdi zmdi-email"></i></a>
                         </li>
                         {# Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
-                        <li data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                        <li class="hm-alert" data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
                             <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
                         </li>
                         {# Menu dropwdown du profil Utilisateur #}
@@ -108,17 +108,17 @@
                             </ul>
                         </li>
                     {% else %}
-                        <li><a data-toggle="modal" href="#modalRegistration" class="navbar-btn">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></li>
+                        <li class="hm-registration-link"><a data-toggle="modal" href="#modalRegistration" class="navbar-btn">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a data-toggle="modal" href="#modalLogin" class="navbar-btn">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
+                        <li class="hm-login-link"><a data-toggle="modal" href="#modalLogin" class="navbar-btn">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
                     {% endif %}
                 </ul>
             </div>
 
-            <div class="media-body h-title hidden-xs">
+            {#<div class="media-body h-title hidden-xs">
                 <span>{{ "global.project_name"|trans|upper }}
                     <small>{{ "navbar.subtitle"|trans|upper }}</small></span>
-            </div>
+            </div>#}
         </div>
     </header>
 {% endblock %}
