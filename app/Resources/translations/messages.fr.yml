@@ -193,9 +193,13 @@ eventInvitation:
         hello: "Bonjour %username%!"
         paragraph: "Vous êtes invités à \"%event_name%\". Cliquez sur le lien ci-dessous pour répondre:"
 
-invitations:
+invitation_list:
   display:
     title: Liste des invités
+
+invitations:
+  display:
+    title: Invitez vos amis
     cancel:
       link: Annuler l'invitation de %name%
       swal:
