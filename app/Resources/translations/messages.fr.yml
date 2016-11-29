@@ -24,6 +24,18 @@ landing_page:
   carousel:
     button:
       new_event: C'est par ici
+    new_year:
+      alt: Nouvel an
+      title: Nouvel An
+      text: Pas encore organisé pour le nouvel an ? C'est le moment d'y remédier !
+    christmas:
+      alt: Noël
+      title: Noël
+      text: Noël c'est le moment du partage, quoi de mieux que de s'organiser collaborativement ?
+    king_cake:
+      alt: Epiphanie
+      title: Epiphanie
+      text: Envie d'un moment de convivialité autour d'une galette? Faites le savoir à vos amis !
     after_work:
       alt: An after work
       title: Un After Work ?
@@ -83,13 +95,19 @@ event:
       label: Titre
       placeholder: Titre de l'événement
     description:
-      label: Description
+      label: Description :
       placeholder: Dites-en plus au sujet de votre événement
     responseDeadline:
-      label: Date limite de réponse
+      label: Date limite de réponse :
       placeholder: Date limite de réponse
+    whereName:
+      label: Où :
+      placeholder: Où
+    when:
+      label: Quand :
+      placeholder: Quand
     status:
-      label: Etat
+      label: Etat :
       placeholder: Etat de l'événement
       swal:
         title: Validation

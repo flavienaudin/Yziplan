@@ -83,13 +83,19 @@ event:
       label: Title
       placeholder: Event title
     description:
-      label: Description
+      label: Description:
       placeholder: Say more about your event
     responseDeadline:
-      label: Response deadline
+      label: Response deadline:
       placeholder: Response deadline
+    whereName:
+      label: Where:
+      placeholder: Where
+    when:
+      label: When:
+      placeholder: When
     status:
-      label: Status
+      label: Status:
       placeholder: Event status
       swal:
         title: Validation

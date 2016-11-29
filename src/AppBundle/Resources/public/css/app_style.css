@@ -213,13 +213,47 @@
     margin: 0 auto;
 }
 
+.event-title {
+    text-shadow: 0 0 20px rgb(0, 0, 0);
+}
+
+h1.event-title {
+    position: absolute;
+    bottom: 0px;
+}
+
 /*----------------------------------
     Event Invitation Answer
 -----------------------------------*/
 
-.answer-form .btn.active,
-.answer-form .btn:active {
-    border: 2px teal solid;
+.answer-form .btn-answer-false {
+    background-color: #ffccbc;
+}
+
+.answer-form .btn-answer-false.active,
+.answer-form .btn-answer-false:active {
+    background-color: #ff5722;
+    font-weight: bold;
+}
+
+.answer-form .btn-answer-maybe {
+    background-color: #b3e5fc;
+}
+
+.answer-form .btn-answer-maybe.active,
+.answer-form .btn-answer-maybe:active {
+    background-color: #03a9f4;
+    font-weight: bold;
+}
+
+.answer-form .btn-answer-true {
+    background-color: #b2dfdb;
+}
+
+.answer-form .btn-answer-true.active,
+.answer-form .btn-answer-true:active {
+    background-color: teal;
+    font-weight: bold;
 }
 
 .answer-thumb {
@@ -684,4 +718,25 @@ table.dataTable td.dataTables_empty {
 
 .z-depth-btn {
     box-shadow: 0 27px 24px rgba(0, 0, 0, 0.2), 0 40px 77px rgba(0, 0, 0, 0.22) !important;
+}
+
+/*---------------------------------
+    Index
+---------------------------------*/
+.quote-img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100px;
+    width: 100px;
+    display: block;;
+}
+
+.carousel-img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100%;
+    width: 100%;
+    display: block;;
 }
