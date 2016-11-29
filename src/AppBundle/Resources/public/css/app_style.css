@@ -704,3 +704,24 @@ table.dataTable td.dataTables_empty {
 .z-depth-btn {
     box-shadow: 0 27px 24px rgba(0, 0, 0, 0.2), 0 40px 77px rgba(0, 0, 0, 0.22) !important;
 }
+
+/*---------------------------------
+    Index
+---------------------------------*/
+.quote-img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100px;
+    width: 100px;
+    display: block;;
+}
+
+.carousel-img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100%;
+    width: 100%;
+    display: block;;
+}

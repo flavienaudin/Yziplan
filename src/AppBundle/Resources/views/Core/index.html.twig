@@ -1,7 +1,21 @@
-{% extends "AppBundle:Core:layout_cboxed.html.twig" %}
+{% extends "::base.html.twig" %}
+
+{# LAYOUT : une colonne centrale #}
+{% block main_section_class %}{% endblock %}
+{% block main_content_class %}{{ parent() }}{% endblock %}
+
+{# Vidage du menu latéral #}
+{% block sidebar_collapse_cmd %}{% endblock %}
+{% block s_main_menu %}{% endblock s_main_menu %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/index.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/morphext.css") }}">
+{% endblock %}
 
 {% block content_body %}
-    <div class="card">
+    <div class="card z-depth-3">
         <div class="card-body">
             <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
                 <!-- Indicators -->
@@ -15,7 +29,7 @@
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner" role="listbox">
                     <div class="item active">
-                        <img src="{{ asset('bundles/app/img/carousel/carousel-bar.jpg') }}" alt="{{ "landing_page.carousel.after_work.alt"|trans }}">
+                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-bar.jpg') }})"></div>
                         <div class="carousel-caption">
                             <h3>{{ "landing_page.carousel.after_work.title"|trans }}</h3>
                             <p>{{ "landing_page.carousel.after_work.text"|trans }}</p>
@@ -23,7 +37,7 @@
                         </div>
                     </div>
                     <div class="item">
-                        <img src="{{ asset('bundles/app/img/carousel/carousel-reunion.jpg') }}" alt="{{ "landing_page.carousel.meeting.alt"|trans }}">
+                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-reunion.jpg') }})"></div>
                         <div class="carousel-caption">
                             <h3>{{ "landing_page.carousel.meeting.title"|trans }}</h3>
                             <p>{{ "landing_page.carousel.meeting.text"|trans }}</p>
@@ -31,7 +45,7 @@
                         </div>
                     </div>
                     <div class="item">
-                        <img src="{{ asset('bundles/app/img/carousel/carousel-soiree.jpg') }}" alt="{{ "landing_page.carousel.party.alt"|trans }}">
+                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-soiree.jpg') }})"></div>
                         <div class="carousel-caption">
                             <h3>{{ "landing_page.carousel.party.title"|trans }}</h3>
                             <p>{{ "landing_page.carousel.party.text"|trans }}</p>
@@ -39,7 +53,7 @@
                         </div>
                     </div>
                     <div class="item">
-                        <img src="{{ asset('bundles/app/img/carousel/carousel-vacances.jpg') }}" alt="{{ "landing_page.carousel.holiday.alt"|trans }}">
+                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-vacances.jpg') }})"></div>
                         <div class="carousel-caption">
                             <h3>{{ "landing_page.carousel.holiday.title"|trans }}</h3>
                             <p>{{ "landing_page.carousel.holiday.text"|trans }}</p>
@@ -56,62 +70,61 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h1><strong>Carte de test</strong></h1>
+    <div class="card palette-Grey-100 bg z-depth-3">
+        <div class="card-header c-boxed text-center">
+            <h1><strong>Comment ça marche?</strong></h1>
         </div>
-        <div class="card-body card-padding">
-            <p>
-                <a href="{{ path("eventTest") }}" class="btn btn-primary btn-block btn-lg">Test événement</a>
-                <a href="{{ path("displayEvent", {'token':'123456789'}) }}" class="btn btn-primary btn-block btn-lg">Evenement 123456</a></p>
-            <p>Landing page à faire :)</p>
-        </div>
-    </div>
-
-    <div class="card palette-Red-200 bg z-depth-3">
-        <div class="card-header">
-            <h1><strong>Fonctionnalités</strong></h1>
-        </div>
-        <div class="card-body card-padding">
+        <div class="card-body card-padding c-boxed">
             <div class="row">
                 <div class="col-md-4">
                     <div class="card z-depth-3">
                         <div class="card-header text-center">
-                            <h3><strong>Créez votre évènement</strong></h3>
+                            <h3><strong><i class="zmdi zmdi-border-color zmdi-hc-2x"></i><br>Créez votre évènement</strong></h3>
                         </div>
                         <div class="card-body card-padding">
-                            <p>Et ajoutez-y l'une de nos nombreuses fonctionnalités :</p>
-                            <div class="list-md-icon">
+                            <p>Vous organisez un événement ou une activité ?</p>
+                            <p>Vous vous posez des questions similaires :</p>
+                            <div class="list-md-icon m-b-10">
                                 <ul>
-                                    <li class="ng-binding"><i class="zmdi zmdi-help-outline"></i> Soudage (Quoi, Quand, Ou, ...)</li>
-                                    <li class="ng-binding"><i class="zmdi zmdi-check-all"></i> Qui apporte quoi</li>
-                                    <li class="ng-binding"><i class="zmdi zmdi-balance-wallet"></i> Gestion des dépenses</li>
-                                    <li class="ng-binding">Cagnotte</li>
-                                    <li class="ng-binding"><i class="zmdi zmdi-collection-image"></i> Partage de photos</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-help-outline"></i>On fait quoi ?</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-calendar"></i>Vous êtes disponible quand ?</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-pin"></i>On part où ?</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-accounts"></i>Qui vient?</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-check-all"></i>Qui apporte quoi ?</li>
                                     <li class="ng-binding">...</li>
                                 </ul>
                             </div>
+                            <p><strong>Pas de panique Yziplan est fait pour vous!</strong></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card z-depth-3">
+                        <div class="card-header text-center">
+                            <h3><strong><i class="zmdi zmdi-account-add zmdi-hc-2x"></i><br>Invitez vos amis.</strong></h3>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p>Partagez vos informations, vos choix et vos envies.</p>
+                            <p>L'organisation se fait naturellement.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card z-depth-3">
+                        <div class="card-header text-center">
+                            <h3><strong><i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Profitez de l'évènement</strong></h3>
+                        </div>
+                        <div class="card-body card-padding">
+                            <p><strong>Il ne vous reste plus qu'à vous amuser avec vos amis!</strong></p>
 
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card z-depth-3">
-                        <div class="card-header text-center">
-                            <h3><strong>Invitez vos amis</strong></h3>
-                        </div>
-                        <div class="card-body card-padding">
-                            <p>Ils particpent </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card z-depth-3">
-                        <div class="card-header text-center">
-                            <h3><strong>Profitez de l'évènement</strong></h3>
-                        </div>
-                        <div class="card-body card-padding">
-                            <p>Tout est organisé, il ne vous reste plus qu'à vous amuser! </p>
+                            <p>Et retrouvez bientôt de nouvelles fonctionnalités pour gérer l'après événement :</p>
+                            <div class="list-md-icon m-b-10">
+                                <ul>
+                                    <li class="ng-binding"><i class="zmdi zmdi-image"></i>Partage de photos</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-balance-wallet"></i></i>Remboursements</li>
+                                    <li class="ng-binding">...</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -119,74 +132,43 @@
         </div>
     </div>
 
-    <div class="card palette-Blue-200 bg z-depth-3">
-        <div class="card-header">
-            <h1><strong>Types d'évènement</strong><br/></h1>
-            <i>Découvrez nos événements pré-configurés!</i>
-
-        </div>
-        <div class="card-body card-padding">
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Teal bg waves-effect text-center m-10">
-                    <i class="zmdi zmdi-cocktail zmdi-hc-5x"></i></br>
-                    Afterwork
-                </button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Yellow-900 bg waves-effect text-center m-10">
-                    <i class="zmdi zmdi-cake zmdi-hc-5x"></i></br>
-                    Anniversaire
-                </button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Purple bg waves-effect text-center m-10">
-                    <i class="zmdi zmdi-movie-alt zmdi-hc-5x"></i></br>
-                    Cinémas
-                </button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Green bg waves-effect text-center m-10">
-                    <i class="zmdi zmdi-flight-takeoff zmdi-hc-5x"></i></br>
-                    Vacances entre amis
-                </button>
-            </a>
-
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Blue bg waves-effect text-center m-10"><i class="zmdi zmdi-calendar zmdi-hc-3x"></i></br>Sondage Quand ?</button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Teal bg waves-effect text-center m-10"><i class="zmdi zmdi-map zmdi-hc-3x"></i></br>Sondage Où ?</button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Deep-Orange bg waves-effect text-center m-10"><i class="zmdi zmdi-pin-help zmdi-hc-3x"></i></br>Sondage Quoi ?</button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Green bg waves-effect text-center m-10"><i class="zmdi zmdi-check-square zmdi-hc-3x"></i></br>Qui apporte quoi ?</button>
-            </a>
-            <a data-toggle="modal" href="#addModule">
-                <button class="btn palette-Purple bg waves-effect text-center m-10"><i class="zmdi zmdi-balance-wallet zmdi-hc-3x"></i></br>Comptes entre amis</button>
-            </a>
-        </div>
-    </div>
-
-    <div class="card z-depth-3">
-        <div class="card-header">
-            <h1>Exemple d'évènement</h1>
-        </div>
-        <div class="card-body card-padding">
-            <p> Evenemnt pré-configuré (sondage cinémas, organisation futsal, after-work, anniversaire, vacances, ...)</p>
-        </div>
-    </div>
-
-    <div class="card palette-Green-100 bg z-depth-3">
-        <div class="card-header">
+    <div class="card palette-Green-50 bg z-depth-3">
+        <div class="card-header c-boxed">
             <h1>Ils en parlent</h1>
         </div>
-        <div class="card-body card-padding">
-            <p>Retour d'utilisateur, de presse, lien Trustpilot, etc...</p>
+        <div class="card-body c-boxed card-padding">
+            <blockquote class="blockquote m-b-25">
+                <div class="quote-table">
+                    <div class="quote-tr">
+                        <div class="quote-img quote-td pull-left m-r-15" style="background-image: url({{ asset('bundles/app/img/index/quote-mi.jpg') }})"></div>
+                        <div class="quote-td p-l-10">
+                            <p>On devait organiser une mission d'infiltration.<br>On pensait que c'était mission impossible, puis on a découvert Yziplan.</p>
+                            <footer>Ethan Hunt - <cite title="Source Title">Mission Impossible</cite></footer>
+                        </div>
+                    </div>
+                </div>
+            </blockquote>
             <blockquote class="blockquote-reverse m-b-25">
-                <p>J'aime quand un plan se déroule sans accro.</p>
-                <footer><cite title="Source Title">Auteur inconnu</cite></footer>
+                <div class="quote-table">
+                    <div class="quote-tr">
+                        <div class="quote-img quote-td pull-right m-l-15" style="background-image: url({{ asset('bundles/app/img/index/quote-hannibal.jpg') }})"></div>
+                        <div class="quote-td p-r-10">
+                            <p>J'aime quand un plan se déroule sans accroc. </p>
+                            <footer>Hannibal - <cite title="Source Title">Agence tous risques</cite></footer>
+                        </div>
+                    </div>
+                </div>
+            </blockquote>
+            <blockquote class="blockquote m-b-25">
+                <div class="quote-table">
+                    <div class="quote-tr">
+                        <div class="quote-img quote-td pull-left m-r-15" style="background-image: url({{ asset('bundles/app/img/index/quote-ocean.jpg') }})"></div>
+                        <div class="quote-td p-l-10">
+                            <p>On se demandait comment on allait pouvoir cambrioler 3 casinos simultanément.<br>Yziplan nous a permis d'atteindre notre objectif en toute sérénité !</p>
+                            <footer>Daniel "Danny" Ocean - <cite title="Source Title">Ocean's Eleven</cite></footer>
+                        </div>
+                    </div>
+                </div>
             </blockquote>
         </div>
     </div>
