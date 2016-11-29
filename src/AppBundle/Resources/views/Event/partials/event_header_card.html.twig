@@ -7,12 +7,14 @@
     {{ include('@App/Event/partials/event_header_card_header.html.twig', {'userEventInvitation':userEventInvitation, 'editEvent' : eventForm is not null }) }}
 
     <div class="card-body card-padding p-t-25">
-        <div class="pmb-block" id="pmbblock_event_header">
-            <div class="pmbb-header">
+        <div class="pmb-block m-0 p-0" id="pmbblock_event_header">
+            {% if eventForm is not null %}
+            <div class="pmbb-header p-10">
                 <ul class="actions">
                     <li><a data-event-header-action="edit" data-event-header-action-target="#pmbblock_event_header" href="#"><i class="zmdi zmdi-edit"></i></a></li>
                 </ul>
             </div>
+            {% endif %}
             <div class="pmbb-body">
                 <div class="pmbb-view">
                     {{ include("@App/Event/partials/event_header_card_show.html.twig", {'userEventInvitation':userEventInvitation}) }}

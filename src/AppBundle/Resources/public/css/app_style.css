@@ -217,6 +217,11 @@
     text-shadow: 0 0 20px rgb(0, 0, 0);
 }
 
+h1.event-title {
+    position: absolute;
+    bottom: 0px;
+}
+
 /*----------------------------------
     Event Invitation Answer
 -----------------------------------*/
@@ -228,6 +233,16 @@
 .answer-form .btn-answer-false.active,
 .answer-form .btn-answer-false:active {
     background-color: #ff5722;
+    font-weight: bold;
+}
+
+.answer-form .btn-answer-maybe {
+    background-color: #b3e5fc;
+}
+
+.answer-form .btn-answer-maybe.active,
+.answer-form .btn-answer-maybe:active {
+    background-color: #03a9f4;
     font-weight: bold;
 }
 

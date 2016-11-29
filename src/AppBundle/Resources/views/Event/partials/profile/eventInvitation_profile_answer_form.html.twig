@@ -5,6 +5,7 @@ Données d'entrée :
 #}
 
 <div id="eventInvitation-answer-panel">
+    <h4>{{ "eventInvitation.form.answer.label"|trans }}</h4>
     {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
     {{ form_row(userEventInvitationAnswerForm.answer,{
         'label_attr':{'class' : 'sr-only'},

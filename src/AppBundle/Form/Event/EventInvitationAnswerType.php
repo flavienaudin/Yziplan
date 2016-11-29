@@ -33,7 +33,11 @@ class EventInvitationAnswerType extends AbstractType
                 $eventInvitation = $formEvent->getData();
 
                 $event = $eventInvitation->getEvent();
-                if ($event->getStatus() == EventStatus::IN_CREATION || $event->getStatus() == EventStatus::IN_ORGANIZATION || $event->getStatus() == EventStatus::AWAITING_VALIDATION) {
+
+                // Todo: décommenter
+                // Désactivation temporaire pour simplification
+                //if ($event->getStatus() == EventStatus::IN_CREATION || $event->getStatus() == EventStatus::IN_ORGANIZATION || $event->getStatus() == EventStatus::AWAITING_VALIDATION) {
+                if (false) {
                     $form->add('answer', ChoiceType::class, array(
                         'required' => true,
                         'expanded' => true,
@@ -42,16 +46,17 @@ class EventInvitationAnswerType extends AbstractType
                             EventInvitationAnswer::INTERESTED => EventInvitationAnswer::INTERESTED,
                             EventInvitationAnswer::NOT_INTERESTED => EventInvitationAnswer::NOT_INTERESTED
                         ),
-                        'choice_attr' =>function($val, $key, $index) {
-                            if($val == EventInvitationAnswer::INTERESTED) {
+                        'choice_attr' => function ($val, $key, $index) {
+                            if ($val == EventInvitationAnswer::INTERESTED) {
                                 $data_class = 'btn-answer-true';
-                            }else{
+                            } else {
                                 $data_class = 'btn-answer-false';
                             }
                             return ['dataclass' => $data_class];
                         }
                     ));
-                } elseif ($event->getStatus() == EventStatus::VALIDATED) {
+                    //} elseif ($event->getStatus() == EventStatus::VALIDATED) {
+                } elseif (true) {
                     $form->add('answer', ChoiceType::class, array(
                         'required' => true,
                         'expanded' => true,
@@ -63,11 +68,11 @@ class EventInvitationAnswerType extends AbstractType
                         ),
                         'choice_attr' =>function($val, $key, $index) {
                             if($val == EventInvitationAnswer::YES) {
-                                $data_class = 'btn-success';
+                                $data_class = 'btn-answer-true';
                             }elseif($val == EventInvitationAnswer::NO) {
-                                $data_class = 'btn-danger';
+                                $data_class = 'btn-answer-false';
                             }else{
-                                $data_class = 'btn-warning';
+                                $data_class = 'btn-answer-maybe';
                             }
                             return ['dataclass' => $data_class];
                         }

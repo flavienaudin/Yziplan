@@ -83,13 +83,19 @@ event:
       label: Titre
       placeholder: Titre de l'événement
     description:
-      label: Description
+      label: Description :
       placeholder: Dites-en plus au sujet de votre événement
     responseDeadline:
-      label: Date limite de réponse
+      label: Date limite de réponse :
       placeholder: Date limite de réponse
+    whereName:
+      label: Où :
+      placeholder: Où
+    when:
+      label: Quand :
+      placeholder: Quand
     status:
-      label: Etat
+      label: Etat :
       placeholder: Etat de l'événement
       swal:
         title: Validation
