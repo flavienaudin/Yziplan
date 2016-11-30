@@ -24,6 +24,18 @@ landing_page:
   carousel:
     button:
       new_event: C'est par ici
+    new_year:
+      alt: Nouvel an
+      title: Nouvel An
+      text: Pas encore organisé pour le nouvel an ? C'est le moment d'y remédier !
+    christmas:
+      alt: Noël
+      title: Noël
+      text: Noël c'est le moment du partage, quoi de mieux que de s'organiser collaborativement ?
+    king_cake:
+      alt: Epiphanie
+      title: Epiphanie
+      text: Envie d'un moment de convivialité autour d'une galette? Faites le savoir à vos amis !
     after_work:
       alt: An after work
       title: Un After Work ?
@@ -181,9 +193,13 @@ eventInvitation:
         hello: "Bonjour %username%!"
         paragraph: "Vous êtes invités à \"%event_name%\". Cliquez sur le lien ci-dessous pour répondre:"
 
-invitations:
+invitation_list:
   display:
     title: Liste des invités
+
+invitations:
+  display:
+    title: Invitez vos amis
     cancel:
       link: Annuler l'invitation de %name%
       swal:

@@ -23,12 +23,35 @@
                     <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
                     <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
                     <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="3" class=""></li>
                 </ol>
 
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner" role="listbox">
                     <div class="item active">
+                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/nouvel-an-2017.jpg') }})"></div>
+                        <div class="carousel-caption">
+                            <h3>{{ "landing_page.carousel.new_year.title"|trans }}</h3>
+                            <p>{{ "landing_page.carousel.new_year.text"|trans }}</p>
+                            <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/noel.jpg') }})"></div>
+                        <div class="carousel-caption">
+                            <h3>{{ "landing_page.carousel.christmas.title"|trans }}</h3>
+                            <p>{{ "landing_page.carousel.christmas.text"|trans }}</p>
+                            <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/galette.jpg') }})"></div>
+                        <div class="carousel-caption">
+                            <h3>{{ "landing_page.carousel.king_cake.title"|trans }}</h3>
+                            <p>{{ "landing_page.carousel.king_cake.text"|trans }}</p>
+                            <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
+                        </div>
+                    </div>
+{#                    <div class="item active">
                         <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-bar.jpg') }})"></div>
                         <div class="carousel-caption">
                             <h3>{{ "landing_page.carousel.after_work.title"|trans }}</h3>
@@ -59,7 +82,7 @@
                             <p>{{ "landing_page.carousel.holiday.text"|trans }}</p>
                             <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
                         </div>
-                    </div>
+                    </div>#}
                 </div>
 
                 <!-- Controls -->
@@ -82,8 +105,7 @@
                             <h3><strong><i class="zmdi zmdi-border-color zmdi-hc-2x"></i><br>Créez votre évènement</strong></h3>
                         </div>
                         <div class="card-body card-padding">
-                            <p>Vous organisez un événement ou une activité ?</p>
-                            <p>Vous vous posez des questions similaires :</p>
+                            <p>Puis posez vos questions :</p>
                             <div class="list-md-icon m-b-10">
                                 <ul>
                                     <li class="ng-binding"><i class="zmdi zmdi-help-outline"></i>On fait quoi ?</li>
@@ -94,7 +116,6 @@
                                     <li class="ng-binding">...</li>
                                 </ul>
                             </div>
-                            <p><strong>Pas de panique Yziplan est fait pour vous!</strong></p>
                         </div>
                     </div>
                 </div>
@@ -104,8 +125,15 @@
                             <h3><strong><i class="zmdi zmdi-account-add zmdi-hc-2x"></i><br>Invitez vos amis.</strong></h3>
                         </div>
                         <div class="card-body card-padding">
-                            <p>Partagez vos informations, vos choix et vos envies.</p>
-                            <p>L'organisation se fait naturellement.</p>
+                            <p>Répondez ensuite à toutes les questions précédentes de manière collaborative.</p>
+                            <p><strong>De nombreux avantages:</strong></p>
+                            <div class="list-md-icon m-b-10">
+                                <ul>
+                                    <li class="ng-binding"><i class="zmdi zmdi-chevron-right"></i></i>Un endroit unique pour les centraliser tous, et dans la simplicité s'organiser.</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-chevron-right"></i></i>(Presque) Plus besoin de courir après vos amis pour avoir des réponses.</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-chevron-right"></i></i>Eviter le syndrome du "Comme vous voulez!" généralisé !</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -133,8 +161,8 @@
     </div>
 
     <div class="card palette-Green-50 bg z-depth-3">
-        <div class="card-header c-boxed">
-            <h1>Ils en parlent</h1>
+        <div class="card-header c-boxed text-center">
+            <h1><strong>Ils en parlent</strong></h1>
         </div>
         <div class="card-body c-boxed card-padding">
             <blockquote class="blockquote m-b-25">

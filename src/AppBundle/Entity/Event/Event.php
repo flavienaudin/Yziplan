@@ -96,14 +96,14 @@ class Event
      *
      * @ORM\Column(name="invitation_only", type="boolean")
      */
-    private $invitationOnly = true;
+    private $invitationOnly = false;
 
     /**
      * * If "true" then guests can send invitations to others.
      * @var boolean
      * @ORM\Column(name="guests_can_invite", type="boolean")
      */
-    private $guestsCanInvite = false;
+    private $guestsCanInvite = true;
 
     /**
      * * If "true" then guests can add module

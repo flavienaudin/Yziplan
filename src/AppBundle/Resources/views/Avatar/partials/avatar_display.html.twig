@@ -15,7 +15,9 @@
     {% set avatar = eventInvitation.applicationUser.appUserInformation.avatar %}
 {% endif %}
 
-<a data-toggle="dropdown" href="#">
+{# {# Todo: Décommenter et supprimer la ligne du dessous (penser à tester data-container="body" en le remettant)
+<a data-toggle="dropdown" href="#">#}
+<a data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ eventInvitation.displayableName }}" data-container="body">
     {% if avatar is not null %}
         <img class="yzi-avatar-img" src="{{ asset('uploads/user/avatar/'~avatar) }}">
     {% else %}
@@ -23,32 +25,15 @@
         {#<span class="di-block avatar-char palette-Teal bg" title="{{ eventInvitation.displayableName }}">{{ eventInvitation.displayableName|slice(0,1)|upper }}</span>#}
     {% endif %}
 </a>
+{# Todo: Décommenter
 <ul class="dropdown-menu dm-icon" role="menu">
     <li role="presentation"><a class="user-public-name">{{ eventInvitation.displayableName }}</a></li>
-    {% if hasAppUser and app.user and eventInvitation.applicationUser != app.user.applicationUser %} {# Si les deux utilisateurs on un compte #}
+    {% if hasAppUser and app.user and eventInvitation.applicationUser != app.user.applicationUser %} #}{# Si les deux utilisateurs on un compte #}{#
         <li role="separator" class="divider"></li>
-        {# TODO : Affichage profil et ajour amis #}
-        <li role="presentation"><a href="{#{{ path('displayUserEvents') }}#}">{{ "avatar.add_friend"|trans }}</a></li>
-        <li role="presentation"><a href="{#{{ path('fos_user_profile_show') }}#}">{{ "avatar.show_profil"|trans }}</a></li>
-        <li role="presentation"><a href="{#{{ path('fos_user_profile_show') }}#}">{{ "avatar.send_message"|trans }}</a></li>
+        #}{# TODO : Affichage profil et ajour amis #}{#
+        <li role="presentation"><a href="#}{#{{ path('displayUserEvents') }}#}{#">{{ "avatar.add_friend"|trans }}</a></li>
+        <li role="presentation"><a href="#}{#{{ path('fos_user_profile_show') }}#}{#">{{ "avatar.show_profil"|trans }}</a></li>
+        <li role="presentation"><a href="#}{#{{ path('fos_user_profile_show') }}#}{#">{{ "avatar.send_message"|trans }}</a></li>
     {% endif %}
-</ul>
+</ul>#}
 
-
-{#
-<script type="text/javascript">
-    $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
-        var $form = $(this);
-        ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                    {% if not edition %}
-                    $form[0].reset();
-                    {% endif %}
-                    $('#{{ pp_form_modal_prefix }}_modal_id').modal('toggle');
-                },
-                null,
-                function () {
-                    $('.grid').masonry('layout');
-                }
-        );
-    });
-</script>#}
