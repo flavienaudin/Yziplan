@@ -7,20 +7,28 @@
  *
  * Example of use : <img class="round" width="30" height="30" avatar="Andy">
  *
- * Version modifiée par Patrick
+ * Version adapaté par Patrick
  */
 (function (w, d) {
 
-    function LetterAvatar(name, size) {
+    function LetterAvatar(name, size, isUserConnected) {
 
         name = name || '';
         size = size || 150;
 
         var colours = [
-                /*"#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50",
+                /* Couleurs originales
+                 "#1abc9c", "#2ecc71", "#3498db", "#9b59b6", "#34495e", "#16a085", "#27ae60", "#2980b9", "#8e44ad", "#2c3e50",
                  "#f1c40f", "#e67e22", "#e74c3c", "#ecf0f1", "#95a5a6", "#f39c12", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"*/
-                "#ff1744", "#f50057", "#d500f9", "#651fff", "#3d5afe", "#2979ff", "#00b0ff", "#00e5ff", "#1de9b6", "#00e676",
-                "#76ff03", "#c6ff00", "#ffea00", "#ffc400", "#ff9100", "#ff3d00", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"
+                /* Flashy
+                 "#ff1744", "#f50057", "#d500f9", "#651fff", "#3d5afe", "#2979ff", "#00b0ff", "#00e5ff", "#1de9b6", "#00e676",
+                 "#76ff03", "#c6ff00", "#ffea00", "#ffc400", "#ff9100", "#ff3d00", "#d35400", "#c0392b", "#bdc3c7", "#7f8c8d"*/
+                /* Pastel
+                 "#e57373", "#f06292", "#ba68c8", "#9575cd", "#7986cb", "#64b5f6", "#4fc3f7", "#4dd0e1", "#4db6ac", "#81c784",
+                 "#aed581", "#827717", "#fbc02d", "#ffa000", "#f57c00", "#ff8a65", "#a1887f", "#757575", "#90a4ae", "#000000"*/
+                /* Orange */
+                "#ffa000", "#ff8f00", "#ff6f00", "#f57c00", "#ef6c00", "#e65100", "#ff8a65", "#ff7043", "#ff5722", "#f4511e",
+                "#ffa000", "#ff8f00", "#ff6f00", "#f57c00", "#ef6c00", "#e65100", "#ff8a65", "#ff7043", "#ff5722", "#f4511e"
             ],
 
             nameSplit = String(name).toUpperCase().split(' '),
@@ -44,7 +52,12 @@
         canvas.height = size;
         context = canvas.getContext("2d");
 
-        context.fillStyle = colours[colourIndex - 1];
+        if (!isUserConnected) {
+            context.fillStyle = colours[colourIndex];
+        } else { // Dans le cas ou on est sur l'avatar de l'utilisateur
+            context.fillStyle = "#d500f9";
+        }
+
         context.fillRect(0, 0, canvas.width, canvas.height);
         context.font = Math.round(canvas.width / 2) + "px Arial";
         context.textAlign = "center";
@@ -61,7 +74,7 @@
 
         Array.prototype.forEach.call(d.querySelectorAll('img[avatar]'), function (img, name) {
             name = img.getAttribute('avatar');
-            img.src = LetterAvatar(name, img.getAttribute('width'));
+            img.src = LetterAvatar(name, img.getAttribute('width'), img.hasAttribute('userAvatar'));
             if (name != '' && name != null) {
                 img.removeAttribute('avatar');
             }
