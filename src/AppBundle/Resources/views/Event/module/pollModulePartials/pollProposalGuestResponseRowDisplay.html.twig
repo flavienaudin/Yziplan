@@ -116,9 +116,7 @@
                         verticaldownclass: 'zmdi zmdi-minus zmdi-hc-fw'
                     });
                     touchSpinInput.on('change', function(){
-                        console.log("toto");
                         $(touchSpinInput).trigger('blur');
-                        console.log("tata");
                     });
                 });
             </script>
@@ -150,16 +148,16 @@
             {% else %}
                 {% if otherGuestPollProposalResponse is not null %}
                     {% if otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
-                        <span class="answer-thumb palette-Light-Green bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                        <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
                     {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
-                        <span class="answer-thumb palette-Amber bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                        <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
                     {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
-                        <span class="answer-thumb palette-Red bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                        <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
                     {% else %}
-                        <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
+                        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
                     {% endif %}
                 {% else %}
-                    <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline"></i></span>
+                    <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline"></i></span>
                 {% endif %}
             {% endif %}
         </td>

@@ -265,6 +265,7 @@ h1.event-title {
     padding: 6px 10px;
     font-size: 12px;
     line-height: 1.42857143;
+    border-radius: 2px;
 }
 
 /*----------------------------------
