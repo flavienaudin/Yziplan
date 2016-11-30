@@ -127,89 +127,85 @@
             });
         }
 
-        var inputId = /** @type {!HTMLInputElement} */(
-                document.getElementById('event_whereName'));
-        var autocomplete = new google.maps.places.Autocomplete(inputId);
-
-        {#{% if userEventInvitation.event.whereGooglePlaceId != null %}
-
-        boundsEventEdit = new google.maps.LatLngBounds();
-        var service = new google.maps.places.PlacesService(boundsEventEdit);
-
-        var infowindow = new google.maps.InfoWindow();
-        service.getDetails({
-                    placeId: '{{ userEventInvitation.event.whereGooglePlaceId }}'
+        var autocompletes = initPollProposalWhereElements('#event_whereName', '#event_whereGooglePlaceId');
+        if (autocompletes.length > 0) {
+            var autocomplete = autocompletes[0];
+            var marker = null;
+            google.maps.event.addListener(autocomplete, 'place_changed', function onPlaceChanged() {
+                var infowindow = new google.maps.InfoWindow();
+                // On enregistre les points pour definir la zone visible de la map
+                if (boundsEventEdit == null) {
+                    boundsEventEdit = new google.maps.LatLngBounds();
                 }
-                ,
-                function (place, status) {
-                    if (status === google.maps.places.PlacesServiceStatus.OK) {
-                        var marker = new google.maps.Marker({
-                            map: mapEventEdit,
-                            position: place.geometry.location
-                        });
-                        #}{# Permet de s'assurer que la map est pas trop zoomée, a priori  le zoom du firbounds se fait en asynchrone,
-                                            donc il faut choper un event, et ne le fait que au premier passage#}{#
 
-                        google.maps.event.addListener(mapEventEdit, 'bounds_changed', function (event) {
-                            if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom == true) {
-                                // Change max/min zoom here
-                                mapEventEdit.setZoom(15);
-                                mapEventEdit.initialZoom = false;
-                            }
-                        });
-                        mapEventEdit.initialZoom = true;
-                        // Rendre le marker clickable avec le nom
-                        google.maps.event.addListener(marker, 'click', function () {
-                            infowindow.setContent(place.name);
-                            infowindow.open(mapEventEdit, this);
-                        });
-                        boundsEventEdit.extend(place.geometry.location)
-                        mapEventEdit.fitBounds(boundsEventEdit);
+                infowindow.close();
+                var place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    return;
+                }
+
+                var zoomChangeBoundsListener = google.maps.event.addListener(mapEventEdit, 'bounds_changed', function (event) {
+                    if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom == true) {
+                        // Change max/min zoom here
+                        mapEventEdit.setZoom(15);
+                        mapEventEdit.initialZoom = false;
                     }
-                }
-        );
-        {% endif %}#}
-        
-        var marker = null;
-        google.maps.event.addListener(autocomplete, 'place_changed', function onPlaceChanged() {
+                    google.maps.event.removeListener(zoomChangeBoundsListener);
+                });
+                mapEventEdit.initialZoom = true;
+                boundsEventEdit.extend(place.geometry.location);
+                mapEventEdit.fitBounds(boundsEventEdit);
+
+                marker = new google.maps.Marker({
+                    map: mapEventEdit,
+                    position: place.geometry.location
+                });
+                google.maps.event.addListener(marker, 'click', function () {
+                    infowindow.setContent(place.name);
+                    infowindow.open(mapEventEdit, this);
+                });
+            });
+
+
+            {#{% if userEventInvitation.event.whereGooglePlaceId != null %}
+
+            boundsEventEdit = new google.maps.LatLngBounds();
+            var service = new google.maps.places.PlacesService(boundsEventEdit);
+
             var infowindow = new google.maps.InfoWindow();
-            // On enregistre les points pour definir la zone visible de la map
-            if (boundsEventEdit == null) {
-                boundsEventEdit = new google.maps.LatLngBounds();
-            }
+            service.getDetails({
+                        placeId: '{{ userEventInvitation.event.whereGooglePlaceId }}'
+                    }
+                    ,
+                    function (place, status) {
+                        if (status === google.maps.places.PlacesServiceStatus.OK) {
+                            var marker = new google.maps.Marker({
+                                map: mapEventEdit,
+                                position: place.geometry.location
+                            });
+                            #}{# Permet de s'assurer que la map est pas trop zoomée, a priori  le zoom du firbounds se fait en asynchrone,
+                                                donc il faut choper un event, et ne le fait que au premier passage#}{#
 
-            infowindow.close();
-            var place = autocomplete.getPlace();
-            if (!place.geometry) {
-                //window.alert("Autocomplete's returned place contains no geometry");
-                return;
-            }
-
-            var zoomChangeBoundsListener = google.maps.event.addListener(mapEventEdit, 'bounds_changed', function (event) {
-                if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom == true) {
-                    // Change max/min zoom here
-                    mapEventEdit.setZoom(15);
-                    mapEventEdit.initialZoom = false;
-                }
-                google.maps.event.removeListener(zoomChangeBoundsListener);
-            });
-            mapEventEdit.initialZoom = true;
-            boundsEventEdit.extend(place.geometry.location)
-            mapEventEdit.fitBounds(boundsEventEdit);
-
-            marker = new google.maps.Marker({
-                map: mapEventEdit,
-                position: place.geometry.location
-            });
-            google.maps.event.addListener(marker, 'click', function () {
-                infowindow.setContent(place.name);
-                infowindow.open(mapEventEdit, this);
-            });
-
-            var inputHidden = /** @type {!HTMLInputElement} */(
-                    document.getElementById('event_whereGooglePlaceId'));
-            inputHidden.value = place.place_id;
-        });
-    };
+                            google.maps.event.addListener(mapEventEdit, 'bounds_changed', function (event) {
+                                if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom == true) {
+                                    // Change max/min zoom here
+                                    mapEventEdit.setZoom(15);
+                                    mapEventEdit.initialZoom = false;
+                                }
+                            });
+                            mapEventEdit.initialZoom = true;
+                            // Rendre le marker clickable avec le nom
+                            google.maps.event.addListener(marker, 'click', function () {
+                                infowindow.setContent(place.name);
+                                infowindow.open(mapEventEdit, this);
+                            });
+                            boundsEventEdit.extend(place.geometry.location)
+                            mapEventEdit.fitBounds(boundsEventEdit);
+                        }
+                    }
+            );
+            {% endif %}#}
+        }
+    }
 
 </script>
