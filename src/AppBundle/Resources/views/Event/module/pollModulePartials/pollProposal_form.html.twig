@@ -33,6 +33,11 @@
     {{ form_end(pollProposalForm) }}
 
     <script type="text/javascript">
+
+        if (typeof google === 'object' && typeof google.maps === 'object') {
+            initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');
+        }
+
         $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
             var $form = $(this);
             ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {

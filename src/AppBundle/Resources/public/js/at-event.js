@@ -103,6 +103,19 @@ $(document).ready(function () {
 });
 
 
+/** Fonctions relatives à la page d'événement */
 
-
-
+/**
+ * Active l'autocomplétion (GooglePlace) pour les champs WHERE de formulaire et ajoute un listener pour mettre à jour un champ HIDDEN dédié
+ */
+function initPollProposalWhereElements(selectorFieldsPlaceName, selectorPlaceId) {
+    $(selectorFieldsPlaceName).each(function () {
+        var placeNameInput = $(this);
+        var autocomplete = new google.maps.places.Autocomplete(placeNameInput[0]);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var inputHidden = placeNameInput.closest('.form-group').next(selectorPlaceId);
+            inputHidden.val(autocomplete.getPlace().place_id);
+        });
+        return autocomplete;
+    });
+}

@@ -31,34 +31,20 @@
 
     <script>
         if (typeof google === 'object' && typeof google.maps === 'object') {
-            initPollProposalWhereElements();
+            initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');
         }
-        function initPollProposalWhereElements() {
-            $('.googlePlaceId_name').each(function () {
-                var whereNameInput = $(this);
-                var autocomplete = new google.maps.places.Autocomplete(whereNameInput[0]);
-                google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                    var inputHidden = whereNameInput.closest('.form-group').next('.googlePlaceId_value');
-                    inputHidden.val(autocomplete.getPlace().place_id);
-                });
-            });
-
-            $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
-                var $form = $(this);
-                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                            $form[0].reset();
-                            if (responseJSON.hasOwnProperty('data')) {
-                                $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable().row.add($(responseJSON['data'])).draw();
-                            }
-                        }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-                            $('#module-{{ userModuleInvitation.module.token }}').trigger("resize");
-                            $('.grid').masonry('layout');
+        $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
+            var $form = $(this);
+            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                        $form[0].reset();
+                        if (responseJSON.hasOwnProperty('data')) {
+                            $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable().row.add($(responseJSON['data'])).draw();
                         }
-                );
-            });
-        }
+                    }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                        $('#module-{{ userModuleInvitation.module.token }}').trigger("resize");
+                        $('.grid').masonry('layout');
+                    }
+            );
+        });
     </script>
 </div>
-
-
-
