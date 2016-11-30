@@ -32,14 +32,14 @@
                             <th class="pollproposal-column" style="width: 50px"></th>
                             <td class="voting-column dt-head-center">
                                 <span class="userInvitation-avatar">
-                                    <div class="avatar-img-container-sm center-block">
+                                    <div class="avatar-img-container-sm center-block m-b-5">
                                         {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userModuleInvitation, isUserConnected : true}) }}
                                     </div>
                                 </span>
                             </td>
                             {% for moduleInvitation in modulesInvitationsExceptUserMI %}
                                 <td class="dt-head-center" style="width: 40px">
-                                    <div class="avatar-img-container-sm center-block">
+                                    <div class="avatar-img-container-sm center-block m-b-5">
                                         {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
                                     </div>
                                 </td>
