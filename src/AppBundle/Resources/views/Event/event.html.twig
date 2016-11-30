@@ -192,4 +192,29 @@
         </script>
     {% endif %}
 
+
+    <script>
+        if (typeof google === 'object' && typeof google.maps === 'object') {
+            initEventShowMap();
+        } else {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.async = true;
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD85iLilkz3ywzsN6VZKA-HEz2SLTEFIOE&libraries=places&callback=initEventGMapAPI";
+            document.body.appendChild(script);
+        }
+    </script>
+
+    <script>
+        function initEventGMapAPI() {
+            initEventShowMap();
+
+            // Init event map fait a l'ouverture de l'edition
+            // initEventEditMap();
+
+            // Active l'autocomplétion des champs "Où" lors de l'ajout de proposition "Where"
+            initPollProposalWhereElements();
+        }
+    </script>
+
 {% endblock %}
