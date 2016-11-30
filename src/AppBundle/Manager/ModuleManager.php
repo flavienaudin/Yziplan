@@ -115,10 +115,23 @@ class ModuleManager
             $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
 
             if ($subtype == PollModuleType::WHEN) {
+                $this->module->setName("pollmodule.add_link.when");
                 $pollElement->setType(PollElementType::DATETIME);
             } elseif ($subtype == PollModuleType::WHAT) {
+                $this->module->setName("pollmodule.add_link.what");
                 $pollElement->setType(PollElementType::STRING);
+            } elseif ($subtype == PollModuleType::WHERE) {
+                $this->module->setName("pollmodule.add_link.where");
+                $pollElement->setType(PollElementType::STRING);
+
+                // to stock google place id
+                $pollElement_place_id = new PollElement();
+                $pollElement_place_id->setType(PollElementType::HIDDEN);
+                $pollElement_place_id->setName(PollElementType::HIDDEN);
+                $pollElement_place_id->setOrderIndex(1);
+                $pollModule->addPollElement($pollElement_place_id);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
+                $this->module->setName("pollmodule.add_link.whobringswhat");
                 $pollElement->setType(PollElementType::STRING);
                 $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
             }
@@ -128,8 +141,8 @@ class ModuleManager
             $this->module->setPollModule($pollModule);
 
         }
-        $moduleInvitation = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
-        $moduleInvitation->setCreator(true);
+        $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
+        $moduleInvitationCreator->setCreator(true);
         $event->addModule($this->module);
         return $this->module;
     }

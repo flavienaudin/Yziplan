@@ -212,6 +212,7 @@ class EventManager
         }
 
         $module = $this->moduleManager->createModule($this->event, $type, $subtype, $userEventInvitation);
+
         // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator).
         $this->moduleInvitationManager->initializeModuleInvitationsForEvent($this->event, $module);
         $this->entityManager->persist($this->event);
@@ -240,7 +241,8 @@ class EventManager
                     $moduleDescription = array();
                     $moduleDescription['module'] = $module;
                     $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
-                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
+                    if (false && $this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
+                        // TODO always false : non nécessaire en version BETA
                         $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
                     }
                     if ($module->getPollModule() != null) {

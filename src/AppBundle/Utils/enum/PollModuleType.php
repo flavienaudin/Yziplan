@@ -14,9 +14,9 @@ class PollModuleType extends AbstractEnumType
     /* Values */
     const WHAT= "pollmoduletype.what";
     const WHEN = "pollmoduletype.when";
-    //const WHERE = "pollmoduletype.where";
+    const WHERE = "pollmoduletype.where";
     const WHO_BRINGS_WHAT = "pollmoduletype.whobringswhat";
 
     protected $name = 'enum_pollmodule_type';
-    protected $values = array(self::WHAT, self::WHEN);
+    protected $values = array(self::WHAT, self::WHEN, self::WHERE, self::WHO_BRINGS_WHAT);
 }

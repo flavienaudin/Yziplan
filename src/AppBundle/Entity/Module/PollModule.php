@@ -218,4 +218,15 @@ class PollModule
         );
         return $this->pollProposals->matching($criteria);
     }
+
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getOrderedPollElements()
+    {
+        $criteria = Criteria::create()
+            ->orderBy(["orderIndex" => Criteria::ASC]);
+        return $this->pollElements->matching($criteria);
+    }
 }

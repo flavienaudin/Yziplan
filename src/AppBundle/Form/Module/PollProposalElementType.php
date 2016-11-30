@@ -13,6 +13,7 @@ use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Utils\enum\PollElementType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -45,6 +46,11 @@ class PollProposalElementType extends AbstractType
             } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::INTEGER) {
                 $form->add('valInteger', IntegerType::class, array(
                     'required' => true,
+                    'label' => $pollProposalElement->getPollElement()->getName()
+                ));
+            } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::HIDDEN) {
+                $form->add('valString', HiddenType::class, array(
+                    'required' => false,
                     'label' => $pollProposalElement->getPollElement()->getName()
                 ));
             } else {

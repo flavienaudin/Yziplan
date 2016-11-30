@@ -241,6 +241,7 @@ pollmodule:
   add_link:
     what: Quoi ?
     when: Quand ?
+    where: Où ?
     whobringswhat: Qui apporte quoi ?
   display:
     no_proposal: Pas encore de proposition
@@ -333,6 +334,7 @@ modulestatus:
 pollmoduletype:
   when: Quand
   what: Quoi
+  where: Où
   whobringswhat: Qu'est-ce qu'il faut ?
 
 contact_info_type:

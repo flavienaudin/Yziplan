@@ -273,9 +273,13 @@ h1.event-title {
 
 .add-module-menu {
     position: fixed;
-    right: 40px;
+    right: 10px;
     bottom: 100px;
     z-index: 10;
+}
+
+.add-module-menu > button.m-btn{
+    right: 10px;
 }
 
 .add-module-menu .dropdown-menu {

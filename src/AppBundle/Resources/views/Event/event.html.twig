@@ -16,7 +16,7 @@
 {% block event_content %}
     {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
         {# TODO Positionner le menu s'ouvrant relativement au browser #}
-        <div class="dropup add-module-menu z-depth-5">
+        <div class="dropup add-module-menu z-depth-4">
             <button class="btn btn-float btn-danger m-btn waves-effect waves-circle waves-float z-depth-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="zmdi zmdi-plus"></i>
             </button>
@@ -37,9 +37,15 @@
                 </li>
                 <li>
                     <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                        'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHERE')}) }}" id="addWherePollModule">
+                        <small>{{ "pollmodule.add_link.where"|trans }}</small>
+                        <i class="waves-effect palette-Green bg zmdi zmdi-pin zmdi-hc-fw"></i> </a>
+                </li>
+                <li>
+                    <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                         'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHO_BRINGS_WHAT')}) }}" id="addWhoBringsWhatPollModule">
                         <small>{{ "pollmodule.add_link.whobringswhat"|trans }}</small>
-                        <i class="waves-effect palette-Blue bg zmdi zmdi-format-list-bulleted zmdi-hc-fw"></i> </a>
+                        <i class="waves-effect palette-Purple bg zmdi zmdi-format-list-bulleted zmdi-hc-fw"></i> </a>
                 </li>
             </ul>
         </div>
@@ -123,6 +129,7 @@
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/fileinput.min.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/datatables.min.css") }}"/>
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootstrap-touchspin.min.css") }}"/>
 
 {% endblock stylesheets %}
 
@@ -132,6 +139,7 @@
     <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/at-selectize.js") }}"></script>
     <script src="{{ asset("bundles/app/js/datatables.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery.bootstrap-touchspin.min.js") }}"></script>
 {% endblock %}
 
 {% block javascripts %}

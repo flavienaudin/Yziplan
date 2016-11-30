@@ -10,18 +10,22 @@
 
     <h4>{{ "pollmodule.modal.addPollProposal.title"|trans }}</h4>
     <div>{{ form_errors(pollProposalForm.pollProposalElements) }}</div>
-    <div class="m-t-20 w-100" style="display: table">
-        <div class="row" style="display: table-row">
+    <div class="m-t-20 w-100">
+        <div class="row" >
             {% for pollProposalElement in pollProposalForm.pollProposalElements %}
-                <div class="col-xs-12 col-sm-4" style="display: table-cell">
-                    {{ form_widget(pollProposalElement, {'widget_options':{
-                        'fgline' : true,
-                        'fgfloat':(pollProposalElement.valDatetime is not defined),
-                        'fgfline':(pollProposalElement.valDatetime is defined)
-                    }} ) }}
-                </div>
+                {% if pollProposalElement.valString is not defined or pollProposalElement.valString.vars.label is not constant('AppBundle\\Utils\\enum\\PollElementType::HIDDEN')%}
+                    <div class="col-xs-12 col-sm-4">
+                        {{ form_widget(pollProposalElement, {'widget_options':{
+                            'fgline' : true,
+                            'fgfloat':(pollProposalElement.valDatetime is not defined),
+                            'fgfline':(pollProposalElement.valDatetime is defined)
+                        }} ) }}
+                    </div>
+                {% else %}
+                    {{ form_widget(pollProposalElement ) }}
+                {% endif %}
             {% endfor %}
-            <div class="col-xs-12 col-sm-2 text-center" style="display: table-cell">
+            <div class="col-xs-12 col-sm-2 text-center">
                 <button type="submit" class="btn btn-primary"><i class="zmdi zmdi-plus-circle zmdi-hc-fw"></i> {{ "global.button.add"|trans }}</button>
             </div>
         </div>
@@ -30,6 +34,11 @@
     {{ form_end(pollProposalForm) }}
 
     <script type="text/javascript">
+        var input = document.getElementById("add_poll_proposal_form_{{ userModuleInvitation.module.token }}_pollProposalElements_0_valString");
+        if(input != null) {
+            //var autocomplete = new google.maps.places.Autocomplete(input);
+        }
+
         $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
             var $form = $(this);
             ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
