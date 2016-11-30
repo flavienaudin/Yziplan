@@ -10086,8 +10086,30 @@ pre {
     line-height: 50px;
 }
 
+.h-menu > li.hm-registration-link {
+    padding-right: 15px;
+}
+
+.h-menu > li.hm-registration-link i,
+.h-menu > li.hm-login-link i {
+    font-size: 24px;
+}
+
+@media (min-width: 401px) {
+    .h-menu > li.hm-registration-link i,
+    .h-menu > li.hm-login-link i {
+        display: none;
+    }
+}
+
 @media (max-width: 400px) {
-    .h-menu > li:not(.hm-profile) {
+    .h-menu > li.hm-registration-link,
+    .h-menu > li.hm-login-link {
+        min-width: 0;
+    }
+
+    .h-menu > li.hm-registration-link span,
+    .h-menu > li.hm-login-link span {
         display: none;
     }
 }

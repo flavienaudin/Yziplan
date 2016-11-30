@@ -61,20 +61,23 @@
                     </div>
                 {% endblock sidebar_collapse_cmd %}
 
-                <a href="{{ path('home') }}" class="di-block"><img src="{{ asset('includes/img/logo/logo_prop3_transp_header.png') }}" class="img-responsive" alt="{{ "global.project_name"|trans }}"> </a>
+                <a href="{{ path('home') }}" class="di-block"><img src="{{ asset('includes/img/logo/logo_prop3_transp_header.png') }}" class="img-responsive" alt="{{ "global.project_name"|trans }}">
+                </a>
             </div>
 
             <div class="pull-right h-menu-wrapper">
                 <ul class="h-menu">
                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                         {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
+                        {# TODO decommenter : non necessaire pour la version beta
                         <li class="hm-alert" data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
                             <a href="#"><i class="hm-icon zmdi zmdi-email"></i></a>
-                        </li>
+                        </li>#}
                         {# Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
+                        {# TODO decommenter : non necessaire pour la version beta
                         <li class="hm-alert" data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
                             <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
-                        </li>
+                        </li>#}
                         {# Menu dropwdown du profil Utilisateur #}
                         <li class="dropdown hm-profile">
                             {# TODO : style : alignement vertical : hm-profile #}
@@ -91,13 +94,15 @@
                                 <li role="separator" class="divider"></li>
                                 <li role="presentation" class="hmp-alerts">
                                     {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
+                                    {# TODO decommenter : non necessaire pour la version beta
                                     <div class="hmp-alert" data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
                                         <a href="#"><i class="hm-icon zmdi zmdi-email"></i></a>
-                                    </div>
+                                    </div>#}
                                     {# Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
+                                    {# TODO decommenter : non necessaire pour la version beta
                                     <div class="hmp-alert" data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
                                         <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
-                                    </div>
+                                    </div>#}
                                 </li>
                                 <li role="separator" class="hmp-alerts divider"></li>
                                 <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a></li>
@@ -108,9 +113,12 @@
                             </ul>
                         </li>
                     {% else %}
-                        <li class="hm-registration-link"><a data-toggle="modal" href="#modalRegistration" class="navbar-btn">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="hm-login-link"><a data-toggle="modal" href="#modalLogin" class="navbar-btn">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
+                        <li class="hm-registration-link">
+                            <a data-toggle="modal" href="#modalRegistration" class="navbar-btn"> <i class="zmdi zmdi-sign-in"></i>
+                                <span> {{ 'layout.register'|trans({}, 'FOSUserBundle') }}</span></a></li>
+                        <li class="hm-login-link">
+                            <a data-toggle="modal" href="#modalLogin" class="navbar-btn"> <i class="zmdi zmdi-power"></i>
+                                <span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</span></a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -127,7 +135,8 @@
 {# Pour avoir une page AVEC un menu latéral : conserver section.with-s-main-menu et redéfinir le block "s_main_menu" ou juste "mainMenu_listItems" #}
 {# Pour avoir une page SANS menu latéral : redéfinir(vider) le block "main_section_clss" et définir les blocks "s_main_menu" et "sidebar_collapse_cmd" vides #}
 <section id="main" class="{% block main_section_class %}with-s-main-menu{% endblock %}">
-    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+    {# TODO non necessaire pour la version beta #}
+    {% if false and is_granted("IS_AUTHENTICATED_REMEMBERED") %}
         {# Panneaux d'affichage des "Notifications utilisateur" ouverts via les icones de la navbar #}
         <aside id="s-user-alerts" class="sidebar">
             <ul class="tab-nav tn-justified tn-icon m-t-10" data-tab-color="teal">
