@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Module;
 
+use AppBundle\Utils\enum\PollElementType;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -28,7 +29,7 @@ class PollProposalElement
     /**
      * Contient la valeur si le PollElement correspondant est de type
      *
-     * @var string     *
+     * @var string
      * @ORM\Column(name="val_string", type="string", length=511, nullable=true)
      */
     private $valString;
@@ -50,6 +51,14 @@ class PollProposalElement
      * @ORM\Column(name="val_datetime", type="datetime", nullable=true)
      */
     private $valDatetime;
+
+    /**
+     * Contient la valeur du Google Place Id si le PollElement est de Type PollElementType::GOOGLE_PLACE_ID
+     *
+     * @var string
+     * @ORM\Column(name="val_google_place_id", type="string", length=511, nullable=true)
+     */
+    private $valGooglePlaceId;
 
 
     /***********************************************************************
@@ -141,6 +150,24 @@ class PollProposalElement
     }
 
     /**
+     * @return string
+     */
+    public function getValGooglePlaceId()
+    {
+        return $this->valGooglePlaceId;
+    }
+
+    /**
+     * @param string $valGooglePlaceId
+     * @return PollProposalElement
+     */
+    public function setValGooglePlaceId($valGooglePlaceId)
+    {
+        $this->valGooglePlaceId = $valGooglePlaceId;
+        return $this;
+    }
+
+    /**
      * @return PollProposal
      */
     public function getPollProposal()
@@ -174,5 +201,32 @@ class PollProposalElement
     {
         $this->pollElement = $pollElement;
         return $this;
+    }
+
+
+    /***********************************************************************
+     *                      Helpers
+     ***********************************************************************/
+
+    /**
+     */
+    public function getValue()
+    {
+        $type = $this->getPollElement()->getType();
+        $val = $this->getValString();
+        switch ($this->getPollElement()->getType()) {
+
+            case PollElementType::DATETIME:
+                $val = $this->getValDatetime();
+                break;
+            case PollElementType::INTEGER :
+                $val = $this->getValInteger();
+                break;
+            case $type == PollElementType::GOOGLE_PLACE_ID:
+            case PollElementType::STRING :
+                $val = $this->getValString();
+                break;
+        }
+        return $val;
     }
 }

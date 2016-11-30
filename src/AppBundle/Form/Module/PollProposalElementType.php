@@ -24,8 +24,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PollProposalElementType extends AbstractType
 {
-
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
@@ -48,10 +46,21 @@ class PollProposalElementType extends AbstractType
                     'required' => true,
                     'label' => $pollProposalElement->getPollElement()->getName()
                 ));
-            } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::HIDDEN) {
-                $form->add('valString', HiddenType::class, array(
+            } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::GOOGLE_PLACE_ID) {
+                $form->add('valString', TextType::class, array(
                     'required' => false,
-                    'label' => $pollProposalElement->getPollElement()->getName()
+                    'label' => $pollProposalElement->getPollElement()->getName(),
+                    'attr' => array(
+                        'class' => 'googlePlaceId_name',
+                        'placeholder' => '' // Set blank placeholder to avoid google set its own
+                    )
+                ));
+                $form->add('valGooglePlaceId', HiddenType::class, array(
+                    'required' => false,
+                    'label' => $pollProposalElement->getPollElement()->getName(),
+                    'attr' => array(
+                        'class' => 'googlePlaceId_value'
+                    )
                 ));
             } else {
                 $form->add('valString', TextType::class, array(

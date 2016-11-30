@@ -11,19 +11,15 @@
     <h4>{{ "pollmodule.modal.addPollProposal.title"|trans }}</h4>
     <div>{{ form_errors(pollProposalForm.pollProposalElements) }}</div>
     <div class="m-t-20 w-100">
-        <div class="row" >
+        <div class="row">
             {% for pollProposalElement in pollProposalForm.pollProposalElements %}
-                {% if pollProposalElement.valString is not defined or pollProposalElement.valString.vars.label is not constant('AppBundle\\Utils\\enum\\PollElementType::HIDDEN')%}
-                    <div class="col-xs-12 col-sm-4">
-                        {{ form_widget(pollProposalElement, {'widget_options':{
-                            'fgline' : true,
-                            'fgfloat':(pollProposalElement.valDatetime is not defined),
-                            'fgfline':(pollProposalElement.valDatetime is defined)
-                        }} ) }}
-                    </div>
-                {% else %}
-                    {{ form_widget(pollProposalElement ) }}
-                {% endif %}
+                <div class="col-xs-12 col-sm-4">
+                    {{ form_widget(pollProposalElement, {'widget_options':{
+                        'fgline' : true,
+                        'fgfloat':(pollProposalElement.valDatetime is not defined),
+                        'fgfline':(pollProposalElement.valDatetime is defined)
+                    }} ) }}
+                </div>
             {% endfor %}
             <div class="col-xs-12 col-sm-2 text-center">
                 <button type="submit" class="btn btn-primary"><i class="zmdi zmdi-plus-circle zmdi-hc-fw"></i> {{ "global.button.add"|trans }}</button>
@@ -33,17 +29,15 @@
     {{ form_rest(pollProposalForm) }}
     {{ form_end(pollProposalForm) }}
 
-    <script type="text/javascript">
-        var input = document.getElementById("add_poll_proposal_form_{{ userModuleInvitation.module.token }}_pollProposalElements_0_valString");
-        if(input != null) {
-            //var autocomplete = new google.maps.places.Autocomplete(input);
+    <script>
+        if (typeof google === 'object' && typeof google.maps === 'object') {
+            initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');
         }
-
         $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
             var $form = $(this);
             ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                         $form[0].reset();
-                        if(responseJSON.hasOwnProperty('data')) {
+                        if (responseJSON.hasOwnProperty('data')) {
                             $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable().row.add($(responseJSON['data'])).draw();
                         }
                     }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
@@ -54,6 +48,3 @@
         });
     </script>
 </div>
-
-
-

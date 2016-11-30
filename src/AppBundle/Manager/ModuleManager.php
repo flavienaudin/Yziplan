@@ -122,14 +122,7 @@ class ModuleManager
                 $pollElement->setType(PollElementType::STRING);
             } elseif ($subtype == PollModuleType::WHERE) {
                 $this->module->setName("pollmodule.add_link.where");
-                $pollElement->setType(PollElementType::STRING);
-
-                // to stock google place id
-                $pollElement_place_id = new PollElement();
-                $pollElement_place_id->setType(PollElementType::HIDDEN);
-                $pollElement_place_id->setName(PollElementType::HIDDEN);
-                $pollElement_place_id->setOrderIndex(1);
-                $pollModule->addPollElement($pollElement_place_id);
+                $pollElement->setType(PollElementType::GOOGLE_PLACE_ID);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
                 $this->module->setName("pollmodule.add_link.whobringswhat");
                 $pollElement->setType(PollElementType::STRING);
