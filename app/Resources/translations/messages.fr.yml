@@ -118,14 +118,12 @@ event:
       text.true: Seuls les invités peuvent participer (événement privé)
       text.false: Tout le monde peut participer (événement public)
     public_invitation:
-      label: Transmettez le lien suivant pour inviter des amis :
+      label: En leur transmettant le lien ci-dessous
     guestsCanInvite:
       label: Autoriser les invités à inviter
       placeholder: Autoriser les invités à inviter
       text.true: Les invités peuvent inviter d'autres personnes
       text.false: Les invités ne peuvent pas inviter d'autres personnes
-  button:
-    facebook_invitation: Inviter via Facebook
 #    guestsCanAddModule:
 #      label: Autoriser les invités à ajouter un module
 #      placeholder: Autoriser les invités à ajouter un module
@@ -207,12 +205,14 @@ invitations:
         text: Êtes-vous sûre de vouloir annuler l'invitation de %name% ?
   form:
     invitations:
-      label: Invitez de nouvelles personnes
+      label: En leur envoyant un e-mail
       placeholder: E-mails de vos invités
       invalid_message: Veuillez renseigner des e-mails valides
       help: Appuyez sur "entrée" après chaque e-mail pour la valider
   button:
     send_invitation: Envoyer les invitations
+    via_facebook: Via Facebook
+    via_gmail_contact: Via Gmail Contacts
 
 contactsgmail:
   title: Contacts Gmail

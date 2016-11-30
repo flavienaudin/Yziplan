@@ -118,14 +118,12 @@ event:
       text.true: An invitation is required to participate (private event)
       text.false: Makes the event accessible to all persons receiving the link
     public_invitation:
-      label: Send this link to invite friends :
+      label: By giving them the link below
     guestsCanInvite:
       label: Guests can invite
       placeholder: Guests can invite
       text.true: Guests can invite other people
       text.false: Guests can not invite other people
-  button:
-    facebook_invitation: Facebook invitation
 #    guestsCanAddModule:
 #      label: Guests can add module
 #      placeholder: Guests can add module
@@ -207,12 +205,14 @@ invitations:
         text: Are you sure you want to cancel %name%'s invitation?
   form:
     invitations:
-      label: Invite new people
+      label: By sending them an email
       placeholder: Emails of your guests
       invalid_message: Valid email address required
       help: Hit "Return" after each email to validate it
   button:
     send_invitation: Send invitations
+    via_facebook: Via Facebook
+    via_gmail_contact: Via Gmail Contacts
 
 contactsgmail:
   title: Gmail contacts
@@ -352,7 +352,6 @@ pollmoduletype:
   what: What
   where: Where
   whobringswhat: What do you need ?
-
 
 contact_info_type:
   home: Home
