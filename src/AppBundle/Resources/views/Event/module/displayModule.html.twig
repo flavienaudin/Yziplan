@@ -17,7 +17,7 @@
                             {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
                                 <li>
                                     <a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"> <i
-                                                class="zmdi zmdi-close-circle" style="color: #f6675d"></i>{#{{ "global.button.delete"|trans }}#}</a></li>
+                                                class="zmdi zmdi-delete" style="color: #f44336"></i>{#{{ "global.button.delete"|trans }}#}</a></li>
                                 <script>
                                     $('#removeModule{{ module.token }}').on('click', function (e) {
                                         e.preventDefault();
