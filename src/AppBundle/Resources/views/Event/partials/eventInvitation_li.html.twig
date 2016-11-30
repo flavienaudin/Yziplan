@@ -7,7 +7,7 @@
     <li>
         <div class="userInvitation-avatar">
             <div class="avatar-img-container">
-                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : eventInvitation}) }}
+                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : eventInvitation, isUserConnected : userEventInvitation == eventInvitation}) }}
             </div>
             {#{{ include('@App/Event/partials/guest/display_guest_avatar.html.twig',{'invitation':eventInvitation}) }}#}
 

@@ -43,7 +43,9 @@
         $('form#userEventInvitationProfile').on("submit", function (e) {
             ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                 if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
-                    $('.userInvitation-avatar .avatar-char').html(responseJSON['data']['userDisplayableName'].charAt(0).toUpperCase());
+                    //$('.userInvitation-avatar .avatar-char').html(responseJSON['data']['userDisplayableName'].charAt(0).toUpperCase());
+                    LetterAvatar.setConnectedUserName(responseJSON['data']['userDisplayableName']);
+                    LetterAvatar.transform();
                 }
             }, null, null);
         });

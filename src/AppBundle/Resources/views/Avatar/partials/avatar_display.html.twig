@@ -1,11 +1,13 @@
 {# Données d'entrée :
 - invitation (EventInvitation|ModuleInvitation) L'invitation concernée
+- isUserConnected (boolean) S'agit-il de l'avatar de l'utilisateur "connecté" (=utilisant l'application)
 
 - Pensez a a inclure les avatars dans une div avatar-img-cintainer-xxx qui vont determiner la taille de l'avatar.
 #}
 
 {# Dans le cas d'une invitation de module on récupère l'eventInvitation liée #}
 {% set eventInvitation = (invitation.eventInvitation is defined ? invitation.eventInvitation : invitation) %}
+{% set isUserConnected = (isUserConnected is defined ? isUserConnected : false) %}
 
 {% set hasAppUser = (eventInvitation.applicationUser is not null) %}
 
@@ -21,7 +23,7 @@
     {% if avatar is not null %}
         <img class="yzi-avatar-img" src="{{ asset('uploads/user/avatar/'~avatar) }}">
     {% else %}
-        <img class="yzi-avatar-img" avatar="{{ eventInvitation.displayableName }}">
+        <img class="yzi-avatar-img" avatar="{{ eventInvitation.displayableName }}" {% if isUserConnected %}userAvatar{% endif %}>
         {#<span class="di-block avatar-char palette-Teal bg" title="{{ eventInvitation.displayableName }}">{{ eventInvitation.displayableName|slice(0,1)|upper }}</span>#}
     {% endif %}
 </a>
