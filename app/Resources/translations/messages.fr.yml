@@ -17,6 +17,7 @@ base:
 
 navbar:
   subtitle: Pour s'organiser, c'est IZI !
+  new_event: Créer un événement
 
 main_menu:
 
@@ -142,6 +143,12 @@ eventInvitations:
     meta_title: Mes événements
     title: Mes événements
     subtitle: Liste des événements que j'organise et des invitations que j'ai reçues
+  table:
+    event_name: Nom de l'événement
+    organiser: Organisateur
+    date: Date
+    place: Lieu
+    response: Réponse
 
 eventInvitation:
   form:
@@ -194,6 +201,10 @@ eventInvitation:
 invitation_list:
   display:
     title: Liste des invités
+    list:
+      yes: Ils seront là :
+      maybe: Ils n'ont pas encore répondu :
+      no: Ils ont déclinés l'invitation :
 
 invitations:
   display:

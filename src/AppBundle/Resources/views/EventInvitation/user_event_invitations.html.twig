@@ -13,12 +13,29 @@ Données d'entrée :
 {% block event_invitations_content %}
     <div class="card">
         <div class="card-header">
-            <h2>{{ "eventInvitations.page.title"|trans }}<small>{{ "eventInvitations.page.subtitle"|trans }}</small></h2>
+            <h2>{{ "eventInvitations.page.title"|trans }}
+                <small>{{ "eventInvitations.page.subtitle"|trans }}</small>
+            </h2>
         </div>
         <div class="card-body card-padding">
-            {% for eventInvitation in eventInvitations %}
-                {{ include('@App/EventInvitation/partials/event_invitation.html.twig', {'eventInvitation':eventInvitation}) }}
-            {% endfor %}
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>{{ "eventInvitations.table.event_name"|trans }}</th>
+                        <th>{{ "eventInvitations.table.organiser"|trans }}</th>
+                        <th>{{ "eventInvitations.table.date"|trans }}</th>
+                        <th>{{ "eventInvitations.table.place"|trans }}</th>
+                        <th>{{ "eventInvitations.table.response"|trans }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for eventInvitation in eventInvitations %}
+                        {{ include('@App/EventInvitation/partials/event_invitation.html.twig', {'eventInvitation':eventInvitation}) }}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}

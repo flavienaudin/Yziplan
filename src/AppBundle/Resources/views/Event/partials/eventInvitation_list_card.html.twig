@@ -15,10 +15,40 @@
             </div>
         </div>
     </div>
-    <div class="card-body card-padding" id="eventinvitation_list-body-card">
-        <div class="well-sm z-depth-2 palette-Grey-200 bg m-b-20">
+    {# Invitation  Oui#}
+    <div class="card-body card-padding-sm" id="eventinvitation-body-card-yes">
+        <div class="well-sm z-depth-1 palette-Green-50 bg p-b-0">
+            <h5>{{ "invitation_list.display.list.yes"|trans }}</h5>
             <ul class="list-inline" id="eventInvitations_list">
-                {% for eventInvitation in eventInvitations if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED') %}
+                {% for eventInvitation in eventInvitations
+                if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED')
+                and eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
+                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {# Invitation  Peut-etre#}
+    <div class="card-body card-padding-sm" id="eventinvitation-body-card-maybe">
+        <div class="well-sm z-depth-1 palette-Light-Blue-50 bg p-b-0">
+            <h5>{{ "invitation_list.display.list.maybe"|trans }}</h5>
+            <ul class="list-inline" id="eventInvitations_list">
+                {% for eventInvitation in eventInvitations
+                if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED')
+                and eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') %}
+                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {# Invitation  Non#}
+    <div class="card-body card-padding-sm" id="eventinvitation-body-card-no">
+        <div class="well-sm z-depth-1 palette-Deep-Orange-50 bg p-b-0">
+            <h5>{{ "invitation_list.display.list.no"|trans }}</h5>
+            <ul class="list-inline" id="eventInvitations_list">
+                {% for eventInvitation in eventInvitations
+                if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED')
+                and eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
                     {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
                 {% endfor %}
             </ul>
