@@ -170,30 +170,6 @@
 
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
 
-    {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
-        <script>
-            swal({
-                title: "{{ "eventInvitation.profile.card.new_warning_alert.title"|trans|raw }}",
-                text: "{{ "eventInvitation.profile.card.new_warning_alert.message"|trans|raw }}",
-                type: "input",
-                showCancelButton: false,
-                closeOnConfirm: false,
-                animation: "slide-from-top",
-                inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}"
-            }, function (inputValue) {
-                if (inputValue === false) return false;
-                if (inputValue === "") {
-                    swal.showInputError("{{ "eventInvitation.profile.card.new_warning_alert.inputError"|trans|raw }}");
-                    return false
-                }
-                $('#event_invitation_guestName').val(inputValue);
-                $('form#userEventInvitationProfile').submit();
-                swal.close();
-            });
-        </script>
-    {% endif %}
-
-
     <script>
         if (typeof google === 'object' && typeof google.maps === 'object') {
             initEventShowMap();
@@ -204,9 +180,7 @@
             script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyD85iLilkz3ywzsN6VZKA-HEz2SLTEFIOE&libraries=places&callback=initEventGMapAPI";
             document.body.appendChild(script);
         }
-    </script>
 
-    <script>
         function initEventGMapAPI() {
             initEventShowMap();
 

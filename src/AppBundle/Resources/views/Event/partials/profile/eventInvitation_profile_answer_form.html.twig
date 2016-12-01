@@ -19,8 +19,34 @@ Données d'entrée :
         $("input[name='event_invitation_anwser[answer]']").on('change', function (e) {
             $(this).closest('form').submit();
         });
+        var answerOnce = false;
         $('form#userEventInvitationAnswer').on('submit', function (e) {
             ajaxFormSubmission(this, e, null, null, null);
+
+            {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
+
+            if(!answerOnce ) {
+                swal({
+                    title: "{{ "eventInvitation.profile.card.new_warning_alert.title"|trans|raw }}",
+                    text: "{{ "eventInvitation.profile.card.new_warning_alert.message"|trans|raw }}",
+                    type: "input",
+                    showCancelButton: false,
+                    closeOnConfirm: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}"
+                }, function (inputValue) {
+                    if (inputValue === false) return false;
+                    if (inputValue === "") {
+                        swal.showInputError("{{ "eventInvitation.profile.card.new_warning_alert.inputError"|trans|raw }}");
+                        return false
+                    }
+                    $('#event_invitation_guestName').val(inputValue);
+                    $('form#userEventInvitationProfile').submit();
+                    answerOnce = true;
+                    swal.close();
+                });
+            }
+            {% endif %}
         });
     </script>
 </div>
