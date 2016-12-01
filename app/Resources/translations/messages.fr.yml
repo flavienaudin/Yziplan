@@ -211,9 +211,11 @@ invitations:
     title: Invitez vos amis
     cancel:
       link: Annuler l'invitation de %name%
+      link_noname: Annuler l'invitation
       swal:
         title: Annulation
         text: Êtes-vous sûre de vouloir annuler l'invitation de %name% ?
+        text_noname: Êtes-vous sûre de vouloir annuler cette invitation ?
   form:
     invitations:
       label: En leur envoyant un e-mail

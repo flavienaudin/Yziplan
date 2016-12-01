@@ -226,7 +226,7 @@
 
 h1.event-title {
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
 }
 
 /*----------------------------------
@@ -273,6 +273,21 @@ h1.event-title {
     font-size: 12px;
     line-height: 1.42857143;
     border-radius: 2px;
+}
+
+/*----------------------------------
+    Event Invitations
+-----------------------------------*/
+
+.userInvitation-avatar{
+    position: relative;
+}
+.cancelInvitation{
+    position: absolute;
+    bottom: 0;
+    right: 3px;
+    border-radius: 2px;
+    color: #FFF;
 }
 
 /*----------------------------------
