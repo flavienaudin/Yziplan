@@ -17,6 +17,7 @@ base:
 
 navbar:
   subtitle: To organise you, it's IZI !
+  new_event: New event
 
 main_menu:
 
@@ -144,6 +145,12 @@ eventInvitations:
     meta_title: My events
     title: My events
     subtitle: List of events I organize and events I am invited to
+  table:
+    event_name: Event name
+    organiser: Organiser
+    date: Date
+    place: Place
+    response: Response
 
 eventInvitation:
   form:

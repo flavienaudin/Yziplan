@@ -67,6 +67,10 @@
 
             <div class="pull-right h-menu-wrapper">
                 <ul class="h-menu">
+                    <li class="hm-alert">
+                        <a href="{{ path('createEvent') }}" class="navbar-btn"><span> {{ 'navbar.new_event'|trans() }}</span></a>
+                    </li>
+
                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                         {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
                         {# TODO decommenter : non necessaire pour la version beta
