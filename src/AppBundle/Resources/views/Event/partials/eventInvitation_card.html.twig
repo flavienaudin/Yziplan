@@ -22,10 +22,9 @@
                 </button>
             </div>
             <div class="m-t-10 fit-width">
-                {{ include('@App/Contact/Gmail/Partials/load_gmail_contacts.html.twig') }}
+                {{ include('@App/Contact/Gmail/Partials/load_gmail_contacts.html.twig', {'event' : userEventInvitation.event}) }}
             </div>
         {% endif %}
-
 
         {% if invitationsForm is not null %}
             <div class="m-t-10 palette-Teal-50 bg p-15">

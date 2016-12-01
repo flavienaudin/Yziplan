@@ -4,7 +4,7 @@
 #}
 
 
-<div class="card c-dark z-depth-2">
+<div class="card c-dark z-depth-2" id="eventInvitation_list_card">
     <div class="card-header well-sm bg palette-Teal m-b-20">
         <div class="media">
             <div class="pull-left"></div>
@@ -15,7 +15,7 @@
             </div>
         </div>
     </div>
-    <div class="card-body card-padding" id="eventinvitation-body-card">
+    <div class="card-body card-padding" id="eventinvitation_list-body-card">
         <div class="well-sm z-depth-2 palette-Grey-200 bg m-b-20">
             <ul class="list-inline" id="eventInvitations_list">
                 {% for eventInvitation in eventInvitations if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED') %}
@@ -31,7 +31,6 @@
         {% endif %}
         {% endif %}
 
-        {#{% if editEventMode %}#}
         $('#eventInvitations_list').find('li a.cancelInvitation').each(function () {
             var link = $(this);
             $(this).on('click', function (e) {
@@ -58,7 +57,9 @@
                 });
             });
         });
-        {#{% endif %}#}
+        $(document).ready(function () {
+            LetterAvatar.transform()
+        });
     </script>
 </div>
 

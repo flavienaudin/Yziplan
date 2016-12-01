@@ -216,8 +216,14 @@ invitations:
 
 contactsgmail:
   title: Gmail contacts
-  invitation: Invite
+  button:
+    invite: Invite
   invitation_and_add: Invite and add to contacts
+  results:
+    avatar: Avatar
+    contact: Contact
+    email: Email
+    empty_table: You don't have any contact
 
 module:
   main_information:
