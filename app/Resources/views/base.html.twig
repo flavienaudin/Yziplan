@@ -67,8 +67,8 @@
 
             <div class="pull-right h-menu-wrapper">
                 <ul class="h-menu">
-                    <li class="hm-alert">
-                        <a href="{{ path('createEvent') }}" class="navbar-btn"><span> {{ 'navbar.new_event'|trans() }}</span></a>
+                    <li class="m-r-15">
+                        <a href="{{ path('createEvent') }}" class="navbar-btn"><i class="zmdi zmdi-plus"></i><span> {{ 'navbar.new_event'|trans() }}</span></a>
                     </li>
 
                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
