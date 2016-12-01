@@ -10089,7 +10089,7 @@ pre {
 
 .h-menu > li.hm-new-event-link,
 .h-menu > li.hm-registration-link {
-    padding-right: 15px;
+    padding-right: 10px;
 }
 
 .h-menu > li.hm-new-event-link a{
@@ -10098,6 +10098,9 @@ pre {
     background-color: #fff;
 }
 
+.h-menu > li.hm-new-event-link * {
+    vertical-align: middle;
+}
 
 .h-menu > li.hm-new-event-link i,
 .h-menu > li.hm-registration-link i,
@@ -10106,7 +10109,6 @@ pre {
 }
 
 @media (min-width: 481px) {
-    .h-menu > li.hm-new-event-link i,
     .h-menu > li.hm-registration-link i,
     .h-menu > li.hm-login-link i {
         display: none;
