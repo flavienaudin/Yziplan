@@ -121,10 +121,10 @@ event:
     public_invitation:
       label: By giving them the link below
     guestsCanInvite:
-      label: Guests can invite
-      placeholder: Guests can invite
-      text.true: Guests can invite other people
-      text.false: Guests can not invite other people
+      label: Allow your friends to invite
+      placeholder: Allow your friends to invite
+      text.true: Your friends can invite
+      text.false: Your friends can not invite
 #    guestsCanAddModule:
 #      label: Guests can add module
 #      placeholder: Guests can add module
@@ -255,10 +255,10 @@ module:
       text.true: An invitation is required to participate (private event)
       text.false: Everyone can participate (public event)
     guestsCanInvite:
-      label: Guests can invite
-      placeholder: Guests can invite
-      text.true: Guests can invite other people
-      text.false: Guests can not invite other people
+      label: Allow your friends to invite
+      placeholder: Allow your friends to invite
+      text.true: Your friends can invite
+      text.false: Your friends can not invite
     choice.label:
       yes: Yes
       no: No
