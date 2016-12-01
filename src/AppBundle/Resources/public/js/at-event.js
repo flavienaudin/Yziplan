@@ -3,12 +3,20 @@
  */
 
 $(document).ready(function () {
+
+    reorderCard();
+
     $('.grid').masonry({
         // options
         itemSelector: '.grid-item',
         columnWidth: '.grid-sizer',
         percentPosition: true
     });
+
+    window.onresize = function(event) {
+        reorderCard();
+        $('.grid').masonry('layout');
+    };
 
     autosize($('textarea'));
 
@@ -117,6 +125,17 @@ function initPollProposalWhereElements(selectorFieldsPlaceName, selectorPlaceId)
 
     });
     return autocompletes;
+}
+
+function reorderCard(){
+    // Changement de position des div liste d'invité et
+    // invitation en fonction de la largeur de l'ecran
+    var iW = $(window).innerWidth();
+    if (iW > 768 && iW < 1200) {
+        $('#invitationCard').insertAfter('#profileCard');
+    } else {
+        $('#guestListCard').insertAfter('#profileCard');
+    }
 }
 
 
