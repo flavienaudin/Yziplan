@@ -13,14 +13,12 @@ use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
-use AppBundle\Mailer\AppTwigSiwftMailer;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -55,15 +53,12 @@ class EventManager
     /** @var ModuleInvitationManager */
     private $moduleInvitationManager;
 
-    /** @var AppTwigSiwftMailer */
-    private $appTwigSiwftMailer;
-
     /** @var Event L'événement en cours de traitement */
     private $event;
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory,
                                 GenerateursToken $generateurToken, ModuleManager $moduleManager, PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager,
-                                ModuleInvitationManager $moduleInvitationManager, AppTwigSiwftMailer $appTwigSiwftMailer)
+                                ModuleInvitationManager $moduleInvitationManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -74,7 +69,6 @@ class EventManager
         $this->pollProposalManager = $pollProposalManager;
         $this->eventInvitationManager = $eventInvitationManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
-        $this->appTwigSiwftMailer = $appTwigSiwftMailer;
     }
 
     /**
@@ -183,10 +177,7 @@ class EventManager
     {
         if ($this->event != null) {
             $emailsData = $eventInvitationsForm->get("invitations")->getData();
-            foreach ($emailsData as $email) {
-                $eventInvitation = $this->eventInvitationManager->getGuestEventInvitation($this->event, $email);
-                $this->appTwigSiwftMailer->sendEventInvitationEmail($eventInvitation);
-            }
+            $this->eventInvitationManager->sendInvitations($this->event, $emailsData);
             $this->entityManager->persist($this->event);
             $this->entityManager->flush();
             return $this->event;
@@ -212,6 +203,7 @@ class EventManager
         }
 
         $module = $this->moduleManager->createModule($this->event, $type, $subtype, $userEventInvitation);
+
         // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator).
         $this->moduleInvitationManager->initializeModuleInvitationsForEvent($this->event, $module);
         $this->entityManager->persist($this->event);
@@ -240,7 +232,8 @@ class EventManager
                     $moduleDescription = array();
                     $moduleDescription['module'] = $module;
                     $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
-                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
+                    if (false && $this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
+                        // TODO always false : non nécessaire en version BETA
                         $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
                     }
                     if ($module->getPollModule() != null) {

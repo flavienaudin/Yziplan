@@ -13,6 +13,7 @@ use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Utils\enum\PollElementType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,8 +24,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PollProposalElementType extends AbstractType
 {
-
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
@@ -46,6 +45,22 @@ class PollProposalElementType extends AbstractType
                 $form->add('valInteger', IntegerType::class, array(
                     'required' => true,
                     'label' => $pollProposalElement->getPollElement()->getName()
+                ));
+            } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::GOOGLE_PLACE_ID) {
+                $form->add('valString', TextType::class, array(
+                    'required' => false,
+                    'label' => $pollProposalElement->getPollElement()->getName(),
+                    'attr' => array(
+                        'class' => 'googlePlaceId_name',
+                        'placeholder' => '' // Set blank placeholder to avoid google set its own
+                    )
+                ));
+                $form->add('valGooglePlaceId', HiddenType::class, array(
+                    'required' => false,
+                    'label' => $pollProposalElement->getPollElement()->getName(),
+                    'attr' => array(
+                        'class' => 'googlePlaceId_value'
+                    )
                 ));
             } else {
                 $form->add('valString', TextType::class, array(

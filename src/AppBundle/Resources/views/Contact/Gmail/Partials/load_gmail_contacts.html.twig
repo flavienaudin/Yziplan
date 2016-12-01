@@ -1,7 +1,13 @@
+{# Données d'entrée :
+- event (Event|null) L'événement pour lequel l'utilisateur peut envoyer des invitations à ses contacts
+#}
+
+
 <script src="https://apis.google.com/js/client.js"></script>
 <script src="https://apis.google.com/js/client.js"></script>
 <script>
-    var GMAIL_CONTACTS = new Array();
+    var GMAIL_CONTACTS = [];
+    var bootGridTable = null;
 
     function authClick() {
         // Your Client ID is retrieved from your project
@@ -9,15 +15,14 @@
         var CLIENT_ID = '97577591330-rnga2ufsqktnn69e8urbupu12rcc889e.apps.googleusercontent.com';
         var SCOPES = ["https://www.googleapis.com/auth/contacts.readonly"];
 
-        gapi.auth.authorize(
-                {client_id: CLIENT_ID, scope: SCOPES, immediate: false}, authResult);
+        gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: false}, authResult);
 
         return false;
     }
 
     /**
      * Handle response from authorization server.
-     * @param {Object} authResult Authorization result.
+     * @param {Object} _Result Authorization result.
      */
     function authResult(_Result) {
         var _Div = document.getElementById('divauthresult');
@@ -35,9 +40,7 @@
      * Load Google People client library. List Contact requested info
      */
     function loadPeopleApi() {
-        gapi.client.load('https://people.googleapis.com/$discovery/rest',
-                'v1',
-                loadContacts);
+        gapi.client.load('https://people.googleapis.com/$discovery/rest', 'v1', loadContacts);
     }
 
     /*  function displayContacts() {
@@ -46,24 +49,17 @@
 
     function loadContacts(pageToken) {
         pageToken = typeof pageToken !== 'undefined' ? pageToken : null;
-        var request = null;
+        var options = {
+            'resourceName': 'people/me',
+            'pageSize': 50,
+            'sortOrder': 'FIRST_NAME_ASCENDING',
+            'requestMask.includeField': 'person.photos,person.email_addresses,person.names'
+        };
         if (pageToken != null) {
-            request = gapi.client.people.people.connections.list({
-                'pageToken': pageToken,
-                'resourceName': 'people/me',
-                'pageSize': 50,
-                'sortOrder': 'FIRST_NAME_ASCENDING',
-                'requestMask.includeField': 'person.photos,person.email_addresses,person.names'
-            });
-        } else {
-            request = gapi.client.people.people.connections.list({
-                'resourceName': 'people/me',
-                'pageSize': 50,
-                'sortOrder': 'FIRST_NAME_ASCENDING',
-                'requestMask.includeField': 'person.photos,person.email_addresses,person.names'
-            });
-        }
+            options['pageToken'] = pageToken;
 
+        }
+        var request = gapi.client.people.people.connections.list(options);
         request.execute(function (resp) {
             var connections = resp.connections;
 
@@ -71,7 +67,7 @@
                 for (i = 0; i < connections.length; i++) {
                     var person = connections[i];
                     if (person.emailAddresses && person.emailAddresses.length > 0) {
-                        var contact = new Array();
+                        var contact = [];
                         if (person.photos && person.photos.length > 0)
                             contact.push(person.photos[0].url);
                         else
@@ -99,64 +95,59 @@
      * Show Contacts Details display on a table pagesize = 100 connections.
      */
     function showContacts() {
-        if (GMAIL_CONTACTS.length > 0) {
-            var _Html = "<table id='tab-gmail-contact' class='table table-condensed table-hover table-striped'><thead><tr>" +
-                    "<th data-column-id='avatar' data-formatter='avatar' data-sortable='false' data-align='center'>{{ "contacts.table.avatar.column_title"|trans }}</th>" +
-                    "<th data-column-id='name'>{{ "contacts.table.contact"|trans }}</th>" +
-                    "<th data-column-id='email' data-identifier='true'>{{ "contacts.table.emails"|trans }}</th>" +
-                    "</tr></thead><tbody>";
-            var _EmptyCell = "<td> </td>";
+        var _Html = "<table id='tab-gmail-contact' class='table table-condensed table-hover table-striped'><thead><tr>" +
+            "<th data-column-id='avatar' data-formatter='avatar' data-sortable='false' data-align='center'>{{ "contactsgmail.results.avatar"|trans }}</th>" +
+            "<th data-column-id='name'>{{ "contactsgmail.results.contact"|trans }}</th>" +
+            "<th data-column-id='email' data-identifier='true'>{{ "contactsgmail.results.email"|trans }}</th>" +
+            "</tr></thead><tbody>";
+        var _EmptyCell = "<td> </td>";
 
-            for (i = 0; i < GMAIL_CONTACTS.length; i++) {
-                var person = GMAIL_CONTACTS[i];
-                _Html += "<tr>";
+        for (i = 0; i < GMAIL_CONTACTS.length; i++) {
+            var person = GMAIL_CONTACTS[i];
+            _Html += "<tr>";
 
-                if (person[0] != null)
-                    _Html += "<td>" + person[0] + "</td>";
-                else
-                    _Html += _EmptyCell;
+            if (person[0] != null)
+                _Html += "<td>" + person[0] + "</td>";
+            else
+                _Html += _EmptyCell;
 
-                _Html += "<td>" + person[1] + "</td>";
-                _Html += "<td>" + person[2] + "</td>";
-                _Html += "</tr>";
-            }
-            _Html += "</tbody></table>";
-            divtableresult.innerHTML = _Html;
-            $("#tab-gmail-contact").bootgrid({
-                multiSort: true,
-                selection: true,
-                multiSelect: true,
-                rowSelect: false,
-                keepSelection: true,
-                formatters: {
-                    "avatar": function (column, row) {
-                        if (row.avatar && row.avatar.trim() != "") {
-                            return "<div class='avatar-img-container-sm center-block'><img class='yzi-avatar-img' src='" + row.avatar + "'></div>";
-                        }
+            _Html += "<td>" + person[1] + "</td>";
+            _Html += "<td>" + person[2] + "</td>";
+            _Html += "</tr>";
+        }
+        _Html += "</tbody></table>";
+        divtableresult.innerHTML = _Html;
+        bootGridTable = $("#tab-gmail-contact").bootgrid({
+            multiSort: true,
+            selection: true,
+            multiSelect: true,
+            rowSelect: false,
+            keepSelection: true,
+            formatters: {
+                "avatar": function (column, row) {
+                    if (row.avatar && row.avatar.trim() != "") {
+                        return "<div class='avatar-img-container-sm center-block'><img class='yzi-avatar-img' src='" + row.avatar + "'></div>";
                     }
                 }
-            });
-            document.getElementById('gmail-preloader').style.display = 'none'
-        } else {
-            divtableresult.innerHTML = "";
-            divauthresult.innerText = "No Contacts found!";
-        }
-        //document.getElementById('gmail-contact-container').style.display = 'block';
+            },
+            labels: {
+                noResults: '{{ "contactsgmail.results.empty_table"|trans }}'
+            }
+        });
+        document.getElementById('gmail-preloader').style.display = 'none';
     }
-</script>
-<a data-toggle="modal" href="#gmail-contact-container" class="btn btn-lg btn-block btn-danger waves-effect" onclick="authClick(event)">
-    <i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> Inviter via contact Gmail
-</a>
+</script><a data-toggle="modal" href="#gmail-contact-container" class="btn btn-lg btn-block btn-danger waves-effect" onclick="authClick()"> <i
+            class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "invitations.button.via_gmail_contact"|trans }}</a>
 
 <div>
     <div class="modal fade in" id="gmail-contact-container" tabindex="-1" role="dialog" aria-hidden="true" style="display: none; padding-right: 17px;">
         <div class="modal-dialog modal-lg">
             <div class="modal-header palette-Teal bg">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
-                <h4 class="modal-title"><i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "contactsgmail.title"|trans }}</h4>
+                <button type="button" class="close c-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                <h4 class="modal-title c-white"><i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "contactsgmail.title"|trans }}</h4>
             </div>
             <div class="modal-content">
-                <div class="fit-width">
+                <div class="w-100">
                     <div id="gmail-preloader" class="preloader pl-lg center-block">
                         <svg class="pl-circular" viewBox="25 25 50 50">
                             <circle class="plc-path" cx="50" cy="50" r="20"></circle>
@@ -164,20 +155,34 @@
                     </div>
                 </div>
                 <div id="divauthresult"></div>
-                <div class="table-responsive">
-                    <div id="divtableresult" class="modal-body">
+                    <div class="table-responsive">
+                        <div id="divtableresult" class="modal-body"></div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}"
-                            data-original-text="{{ "contactsgmail.invitation"|trans }}">
-                        {{ "contactsgmail.invitation"|trans }}
-                    </button>
-                    <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}"
-                            data-original-text="{{ "contactsgmail.invitation_and_add"|trans }}">
-                        {{ "contactsgmail.invitation_and_add"|trans }}
-                    </button>
-                </div>
+
+                {% if event is defined and event is not null or is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <div class="p-15 text-right">
+                        {% if event is defined and event is not null %}
+                            <button type="button" class="btn btn-primary waves-effect" id="inviteSelectedContacts" data-loading-text="{{ "global.button.loading"|trans }}"
+                                    data-original-text="{{ "contactsgmail.button.invite"|trans}}">{{ "contactsgmail.button.invite"|trans }}</button>
+                        {% endif %}
+                        {#<button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}"
+                                data-original-text="{{ "contactsgmail.invitation_and_add"|trans }}">
+                            {{ "contactsgmail.invitation_and_add"|trans }}
+                        </button>#}
+                    </div>
+                    <script>
+                        $('#inviteSelectedContacts').on('click', function (e) {
+                            if(bootGridTable !== null) {
+                                var emails = bootGridTable.bootgrid('getSelectedRows');
+                                console.log(emails);
+                                var data = {'emails' : emails};
+                                ajaxRequest("{{ path('sendEventInvitations', {'token':event.token}) }}", data , e, function(responseJSON, textStatus, jqXHR){
+                                    $('#gmail-contact-container').modal('hide')
+                                }, null, null);
+                            }
+                        });
+                    </script>
+                {% endif %}
             </div>
         </div>
     </div>

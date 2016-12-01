@@ -5,16 +5,23 @@ Données d'entrée :
 - eventInvitation : EventInvitation à afficher
 
 #}
-<div>
-    <u><span data-toggle="popover" data-placement="top" data-content="{{ eventInvitation.event.description }}"
-          title="{{ "event.form.description.label"|trans }}" data-original-title="{{ "event.form.description.label"|trans }}">
-        {{ eventInvitation.event.name }}
-    </span></u>
-    <i class="zmdi zmdi-circle"></i>
-    <span>{{ eventInvitation.displayableName }}</span>
-    <i class="zmdi zmdi-circle"></i>
-    <span class="badge">{{ eventInvitation.status|trans }}</span>
-    <span>
-        <a href="{{ path('displayEventInvitation', {'token': eventInvitation.token}) }}"><i class="zmdi zmdi-eye"></i></a>
-    </span>
-</div>
+{#
+<th>Nom de l'évènement</th>
+<th>Organisateur</th>
+<th>Date</th>
+<th>Lieu</th>
+<th>Réponse</th>
+#}
+<tr>
+    <td><a href="{{ path('displayEventInvitation', {'token': eventInvitation.token}) }}">{{ eventInvitation.event.name }}</a></td>
+    <td>{{ eventInvitation.event.getCreators[0].getDisplayableName }}</td>
+    <td>{{ eventInvitation.event.when is not null ? eventInvitation.event.when|localizeddate:'-' }}</td>
+    <td>{{ eventInvitation.event.whereName is not empty ? eventInvitation.event.whereName:"-" }}</td>
+    {% if eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
+        <td class="palette-Teal-50 bg">{{ "eventInvitation.answer.yes"|trans }}</td>
+    {% elseif eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') %}
+        <td class="palette-Light-Blue-50 bg">{{ "eventInvitation.answer.dont_know"|trans }}</td>
+    {% elseif eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
+        <td class="palette-Deep-Orange-50 bg ">{{ "eventInvitation.answer.no"|trans }}</td>
+    {% endif %}
+</tr>

@@ -10,19 +10,18 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/index.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/morphext.css") }}">
 {% endblock %}
 
 {% block content_body %}
     <div class="card z-depth-3">
         <div class="card-body">
-            <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+            <div id="carousel-index" class="carousel slide" data-ride="carousel">
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
-                    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
-                    <li data-target="#carousel-example-generic" data-slide-to="2" class=""></li>
+                    <li data-target="#carousel-index" data-slide-to="0" class="active"></li>
+                    <li data-target="#carousel-index" data-slide-to="1" class=""></li>
+                    <li data-target="#carousel-index" data-slide-to="2" class=""></li>
                 </ol>
 
                 <!-- Wrapper for slides -->
@@ -125,11 +124,11 @@
                             <h3><strong><i class="zmdi zmdi-account-add zmdi-hc-2x"></i><br>Invitez vos amis.</strong></h3>
                         </div>
                         <div class="card-body card-padding">
-                            <p>Répondez ensuite à toutes les questions précédentes de manière collaborative.</p>
+                            <p>Répondez ensuite aux questions précédentes de manière collaborative.</p>
                             <p><strong>De nombreux avantages:</strong></p>
                             <div class="list-md-icon m-b-10">
                                 <ul>
-                                    <li class="ng-binding"><i class="zmdi zmdi-chevron-right"></i></i>Un endroit unique pour les centraliser tous, et dans la simplicité s'organiser.</li>
+                                    <li class="ng-binding"><i class="zmdi zmdi-chevron-right"></i></i>Un endroit unique pour les centraliser toutes, et dans la simplicité s'organiser.</li>
                                     <li class="ng-binding"><i class="zmdi zmdi-chevron-right"></i></i>(Presque) Plus besoin de courir après vos amis pour avoir des réponses.</li>
                                     <li class="ng-binding"><i class="zmdi zmdi-chevron-right"></i></i>Eviter le syndrome du "Comme vous voulez!" généralisé !</li>
                                 </ul>

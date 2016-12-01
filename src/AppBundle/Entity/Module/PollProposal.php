@@ -244,7 +244,7 @@ class PollProposal
      */
     public function initializeWithPollModule(PollModule $pollModule)
     {
-        foreach ($pollModule->getPollElements() as $pollElement) {
+        foreach ($pollModule->getOrderedPollElements() as $pollElement) {
             $ppElt = new PollProposalElement();
             $ppElt->setPollElement($pollElement);
             $this->addPollProposalElement($ppElt);

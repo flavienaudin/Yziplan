@@ -17,7 +17,9 @@ use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Form\Event\EventInvitationAnswerType;
 use AppBundle\Form\Event\EventInvitationType;
+use AppBundle\Mailer\AppTwigSiwftMailer;
 use AppBundle\Security\EventInvitationVoter;
+use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use ATUserBundle\Entity\AccountUser;
@@ -55,11 +57,14 @@ class EventInvitationManager
     /** @var  ModuleInvitationManager */
     private $moduleInvitationManager;
 
+    /** @var AppTwigSiwftMailer */
+    private $appTwigSiwftMailer;
+
     /** @var EventInvitation L'invitation à l'événement en cours de traitement */
     private $eventInvitation;
 
 
-    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, ApplicationUserManager $applicationUserManager, ModuleInvitationManager $moduleInvitationManager)
+    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, ApplicationUserManager $applicationUserManager, ModuleInvitationManager $moduleInvitationManager, AppTwigSiwftMailer $appTwigSiwftMailer)
     {
         $this->entityManager = $doctrine;
         $this->authorizationChecker = $authorizationChecker;
@@ -68,6 +73,7 @@ class EventInvitationManager
         $this->session = $session;
         $this->applicationUserManager = $applicationUserManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
+        $this->appTwigSiwftMailer = $appTwigSiwftMailer;
     }
 
     /**
@@ -207,6 +213,19 @@ class EventInvitationManager
     }
 
     /**
+     * Create and send invitations using emails
+     * @param Event $event
+     * @param $emailsData
+     */
+    public function sendInvitations(Event $event, $emailsData)
+    {
+        foreach ($emailsData as $email) {
+            $eventInvitation = $this->getGuestEventInvitation($event, $email);
+            $this->appTwigSiwftMailer->sendEventInvitationEmail($eventInvitation);
+        }
+    }
+
+    /**
      * Create an EventInvitation and set it as creator of the event
      * @param Event $event
      * @param ApplicationUser|null $applicationUser
@@ -216,6 +235,7 @@ class EventInvitationManager
     {
         $this->initializeEventInvitation($event, $applicationUser);
         $this->eventInvitation->setCreator(true);
+        $this->eventInvitation->setAnswer(EventInvitationAnswer::YES);
         return $this->eventInvitation;
     }
 
@@ -265,7 +285,7 @@ class EventInvitationManager
     public function treatEventInvitationFormSubmission(Form $evtInvitForm)
     {
         $this->eventInvitation = $evtInvitForm->getData();
-        if(empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::VALID){
+        if (empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::VALID) {
             // Si le nom est vide => l'invitation revient en attente de réponse
             $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
 

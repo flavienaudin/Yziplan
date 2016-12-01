@@ -17,6 +17,7 @@ base:
 
 navbar:
   subtitle: Pour s'organiser, c'est IZI !
+  new_event: Créer un événement
 
 main_menu:
 
@@ -118,14 +119,12 @@ event:
       text.true: Seuls les invités peuvent participer (événement privé)
       text.false: Tout le monde peut participer (événement public)
     public_invitation:
-      label: Transmettez le lien suivant pour inviter des amis :
+      label: En leur transmettant le lien ci-dessous
     guestsCanInvite:
-      label: Autoriser les invités à inviter
-      placeholder: Autoriser les invités à inviter
-      text.true: Les invités peuvent inviter d'autres personnes
-      text.false: Les invités ne peuvent pas inviter d'autres personnes
-  button:
-    facebook_invitation: Inviter via Facebook
+      label: Permettre à vos amis d'inviter
+      placeholder: Permettre à vos amis d'inviter
+      text.true: Vos amis peuvent inviter
+      text.false: Vos amis ne peuvent pas inviter
 #    guestsCanAddModule:
 #      label: Autoriser les invités à ajouter un module
 #      placeholder: Autoriser les invités à ajouter un module
@@ -144,6 +143,12 @@ eventInvitations:
     meta_title: Mes événements
     title: Mes événements
     subtitle: Liste des événements que j'organise et des invitations que j'ai reçues
+  table:
+    event_name: Nom de l'événement
+    organiser: Organisateur
+    date: Date
+    place: Lieu
+    response: Réponse
 
 eventInvitation:
   form:
@@ -193,9 +198,17 @@ eventInvitation:
         hello: "Bonjour %username%!"
         paragraph: "Vous êtes invités à \"%event_name%\". Cliquez sur le lien ci-dessous pour répondre:"
 
-invitations:
+invitation_list:
   display:
     title: Liste des invités
+    list:
+      yes: Ils seront là :
+      maybe: Ils n'ont pas encore répondu :
+      no: Ils ont déclinés l'invitation :
+
+invitations:
+  display:
+    title: Invitez vos amis
     cancel:
       link: Annuler l'invitation de %name%
       swal:
@@ -203,17 +216,25 @@ invitations:
         text: Êtes-vous sûre de vouloir annuler l'invitation de %name% ?
   form:
     invitations:
-      label: Invitez de nouvelles personnes
+      label: En leur envoyant un e-mail
       placeholder: E-mails de vos invités
       invalid_message: Veuillez renseigner des e-mails valides
       help: Appuyez sur "entrée" après chaque e-mail pour la valider
   button:
     send_invitation: Envoyer les invitations
+    via_facebook: Via Facebook
+    via_gmail_contact: Via Gmail Contacts
 
 contactsgmail:
   title: Contacts Gmail
-  invitation: Inviter
+  button:
+    invite: Inviter
   invitation_and_add: Inviter et ajouter aux contacts
+  results:
+    avatar: Avatar
+    contact: Contact
+    email: E-mail
+    empty_table: Vous n'avez pas de contacts
 
 module:
   main_information:
@@ -234,10 +255,10 @@ module:
       text.true: Seuls les invités peuvent participer (événement privé)
       text.false: Rend l'événement accessible à toutes les personnes recevant le lien
     guestsCanInvite:
-      label: Autoriser les invités à inviter
-      placeholder: Autoriser les invités à inviter
-      text.true: Les invités peuvent inviter d'autres personnes.
-      text.false: Les invités ne peuvent pas inviter d'autres personnes.
+      label: Permettre à vos amis d'inviter
+      placeholder: Permettre à vos amis d'inviter
+      text.true: Vos amis peuvent inviter
+      text.false: Vos amis ne peuvent pas inviter
     choice.label:
       yes: Oui
       no: Non
@@ -253,6 +274,7 @@ pollmodule:
   add_link:
     what: Quoi ?
     when: Quand ?
+    where: Où ?
     whobringswhat: Qui apporte quoi ?
   display:
     no_proposal: Pas encore de proposition
@@ -345,6 +367,7 @@ modulestatus:
 pollmoduletype:
   when: Quand
   what: Quoi
+  where: Où
   whobringswhat: Qu'est-ce qu'il faut ?
 
 contact_info_type:

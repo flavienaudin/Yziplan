@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
@@ -29,22 +30,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class EventController
- * @package AppBundle\Controller
+ *
  * @Route("/{_locale}/event", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
  */
 class EventController extends Controller
 {
-
-    /**
-     * @Route("/show-test", name="eventTest")
-     * @deprecated
-     */
-    public function eventTestAction()
-    {
-        return $this->render('AppBundle:Event/proto:test-event.html.twig');
-    }
-
-
     /**
      * @Route("/new", name="createEvent")
      */
@@ -54,7 +44,7 @@ class EventController extends Controller
         $eventManager = $this->get('at.manager.event');
         /** @var Event $currentEvent */
         $currentEvent = $eventManager->initializeEvent(true);
-        // Only one EventInvitation added when initialize an Event.
+        /** @var EventInvitation $currentEventInvitation Only one EventInvitation added when initialize an Event. */
         $currentEventInvitation = $currentEvent->getEventInvitations()->first();
         if ($currentEventInvitation != null) {
             $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $currentEventInvitation->getToken());
@@ -193,6 +183,11 @@ class EventController extends Controller
                                 'invitationsForm' => $eventInvitationsForm->createView()
 
                             ));
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
+                            $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'eventInvitations' => $currentEvent->getEventInvitations()
+                            ));
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitations-main-div'] =
@@ -217,7 +212,8 @@ class EventController extends Controller
         $modules = $eventManager->getModulesToDisplay($userEventInvitation);
         $moduleManager = $this->get("at.manager.module");
         foreach ($modules as $moduleId => $moduleDescription) {
-            if (key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
+            // TODO non nécessaire en version BETA
+            if (false && key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
                 /** @var Form $moduleForm */
                 $moduleForm = $moduleDescription['moduleForm'];
                 $moduleForm->handleRequest($request);

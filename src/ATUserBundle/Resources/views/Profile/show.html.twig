@@ -28,12 +28,13 @@
                     <li id="tab-profile-information" class="waves-effect">
                         <a href="#profile-information" aria-controls="profile-information" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_information"|trans }}</a>
                     </li>
+                    {# TODO non nécessaire sur la version beta
                     <li id="tab-profile-contacts" class="waves-effect">
                         <a href="#profile-contacts" aria-controls="profile-contacts" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_contacts"|trans }}</a>
                     </li>
                     <li id="tab-profile-preferences" class="waves-effect">
                         <a href="#profile-preferences" aria-controls="profile-preferences" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_preferences"|trans }}</a>
-                    </li>
+                    </li>#}
                 </ul>
 
                 <div class="tab-content">
@@ -45,8 +46,9 @@
                             'form_app_user_info_complementaries':form_app_user_info_complementaries
                         }) }}
                     </div>
+                    {# TODO non nécessaire sur la version beta
                     <div role="tabpanel" class="tab-pane" id="profile-contacts">
-                        {# User -> Contacts|ContactGroups #}
+                        {# User -> Contacts|ContactGroups
                         {{ include('@ATUser/Profile/partials/profile_contacts.html.twig', {
                             'contacts':user.applicationUser.contacts,
                             'contactGroups':user.applicationUser.contactGroups,
@@ -54,8 +56,9 @@
                     </div>
                     <div role="tabpanel" class="tab-pane" id="profile-preferences">
                         Préférences
-                        {#{{ include('@ATUser/Profile/partials/profile_preferences.html.twig') }}#}
+
                     </div>
+                    #}
                 </div>
             </div>
         </div>
@@ -65,7 +68,7 @@
 {% block page_modal_container %}
     {{ parent() }}
     <div id="editAppUserEmail_modalContainer">{# where  modals to edit AppUserEmail will be added by Ajax request #}</div>
-    <div id="editContact_modalContainer">{# where  modals to edit Contact will be added by Ajax request #}</div>
+    {#<div id="editContact_modalContainer">#}{# where  modals to edit Contact will be added by Ajax request #}{#</div>#}
 {% endblock page_modal_container %}
 
 {% block stylesheets %}

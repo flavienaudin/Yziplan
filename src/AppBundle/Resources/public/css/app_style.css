@@ -87,6 +87,13 @@
 }
 
 /*-----------------------------------
+    FIX Google Place autocomplete result are under modal
+-----------------------------------*/
+.pac-container{
+    z-index: 1050;
+}
+
+/*-----------------------------------
 
 -----------------------------------*/
 .list-md-icon ul {
@@ -265,6 +272,7 @@ h1.event-title {
     padding: 6px 10px;
     font-size: 12px;
     line-height: 1.42857143;
+    border-radius: 2px;
 }
 
 /*----------------------------------
@@ -273,9 +281,13 @@ h1.event-title {
 
 .add-module-menu {
     position: fixed;
-    right: 40px;
+    right: 10px;
     bottom: 100px;
     z-index: 10;
+}
+
+.add-module-menu > button.m-btn{
+    right: 10px;
 }
 
 .add-module-menu .dropdown-menu {
@@ -358,8 +370,11 @@ h1.event-title {
 /*---------------------------------
     Formulaires
 ---------------------------------*/
+.fg-float .form-control,
 .form-control {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(245, 245, 245, 0.3);
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
 }
 
 /* Pas de couleur de fond ni de bordure sur l'icone en cas d'erreur */

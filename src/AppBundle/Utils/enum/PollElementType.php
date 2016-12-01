@@ -12,9 +12,10 @@ namespace AppBundle\Utils\enum;
 class PollElementType extends AbstractEnumType
 {
 
+    const GOOGLE_PLACE_ID ="googlePlaceId";
     // Values already in AbstractEnumType's constantes
 
     protected $name = 'enum_pollproposal_elementtype';
-    protected $values = array(self::STRING, self::INTEGER, self::DATETIME);
+    protected $values = array(self::STRING, self::INTEGER, self::DATETIME, self::GOOGLE_PLACE_ID);
 
 }

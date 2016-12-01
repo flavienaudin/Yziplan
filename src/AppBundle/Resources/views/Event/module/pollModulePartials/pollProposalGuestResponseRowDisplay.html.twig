@@ -68,9 +68,8 @@
             <div class="media-body">
                 <span {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
                     {% for ppElt in pollProposal.pollProposalElements %}
-                        {% set val = attribute(ppElt, 'val'~ppElt.pollElement.type) %}
-                        {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?val|localizeddate:val }}{% if not loop.last %}
-                        <br>{% endif %}
+                        {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?ppElt.value|localizeddate:ppElt.value }}
+                        {% if not loop.last %}<br>{% endif %}
                     {% endfor %}
                 </span>
             </div>
@@ -102,10 +101,24 @@
                                                                                                                                                                     value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"
                             {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-down"></i> </label>
             </div>
-        {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
+            {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
             {% set sendRequestEvent = "blur" %}
             <label for="pollProposalReponse_{{ pollProposal.id }}" class="sr-only">{{ pollProposal.pollModule.votingType }}</label>
-            <input type="number" class="w-100" name="pollProposalReponse_{{ pollProposal.id }}" min="0" value="{{ responseValue }}">
+        <input type="text" class="input-sm w-100" name="pollProposalReponse_{{ pollProposal.id }}" min="0" value="{{ responseValue }}">
+            <script>
+                $(document).ready(function () {
+                    var touchSpinInput = $("input[name='pollProposalReponse_{{ pollProposal.id }}']").TouchSpin({
+                        min: 0,
+                        initval: 0,
+                        verticalbuttons: true,
+                        verticalupclass: 'zmdi zmdi-plus zmdi-hc-fw',
+                        verticaldownclass: 'zmdi zmdi-minus zmdi-hc-fw'
+                    });
+                    touchSpinInput.on('change', function () {
+                        $(touchSpinInput).trigger('blur');
+                    });
+                });
+            </script>
         {% endif %}
         <script>
             $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('{{ sendRequestEvent }}', function (e) {
@@ -134,16 +147,16 @@
             {% else %}
                 {% if otherGuestPollProposalResponse is not null %}
                     {% if otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
-                        <span class="answer-thumb palette-Light-Green bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                        <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
                     {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
-                        <span class="answer-thumb palette-Amber bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                        <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
                     {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
-                        <span class="answer-thumb palette-Red bg c-white"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                        <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
                     {% else %}
-                        <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
+                        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
                     {% endif %}
                 {% else %}
-                    <span class="answer-thumb palette-Blue-Grey bg c-white"><i class="zmdi zmdi-help-outline"></i></span>
+                    <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline"></i></span>
                 {% endif %}
             {% endif %}
         </td>

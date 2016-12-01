@@ -9,12 +9,12 @@
 <div class="row">
     <div class="col-xs-12 {{ eventHeaderLayout }}">
         <dl class="dl-horizontal">
-            <dt class="text-right">{{ "event.form.when.label"|trans }}</dt>
-            <dd>{{ userEventInvitation.event.when|localizeddate }}</dd>
-            <dt class="text-right">{{ "event.form.whereName.label"|trans }}</dt>
-            <dd>{{ userEventInvitation.event.whereName }}</dd>
-            <dt class="text-right">{{ "event.form.responseDeadline.label"|trans }}</dt>
-            <dd>{{ userEventInvitation.event.responseDeadline|localizeddate }}</dd>
+            <dt>{{ "event.form.when.label"|trans }}</dt>
+            <dd>{{ userEventInvitation.event.when is not null?userEventInvitation.event.when|localizeddate:'-' }}</dd>
+            <dt>{{ "event.form.whereName.label"|trans }}</dt>
+            <dd>{{ userEventInvitation.event.whereName is not empty?userEventInvitation.event.whereName:"-" }}</dd>
+            <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
+            <dd>{{ userEventInvitation.event.responseDeadline is not null ? userEventInvitation.event.responseDeadline|localizeddate:'-'}}</dd>
             {# Todo: décommenter
              <dt>{{ "event.form.status.label"|trans }}</dt>
             <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span></dd>#}
