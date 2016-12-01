@@ -19,6 +19,7 @@ use AppBundle\Form\Event\EventInvitationAnswerType;
 use AppBundle\Form\Event\EventInvitationType;
 use AppBundle\Mailer\AppTwigSiwftMailer;
 use AppBundle\Security\EventInvitationVoter;
+use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use ATUserBundle\Entity\AccountUser;
@@ -234,6 +235,7 @@ class EventInvitationManager
     {
         $this->initializeEventInvitation($event, $applicationUser);
         $this->eventInvitation->setCreator(true);
+        $this->eventInvitation->setAnswer(EventInvitationAnswer::YES);
         return $this->eventInvitation;
     }
 
