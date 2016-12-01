@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class EventController
- * @package AppBundle\Controller
+ *
  * @Route("/{_locale}/event", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
  */
 class EventController extends Controller
@@ -192,6 +192,11 @@ class EventController extends Controller
                                 'eventInvitations' => $currentEvent->getEventInvitations(),
                                 'invitationsForm' => $eventInvitationsForm->createView()
 
+                            ));
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
+                            $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'eventInvitations' => $currentEvent->getEventInvitations()
                             ));
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {

@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Security\EventInvitationVoter;
@@ -24,7 +25,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 /**
  * Class EventInvitationController
- * @package AppBundle\Controller
  * @Route("/{_locale}/event-invitation", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
  */
 class EventInvitationController extends Controller
@@ -74,6 +74,35 @@ class EventInvitationController extends Controller
             $request->getSession()->remove(EventInvitationManager::TOKEN_SESSION_KEY);
         }
         return $this->redirectToRoute("displayEvent", array('token' => $eventToken));
+    }
+
+
+    /**
+     * @Route("/send/{token}", name="sendEventInvitations" )
+     * @ParamConverter("event", class="AppBundle:Event\Event")
+     */
+    public function sendEventInvitationAction(Event $event, Request $request)
+    {
+        $eventInvitationManager = $this->get("at.manager.event_invitation");
+        $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($event, false, false, $this->getUser());
+        if ($userEventInvitation == null) {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
+            return $this->redirectToRoute("home");
+        } else {
+            $emails = array();
+            if($request->request->has('emails')) {
+                $emails = $request->request->get('emails');
+            }
+            $eventInvitationManager->sendInvitations($event, $emails);
+
+            $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
+                $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
+                    'userEventInvitation' => $userEventInvitation,
+                    'eventInvitations' => $event->getEventInvitations()
+                ));
+            return new AppJsonResponse($data, Response::HTTP_OK);
+        }
     }
 
     /**

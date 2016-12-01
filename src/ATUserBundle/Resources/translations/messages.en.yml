@@ -223,7 +223,6 @@ contacts:
       nationality:
         label: Nationality
         placeholder: Nationality
-
   table:
     label:
       search_contact: Search a contact

@@ -36,9 +36,10 @@ class TestController extends Controller
             ));*/
 
             $this->get("app.mailer.twig_swift")->sendEventInvitationEmail($eventInvitation);
-            return new Response("email envoyé");
+            return $this->render("@App/Test/test_sendInvitationEmail.html.twig",['message' => "ok" ]);
         }
-        return new Response("WRONG ENVIRONMENT");
+        return $this->render("@App/Test/test_sendInvitationEmail.html.twig", ['message' => "MAUVAIS ENVIRONNEMENT" ]);
+
     }
 
 }
