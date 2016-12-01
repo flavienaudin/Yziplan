@@ -196,6 +196,10 @@ eventInvitation:
 invitation_list:
   display:
     title: Liste des invités
+    list:
+      yes: Ils seront là :
+      maybe: Ils n'ont pas encore répondu :
+      no: Ils ont déclinés l'invitation :
 
 invitations:
   display:
