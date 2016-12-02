@@ -84,19 +84,19 @@
         {% if pollProposal.pollModule.votingType in [constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO'), constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE')] %}
             {% set sendRequestEvent = "change" %}
             <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
-                <label class="btn palette-Light-Green bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}"> <input type="radio"
+                <label class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}"> <input type="radio"
                                                                                                                                                                              autocomplete="off"
                                                                                                                                                                              name="pollProposalReponse_{{ pollProposal.id }}"
                                                                                                                                                                              value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"
                             {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up"></i> </label>
                 {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE') %}
-                    <label class="btn palette-Amber bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}"> <input type="radio"
+                    <label class="btn response-maybe bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}"> <input type="radio"
                                                                                                                                                                              autocomplete="off"
                                                                                                                                                                              name="pollProposalReponse_{{ pollProposal.id }}"
                                                                                                                                                                              value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"
                                 {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up-down"></i> </label>
                 {% endif %}
-                <label class="btn palette-Red bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}"> <input type="radio" autocomplete="off"
+                <label class="btn response-no bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}"> <input type="radio" autocomplete="off"
                                                                                                                                                                     name="pollProposalReponse_{{ pollProposal.id }}"
                                                                                                                                                                     value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"
                             {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-down"></i> </label>

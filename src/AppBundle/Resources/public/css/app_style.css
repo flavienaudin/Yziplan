@@ -89,7 +89,7 @@
 /*-----------------------------------
     FIX Google Place autocomplete result are under modal
 -----------------------------------*/
-.pac-container{
+.pac-container {
     z-index: 1050;
 }
 
@@ -279,10 +279,11 @@ h1.event-title {
     Event Invitations
 -----------------------------------*/
 
-.userInvitation-avatar{
+.userInvitation-avatar {
     position: relative;
 }
-.cancelInvitation{
+
+.cancelInvitation {
     position: absolute;
     bottom: 0;
     right: 3px;
@@ -301,7 +302,7 @@ h1.event-title {
     z-index: 10;
 }
 
-.add-module-menu > button.m-btn{
+.add-module-menu > button.m-btn {
     right: 10px;
 }
 
@@ -463,8 +464,35 @@ table.dataTable td.dataTables_empty {
 /*---------------------------------
     Poll Proposal Response
 ----------------------------------*/
-.pollproposal-response > label.active {
+/*.pollproposal-response > label.active {
     border: teal 1px solid;
+}*/
+
+.pollproposal-response > .response-yes {
+    color: #4caf50 !important;
+}
+
+.pollproposal-response > .response-yes.active {
+    background-color: #4caf50;
+    color: white !important;
+}
+
+.pollproposal-response > .response-maybe {
+    color: #ffc107 !important;
+}
+
+.pollproposal-response > .response-maybe.active {
+    background-color: #ffc107;
+    color: white !important;
+}
+
+.pollproposal-response > .response-no {
+    color: #ff5722 !important;
+}
+
+.pollproposal-response > .response-no.active {
+    background-color: #ff5722;
+    color: white !important;
 }
 
 /*---------------------------------
