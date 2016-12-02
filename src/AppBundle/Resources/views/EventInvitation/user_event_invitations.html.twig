@@ -11,31 +11,162 @@ Données d'entrée :
 {% block title %}{{ parent() }} - {{ 'eventInvitations.page.meta_title'|trans }}{% endblock %}
 
 {% block event_invitations_content %}
-    <div class="card">
-        <div class="card-header">
-            <h2>{{ "eventInvitations.page.title"|trans }}
-                <small>{{ "eventInvitations.page.subtitle"|trans }}</small>
-            </h2>
-        </div>
-        <div class="card-body card-padding">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>{{ "eventInvitations.table.event_name"|trans }}</th>
-                        <th>{{ "eventInvitations.table.organiser"|trans }}</th>
-                        <th>{{ "eventInvitations.table.date"|trans }}</th>
-                        <th>{{ "eventInvitations.table.place"|trans }}</th>
-                        <th>{{ "eventInvitations.table.response"|trans }}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for eventInvitation in eventInvitations %}
-                        {{ include('@App/EventInvitation/partials/event_invitation.html.twig', {'eventInvitation':eventInvitation}) }}
-                    {% endfor %}
-                    </tbody>
-                </table>
+    <div class="row">
+        <div class="col-xs-12 col-md-8">
+            <div class="card z-depth-2">
+                <div class="card-header">
+                    <h2>{{ "eventInvitations.page.title"|trans }}
+                        <small>{{ "eventInvitations.page.subtitle"|trans }}</small>
+                    </h2>
+                </div>
+                <div class="card-body card-padding">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>{{ "eventInvitations.table.event_name"|trans }}</th>
+                                <th>{{ "eventInvitations.table.organiser"|trans }}</th>
+                                <th>{{ "eventInvitations.table.date"|trans }}</th>
+                                <th>{{ "eventInvitations.table.place"|trans }}</th>
+                                <th>{{ "eventInvitations.table.response"|trans }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for eventInvitation in eventInvitations %}
+                                {{ include('@App/EventInvitation/partials/event_invitation.html.twig', {'eventInvitation':eventInvitation}) }}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="col-xs-12 col-md-4">
+            <div id='calendar' class="card z-depth-2"></div>
+        </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            var cId = $('#calendar'); //Change the name if you want. I'm also using thsi add button for more actions
+
+            //Generate the Calendar
+            cId.fullCalendar({
+                header: {
+                    right: '',
+                    center: 'prev, title, next',
+                    left: ''
+                },
+
+                theme: true, //Do not remove this as it ruin the design
+                selectable: true,
+                selectHelper: true,
+                editable: false,
+                firstDay: 1, // value for monday
+                locale: window.navigator.userLanguage || window.navigator.language || 'fr',
+
+                //Add Events
+                events: [
+                    {% for eventInvitation in eventInvitations if eventInvitation.event.when is not null %}
+                    {
+                        {% set day = eventInvitation.event.when|date("d") %}
+                        {% set month = eventInvitation.event.when|date("m") -1 %}
+                        {% set year = eventInvitation.event.when|date("Y") %}
+                        title: ' {{ eventInvitation.event.name is not empty ? eventInvitation.event.name: ('eventInvitations.table.no_name'|trans)}}',
+                        start: new Date({{ year }},{{ month }}, {{ day }}),
+                        allDay: true,
+                        {% if eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
+                        className: 'palette-Teal bg',
+                        {% elseif eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') %}
+                        className: 'palette-Light-Blue bg',
+                        {% elseif eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
+                        className: 'palette-Deep-Orange bg',
+                        {% endif %}
+                        url:'{{ path('displayEventInvitation', {'token': eventInvitation.token}) }}',
+
+                    },
+                    {% endfor %}
+                ],
+
+                //On Day Select
+                select: function (start, end, allDay) {
+                    $('#addNew-event').modal('show');
+                    $('#addNew-event input:text').val('');
+                    $('#getStart').val(start);
+                    $('#getEnd').val(end);
+                }
+            });
+
+            //Create and ddd Action button with dropdown in Calendar header.
+            var actionMenu = '<ul class="actions actions-alt" id="fc-actions">' +
+                    '<li class="dropdown pull-right">' +
+                    '<a href="" data-toggle="dropdown"><i class="zmdi zmdi-more-vert"></i></a>' +
+                    '<ul class="dropdown-menu">' +
+                    '<li class="active">' +
+                    '<a data-view="month" href="">{{ "eventInvitations.calendar.month_view"|trans }}</a>' +
+                    '</li>' +
+                    '<li>' +
+                    '<a data-view="agendaWeek" href="">{{ "eventInvitations.calendar.week_view"|trans }}</a>' +
+                    '</li>'+
+                    '<li>' +
+                    '<a data-view="basicDay" href="">{{ "eventInvitations.calendar.day_view"|trans }}</a>' +
+                    '</li>';
+
+            {# Pour les autres vues
+            '<li>' +
+            '<a data-view="basicWeek" href="">Week View</a>' +
+            '</li>' +
+            '<li>' +
+            '<a data-view="agendaDay" href="">Agenda Day View</a>' +
+            '</li>' +
+            '</ul>' +
+            '</div>' +
+            '</li>'#}
+
+            cId.find('.fc-toolbar').append(actionMenu);
+
+            //Event Tag Selector
+            (function () {
+                $('body').on('click', '.event-tag > span', function () {
+                    $('.event-tag > span').removeClass('selected');
+                    $(this).addClass('selected');
+                });
+            })();
+
+            //Add new Event
+            $('body').on('click', '#addEvent', function () {
+                var eventName = $('#eventName').val();
+                var tagColor = $('.event-tag > span.selected').attr('data-tag');
+
+                if (eventName != '') {
+                    //Render Event
+                    $('#calendar').fullCalendar('renderEvent', {
+                        title: eventName,
+                        start: $('#getStart').val(),
+                        end: $('#getEnd').val(),
+                        allDay: true,
+                        className: tagColor
+
+                    }, true); //Stick the event
+
+                    $('#addNew-event form')[0].reset()
+                    $('#addNew-event').modal('hide');
+                }
+
+                else {
+                    $('#eventName').closest('.form-group').addClass('has-error');
+                }
+            });
+
+            //Calendar views
+            $('body').on('click', '#fc-actions [data-view]', function (e) {
+                e.preventDefault();
+                var dataView = $(this).attr('data-view');
+
+                $('#fc-actions li').removeClass('active');
+                $(this).parent().addClass('active');
+                cId.fullCalendar('changeView', dataView);
+            });
+        });
+    </script>
 {% endblock %}

@@ -13,7 +13,9 @@ Données d'entrée :
 <th>Réponse</th>
 #}
 <tr>
-    <td><a href="{{ path('displayEventInvitation', {'token': eventInvitation.token}) }}">{{ eventInvitation.event.name }}</a></td>
+    <td><a href="{{ path('displayEventInvitation', {'token': eventInvitation.token}) }}">
+            {{ eventInvitation.event.name is not empty ? eventInvitation.event.name: ('eventInvitations.table.no_name'|trans)}}</a>
+    </td>
     <td>{{ eventInvitation.event.getCreators[0].getDisplayableName }}</td>
     <td>{{ eventInvitation.event.when is not null ? eventInvitation.event.when|localizeddate:'-' }}</td>
     <td>{{ eventInvitation.event.whereName is not empty ? eventInvitation.event.whereName:"-" }}</td>

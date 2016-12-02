@@ -18,9 +18,9 @@
             'attr':{'placeholder':'event.form.description.placeholder','rows':3},
             'widget_options':{'fgline':true}
         }) }}
-        {{ form_row(eventForm.responseDeadline, {
-            'label':'event.form.responseDeadline.label',
-            'attr':{'placeholder':'event.form.responseDeadline.placeholder'},
+        {{ form_row(eventForm.when, {
+            'label':'event.form.when.label',
+            'attr':{'placeholder':'event.form.when.placeholder'},
             'widget_options':{'fgline':true, 'displayInRow' : true}
         }) }}
         {{ form_row(eventForm.whereName, {
@@ -29,9 +29,9 @@
             'widget_options':{'fgline':true, 'displayInRow' : true}
         }) }}
         {{ form_row(eventForm.whereGooglePlaceId) }}
-        {{ form_row(eventForm.when, {
-            'label':'event.form.when.label',
-            'attr':{'placeholder':'event.form.when.placeholder'},
+        {{ form_row(eventForm.responseDeadline, {
+            'label':'event.form.responseDeadline.label',
+            'attr':{'placeholder':'event.form.responseDeadline.placeholder'},
             'widget_options':{'fgline':true, 'displayInRow' : true}
         }) }}
 

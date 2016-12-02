@@ -149,6 +149,12 @@ eventInvitations:
     date: Date
     place: Place
     response: Response
+    no_name: No name for this event
+  calendar:
+    month_view: Month view
+    week_view: Week view
+    day_view: Day view
+
 
 eventInvitation:
   form:

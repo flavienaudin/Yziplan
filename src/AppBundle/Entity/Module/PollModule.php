@@ -229,4 +229,5 @@ class PollModule
             ->orderBy(["orderIndex" => Criteria::ASC]);
         return $this->pollElements->matching($criteria);
     }
+
 }
