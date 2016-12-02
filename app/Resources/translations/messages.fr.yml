@@ -121,10 +121,10 @@ event:
     public_invitation:
       label: En leur transmettant le lien ci-dessous
     guestsCanInvite:
-      label: Autoriser les invités à inviter
-      placeholder: Autoriser les invités à inviter
-      text.true: Les invités peuvent inviter d'autres personnes
-      text.false: Les invités ne peuvent pas inviter d'autres personnes
+      label: Permettre à vos amis d'inviter
+      placeholder: Permettre à vos amis d'inviter
+      text.true: Vos amis peuvent inviter
+      text.false: Vos amis ne peuvent pas inviter
 #    guestsCanAddModule:
 #      label: Autoriser les invités à ajouter un module
 #      placeholder: Autoriser les invités à ajouter un module
@@ -216,9 +216,11 @@ invitations:
     title: Invitez vos amis
     cancel:
       link: Annuler l'invitation de %name%
+      link_noname: Annuler l'invitation
       swal:
         title: Annulation
         text: Êtes-vous sûre de vouloir annuler l'invitation de %name% ?
+        text_noname: Êtes-vous sûre de vouloir annuler cette invitation ?
   form:
     invitations:
       label: En leur envoyant un e-mail
@@ -260,10 +262,10 @@ module:
       text.true: Seuls les invités peuvent participer (événement privé)
       text.false: Rend l'événement accessible à toutes les personnes recevant le lien
     guestsCanInvite:
-      label: Autoriser les invités à inviter
-      placeholder: Autoriser les invités à inviter
-      text.true: Les invités peuvent inviter d'autres personnes.
-      text.false: Les invités ne peuvent pas inviter d'autres personnes.
+      label: Permettre à vos amis d'inviter
+      placeholder: Permettre à vos amis d'inviter
+      text.true: Vos amis peuvent inviter
+      text.false: Vos amis ne peuvent pas inviter
     choice.label:
       yes: Oui
       no: Non

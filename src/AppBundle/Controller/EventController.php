@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
@@ -34,17 +35,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class EventController extends Controller
 {
-
-    /**
-     * @Route("/show-test", name="eventTest")
-     * @deprecated
-     */
-    public function eventTestAction()
-    {
-        return $this->render('AppBundle:Event/proto:test-event.html.twig');
-    }
-
-
     /**
      * @Route("/new", name="createEvent")
      */
@@ -54,7 +44,7 @@ class EventController extends Controller
         $eventManager = $this->get('at.manager.event');
         /** @var Event $currentEvent */
         $currentEvent = $eventManager->initializeEvent(true);
-        // Only one EventInvitation added when initialize an Event.
+        /** @var EventInvitation $currentEventInvitation Only one EventInvitation added when initialize an Event. */
         $currentEventInvitation = $currentEvent->getEventInvitations()->first();
         if ($currentEventInvitation != null) {
             $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $currentEventInvitation->getToken());
@@ -117,6 +107,12 @@ class EventController extends Controller
                     if ($eventInvitationAnswerForm->isValid()) {
                         $eventInvitationManager->treatEventInvitationAnswerFormSubmission($eventInvitationAnswerForm);
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('global.success.data_saved');
+
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
+                            $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'eventInvitations' => $currentEvent->getEventInvitations()
+                            ));
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');

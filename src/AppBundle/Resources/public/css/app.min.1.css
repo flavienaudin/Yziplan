@@ -18,6 +18,7 @@ html {
 
 body {
     margin: 0;
+    min-width: 250px;
 }
 
 article,
@@ -10086,28 +10087,42 @@ pre {
     line-height: 50px;
 }
 
+.h-menu > li.hm-new-event-link,
 .h-menu > li.hm-registration-link {
-    padding-right: 15px;
+    padding-right: 10px;
 }
 
+.h-menu > li.hm-new-event-link a{
+    margin-top: 0;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+.h-menu > li.hm-new-event-link * {
+    vertical-align: middle;
+}
+
+.h-menu > li.hm-new-event-link i,
 .h-menu > li.hm-registration-link i,
 .h-menu > li.hm-login-link i {
     font-size: 24px;
 }
 
-@media (min-width: 401px) {
+@media (min-width: 481px) {
     .h-menu > li.hm-registration-link i,
     .h-menu > li.hm-login-link i {
         display: none;
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width: 480px) {
+    .h-menu > li.hm-new-event-link,
     .h-menu > li.hm-registration-link,
     .h-menu > li.hm-login-link {
         min-width: 0;
     }
 
+    .h-menu > li.hm-new-event-link span,
     .h-menu > li.hm-registration-link span,
     .h-menu > li.hm-login-link span {
         display: none;

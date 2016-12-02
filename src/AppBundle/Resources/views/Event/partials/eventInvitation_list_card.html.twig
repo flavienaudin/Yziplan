@@ -19,7 +19,7 @@
     <div class="card-body card-padding-sm" id="eventinvitation-body-card-yes">
         <div class="well-sm z-depth-1 palette-Green-50 bg p-b-0">
             <h5>{{ "invitation_list.display.list.yes"|trans }}</h5>
-            <ul class="list-inline" id="eventInvitations_list">
+            <ul class="list-inline eventInvitations_list">
                 {% for eventInvitation in eventInvitations
                 if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED')
                 and eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
@@ -32,7 +32,7 @@
     <div class="card-body card-padding-sm" id="eventinvitation-body-card-maybe">
         <div class="well-sm z-depth-1 palette-Light-Blue-50 bg p-b-0">
             <h5>{{ "invitation_list.display.list.maybe"|trans }}</h5>
-            <ul class="list-inline" id="eventInvitations_list">
+            <ul class="list-inline eventInvitations_list">
                 {% for eventInvitation in eventInvitations
                 if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED')
                 and eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') %}
@@ -45,7 +45,7 @@
     <div class="card-body card-padding-sm" id="eventinvitation-body-card-no">
         <div class="well-sm z-depth-1 palette-Deep-Orange-50 bg p-b-0">
             <h5>{{ "invitation_list.display.list.no"|trans }}</h5>
-            <ul class="list-inline" id="eventInvitations_list">
+            <ul class="list-inline eventInvitations_list">
                 {% for eventInvitation in eventInvitations
                 if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED')
                 and eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
@@ -61,12 +61,15 @@
         {% endif %}
         {% endif %}
 
-        $('#eventInvitations_list').find('li a.cancelInvitation').each(function () {
+        $('.eventInvitations_list').find('li a.cancelInvitation').each(function () {
             var link = $(this);
             $(this).on('click', function (e) {
                 e.preventDefault();
-                var text = "{{ "invitations.display.cancel.swal.text"|trans }}";
-                if (link.data('guestname') != "") {
+                var text = "";
+                if (link.data('guestname') == "") {
+                    text = "{{ "invitations.display.cancel.swal.text_noname"|trans }}";
+                }else{
+                    text = "{{ "invitations.display.cancel.swal.text"|trans }}";
                     text = text.replace('%name%', link.data('guestname'));
                 }
                 swal({

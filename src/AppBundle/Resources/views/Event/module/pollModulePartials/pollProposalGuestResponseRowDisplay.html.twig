@@ -147,7 +147,7 @@
             {% else %}
                 {% if otherGuestPollProposalResponse is not null %}
                     {% if otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
-                        <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                        <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
                     {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
                         <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
                     {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
