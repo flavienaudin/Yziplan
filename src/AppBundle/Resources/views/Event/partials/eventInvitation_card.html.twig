@@ -17,7 +17,7 @@
     <div class="card-body card-padding-sm" id="eventinvitation-body-card">
         {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly %}
             <div class="m-t-10 fit-width">
-                <button class="btn btn-lg btn-block palette-Blue-A700 bg" id="shareEventFB" name="provider">
+                <button class="btn btn-lg btn-block btn-facebook" id="shareEventFB" name="provider">
                     <i class="zmdi zmdi-facebook zmdi-hc-lg"></i> {{ "invitations.button.via_facebook"|trans }}
                 </button>
             </div>
