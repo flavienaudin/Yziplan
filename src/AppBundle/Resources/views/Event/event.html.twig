@@ -68,7 +68,7 @@
 
         <div class="grid-item col-xs-12 col-lg-4">
             <div class="row">
-                <div id="profileCard" class="col-xs-12 col-sm-6 col-md-12">
+                <div id="profileCard" class="col-xs-12 col-sm-6 col-lg-12">
                     {{ include("@App/Event/partials/profile/eventInvitation_profile_card.html.twig", {
                         "userEventInvitation":userEventInvitation,
                         'userEventInvitationForm' : userEventInvitationForm,
@@ -82,7 +82,7 @@
                     }) }}
                 </div>
 
-                <div id="invitationCard" class="col-xs-12 col-sm-6 col-md-12">
+                <div id="invitationCard" class="col-xs-12 col-sm-6 col-lg-12">
                     {{ include('@App/Event/partials/eventInvitation_card.html.twig', {
                         'userEventInvitation':userEventInvitation,
                         'invitationsForm':invitationsForm
