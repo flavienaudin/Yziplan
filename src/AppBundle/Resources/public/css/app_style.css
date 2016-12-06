@@ -1,13 +1,11 @@
 /** Prototype 2 CSS */
 
-
 /*---------------------------------
    Connexion
 ----------------------------------*/
 .btn-facebook {
     background-color: #3b5998;
 }
-
 
 /*---------------------------------
     TOASTR
@@ -507,19 +505,44 @@ table.dataTable td.dataTables_empty {
 /*---------------------------------
     Help popover
 ---------------------------------*/
-[data-style=primary] + .popover {
+/* CUSTOM POPOVERS */
+.pop-help-event {
     background-color: #9c27b0;
+    border-color: #9c27b0;
     color: white;
 }
 
-.pop-help .popover-title {
-    background-color: #9c27b0;
-    color: white;
+.popover.right.pop-help-event > .arrow {
+    border-right-color: #9c27b0;
 }
 
-.pop-help .popover-content {
-    background-color: #9c27b0;
-    color: white;
+.popover.left.pop-help-event > .arrow {
+    border-left-color: #9c27b0;
+}
+
+.popover.top.pop-help-event > .arrow {
+    border-top-color: #9c27b0;
+}
+
+.popover.bottom.pop-help-event > .arrow {
+    border-bottom-color: #9c27b0;
+}
+
+
+.popover.right.pop-help-event > .arrow:after {
+    border-right-color: #9c27b0 !important;
+}
+
+.popover.left.pop-help-event > .arrow:after {
+    border-left-color: #9c27b0;
+}
+
+.popover.top.pop-help-event > .arrow:after {
+    border-top-color: #9c27b0;
+}
+
+.popover.bottom.pop-help-event > .arrow:after {
+    border-bottom-color: #9c27b0;
 }
 
 /*---------------------------------

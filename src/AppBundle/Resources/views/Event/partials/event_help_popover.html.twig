@@ -40,7 +40,7 @@ La popover se ferme sous l'une des 3 condition suivante:
             html : 'true',
             placement : 'auto {{ placement }}',
             content : 'Mon test de contenu',
-            style : 'primary',
+            template : '<div class="popover pop-help-event" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
         });
         $('#{{ divId }}').popover('show');
     });
