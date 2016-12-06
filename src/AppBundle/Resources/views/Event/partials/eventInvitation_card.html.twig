@@ -114,7 +114,7 @@
             $.ajaxSetup({cache: true});
             $.getScript('//connect.facebook.net/fr_FR/all.js', function () {
                 FB.init({
-                    appId: '120057968481692',
+                    appId: '{{ facebook_client_id }}',
                     xfbml: true,
                     version: 'v2.8'
                 });
