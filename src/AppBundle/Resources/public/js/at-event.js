@@ -4,16 +4,11 @@
 
 $(document).ready(function () {
 
+    initialiseYziplanMasonry();
     reorderCard();
+    $('.grid').masonry('layout');
 
-    $('.grid').masonry({
-        // options
-        itemSelector: '.grid-item',
-        columnWidth: '.grid-sizer',
-        percentPosition: true
-    });
-
-    window.onresize = function(event) {
+    window.onresize = function (event) {
         reorderCard();
         $('.grid').masonry('layout');
     };
@@ -127,17 +122,41 @@ function initPollProposalWhereElements(selectorFieldsPlaceName, selectorPlaceId)
     return autocompletes;
 }
 
-function reorderCard(){
+function reorderCard() {
     // Changement de position des div liste d'invité et
     // invitation en fonction de la largeur de l'ecran
     var iW = $(window).innerWidth();
-    if (iW > 768 && iW < 1200) {
+    if (iW <= 768) {
+        if (!$('#invitationCard').hasClass('grid-item')) {
+            $('#invitationCard').addClass('grid-item');
+            $('.grid').masonry('addItems',$('#invitationCard') );
+        }
+        $('#invitationCard').insertAfter('#eventModulesContainer');
+    } else if (iW > 768 && iW < 1200) {
+        if ($('#invitationCard').hasClass('grid-item')) {
+            $('#invitationCard').removeClass('grid-item');
+            $('.grid').masonry('destroy');
+            initialiseYziplanMasonry();
+        }
         $('#invitationCard').insertAfter('#profileCard');
     } else {
-        $('#guestListCard').insertAfter('#profileCard');
+        if ($('#invitationCard').hasClass('grid-item')) {
+            $('#invitationCard').removeClass('grid-item');
+            $('.grid').masonry('destroy');
+            initialiseYziplanMasonry();
+        }
+        $('#invitationCard').insertAfter('#guestListCard');
     }
 }
 
+function initialiseYziplanMasonry(){
+    $('.grid').masonry({
+        // options
+        itemSelector: '.grid-item',
+        columnWidth: '.grid-sizer',
+        percentPosition: true
+    });
+}
 
 
 

@@ -82,12 +82,6 @@
                     }) }}
                 </div>
 
-                <div id="invitationCard" class="col-xs-12 col-sm-6 col-lg-12">
-                    {{ include('@App/Event/partials/eventInvitation_card.html.twig', {
-                        'userEventInvitation':userEventInvitation,
-                        'invitationsForm':invitationsForm
-                    }) }}
-                </div>
             </div>
         </div>
 
@@ -118,6 +112,14 @@
                 {% endif %}
             {% endfor %}
         </div>
+
+        <div id="invitationCard" class="grid-item col-xs-12 col-sm-6 col-lg-12">
+            {{ include('@App/Event/partials/eventInvitation_card.html.twig', {
+                'userEventInvitation':userEventInvitation,
+                'invitationsForm':invitationsForm
+            }) }}
+        </div>
+
         <!-- .grid-sizer empty element, only used for element sizing -->
         <div class="grid-sizer col-xs-12 col-lg-4"></div>
     </div>
