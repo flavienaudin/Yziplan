@@ -90,9 +90,9 @@
                 },
                 "commands": function (column, row) {
                     return "<a href='{{ path('editContact') }}'class=\"btn btn-icon command-edit waves-effect waves-circle\" data-row-id=\"" + row.id + "\"><span class=\"zmdi " +
-                            "zmdi-edit\"></span></button>" +
-                            "<a href='{{ path('deleteContact') }}' class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\">" +
-                            "<span class=\"zmdi zmdi-delete\"></span></a>";
+                        "zmdi-edit\"></span></button>" +
+                        "<a href='{{ path('deleteContact') }}' class=\"btn btn-icon command-delete waves-effect waves-circle\" data-row-id=\"" + row.id + "\">" +
+                        "<span class=\"zmdi zmdi-delete\"></span></a>";
                 }
             },
             labels: {
@@ -103,7 +103,7 @@
         }).on("loaded.rs.jquery.bootgrid", function () {
             /* Executes after data is loaded and rendered */
             contactsBootgrid
-                    .find(".command-edit").on("click", function (e) {
+                .find(".command-edit").on("click", function (e) {
                 e.preventDefault();
                 var moduleModalsContainer = $('#editContact_modalContainer');
                 $(moduleModalsContainer).empty();
@@ -113,7 +113,7 @@
                     editModal.modal('show');
                 }, null, null);
             }).end()
-                    .find(".command-delete").on("click", function (e) {
+                .find(".command-delete").on("click", function (e) {
                 var link = $(this);
                 var contactId = $(this).data("row-id");
                 e.preventDefault();
@@ -124,14 +124,11 @@
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: '{{ "global.button.delete"|trans }}',
-                    closeOnConfirm: true,
                     showLoaderOnConfirm: true
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        ajaxRequest(link, {"contact-id": contactId}, e, function (responseJSON, textStatus, jqXHR) {
-                            contactsBootgrid.bootgrid('reload');
-                        }, null, null);
-                    }
+                }).then(function () {
+                    ajaxRequest(link, {"contact-id": contactId}, e, function (responseJSON, textStatus, jqXHR) {
+                        contactsBootgrid.bootgrid('reload');
+                    }, null, null);
                 });
             }).end();
         });

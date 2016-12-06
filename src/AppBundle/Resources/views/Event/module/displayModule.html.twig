@@ -16,8 +16,9 @@
                         <ul class="actions a-alt">
                             {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
                                 <li>
-                                    <a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"> <i
-                                                class="zmdi zmdi-delete" style="color: #f44336"></i>{#{{ "global.button.delete"|trans }}#}</a></li>
+                                    <a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"> <i class="zmdi zmdi-delete"
+                                                                                                                                                                               style="color: #f44336"></i>{#{{ "global.button.delete"|trans }}#}
+                                    </a></li>
                                 <script>
                                     $('#removeModule{{ module.token }}').on('click', function (e) {
                                         e.preventDefault();
@@ -29,17 +30,14 @@
                                             showCancelButton: true,
                                             confirmButtonColor: "#DD6B55",
                                             confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                            closeOnConfirm: true,
                                             showLoaderOnConfirm: true
-                                        }, function (isConfirm) {
-                                            if (isConfirm) {
-                                                ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                        $('#module-{{ module.token }}').remove();
-                                                        $('.grid').masonry('layout');
-                                                    }
-                                                }, null, null);
-                                            }
+                                        }).then(function () {
+                                            ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
+                                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
+                                                    $('#module-{{ module.token }}').remove();
+                                                    $('.grid').masonry('layout');
+                                                }
+                                            }, null, null);
                                         });
                                     });
                                 </script>

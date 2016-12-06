@@ -57,15 +57,13 @@
                 confirmButtonText: '{{ "global.button.delete"|trans }}',
                 closeOnConfirm: true,
                 showLoaderOnConfirm: true
-            }, function (isConfirm) {
-                if (isConfirm) {
-                    ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                        if (responseJSON.hasOwnProperty('data')  && responseJSON['data'].actionResult === true) {
-                            $('#module-{{ module.token }}').remove();
-                            $('.grid').masonry('layout');
-                        }
-                    }, null, null);
-                }
+            }).then(function () {
+                ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
+                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
+                        $('#module-{{ module.token }}').remove();
+                        $('.grid').masonry('layout');
+                    }
+                }, null, null);
             });
         });
         {% endif %}

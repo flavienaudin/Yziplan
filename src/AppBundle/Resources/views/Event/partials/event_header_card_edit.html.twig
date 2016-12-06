@@ -58,6 +58,7 @@
                                     $('#validateEventLink').on('click', function (e) {
                                         e.preventDefault();
                                         var link = $(this);
+                                        // TODO Test la migration vers SweetAlert 2
                                         swal({
                                             title: "{{ "event.form.status.swal.title"|trans }}",
                                             text: "{{ "event.form.status.swal.text"|trans }}",
@@ -65,15 +66,13 @@
                                             showCancelButton: true,
                                             //confirmButtonColor: "#DD6B55",
                                             confirmButtonText: '{{ "global.button.valid"|trans }}',
-                                            closeOnConfirm: true,
                                             showLoaderOnConfirm: true
-                                        }, function (isConfirm) {
-                                            if (isConfirm) {
-                                                ajaxRequest(link, null, e, null, null, null);
-                                                // close edition block
-                                                var t = $form.data('event-header-pmb-block-target');
-                                                $(t).removeClass('toggled');
-                                            }
+                                        }).then(function () {
+                                            ajaxRequest(link, null, e, null, null, null);
+                                            // close edition block
+                                            var t = $form.data('event-header-pmb-block-target');
+                                            $(t).removeClass('toggled');
+
                                         });
                                     });
                                 });

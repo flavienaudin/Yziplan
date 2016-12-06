@@ -178,6 +178,12 @@ function jsPlugginActivation() {
     });
     $('.selectpicker').selectpicker();
     $('.toggle-tooltip, [data-toggle="tooltip"]').tooltip();
+
+    var masonryGrid = $('.grid');
+    if (masonryGrid[0] && Masonry.data(masonryGrid[0])) {
+        // If a masonry is initialized
+        masonryGrid.masonry('layout');
+    }
 }
 
 /**
@@ -226,7 +232,7 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
     var urlTarget;
     if (typeof target == 'string') {
         urlTarget = target;
-    }else{
+    } else {
         urlTarget = $(target).attr('href');
     }
 
