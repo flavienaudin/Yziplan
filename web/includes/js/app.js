@@ -2,16 +2,19 @@
  * Created by Flavien on 01/07/2016.
  */
 
-
 $(document).ready(function () {
+    /** Common JQuery Selectors **/
+    var $html = $('html');
+    var $body = $('body');
+
+    if(isMobile()){
+        $html.addClass('ismobile');
+    }
+
     /** Global pre-loader */
     $('.at-global-preloader').hide();
 
     jsPlugginActivation();
-
-    /** Common JQuery Selectors **/
-    var $html = $('html');
-    var $body = $('body');
 
     /* --------------------------------------------------------
      Scrollbar
@@ -138,6 +141,14 @@ $(document).ready(function () {
         });
     }
 });
+
+/**
+ * Detect mobile browser
+ */
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
 
 
 /**
