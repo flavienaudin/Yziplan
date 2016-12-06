@@ -26,6 +26,9 @@ parameters:
     oauth.facebook.id: ~
     oauth.facebook.secret: ~
 
+    # API configuration
+    maps_api.google.id: ~
+
     # DEV
     dev_delivery_address: ~
 

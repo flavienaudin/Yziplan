@@ -11,7 +11,7 @@
 
     function authClick() {
         {# Your Client ID is retrieved from your project in the Developer Console => https://console.developers.google.com#}
-        var CLIENT_ID = '{{ google_client_id }}';{# '97577591330-rnga2ufsqktnn69e8urbupu12rcc889e.apps.googleusercontent.com' #}
+        var CLIENT_ID = '{{ google_client_id }}';
         var SCOPES = ["https://www.googleapis.com/auth/contacts.readonly"];
 
         gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: false}, authResult);
