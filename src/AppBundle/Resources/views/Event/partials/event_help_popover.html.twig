@@ -1,0 +1,47 @@
+{# Gère l'affichage des popover d'aide sur la page d'invitation :
+- divId : id de la div sur laquelle appliquer le popover
+- userInvitation (EventInvitation ou ModuleInvitation) Invitation de l'utilisateur
+- placement : optionnel - placement souhaité de la popover (left, right, top, bottom)
+
+Fonctionnement :
+On affiche une popover pour interpeller l'utilisateur cette popover s'affiche si:
+- L'utilisateur n'a pas de compte utilisateur
+- L'utilisateur a un compte utilisateur et n'a jamais eu ce type de popover
+- L'utilisateur a deja vu ce type de popover mais n'a pas cliqué sur "ne plus afficher"
+
+La popover se ferme sous l'une des 3 condition suivante:
+- L'utilisateur a effectué l'action indiquée par la popover (+ appliquer l'effet de "ne plus afficher")
+- l'utilisateur a cliqué sur "fermer"
+- L'utilisateur a cliqué sur "ne plus afficher" (valable sur toute l'appli pour le sutilisateurs connectés, valable uniquement pour l'événement pour les utilisateurs non connecté)
+#}
+
+{# Configuration des paramètres #}
+
+{% set placement = (placement is defined ? placement : '') %}
+{#{% set eventInvitation = (userInvitation.eventInvitation is defined ? userInvitation.eventInvitation : userInvitation) %}
+{% set isUserConnected = (app.user is defined) %}
+
+{% set hasAppUser = (eventInvitation.applicationUser is not null) %}
+
+#}{# Définition de l'avatar #}{#
+{% set avatar = null %}
+{% if hasAppUser and eventInvitation.applicationUser.appUserInformation.avatar is not null %}
+    {% set avatar = eventInvitation.applicationUser.appUserInformation.avatar %}
+{% endif %}#}
+
+
+{# Gestion de l'appel ajax en cas d'appui sur "ne plus afficher" #}
+
+<script>
+    $(document).ready(function () {
+        $('#{{ divId }}').popover({
+            container: 'body',
+            trigger: 'manual',
+            html : 'true',
+            placement : 'auto {{ placement }}',
+            content : 'Mon test de contenu',
+            style : 'primary',
+        });
+        $('#{{ divId }}').popover('show');
+    });
+</script>
