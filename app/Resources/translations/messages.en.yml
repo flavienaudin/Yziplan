@@ -190,6 +190,7 @@ eventInvitation:
       title: What's your name ?
       message: Please, fill in your name to validate your invitation.
       inputError: It's better with non-empty name
+    guestname_required_to_participate: You must fill your name to participate
   message:
     warning:
       email_owned_by_accountuser: Warning! This email address is associated to a user account. Please, login before participating to enjoy all the features.
@@ -340,6 +341,11 @@ global:
   exception:
     access_denied_http: You do not have access to these information. Please, connect with the appropriate user.
     method_not_allowed_http: This request is not allowed. Take care.
+  swal:
+    title:
+      error: Error
+      warning: Warning
+      success: OK
 
 # Enums
 gender:

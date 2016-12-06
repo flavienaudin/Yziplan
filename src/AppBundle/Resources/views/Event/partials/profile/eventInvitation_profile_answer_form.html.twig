@@ -4,8 +4,8 @@ Données d'entrée :
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
-<div id="eventInvitation-answer-panel" class="pop-help">
-    {{ include("@App/Event/partials/event_help_popover.html.twig",{'divId' : 'eventInvitation-answer-panel'}) }}
+<div id="eventInvitation-answer-panel" {#class="pop-help"#}>
+    {#{{ include("@App/Event/partials/event_help_popover.html.twig",{'divId' : 'eventInvitation-answer-panel'}) }}#}
     <h4>{{ "eventInvitation.form.answer.label"|trans }}</h4>
     {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
     {{ form_row(userEventInvitationAnswerForm.answer,{
@@ -20,33 +20,22 @@ Données d'entrée :
         $("input[name='event_invitation_anwser[answer]']").on('change', function (e) {
             $(this).closest('form').submit();
         });
-        var answerOnce = false;
+        var alreadyAnswerValid = false;
         $('form#userEventInvitationAnswer').on('submit', function (e) {
-            ajaxFormSubmission(this, e, null, null, null);
-
+            e.preventDefault();
             {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
-
-            if(!answerOnce ) {
-                swal({
-                    title: "{{ "eventInvitation.profile.card.new_warning_alert.title"|trans|raw }}",
-                    text: "{{ "eventInvitation.profile.card.new_warning_alert.message"|trans|raw }}",
-                    type: "input",
-                    showCancelButton: false,
-                    closeOnConfirm: false,
-                    animation: "slide-from-top",
-                    inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}"
-                }, function (inputValue) {
-                    if (inputValue === false) return false;
-                    if (inputValue === "") {
-                        swal.showInputError("{{ "eventInvitation.profile.card.new_warning_alert.inputError"|trans|raw }}");
-                        return false
-                    }
-                    $('#event_invitation_guestName').val(inputValue);
-                    $('form#userEventInvitationProfile').submit();
-                    answerOnce = true;
-                    swal.close();
+            if (!alreadyAnswerValid) {
+                alreadyAnswerValid = askGuestName(function(){
+                    ajaxFormSubmission(this, e, null, null, null);
+                    alreadyAnswerValid = true;
                 });
+            }else{
+                {# Le nom a déjà été demandé, on soumet le formulaire directement#}
+                ajaxFormSubmission(this, e, null, null, null);
             }
+            {% else %}
+            {# Le nom est déjà renseigné on soumet le formulaire directement#}
+            ajaxFormSubmission(this, e, null, null, null);
             {% endif %}
         });
     </script>

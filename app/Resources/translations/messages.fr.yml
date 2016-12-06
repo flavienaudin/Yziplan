@@ -189,6 +189,7 @@ eventInvitation:
       title: Quel est votre nom ?
       message: Merci de renseigner votre nom pour valider l'invitation.
       inputError: C'est mieux avec quelques lettres.
+    guestname_required_to_participate: Vous devez renseigner un nom pour participer
   message:
     warning:
       email_owned_by_accountuser: Attention! Cet e-mail est associée à un compte utilisateur. Connectez-vous avant de participer pour profiter de toutes les fonctionnalités.
@@ -339,6 +340,11 @@ global:
   exception:
     access_denied_http: Vous n'avez pas accès à ces données. Connectez-vous avec l'utilisateur adéquate.
     method_not_allowed_http: Cette requête n'est pas autorisée. Faites attention.
+  swal:
+    title:
+      error: Erreur
+      warning: Avertissement
+      success: OK
 
 # Enums
 gender:

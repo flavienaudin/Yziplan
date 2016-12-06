@@ -52,15 +52,13 @@
                         showCancelButton: true,
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: '{{ "global.button.delete"|trans }}',
-                        closeOnConfirm: true,
                         showLoaderOnConfirm: true
-                    }, function (isConfirm) {
-                        if (isConfirm) {
-                            ajaxRequest(link, null, e, function (responseJSON, textStatus, jqXHR) {
-                                $("li#appuseremail_{{ appuseremail.id }}").remove();
-                                $('#{{ modalIdPrefix }}_modal').modal('toggle');
-                            }, null, null);
-                        }
+                    }).then(function () {
+                        // Action is confirmed by the user
+                        ajaxRequest(link, null, e, function (responseJSON, textStatus, jqXHR) {
+                            $("li#appuseremail_{{ appuseremail.id }}").remove();
+                            $('#{{ modalIdPrefix }}_modal').modal('toggle');
+                        }, null, null);
                     });
                 });
             </script>

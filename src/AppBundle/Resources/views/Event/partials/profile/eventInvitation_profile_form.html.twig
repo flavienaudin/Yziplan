@@ -43,11 +43,54 @@
         $('form#userEventInvitationProfile').on("submit", function (e) {
             ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                 if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
-                    //$('.userInvitation-avatar .avatar-char').html(responseJSON['data']['userDisplayableName'].charAt(0).toUpperCase());
                     LetterAvatar.setConnectedUserName(responseJSON['data']['userDisplayableName']);
                     LetterAvatar.transform();
                 }
             }, null, null);
         });
+
+        {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
+        /**
+         * Affichage d'une fenêtre "dialog" pour demander le nom de l'invité et d'executer la fonction donnée (ex : soumission d'un formulaire)
+         */
+        function askGuestName(resolveFunction) {
+            /*if ($('#event_invitation_guestName').val().trim() != "") {
+                if (resolveFunction) {
+                    resolveFunction();
+                }
+            } else {*/
+                swal({
+                    title: "{{ "eventInvitation.profile.card.new_warning_alert.title"|trans|raw }}",
+                    text: "{{ "eventInvitation.profile.card.new_warning_alert.message"|trans|raw }}",
+                    type: "question",
+                    input: "text",
+                    showCancelButton: false,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}",
+                    preConfirm: function (input) {
+                        return new Promise(function (resolve, reject) {
+                            if (input === false || input.trim() === '') {
+                                reject("{{ "eventInvitation.profile.card.new_warning_alert.inputError"|trans|raw }}");
+                            } else {
+                                resolve();
+                            }
+                        })
+                    }
+                }).then(function (inputValue) {
+                    $('#event_invitation_guestName').val(inputValue);
+                    $('form#userEventInvitationProfile').submit();
+                    if (resolveFunction) {
+                        resolveFunction();
+                    }
+                }, function (dismiss) {
+                    swal({
+                        title: "{{ "global.swal.title.error"|trans }}",
+                        text: "{{ "eventInvitation.profile.card.guestname_required_to_participate"|trans|raw }}",
+                        type: "error"
+                    });
+                });
+//            }
+        }
+        {% endif %}
     </script>
 </div>

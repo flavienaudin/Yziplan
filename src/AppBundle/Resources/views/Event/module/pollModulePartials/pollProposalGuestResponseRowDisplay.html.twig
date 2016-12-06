@@ -40,25 +40,21 @@
                                     showCancelButton: true,
                                     confirmButtonColor: "#DD6B55",
                                     confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                    closeOnConfirm: true,
                                     showLoaderOnConfirm: true
-                                }, function (isConfirm) {
-                                    if (isConfirm) {
-                                        ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable()
-                                                        .row($('#pp_display_row_{{ pollProposal.id }}'))
-                                                        .remove().draw();
-                                                //$('#pp_display_row_{{ pollProposal.id }}').remove();
-                                                var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
-                                                $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
-                                                    $(this).remove();
-                                                });
-                                            }
-                                        }, null, function () {
-                                            $('.grid').masonry('layout');
-                                        });
-                                    }
+                                }).then(function () {
+                                    ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
+                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
+                                            $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable()
+                                                .row($('#pp_display_row_{{ pollProposal.id }}'))
+                                                .remove().draw();
+                                            var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
+                                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
+                                                $(this).remove();
+                                            });
+                                        }
+                                    }, null, function () {
+                                        $('.grid').masonry('layout');
+                                    });
                                 });
                             });
                         </script>
@@ -84,16 +80,15 @@
         {% if pollProposal.pollModule.votingType in [constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO'), constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE')] %}
             {% set sendRequestEvent = "change" %}
             <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
-                <label class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}"> <input type="radio"
-                                                                                                                                                                             autocomplete="off"
-                                                                                                                                                                             name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                                                                             value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"
+                <label class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}"> <input type="radio" autocomplete="off"
+                                                                                                                                                                      name="pollProposalReponse_{{ pollProposal.id }}"
+                                                                                                                                                                      value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"
                             {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up"></i> </label>
                 {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE') %}
                     <label class="btn response-maybe bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}"> <input type="radio"
-                                                                                                                                                                             autocomplete="off"
-                                                                                                                                                                             name="pollProposalReponse_{{ pollProposal.id }}"
-                                                                                                                                                                             value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"
+                                                                                                                                                                              autocomplete="off"
+                                                                                                                                                                              name="pollProposalReponse_{{ pollProposal.id }}"
+                                                                                                                                                                              value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"
                                 {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up-down"></i> </label>
                 {% endif %}
                 <label class="btn response-no bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}"> <input type="radio" autocomplete="off"

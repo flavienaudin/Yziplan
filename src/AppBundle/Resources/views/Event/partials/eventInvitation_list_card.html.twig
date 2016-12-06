@@ -68,7 +68,7 @@
                 var text = "";
                 if (link.data('guestname') == "") {
                     text = "{{ "invitations.display.cancel.swal.text_noname"|trans }}";
-                }else{
+                } else {
                     text = "{{ "invitations.display.cancel.swal.text"|trans }}";
                     text = text.replace('%name%', link.data('guestname'));
                 }
@@ -79,14 +79,11 @@
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
                     confirmButtonText: '{{ "global.button.delete"|trans }}',
-                    closeOnConfirm: true,
                     showLoaderOnConfirm: true
-                }, function (isConfirm) {
-                    if (isConfirm) {
-                        ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                            $(link).parent().remove();
-                        }, null, null);
-                    }
+                }).then(function () {
+                    ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
+                        $(link).parent().remove();
+                    }, null, null);
                 });
             });
         });

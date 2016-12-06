@@ -59,16 +59,13 @@
                         showCancelButton: true,
                         confirmButtonColor: "#DD6B55",
                         confirmButtonText: '{{ "global.button.delete"|trans }}',
-                        closeOnConfirm: true,
                         showLoaderOnConfirm: true
-                    }, function (isConfirm) {
-                        if (isConfirm) {
-                            var data = {'contact-id': link.data('contact-id')};
-                            ajaxRequest(link, data, e, function (responseJSON, textStatus, jqXHR) {
-                                $('#contactsTable').bootgrid('reload');
-                                $('#{{ modalIdPrefix }}_modal').modal('toggle');
-                            }, null, null);
-                        }
+                    }).then(function () {
+                        var data = {'contact-id': link.data('contact-id')};
+                        ajaxRequest(link, data, e, function (responseJSON, textStatus, jqXHR) {
+                            $('#contactsTable').bootgrid('reload');
+                            $('#{{ modalIdPrefix }}_modal').modal('toggle');
+                        }, null, null);
                     });
                 });
             </script>
