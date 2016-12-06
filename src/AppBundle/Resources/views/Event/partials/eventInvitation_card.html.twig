@@ -16,11 +16,13 @@
     </div>
     <div class="card-body card-padding-sm" id="eventinvitation-body-card">
         {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly %}
-            <div class="m-t-10 fit-width">
+
+            <div class="m-t-10 fit-width" id="shareEventFB_container">
                 <button class="btn btn-lg btn-block btn-facebook" id="shareEventFB" name="provider">
                     <i class="zmdi zmdi-facebook zmdi-hc-lg"></i> {{ "invitations.button.via_facebook"|trans }}
                 </button>
             </div>
+
             <div class="m-t-10 fit-width">
                 {{ include('@App/Contact/Gmail/Partials/load_gmail_contacts.html.twig', {'event' : userEventInvitation.event}) }}
             </div>
@@ -110,24 +112,28 @@
             });
             {% endif %}
 
-            // Initialize invitation via facebook
-            $.ajaxSetup({cache: true});
-            $.getScript('//connect.facebook.net/fr_FR/all.js', function () {
-                FB.init({
-                    appId: '{{ facebook_client_id }}',
-                    xfbml: true,
-                    version: 'v2.8'
+            if (isMobile()) {
+                $('#shareEventFB_container').remove();
+            }else{
+                // Initialize invitation via facebook
+                $.ajaxSetup({cache: true});
+                $.getScript('//connect.facebook.net/fr_FR/all.js', function () {
+                    FB.init({
+                        appId: {{ facebook_client_id }},
+                        xfbml: true,
+                        version: 'v2.8'
+                    });
                 });
-            });
 
-            // React to the invite via facebook button
-            $('#shareEventFB').click(function () {
-                var pageLink = document.getElementById("url_event_public_invitation").value;
-                FB.ui({
-                    method: 'send',
-                    link: pageLink
+                // React to the invite via facebook button
+                $('#shareEventFB').click(function () {
+                    var pageLink = $("#url_event_public_invitation").val();
+                    FB.ui({
+                        method: 'send',
+                        link: pageLink
+                    });
                 });
-            });
+            }
         });
     </script>
 </div>
