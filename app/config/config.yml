@@ -43,6 +43,7 @@ twig:
     globals:
         locale: "%locale%"
         base_template: "base.html.twig"
+        google_client_id: "%oauth.google.id%"
     form_themes:
         - 'Form/app_forms_layout.html.twig'
 
