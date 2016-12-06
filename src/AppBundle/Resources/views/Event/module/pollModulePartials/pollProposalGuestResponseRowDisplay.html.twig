@@ -116,14 +116,13 @@
             </script>
         {% endif %}
         <script>
-            var alreadyAnswerValid = false;
-            function pollProposalResponseformSubmission(element) {
+            $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('{{ sendRequestEvent }}', function (e) {
                 var data = {
                     'pollProposalId': {{ pollProposal.id }},
                     'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
-                    'value': $(element).val()
+                    'value': $(this).val()
                 };
-                var icon = $(element).parent("label");
+                var icon = $(this).parent("label");
                 var urlTarget = "{{ path('answerPollModuleProposal') }}";
                 ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
                     {# autre façon d'animer ? #}
@@ -133,28 +132,6 @@
                         icon.removeClass(animation);
                     }, 1000);
                 }, null, null);
-            }
-
-            $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('{{ sendRequestEvent }}', function (e) {
-                e.preventDefault();
-                {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
-                if (!alreadyAnswerValid) {
-                    alreadyAnswerValid = askGuestName(function(){
-                        pollProposalResponseformSubmission(this);
-                        //ajaxFormSubmission(this, e, null, null, null);
-                        alreadyAnswerValid = true;
-                    });
-                }else{
-                    {# Le nom a déjà été demandé, on soumet le formulaire directement#}
-                    pollProposalResponseformSubmission(this);
-                }
-                {% else %}
-                {# Le nom est déjà renseigné on soumet le formulaire directement#}
-                pollProposalResponseformSubmission(this);
-                {% endif %}
-
-
-
             });
         </script>
     </td>

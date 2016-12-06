@@ -4,8 +4,8 @@ Données d'entrée :
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
-<div id="eventInvitation-answer-panel" class="pop-help">
-    {{ include("@App/Event/partials/event_help_popover.html.twig",{'divId' : 'eventInvitation-answer-panel'}) }}
+<div id="eventInvitation-answer-panel" {#class="pop-help"#}>
+    {#{{ include("@App/Event/partials/event_help_popover.html.twig",{'divId' : 'eventInvitation-answer-panel'}) }}#}
     <h4>{{ "eventInvitation.form.answer.label"|trans }}</h4>
     {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
     {{ form_row(userEventInvitationAnswerForm.answer,{
