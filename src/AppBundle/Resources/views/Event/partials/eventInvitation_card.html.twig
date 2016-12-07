@@ -15,14 +15,14 @@
         </div>
     </div>
     <div class="card-body card-padding-sm" id="eventinvitation-body-card">
-        {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly %}
-
+        {% if userEventInvitation.creator or userEventInvitation.administrator or (not userEventInvitation.event.invitationOnly and userEventInvitation.event.guestsCanInvite) %}
             <div class="m-t-10 fit-width" id="shareEventFB_container">
                 <button class="btn btn-lg btn-block btn-facebook" id="shareEventFB" name="provider">
                     <i class="zmdi zmdi-facebook zmdi-hc-lg"></i> {{ "invitations.button.via_facebook"|trans }}
                 </button>
             </div>
-
+        {% endif %}
+        {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.guestsCanInvite %}
             <div class="m-t-10 fit-width">
                 {{ include('@App/Contact/Gmail/Partials/load_gmail_contacts.html.twig', {'event' : userEventInvitation.event}) }}
             </div>
