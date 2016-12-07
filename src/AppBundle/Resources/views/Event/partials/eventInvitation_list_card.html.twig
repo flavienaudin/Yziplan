@@ -62,15 +62,15 @@
         {% endif %}
 
         $('.eventInvitations_list').find('li a.cancelInvitation').each(function () {
-            var link = $(this);
-            $(this).on('click', function (e) {
+            var $link = $(this);
+            $link.on('click', function (e) {
                 e.preventDefault();
                 var text = "";
-                if (link.data('guestname') == "") {
+                if ($link.data('guestname') == "") {
                     text = "{{ "invitations.display.cancel.swal.text_noname"|trans }}";
                 } else {
                     text = "{{ "invitations.display.cancel.swal.text"|trans }}";
-                    text = text.replace('%name%', link.data('guestname'));
+                    text = text.replace('%name%', $link.data('guestname'));
                 }
                 swal({
                     title: "{{ "invitations.display.cancel.swal.title"|trans }}",
@@ -81,8 +81,8 @@
                     confirmButtonText: '{{ "global.button.delete"|trans }}',
                     showLoaderOnConfirm: true
                 }).then(function () {
-                    ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                        $(link).parent().remove();
+                    ajaxRequest($link, null, e, function (responseJSON, textStatus, jqXHR) {
+                        $($link).closest('li').remove();
                     }, null, null);
                 });
             });
