@@ -512,6 +512,10 @@ table.dataTable td.dataTables_empty {
     color: white;
 }
 
+.pop-help-event > .popover-content {
+    margin-top: 10px;
+}
+
 .popover.right.pop-help-event > .arrow {
     border-right-color: #9c27b0;
 }
@@ -528,9 +532,8 @@ table.dataTable td.dataTables_empty {
     border-bottom-color: #9c27b0;
 }
 
-
 .popover.right.pop-help-event > .arrow:after {
-    border-right-color: #9c27b0 !important;
+    border-right-color: #9c27b0
 }
 
 .popover.left.pop-help-event > .arrow:after {

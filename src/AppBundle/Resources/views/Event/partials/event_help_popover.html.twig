@@ -1,6 +1,7 @@
 {# Gère l'affichage des popover d'aide sur la page d'invitation :
 - divId : id de la div sur laquelle appliquer le popover
 - userInvitation (EventInvitation ou ModuleInvitation) Invitation de l'utilisateur
+- text : text à diffuser dans la modale
 - placement : optionnel - placement souhaité de la popover (left, right, top, bottom)
 
 Fonctionnement :
@@ -18,17 +19,10 @@ La popover se ferme sous l'une des 3 condition suivante:
 {# Configuration des paramètres #}
 
 {% set placement = (placement is defined ? placement : '') %}
-{#{% set eventInvitation = (userInvitation.eventInvitation is defined ? userInvitation.eventInvitation : userInvitation) %}
-{% set isUserConnected = (app.user is defined) %}
+{% set eventInvitation = (userInvitation.eventInvitation is defined ? userInvitation.eventInvitation : userInvitation) %}
 
-{% set hasAppUser = (eventInvitation.applicationUser is not null) %}
-
-#}{# Définition de l'avatar #}{#
-{% set avatar = null %}
-{% if hasAppUser and eventInvitation.applicationUser.appUserInformation.avatar is not null %}
-    {% set avatar = eventInvitation.applicationUser.appUserInformation.avatar %}
-{% endif %}#}
-
+{% if eventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION')%}
+{# or eventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_ANSWER')#}
 
 {# Gestion de l'appel ajax en cas d'appui sur "ne plus afficher" #}
 
@@ -39,9 +33,22 @@ La popover se ferme sous l'une des 3 condition suivante:
             trigger: 'manual',
             html : 'true',
             placement : 'auto {{ placement }}',
-            content : 'Mon test de contenu',
-            template : '<div class="popover pop-help-event" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>',
+            content : '{{ text|trans }}',
+            template : '<div class="popover pop-help-event z-depth-3" role="tooltip">' +
+            '<div class="arrow"></div>' +
+            '<h3 class="popover-title"></h3>' +
+            '<div class="popover-content"></div>' +
+            '<div class="popover-button">' +
+            '<div class="pull-right m-b-10 m-r-10">' +
+            '<button data-toggle="clickover" class="btn btn-small btn-primary" onclick="$(&quot;#{{ divId }}&quot;).popover(&quot;hide&quot;);">{{ 'global.button.close'|trans }}</button>'+
+            '</div>' +
+            '</div>' +
+            '</div>',
         });
+
         $('#{{ divId }}').popover('show');
     });
+
 </script>
+
+{% endif %}

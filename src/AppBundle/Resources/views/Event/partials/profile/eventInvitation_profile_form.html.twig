@@ -4,6 +4,7 @@
 #}
 
 <div id="eventInvitationProfile_formContainer">
+    {{ include("@App/Event/partials/event_help_popover.html.twig",{'userInvitation' : userEventInvitation, 'divId' : 'event_invitation_guestName','text': 'event.help.popover.name'}) }}
     {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationProfile'}}) }}
     <div class="row">
         <div class="col-sm-7">
