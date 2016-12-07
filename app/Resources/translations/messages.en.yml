@@ -138,6 +138,12 @@ event:
     unauthorized_access: You have no right to access this event.
   success.message:
     creation: Event created successfully.
+  help:
+    popover:
+      header: Fill in information about your event.
+      name: Don't stay anonymous, give your name!
+      response: Think about confirming your presence (you can do it later).
+      pollmodule: Your friends are waiting for your mind.
 
 eventInvitations:
   user_menu:
@@ -338,6 +344,7 @@ global:
     go_to: Go to
     set: Set
     poll: Survey
+    close: Close
   success:
     data_saved: Information saved
   error:

@@ -138,6 +138,12 @@ event:
     unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
   success.message:
     creation: Evénement créé avec succès.
+  help:
+    popover:
+      header: Renseignez les informations relatives à votre événement.
+      name: Ne restez pas dans l'anonymat, renseignez votre nom !
+      response: Pensez à confirmer votre présence (vous pouvez le faire plus tard).
+      pollmodule: Vos amis attendent votre avis.
 
 eventInvitations:
   user_menu:
@@ -337,6 +343,7 @@ global:
     go_to: Aller à
     set: Définir
     poll: Sondage
+    close: Fermer
   success:
     data_saved: Données sauvegardées
   error:
