@@ -98,15 +98,18 @@ event:
     description:
       label: Description:
       placeholder: Say more about your event
+      empty: Orgnizers didn't give more detail
     responseDeadline:
       label: Response deadline:
       placeholder: Response deadline
     whereName:
       label: Where:
       placeholder: Where
+      tootlip.title: Set where your event will take place or add a poll to consult your guest
     when:
       label: When:
       placeholder: When
+      tootlip.title: Set the date of your event or add a poll to consult your guest
     status:
       label: Status:
       placeholder: Event status
@@ -333,6 +336,8 @@ global:
     loading: In progress...
     copy: Copy
     go_to: Go to
+    set: Set
+    poll: Survey
   success:
     data_saved: Information saved
   error:

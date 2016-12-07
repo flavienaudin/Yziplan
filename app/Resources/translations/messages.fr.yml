@@ -98,15 +98,18 @@ event:
     description:
       label: Description :
       placeholder: Dites-en plus au sujet de votre événement
+      empty: Les organisateurs n'ont pas donné plus de détail
     responseDeadline:
       label: Date limite de réponse :
       placeholder: Date limite de réponse
     whereName:
       label: Où :
       placeholder: Où
+      tootlip.title: Fixez le lieu de votre événement ou ajoutez un sondage pour consulter vos invités
     when:
       label: Quand :
       placeholder: Quand
+      tootlip.title: Fixez la date de votre événement ou ajoutez un sondage pour consulter vos invités
     status:
       label: Etat :
       placeholder: Etat de l'événement
@@ -332,6 +335,8 @@ global:
     loading: En cours...
     copy: Copier
     go_to: Aller à
+    set: Définir
+    poll: Sondage
   success:
     data_saved: Données sauvegardées
   error:
