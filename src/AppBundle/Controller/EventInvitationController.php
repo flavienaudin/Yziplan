@@ -50,12 +50,12 @@ class EventInvitationController extends Controller
             $user = $this->getUser();
             $eventInvitationManager = $this->get('at.manager.event_invitation');
             $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($eventInvitation->getEvent(), false, false, $user);
-            if($userEventInvitation == null) {
+            if ($userEventInvitation == null) {
                 $eventInvitation->setApplicationUser($user->getApplicationUser());
                 $eventInvitationManager
                     ->setEventInvitation($eventInvitation)
                     ->persistEventInvitation();
-            }else {
+            } else {
                 $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans("eventInvitation.message.warning.another_invitation_already_exists_for_user"));
                 $eventInvitation = $userEventInvitation;
             }
@@ -90,12 +90,24 @@ class EventInvitationController extends Controller
             return $this->redirectToRoute("home");
         } else {
             $emails = array();
-            if($request->request->has('emails')) {
+            if ($request->request->has('emails')) {
                 $emails = $request->request->get('emails');
             }
-            $eventInvitationManager->sendInvitations($event, $emails);
+            $failedRecipients = array();
+            $eventInvitationManager->sendInvitations($event, $emails, $failedRecipients);
 
-            $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+            if (count($failedRecipients) > 0) {
+                $emails = "";
+                foreach (array_values($failedRecipients) as $email) {
+                    if (!empty($email)) {
+                        $emails .= ", ";
+                    }
+                    $emails .= $email;
+                }
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("invitations.message.error", ["%email_list%" => $emails]);
+            } else {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("invitations.message.success");
+            }
             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
                 $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
                     'userEventInvitation' => $userEventInvitation,
