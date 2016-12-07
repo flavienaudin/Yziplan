@@ -13,6 +13,7 @@ use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Security\EventVoter;
 use AppBundle\Security\ModuleVoter;
+use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -38,25 +39,37 @@ class ModuleController extends Controller
     {
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
         $this->denyAccessUnlessGranted(EventVoter::ADD_EVENT_MODULE, $userEventInvitation);
-        $eventManager = $this->get("at.manager.event");
-        $eventManager->setEvent($event);
-        $module = $eventManager->addModule($type, $subtype);
-        if ($request->isXmlHttpRequest()) {
-            if ($module != null) {
-                $moduleManager = $this->get('at.manager.module');
-                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#eventModulesContainer'] =
-                    $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module));
-                return new AppJsonResponse($data, Response::HTTP_OK);
+        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+            // Vérification serveur de la validité de l'invitation
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
-                $responseData[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('module.error.message.add');
-                return new AppJsonResponse($responseData, Response::HTTP_BAD_REQUEST);
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] =
+                    $this->get('translator')->trans("eventInvitation.profile.card.guestname_required_alert.error_message.unauthorized_action");;
+                return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
             }
         } else {
-            if ($module == null) {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('module.error.message.add'));
-            }
-            return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . ($module != null ? '#module-' . $module->getToken() : ''));
+            $eventManager = $this->get("at.manager.event");
+            $eventManager->setEvent($event);
+            $module = $eventManager->addModule($type, $subtype);
+            if ($request->isXmlHttpRequest()) {
+                if ($module != null) {
+                    $moduleManager = $this->get('at.manager.module');
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#eventModulesContainer'] =
+                        $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module));
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $responseData[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('module.error.message.add');
+                    return new AppJsonResponse($responseData, Response::HTTP_BAD_REQUEST);
+                }
+            } else {
+                if ($module == null) {
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('module.error.message.add'));
+                }
+                return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . ($module != null ? '#module-' . $module->getToken() : ''));
 
+            }
         }
     }
 
@@ -68,23 +81,35 @@ class ModuleController extends Controller
     {
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($module->getEvent(), false, false, $this->getUser());
         $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
-        if ($request->isXmlHttpRequest()) {
-            if ($this->isGranted(ModuleVoter::DELETE, $userModuleInvitation)) {
+        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+            // Vérification serveur de la validité de l'invitation
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+            } else {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] =
+                    $this->get('translator')->trans("eventInvitation.profile.card.guestname_required_alert.error_message.unauthorized_action");;
+                return $this->redirectToRoute('displayEvent', array('token' => $module->getEvent()->getToken()));
+            }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+                if ($this->isGranted(ModuleVoter::DELETE, $userModuleInvitation)) {
+                    $moduleManager = $this->get("at.manager.module");
+                    $moduleManager->setModule($module);
+                    $moduleManager->removeModule();
+                    $responseData[AppJsonResponse::DATA]['actionResult'] = true;
+                    return new JsonResponse($responseData, Response::HTTP_OK);
+                } else {
+                    $responseData[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
+                    return new AppJsonResponse($responseData, Response::HTTP_UNAUTHORIZED);
+                }
+            } else {
+                $this->denyAccessUnlessGranted(ModuleVoter::DELETE, $userModuleInvitation);
                 $moduleManager = $this->get("at.manager.module");
                 $moduleManager->setModule($module);
                 $moduleManager->removeModule();
-                $responseData[AppJsonResponse::DATA]['actionResult'] = true;
-                return new JsonResponse($responseData, Response::HTTP_OK);
-            } else {
-                $responseData[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
-                return new AppJsonResponse($responseData, Response::HTTP_UNAUTHORIZED);
+                return $this->redirectToRoute('displayEvent', array('token' => $module->getEvent()->getToken()));
             }
-        } else {
-            $this->denyAccessUnlessGranted(ModuleVoter::DELETE, $userModuleInvitation);
-            $moduleManager = $this->get("at.manager.module");
-            $moduleManager->setModule($module);
-            $moduleManager->removeModule();
-            return $this->redirectToRoute('displayEvent', array('token' => $module->getEvent()->getToken()));
         }
     }
 }

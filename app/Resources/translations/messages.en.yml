@@ -191,6 +191,8 @@ eventInvitation:
       message: Please, enter your name in order to identify yourself with other guests
       inputError: It's better with non-empty name.
       dismiss: Your participation doesn't count until you fill a name.
+      error_message:
+        unauthorized_action: You must first validate your invitation by entering your name in order to collaborate to this event organization.
   message:
     warning:
       email_owned_by_accountuser: Warning! This email address is associated to a user account. Please, login before participating to enjoy all the features.
@@ -229,6 +231,8 @@ invitations:
       placeholder: Emails of your guests
       invalid_message: Valid email address required
       help: Hit "Return" after each email to validate it
+  message:
+    success: Invitations has been sent.
   button:
     send_invitation: Send invitations
     via_facebook: Via Facebook

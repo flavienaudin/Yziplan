@@ -22,8 +22,8 @@ Données d'entrée :
         });
         $('form#userEventInvitationAnswer').on('submit', function (e) {
             ajaxFormSubmission(this, e, function(responseJSON, textStatus, jqXHR){
-                if(!eventInvitationValid && askGuestName() !== undefined){
-                    askGuestName()
+                if(!eventInvitationValid && askGuestName !== undefined){
+                    askGuestName();
                 }
             }, null, null);
         });

@@ -51,12 +51,26 @@
         </div>
         <script>
             $('.add-pollmodule-link').on('click', function (e) {
-                ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
-                    var eventModulesContainer = $('#eventModulesContainer');
-                    $('.grid').masonry('layout');
-                    $(document).scrollTop($(eventModulesContainer).children().last().offset().top);
-                    LetterAvatar.transform();
-                }, null, null);
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    e.preventDefault();
+                    askGuestName();
+                } else {
+                    ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
+                        var eventModulesContainer = $('#eventModulesContainer');
+                        $('.grid').masonry('layout');
+                        $(document).scrollTop($(eventModulesContainer).children().last().offset().top);
+                        LetterAvatar.transform();
+                    }, function(jqXHR, textStatus, errorThrown){
+                        if (jqXHR.hasOwnProperty('responseJSON')) {
+                            var responseJSON = jqXHR['responseJSON'];
+                            if(responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                if (!eventInvitationValid && askGuestName !== undefined) {
+                                    askGuestName();
+                                }
+                            }
+                        }
+                    }, null);
+                }
             });
         </script>
     {% endif %}
