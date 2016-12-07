@@ -45,7 +45,7 @@ class EventInvitationController extends Controller
 
         if ($eventInvitation->getApplicationUser() == null && $this->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED)) {
             // Si l'invitation n'est pas affecté à un ApplicationUser et l'utilisateur est connecté
-            // Alors on essaye d'affectater l'invitation à l'utilisateur si celui-ci n'a pas déjà une invitation pour cet événement
+            // Alors on essaye d'affecter l'invitation à l'utilisateur si celui-ci n'a pas déjà une invitation pour cet événement
             /** @var AccountUser $user */
             $user = $this->getUser();
             $eventInvitationManager = $this->get('at.manager.event_invitation');

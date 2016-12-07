@@ -52,13 +52,13 @@
                         {% for creatorInvitation in module.creators %}
                             {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
                         {% endfor %}
-                        {% if creatorsNames is not empty %}
-                            <h2><span id="module_{{ module.token }}_name">{{ module.name is not empty?module.name|trans }}</span>
+                        <h2><span id="module_{{ module.token }}_name">{{ module.name is not empty?module.name|trans }}</span>
+                            {% if creatorsNames is not empty %}
                                 <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}
                                     {# TODO décommenter <span class="label label-default">{{ module.status|trans}}</span>#}
                                 </small>
-                            </h2>
-                        {% endif %}
+                            {% endif %}
+                        </h2>
                     {% endblock mhMediaBody %}
                 </div>
             </div>

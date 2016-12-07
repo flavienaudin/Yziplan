@@ -53,8 +53,8 @@
             $('.add-pollmodule-link').on('click', function (e) {
                 ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
                     var eventModulesContainer = $('#eventModulesContainer');
+                    $(document).scrollTop($(eventModulesContainer).children().last().offset().top - 100);
                     $('.grid').masonry('layout');
-                    $(document).scrollTop($(eventModulesContainer).children().last().offset().top);
                     LetterAvatar.transform();
                 }, null, null);
             });
