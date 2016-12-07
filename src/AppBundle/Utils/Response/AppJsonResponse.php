@@ -30,7 +30,8 @@ class AppJsonResponse extends JsonResponse
      *          self::HTML_CONTENT_ACTION_APPEND_TO => array( htmlElementId => contenu HTML à utiliser )
      *          self::HTML_CONTENT_ACTION_HTML => array( htmlElementId => contenu HTML à utiliser )
      *      ),
-     *      self::DATA => array( données à transmettre à la fonction JS callback (done/fail) pour effectuer des traitements spécifiques (mise à jour d'affichage,...)
+     *      self::DATA => array( données à transmettre à la fonction JS callback (done/fail) pour effectuer des traitements spécifiques (mise à jour d'affichage,...) )
+     *      self::JAVASCRIPT => JS methods name to call or script to add to page and execute => treat in the done/fail/then AJAX methods
      *
      * )
      */
@@ -38,6 +39,7 @@ class AppJsonResponse extends JsonResponse
     const MESSAGES = "messages";
     const HTML_CONTENTS = "htmlContents";
     const DATA = "data";
+    const JAVASCRIPT = "javascript";
 
     /** Replace the element by the content */
     const HTML_CONTENT_ACTION_REPLACE = "replaceWith";

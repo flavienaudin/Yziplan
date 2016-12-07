@@ -14,6 +14,7 @@ use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Security\EventVoter;
+use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
@@ -79,12 +80,10 @@ class EventController extends Controller
                         $userEventInvitation = $eventInvitationManager->treatEventInvitationFormSubmission($eventInvitationForm);
                         // Update the form with the updated userEventInvitation
                         $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
-                        $eventInvitationAnswerForm = $eventInvitationManager->createEventInvitationAnswerForm();
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#user-event-invitation-card'] =
-                            $this->renderView("@App/Event/partials/profile/eventInvitation_profile_card.html.twig", array(
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitationProfile_formContainer'] =
+                            $this->renderView("@App/Event/partials/profile/eventInvitation_profile_form.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,
-                                'userEventInvitationForm' => $eventInvitationForm->createView(),
-                                'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView()
+                                'userEventInvitationForm' => $eventInvitationForm->createView()
                             ));
                         $data[AppJsonResponse::DATA]['userDisplayableName'] = $userEventInvitation->getDisplayableName();
                         return new AppJsonResponse($data, Response::HTTP_OK);
@@ -109,7 +108,6 @@ class EventController extends Controller
                     if ($eventInvitationAnswerForm->isValid()) {
                         $eventInvitationManager->treatEventInvitationAnswerFormSubmission($eventInvitationAnswerForm);
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('global.success.data_saved');
-
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
                             $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,
@@ -264,8 +262,6 @@ class EventController extends Controller
                         if ($pollProposalAddForm->isValid()) {
                             $pollProposalManager = $this->get('at.manager.pollproposal');
                             $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
-
-                            /*$data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");*/
                             $data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
 
                             $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']);

@@ -35,16 +35,25 @@
         }
         $('form#{{ pp_form_modal_prefix }}_form_id').on('submit', function (e) {
             var $form = $(this);
-            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+            if(!eventInvitationValid && askGuestName !== undefined){
+                e.preventDefault();
+                askGuestName();
+            }else {
+                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                         $form[0].reset();
                         if (responseJSON.hasOwnProperty('data')) {
                             $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable().row.add($(responseJSON['data'])).draw();
                         }
-                    }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                    }, function(responseJSON, textStatus, jqXHR){
+                        if(!eventInvitationValid && askGuestName() !== undefined){
+                            askGuestName()
+                        }
+                    }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
                         $('#module-{{ userModuleInvitation.module.token }}').trigger("resize");
                         $('.grid').masonry('layout');
                     }
-            );
+                );
+            }
         });
     </script>
 </div>

@@ -186,11 +186,11 @@ eventInvitation:
       administrator: Administrator
     text:
       disconnect: You are not %user%?
-    new_warning_alert:
+    guestname_required_alert:
       title: What's your name ?
-      message: Please, fill in your name to validate your invitation.
-      inputError: It's better with non-empty name
-    guestname_required_to_participate: You must fill your name to participate
+      message: Please, enter your name in order to identify yourself with other guests
+      inputError: It's better with non-empty name.
+      dismiss: Your participation doesn't count until you fill a name.
   message:
     warning:
       email_owned_by_accountuser: Warning! This email address is associated to a user account. Please, login before participating to enjoy all the features.

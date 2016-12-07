@@ -185,11 +185,11 @@ eventInvitation:
       administrator: Administrateur
     text:
       disconnect: Vous n'êtes pas %user% ?
-    new_warning_alert:
-      title: Quel est votre nom ?
-      message: Merci de renseigner votre nom pour valider l'invitation.
+    guestname_required_alert:
+      title: Quel est ton nom ?
+      message: Merci de renseigner ton nom afin t'identifier auprès des autres invités
       inputError: C'est mieux avec quelques lettres.
-    guestname_required_to_participate: Vous devez renseigner un nom pour participer
+      dismiss: Ton invitation ne sera pas prise en compte tant que tu n'auras pas renseigné ton nom
   message:
     warning:
       email_owned_by_accountuser: Attention! Cet e-mail est associée à un compte utilisateur. Connectez-vous avant de participer pour profiter de toutes les fonctionnalités.
