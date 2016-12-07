@@ -313,6 +313,10 @@ pollmodule:
       title: Etes-vous sûr de vouloir supprimer cette proposition ?
       message: Cette action est irréversible
 
+addModule:
+  display:
+    title: Ajouter un élément
+
 moduleInvitation:
   empty_displayable_name: Vous
   error.message:

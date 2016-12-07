@@ -314,6 +314,10 @@ pollmodule:
       title: Are you sure you want to delete this proposal?
       message: This action is irreversible
 
+addModule:
+  display:
+    title: Add an item
+
 moduleInvitation:
   empty_displayable_name: You
   error.message:

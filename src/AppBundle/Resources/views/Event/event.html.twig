@@ -112,6 +112,12 @@
             {% endfor %}
         </div>
 
+        <div class="grid-item col-xs-12 col-lg-8" id="addModule">
+            {{ include('@App/Event/module/displayAddModule.html.twig',{
+            'event': event
+            }) }}
+        </div>
+
         {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly or invitationsForm is not null %}
             <div id="invitationCard" class="grid-item col-xs-12 col-sm-6 col-lg-12">
                 {{ include('@App/Event/partials/eventInvitation_card.html.twig', {
