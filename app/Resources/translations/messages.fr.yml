@@ -228,6 +228,9 @@ invitations:
       placeholder: E-mails de vos invités
       invalid_message: Veuillez renseigner des e-mails valides
       help: Appuyez sur "entrée" après chaque e-mail pour la valider
+  message:
+    success: Les invitations ont bien été envoyées.
+    error:  "Les invitations suivantes n'ont pu être envoyées : %email_list%"
   button:
     send_invitation: Envoyer les invitations
     via_facebook: Via Facebook

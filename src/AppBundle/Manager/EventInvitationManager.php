@@ -217,11 +217,16 @@ class EventInvitationManager
      * @param Event $event
      * @param $emailsData
      */
-    public function sendInvitations(Event $event, $emailsData)
+    public function sendInvitations(Event $event, $emailsData, &$failedRecipients = null)
     {
+        $failedRecipients = (array) $failedRecipients;
         foreach ($emailsData as $email) {
             $eventInvitation = $this->getGuestEventInvitation($event, $email);
-            $this->appTwigSiwftMailer->sendEventInvitationEmail($eventInvitation);
+            if($this->appTwigSiwftMailer->sendEventInvitationEmail($eventInvitation)){
+                $this->persistEventInvitation();
+            }else{
+                $failedRecipients[] = $email;
+            }
         }
     }
 

@@ -229,6 +229,9 @@ invitations:
       placeholder: Emails of your guests
       invalid_message: Valid email address required
       help: Hit "Return" after each email to validate it
+  message:
+    success: Invitations have been sent
+    error: "The following invitations could not be sent : %email_list%"
   button:
     send_invitation: Send invitations
     via_facebook: Via Facebook
