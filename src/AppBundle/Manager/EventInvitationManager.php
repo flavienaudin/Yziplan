@@ -223,12 +223,12 @@ class EventInvitationManager
      */
     public function sendInvitations(Event $event, $emailsData, &$failedRecipients = null)
     {
-        $failedRecipients = (array) $failedRecipients;
+        $failedRecipients = (array)$failedRecipients;
         foreach ($emailsData as $email) {
             $eventInvitation = $this->getGuestEventInvitation($event, $email);
-            if($this->appTwigSiwftMailer->sendEventInvitationEmail($eventInvitation)){
+            if ($this->appTwigSiwftMailer->sendEventInvitationEmail($eventInvitation)) {
                 $this->persistEventInvitation();
-            }else{
+            } else {
                 $failedRecipients[] = $email;
             }
         }
@@ -304,8 +304,8 @@ class EventInvitationManager
                     $moduleInvitation->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
                 }
             }
-        } elseif (!empty($this->eventInvitation->getDisplayableName()) && ($this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
-                || $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+        } elseif (!empty($this->eventInvitation->getDisplayableName()) &&
+            ($this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
         ) {
             // Si le nom n'est pas vide => l'invitation devient valide
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
@@ -331,6 +331,7 @@ class EventInvitationManager
                 }
                 // If an AppUserEmail exists, it can't be associated to AccountUser due to EmailNotBelongToAccountUser constraint
                 $applicationUser->addEventInvitation($this->eventInvitation);
+                $this->appTwigSiwftMailer->sendRecapEventInvitationEmail( $this->eventInvitation);
             }
         }
         $this->persistEventInvitation();

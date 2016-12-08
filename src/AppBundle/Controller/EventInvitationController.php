@@ -118,13 +118,13 @@ class EventInvitationController extends Controller
                     }
                     if ($request->isXmlHttpRequest()) {
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("invitations.message.error", ["%email_list%" => $emails]);
-                    }else{
+                    } else {
                         $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans("invitations.message.error", ["%email_list%" => $emails]));
                     }
                 } else {
                     if ($request->isXmlHttpRequest()) {
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("invitations.message.success");
-                    }else{
+                    } else {
                         $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("invitations.message.success"));
                     }
                 }

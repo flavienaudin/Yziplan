@@ -84,6 +84,11 @@ class EventController extends Controller
                                 'userEventInvitation' => $userEventInvitation,
                                 'userEventInvitationForm' => $eventInvitationForm->createView()
                             ));
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
+                            $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'eventInvitations' => $currentEvent->getEventInvitations()
+                            ));
                         $data[AppJsonResponse::DATA]['userDisplayableName'] = $userEventInvitation->getDisplayableName();
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
@@ -187,7 +192,7 @@ class EventController extends Controller
                     } else if ($eventInvitationsForm->isValid()) {
                         $currentEvent = $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm);
                         $eventInvitationsForm = $eventManager->createEventInvitationsForm();
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("invitations.message.success");
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitations-main-div'] =
                             $this->renderView("@App/Event/partials/eventInvitation_card.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,

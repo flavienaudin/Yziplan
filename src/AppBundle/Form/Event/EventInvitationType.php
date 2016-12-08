@@ -37,9 +37,7 @@ class EventInvitationType extends AbstractType
                     'required' => true,
                     'data' => $displayableName,
                     'constraints' => new NotBlank()
-                ))
-                ->add('token', HiddenType::class);
-
+                ));
             $email = $eventInvitation->getDisplayableEmail();
             $form->add('email', EmailType::class, array(
                 'required' => false,

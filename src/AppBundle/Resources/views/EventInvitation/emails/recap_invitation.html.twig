@@ -4,7 +4,7 @@
 
 {% block subject %}
     {% autoescape false %}
-        {{ 'eventInvitation.email.invitation.subject'|trans }}
+        {{ 'eventInvitation.email.recap.subject'|trans }}
     {% endautoescape %}
 {% endblock %}
 {% block body_text %}
@@ -13,8 +13,8 @@
         {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
     {% endfor %}
     {% autoescape false %}
-        {{ 'eventInvitation.email.invitation.body.hello'|trans({'%username%': eventInvitation.displayableName}) }}
-        {{ 'eventInvitation.email.invitation.body.paragraph'|trans({"%event_name%":eventInvitation.event.name}) }}
+        {{ 'eventInvitation.email.recap.body.hello'|trans({'%username%': eventInvitation.displayableName}) }}
+        {{ 'eventInvitation.email.recap.body.paragraph'|trans({"%event_name%":eventInvitation.event.name}) }}
         {{ url('displayEventInvitation',{'token':eventInvitation.token}) }}
         {{ "email.salutation"|trans }},
         {% if creatorsNames is not empty %}{{ creatorsNames }}{% endif %}
@@ -45,18 +45,13 @@ line-height: 1.6; background-color: #f6f6f6;">
                                     <tr>
                                         <td style="padding: 0 0 20px;">
                                             <h3 style="font-size: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; margin: 40px 0 0; line-height: 1.2;
-                                        font-weight: 400;">{{ "eventInvitation.email.invitation.body.hello"|trans({"%username%":eventInvitation.displayableName}) }}</h3>
+                                        font-weight: 400;">{{ "eventInvitation.email.recap.body.hello"|trans({"%username%":eventInvitation.displayableName}) }}</h3>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 0 0 20px;">
-                                            {% if creatorsNames|split(",")|length > 1 %}
-                                                {{ "eventInvitation.email.invitation.body.paragraph.first_part.several_orga"|trans }}
-                                            {% else %}
-                                                {{ "eventInvitation.email.invitation.body.paragraph.first_part.single_orga"|trans }}
-                                            {% endif %}
-                                            {{ "eventInvitation.email.invitation.body.paragraph.second_part"|trans({"%event_name%":eventInvitation.event.name}) }}<br>
-                                            <a href="{{ url('displayEventInvitation', {'token':eventInvitation.token}) }}"
+                                            {{ "eventInvitation.email.recap.body.paragraph"|trans({"%event_name%":eventInvitation.event.name}) }}<br> <a
+                                                    href="{{ url('displayEventInvitation', {'token':eventInvitation.token}) }}"
                                                     {#style="text-decoration: none; color: #FFF; background-color: #009688;
                                                           border: solid #009688; border-width: 5px 10px; line-height: 2; font-weight: bold; text-align: center; cursor: pointer; display: inline-block;
                                                           border-radius: 5px;"#}>{{ url('displayEventInvitation', {'token':eventInvitation.token}) }}</a>
