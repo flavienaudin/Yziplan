@@ -197,11 +197,11 @@ eventInvitation:
       disconnect: You are not %user%?
     guestname_required_alert:
       title: What's your name ?
-      message: Please, enter your name in order to identify yourself with other guests
+      message: Enter your name in order to identify yourself with other guests
       inputError: It's better with non-empty name.
       dismiss: Your participation doesn't count until you fill a name.
       error_message:
-        unauthorized_action: You must first validate your invitation by entering your name in order to collaborate to this event organization.
+        unauthorized_action: In order to collaborate to this event organization, you should validate your invitation by entering your name.
   message:
     warning:
       email_owned_by_accountuser: Warning! This email address is associated to a user account. Please, login before participating to enjoy all the features.
