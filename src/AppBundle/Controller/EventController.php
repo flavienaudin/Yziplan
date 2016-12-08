@@ -71,6 +71,12 @@ class EventController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         } else {
+
+            /* TODO : invitation annulée : désactiver les formulaires */
+            if($userEventInvitation->getStatus() == EventInvitationStatus::CANCELLED){
+                $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans('eventInvitation.message.warning.invitation_cancelled'));
+            }
+
             $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
             $eventInvitationForm->handleRequest($request);
             if ($eventInvitationForm->isSubmitted()) {

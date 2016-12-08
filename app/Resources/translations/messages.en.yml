@@ -206,6 +206,7 @@ eventInvitation:
     warning:
       email_owned_by_accountuser: Warning! This email address is associated to a user account. Please, login before participating to enjoy all the features.
       another_invitation_already_exists_for_user: You already have an invitation to this event, you were redirected to it.
+      invitation_cancelled: Your invitation is cancelled, you cannot participate in the organization anymore.
     error:
       unauthorized_cancel: You are not allowed to cancel this invitation.
       unauthorized_access: You are ot invited to this event.
