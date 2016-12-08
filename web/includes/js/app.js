@@ -7,7 +7,7 @@ $(document).ready(function () {
     var $html = $('html');
     var $body = $('body');
 
-    if(isMobile()){
+    if (isMobile()) {
         $html.addClass('ismobile');
     }
 
@@ -148,7 +148,6 @@ $(document).ready(function () {
 function isMobile() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
-
 
 
 /**

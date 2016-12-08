@@ -30,7 +30,6 @@
 
         {% if invitationsForm is not null %}
             <div class="m-t-10 palette-Teal-50 bg p-15">
-                {# TODO Implémenter les invitations #}
                 {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),'attr':{'id':'eventInvitations'}}) }}
                 {{ form_row(invitationsForm.invitations, {
                     'id':'eventInvitations_newEmails',
@@ -108,13 +107,27 @@
             });
 
             $('form#eventInvitations').on('submit', function (e) {
-                ajaxFormSubmission(this, e, null, null, null);
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    e.preventDefault();
+                    askGuestName();
+                } else {
+                    ajaxFormSubmission(this, e, null, function(jqXHR, textStatus, errorThrown){
+                        if (jqXHR.hasOwnProperty('responseJSON')) {
+                            var responseJSON = jqXHR['responseJSON'];
+                            if(responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                if (!eventInvitationValid && askGuestName !== undefined) {
+                                    askGuestName();
+                                }
+                            }
+                        }
+                    }, null);
+                }
             });
             {% endif %}
 
             if (isMobile()) {
                 $('#shareEventFB_container').remove();
-            }else{
+            } else {
                 // Initialize invitation via facebook
                 $.ajaxSetup({cache: true});
                 $.getScript('//connect.facebook.net/fr_FR/all.js', function () {

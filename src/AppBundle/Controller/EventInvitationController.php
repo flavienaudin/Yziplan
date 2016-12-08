@@ -13,6 +13,7 @@ use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Security\EventInvitationVoter;
+use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
@@ -44,7 +45,7 @@ class EventInvitationController extends Controller
         $this->denyAccessUnlessGranted(EventInvitationVoter::EDIT, $eventInvitation);
 
         if ($eventInvitation->getApplicationUser() == null && $this->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED)) {
-            // Si l'invitation n'est pas affecté à un ApplicationUser et l'utilisateur est connecté
+            // Si l'invitation n'est pas affectée à un ApplicationUser et l'utilisateur est connecté
             // Alors on essaye d'affecter l'invitation à l'utilisateur si celui-ci n'a pas déjà une invitation pour cet événement
             /** @var AccountUser $user */
             $user = $this->getUser();
@@ -76,7 +77,6 @@ class EventInvitationController extends Controller
         return $this->redirectToRoute("displayEvent", array('token' => $eventToken));
     }
 
-
     /**
      * @Route("/send/{token}", name="sendEventInvitations" )
      * @ParamConverter("event", class="AppBundle:Event\Event")
@@ -89,31 +89,58 @@ class EventInvitationController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         } else {
-            $emails = array();
-            if ($request->request->has('emails')) {
-                $emails = $request->request->get('emails');
-            }
-            $failedRecipients = array();
-            $eventInvitationManager->sendInvitations($event, $emails, $failedRecipients);
-
-            if (count($failedRecipients) > 0) {
-                $emails = "";
-                foreach (array_values($failedRecipients) as $email) {
-                    if (!empty($email)) {
-                        $emails .= ", ";
-                    }
-                    $emails .= $email;
+            if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+                // Vérification serveur de la validité de l'invitation
+                if ($request->isXmlHttpRequest()) {
+                    $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                } else {
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] =
+                        $this->get('translator')->trans("eventInvitation.profile.card.guestname_required_alert.error_message.unauthorized_action");;
+                    return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
                 }
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("invitations.message.error", ["%email_list%" => $emails]);
             } else {
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("invitations.message.success");
+                $emails = array();
+                if ($request->request->has('emails')) {
+                    $emails = $request->request->get('emails');
+                }
+
+                $failedRecipients = array();
+                $eventInvitationManager->sendInvitations($event, $emails, $failedRecipients);
+
+                if (count($failedRecipients) > 0) {
+                    $emails = "";
+                    foreach (array_values($failedRecipients) as $email) {
+                        if (!empty($email)) {
+                            $emails .= ", ";
+                        }
+                        $emails .= $email;
+                    }
+                    if ($request->isXmlHttpRequest()) {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("invitations.message.error", ["%email_list%" => $emails]);
+                    }else{
+                        $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans("invitations.message.error", ["%email_list%" => $emails]));
+                    }
+                } else {
+                    if ($request->isXmlHttpRequest()) {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("invitations.message.success");
+                    }else{
+                        $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("invitations.message.success"));
+                    }
+                }
+
+                if ($request->isXmlHttpRequest()) {
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
+                        $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
+                            'userEventInvitation' => $userEventInvitation,
+                            'eventInvitations' => $event->getEventInvitations()
+                        ));
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("invitations.message.success"));
+                    return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+                }
             }
-            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
-                $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
-                    'userEventInvitation' => $userEventInvitation,
-                    'eventInvitations' => $event->getEventInvitations()
-                ));
-            return new AppJsonResponse($data, Response::HTTP_OK);
         }
     }
 
@@ -163,7 +190,6 @@ class EventInvitationController extends Controller
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
         $userEventInvitations = $this->get('at.manager.application_user')->getUserEventInvitations($this->getUser());
         return $this->render("@App/EventInvitation/user_event_invitations.html.twig", array("eventInvitations" => $userEventInvitations));
-
     }
 
 }

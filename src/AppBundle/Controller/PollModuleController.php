@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -42,21 +43,27 @@ class PollModuleController extends Controller
             $pollProposalEditionForm = $pollProposalManager->createPollProposalForm($pollProposal);
             $pollProposalEditionForm->handleRequest($request);
             if ($pollProposalEditionForm->isSubmitted()) {
-                if ($pollProposalEditionForm->isValid()) {
-                    $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalEditionForm);
-                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pp_display_row_' . $pollProposal->getId()] =
-                        $pollProposalManager->displayPollProposalRowPartial($pollProposal, $moduleInvitation->getEventInvitation());
-                    return new AppJsonResponse($data, Response::HTTP_OK);
-                } else {
-                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollProposalEdition_' . $pollProposal->getId() . '_formContainer'] =
-                        $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
-                            'userModuleInvitation' => $moduleInvitation,
-                            'pollProposalForm' => $pollProposalEditionForm->createView(),
-                            'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
-                            'edition' => true
-                        ));
+                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+                    // Vérification serveur de la validité de l'invitation
+                    $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                } else {
+                    if ($pollProposalEditionForm->isValid()) {
+                        $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalEditionForm);
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pp_display_row_' . $pollProposal->getId()] =
+                            $pollProposalManager->displayPollProposalRowPartial($pollProposal, $moduleInvitation->getEventInvitation());
+                        return new AppJsonResponse($data, Response::HTTP_OK);
+                    } else {
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollProposalEdition_' . $pollProposal->getId() . '_formContainer'] =
+                            $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
+                                'userModuleInvitation' => $moduleInvitation,
+                                'pollProposalForm' => $pollProposalEditionForm->createView(),
+                                'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
+                                'edition' => true
+                            ));
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    }
                 }
             }
             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#modal-container-block-' . $pollProposal->getPollModule()->getModule()->getToken()] =
@@ -83,11 +90,16 @@ class PollModuleController extends Controller
     {
         if ($moduleInvitation == $pollProposal->getCreator()) {
             if ($request->isXmlHttpRequest()) {
-                $pollProposalManager = $this->get("at.manager.pollproposal");
-                $pollProposalManager->removePollProposal($pollProposal);
-                $data[AppJsonResponse::DATA]['actionResult'] = true;
-                /*$data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");*/
-                return new AppJsonResponse($data, Response::HTTP_OK);
+                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+                    // Vérification serveur de la validité de l'invitation
+                    $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                } else {
+                    $pollProposalManager = $this->get("at.manager.pollproposal");
+                    $pollProposalManager->removePollProposal($pollProposal);
+                    $data[AppJsonResponse::DATA]['actionResult'] = true;
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                }
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
                 return $this->redirectToRoute("home");

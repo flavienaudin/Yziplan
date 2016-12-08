@@ -129,6 +129,10 @@ class EventInvitationManager
             } else {
                 if ($initializeIfNotExists && $this->authorizationChecker->isGranted(EventInvitationVoter::CREATE, $event)) {
                     $this->eventInvitation = $this->initializeEventInvitation($event, ($user instanceof AccountUser ? $user->getApplicationUser() : null));
+                    if (!($user instanceof AccountUser)) {
+                        // Invitation créée à partir du lien public de l'événement et avec un invité non connecté
+                        $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
+                    }
                     $this->persistEventInvitation();
                 } else {
                     $this->eventInvitation = null;
@@ -156,7 +160,7 @@ class EventInvitationManager
     {
         $this->eventInvitation = new EventInvitation();
         $this->eventInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
+        $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
         if ($applicationUser != null) {
             $this->eventInvitation->setApplicationUser($applicationUser);
             if (!empty($this->eventInvitation->getDisplayableName())) {
@@ -292,7 +296,7 @@ class EventInvitationManager
         $this->eventInvitation = $evtInvitForm->getData();
         if (empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::VALID) {
             // Si le nom est vide => l'invitation revient en attente de réponse
-            $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
+            $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
 
             /** @var ModuleInvitation $moduleInvitation */
             foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
@@ -300,7 +304,9 @@ class EventInvitationManager
                     $moduleInvitation->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
                 }
             }
-        } elseif (!empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+        } elseif (!empty($this->eventInvitation->getDisplayableName()) && ($this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
+                || $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+        ) {
             // Si le nom n'est pas vide => l'invitation devient valide
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
 

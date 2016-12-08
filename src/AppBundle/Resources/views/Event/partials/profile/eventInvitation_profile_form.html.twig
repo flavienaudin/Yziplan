@@ -50,19 +50,16 @@
             }, null, null);
         });
 
-        {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
+        {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
+        eventInvitationValid = false;
         /**
          * Affichage d'une fenêtre "dialog" pour demander le nom de l'invité et d'executer la fonction donnée (ex : soumission d'un formulaire)
          */
-        function askGuestName(resolveFunction) {
-            /*if ($('#event_invitation_guestName').val().trim() != "") {
-                if (resolveFunction) {
-                    resolveFunction();
-                }
-            } else {*/
+        function askGuestName() {
+            if (!eventInvitationValid) {
                 swal({
-                    title: "{{ "eventInvitation.profile.card.new_warning_alert.title"|trans|raw }}",
-                    text: "{{ "eventInvitation.profile.card.new_warning_alert.message"|trans|raw }}",
+                    title: "{{ "eventInvitation.profile.card.guestname_required_alert.title"|trans|raw }}",
+                    text: "{{ "eventInvitation.profile.card.guestname_required_alert.message"|trans|raw }}",
                     type: "question",
                     input: "text",
                     showCancelButton: false,
@@ -71,7 +68,7 @@
                     preConfirm: function (input) {
                         return new Promise(function (resolve, reject) {
                             if (input === false || input.trim() === '') {
-                                reject("{{ "eventInvitation.profile.card.new_warning_alert.inputError"|trans|raw }}");
+                                reject("{{ "eventInvitation.profile.card.guestname_required_alert.inputError"|trans|raw }}");
                             } else {
                                 resolve();
                             }
@@ -80,18 +77,17 @@
                 }).then(function (inputValue) {
                     $('#event_invitation_guestName').val(inputValue);
                     $('form#userEventInvitationProfile').submit();
-                    if (resolveFunction) {
-                        resolveFunction();
-                    }
                 }, function (dismiss) {
                     swal({
                         title: "{{ "global.swal.title.error"|trans }}",
-                        text: "{{ "eventInvitation.profile.card.guestname_required_to_participate"|trans|raw }}",
+                        text: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans|raw }}",
                         type: "error"
                     });
                 });
-//            }
+            }
         }
+        {% else %}
+        eventInvitationValid = true;
         {% endif %}
     </script>
 </div>
