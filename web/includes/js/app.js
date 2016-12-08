@@ -379,3 +379,22 @@ function treatHtmlContents(htmlContents) {
 function escapeSelectorCharacters(selector) {
     return selector.replace(/(:|\.|\[|\]|,)/g, "\\$1");
 }
+
+
+function refuserToucheEntree(event) {
+// Compatibilité IE / Firefox
+    if (!event && window.event) {
+        event = window.event;
+    }
+// IE
+    if (event.keyCode == 13) {
+        event.returnValue = false;
+        event.cancelBubble = true;
+    }
+// DOM
+    if (event.which == 13) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+}
+
