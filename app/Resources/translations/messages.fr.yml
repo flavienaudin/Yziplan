@@ -196,11 +196,11 @@ eventInvitation:
       disconnect: Vous n'êtes pas %user% ?
     guestname_required_alert:
       title: Quel est ton nom ?
-      message: Merci de renseigner ton nom afin t'identifier auprès des autres invités
-      inputError: C'est mieux avec quelques lettres.
-      dismiss: Ton invitation ne sera pas prise en compte tant que tu n'auras pas renseigné ton nom
+      message: Renseigne ton nom afin t'identifier auprès des autres invités
+      inputError: C'est bien mieux avec quelques lettres.
+      dismiss: Ton invitation ne sera pas prise en compte si tu restes inconnu.
       error_message:
-        unauthorized_action: Tu dois d'abord valider ton invitation en renseignant ton nom pour pouvoir particper à l'organisation de cet événement.
+        unauthorized_action: Afin de participer à l'organisation de cet événement, tu dois valider ton invitation en renseignant ton nom.
   message:
     warning:
       email_owned_by_accountuser: Attention! Cet e-mail est associée à un compte utilisateur. Connectez-vous avant de participer pour profiter de toutes les fonctionnalités.
