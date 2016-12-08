@@ -166,9 +166,13 @@ function jsPlugginActivation() {
     }
 
     $('.clockpicker').clockpicker();
-    $('.datepicker').datetimepicker({
-        format: "DD/MM/YYYY",
-        locale: "fr",
+    var locale_format = "DD/MM/YYYY";
+    if(locale_js == 'en'){
+        locale_format = "MM/DD/YYYY";
+    }
+    $('.ag-date-picker').datetimepicker({
+        format: locale_format,
+        locale: locale_js,
         showClear: true,
         icons: {
             time: 'zmdi zmdi-time',

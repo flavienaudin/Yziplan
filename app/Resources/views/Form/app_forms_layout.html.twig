@@ -112,11 +112,11 @@
 {% block date_widget -%}
     {% if widget == 'single_text' %}
         <div class="dtp-container dropdown">
-            <div class="input-group date ag-date-picker datepicker">
-            <span class="input-group-addon">
-                <span class="zmdi zmdi-calendar"></span>
-            </span>
-                {% set attr = attr|merge({class: (attr.class|default('') ~ ' datepicker')|trim}) -%}
+            <div class="input-group date">{# add class : ag-date-picker to activate picker on ICOe instead of the field #}
+                <span class="input-group-addon">
+                    <i class="zmdi zmdi-calendar"></i>
+                </span>
+                {% set attr = attr|merge({class: (attr.class|default('') ~ ' ag-date-picker')|trim}) -%}
                 {{- block('form_widget_simple') -}}
             </div>
         </div>
