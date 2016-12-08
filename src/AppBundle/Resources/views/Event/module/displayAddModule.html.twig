@@ -8,33 +8,44 @@
             </div>
         </div>
     </div>
-    <div class="card-body card-padding-sm" id="addModule-body-card">
+    <div class="card-body card-padding" id="addModule-body-card">
         <div class="row">
             <div class="col-xs-6 col-sm-3 text-center">
                 <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                     'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHAT')}) }}" id="addWhatPollModule">
-                    <i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help zmdi-hc-5x"></i>
+                    <i class="waves-effect zmdi zmdi-pin-help zmdi-hc-5x"></i>
                     <p>{{ "pollmodule.add_link.what"|trans }}</p></a>
             </div>
             <div class="col-xs-6 col-sm-3 text-center">
                 <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                     'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHEN')}) }}" id="addWhenPollModule">
-                    <i class="waves-effect palette-Blue bg zmdi zmdi-calendar zmdi-hc-5x"></i>
+                    <i class="waves-effect zmdi zmdi-calendar zmdi-hc-5x"></i>
                     <p>{{ "pollmodule.add_link.when"|trans }}</p></a>
             </div>
             <div class="col-xs-6 col-sm-3 text-center">
                 <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                     'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHERE')}) }}" id="addWherePollModule">
-                    <i class="waves-effect palette-Green bg zmdi zmdi-pin zmdi-hc-5x"></i>
+                    <i class="waves-effect zmdi zmdi-pin zmdi-hc-5x"></i>
                     <p>{{ "pollmodule.add_link.where"|trans }}</p> </a>
             </div>
             <div class="col-xs-6 col-sm-3 text-center">
                 <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                     'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHO_BRINGS_WHAT')}) }}" id="addWhoBringsWhatPollModule">
-                    <i class="waves-effect palette-Purple bg zmdi zmdi-format-list-bulleted zmdi-hc-5x"></i>
+                    <i class="waves-effect zmdi zmdi-format-list-bulleted zmdi-hc-5x"></i>
                     <p>{{ "pollmodule.add_link.whobringswhat"|trans }}</p></a>
 
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $('.add-pollmodule-link').on('click', function (e) {
+        ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
+            var eventModulesContainer = $('#eventModulesContainer');
+            $(document).scrollTop($(eventModulesContainer).children().last().offset().top - 100);
+            $('.grid').masonry('layout');
+            LetterAvatar.transform();
+        }, null, null);
+    });
+</script>
