@@ -8,21 +8,62 @@
 
 <div class="row">
     <div class="col-xs-12 {{ eventHeaderLayout }}">
+        <div class="well well-sm m-b-10">
+            <dl>
+                <dt class="p-b-5">{{ "event.form.description.label"|trans }}</dt>
+                <dd>{% if userEventInvitation.event.description is not empty %}
+                        {{ userEventInvitation.event.description }}
+                    {% else %}
+                        <i class="text-muted">{{ "event.form.description.empty"|trans }}</i>
+                    {% endif %}
+                </dd>
+            </dl>
+        </div>
         <dl class="dl-horizontal">
-            <dt>{{ "event.form.when.label"|trans }}</dt>
-            <dd>{{ userEventInvitation.event.when is not null?userEventInvitation.event.when|localizeddate:'-' }}</dd>
-            <dt>{{ "event.form.whereName.label"|trans }}</dt>
-            <dd>{{ userEventInvitation.event.whereName is not empty?userEventInvitation.event.whereName:"-" }}</dd>
-            <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
-            <dd>{{ userEventInvitation.event.responseDeadline is not null ? userEventInvitation.event.responseDeadline|localizeddate:'-'}}</dd>
+            {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.when is not empty %}
+                <dt><i class="zmdi zmdi-calendar zmdi-hc-fw"></i> {{ "event.form.when.label"|trans }}</dt>
+                <dd>
+                    {% if userEventInvitation.event.when is empty %}
+                        <div class="btn-group btn-group-xs">
+                            <a href="{{ url('addEventModule', {'token': userEventInvitation.event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                                'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHEN')}) }}" class="add-pollmodule-shortcut btn btn-icon-text waves-effect palette-Blue bg">
+                                <i class="zmdi zmdi-plus-circle zmdi-hc-fw"></i> {{ "global.button.poll"|trans }}</a>
+                            <a data-event-header-action="edit" data-event-header-action-target="#pmbblock_event_header" class="btn btn-default btn-icon-text waves-effect">
+                                <i class="zmdi zmdi-edit zmdi-hc-fw"></i> {{ "global.button.set"|trans }}</a>
+                            <a data-toggle="tooltip" title="{{ "event.form.when.tootlip.title"|trans }}" class="btn btn-default btn-icon-text waves-effect">
+                                <i class="zmdi zmdi-info zmdi-hc-fw"></i></a>
+                        </div>
+                    {% else %}
+                        {{ userEventInvitation.event.when|localizeddate }}
+                    {% endif %}
+                </dd>
+            {% endif %}
+            {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.whereName is not empty %}
+                <dt><i class="zmdi zmdi-pin zmdi-hc-fw"></i> {{ "event.form.whereName.label"|trans }}</dt>
+                <dd>
+                    {% if userEventInvitation.event.whereName is empty %}
+                        <div class="btn-group btn-group-xs" role="group">
+                            <a href="{{ url('addEventModule', {'token': userEventInvitation.event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                                'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHERE')}) }}" class="add-pollmodule-shortcut btn btn-icon-text waves-effect palette-Green bg">
+                                <i class="zmdi zmdi-plus-circle zmdi-hc-fw"></i> {{ "global.button.poll"|trans }}</a>
+                            <a data-event-header-action="edit" data-event-header-action-target="#pmbblock_event_header" class="btn btn-default btn-icon-text waves-effect">
+                                <i class="zmdi zmdi-edit zmdi-hc-fw"></i> {{ "global.button.set"|trans }}</a>
+                            <a data-toggle="tooltip" title="{{ "event.form.whereName.tootlip.title"|trans }}" class="btn btn-default btn-icon-text waves-effect">
+                                <i class="zmdi zmdi-info zmdi-hc-fw"></i></a>
+                        </div>
+                    {% else %}
+                        {{ userEventInvitation.event.whereName }}
+                    {% endif %}
+                </dd>
+            {% endif %}
+            {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.responseDeadline is not empty %}
+                <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
+                <dd>{{ userEventInvitation.event.responseDeadline is not null ? userEventInvitation.event.responseDeadline|localizeddate:'-' }}</dd>
+            {% endif %}
             {# Todo: décommenter
              <dt>{{ "event.form.status.label"|trans }}</dt>
             <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span></dd>#}
         </dl>
-        <div class="bg palette-Grey-100 p-10 m-t-15 m-b-15">
-            <dt class="p-b-5">{{ "event.form.description.label"|trans }}</dt>
-            <dd>{{ userEventInvitation.event.description }}</dd>
-        </div>
         {# Todo: décommenter
         {% if userEventInvitation.event.invitationOnly %}
             <div class="text-danger">
@@ -71,38 +112,47 @@
 
             var infowindow = new google.maps.InfoWindow();
             service.getDetails({
-                        placeId: '{{ userEventInvitation.event.whereGooglePlaceId }}'
-                    }
-                    ,
-                    function (place, status) {
-                        if (status === google.maps.places.PlacesServiceStatus.OK) {
-                            var marker = new google.maps.Marker({
-                                map: mapEventShow,
-                                position: place.geometry.location
-                            });
-                            {# Permet de s'assurer que la map est pas trop zoomée, a priori  le zoom du firbounds se fait en asynchrone,
-                                                donc il faut choper un event, et ne le fait que au premier passage#}
+                    placeId: '{{ userEventInvitation.event.whereGooglePlaceId }}'
+                }
+                ,
+                function (place, status) {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        var marker = new google.maps.Marker({
+                            map: mapEventShow,
+                            position: place.geometry.location
+                        });
+                        {# Permet de s'assurer que la map est pas trop zoomée, a priori  le zoom du firbounds se fait en asynchrone,
+                                            donc il faut choper un event, et ne le fait que au premier passage#}
 
-                            google.maps.event.addListener(mapEventShow, 'bounds_changed', function (event) {
-                                if (mapEventShow.getZoom() > 15 && mapEventShow.initialZoom == true) {
-                                    // Change max/min zoom here
-                                    mapEventShow.setZoom(15);
-                                    mapEventShow.initialZoom = false;
-                                }
-                            });
-                            mapEventShow.initialZoom = true;
-                            // Rendre le marker clickable avec le nom
-                            google.maps.event.addListener(marker, 'click', function () {
-                                infowindow.setContent(place.name);
-                                infowindow.open(mapEventShow, this);
-                            });
-                            boundsEventShow.extend(place.geometry.location)
-                            mapEventShow.fitBounds(boundsEventShow);
-                        }
+                        google.maps.event.addListener(mapEventShow, 'bounds_changed', function (event) {
+                            if (mapEventShow.getZoom() > 15 && mapEventShow.initialZoom == true) {
+                                // Change max/min zoom here
+                                mapEventShow.setZoom(15);
+                                mapEventShow.initialZoom = false;
+                            }
+                        });
+                        mapEventShow.initialZoom = true;
+                        // Rendre le marker clickable avec le nom
+                        google.maps.event.addListener(marker, 'click', function () {
+                            infowindow.setContent(place.name);
+                            infowindow.open(mapEventShow, this);
+                        });
+                        boundsEventShow.extend(place.geometry.location)
+                        mapEventShow.fitBounds(boundsEventShow);
                     }
+                }
             );
             {% endif %}
         }
     }
+
+    $('.add-pollmodule-shortcut').on('click', function (e) {
+        ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
+            var eventModulesContainer = $('#eventModulesContainer');
+            $(document).scrollTop($(eventModulesContainer).children().last().offset().top - 100);
+            $('.grid').masonry('layout');
+            LetterAvatar.transform();
+        }, null, null);
+    });
 </script>
 
