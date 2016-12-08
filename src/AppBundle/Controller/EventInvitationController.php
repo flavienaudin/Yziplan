@@ -161,10 +161,10 @@ class EventInvitationController extends Controller
         if ($this->isGranted(EventInvitationVoter::CANCEL, [$userEventInvitation, $eventInvitationToCancel])) {
             if ($eventInvitationManager->cancelEventInvitation($eventInvitationToCancel)) {
                 if ($request->isXmlHttpRequest()) {
-                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("global.success.data_saved");
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("invitations.display.cancel.message.success");
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("global.success.data_saved"));
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("invitations.display.cancel.message.success"));
                     return $this->redirectToRoute("displayEvent", array("token" => $eventInvitationToCancel->getEvent()->getToken()));
                 }
             }

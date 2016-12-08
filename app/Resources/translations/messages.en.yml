@@ -243,6 +243,8 @@ invitations:
         title: Cancellattion
         text: Are you sure you want to cancel %name%'s invitation?
         text_noname: Are you sure you want to cancel this invitation?
+      message:
+        success: The invitation has been cancelled
   form:
     invitations:
       label: By sending them an email

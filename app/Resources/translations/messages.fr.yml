@@ -242,6 +242,8 @@ invitations:
         title: Annulation
         text: Êtes-vous sûre de vouloir annuler l'invitation de %name% ?
         text_noname: Êtes-vous sûre de vouloir annuler cette invitation ?
+      message:
+        success: L'invitation a bien été annulée
   form:
     invitations:
       label: En leur envoyant un e-mail
