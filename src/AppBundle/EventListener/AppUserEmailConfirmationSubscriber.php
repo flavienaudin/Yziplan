@@ -11,8 +11,8 @@ namespace AppBundle\EventListener;
 
 use AppBundle\AppEvents;
 use AppBundle\Entity\User\AppUserEmail;
+use AppBundle\Event\AppUserEmailEvent;
 use ATUserBundle\Mailer\AtTwigSiwftMailer;
-use FOS\UserBundle\Event\FormEvent;
 use FOS\UserBundle\Mailer\MailerInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -50,12 +50,12 @@ class AppUserEmailConfirmationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FormEvent $event
+     * @param AppUserEmailEvent $event
      */
-    public function onAddSuccess(FormEvent $event)
+    public function onAddSuccess(AppUserEmailEvent $event)
     {
         /** @var AppUserEmail $appUserEmail */
-        $appUserEmail = $event->getForm()->getData();
+        $appUserEmail = $event->getAppUserEmail();
         if (null === $appUserEmail->getConfirmationToken()) {
             $appUserEmail->setConfirmationToken($this->tokenGenerator->generateToken());
         }

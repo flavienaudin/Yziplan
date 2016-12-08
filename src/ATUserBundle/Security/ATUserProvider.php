@@ -10,7 +10,7 @@ namespace ATUserBundle\Security;
 
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
-use AppBundle\Envent\AppUserEmailEvent;
+use AppBundle\Event\AppUserEmailEvent;
 use AppBundle\Manager\GenerateursToken;
 use ATUserBundle\ATUserEvents;
 use ATUserBundle\Entity\AccountUser;

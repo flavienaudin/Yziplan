@@ -6,7 +6,7 @@
  * Time: 11:14
  */
 
-namespace AppBundle\Envent;
+namespace AppBundle\Event;
 
 use AppBundle\Entity\User\AppUserEmail;
 use Symfony\Component\EventDispatcher\Event;

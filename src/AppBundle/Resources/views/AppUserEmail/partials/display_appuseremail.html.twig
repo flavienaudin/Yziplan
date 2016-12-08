@@ -2,7 +2,7 @@
 - appuseremail (AppUserEmail) l'appUserEmail à afficher
 #}
 
-{% set isAccountEmail = (appuseremail.applicationUser.accountUser.emailCanonical == appuseremail.emailCanonical) %}
+{% set isAccountEmail = (appuseremail.applicationUser.accountUser is not null and appuseremail.applicationUser.accountUser.emailCanonical == appuseremail.emailCanonical) %}
 <li id="appuseremail_{{ appuseremail.id }}">
     {% if appuseremail.confirmationToken is null %}
         <span>
