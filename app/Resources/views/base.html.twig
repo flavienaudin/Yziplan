@@ -212,7 +212,7 @@
     {% block page_modal_container %}{% endblock %}
 </div>
 
-<!-- Older IE warning message --><!--[if lt IE 9]>
+<!-- Older IE warning message --><!--[if lte IE 9]>
 <div class="ie-warning">
     <h1 class="c-white">Warning!!</h1>
     <p>{{ "base.ie_warning.text1"|trans|raw }}</p>
@@ -258,10 +258,12 @@
     <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/palette.js") }}"></script>
     <script src="{{ asset("bundles/app/js/toastr.min.js") }}"></script>
-    <!-- for IE 10+ support : SweetAlert2 -->
-    <!--[if gt IE 10 ]>
-    <script src="{{ asset(" bundles/app/js/es6-promise.auto.min.js") }}"></script><![endif]-->
+
+    <!-- for IE support : SweetAlert2 -->
+    <script src="{{ asset("bundles/app/js/es6-promise.auto.min.js") }}"></script>
+
     <script src="{{ asset("bundles/app/js/sweetalert2.min.js") }}"></script>
+
     <script src="{{ asset("bundles/app/js/letter-avatar.js") }}"></script>
     <script src="{{ asset("bundles/app/js/fullcalendar-3.0.1.min.js") }}"></script>
 

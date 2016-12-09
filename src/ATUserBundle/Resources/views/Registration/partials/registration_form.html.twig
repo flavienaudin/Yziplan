@@ -44,7 +44,7 @@
 </div>
 
 <div class="text-center m-b-25">
-    <em><a {% if modal is defined and modal %}data-toggle="modal" href="#modalLogin" {% else %}href="{{ path('fos_user_security_login') }}{% endif %}">
+    <em><a {% if modal is defined and modal %}data-toggle="modal" href="#modalLogin" {% else %}href="{{ path('fos_user_security_login') }}"{% endif %}>
             {{ "register.text.already_an_account"|trans }}</a> </em>
 </div>
 
