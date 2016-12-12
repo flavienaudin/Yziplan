@@ -4,7 +4,7 @@
 - userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
 #}
 
-<div class="card {% block moduleCardClass %}c-dark{% endblock %}" id="module-{{ module.token }}">
+<div class="card z-depth-2 {% block moduleCardClass %}c-dark{% endblock %}" id="module-{{ module.token }}">
     <div class="card-header {% block moduleHeaderClass %}palette-Teal bg{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
         {% block moduleHeader %}
             <div class="media">
@@ -22,23 +22,36 @@
                                 <script>
                                     $('#removeModule{{ module.token }}').on('click', function (e) {
                                         e.preventDefault();
-                                        var removeModuleLink = $(this);
-                                        swal({
-                                            title: '{{ "module.alert.confirm_deletion.title"|trans }}',
-                                            text: '{{ "module.alert.confirm_deletion.message"|trans }}',
-                                            type: "warning",
-                                            showCancelButton: true,
-                                            confirmButtonColor: "#DD6B55",
-                                            confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                            showLoaderOnConfirm: true
-                                        }).then(function () {
-                                            ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                    $('#module-{{ module.token }}').remove();
-                                                    $('.grid').masonry('layout');
-                                                }
-                                            }, null, null);
-                                        });
+                                        if (!eventInvitationValid && askGuestName !== undefined) {
+                                            askGuestName();
+                                        } else {
+                                            var removeModuleLink = $(this);
+                                            swal({
+                                                title: '{{ "module.alert.confirm_deletion.title"|trans }}',
+                                                text: '{{ "module.alert.confirm_deletion.message"|trans }}',
+                                                type: "warning",
+                                                showCancelButton: true,
+                                                confirmButtonColor: "#DD6B55",
+                                                confirmButtonText: '{{ "global.button.delete"|trans }}',
+                                                showLoaderOnConfirm: true
+                                            }).then(function () {
+                                                ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
+                                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
+                                                        $('#module-{{ module.token }}').remove();
+                                                        $('.grid').masonry('layout');
+                                                    }
+                                                }, function(jqXHR, textStatus, errorThrown){
+                                                    if (jqXHR.hasOwnProperty('responseJSON')) {
+                                                        var responseJSON = jqXHR['responseJSON'];
+                                                        if(responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                                            if (!eventInvitationValid && askGuestName !== undefined) {
+                                                                askGuestName();
+                                                            }
+                                                        }
+                                                    }
+                                                }, null);
+                                            });
+                                        }
                                     });
                                 </script>
                             {% endif %}
@@ -52,13 +65,13 @@
                         {% for creatorInvitation in module.creators %}
                             {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
                         {% endfor %}
-                        {% if creatorsNames is not empty %}
-                            <h2><span id="module_{{ module.token }}_name">{{ module.name is not empty?module.name|trans }}</span>
+                        <h2><span id="module_{{ module.token }}_name">{{ module.name is not empty?module.name|trans }}</span>
+                            {% if creatorsNames is not empty %}
                                 <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}
                                     {# TODO décommenter <span class="label label-default">{{ module.status|trans}}</span>#}
                                 </small>
-                            </h2>
-                        {% endif %}
+                            {% endif %}
+                        </h2>
                     {% endblock mhMediaBody %}
                 </div>
             </div>

@@ -98,15 +98,18 @@ event:
     description:
       label: Description :
       placeholder: Dites-en plus au sujet de votre événement
+      empty: Les organisateurs n'ont pas donné plus de détail
     responseDeadline:
       label: Date limite de réponse :
       placeholder: Date limite de réponse
     whereName:
       label: Où :
       placeholder: Où
+      tootlip.title: Fixez le lieu de votre événement ou ajoutez un sondage pour consulter vos invités
     when:
       label: Quand :
       placeholder: Quand
+      tootlip.title: Fixez la date de votre événement ou ajoutez un sondage pour consulter vos invités
     status:
       label: Etat :
       placeholder: Etat de l'événement
@@ -135,6 +138,12 @@ event:
     unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
   success.message:
     creation: Evénement créé avec succès.
+  help:
+    popover:
+      header: Renseignez les informations relatives à votre événement.
+      name: Ne restez pas dans l'anonymat, renseignez votre nom !
+      response: Pensez à confirmer votre présence (vous pouvez le faire plus tard).
+      pollmodule: Vos amis attendent votre avis.
 
 eventInvitations:
   user_menu:
@@ -185,24 +194,36 @@ eventInvitation:
       administrator: Administrateur
     text:
       disconnect: Vous n'êtes pas %user% ?
-    new_warning_alert:
-      title: Quel est votre nom ?
-      message: Merci de renseigner votre nom pour valider l'invitation.
-      inputError: C'est mieux avec quelques lettres.
-    guestname_required_to_participate: Vous devez renseigner un nom pour participer
+    guestname_required_alert:
+      title: Quel est ton nom ?
+      message: Renseigne ton nom afin t'identifier auprès des autres invités
+      inputError: C'est bien mieux avec quelques lettres.
+      dismiss: Ton invitation ne sera pas prise en compte si tu restes inconnu.
+      error_message:
+        unauthorized_action: Afin de participer à l'organisation de cet événement, tu dois valider ton invitation en renseignant ton nom.
   message:
     warning:
       email_owned_by_accountuser: Attention! Cet e-mail est associée à un compte utilisateur. Connectez-vous avant de participer pour profiter de toutes les fonctionnalités.
       another_invitation_already_exists_for_user: Vous avez déjà une inivitation pour cet événement, vous avez été redirigé vers celle-ci.
+      invitation_cancelled: Ton invitation est annulée, tu ne peux plus participer à l'organisation.
     error:
       unauthorized_cancel: Vous n'avez pas les autorisations pour annuler cette invitation.
       unauthorized_access: Vous n'êtes pas inviter à cet événement.
   email:
-    txt:
-      subject: "[Yziplan] Vous avez reçu une invitation"
+    invitation:
+      subject: "[Yziplan] Tu as reçu une invitation"
       body:
         hello: "Bonjour %username%!"
-        paragraph: "Vous êtes invités à \"%event_name%\". Cliquez sur le lien ci-dessous pour répondre:"
+        paragraph:
+          first_part:
+            several_orga: "Nous t'invitons "
+            single_orga: "Je t'invite "
+          second_part: "à \"%event_name%\". Suis le lien ci-dessous pour y répondre:"
+    recap:
+      subject: "[Yziplan] Lien personnel de ton invitation"
+      body:
+        hello: "Bonjour %username%!"
+        paragraph: "Tu participes à l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier ta participation, utilise le lien ci-dessous :"
 
 invitation_list:
   display:
@@ -222,6 +243,8 @@ invitations:
         title: Annulation
         text: Êtes-vous sûre de vouloir annuler l'invitation de %name% ?
         text_noname: Êtes-vous sûre de vouloir annuler cette invitation ?
+      message:
+        success: L'invitation a bien été annulée
   form:
     invitations:
       label: En leur envoyant un e-mail
@@ -307,6 +330,10 @@ pollmodule:
       title: Etes-vous sûr de vouloir supprimer cette proposition ?
       message: Cette action est irréversible
 
+addModule:
+  display:
+    title: Ajouter un élément
+
 moduleInvitation:
   empty_displayable_name: Vous
   error.message:
@@ -332,6 +359,9 @@ global:
     loading: En cours...
     copy: Copier
     go_to: Aller à
+    set: Définir
+    poll: Sondage
+    close: Fermer
   success:
     data_saved: Données sauvegardées
   error:

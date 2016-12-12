@@ -32,8 +32,15 @@ Données d'entrée :
         }) }}
     </div>
 
+    <div class="card-body card-padding">
+        {{ include('@App/Event/partials/profile/eventInvitation_profile_answer_form.html.twig',{
+            'userEventInvitation' : userEventInvitation,
+            'userEventInvitationAnswerForm' : userEventInvitationAnswerForm
+        }) }}
+    </div>
+
     {% if userEventInvitation.applicationUser is null or userEventInvitation.applicationUser.accountUser is null %}
-        <div class="card-body card-padding">
+        <div class="card-footer card-padding">
             <label class="control-label text-info" for="url_user_invitation">{{ "eventInvitation.url.text"|trans }}&nbsp;: </label>
             <div class="input-group">
                 <input id="url_user_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}"> <span
@@ -42,11 +49,4 @@ Données d'entrée :
             </div>
         </div>
     {% endif %}
-
-    <div class="card-footer card-padding">
-        {{ include('@App/Event/partials/profile/eventInvitation_profile_answer_form.html.twig',{
-            'userEventInvitation' : userEventInvitation,
-            'userEventInvitationAnswerForm' : userEventInvitationAnswerForm
-        }) }}
-    </div>
 </div>

@@ -20,42 +20,68 @@
                         <script>
                             $('#getPPEditionForm_{{ pollProposal.id }}').on('click', function (e) {
                                 e.preventDefault();
-                                var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
-                                var modals = $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id');
-                                if ($(modals).length > 0) {
-                                    $(modals).first().modal('toggle');
+                                if (!eventInvitationValid && askGuestName !== undefined) {
+                                    askGuestName();
                                 } else {
-                                    ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                                        $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
-                                    }, null, null);
+                                    var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
+                                    var modals = $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id');
+                                    if ($(modals).length > 0) {
+                                        $(modals).first().modal('toggle');
+                                    } else {
+                                        ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
+                                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
+                                        }, function(jqXHR, textStatus, errorThrown){
+                                            if (jqXHR.hasOwnProperty('responseJSON')) {
+                                                var responseJSON = jqXHR['responseJSON'];
+                                                if(responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                                    if (!eventInvitationValid && askGuestName !== undefined) {
+                                                        askGuestName();
+                                                    }
+                                                }
+                                            }
+                                        }, null);
+                                    }
                                 }
                             });
                             $('#removePP_{{ pollProposal.id }}').on('click', function (e) {
                                 e.preventDefault();
-                                var removePPLink = $(this);
-                                swal({
-                                    title: '{{ "pollmodule.alert.confirm_proposal_deletion.title"|trans }}',
-                                    text: '{{ "pollmodule.alert.confirm_proposal_deletion.message"|trans }}',
-                                    type: "warning",
-                                    showCancelButton: true,
-                                    confirmButtonColor: "#DD6B55",
-                                    confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                    showLoaderOnConfirm: true
-                                }).then(function () {
-                                    ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                            $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable()
-                                                .row($('#pp_display_row_{{ pollProposal.id }}'))
-                                                .remove().draw();
-                                            var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
-                                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
-                                                $(this).remove();
-                                            });
-                                        }
-                                    }, null, function () {
-                                        $('.grid').masonry('layout');
+                                if (!eventInvitationValid && askGuestName !== undefined) {
+                                    askGuestName();
+                                } else {
+                                    var removePPLink = $(this);
+                                    swal({
+                                        title: '{{ "pollmodule.alert.confirm_proposal_deletion.title"|trans }}',
+                                        text: '{{ "pollmodule.alert.confirm_proposal_deletion.message"|trans }}',
+                                        type: "warning",
+                                        showCancelButton: true,
+                                        confirmButtonColor: "#DD6B55",
+                                        confirmButtonText: '{{ "global.button.delete"|trans }}',
+                                        showLoaderOnConfirm: true
+                                    }).then(function () {
+                                        ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
+                                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
+                                                $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable()
+                                                    .row($('#pp_display_row_{{ pollProposal.id }}'))
+                                                    .remove().draw();
+                                                var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
+                                                $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
+                                                    $(this).remove();
+                                                });
+                                            }
+                                        }, function(jqXHR, textStatus, errorThrown){
+                                            if (jqXHR.hasOwnProperty('responseJSON')) {
+                                                var responseJSON = jqXHR['responseJSON'];
+                                                if(responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                                    if (!eventInvitationValid && askGuestName !== undefined) {
+                                                        askGuestName();
+                                                    }
+                                                }
+                                            }
+                                        }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                                            $('.grid').masonry('layout');
+                                        });
                                     });
-                                });
+                                }
                             });
                         </script>
                     </div>
@@ -125,13 +151,17 @@
                 var icon = $(this).parent("label");
                 var urlTarget = "{{ path('answerPollModuleProposal') }}";
                 ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
-                    {# autre façon d'animer ? #}
                     var animation = 'bounceIn';
                     icon.addClass('animated ' + animation);
                     setTimeout(function () {
                         icon.removeClass(animation);
                     }, 1000);
-                }, null, null);
+                }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                    {# Avertissement/Demande du nom pour valider la participation #}
+                    if (!eventInvitationValid && askGuestName !== undefined) {
+                        askGuestName();
+                    }
+                });
             });
         </script>
     </td>

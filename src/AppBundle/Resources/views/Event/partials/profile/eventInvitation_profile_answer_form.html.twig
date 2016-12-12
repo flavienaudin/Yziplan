@@ -1,42 +1,35 @@
-{# Tuile d'affichage de l'invitation en cours sur la page d'événement pour que l'utilisateur renseigne ses informations
+{# Formulaire de réponse de la présence de l'invité à l'événement (invitation en cours sur la page d'un événement)
 Données d'entrée :
 - userEventInvitation (EventInvitation) Invitation de l'utilisateur de l'utilisateur
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
-<div id="eventInvitation-answer-panel" {#class="pop-help"#}>
-    {#{{ include("@App/Event/partials/event_help_popover.html.twig",{'divId' : 'eventInvitation-answer-panel'}) }}#}
-    <h4>{{ "eventInvitation.form.answer.label"|trans }}</h4>
-    {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
-    {{ form_row(userEventInvitationAnswerForm.answer,{
-        'label_attr':{'class' : 'sr-only'},
-        'attr':{'type' : 'answer'}
-    }) }}
+<div id="eventInvitation-answer-panel">
+    {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED') %}
+        <div class="well well-sm palette-Purple-300 bg c-white">{{ "eventInvitation.message.warning.invitation_cancelled"|trans }}</div>
+    {% else %}
+        {{ include("@App/Event/partials/event_help_popover.html.twig",{'userInvitation' : userEventInvitation, 'divId' : 'eventInvitation-answer-panel','text': 'event.help.popover.response'}) }}
+        <h4>{{ "eventInvitation.form.answer.label"|trans }}</h4>
+        {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
+        {{ form_row(userEventInvitationAnswerForm.answer,{
+            'label_attr':{'class' : 'sr-only'},
+            'attr':{'type' : 'answer'}
+        }) }}
 
-    {{ form_rest(userEventInvitationAnswerForm) }}
-    {{ form_end(userEventInvitationAnswerForm) }}
+        {{ form_rest(userEventInvitationAnswerForm) }}
+        {{ form_end(userEventInvitationAnswerForm) }}
 
-    <script>
-        $("input[name='event_invitation_anwser[answer]']").on('change', function (e) {
-            $(this).closest('form').submit();
-        });
-        var alreadyAnswerValid = false;
-        $('form#userEventInvitationAnswer').on('submit', function (e) {
-            e.preventDefault();
-            {% if userEventInvitation is defined and userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
-            if (!alreadyAnswerValid) {
-                alreadyAnswerValid = askGuestName(function(){
-                    ajaxFormSubmission(this, e, null, null, null);
-                    alreadyAnswerValid = true;
-                });
-            }else{
-                {# Le nom a déjà été demandé, on soumet le formulaire directement#}
-                ajaxFormSubmission(this, e, null, null, null);
-            }
-            {% else %}
-            {# Le nom est déjà renseigné on soumet le formulaire directement#}
-            ajaxFormSubmission(this, e, null, null, null);
-            {% endif %}
-        });
-    </script>
+        <script>
+            $("input[name='event_invitation_anwser[answer]']").on('change', function (e) {
+                $(this).closest('form').submit();
+            });
+            $('form#userEventInvitationAnswer').on('submit', function (e) {
+                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                    if (!eventInvitationValid && askGuestName !== undefined) {
+                        askGuestName();
+                    }
+                }, null, null);
+            });
+        </script>
+    {% endif %}
 </div>

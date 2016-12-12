@@ -7,7 +7,7 @@ $(document).ready(function () {
     var $html = $('html');
     var $body = $('body');
 
-    if(isMobile()){
+    if (isMobile()) {
         $html.addClass('ismobile');
     }
 
@@ -150,7 +150,6 @@ function isMobile() {
 }
 
 
-
 /**
  * Active les pluggins JS/CSS après une requête Ajax et au chargement d'une page
  *  - textarea autosize
@@ -167,9 +166,13 @@ function jsPlugginActivation() {
     }
 
     $('.clockpicker').clockpicker();
-    $('.datepicker').datetimepicker({
-        format: "DD/MM/YYYY",
-        locale: "fr",
+    var locale_format = "DD/MM/YYYY";
+    if(locale_js == 'en'){
+        locale_format = "MM/DD/YYYY";
+    }
+    $('.ag-date-picker').datetimepicker({
+        format: locale_format,
+        locale: locale_js,
         showClear: true,
         icons: {
             time: 'zmdi zmdi-time',
@@ -380,3 +383,22 @@ function treatHtmlContents(htmlContents) {
 function escapeSelectorCharacters(selector) {
     return selector.replace(/(:|\.|\[|\]|,)/g, "\\$1");
 }
+
+
+function refuserToucheEntree(event) {
+// Compatibilité IE / Firefox
+    if (!event && window.event) {
+        event = window.event;
+    }
+// IE
+    if (event.keyCode == 13) {
+        event.returnValue = false;
+        event.cancelBubble = true;
+    }
+// DOM
+    if (event.which == 13) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+}
+

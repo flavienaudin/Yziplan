@@ -98,15 +98,18 @@ event:
     description:
       label: Description:
       placeholder: Say more about your event
+      empty: Orgnizers didn't give more detail
     responseDeadline:
       label: Response deadline:
       placeholder: Response deadline
     whereName:
       label: Where:
       placeholder: Where
+      tootlip.title: Set where your event will take place or add a poll to consult your guest
     when:
       label: When:
       placeholder: When
+      tootlip.title: Set the date of your event or add a poll to consult your guest
     status:
       label: Status:
       placeholder: Event status
@@ -135,6 +138,12 @@ event:
     unauthorized_access: You have no right to access this event.
   success.message:
     creation: Event created successfully.
+  help:
+    popover:
+      header: Fill in information about your event.
+      name: Don't stay anonymous, give your name!
+      response: Think about confirming your presence (you can do it later).
+      pollmodule: Your friends are waiting for your mind.
 
 eventInvitations:
   user_menu:
@@ -186,24 +195,36 @@ eventInvitation:
       administrator: Administrator
     text:
       disconnect: You are not %user%?
-    new_warning_alert:
+    guestname_required_alert:
       title: What's your name ?
-      message: Please, fill in your name to validate your invitation.
-      inputError: It's better with non-empty name
-    guestname_required_to_participate: You must fill your name to participate
+      message: Enter your name in order to identify yourself with other guests
+      inputError: It's better with non-empty name.
+      dismiss: Your participation doesn't count until you fill a name.
+      error_message:
+        unauthorized_action: In order to collaborate to this event organization, you should validate your invitation by entering your name.
   message:
     warning:
       email_owned_by_accountuser: Warning! This email address is associated to a user account. Please, login before participating to enjoy all the features.
       another_invitation_already_exists_for_user: You already have an invitation to this event, you were redirected to it.
+      invitation_cancelled: Your invitation is cancelled, you cannot participate in the organization anymore.
     error:
       unauthorized_cancel: You are not allowed to cancel this invitation.
       unauthorized_access: You are ot invited to this event.
   email:
-    txt:
+    invitation:
       subject: "[Yziplan] You received an invitation"
       body:
         hello: "Hi %username%!"
-        paragraph: "You are invited to \"%event_name%\". Follow the link bellow to answer:"
+        paragraph:
+          first_part:
+            several_orga: "We are "
+            single_orga: "I am  "
+          second_part: "inviting you to \"%event_name%\". Follow the link bellow to answer:"
+    recap:
+      subject: "[Yziplan] Personal link to your invitation"
+      body:
+        hello: "Hi %username%!"
+        paragraph: "You participate to the event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
 
 invitation_list:
   display:
@@ -223,6 +244,8 @@ invitations:
         title: Cancellattion
         text: Are you sure you want to cancel %name%'s invitation?
         text_noname: Are you sure you want to cancel this invitation?
+      message:
+        success: The invitation has been cancelled
   form:
     invitations:
       label: By sending them an email
@@ -230,7 +253,7 @@ invitations:
       invalid_message: Valid email address required
       help: Hit "Return" after each email to validate it
   message:
-    success: Invitations have been sent
+    success: Invitations have been sent successfully
     error: "The following invitations could not be sent : %email_list%"
   button:
     send_invitation: Send invitations
@@ -308,6 +331,10 @@ pollmodule:
       title: Are you sure you want to delete this proposal?
       message: This action is irreversible
 
+addModule:
+  display:
+    title: Add an item
+
 moduleInvitation:
   empty_displayable_name: You
   error.message:
@@ -333,6 +360,9 @@ global:
     loading: In progress...
     copy: Copy
     go_to: Go to
+    set: Set
+    poll: Survey
+    close: Close
   success:
     data_saved: Information saved
   error:

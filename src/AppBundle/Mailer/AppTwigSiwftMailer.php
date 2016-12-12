@@ -31,4 +31,20 @@ class AppTwigSiwftMailer extends TwigSwiftMailer
         }
         return false;
     }
+
+    public function sendRecapEventInvitationEmail(EventInvitation $eventInvitation)
+    {
+        if ($eventInvitation->getApplicationUser()->getAccountUser() != null) {
+            $emailTo = $eventInvitation->getApplicationUser()->getAccountUser()->getEmail();
+        } elseif (count($eventInvitation->getApplicationUser()->getAppUserEmails()) > 0) {
+            $emailTo = $eventInvitation->getApplicationUser()->getAppUserEmails()->first()->getEmail();
+        }
+        if (!empty($emailTo)) {
+            $context = array("eventInvitation" => $eventInvitation);
+            $this->sendMessage("@App/EventInvitation/emails/recap_invitation.html.twig", $context, $this->parameters['from_email']['confirmation'], $emailTo);
+            return true;
+
+        }
+        return false;
+    }
 }

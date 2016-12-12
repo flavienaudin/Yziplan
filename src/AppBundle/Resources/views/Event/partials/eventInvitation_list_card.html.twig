@@ -22,6 +22,7 @@
             <ul class="list-inline eventInvitations_list">
                 {% for eventInvitation in eventInvitations
                 if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED')
+                and eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION')
                 and eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
                     {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
                 {% endfor %}
@@ -35,6 +36,7 @@
             <ul class="list-inline eventInvitations_list">
                 {% for eventInvitation in eventInvitations
                 if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED')
+                and eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION')
                 and eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') %}
                     {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
                 {% endfor %}
@@ -48,6 +50,7 @@
             <ul class="list-inline eventInvitations_list">
                 {% for eventInvitation in eventInvitations
                 if eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED')
+                and eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION')
                 and eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
                     {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
                 {% endfor %}

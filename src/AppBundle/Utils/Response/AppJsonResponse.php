@@ -30,7 +30,7 @@ class AppJsonResponse extends JsonResponse
      *          self::HTML_CONTENT_ACTION_APPEND_TO => array( htmlElementId => contenu HTML à utiliser )
      *          self::HTML_CONTENT_ACTION_HTML => array( htmlElementId => contenu HTML à utiliser )
      *      ),
-     *      self::DATA => array( données à transmettre à la fonction JS callback (done/fail) pour effectuer des traitements spécifiques (mise à jour d'affichage,...)
+     *      self::DATA => array( données à transmettre à la fonction JS callback (done/fail) pour effectuer des traitements spécifiques (mise à jour d'affichage,...) )
      *
      * )
      */
