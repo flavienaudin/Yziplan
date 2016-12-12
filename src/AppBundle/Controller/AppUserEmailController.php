@@ -14,7 +14,6 @@ use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Form\User\AppUserEmailType;
 use AppBundle\Manager\ApplicationUserManager;
 use AppBundle\Utils\enum\FlashBagTypes;
-use AppBundle\Utils\FormUtils;
 use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
 use FOS\UserBundle\Event\FormEvent;

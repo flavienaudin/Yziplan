@@ -15,13 +15,15 @@ use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollElement;
 use AppBundle\Entity\Module\PollModule;
+use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Form\Module\ModuleType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\ModuleType as EnumModuleType;
 use AppBundle\Utils\enum\PollElementType;
-use AppBundle\Utils\enum\PollModuleVotingType;
 use AppBundle\Utils\enum\PollModuleType;
+use AppBundle\Utils\enum\PollModuleVotingType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -116,15 +118,19 @@ class ModuleManager
 
             if ($subtype == PollModuleType::WHEN) {
                 $this->module->setName("pollmodule.add_link.when");
+                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollElement->setType(PollElementType::DATETIME);
             } elseif ($subtype == PollModuleType::WHAT) {
                 $this->module->setName("pollmodule.add_link.what");
+                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollElement->setType(PollElementType::STRING);
             } elseif ($subtype == PollModuleType::WHERE) {
                 $this->module->setName("pollmodule.add_link.where");
+                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollElement->setType(PollElementType::GOOGLE_PLACE_ID);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
                 $this->module->setName("pollmodule.add_link.whobringswhat");
+                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollElement->setType(PollElementType::STRING);
                 $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
             }
@@ -153,6 +159,77 @@ class ModuleManager
         return $this->module;
     }
 
+    /**
+     * @param Module $originalModule Module à dupliquer
+     * @param boolean $duplicateInvitations
+     * @return Module Le module résultant de la dupliquation
+     */
+    public function duplicateModule(Module $originalModule)
+    {
+        if ($originalModule != null) {
+            $this->module = $originalModule;
+        }
+        if ($this->module != null) {
+            $duplicatedModule = new Module();
+            $duplicatedModule->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+            $duplicatedModule->setName($originalModule->getName());
+            $duplicatedModule->setDescription($originalModule->getDescription());
+            $duplicatedModule->setOrderIndex($originalModule->getOrderIndex());
+            $duplicatedModule->setStatus(ModuleStatus::IN_ORGANIZATION);
+            $duplicatedModule->setResponseDeadline($originalModule->getResponseDeadline());
+            $duplicatedModule->setInvitationOnly($originalModule->isInvitationOnly());
+            $duplicatedModule->setGuestsCanInvite($originalModule->isGuestsCanInvite());
+
+            if ($originalModule->getPaymentModule() != null) {
+                // TODO implementer la duplication du PaymentModule
+            }
+
+
+            if (($originalPollModule = $originalModule->getPollModule()) != null) {
+                $duplicatedPollModule = new PollModule();
+                $duplicatedPollModule->setVotingType($originalPollModule->getVotingType());
+
+                $mapOrigPPEltIdToDuplPPel = array();
+                /** @var PollElement $originalPollElement */
+                foreach ($originalPollModule->getPollElements() as $originalPollElement) {
+                    $duplicatedPollElement = new PollElement();
+                    $duplicatedPollElement->setName($originalPollElement->getName());
+                    $duplicatedPollElement->setType($originalPollElement->getType());
+                    $duplicatedPollElement->setOrderIndex($originalPollElement->getOrderIndex());
+                    $duplicatedPollModule->addPollElement($duplicatedPollElement);
+                    $mapOrigPPEltIdToDuplPPel[$originalPollElement->getId()] = $duplicatedPollElement;
+                }
+
+                /** @var PollProposal $originalPollProposal */
+                foreach($originalPollModule->getPollProposals() as $originalPollProposal){
+                    if(!$originalPollProposal->isDeleted()){
+                        $duplicatedPollProposal = new PollProposal();
+                        $duplicatedPollProposal->setDeleted(false);
+                        $duplicatedPollProposal->setDescription($originalPollProposal->getDescription());
+                        $duplicatedPollModule->addPollProposal($duplicatedPollProposal);
+                        /** @var PollProposalElement $originialPollProposalElement */
+                        foreach ($originalPollProposal->getPollProposalElements() as $originialPollProposalElement){
+                            $duplicatedPollProposalElement = new PollProposalElement();
+                            $duplicatedPollProposalElement->setValString($originialPollProposalElement->getValString());
+                            $duplicatedPollProposalElement->setValInteger($originialPollProposalElement->getValInteger());
+                            $duplicatedPollProposalElement->setValDatetime($originialPollProposalElement->getValDatetime());
+                            $duplicatedPollProposalElement->setValGooglePlaceId($originialPollProposalElement->getValGooglePlaceId());
+                            $mapOrigPPEltIdToDuplPPel[$originialPollProposalElement->getPollElement()->getId()]->addPollProposalElement($duplicatedPollProposalElement);
+                            $duplicatedPollProposal->addPollProposalElement($duplicatedPollProposalElement);
+                        }
+                    }
+                }
+
+                $duplicatedModule->setPollModule($duplicatedPollModule);
+            } elseif (($originalExpenseModule = $originalModule->getExpenseModule()) != null) {
+                // TODO implementer la duplication de l'expenseModule
+            }
+
+            return $duplicatedModule;
+        } else {
+            return null;
+        }
+    }
 
     /**
      * @param Module $module
