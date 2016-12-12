@@ -119,10 +119,11 @@ $(document).ready(function () {
     /* --------------------------------------------------------
      Tooltips
      ----------------------------------------------------------*/
-    var $tooltip = $('[data-toggle="tooltip"]');
-    if ($tooltip[0]) {
-        $tooltip.tooltip();
-    }
+    // Cf. JSPluginActivation
+    // var $tooltip = $('[data-toggle="tooltip"]');
+    // if ($tooltip[0]) {
+    //     $tooltip.tooltip();
+    // }
 
     /* --------------------------------------------------------
      Popover
