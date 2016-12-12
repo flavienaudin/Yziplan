@@ -226,6 +226,14 @@ class EventInvitationManager
         $failedRecipients = (array)$failedRecipients;
         foreach ($emailsData as $email) {
             $eventInvitation = $this->getGuestEventInvitation($event, $email);
+            if($eventInvitation->getStatus() == EventInvitationStatus::CANCELLED){
+                if(empty($eventInvitation->getDisplayableName())){
+                    $eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
+                }else{
+                    $eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+                }
+                $eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+            }
             if ($this->appTwigSiwftMailer->sendEventInvitationEmail($eventInvitation)) {
                 $this->persistEventInvitation();
             } else {
