@@ -122,7 +122,7 @@ class PollProposal
     /**
      * @return boolean
      */
-    public function getDeleted()
+    public function isDeleted()
     {
         return $this->deleted;
     }

@@ -25,6 +25,8 @@
     left: 50%;
     width: 40px;
     margin-left: -20px;
+    background-color: rgba(240,240,240,0.5);
+    border-radius: 50%;
 }
 
 .at-global-preloader .plc-path {

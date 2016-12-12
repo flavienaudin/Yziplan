@@ -85,6 +85,9 @@ event:
       new_event: Nouvel événement
   header:
     organised_by: "Organisé par %creator%"
+    tootltip:
+      edit: Editer l'événement
+      duplicate: Dupliquer l'événement
   picture:
     link: Changer l'image
     update_modal:

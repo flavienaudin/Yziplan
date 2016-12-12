@@ -140,7 +140,7 @@ class EventManager
     }
 
     /**
-     * @return Form Formulaire de création/édition d'un événement
+     * @return FormInterface Formulaire de création/édition d'un événement
      */
     public function initEventForm()
     {
@@ -166,6 +166,52 @@ class EventManager
         $this->entityManager->flush();
 
         return $this->event;
+    }
+
+    /**
+     * Duplique l'événement passé en paramètre (ou celui en cours) en fonction des paramètres : dupliquer les mdules et/ou les invitations
+     * L'événement n'est pas persisté en base de données
+     *
+     * @param boolean $duplicateModules Les modules sont également dupliqué et associés au nouvel événement
+     * @param boolean $duplicateInvitations Les invitations existantes sont utilisées pour les invitations du nouvel événement
+     * @param Event|null $event L'événement à duppliquer (si non donné,  l'attribut de la classe est utilisé)
+     * @return Event Résultat de la duplication de l'événement
+     */
+    public function duplicateEvent($duplicateModules, Event $event = null)
+    {
+        if ($event != null) {
+            $this->event = $event;
+        }
+        if ($this->event != null) {
+            $duplicatedEvent = new Event();
+            $duplicatedEvent->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+            $duplicatedEvent->setStatus(EventStatus::IN_ORGANIZATION);
+            $duplicatedEvent->setName($this->event->getName());
+            $duplicatedEvent->setDescription($this->event->getDescription());
+
+            $duplicatedEvent->setWhereName($this->event->getWhereName());
+            $duplicatedEvent->setWhereGooglePlaceId($this->event->getWhereGooglePlaceId());
+            $duplicatedEvent->setWhen($this->event->getWhen());
+
+            $duplicatedEvent->setInvitationOnly($this->event->isInvitationOnly());
+            $duplicatedEvent->setGuestsCanInvite($this->event->isGuestsCanInvite());
+            $duplicatedEvent->setGuestsCanAddModule($this->event->isGuestsCanAddModule());
+
+            if ($duplicateModules) {
+                /** @var Module $originalModule */
+                foreach ($event->getModules() as $originalModule) {
+                    if($originalModule->getStatus() == ModuleStatus::IN_ORGANIZATION) {
+                        /** @var Module $duplicatedModule */
+                        $duplicatedModule = $this->moduleManager->duplicateModule($originalModule);
+                        $duplicatedEvent->addModule($duplicatedModule);
+                    }
+                }
+            }
+            // TODO : duplicate EventInvitation ?
+            return $duplicatedEvent;
+        } else {
+            return null;
+        }
     }
 
     public function createEventInvitationsForm()

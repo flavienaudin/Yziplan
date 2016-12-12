@@ -17,9 +17,9 @@
     {% set avatar = eventInvitation.applicationUser.appUserInformation.avatar %}
 {% endif %}
 
-{# {# Todo: Décommenter et supprimer la ligne du dessous (penser à tester data-container="body" en le remettant)
+{# {# Todo: Décommenter et supprimer la ligne du dessous (penser à tester data-container="body" et l'utilisation de title a la place de data-original-title, en le remettant)
 <a data-toggle="dropdown" href="#">#}
-<a data-toggle="tooltip" data-placement="top" title="" data-original-title="{{ eventInvitation.displayableName }}" data-container="body">
+<a data-toggle="tooltip" data-placement="top" title="{{ eventInvitation.displayableName }}" data-container="body">
     {% if avatar is not null %}
         <img class="yzi-avatar-img" src="{{ asset('uploads/user/avatar/'~avatar) }}">
     {% else %}

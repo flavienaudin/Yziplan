@@ -153,7 +153,6 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         // Module Poll
         //-------------//
         $modulePoll = $moduleManager->createModule($event1, ModuleType::POLL_MODULE, PollModuleType::WHAT, $eventInvitationCreator);
-        $modulePoll->setDescription("Qu'est-ce qu'on fait");
         $moduleInvitationManager->initializeModuleInvitationsForEvent($event1, $modulePoll);
 
         $pollModule = $modulePoll->getPollModule();
@@ -177,7 +176,10 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $manager->persist($event1);
         $manager->flush();
 
+
+        //-------------//
         //Event 2
+        //-------------//
         $event2 = new Event();
         $event2->setName("Evénement 2");
         $event2->setToken("012345678");
@@ -196,22 +198,8 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $event2->addEventInvitation($event2InvitationCreator);
 
         // Module Event 2
-        $moduleEvent2 = new Module();
-        $moduleEvent2->setStatus(ModuleStatus::IN_CREATION);
-        $moduleEvent2->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $pollModuleEvent2 = new PollModule();
-        $pollModuleEvent2->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
-        $moduleEvent2->setPollModule($pollModuleEvent2);
-        $event2->addModule($moduleEvent2);
-
-        // Module Event 2 Invitation Creator
-        $moduleEvent2InvitationCreator = new ModuleInvitation();
-        $moduleEvent2InvitationCreator->setModule($moduleEvent2);
-        $moduleEvent2InvitationCreator->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $moduleEvent2InvitationCreator->setStatus(ModuleInvitationStatus::VALID);
-        $moduleEvent2->addModuleInvitation($moduleEvent2InvitationCreator);
-        $moduleEvent2InvitationCreator->isCreator();
-        $event2InvitationCreator->addModuleInvitation($moduleEvent2InvitationCreator);
+        $moduleEvent2 = $moduleManager->createModule($event2, ModuleType::POLL_MODULE, PollModuleType::WHAT, $event2InvitationCreator);
+        $moduleInvitationManager->initializeModuleInvitationsForEvent($event2, $moduleEvent2);
 
         //EventInvitation Guest 1
         $event2InvitationGuest1 = new EventInvitation();

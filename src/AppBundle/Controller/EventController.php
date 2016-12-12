@@ -10,6 +10,8 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventInvitationVoter;
@@ -19,6 +21,7 @@ use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use AppBundle\Utils\Response\FileInputJsonResponse;
+use ATUserBundle\Entity\AccountUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -27,10 +30,11 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 /**
  * Class EventController
- *
+ * @package AppBundle\Controller
  * @Route("/{_locale}/event", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
  */
 class EventController extends Controller
@@ -49,7 +53,46 @@ class EventController extends Controller
         if ($currentEventInvitation != null) {
             $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $currentEventInvitation->getToken());
         }
-        return $this->redirectToRoute("displayEvent", array('token' => $currentEvent->getToken()));
+        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+    }
+
+    /**
+     * @Route("/duplicate/{token}", name="duplicateEvent")
+     * @ParamConverter("event", class="AppBundle:Event\Event")
+     */
+    public function duplicateEvent(Event $event, Request $request)
+    {
+        $eventManager = $this->get("at.manager.event");
+        $duplicatedEvent = $eventManager->duplicateEvent(true, $event);
+
+        $user = $this->getUser();
+        $userApplicationUser = null;
+        if ($this->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED) && $user instanceof AccountUser) {
+            $userApplicationUser = $user->getApplicationUser();
+        }
+
+        $eventInvitationManager = $this->get("at.manager.event_invitation");
+        $userEventInvitation = $eventInvitationManager->createCreatorEventInvitation($duplicatedEvent, $userApplicationUser);
+        if ($userEventInvitation != null) {
+            // The creator is designated as creator of all modules and all pollProposals
+            /** @var ModuleInvitation $userModuleInvitation */
+            foreach ($userEventInvitation->getModuleInvitations() as $userModuleInvitation){
+                $userModuleInvitation->setCreator(true);
+                if(($pollModule = $userModuleInvitation->getModule()->getPollModule()) != null){
+                    /** @var PollProposal $pollProposal */
+                    foreach($pollModule->getPollProposals() as $pollProposal){
+                        $pollProposal->setCreator($userModuleInvitation);
+                    }
+                }
+            }
+            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $userEventInvitation->getToken());
+        }
+
+        $entityManager = $this->get('doctrine.orm.entity_manager');
+        $entityManager->persist($duplicatedEvent);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('displayEvent', array('token' => $duplicatedEvent->getToken()));
     }
 
     /**
@@ -71,9 +114,8 @@ class EventController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         } else {
-
             /* TODO : invitation annulée : désactiver les formulaires */
-            if($userEventInvitation->getStatus() == EventInvitationStatus::CANCELLED){
+            if ($userEventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                 $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans('eventInvitation.message.warning.invitation_cancelled'));
             }
 
@@ -147,12 +189,13 @@ class EventController extends Controller
         // Edition management //
         ////////////////////////
         $eventForm = null;
+        $eventDuplicationForm = null;
         if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
             /** @var Form $eventForm */
             $eventForm = $eventManager->initEventForm();
             $eventForm->handleRequest($request);
-            if ($request->isXmlHttpRequest()) {
-                if ($eventForm->isSubmitted()) {
+            if ($eventForm->isSubmitted()) {
+                if ($request->isXmlHttpRequest()) {
                     if ($eventForm->isValid()) {
                         $eventManager->treatEventFormSubmission($eventForm);
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
@@ -172,10 +215,10 @@ class EventController extends Controller
                             );
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     }
+                } elseif ($eventForm->isValid()) {
+                    $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                    return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                 }
-            } elseif ($eventForm->isValid()) {
-                $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
-                return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
             }
         }
 
