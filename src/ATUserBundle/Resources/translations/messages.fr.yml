@@ -21,7 +21,7 @@ register:
     already_an_account: Déjà un compte ?
   form_field:
     email: E-mail
-    publicName: Votre nom public
+    publicName: Ton nom public
   validation:
     email_already_used: Cet adresse e-mail est déjà utilisée
   check_email:
@@ -33,8 +33,8 @@ register:
     message: |
         Bonjour %username%!
 
-        Nous avons enregistré un inscription avec l'adresse %email% que vous avez attaché à votre compte. Cet e-mail va être transférer au nouveau compte.
-        Si vous n'êtes pas à l'initiative de cette inscription, vérifiez immédiatement la boîte e-mail correspondante et annulez la demande.
+        Nous avons enregistré un inscription avec l'adresse "%email%" que tu as attachée à votre compte. Cet e-mail va être transféré au nouveau compte.
+        Si tu n'es pas à l'initiative de cette inscription, vérifie immédiatement la boîte e-mail correspondante et annule la demande.
 
         Cordialement,
         L'équipe.
@@ -47,7 +47,7 @@ confirmed:
 change_password:
   page:
     meta_title: Modification du mot de passe
-    title: Modifier votre mot de passe
+    title: Modifier ton mot de passe
 
 resetting:
   check_email:
@@ -60,8 +60,8 @@ resetting:
       title: Mot de passe déjà requis
   reset:
     page:
-      meta_title: Initialisation de votre mot de passe
-      title: Initialisation de votre mot de passe
+      meta_title: Initialisation de ton mot de passe
+      title: Initialisation de ton mot de passe
   request:
     page:
       meta_title: Mot de passe oublié
@@ -69,18 +69,18 @@ resetting:
 
 profile:
   user_menu:
-    entry: Mon profil
+    entry: Ton profil
   show:
     page:
-      meta_title: Mon profil
-      title: Mon profil
-      avatar_update: Mettre à jour votre avatar
+      meta_title: Ton profil
+      title: Ton profil
+      avatar_update: Mettre à jour ton avatar
     tab:
       profile_information: Profil
       profile_contacts: Contacts
       profile_preferences: Préférences
     appuseremail:
-      title: Vos e-mails associés
+      title: Tes e-mails associés
       add_link: Associer un nouvel email
       waiting_validation: En attente de validation
       tooltip:
@@ -94,7 +94,7 @@ profile:
           title: Editer l'email "%email%"
         delete:
           swal_title: "Suppression d'un e-mail"
-          swal_text: Êtes-vous sûre de vouloir supprimer cet email ?
+          swal_text: Es-tu sûr de vouloir supprimer cet email ?
         form:
           email:
             label: E-mail
@@ -104,7 +104,7 @@ profile:
             none-selected-text: Type
           use_to_receive_email:
             label: Recevoir les notifications
-            help: Recevoir les notifications liées à cet e-mail dans sa boîte de réception plutôt que dans celle de l'e-mail de votre compte utilisateur.
+            help: Recevoir les notifications liées à cet e-mail dans sa boîte de réception plutôt que dans celle de l'e-mail de ton compte utilisateur.
           validation:
             email_already_used: Cet adresse e-mail est déjà associée à un compte
     profile_information:
@@ -116,8 +116,8 @@ profile:
           placeholder: E-mail
         password:
           title: Mot de passe
-          change: Modifier votre mot de passe
-          init: Initialiser votre mot de passe
+          change: Modifier ton mot de passe
+          init: Initialiser ton mot de passe
         social_network:
           title: Réseaux sociaux
       personal_information:
@@ -126,7 +126,7 @@ profile:
           title: Nom public
           label: Nom public
           placeholder: Nom Public
-          help: Il s'agit de votre nom affiché publiquement par défault (par exemple pour les invitations ou votre profil public)
+          help: Il s'agit de ton nom affiché publiquement par défault (par exemple pour les invitations ou ton profil public)
         firstname:
           title: Prénom
           label: Prénom
@@ -146,7 +146,7 @@ profile:
         birthday:
           title: Anniversaire
           label: Anniversaire
-          placeholder: Cliquez ici...
+          placeholder: Clique ici...
         nationality:
           title: Nationalité
           label: Nationalité
@@ -162,7 +162,7 @@ profile:
           label: Ville
           placeholder: Ville
       complementaries:
-        title: A propos de vous
+        title: A propos de toi
         marital_status:
           title: Situation Familiale
           label: Situation Familiale
@@ -170,29 +170,29 @@ profile:
         biography:
           title: Biographie
           label: Biographie
-          placeholder: Quelques mots à propos de vous ...
-          empty: Vous n'avez pas encore renseigné votre biographie
+          placeholder: Quelques mots à propos de toi...
+          empty: Tu n'as pas encore renseigné ta biographie
         interests:
           title: Centres d'intérêts
           label: Centres d'intérêts
-          placeholder: Quels sont vos centres d'intérêts...
-          empty: Vous n'avez pas encore renseigné vos centres d'intérêts
+          placeholder: Quels sont tes centres d'intérêts...
+          empty: Tu n'as pas encore renseigné tes centres d'intérêts
         food_conveniences:
           title: Commodités Alimentaires
           label: Commodités Alimentaires
-          placeholder: Renseignez vos préférences et allergies alimentaires...
-          empty: Vous n'avez pas encore renseigné vos commodités alimentaires
+          placeholder: Renseigne tes préférences et allergies alimentaires...
+          empty: Tu n'as pas encore renseigné tes commodités alimentaires
   message:
     update:
       success: Informations mises à jour
-      error: Une erreur est survenue lors de la mise à jour de vos informations
+      error: Une erreur est survenue lors de la mise à jour de tes informations
     init_password:
-      already_init: Cette action est interdite car vous devriez déjà connaître votre mot de passe.
+      already_init: Cette action est interdite car tu devrais déjà connaître ton mot de passe.
 
 contacts:
   left-menu:
-    title: Vos groupes
-    all_contacts: Tous vos contacts
+    title: Tes groupes
+    all_contacts: Tous tes contacts
     add_group:
       label: Nouveau
   menu:
@@ -238,9 +238,9 @@ contacts:
   text:
     selection_action: Avec les contacts sélectionnés
     selection_button: Créer un événement
-    empty_contact_list: Vous n'avez pas encore de contact, faites une recherche
+    empty_contact_list: Tu n'as pas encore de contact, fais une recherche
   alert:
-    remove_contact_confirmation_title: Etes-vous sûr de vouloir supprimer ce contact ?
+    remove_contact_confirmation_title: Es-tu sûr de vouloir supprimer ce contact ?
     remove_contact_confirmation_text: Cette action est irréversible
   message:
     add_contact:
@@ -255,7 +255,7 @@ contacts:
 
 # Global messages
 text:
-  social_network_connexion: 'Connectez-vous via les réseaux sociaux'
+  social_network_connexion: 'Connecte-toi via les réseaux sociaux'
   social_network:
     google: Google
     facebook: Facebook
