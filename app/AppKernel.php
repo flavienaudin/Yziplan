@@ -17,6 +17,7 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
+            //new YziCommentBundle\YziCommentBundle(),
 
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
 
@@ -32,7 +33,6 @@ class AppKernel extends Kernel
             new FOS\RestBundle\FOSRestBundle(),
             new FOS\CommentBundle\FOSCommentBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle($this),
-            new YziCommentBundle\YziCommentBundle(),
         ];
 
         //Test and Dev Bundles
