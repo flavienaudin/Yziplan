@@ -76,11 +76,11 @@ class EventController extends Controller
         if ($userEventInvitation != null) {
             // The creator is designated as creator of all modules and all pollProposals
             /** @var ModuleInvitation $userModuleInvitation */
-            foreach ($userEventInvitation->getModuleInvitations() as $userModuleInvitation){
+            foreach ($userEventInvitation->getModuleInvitations() as $userModuleInvitation) {
                 $userModuleInvitation->setCreator(true);
-                if(($pollModule = $userModuleInvitation->getModule()->getPollModule()) != null){
+                if (($pollModule = $userModuleInvitation->getModule()->getPollModule()) != null) {
                     /** @var PollProposal $pollProposal */
-                    foreach($pollModule->getPollProposals() as $pollProposal){
+                    foreach ($pollModule->getPollProposals() as $pollProposal) {
                         $pollProposal->setCreator($userModuleInvitation);
                     }
                 }
@@ -186,6 +186,16 @@ class EventController extends Controller
         }
 
         ////////////////////////
+        // Comment Management //
+        ////////////////////////
+        $thread = $currentEvent->getCommentThread();
+        $discussionManager = $this->container->get('at.manager.discussion');
+        if (null == $thread) {
+            $thread = $discussionManager->createEventThread($currentEvent, $request->getUri());
+        }
+        $comments = $discussionManager->getCommentsThread($thread);
+
+        ////////////////////////
         // Edition management //
         ////////////////////////
         $eventForm = null;
@@ -202,7 +212,8 @@ class EventController extends Controller
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#event-header-card'] =
                             $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
                                     'userEventInvitation' => $userEventInvitation,
-                                    'eventForm' => $eventForm->createView()
+                                    'eventForm' => $eventForm->createView(),
+                                    'thread' => $thread, 'comments' => $comments,
                                 )
                             );
                         return new AppJsonResponse($data, Response::HTTP_OK);
@@ -211,6 +222,7 @@ class EventController extends Controller
                             $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
                                     'userEventInvitation' => $userEventInvitation,
                                     'eventForm' => $eventForm->createView(),
+                                    'thread' => $thread, 'comments' => $comments,
                                 )
                             );
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
@@ -374,6 +386,7 @@ class EventController extends Controller
         return $this->render('AppBundle:Event:event.html.twig', array(
             'event' => $currentEvent,
             'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
+            'thread' => $thread, 'comments' => $comments,
             'invitationsForm' => ($eventInvitationsForm != null ? $eventInvitationsForm->createView() : null),
             'modules' => $modules,
             'userEventInvitation' => $userEventInvitation,
@@ -443,10 +456,20 @@ class EventController extends Controller
             /** @var Form $eventForm */
             $eventForm = $eventManager->initEventForm();
             $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+
+            $thread = $event->getCommentThread();
+            if ($thread != null) {
+                $discussionManager = $this->container->get('at.manager.discussion');
+                $comments = $discussionManager->getCommentsThread($thread);
+            } else {
+                $comments = [];
+            }
+
             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#event-header-card'] =
                 $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
                         'userEventInvitation' => $eventInvitation,
-                        'eventForm' => $eventForm->createView()
+                        'eventForm' => $eventForm->createView(),
+                        'thread' => $thread, 'comments' => $comments,
                     )
                 );
             return new AppJsonResponse($data, Response::HTTP_OK);

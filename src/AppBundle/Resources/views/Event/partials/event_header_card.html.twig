@@ -1,6 +1,8 @@
 {# Données d'entrée :
 - userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
 - eventForm (Form|null) Formulaire d'édition des information général de l'événement (si les droits le permettent)
+- thread (Thread) Le fil de discussion de l'événement
+- comments(Comment[]) Les commentaires appartenant au fil de discussion de l'événement
 #}
 
 <div class="card z-depth-2" id="event-header-card">
@@ -34,11 +36,42 @@
             </div>
         </div>
     </div>
+
+    {% if thread is defined and thread is not null %}
+
+        <div id="fos_comment_thread" data-thread="{{ thread.id }}" class="wall-comment-list">
+            {% include 'FOSCommentBundle:Thread:comments.html.twig' with {'comments': comments,'thread': thread, 'view' : 'flat'} %}
+        </div>
+
+    {% endif %}
 </div>
 <script>
     $(document).ready(function () {
         if (typeof google === 'object' && typeof google.maps === 'object') {
             initEventShowMap();
         }
+        $(document).on('fos_comment_add_comment fos_comment_show_form fos_comment_show_edit_form fos_comment_cancel_form', function (event, data) {
+            $('.grid').masonry('layout');
+        });
+
+        /** Fonction pour eviter le double envoi de commentaire */
+        (function ($) {
+            var comment = {};
+            comment.construct = function () {
+                comment.formSubmitHandler();
+                comment.commentAddedHandler();
+            };
+            comment.commentAddedHandler = function () {
+                $(document).on('fos_comment_add_comment', function (event, commentHtml) {
+                    $('.fos_comment_submit > button[type=submit], .fos_comment_submit > input[type=submit]').removeAttr("disabled");
+                });
+            };
+            comment.formSubmitHandler = function () {
+                $(document).on('fos_comment_submitting_form', function () {
+                    $('.fos_comment_submit > button[type=submit], .fos_comment_submit > input[type=submit]').attr("disabled", "disabled");
+                });
+            };
+            comment.construct();
+        })(jQuery);
     });
 </script>

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Event;
 
+use AppBundle\Entity\Comment\Thread;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -64,7 +65,7 @@ class Event
      */
     private $whereGooglePlaceId;
 
-   /**
+    /**
      * @var DateTime
      *
      * @ORM\Column(name="when_event", type="datetime", unique=false, nullable=true)
@@ -116,6 +117,13 @@ class Event
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
+
+    /**
+     * @var Thread
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Comment\Thread")
+     * @ORM\JoinColumn(name="comment_thread_id", referencedColumnName="id", nullable=true)
+     */
+    private $commentThread;
 
     /**
      * @var ArrayCollection
@@ -271,7 +279,6 @@ class Event
     }
 
 
-
     /**
      * Get token
      *
@@ -392,6 +399,24 @@ class Event
     public function setGuestsCanAddModule($guestsCanAddModule)
     {
         $this->guestsCanAddModule = $guestsCanAddModule;
+        return $this;
+    }
+
+    /**
+     * @return Thread
+     */
+    public function getCommentThread()
+    {
+        return $this->commentThread;
+    }
+
+    /**
+     * @param Thread $commentThread
+     * @return Event
+     */
+    public function setCommentThread($commentThread)
+    {
+        $this->commentThread = $commentThread;
         return $this;
     }
 

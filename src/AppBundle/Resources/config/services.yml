@@ -23,6 +23,10 @@ services:
     class: AppBundle\Manager\EventManager
     arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation']
 
+  at.manager.discussion:
+    class: AppBundle\Manager\DiscussionManager
+    arguments: ['@at.manager.event','@fos_comment.manager.thread','@fos_comment.manager.comment']
+
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
     arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation','@at.manager.pollproposal']

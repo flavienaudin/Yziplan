@@ -147,6 +147,9 @@ function isMobile() {
  *  - textarea autosize
  *  - clockpicker
  *  - datepicker
+ *  - selectpicker
+ *  - tooltip
+ *  - mansorny
  */
 function jsPlugginActivation() {
     /** Autosize **/
