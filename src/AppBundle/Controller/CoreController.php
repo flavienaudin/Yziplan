@@ -26,7 +26,11 @@ class CoreController extends Controller
      */
     public function testIndexAction(Request $request)
     {
-        return $this->render('AppBundle:Core:testIndex.html.twig');
+        if ($this->get('kernel')->getEnvironment() == "dev") {
+            return $this->render('AppBundle:Core:testIndex.html.twig');
+        } else {
+            return $this->redirectToRoute('home');
+        }
     }
 
     /**
@@ -34,7 +38,10 @@ class CoreController extends Controller
      */
     public function testIndex2Action(Request $request)
     {
-        return $this->render('AppBundle:Core:testIndex2.html.twig');
+        if ($this->get('kernel')->getEnvironment() == "dev") {
+            return $this->render('AppBundle:Core:testIndex2.html.twig');
+        } else {
+            return $this->redirectToRoute('home');
+        }
     }
-
 }
