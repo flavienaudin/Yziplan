@@ -34,6 +34,10 @@ $(document).ready(function () {
             initEventEditMap();
         });
     }
+
+    $('textarea, .auto-size').on('autosize:resized', function(){
+        $('.grid').masonry('layout');
+    });
 });
 
 /** Fonctions relatives à la page d'événement */

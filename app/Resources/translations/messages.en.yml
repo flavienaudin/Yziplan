@@ -10,7 +10,7 @@ base:
       opera: Opera
       safari: Safari
       ie: IE (New)
-    text1: You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.
+    text1: You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to entirely enjoy Yziplan.
     text2: Sorry for the inconvenience!
   footer:
     home: Home
@@ -28,45 +28,45 @@ landing_page:
     new_year:
       alt: New Year
       title: New Year
-      text: Pas encore organisé pour le nouvel an ? C'est le moment d'y remédier !
+      text: Not organised for the New Year? It's not to late!
     christmas:
       alt: Christmas
       title: Christmas
-      text: Noël c'est le moment du partage, quoi de mieux que de s'organiser collaborativement ?
+      text: Christmas, this is the time of sharing, What better way to organize collaboratively?
     king_cake:
       alt: Epiphany
       title: Epiphany
-      text: Envie d'un moment de convivialité autour d'une galette? Faites le savoir à vos amis !
+      text: Feel like a moment of conviviality around a Twelfth-Night pancake? Let your friends know!
     after_work:
       alt: after work
-      title: An After Work ?
-      text: Want to know who is available and where to go for a drink ?
+      title: An After Work?
+      text: Want to know who is available and where to go for a drink?
     meeting:
       alt: professional meeting
-      title: A professional meeting ?
-      text: Need to choose a slot for a meeting in order to have the maximum of person ?
+      title: A professional meeting?
+      text: Need to choose a slot for a meeting in order to have the maximum of person?
     party:
       alt: party
       title: A Party ?
-      text: Want to organize the next party with your friends ?
+      text: Want to organize the next party with your friends?
     holiday:
       alt: holidays
-      title: Vacation between friends ?
-      text: Organize yourself with your friends to know where and when to go on weekends or holidays !
+      title: Vacation between friends?
+      text: Organize yourself with your friends to know where and when to go on weekends or holidays!
 
 appuseremail:
   associate:
     message:
       check_mailbox: Please check the "%email%" mailbox to validate the association.
       association_validated: The association with the email %email% is confirmed.
-      not_found: The associated email with given token does not exist
-      wrong_user: The email is not associated with the account.
+      not_found: The associated email with given token does not exist.
+      wrong_user: The email is not associated with this account.
     confirmationAppUserEmail_email:
       subject: Yziplan Confirmation - Email association
       message: |
         Hello %username%!
 
-        To finish associating the email %email% - please visit %confirmationUrl%
+        To finish associating the email "%email%" - please visit %confirmationUrl%
 
         Regards,
         The Team.
@@ -99,26 +99,26 @@ event:
       label: Title
       placeholder: Event title
     description:
-      label: Description:
+      label: "Description:"
       placeholder: Say more about your event
       empty: Orgnizers didn't give more detail
     responseDeadline:
-      label: Response deadline:
+      label: "Response deadline:"
       placeholder: Response deadline
     whereName:
-      label: Where:
+      label: "Where:"
       placeholder: Where
       tootlip.title: Set where your event will take place or add a poll to consult your guest
     when:
-      label: When:
+      label: "When:"
       placeholder: When
       tootlip.title: Set the date of your event or add a poll to consult your guest
     status:
-      label: Status:
+      label: "Status:"
       placeholder: Event status
       swal:
         title: Validation
-        text: The event is going to be validated...qu'est ce que ça va changer ?
+        text: The event is going to be validated...
     invitationOnly:
       label: Invitation only
       placeholder: Invitation only
@@ -138,23 +138,23 @@ event:
 #      text.false: Guests can not add module to the event
   error.message:
     creation: An error occured while creating an event.
-    unauthorized_access: You have no right to access this event.
+    unauthorized_access: You have not the authorization to access this event.
   success.message:
-    creation: Event created successfully.
+    creation: Event created successfully
   help:
     popover:
       header: Fill in information about your event.
-      name: Don't stay anonymous, give your name!
+      name: Don't stay anonymous, enter your name!
       response: Think about confirming your presence (you can do it later).
       pollmodule: Your friends are waiting for your mind.
 
 eventInvitations:
   user_menu:
-    entry: My events
+    entry: Your events
   page:
-    meta_title: My events
-    title: My events
-    subtitle: List of events I organize and events I am invited to
+    meta_title: Your events
+    title: Your events
+    subtitle: List of events you organize and events you are invited to
   table:
     event_name: Event name
     organiser: Organiser
@@ -199,7 +199,7 @@ eventInvitation:
     text:
       disconnect: You are not %user%?
     guestname_required_alert:
-      title: What's your name ?
+      title: What's your name?
       message: Enter your name in order to identify yourself with other guests
       inputError: It's better with non-empty name.
       dismiss: Your participation doesn't count until you fill a name.
@@ -208,7 +208,7 @@ eventInvitation:
   message:
     warning:
       email_owned_by_accountuser: Warning! This email address is associated to a user account. Please, login before participating to enjoy all the features.
-      another_invitation_already_exists_for_user: You already have an invitation to this event, you were redirected to it.
+      another_invitation_already_exists_for_user: You already have an invitation to this event, you were redirected.
       invitation_cancelled: Your invitation is cancelled, you cannot participate in the organization anymore.
     error:
       unauthorized_cancel: You are not allowed to cancel this invitation.
@@ -227,15 +227,15 @@ eventInvitation:
       subject: "[Yziplan] Personal link to your invitation"
       body:
         hello: "Hi %username%!"
-        paragraph: "You participate to the event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
+        paragraph: "You participate to the organization of event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
 
 invitation_list:
   display:
     title: Guests list
     list:
-      yes: They will be there:
-      maybe: They didn't answer yet:
-      no: They won't come:
+      yes: "They will be there:"
+      maybe: "They didn't answer yet:"
+      no: "They won't come:"
 
 invitations:
   display:
@@ -303,17 +303,17 @@ module:
       inherit: Inherit
   alert:
     confirm_deletion:
-      title: Are you sure you want to delete this module ?
+      title: Are you sure you want to delete this module?
       message: This action is irreversible
   error.message:
     add: You must set your name on your invitation.
 
 pollmodule:
   add_link:
-    what: What ?
-    when: When ?
-    where: Where ?
-    whobringswhat: Who brings what ?
+    what: What?
+    when: When?
+    where: Where?
+    whobringswhat: Who brings what?
   display:
     no_proposal: No proposal yet
   modal:
@@ -339,16 +339,15 @@ addModule:
     title: Add an item
 
 moduleInvitation:
-  empty_displayable_name: You
   error.message:
     missing_data: Data are missing to treat the request.
     unauthorized_access: You are not allowed to edit this answer.
 
 # Globals
 global:
-  project_name: YziPlan
-  event: Event
-  user_anonyme: YsiPlanor anonyme
+  project_name: Yziplan
+  event: event
+  user_anonyme: Ysiplanor anonyme
   link:
     top: Top
   button:
@@ -371,7 +370,7 @@ global:
   error:
     not_ajax_request: Your behavior is suspect, big brother is watching you!
     unauthorized_access: You haven't access to this section.
-    internal_server_error: An internal error occured. Please, check your data and repeat the action.
+    internal_server_error: An internal error occured. Please, check your data and retry the action.
     javascrip_disabled: Javascript is disabled by your web browser. The web site may react badly. Enable it to take full advantage of the features we offer.
     invalid_form: Submitted data are not valid.
   exception:
@@ -418,7 +417,7 @@ pollmoduletype:
   when: When
   what: What
   where: Where
-  whobringswhat: What do you need ?
+  whobringswhat: What do you need?
 
 contact_info_type:
   home: Home

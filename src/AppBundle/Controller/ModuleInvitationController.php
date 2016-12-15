@@ -11,6 +11,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Security\ModuleInvitationVoter;
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\Response\AppJsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,14 +38,14 @@ class ModuleInvitationController extends Controller
                     $pollroposalResponseManager = $this->get("at.manager.pollproposal_response");
                     $pollroposalResponseManager->answerPollModuleProposal($moduleInvitation, $request->request->get('pollProposalId'), $request->request->get('value'));
                     $data = array();
-                    return new JsonResponse($data, Response::HTTP_OK);
+                    return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('moduleInvitation.error.message.unauthorized_access');
-                    return new JsonResponse($data, Response::HTTP_UNAUTHORIZED);
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('moduleInvitation.error.message.unauthorized_access');
+                    return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
                 }
             } else {
-                $data['messages'][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('moduleInvitation.error.message.missing_data');
-                return new JsonResponse($data, Response::HTTP_BAD_REQUEST);
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('moduleInvitation.error.message.missing_data');
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             }
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));

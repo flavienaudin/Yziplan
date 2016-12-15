@@ -10,7 +10,7 @@ base:
       opera: Opera
       safari: Safari
       ie: IE (Nouveau)
-    text1: Vous utilisez une ancienne version d'Internet Explorer, veuillez le mettre à jour<br/> ou installer l'un des navigateur suivants pour profiter pleinement de ce site internet.
+    text1: Tu utilises une ancienne version d'Internet Explorer, merci de le mettre à jour<br/> ou d'installer l'un des navigateur suivants pour profiter pleinement d'Yziplan.
     text2: Désolé pour le dérangement!
   footer:
     home: Accueil
@@ -69,7 +69,7 @@ appuseremail:
         Pour valider l'association de l'email %email%, merci de vous rendre sur %confirmationUrl%
 
         Cordialement,
-        L'équipe.
+        L'équipé Yziplan.
   edit:
     message:
       error: Impossible de modifier cette association.
@@ -77,7 +77,7 @@ appuseremail:
     message:
       error:
         default: Une erreur est survenue lors de la suppression de l'e-mail associé.
-        main_email: Désolé, il n'est pas possible de supprimer votre adresse principale.
+        main_email: Désolé, il n'est pas possible de supprimer ton adresse principale.
 
 event:
   page:
@@ -93,32 +93,32 @@ event:
     update_modal:
       title: Charger une image
       button:
-        submit_title: Transférer l'image et utiliser pour l'événement
+        submit_title: Transférer l'image et l'utiliser pour l'événement
   form:
     name:
       label: Titre
       placeholder: Titre de l'événement
     description:
-      label: Description :
+      label: "Description :"
       placeholder: Dites-en plus au sujet de votre événement
       empty: Les organisateurs n'ont pas donné plus de détail
     responseDeadline:
-      label: Date limite de réponse :
+      label: "Date limite de réponse :"
       placeholder: Date limite de réponse
     whereName:
-      label: Où :
+      label: "Où :"
       placeholder: Où
-      tootlip.title: Fixez le lieu de votre événement ou ajoutez un sondage pour consulter vos invités
+      tootlip.title: Fixe le lieu où se déroule ton événement ou ajoute un sondage pour consulter tes invités
     when:
-      label: Quand :
+      label: "Quand :"
       placeholder: Quand
-      tootlip.title: Fixez la date de votre événement ou ajoutez un sondage pour consulter vos invités
+      tootlip.title: Fixe la date de ton événement ou ajoute un sondage pour consulter tes invités
     status:
-      label: Etat :
+      label: "Etat :"
       placeholder: Etat de l'événement
       swal:
         title: Validation
-        text: L'événement va être validé...qu'est ce que ça va changer ?
+        text: L'événement va être validé...
     invitationOnly:
       label: Seulement sur invitation
       placeholder: Seulement sur invitation
@@ -129,8 +129,8 @@ event:
     guestsCanInvite:
       label: Permettre à vos amis d'inviter
       placeholder: Permettre à vos amis d'inviter
-      text.true: Vos amis peuvent inviter
-      text.false: Vos amis ne peuvent pas inviter
+      text.true: Tes amis peuvent inviter
+      text.false: Tes amis ne peuvent pas inviter
 #    guestsCanAddModule:
 #      label: Autoriser les invités à ajouter un module
 #      placeholder: Autoriser les invités à ajouter un module
@@ -138,23 +138,23 @@ event:
 #      text.false: Les invités ne peuvent pas ajouter un module
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement.
-    unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
+    unauthorized_access: Tu n'as pas les autorisations pour accéder à cet événement.
   success.message:
     creation: Evénement créé avec succès.
   help:
     popover:
-      header: Renseignez les informations relatives à votre événement.
-      name: Ne restez pas dans l'anonymat, renseignez votre nom !
-      response: Pensez à confirmer votre présence (vous pouvez le faire plus tard).
-      pollmodule: Vos amis attendent votre avis.
+      header: Renseigne les informations relatives à l'événement.
+      name: Ne reste pas dans l'anonymat, renseigne ton nom!
+      response: Pense à confirmer ta présence (Tu peux le faire plus tard).
+      pollmodule: Tes amis attendent ton avis.
 
 eventInvitations:
   user_menu:
-    entry: Mes événements
+    entry: Tes événements
   page:
-    meta_title: Mes événements
-    title: Mes événements
-    subtitle: Liste des événements que j'organise et des invitations que j'ai reçues
+    meta_title: Tes événements
+    title: Tes événements
+    subtitle: Liste des événements que tu organises et des invitations que tu as reçues
   table:
     event_name: Nom de l'événement
     organiser: Organisateur
@@ -171,32 +171,32 @@ eventInvitation:
   form:
     guestname:
       label: Nom
-      placeholder: Votre nom pour l'événement
+      placeholder: Ton nom
     email:
       label: E-mail
-      placeholder: Votre e-mail de contact
+      placeholder: Ton e-mail de contact
     answer:
-      label: Serez-vous présent ?
-      placeholder: Serez-vous présent ?
+      label: Seras-tu présent ?
+      placeholder: Seras-tu présent ?
   answer:
     card:
-      title: Votre réponse
+      title: Ta réponse
     yes: Oui
     no: Non
     interested: Intéressé
     not_interested: Non Intéressé
     dont_know: Peut-être
   url:
-    label: Votre invitation
-    text: Conserver ce lien pour revenir sur cette page
+    label: Ton invitation
+    text: Conserve ce lien pour revenir sur cette page
   profile.card:
-    title: Votre profil
+    title: Ton profil
     badge:
       guest: Invité
       creator: Créateur
       administrator: Administrateur
     text:
-      disconnect: Vous n'êtes pas %user% ?
+      disconnect: Tu n'es pas %user% ?
     guestname_required_alert:
       title: Quel est ton nom ?
       message: Renseigne ton nom afin t'identifier auprès des autres invités
@@ -206,12 +206,12 @@ eventInvitation:
         unauthorized_action: Afin de participer à l'organisation de cet événement, tu dois valider ton invitation en renseignant ton nom.
   message:
     warning:
-      email_owned_by_accountuser: Attention! Cet e-mail est associée à un compte utilisateur. Connectez-vous avant de participer pour profiter de toutes les fonctionnalités.
-      another_invitation_already_exists_for_user: Vous avez déjà une inivitation pour cet événement, vous avez été redirigé vers celle-ci.
+      email_owned_by_accountuser: Attention! Cet e-mail est associé à un compte utilisateur. Connecte-toi afin de profiter de toutes les fonctionnalités.
+      another_invitation_already_exists_for_user: Tu as déjà une inivitation pour cet événement, tu as été redirigé vers celle-ci.
       invitation_cancelled: Ton invitation est annulée, tu ne peux plus participer à l'organisation.
     error:
-      unauthorized_cancel: Vous n'avez pas les autorisations pour annuler cette invitation.
-      unauthorized_access: Vous n'êtes pas inviter à cet événement.
+      unauthorized_cancel: Tu n'as pas les autorisations pour annuler cette invitation.
+      unauthorized_access: Tu n'es pas invité à cet événement.
   email:
     invitation:
       subject: "[Yziplan] Tu as reçu une invitation"
@@ -226,34 +226,34 @@ eventInvitation:
       subject: "[Yziplan] Lien personnel de ton invitation"
       body:
         hello: "Bonjour %username%!"
-        paragraph: "Tu participes à l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier ta participation, utilise le lien ci-dessous :"
+        paragraph: "Tu participes à l'organisation de l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier ta participation, utilise le lien ci-dessous :"
 
 invitation_list:
   display:
     title: Liste des invités
     list:
-      yes: Ils seront là :
-      maybe: Ils n'ont pas encore répondu :
-      no: Ils ont déclinés l'invitation :
+      yes: "Ils seront là :"
+      maybe: "Ils n'ont pas encore répondu :"
+      no: "Ils ont déclinés l'invitation :"
 
 invitations:
   display:
-    title: Invitez vos amis
+    title: Invite tes amis
     cancel:
       link: Annuler l'invitation de %name%
       link_noname: Annuler l'invitation
       swal:
         title: Annulation
-        text: Êtes-vous sûre de vouloir annuler l'invitation de %name% ?
-        text_noname: Êtes-vous sûre de vouloir annuler cette invitation ?
+        text: Es-tu sûr de vouloir annuler l'invitation de %name% ?
+        text_noname: Es-tu sûr de vouloir annuler cette invitation ?
       message:
         success: L'invitation a bien été annulée
   form:
     invitations:
       label: En leur envoyant un e-mail
-      placeholder: E-mails de vos invités
-      invalid_message: Veuillez renseigner des e-mails valides
-      help: Appuyez sur "entrée" après chaque e-mail pour la valider
+      placeholder: E-mails de tes invités
+      invalid_message: Les e-mails ne sont pas correctes
+      help: Appuyez sur "entrée" après chaque e-mail pour le valider
   message:
     success: Les invitations ont bien été envoyées.
     error:  "Les invitations suivantes n'ont pu être envoyées : %email_list%"
@@ -271,7 +271,7 @@ contactsgmail:
     avatar: Avatar
     contact: Contact
     email: E-mail
-    empty_table: Vous n'avez pas de contacts
+    empty_table: Tu n'as pas encore de contacts
 
 module:
   main_information:
@@ -292,20 +292,20 @@ module:
       text.true: Seuls les invités peuvent participer (événement privé)
       text.false: Rend l'événement accessible à toutes les personnes recevant le lien
     guestsCanInvite:
-      label: Permettre à vos amis d'inviter
-      placeholder: Permettre à vos amis d'inviter
-      text.true: Vos amis peuvent inviter
-      text.false: Vos amis ne peuvent pas inviter
+      label: Permettre à tes amis d'inviter
+      placeholder: Permettre à tes amis d'inviter
+      text.true: Tes amis peuvent inviter
+      text.false: Tes amis ne peuvent pas inviter
     choice.label:
       yes: Oui
       no: Non
       inherit: Hérite
   alert:
     confirm_deletion:
-      title: Etes-vous sûr de vouloir supprimer ce module ?
+      title: Es-tu sûr de vouloir supprimer ce module ?
       message: Cette action est irréversible
   error.message:
-    add: Vous devez renseigner votre nom sur l'invitation.
+    add: Tu dois renseigner ton nom sur l'invitation.
 
 pollmodule:
   add_link:
@@ -330,7 +330,7 @@ pollmodule:
           label: Ajouter une date
   alert:
     confirm_proposal_deletion:
-      title: Etes-vous sûr de vouloir supprimer cette proposition ?
+      title: Es-tu sûr de vouloir supprimer cette proposition ?
       message: Cette action est irréversible
 
 addModule:
@@ -338,16 +338,15 @@ addModule:
     title: Ajouter un élément
 
 moduleInvitation:
-  empty_displayable_name: Vous
   error.message:
     missing_data: Des informations sont manquantes pour traiter la requête.
     unauthorized_access: Vous n'êtes pas autoriser à modifier cette réponse
 
 # Globals
 global:
-  project_name: YziPlan
+  project_name: Yziplan
   event: événement
-  user_anonyme: YsiPlaneur anonyme
+  user_anonyme: Ysiplaneur anonyme
   link:
     top: Haut
   button:
@@ -368,14 +367,14 @@ global:
   success:
     data_saved: Données sauvegardées
   error:
-    not_ajax_request: Vous agissez suspectement, on vous garde à l'oeil!
-    unauthorized_access: Vous n'êtes pas autorisés à accéder à cette section.
-    internal_server_error: Une erreur interne est survenue. Merci de vérifier vos données et de réessayer votre action.
-    javascrip_disabled: Le javascript est désactivé par votre navigateur. Le site risque de mal réagir. Ré-activez-le afin de profiter pleinement des fonctionnalités que nous vous proposons
+    not_ajax_request: Tu agis de manière suspecte, on te garde à l'oeil!
+    unauthorized_access: Tu n'es pas autorisé à accéder à cette section.
+    internal_server_error: Une erreur interne est survenue. Merci de vérifier tes données et de réessayer ton action.
+    javascrip_disabled: Ton navigateur a désactivé le javascript. Le site risque de mal s'afficher. Ré-active-le afin de profiter pleinement des fonctionnalités que nous te proposons
     invalid_form: Des données du formulaire sont invalides.
   exception:
-    access_denied_http: Vous n'avez pas accès à ces données. Connectez-vous avec l'utilisateur adéquate.
-    method_not_allowed_http: Cette requête n'est pas autorisée. Faites attention.
+    access_denied_http: Tu n'as pas accès à ces données. Connecte-toi avec l'utilisateur adéquate.
+    method_not_allowed_http: Cette requête n'est pas autorisée.
   swal:
     title:
       error: Erreur

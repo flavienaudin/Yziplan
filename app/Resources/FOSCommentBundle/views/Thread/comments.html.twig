@@ -1,0 +1,52 @@
+{#
+
+ This file is part of the FOSCommentBundle package.
+
+ (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+
+ This source file is subject to the MIT license that is bundled
+ with this source code in the file LICENSE.
+
+Données d'entrée :
+- comments (Tree( 'comment', children[])) Les commentaires à afficher
+- thread (Thread) Le thread
+- depth (int|null) La profondeur affichée
+- view (['flat'|'tree'|null) Le mode d'affichage
+- userEventInvitation (EventInvitation|null) L'invitation de l'écrivain
+#}
+
+{% set depth = depth|default(0) %}
+{% set view = view|default('flat') %}
+{% if depth == 0 %}
+    {% if fos_comment_can_comment_thread(thread) %}
+        {{ render(url('fos_comment_new_thread_comments', {"id": thread.id})) }}
+    {% endif %}
+    <a href="#eventCommentListCollapse" data-toggle="collapse">Afficher les commentaires</a>
+
+    {% if fos_comment_can_edit_thread(thread) %}
+        <div class="fos_comment_thread_commentable">
+            <button data-url="{{ url('fos_comment_edit_thread_commentable', {'id': thread.id, 'value': not thread.commentable}) }}" class="fos_comment_thread_commentable_action">
+                {{ (thread.commentable ? 'fos_comment_thread_close' : 'fos_comment_thread_open') | trans({}, 'FOSCommentBundle') }}
+            </button>
+        </div>
+    {% endif %}
+{% endif %}
+<div class="wcl-list {{ depth == 0? "collapse" }}" {{ depth == 0? 'id="eventCommentListCollapse"' }}>
+    {% for commentinfo in comments if commentinfo.comment is not fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
+        {% include "FOSCommentBundle:Thread:comment.html.twig" with { "children": commentinfo.children, "comment": commentinfo.comment, "depth": depth, "view": view, 'userEventInvitation':userEventInvitation } %}
+    {% endfor %}
+</div>
+
+{% if depth == 0 %}
+    <script>
+        $(document).ready(function () {
+            $('#eventCommentListCollapse').on({
+                'shown.bs.collapse': function () {
+                    $('.grid').masonry('layout');
+                }, 'hidden.bs.collapse': function () {
+                    $('.grid').masonry('layout');
+                }
+            });
+        });
+    </script>
+{% endif %}

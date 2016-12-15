@@ -53,7 +53,7 @@ twig:
 assetic:
     debug:          '%kernel.debug%'
     use_controller: '%kernel.debug%'
-    bundles: [ 'AppBundle', 'ATUserBundle' ]
+    bundles: [ 'AppBundle', 'ATUserBundle','FOSCommentBundle' ]
 
 # Doctrine Configuration
 doctrine:
@@ -175,6 +175,13 @@ hwi_oauth:
         properties:
             google: googleId
             facebook: facebookId
+
+fos_comment:
+    db_driver: orm
+    class:
+        model:
+            comment: AppBundle\Entity\Comment\Comment
+            thread: AppBundle\Entity\Comment\Thread
 
 # Services configurations
 services:

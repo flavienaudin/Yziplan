@@ -15509,7 +15509,7 @@ body.o-hidden {
 }
 
 .wall-comment-list {
-    padding: 20px;
+    padding: 10px 20px;
     background: #f7f7f7;
 }
 
@@ -15526,6 +15526,13 @@ body.o-hidden {
     position: absolute;
     right: -20px;
     top: -1px;
+}
+
+.wcl-form > form.fos_comment_comment_new_form + .media{
+    margin-top: 0;
+}
+.wcl-form > .media:last-child{
+    margin-bottom: 15px;
 }
 
 .wcl-list + .wcl-form {

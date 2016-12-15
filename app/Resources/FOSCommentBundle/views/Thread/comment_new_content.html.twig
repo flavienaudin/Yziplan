@@ -1,0 +1,79 @@
+{#
+
+ This file is part of the FOSCommentBundle package.
+
+ (c) FriendsOfSymfony <http://friendsofsymfony.github.com/>
+
+ This source file is subject to the MIT license that is bundled
+ with this source code in the file LICENSE.
+
+Données d'entrée :
+- form (Form) formùualire de rédaction d'un commentaire
+- first (boolean) S'il s'agit du premier commentaire
+- thread (Thread) le thread
+- parent (Comment|null) Le commentaire parent du nouveau commentaire
+- id (string) Id du thread
+#}
+
+{% set first = first|default(false) %}
+
+{% set url_parameters = {'id': id } %}
+{% if parent is not null %}
+    {% set url_parameters = url_parameters|merge({'parentId': parent.id}) %}
+{% endif %}
+
+{% block fos_comment_comment_form_holder %}
+    <div class="wcl-form fos_comment_comment_form_holder">
+        {% block fos_comment_form_title %}{% endblock %}
+
+        {% block fos_comment_comment_new_form %}
+            <form class="fos_comment_comment_new_form" action="{{ url('fos_comment_post_thread_comments', url_parameters) }}" data-parent="{{ parent.id|default() }}" method="POST">
+                <div class="media">
+                    <div class="pull-right">
+                        <div class="fos_comment_submit">
+                            {% block fos_comment_form_submit %}
+                                {% if parent is not null %}
+                                    <button type="button" class="btn btn-default waves-effect fos_comment_comment_reply_cancel">
+                                        {% trans from 'FOSCommentBundle' %}fos_comment_comment_reply_cancel{% endtrans %}</button>
+                                {% endif %}
+                                <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}"
+                                        data-original-text="{% trans from 'FOSCommentBundle' %}fos_comment_comment_new_submit{% endtrans %}">
+                                    {% trans from 'FOSCommentBundle' %}fos_comment_comment_new_submit{% endtrans %}</button>
+                            {% endblock %}
+                        </div>
+                    </div>
+                    <div class="media-body">
+                        {% block fos_comment_form_fields %}
+                            <div class="fos_comment_form_errors">
+                                {{ form_errors(form) }}
+                                {{ form_errors(form.body) }}
+                            </div>
+
+                            {% if first %}
+                                {% set label = 'fos_comment_comment_new_headline_first'|trans([], 'FOSCommentBundle') %}
+                            {% elseif parent is not null %}
+                                {% set label = 'fos_comment_comment_reply_reply_to'|trans({"%name%": parent.authorName}, 'FOSCommentBundle') %}
+                            {% else %}
+                                {% set label = 'fos_comment_comment_new_headline'|trans([], 'FOSCommentBundle') %}
+                            {% endif %}
+                            {{ form_row(form.body, {
+                                'label':label,
+                                'label_attr':{'class':'sr-only'},
+                                'attr':{'placeholder':label},
+                                'widget_options':{
+                                    'fgline':true
+                                }
+                            }) }}
+
+                            {{ form_rest(form) }}
+                        {% endblock %}
+                    </div>
+                </div>
+
+            </form>
+        {% endblock fos_comment_comment_new_form %}
+    </div>
+{% endblock fos_comment_comment_form_holder %}
+
+
+
