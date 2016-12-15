@@ -234,7 +234,7 @@ invitation_list:
     list:
       yes: "Ils seront là :"
       maybe: "Ils n'ont pas encore répondu :"
-      no: "Ils ont déclinés l'invitation :"
+      no: "Ils ont décliné l'invitation :"
 
 invitations:
   display:
