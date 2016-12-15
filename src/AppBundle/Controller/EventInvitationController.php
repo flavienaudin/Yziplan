@@ -62,7 +62,7 @@ class EventInvitationController extends Controller
             }
         }
 
-        $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $eventInvitation->getToken());
+        $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY.'/'.$eventInvitation->getEvent()->getToken(), $eventInvitation->getToken());
         return $this->redirectToRoute("displayEvent", array('token' => $eventInvitation->getEvent()->getToken()));
     }
 
@@ -72,7 +72,7 @@ class EventInvitationController extends Controller
     public function disconnectEventInvitationAction($eventToken, Request $request)
     {
         if ($request->hasSession()) {
-            $request->getSession()->remove(EventInvitationManager::TOKEN_SESSION_KEY);
+            $request->getSession()->remove(EventInvitationManager::TOKEN_SESSION_KEY.'/'.$eventToken);
         }
         return $this->redirectToRoute("displayEvent", array('token' => $eventToken));
     }

@@ -51,7 +51,7 @@ class EventController extends Controller
         /** @var EventInvitation $currentEventInvitation Only one EventInvitation added when initialize an Event. */
         $currentEventInvitation = $currentEvent->getEventInvitations()->first();
         if ($currentEventInvitation != null) {
-            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $currentEventInvitation->getToken());
+            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY.'/'.$currentEvent->getToken(), $currentEventInvitation->getToken());
         }
         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
     }
@@ -85,7 +85,7 @@ class EventController extends Controller
                     }
                 }
             }
-            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY, $userEventInvitation->getToken());
+            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY.'/'.$duplicatedEvent->getToken(), $userEventInvitation->getToken());
         }
 
         $entityManager = $this->get('doctrine.orm.entity_manager');
