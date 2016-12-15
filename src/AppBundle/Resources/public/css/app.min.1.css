@@ -15528,6 +15528,13 @@ body.o-hidden {
     top: -1px;
 }
 
+.wcl-form > form.fos_comment_comment_new_form + .media{
+    margin-top: 0;
+}
+.wcl-form > .media:last-child{
+    margin-bottom: 15px;
+}
+
 .wcl-list + .wcl-form {
     margin-top: 25px;
 }

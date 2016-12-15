@@ -38,9 +38,8 @@
     </div>
 
     {% if thread is defined and thread is not null %}
-
         <div id="fos_comment_thread" data-thread="{{ thread.id }}" class="wall-comment-list">
-            {% include 'FOSCommentBundle:Thread:comments.html.twig' with {'comments': comments,'thread': thread, 'view' : 'flat'} %}
+            {% include 'FOSCommentBundle:Thread:comments.html.twig' with {'comments':comments, 'thread':thread, 'view':'flat', 'userEventInvitation':userEventInvitation} %}
         </div>
 
     {% endif %}
@@ -52,6 +51,7 @@
         }
         $(document).on('fos_comment_add_comment fos_comment_show_form fos_comment_show_edit_form fos_comment_cancel_form', function (event, data) {
             $('.grid').masonry('layout');
+            LetterAvatar.transform();
         });
 
         /** Fonction pour eviter le double envoi de commentaire */

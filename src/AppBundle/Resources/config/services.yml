@@ -105,6 +105,12 @@ services:
     tags:
       - { name: kernel.event_subscriber }
 
+  at.event_listener.discussion:
+    class: AppBundle\EventListener\Comment\DiscussionEventSubscriber
+    arguments: ['@security.token_storage', '@at.manager.event','@at.manager.event_invitation','@at.mailer.twig_swift']
+    tags:
+      - { name: kernel.event_subscriber }
+
   at.event_listener.appuseremail_confirmation:
     class: AppBundle\EventListener\AppUserEmailConfirmationSubscriber
     arguments: ['@at.mailer.twig_swift','@fos_user.util.token_generator','@router']

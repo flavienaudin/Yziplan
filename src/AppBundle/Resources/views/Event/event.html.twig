@@ -162,7 +162,6 @@
     <link rel="stylesheet" href="{{ asset("bundles/app/css/fileinput.min.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/datatables.min.css") }}"/>
     <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootstrap-touchspin.min.css") }}"/>
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/comments.css") }}" type="text/css"/>
 {% endblock stylesheets %}
 
 {% block top_javascripts %}
@@ -202,9 +201,10 @@
     {# Plugin for cliplboard field (copy into clipboard by clicking) #}
     <script src="{{ asset('bundles/app/js/clipboard.min.js') }}"></script>
 
-    {% javascripts '@FOSCommentBundle/Resources/public/js/comments.js' %}
+    <script type="text/javascript" src="{{ asset('bundles/foscomment/js/comments.js') }}"></script>
+    {#{% javascripts '@FOSCommentBundle/Resources/public/js/comments.js' %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+    {% endjavascripts %}#}
 
     <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
 

@@ -12,19 +12,22 @@ Données d'entrée :
  - comment (Comment) Le commentaire courant
  - depth (int) Profondeur en cours d'affichage
  - view (string) Mode d'affichage
+  - userEventInvitation (EventInvitation|null) L'invitation en cours
 #}
 
 {% block fos_comment_comment %}
     <div id="fos_comment_{{ comment.id }}" class="fos_comment_comment_show fos_comment_comment_depth_{{ depth }} media"
          {% if parent is defined and parent is not null %}data-parent="{{ parent.id }}"{% endif %}>
-        <div class="pull-left">
-            <div class="userInvitation-avatar">
-                <div class="avatar-img-container-sm">
-                    {# TODO get author.eventInvitation #}
-                    {#{{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userModuleInvitation, isUserConnected : false}) }}#}
+        {% if comment.author is defined %}
+            {% set isConnected = (comment.author is not null and userEventInvitation is defined and comment.author == userEventInvitation) %}
+            <div class="{{ isConnected?'pull-right':'pull-left' }}">
+                <div class="userInvitation-avatar">
+                    <div class="avatar-img-container-sm">
+                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : comment.author, isUserConnected : isConnected}) }}
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
 
         {% if fos_comment_can_edit_comment(comment) or fos_comment_can_delete_comment(comment) %}
             <div class="pull-right p-0">
@@ -60,7 +63,7 @@ Données d'entrée :
             </div>
         {% endif %}
 
-        <div class="media-body">
+        <div class="media-body {{ isConnected?'text-right' }}">
             <div class="fos_comment_comment_metas">
                 <a class="a-title">{{ comment.authorName }}</a>
                 <small class="c-gray m-l-10">{{ comment.createdAt|localizeddate }}</small>
