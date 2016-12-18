@@ -191,7 +191,7 @@ class EventController extends Controller
         $thread = $currentEvent->getCommentThread();
         $discussionManager = $this->container->get('at.manager.discussion');
         if (null == $thread) {
-            $thread = $discussionManager->createEventThread($currentEvent, $request->getUri());
+            $thread = $discussionManager->createCommentableThread($currentEvent);
         }
         $comments = $discussionManager->getCommentsThread($thread);
 
@@ -469,7 +469,7 @@ class EventController extends Controller
                 $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
                         'userEventInvitation' => $eventInvitation,
                         'eventForm' => $eventForm->createView(),
-                        'thread' => $thread, 'comments' => $comments,
+                        'thread' => $thread, 'comments' => $comments
                     )
                 );
             return new AppJsonResponse($data, Response::HTTP_OK);

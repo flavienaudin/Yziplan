@@ -56,6 +56,9 @@ class ModuleManager
     /** @var ModuleInvitationManager */
     private $moduleInvitationManager;
 
+    /** @var DiscussionManager $discussionManager */
+    private $discussionManager;
+
     /** @var PollProposalManager */
     private $pollProposalManager;
 
@@ -63,7 +66,8 @@ class ModuleManager
     private $module;
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory,
-                                GenerateursToken $generateurToken, EngineInterface $templating, ModuleInvitationManager $moduleInvitationManager, PollProposalManager $pollProposalManager)
+                                GenerateursToken $generateurToken, EngineInterface $templating, ModuleInvitationManager $moduleInvitationManager, PollProposalManager $pollProposalManager,
+                                DiscussionManager $discussionManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -73,6 +77,7 @@ class ModuleManager
         $this->templating = $templating;
         $this->moduleInvitationManager = $moduleInvitationManager;
         $this->pollProposalManager = $pollProposalManager;
+        $this->discussionManager = $discussionManager;
     }
 
     /**
@@ -91,6 +96,13 @@ class ModuleManager
     {
         $this->module = $module;
         return $this;
+    }
+
+    public function retrieveModuleByToken($token)
+    {
+        $moduleRepo = $this->entityManager->getRepository(Module::class);
+        $this->module = $moduleRepo->findOneBy(array('token' => $token));
+        return $this->module;
     }
 
     /**
@@ -136,10 +148,9 @@ class ModuleManager
             }
             $pollModule->addPollElement($pollElement);
 
-
             $this->module->setPollModule($pollModule);
-
         }
+
         $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
         $moduleInvitationCreator->setCreator(true);
         $event->addModule($this->module);
@@ -201,14 +212,14 @@ class ModuleManager
                 }
 
                 /** @var PollProposal $originalPollProposal */
-                foreach($originalPollModule->getPollProposals() as $originalPollProposal){
-                    if(!$originalPollProposal->isDeleted()){
+                foreach ($originalPollModule->getPollProposals() as $originalPollProposal) {
+                    if (!$originalPollProposal->isDeleted()) {
                         $duplicatedPollProposal = new PollProposal();
                         $duplicatedPollProposal->setDeleted(false);
                         $duplicatedPollProposal->setDescription($originalPollProposal->getDescription());
                         $duplicatedPollModule->addPollProposal($duplicatedPollProposal);
                         /** @var PollProposalElement $originialPollProposalElement */
-                        foreach ($originalPollProposal->getPollProposalElements() as $originialPollProposalElement){
+                        foreach ($originalPollProposal->getPollProposalElements() as $originialPollProposalElement) {
                             $duplicatedPollProposalElement = new PollProposalElement();
                             $duplicatedPollProposalElement->setValString($originialPollProposalElement->getValString());
                             $duplicatedPollProposalElement->setValInteger($originialPollProposalElement->getValInteger());
@@ -273,25 +284,34 @@ class ModuleManager
             /** @var FormInterface $moduleForm */
             $moduleForm = $this->createModuleForm($module);
         }
+        $thread = $module->getCommentThread();
+        if ($thread != null) {
+            $comments = $this->discussionManager->getCommentsThread($thread);
+        } else {
+            $comments = [];
+        }
         if ($module->getPollModule() != null) {
             // TODO Check authorization to "AddPollProposal"
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
                 'pollProposalAddForm' => $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation)->createView(),
-                'userModuleInvitation' => $userModuleInvitation
+                'userModuleInvitation' => $userModuleInvitation,
+                'thread' => $thread, 'comments' => $comments
             ));
         } elseif ($module->getExpenseModule() != null) {
             return $this->templating->render("@App/Event/module/displayExpenseModule.html.twig", [
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
-                'userModuleInvitation' => $userModuleInvitation
+                'userModuleInvitation' => $userModuleInvitation,
+                'thread' => $thread, 'comments' => $comments
             ]);
         } else {
             return $this->templating->render("@App/Event/module/displayModule.html.twig", [
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
-                'userModuleInvitation' => $userModuleInvitation
+                'userModuleInvitation' => $userModuleInvitation,
+                'thread' => $thread, 'comments' => $comments
             ]);
         }
     }

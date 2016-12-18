@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity\Event;
 
+use AppBundle\Entity\Comment\CommentableInterface;
+use AppBundle\Entity\Comment\Thread;
 use AppBundle\Entity\Module\ExpenseModule;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Payment\PaymentModule;
@@ -10,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use FOS\CommentBundle\Model\ThreadInterface;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -18,7 +21,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * @ORM\Table(name="event_module")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Event\ModuleRepository")
  */
-class Module
+class Module implements CommentableInterface
 {
     /** Active les timestamps automatiques pour la creation et la mise a jour */
     use TimestampableEntity;
@@ -99,6 +102,13 @@ class Module
      * @ORM\JoinColumn(name="event_id", referencedColumnName="id")
      */
     private $event;
+
+    /**
+     * @var Thread
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Comment\Thread")
+     * @ORM\JoinColumn(name="comment_thread_id", referencedColumnName="id", nullable=true)
+     */
+    private $commentThread;
 
     /**
      * @var ArrayCollection
@@ -305,6 +315,33 @@ class Module
     public function setEvent($event)
     {
         $this->event = $event;
+    }
+
+    /**
+     * @return Thread
+     */
+    public function getCommentThread()
+    {
+        return $this->commentThread;
+    }
+
+    /**
+     * @param ThreadInterface $commentThread
+     * @return Module
+     */
+    public function setCommentThread($commentThread)
+    {
+        $this->commentThread = $commentThread;
+        return $this;
+
+    }
+
+    /**
+     * @return string The Id of the thread to create or get
+     */
+    public function getThreadId()
+    {
+        return $this->event->getToken() . '_' . $this->getToken();
     }
 
     /**

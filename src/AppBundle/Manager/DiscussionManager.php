@@ -10,15 +10,16 @@ namespace AppBundle\Manager;
 
 
 use AppBundle\Entity\Comment\Comment;
+use AppBundle\Entity\Comment\CommentableInterface;
 use AppBundle\Entity\Comment\Thread;
-use AppBundle\Entity\Event\Event;
+use Doctrine\ORM\EntityManager;
 use FOS\CommentBundle\Entity\CommentManager;
 use FOS\CommentBundle\Entity\ThreadManager;
 
 class DiscussionManager
 {
-    /** @var EventManager $eventManager */
-    private $eventManager;
+    /** @var EntityManager $entityManager */
+    private $entityManager;
     /** @var ThreadManager $threadManager */
     private $threadManager;
     /** @var CommentManager $commentManager */
@@ -28,16 +29,15 @@ class DiscussionManager
     /** @var Comment[] */
     private $comments;
 
-
     /**
      * EventCommentManager constructor.
-     * @param EventManager $eventManager
+     * @param EntityManager $entityManager
      * @param CommentManager $commentManager
      * @param ThreadManager $threadManager
      */
-    public function __construct(EventManager $eventManager, ThreadManager $threadManager, CommentManager $commentManager)
+    public function __construct(EntityManager $entityManager, ThreadManager $threadManager, CommentManager $commentManager)
     {
-        $this->eventManager = $eventManager;
+        $this->entityManager = $entityManager;
         $this->commentManager = $commentManager;
         $this->threadManager = $threadManager;
     }
@@ -78,21 +78,29 @@ class DiscussionManager
         return $this;
     }
 
-    public function createEventThread(Event $event, $uri)
+    /**
+     * @param CommentableInterface $commentable
+     * @param $uri
+     * @return Thread|\FOS\CommentBundle\Model\Thread
+     */
+    public function createCommentableThread(CommentableInterface $commentable)
     {
         $this->thread = $this->threadManager->createThread();
-        $this->thread->setId($event->getToken());
-        $this->thread->setPermalink($uri);
+        $this->thread->setId($commentable->getThreadId());
         // Add the thread
         $this->threadManager->saveThread($this->thread);
 
-        $event->setCommentThread($this->thread);
-        $this->eventManager
-            ->setEvent($event)
-            ->persistEvent();
+        $commentable->setCommentThread($this->thread);
+        $this->entityManager->persist($commentable);
+        $this->entityManager->flush();
         return $this->thread;
     }
 
+    /**
+     * Retrieve comments of thread (optionnally given as parameter)
+     * @param Thread|null $thread
+     * @return Comment[]|array
+     */
     public function getCommentsThread(Thread $thread = null)
     {
         if ($thread != null) {

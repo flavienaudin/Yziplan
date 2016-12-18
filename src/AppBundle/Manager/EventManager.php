@@ -53,12 +53,15 @@ class EventManager
     /** @var ModuleInvitationManager */
     private $moduleInvitationManager;
 
+    /** @var DiscussionManager $discussionManager */
+    private $discussionManager;
+
     /** @var Event L'événement en cours de traitement */
     private $event;
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory,
                                 GenerateursToken $generateurToken, ModuleManager $moduleManager, PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager,
-                                ModuleInvitationManager $moduleInvitationManager)
+                                ModuleInvitationManager $moduleInvitationManager, DiscussionManager $discussionManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -69,6 +72,7 @@ class EventManager
         $this->pollProposalManager = $pollProposalManager;
         $this->eventInvitationManager = $eventInvitationManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
+        $this->discussionManager = $discussionManager;
     }
 
     /**
@@ -255,11 +259,16 @@ class EventManager
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
 
+
+        // Create the thread after the module affectation to its event because of the thread ID is generate with the event token
+        $this->discussionManager->createCommentableThread($module );
+
         return $module;
     }
 
     /**
      * @param EventInvitation $userEventInvitation
+     * @param string $requestUri The URI of the request to create thread for modules
      * @return array Un tableau de modules de l'événement au format :
      *  moduleId => [
      *  'module' => Module : Le module lui-meme
@@ -278,6 +287,15 @@ class EventManager
                     $moduleDescription = array();
                     $moduleDescription['module'] = $module;
                     $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
+
+                    $thread = $module->getCommentThread();
+                    if (null == $thread) {
+                        $thread = $this->discussionManager->createCommentableThread($module);
+                    }
+                    $comments = $this->discussionManager->getCommentsThread($thread);
+                    $moduleDescription['thread'] = $thread;
+                    $moduleDescription['comments'] = $comments;
+
                     if (false && $this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
                         // TODO always false : non nécessaire en version BETA
                         $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);

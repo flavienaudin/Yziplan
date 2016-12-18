@@ -112,19 +112,22 @@
                             'module':moduleDescription.module,
                             'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
                             'userModuleInvitation':userModuleInvitation,
+                            'thread':moduleDescription.thread,'comments':moduleDescription.comments,
                             'pollProposalAddForm':(moduleDescription.pollProposalAddForm is defined?moduleDescription.pollProposalAddForm:null )
                         }) }}
                     {% elseif moduleDescription.module.expenseModule is not null %}
                         {{ include('@App/Event/module/displayExpenseModule.html.twig', {
                             'module':moduleDescription.module,
                             'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
-                            'userModuleInvitation':userModuleInvitation
+                            'userModuleInvitation':userModuleInvitation,
+                            'thread':moduleDescription.thread,'comments':moduleDescription.comments
                         }) }}
                     {% else %}
                         {{ include('@App/Event/module/displayModule.html.twig', {
                             'module':moduleDescription.module,
                             'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
-                            'userModuleInvitation':userModuleInvitation
+                            'userModuleInvitation':userModuleInvitation,
+                            'thread':moduleDescription.thread,'comments':moduleDescription.comments
                         }) }}
                     {% endif %}
                 {% endif %}
@@ -168,7 +171,7 @@
     {{ parent() }}
     <script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>
     <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/at-selectize.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/yzi-selectize.js") }}"></script>
     <script src="{{ asset("bundles/app/js/datatables.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jquery.bootstrap-touchspin.min.js") }}"></script>
     <script>
@@ -201,12 +204,25 @@
     {# Plugin for cliplboard field (copy into clipboard by clicking) #}
     <script src="{{ asset('bundles/app/js/clipboard.min.js') }}"></script>
 
-    <script type="text/javascript" src="{{ asset('bundles/foscomment/js/comments.js') }}"></script>
-    {#{% javascripts '@FOSCommentBundle/Resources/public/js/comments.js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}#}
+    <script>
+        var fos_comment_thread_container = $('.commentable_thread ');
+        var fos_comment_thread_api_base_url = '{{ path('fos_comment_get_threads') }}';
+        // Snippet for asynchronously loading the comments
+        $(document).ready( function() {
+            var fos_comment_script = document.createElement('script');
+            fos_comment_script.async = true;
+            fos_comment_script.src = '{{ asset('bundles/app/js/yzi-comment.js') }}';
+            fos_comment_script.type = 'text/javascript';
+            document.getElementsByTagName('body')[0].appendChild(fos_comment_script);
 
-    <script src="{{ asset("bundles/app/js/at-event.js") }}"></script>
+            $(document).on('fos_comment_add_comment fos_comment_show_form fos_comment_show_edit_form fos_comment_cancel_form', function (event, data) {
+                $('.grid').masonry('layout');
+                LetterAvatar.transform();
+            });
+        });
+    </script>
+
+    <script src="{{ asset("bundles/app/js/yzi-event.js") }}"></script>
 
     <script>
         if (typeof google === 'object' && typeof google.maps === 'object') {

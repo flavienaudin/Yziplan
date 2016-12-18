@@ -231,7 +231,7 @@ function getAnchor(url) {
 /*----------------*/
 // Attention au cas où une alerte de confirmation doit être affichée : e.preventDefault() doit être appelé avant l'appel à la fonction de requête Ajax
 
-function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCallback) {
+function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCallback, method) {
     if (event != null) {
         event.preventDefault();
     }
@@ -244,10 +244,13 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
     } else {
         urlTarget = $(target).attr('href');
     }
+    if(typeof method === "undefined") {
+        method = 'post';
+    }
 
     $.ajax({
         url: urlTarget,
-        type: 'post',
+        type: method,
         data: data
     }).done(function (responseJSON, textStatus, jqXHR) {
         if (responseJSON.hasOwnProperty('htmlContents')) {
