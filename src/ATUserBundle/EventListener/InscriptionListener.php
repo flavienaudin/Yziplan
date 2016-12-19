@@ -9,7 +9,7 @@
 namespace ATUserBundle\EventListener;
 
 use AppBundle\Entity\User\AppUserEmail;
-use AppBundle\Envent\AppUserEmailEvent;
+use AppBundle\Event\AppUserEmailEvent;
 use AppBundle\Manager\ApplicationUserManager;
 use ATUserBundle\ATUserEvents;
 use ATUserBundle\Entity\AccountUser;
@@ -71,6 +71,8 @@ class InscriptionListener implements EventSubscriberInterface
             $user->getApplicationUser()->addAppUserEmail($appUserEmail);
         } elseif ($appUserEmail->getApplicationUser()->getAccountUser() == null) {
             // AppUserEmail existant mais non rattaché à un compte => On le rattache au nouveau compte utilisateur
+            $this->applicationUserManager->mergeApplicationUsers($user->getApplicationUser(), $appUserEmail->getApplicationUser());
+
             $appUserEmail->setUseToReceiveEmail(true);
             $user->getApplicationUser()->addAppUserEmail($appUserEmail);
         } else {

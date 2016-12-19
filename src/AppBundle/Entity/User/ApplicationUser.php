@@ -92,6 +92,20 @@ class ApplicationUser
      */
     private $contactGroups;
 
+    /**
+     * Un ApplicationUser a plusieurs ApplicationUser secondaires attachés
+     * @var ArrayCollection of ApplicationUser
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User\ApplicationUser", mappedBy="mainAppUser")
+     */
+    private $mergedAppUsers;
+
+    /**
+     * Plusieurs ApplicationUser sont attachés à un ApplicationUser principal.
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User\ApplicationUser", inversedBy="mergedAppUsers")
+     * @ORM\JoinColumn(name="main_id", referencedColumnName="id", nullable=true)
+     */
+    private $mainAppUser;
+
 
     /***********************************************************************
      *                      Constructor
@@ -105,6 +119,8 @@ class ApplicationUser
         $this->appUserEmails = new ArrayCollection();
         $this->contacts = new ArrayCollection();
         $this->contactGroups = new ArrayCollection();
+
+        $this->mergedAppUsers = new ArrayCollection();
     }
 
 
@@ -328,6 +344,49 @@ class ApplicationUser
     public function removeContactGroup(ContactGroup $contactGroup)
     {
         $this->contactGroups->removeElement($contactGroup);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getMergedAppUsers()
+    {
+        return $this->mergedAppUsers;
+    }
+
+    /**
+     * @param ApplicationUser $mergedAppUser
+     */
+    public function addMergedAppUser(ApplicationUser $mergedAppUser)
+    {
+        $mergedAppUser->setStatus(AppUserStatus::MERGED);
+        $this->mergedAppUsers[] = $mergedAppUser;
+        $mergedAppUser->setMainAppUser($this);
+        return $this;
+    }
+
+    /**
+     * @param ApplicationUser $mergedAppUser
+     */
+    public function removeMergedAppUser(ApplicationUser $mergedAppUser)
+    {
+        $this->mergedAppUsers->removeElement($mergedAppUser);
+    }
+    /**
+     * @return ApplicationUser
+     */
+    public function getMainAppUser()
+    {
+        return $this->mainAppUser;
+    }
+
+    /**
+     * @param mixed $mainAppUser
+     */
+    public function setMainAppUser($mainAppUser)
+    {
+        $this->mainAppUser = $mainAppUser;
+        return $this;
     }
 
     /***********************************************************************

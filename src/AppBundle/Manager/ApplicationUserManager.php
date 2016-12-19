@@ -8,8 +8,10 @@
 
 namespace AppBundle\Manager;
 
+use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
+use AppBundle\Utils\enum\AppUserStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
@@ -129,7 +131,7 @@ class ApplicationUserManager
 
     /**
      * @param FormInterface $appUserEmailForm
-     * @return FormInterface
+     * @return FormInterface|AppUserEmail
      */
     public function treatAddAppUserEmailForm(FormInterface $appUserEmailForm)
     {
@@ -137,18 +139,47 @@ class ApplicationUserManager
             /** @var AppUserEmail $newAppUserEmail */
             $newAppUserEmail = $appUserEmailForm->getData();
             $existingAppUserEmail = $this->findAppUserEmailByEmail($newAppUserEmail->getEmail());
-            if ($existingAppUserEmail != null) {
-                $appUserEmailForm->get('email')
-                    ->addError(new FormError($this->translator->trans("profile.show.appuseremail.modal.form.validation.email_already_used")));
+            if ($existingAppUserEmail != null){
+                if($existingAppUserEmail->getApplicationUser()->getAccountUser() != null) {
+                    // L'email est déjà attatché à un AccountUser, il ne peut être utilisé
+                    $appUserEmailForm->get('email')->addError(new FormError($this->translator->trans("profile.show.appuseremail.modal.form.validation.email_already_used")));
+                    return $appUserEmailForm;
+                }else{
+                    // l'email existe mais n'est pas rattaché à un AccountUser, il pourra être rattaché à l'utilisateur uniquement après validation par email
+                    // pour ne pas bloquer les éventuelles invitations qui seraient rattachés à son ApplicationUser
+                    $existingAppUserEmail->setType($newAppUserEmail->getType());
+                    $existingAppUserEmail->setUseToReceiveEmail($newAppUserEmail->isUseToReceiveEmail());
+                    $this->entityManager->persist($this->applicationUser);
+                    $this->entityManager->flush();
+                    return $existingAppUserEmail;
+                }
+            }else {
+                // L'email n'est pas connu en base, on l'attache à l'utilisateur directement (peut être soumis à validation par email)
+                $newAppUserEmail->setEmailCanonical($this->emailCanonicalizer->canonicalize($newAppUserEmail->getEmail()));
+                $this->applicationUser->addAppUserEmail($newAppUserEmail);
+                $this->entityManager->persist($this->applicationUser);
+                $this->entityManager->flush();
                 return $appUserEmailForm;
             }
-            $newAppUserEmail->setEmailCanonical($this->emailCanonicalizer->canonicalize($newAppUserEmail->getEmail()));
-            $this->applicationUser->addAppUserEmail($newAppUserEmail);
-            $this->entityManager->persist($this->applicationUser);
-            $this->entityManager->flush();
-            return $appUserEmailForm;
         }
         $appUserEmailForm->addError(new FormError($this->translator->trans("profile.message.update.error")));
         return $appUserEmailForm;
+    }
+
+    /**
+     * Fusionne deux ApplicationUser en adaptant les status
+     * Les ApplicationUsers ne sont pas persistées
+     * @param ApplicationUser $mainApplicationUser
+     * @param ApplicationUser $mergedApplicationUser
+     */
+    public function mergeApplicationUsers(ApplicationUser $mainApplicationUser, ApplicationUser $mergedApplicationUser)
+    {
+        $mainApplicationUser->setStatus(AppUserStatus::MAIN);
+        $mainApplicationUser->addMergedAppUser($mergedApplicationUser);
+        /** @var EventInvitation $eventInvitation */
+        foreach ($mergedApplicationUser->getEventInvitations() as $eventInvitation) {
+            $mergedApplicationUser->removeEventInvitation($eventInvitation);
+            $mainApplicationUser->addEventInvitation($eventInvitation);
+        }
     }
 }

@@ -19,6 +19,7 @@ use AppBundle\Form\Event\EventInvitationAnswerType;
 use AppBundle\Form\Event\EventInvitationType;
 use AppBundle\Mailer\AppTwigSiwftMailer;
 use AppBundle\Security\EventInvitationVoter;
+use AppBundle\Utils\enum\AppUserStatus;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
@@ -125,6 +126,20 @@ class EventInvitationManager
             if ($this->eventInvitation != null) {
                 if (!$this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
                     $this->eventInvitation = null;
+                } else {
+                    if ($user instanceof AccountUser && $this->authorizationChecker->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED, $user)) {
+                        // On vérifie s'il est possible de rattacher l'invitation à l'utilisateur connecté
+                        if ($this->eventInvitation->getApplicationUser() == null) {
+                            $this->eventInvitation->setApplicationUser($user->getApplicationUser());
+                            $this->persistEventInvitation();
+                        } elseif ($this->eventInvitation->getApplicationUser()->getAccountUser() == null) {
+                            // ApplicationUser de l'EventInvitation ne doit pas avoir d'AppUserEmail ni d'autre information (ni AppUserXxx, ni Contact, ni ContactGroup, ...)
+                            // Sinon l'utilisateur aurait déjà récupéré les EventInvitation lors de son inscription
+                            $this->applicationUserManager->mergeApplicationUsers($user->getApplicationUser(), $this->eventInvitation->getApplicationUser());
+                            $this->eventInvitation->setApplicationUser($user->getApplicationUser());
+                            $this->persistEventInvitation();
+                        }
+                    }
                 }
             } else {
                 if ($initializeIfNotExists && $this->authorizationChecker->isGranted(EventInvitationVoter::CREATE, $event)) {
@@ -339,7 +354,7 @@ class EventInvitationManager
                 }
                 // If an AppUserEmail exists, it can't be associated to AccountUser due to EmailNotBelongToAccountUser constraint
                 $applicationUser->addEventInvitation($this->eventInvitation);
-                $this->appTwigSiwftMailer->sendRecapEventInvitationEmail( $this->eventInvitation);
+                $this->appTwigSiwftMailer->sendRecapEventInvitationEmail($this->eventInvitation);
             }
         }
         $this->persistEventInvitation();

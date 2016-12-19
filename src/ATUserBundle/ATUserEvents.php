@@ -18,7 +18,7 @@ class ATUserEvents
      *
      * This event allows you to update the user after its successfully registration by Oauth
      *
-     * @Event("AT\UserBundle\Event\AppUserEmailEvent")
+     * @Event("AppBundle\Event\AppUserEmailEvent")
      */
     const OAUTH_REGISTRATION_SUCCESS = 'at_user.oauth_registration.success';
 }
