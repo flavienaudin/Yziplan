@@ -514,6 +514,12 @@ table.dataTable td.dataTables_empty {
     color: white;
 }
 
+.pop-help-event > .popover-title {
+    background-color: #9c27b0;
+    border-color: #9c27b0;
+    color: white;
+}
+
 .pop-help-event > .popover-content {
     margin-top: 10px;
 }

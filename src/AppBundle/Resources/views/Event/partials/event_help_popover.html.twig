@@ -15,34 +15,29 @@ et l'utilisateur n'a eu aucune interaction avec la page.
 {% set placement = (placement is defined ? placement : '') %}
 {% set eventInvitation = (userInvitation.eventInvitation is defined ? userInvitation.eventInvitation : userInvitation) %}
 
-{% if eventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION')%}
-{# or eventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_ANSWER')#}
-
-{# Gestion de l'appel ajax en cas d'appui sur "ne plus afficher" #}
-
-<script>
-    $(document).ready(function () {
-        $('#{{ divId }}').popover({
-            container: 'body',
-            trigger: 'manual',
-            html : 'true',
-            placement : 'auto {{ placement }}',
-            content : '{{ text|trans }}',
-            template : '<div class="popover pop-help-event z-depth-3" role="tooltip">' +
-            '<div class="arrow"></div>' +
-            '<h3 class="popover-title"></h3>' +
-            '<div class="popover-content"></div>' +
-            '<div class="popover-button">' +
-            '<div class="pull-right m-b-10 m-r-10">' +
-            '<button data-toggle="clickover" class="btn btn-small btn-primary" onclick="$(&quot;#{{ divId }}&quot;).popover(&quot;hide&quot;);">{{ 'global.button.close'|trans }}</button>'+
-            '</div>' +
-            '</div>' +
-            '</div>',
+{% if eventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION')
+or eventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_ANSWER') %}
+    {# TODO Gestion de l'appel ajax en cas d'appui sur "ne plus afficher" #}
+    <script>
+        $(document).ready(function () {
+            $('#{{ divId }}').popover({
+                container: 'body',
+                trigger: 'manual',
+                html: 'true',
+                placement: 'auto {{ placement }}',
+                content: '{{ text|trans }}',
+                template: '<div class="popover pop-help-event z-depth-3" role="tooltip">' +
+                '<div class="arrow"></div>' +
+// Pas de titre : en cas de tooltip, celui-ci est utilisé comme titre de la popover également
+//                '<h3 class="popover-title"></h3>' +
+                '<div class="popover-content"></div>' +
+                '<div class="popover-button">' +
+                '<div class="pull-right m-b-10 m-r-10">' +
+                '<button data-toggle="clickover" class="btn btn-small btn-primary" onclick="$(&quot;#{{ divId }}&quot;).popover(&quot;hide&quot;);">{{ 'global.button.close'|trans }}</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>'
+            }).popover('show');
         });
-
-        $('#{{ divId }}').popover('show');
-    });
-
-</script>
-
+    </script>
 {% endif %}

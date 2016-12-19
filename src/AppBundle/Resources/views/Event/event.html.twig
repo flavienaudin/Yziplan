@@ -16,68 +16,6 @@
 {% block title %}{{ parent() }} - {{ event.name is empty?"event.page.meta_title.new_event"|trans:event.name }}{% endblock %}
 
 {% block event_content %}
-    {# Desactivation de bouton rond permettant l'ajout de module jusqu'a nouvel ordre, il a été remplacé par une carte en bas de page.
-
-    {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
-         <div class="dropup add-module-menu z-depth-4">
-             <button class="btn btn-float palette-Pink bg m-btn waves-effect waves-circle waves-float z-depth-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                 <i class="zmdi zmdi-plus"></i>
-             </button>
-
-             #}{#<a data-toggle="dropdown" href="#" class="btn btn-float palette-Teal bg waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></a>#}{#
-             <ul class="dropdown-menu dropdown-menu-right">
-                 <li>
-                     <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
-                         'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHAT')}) }}" id="addWhatPollModule">
-                         <small>{{ "pollmodule.add_link.what"|trans }}</small>
-                         <i class="waves-effect palette-Deep-Orange bg zmdi zmdi-pin-help zmdi-hc-fw"></i> </a>
-                 </li>
-                 <li>
-                     <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
-                         'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHEN')}) }}" id="addWhenPollModule">
-                         <small>{{ "pollmodule.add_link.when"|trans }}</small>
-                         <i class="waves-effect palette-Blue bg zmdi zmdi-calendar zmdi-hc-fw"></i> </a>
-                 </li>
-                 <li>
-                     <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
-                         'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHERE')}) }}" id="addWherePollModule">
-                         <small>{{ "pollmodule.add_link.where"|trans }}</small>
-                         <i class="waves-effect palette-Green bg zmdi zmdi-pin zmdi-hc-fw"></i> </a>
-                 </li>
-                 <li>
-                     <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
-                         'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHO_BRINGS_WHAT')}) }}" id="addWhoBringsWhatPollModule">
-                         <small>{{ "pollmodule.add_link.whobringswhat"|trans }}</small>
-                         <i class="waves-effect palette-Purple bg zmdi zmdi-format-list-bulleted zmdi-hc-fw"></i> </a>
-                 </li>
-             </ul>
-         </div>
-         <script>
-             $('.add-pollmodule-link').on('click', function (e) {
-                 if (!eventInvitationValid && askGuestName !== undefined) {
-                     e.preventDefault();
-                     askGuestName();
-                 } else {
-                     ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
-                         var eventModulesContainer = $('#eventModulesContainer');
-                         $(document).scrollTop($(eventModulesContainer).children().last().offset().top - 100);
-                         $('.grid').masonry('layout');
-                         LetterAvatar.transform();
-                     }, function(jqXHR, textStatus, errorThrown){
-                         if (jqXHR.hasOwnProperty('responseJSON')) {
-                             var responseJSON = jqXHR['responseJSON'];
-                             if(responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                 if (!eventInvitationValid && askGuestName !== undefined) {
-                                     askGuestName();
-                                 }
-                             }
-                         }
-                     }, null);
-                 }
-             });
-         </script>
-     {% endif %}#}
-
     <div class="grid row">
         <div class="grid-item col-xs-12 col-lg-8">
             {{ include("@App/Event/partials/event_header_card.html.twig", {'userEventInvitation':userEventInvitation, 'eventForm':eventForm, 'thread':thread, 'comments':comments}) }}
@@ -101,8 +39,7 @@
             </div>
         </div>
 
-        {# Affiche les modules de l'événement,
-         modules ajoutés via Ajax sont ajoutés à la fin de la div #eventModulesContainer #}
+        {# Affiche les modules de l'événement, les modules ajoutés via Ajax sont ajoutés à la fin de la div #eventModulesContainer #}
         <div class="grid-item col-xs-12 col-lg-8" id="eventModulesContainer">
             {% for moduleDescription in modules if moduleDescription.module.status != constant("AppBundle\\Utils\\enum\\ModuleStatus::DELETED") %}
                 {% set userModuleInvitation = userEventInvitation.getModuleInvitationForModule(moduleDescription.module) %}
@@ -137,18 +74,13 @@
         {# Carte permettant l'ajout de modules supplémentaires, n'est affiché que si l'utilisateur a le droit #}
         {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
             <div class="grid-item col-xs-12 col-lg-8" id="addModule">
-                {{ include('@App/Event/module/displayAddModule.html.twig',{
-                    'event': event
-                }) }}
+                {{ include('@App/Event/module/displayAddModule.html.twig',{'event': event}) }}
             </div>
         {% endif %}
 
         {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly or invitationsForm is not null %}
             <div id="invitationCard" class="grid-item col-xs-12 col-sm-6 col-lg-12">
-                {{ include('@App/Event/partials/eventInvitation_card.html.twig', {
-                    'userEventInvitation':userEventInvitation,
-                    'invitationsForm':invitationsForm
-                }) }}
+                {{ include('@App/Event/partials/eventInvitation_card.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
             </div>
         {% endif %}
 
@@ -208,7 +140,7 @@
         var fos_comment_thread_container = $('.commentable_thread ');
         var fos_comment_thread_api_base_url = '{{ path('fos_comment_get_threads') }}';
         // Snippet for asynchronously loading the comments
-        $(document).ready( function() {
+        $(document).ready(function () {
             var fos_comment_script = document.createElement('script');
             fos_comment_script.async = true;
             fos_comment_script.src = '{{ asset('bundles/app/js/yzi-comment.js') }}';

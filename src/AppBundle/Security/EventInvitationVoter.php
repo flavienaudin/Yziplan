@@ -74,6 +74,7 @@ class EventInvitationVoter extends Voter
                 if ($eventInvitation->getApplicationUser() == null) {
                     return true;
                 } else if ($eventInvitation->getApplicationUser()->getAccountUser() == null) {
+                    // TODO Ajouter le cas ou l'email de l'invitation n'appartient pas au compte
                     return true;
                 } elseif ($user == $eventInvitation->getApplicationUser()->getAccountUser()) {
                     return true;
