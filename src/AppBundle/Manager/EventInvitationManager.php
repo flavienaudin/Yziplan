@@ -144,10 +144,6 @@ class EventInvitationManager
             } else {
                 if ($initializeIfNotExists && $this->authorizationChecker->isGranted(EventInvitationVoter::CREATE, $event)) {
                     $this->eventInvitation = $this->initializeEventInvitation($event, ($user instanceof AccountUser ? $user->getApplicationUser() : null));
-                    if (!($user instanceof AccountUser)) {
-                        // Invitation créée à partir du lien public de l'événement et avec un invité non connecté
-                        $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
-                    }
                     $this->persistEventInvitation();
                 } else {
                     $this->eventInvitation = null;
@@ -175,10 +171,13 @@ class EventInvitationManager
     {
         $this->eventInvitation = new EventInvitation();
         $this->eventInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+        $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
         if ($applicationUser != null) {
+            // L'invitation est attaché un ApplicationUser => c'est une invitation directe (ie par email) => status = AWAITING_ANSWER
+            $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
             $this->eventInvitation->setApplicationUser($applicationUser);
             if (!empty($this->eventInvitation->getDisplayableName())) {
+                // Le nom de l'invité est déjà renseigné (ie attachement à un compte utilisateur) => status = VALID
                 $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
             }
         }
@@ -208,7 +207,7 @@ class EventInvitationManager
     }
 
     /**
-     * Retrieve an EventInvitation by the email of the guest and the concerned event
+     * Retrieve an EventInvitation by the email of the guest and the concerned event. Initialize a new one if none is found
      * @param Event $event The event concerned
      * @param string $email The email of the guest to search the EventInvitation for
      * @return EventInvitation
@@ -235,18 +234,15 @@ class EventInvitationManager
      * Create and send invitations using emails
      * @param Event $event
      * @param $emailsData
+     * @param $failedRecipients array of email address which the email could not be sent to
      */
-    public function sendInvitations(Event $event, $emailsData, &$failedRecipients = null)
+    public function sendInvitations(Event $event, $emailsData, &$failedRecipients = array())
     {
         $failedRecipients = (array)$failedRecipients;
         foreach ($emailsData as $email) {
             $eventInvitation = $this->getGuestEventInvitation($event, $email);
             if($eventInvitation->getStatus() == EventInvitationStatus::CANCELLED){
-                if(empty($eventInvitation->getDisplayableName())){
-                    $eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
-                }else{
-                    $eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
-                }
+                // Envoie d'une invitation => AWAITNG_ANSWER
                 $eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
             }
             if ($this->appTwigSiwftMailer->sendEventInvitationEmail($eventInvitation)) {
@@ -268,6 +264,7 @@ class EventInvitationManager
         $this->initializeEventInvitation($event, $applicationUser);
         $this->eventInvitation->setCreator(true);
         $this->eventInvitation->setAnswer(EventInvitationAnswer::YES);
+        $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
         return $this->eventInvitation;
     }
 
