@@ -49,9 +49,9 @@
                 initEventShowMap();
             }
 
-            if (typeof FOS_COMMENT !== "undefined") {
-                FOS_COMMENT.thread_container = $('.commentable_thread ');
-                FOS_COMMENT.initializeListeners();
+            if (typeof window.fos !== 'undefined' && typeof window.fos.Comment !== "undefined") {
+                window.fos.Comment.thread_container = $('.commentable_thread ');
+                window.fos.Comment.initializeListeners();
             }
             /** Fonction pour eviter le double envoi de commentaire */
             $('#event_comment_thread')
