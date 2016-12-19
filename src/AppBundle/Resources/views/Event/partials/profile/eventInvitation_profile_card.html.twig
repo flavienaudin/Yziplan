@@ -8,8 +8,8 @@ Données d'entrée :
 <div class="card c-dark z-depth-2" id="user-event-invitation-card">
     <div class="card-header palette-Teal bg m-b-20">
         <div class="media">
-            <div class="pull-left"></div>
-            <div class="pull-right">
+            {#<div class="pull-left"></div>#}
+            {#<div class="pull-right">
                     {% if userEventInvitation.creator %}
                         <span class="label label-danger">{{ "eventInvitation.profile.card.badge.creator"|trans }}</span>
                     {% elseif userEventInvitation.administrator %}
@@ -17,7 +17,7 @@ Données d'entrée :
                     {% else %}
                         <span class="label label-success">{{ "eventInvitation.profile.card.badge.guest"|trans }}</span>
                     {% endif %}
-            </div>
+            </div>#}
             <div class="media-body">
                 <h2><span>{{ "eventInvitation.profile.card.title"|trans }}</span>
                     <small></small>
