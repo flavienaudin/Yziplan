@@ -264,8 +264,11 @@ class EventInvitationManager
         $this->initializeEventInvitation($event, $applicationUser);
         $this->eventInvitation->setCreator(true);
         $this->eventInvitation->setAnswer(EventInvitationAnswer::YES);
-        $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+        if($applicationUser != null & $applicationUser->getAccountUser() instanceof AccountUser) {
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
+        }else{
+            $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+        }
         return $this->eventInvitation;
     }
 
