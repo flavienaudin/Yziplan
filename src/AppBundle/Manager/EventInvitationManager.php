@@ -265,6 +265,7 @@ class EventInvitationManager
         $this->eventInvitation->setCreator(true);
         $this->eventInvitation->setAnswer(EventInvitationAnswer::YES);
         $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+            $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
         return $this->eventInvitation;
     }
 
