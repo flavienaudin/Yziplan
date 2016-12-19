@@ -1,7 +1,8 @@
 /**
  * Created by Flavien on 16/12/2016.
+ * This file is based on the "comment.js" file of the FOSCommentBundle package.
+ * It is adapted to Yziplan specifications and methods
  */
-
 /**
  * This file is part of the FOSCommentBundle package.
  *
@@ -64,23 +65,7 @@
          * @param failCallback function Optional callback function to use in case of error.
          * @param alwaysCallback function Optional callback function to use after the call or success or error.
          */
-        post: ajaxRequest
-        //ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCallback)
-
-        /*function (url, data, e, success, error, complete) {
-         // Wrap the error callback to match return data between jQuery and easyXDM
-         var wrappedErrorCallback = function (response) {
-         if ('undefined' !== typeof error) {
-         error(response.responseText, response.status);
-         }
-         };
-         var wrappedCompleteCallback = function (response) {
-         if ('undefined' !== typeof complete) {
-         complete(response.responseText, response.status);
-         }
-         };
-         $.post(url, data, success).error(wrappedErrorCallback).complete(wrappedCompleteCallback);
-         }*/,
+        post: ajaxRequest,
 
         /**
          * Shorcut post method.
@@ -93,17 +78,7 @@
          * @param alwaysCallback function Optional callback function to use after the call or success or error.
          * @param method
          */
-        get: ajaxRequest
-        //ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCallback, method) {
-        /*function (url, data, success, error) {
-         // Wrap the error callback to match return data between jQuery and easyXDM
-         var wrappedErrorCallback = function (response) {
-         if ('undefined' !== typeof error) {
-         error(response.responseText, response.status);
-         }
-         };
-         $.get(url, data, success).error(wrappedErrorCallback);
-         }*/,
+        get: ajaxRequest,
 
         /**
          * Gets the comments of a thread and places them in the thread holder.
