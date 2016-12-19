@@ -2,6 +2,8 @@
 - module (Module) Le module à afficher
 - moduleForm (Form|null) Le formulaire d'édition du module
 - userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
+- thread (Thread) Le fil de discussion du module
+- comments(Comment[]) Les commentaires appartenant au fil de discussion du module
 #}
 
 <div class="card z-depth-2 {% block moduleCardClass %}c-dark{% endblock %}" id="module-{{ module.token }}">
@@ -15,10 +17,8 @@
                     {% block mhMediaRight %}
                         <ul class="actions a-alt">
                             {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-                                <li>
-                                    <a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"> <i class="zmdi zmdi-delete"
-                                                                                                                                                                               style="color: #f44336"></i>{#{{ "global.button.delete"|trans }}#}
-                                    </a></li>
+                                <li><a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"> <i
+                                                class="zmdi zmdi-delete c-red"></i></a></li>
                                 <script>
                                     $('#removeModule{{ module.token }}').on('click', function (e) {
                                         e.preventDefault();
@@ -40,10 +40,10 @@
                                                         $('#module-{{ module.token }}').remove();
                                                         $('.grid').masonry('layout');
                                                     }
-                                                }, function(jqXHR, textStatus, errorThrown){
+                                                }, function (jqXHR, textStatus, errorThrown) {
                                                     if (jqXHR.hasOwnProperty('responseJSON')) {
                                                         var responseJSON = jqXHR['responseJSON'];
-                                                        if(responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
                                                             if (!eventInvitationValid && askGuestName !== undefined) {
                                                                 askGuestName();
                                                             }
@@ -137,10 +137,34 @@
     </div>
     <div class="{% block moduleFooterClass %}card-footer{% endblock moduleFooterClass %}">
         {% block moduleFooter %}{% endblock moduleFooter %}
+
+        {% block moduleDiscussion %}
+            {% if thread is defined and thread is not null %}
+                <div id="module_{{ module.token }}_comment_thread" data-thread="{{ thread.id }}" class="commentable_thread wall-comment-list">
+                    {% include 'FOSCommentBundle:Thread:comments.html.twig' with {'comments':comments, 'thread':thread, 'view':'flat', 'userEventInvitation':userModuleInvitation.eventInvitation} %}
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        if (typeof FOS_COMMENT !== "undefined") {
+                            FOS_COMMENT.thread_container = $('.commentable_thread ');
+                            FOS_COMMENT.initializeListeners();
+                        }
+                        /** Fonction pour eviter le double envoi de commentaire */
+                        $('#module_{{ module.token }}_comment_thread')
+                            .on('fos_comment_add_comment', function (event, commentHtml) {
+                                $('#module_{{ module.token }}_comment_thread .fos_comment_submit > button[type=submit], #module_{{ module.token }}_comment_thread .fos_comment_submit > input[type=submit]').removeAttr("disabled");
+                            })
+                            .on('fos_comment_submitting_form', function () {
+                                $('#module_{{ module.token }}_comment_thread .fos_comment_submit > button[type=submit], #module_{{ module.token }}_comment_thread .fos_comment_submit > input[type=submit]').attr("disabled", "disabled");
+                            });
+                    });
+                </script>
+            {% endif %}
+        {% endblock moduleDiscussion %}
     </div>
 
     <div id="modal-container-block-{{ module.token }}">
-        {% block module_modal_container %}{% endblock %}
+        {% block module_modal_container %}{% endblock module_modal_container %}
     </div>
 
     {% block JSmodule %}{% endblock %}

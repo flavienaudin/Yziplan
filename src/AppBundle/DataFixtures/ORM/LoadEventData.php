@@ -58,6 +58,8 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $moduleManager = $this->container->get('at.manager.module');
         $moduleInvitationManager = $this->container->get('at.manager.module_invitation');
 
+        $discussionManager = $this->container->get('at.manager.discussion');
+
         /** @var AccountUser $userprincipal */
         $userprincipal = $userManager->findUserByEmail(LoadUsers::USER_ONE_EMAIL);
         /** @var AccountUser $userInvite */
@@ -155,6 +157,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $modulePoll = $moduleManager->createModule($event1, ModuleType::POLL_MODULE, PollModuleType::WHAT, $eventInvitationCreator);
         $moduleInvitationManager->initializeModuleInvitationsForEvent($event1, $modulePoll);
 
+
         $pollModule = $modulePoll->getPollModule();
 
         $pollProposal1 = new PollProposal();
@@ -176,6 +179,9 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $manager->persist($event1);
         $manager->flush();
 
+        // Discussion creation
+        $discussionManager->createCommentableThread($event1);
+        $discussionManager->createCommentableThread($modulePoll);
 
         //-------------//
         //Event 2
@@ -218,6 +224,9 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
 
         $manager->persist($event2);
         $manager->flush();
+
+        $discussionManager->createCommentableThread($event2);
+        $discussionManager->createCommentableThread($moduleEvent2);
     }
 
     public function getOrder()

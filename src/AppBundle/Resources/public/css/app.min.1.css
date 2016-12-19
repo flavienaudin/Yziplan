@@ -15539,6 +15539,10 @@ body.o-hidden {
     margin-top: 25px;
 }
 
+.wcl-list .media:hover {
+    background-color:#EFEFEF;
+}
+
 .wp-text {
     border: 0;
     padding: 0;

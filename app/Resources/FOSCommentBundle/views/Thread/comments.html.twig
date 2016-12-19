@@ -21,7 +21,7 @@ Données d'entrée :
     {% if fos_comment_can_comment_thread(thread) %}
         {{ render(url('fos_comment_new_thread_comments', {"id": thread.id})) }}
     {% endif %}
-    <a href="#eventCommentListCollapse" data-toggle="collapse">Afficher les commentaires</a>
+    <a href="#eventCommentListCollapse_{{ thread.id }}" data-toggle="collapse">Afficher les commentaires</a>
 
     {% if fos_comment_can_edit_thread(thread) %}
         <div class="fos_comment_thread_commentable">
@@ -31,7 +31,7 @@ Données d'entrée :
         </div>
     {% endif %}
 {% endif %}
-<div class="wcl-list {{ depth == 0? "collapse" }}" {{ depth == 0? 'id="eventCommentListCollapse"' }}>
+<div class="wcl-list {{ depth == 0? "collapse" }}" {% if depth == 0 %}id="eventCommentListCollapse_{{ thread.id}}"{% endif %} }}>
     {% for commentinfo in comments if commentinfo.comment is not fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
         {% include "FOSCommentBundle:Thread:comment.html.twig" with { "children": commentinfo.children, "comment": commentinfo.comment, "depth": depth, "view": view, 'userEventInvitation':userEventInvitation } %}
     {% endfor %}
@@ -40,7 +40,7 @@ Données d'entrée :
 {% if depth == 0 %}
     <script>
         $(document).ready(function () {
-            $('#eventCommentListCollapse').on({
+            $('#eventCommentListCollapse_{{ thread.id }}').on({
                 'shown.bs.collapse': function () {
                     $('.grid').masonry('layout');
                 }, 'hidden.bs.collapse': function () {
