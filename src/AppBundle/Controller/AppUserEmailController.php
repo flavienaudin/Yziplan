@@ -11,12 +11,12 @@ namespace AppBundle\Controller;
 
 use AppBundle\AppEvents;
 use AppBundle\Entity\User\AppUserEmail;
+use AppBundle\Event\AppUserEmailEvent;
 use AppBundle\Form\User\AppUserEmailType;
 use AppBundle\Manager\ApplicationUserManager;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
-use FOS\UserBundle\Event\FormEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -49,12 +49,20 @@ class AppUserEmailController extends Controller
             $appUserEmailForm = $this->createForm(AppUserEmailType::class, $newAppUserEmail);
             $appUserEmailForm->handleRequest($request);
             if ($appUserEmailForm->isValid()) {
-                $appUserEmailForm = $applicationUserManager->treatAddAppUserEmailForm($appUserEmailForm);
-                if (count($appUserEmailForm->getErrors(true)) === 0) {
+                $formTreatmentReturn = $applicationUserManager->treatAddAppUserEmailForm($appUserEmailForm);
+                $appUserEmail = null;
+                if ($formTreatmentReturn instanceof AppUserEmail) {
+                    // AppUserEmail directement retourné => tentative de rattachement à l'utilisateur connecté si validation par email OK
+                    $appUserEmail = $formTreatmentReturn;
+                } elseif ($formTreatmentReturn instanceof FormInterface && count($appUserEmailForm->getErrors(true)) === 0) {
+                    // L'email n'est pas existante pas d'ereur
                     /** @var AppUserEmail $appUserEmail */
                     $appUserEmail = $appUserEmailForm->getData();
-                    $formEvent = new FormEvent($appUserEmailForm, $request);
-                    $eventDispatcher->dispatch(AppEvents::APPUSEREMAIL_ADD_SUCCESS, $formEvent);
+                }
+                if ($appUserEmail != null) {
+                    $userEmailEvent = new AppUserEmailEvent($appUserEmail);
+                    $eventDispatcher->dispatch(AppEvents::APPUSEREMAIL_ADD_SUCCESS, $userEmailEvent);
+
                     $entityManager = $this->get('doctrine.orm.entity_manager');
                     $entityManager->persist($appUserEmail);
                     $entityManager->flush();
@@ -118,7 +126,15 @@ class AppUserEmailController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("appuseremail.associate.message.not_found", ['%token%' => $token]));
             return $this->redirectToRoute("fos_user_profile_show");
         }
-        if ($this->getUser() != $appUserEmail->getApplicationUser()->getAccountUser()) {
+        $user = $this->getUser();
+        if ($appUserEmail->getApplicationUser()->getAccountUser() == null && $user instanceof AccountUser) {
+            // L'AppUserEmail est attaché à un ApplicationUser qui n'est pas relié à un AccountUser
+            // Son ApplicationUser est fusionné avec celui de l'utilisateur connecté et il est attaché directement à l'ApplicationUser principal
+            // Toutes les invitations reliés à l'ApplicationUser secondaire sont rattachées dans l'ApplicationUser principal
+            $applicationUserManager->mergeApplicationUsers($user->getApplicationUser(), $appUserEmail->getApplicationUser());
+            $appUserEmail->getApplicationUser()->removeAppUserEmail($appUserEmail);
+            $user->getApplicationUser()->addAppUserEmail($appUserEmail);
+        } elseif ($this->getUser() != $appUserEmail->getApplicationUser()->getAccountUser()) {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("appuseremail.associate.message.wrong_user"));
             return $this->redirectToRoute('fos_user_profile_show');
         }
