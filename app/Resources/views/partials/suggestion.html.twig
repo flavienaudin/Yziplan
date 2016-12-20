@@ -60,22 +60,29 @@
     </div>
 </div>
 
-<script>
-    $('form#formSuggestion').on('submit', function (e) {
-        var $form = $(this);
-        ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                $form[0].reset();
-            }
-        );
-    });
-</script>
-
 <!-- Base : Suggestion/Bugs-->
 <script>
     // Formulaire de soumission de suggestions/bugs
-    var formSuggestion = $('#formSuggestion');
+    var formSuggestion = $('form#formSuggestion');
     formSuggestion.on("submit", function (event) {
-        event.preventDefault();
+        if (event != null) {
+            event.preventDefault();
+        }
+        var preloader = $('.at-global-preloader');
+        $(preloader).show();
+
+        // On prévient de la double soumission d'un formulaire
+        formSuggestion.find('[type=submit]').each(function () {
+            $(this).on('click', function (e) {
+                e.preventDefault();
+            });
+            $(this).prop("disabled");
+            $(this).addClass("disabled");
+            if ($(this).data('loading-text')) {
+                $(this).html($(this).data('loading-text'));
+            }
+        });
+
         datas = $(this).serializeArray();
         $.ajax("{{ path("addSuggestion") }}", {
             type: "POST",
@@ -87,6 +94,15 @@
             toastr["error"](data['message'], data['titre']);
         }).then(function (data) {
             $('#addSuggestion').modal('toggle');
+            $(preloader).hide();
+            formSuggestion.find('[type=submit]').each(function () {
+                $(this).off('click');
+                $(this).removeProp("disabled");
+                $(this).removeClass("disabled");
+                if ($(this).data('original-text')) {
+                    $(this).html($(this).data('original-text'));
+                }
+            });
         });
     });
 

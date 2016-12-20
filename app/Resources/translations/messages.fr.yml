@@ -434,7 +434,7 @@ email:
 
 # Modale suggestion :
 suggestion:
-  button: Donnez votre avis
+  button: Envoyer une suggestion
   modale:
     texte: Envoyer une suggestion, un bogue, ...
     champ_nom: Votre Nom
