@@ -15,7 +15,7 @@ $(document).ready(function () {
     new Clipboard("#btn_url_event_public_invitation");
     new Clipboard('#btn_copy_invitation_url');
 
-    /** Profile About Edit Toggle */
+    /** Event Edit Toggle */
     if ($('[data-event-header-action]')[0]) {
         $('body').on('click', '[data-event-header-action]', function (e) {
             e.preventDefault();
