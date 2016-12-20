@@ -432,3 +432,14 @@ appuser:
 email:
   salutation: Cordially
   organisers: The yzi-organisers
+
+# Modale suggestion :
+suggestion:
+  button: Give your opinion
+  modale:
+    texte: Send a suggestion, bugs, ...
+    champ_nom: Your Name
+    champ_email: Your Email
+  success:
+    titre: Thank you!
+    message: Your suggestion has been sent. We will read it carefully.

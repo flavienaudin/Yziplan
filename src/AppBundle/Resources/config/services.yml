@@ -150,3 +150,8 @@ services:
         public: false
         tags:
             - { name: twig.extension }
+
+# Gestion retour utilisateur
+  at.manager.retour_utilisateur:
+          class: AppBundle\Manager\RetourUtilisateurManager
+          arguments: ['@app.mailer.twig_swift', '%trello.token_or_login%', '%trello.pass%']

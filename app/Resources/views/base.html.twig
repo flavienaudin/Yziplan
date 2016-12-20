@@ -62,14 +62,18 @@
                     </div>
                 {% endblock sidebar_collapse_cmd %}
 
-                <a href="{{ path('home') }}" class="di-block"><img src="{{ asset('includes/img/logo/logo_prop3_transp_header.png') }}" class="img-responsive" alt="{{ "global.project_name"|trans }}">
+                <a href="{{ path('home') }}" class="di-block"><img
+                            src="{{ asset('includes/img/logo/logo_prop3_transp_header.png') }}" class="img-responsive"
+                            alt="{{ "global.project_name"|trans }}">
                 </a>
             </div>
 
             <div class="pull-right h-menu-wrapper">
                 <ul class="h-menu">
                     <li class="hm-new-event-link">
-                        <a href="{{ path('createEvent') }}" class="btn btn-link navbar-btn c-teal"> <i class="zmdi zmdi-calendar"></i> <span> {{ 'navbar.new_event'|trans() }}</span></a></li>
+                        <a href="{{ path('createEvent') }}" class="btn btn-link navbar-btn c-teal"> <i
+                                    class="zmdi zmdi-calendar"></i> <span> {{ 'navbar.new_event'|trans() }}</span></a>
+                    </li>
 
                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                         {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
@@ -88,13 +92,17 @@
                             <a data-toggle="dropdown" href="#">
                                 {# TODO : mettre l'avatar de l'utilisateur #}
                                 {% if app.user.applicationUser.appUserInformation.avatar is not null %}
-                                    <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}" class="avatar-img">
+                                    <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}"
+                                         class="avatar-img">
                                 {% else %}
-                                    <img src="{{ asset('bundles/app/img/user/avatar/menu_avatar_default.png') }}" class="avatar-img">
+                                    <img src="{{ asset('bundles/app/img/user/avatar/menu_avatar_default.png') }}"
+                                         class="avatar-img">
                                 {% endif %}
                             </a>
                             <ul class="dropdown-menu pull-right dm-icon" role="menu">
-                                <li role="presentation"><a class="user-public-name">{{ app.user.displayableName is not empty ? app.user.displayableName:"global.user_anonyme"|trans }}</a></li>
+                                <li role="presentation"><a
+                                            class="user-public-name">{{ app.user.displayableName is not empty ? app.user.displayableName:"global.user_anonyme"|trans }}</a>
+                                </li>
                                 <li role="separator" class="divider"></li>
                                 <li role="presentation" class="hmp-alerts">
                                     {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
@@ -109,19 +117,29 @@
                                     </div>#}
                                 </li>
                                 <li role="separator" class="hmp-alerts divider"></li>
-                                <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a></li>
-                                <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a></li>
+                                <li role="presentation"><a
+                                            href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a>
+                                </li>
+                                <li role="presentation"><a
+                                            href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a>
+                                </li>
                                 <li role="separator" class="divider"></li>
                                 {# TODO : définir le menu déroulant de l'utilisateur connecté : profil, déconnexion, ... #}
-                                <li role="presentation"><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></li>
+                                <li role="presentation"><a
+                                            href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a>
+                                </li>
                             </ul>
                         </li>
                     {% else %}
                         <li class="hm-registration-link hidden-xs">
-                            <a data-toggle="modal" href="#modalRegistration" class="navbar-btn"> <i class="zmdi zmdi-sign-in"></i> <span> {{ 'layout.register'|trans({}, 'FOSUserBundle') }}</span></a>
+                            <a data-toggle="modal" href="#modalRegistration" class="navbar-btn"> <i
+                                        class="zmdi zmdi-sign-in"></i>
+                                <span> {{ 'layout.register'|trans({}, 'FOSUserBundle') }}</span></a>
                         </li>
                         <li class="hm-login-link">
-                            <a data-toggle="modal" href="#modalLogin" class="navbar-btn"> <i class="zmdi zmdi-power"></i> <span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</span></a></li>
+                            <a data-toggle="modal" href="#modalLogin" class="navbar-btn"> <i
+                                        class="zmdi zmdi-power"></i>
+                                <span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</span></a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -143,8 +161,10 @@
         {# Panneaux d'affichage des "Notifications utilisateur" ouverts via les icones de la navbar #}
         <aside id="s-user-alerts" class="sidebar">
             <ul class="tab-nav tn-justified tn-icon m-t-10" data-tab-color="teal">
-                <li><a class="sua-messages" href="#sua-messages" data-toggle="tab"><i class="zmdi zmdi-email"></i></a></li>
-                <li><a class="sua-notifications" href="#sua-notifications" data-toggle="tab"><i class="zmdi zmdi-notifications"></i></a></li>
+                <li><a class="sua-messages" href="#sua-messages" data-toggle="tab"><i class="zmdi zmdi-email"></i></a>
+                </li>
+                <li><a class="sua-notifications" href="#sua-notifications" data-toggle="tab"><i
+                                class="zmdi zmdi-notifications"></i></a></li>
             </ul>
 
             <div class="tab-content">
@@ -209,7 +229,9 @@
         {{ render(controller('ATUserBundle:Security:login', {"parentRequest":app.request, "display":"modal"})) }}
         {{ render(controller('ATUserBundle:Registration:register', {"parentRequest":app.request, "display":"modal"})) }}
     {% endif %}
-    {% block page_modal_container %}{% endblock %}
+    {% block page_modal_container %}
+        {{ include(':partials:suggestion.html.twig') }}
+    {% endblock %}
 </div>
 
 <!-- Older IE warning message --><!--[if lte IE 9]>
@@ -219,27 +241,32 @@
     <div class="iew-container">
         <ul class="iew-download">
             <li>
-                <a href="http://www.google.com/chrome/"> <img src="{{ asset('bundles/app/img/browsers/chrome.png') }}" alt="Chrome">
+                <a href="http://www.google.com/chrome/"> <img src="{{ asset('bundles/app/img/browsers/chrome.png') }}"
+                                                              alt="Chrome">
                     <div>{{ "base.ie_warning.browser.chrome"|trans }}</div>
                 </a>
             </li>
             <li>
-                <a href="https://www.mozilla.org/en-US/firefox/new/"> <img src="{{ asset('bundles/app/img/browsers/firefox.png') }}" alt="Firefox">
+                <a href="https://www.mozilla.org/en-US/firefox/new/"> <img
+                        src="{{ asset('bundles/app/img/browsers/firefox.png') }}" alt="Firefox">
                     <div>{{ "base.ie_warning.browser.firefox"|trans }}</div>
                 </a>
             </li>
             <li>
-                <a href="http://www.opera.com"> <img src="{{ asset('bundles/app/img/browsers/opera.png') }}" alt="Opera">
+                <a href="http://www.opera.com"> <img src="{{ asset('bundles/app/img/browsers/opera.png') }}"
+                                                     alt="Opera">
                     <div>{{ "base.ie_warning.browser.opera"|trans }}</div>
                 </a>
             </li>
             <li>
-                <a href="https://www.apple.com/safari/"> <img src="{{ asset('bundles/app/img/browsers/safari.png') }}" alt="Safari">
+                <a href="https://www.apple.com/safari/"> <img src="{{ asset('bundles/app/img/browsers/safari.png') }}"
+                                                              alt="Safari">
                     <div>{{ "base.ie_warning.browser.safari"|trans }}</div>
                 </a>
             </li>
             <li>
-                <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie"> <img src="{{ asset('bundles/app/img/browsers/ie.png') }}" alt="Internet Explorer">
+                <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie"> <img
+                        src="{{ asset('bundles/app/img/browsers/ie.png') }}" alt="Internet Explorer">
                     <div>{{ "base.ie_warning.browser.ie"|trans }}</div>
                 </a>
             </li>
@@ -249,86 +276,87 @@
 </div><![endif]-->
 
 {% block javascripts %}
-    <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/waves.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery.bootgrid-updated.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-datetimepicker.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/palette.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/toastr.min.js") }}"></script>
+<script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
+<script src="{{ asset("bundles/app/js/waves.min.js") }}"></script>
+<script src="{{ asset("bundles/app/js/jquery.bootgrid-updated.js") }}"></script>
+<script src="{{ asset("bundles/app/js/bootstrap-clockpicker.min.js") }}"></script>
+<script src="{{ asset("bundles/app/js/bootstrap-datetimepicker.min.js") }}"></script>
+<script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
+<script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
+<script src="{{ asset("bundles/app/js/palette.js") }}"></script>
+<script src="{{ asset("bundles/app/js/toastr.min.js") }}"></script>
 
-    <!-- for IE support : SweetAlert2 -->
-    <script src="{{ asset("bundles/app/js/es6-promise.auto.min.js") }}"></script>
+<!-- for IE support : SweetAlert2 -->
+<script src="{{ asset("bundles/app/js/es6-promise.auto.min.js") }}"></script>
 
-    <script src="{{ asset("bundles/app/js/sweetalert2.min.js") }}"></script>
+<script src="{{ asset("bundles/app/js/sweetalert2.min.js") }}"></script>
 
-    <script src="{{ asset("bundles/app/js/letter-avatar.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/fullcalendar-3.0.1.min.js") }}"></script>
+<script src="{{ asset("bundles/app/js/letter-avatar.js") }}"></script>
+<script src="{{ asset("bundles/app/js/fullcalendar-3.0.1.min.js") }}"></script>
 
-    <script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/autosize.min.js") }}"></script>
+<script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
+<script src="{{ asset("bundles/app/js/autosize.min.js") }}"></script>
 
-    <!-- Placeholder for IE9 -->
-    <!--[if IE 9 ]>
-    <script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->
+<!-- Placeholder for IE9 -->
+<!--[if IE 9 ]>
+<script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->
 
 
-    {# /!\ en cas d'ajout de nouveaux widgets venant du Template AdminExtended, vérifier dans le fichier ci-dessus
-    les functions appelées et les ajouter au fichier "app.js" au cas par cas
-    <script src="{{ asset("bundles/app/js/functions.js") }}"></script>#}
-    <script src="{{ asset("bundles/app/js/actions.js") }}"></script>
-    <script src="{{ asset("includes/js/app.js") }}"></script>
+{# /!\ en cas d'ajout de nouveaux widgets venant du Template AdminExtended, vérifier dans le fichier ci-dessus
+les functions appelées et les ajouter au fichier "app.js" au cas par cas
+<script src="{{ asset("bundles/app/js/functions.js") }}"></script>#}
+<script src="{{ asset("bundles/app/js/actions.js") }}"></script>
+<script src="{{ asset("includes/js/app.js") }}"></script>
 
-    <!-- Connexion/Registration Modals -->
-    <script>
-        {# Fermeture des modals Inscription/Connexion à l'ouverture de l'autre #}
-        $('#modalLogin').on('show.bs.modal', function () {
-            // Load up a new modal...
-            $('#modalRegistration').modal('hide')
-        });
+<!-- Connexion/Registration Modals -->
+<script>
+    {# Fermeture des modals Inscription/Connexion à l'ouverture de l'autre #}
+    $('#modalLogin').on('show.bs.modal', function () {
+        // Load up a new modal...
+        $('#modalRegistration').modal('hide')
+    });
 
-        $('#modalRegistration').on('show.bs.modal', function () {
-            // Load up a new modal...
-            $('#modalLogin').modal('hide')
-        });
-    </script>
+    $('#modalRegistration').on('show.bs.modal', function () {
+        // Load up a new modal...
+        $('#modalLogin').modal('hide')
+    });
+</script>
 
-    <script>
-        var locale_js = "{{ app.request.locale }}";
-    </script>
+<script>
+    var locale_js = "{{ app.request.locale }}";
+</script>
 
-    <!-- Base : Config pluggin Toastr -->
-    <script>
-        // Configuration des notifcations via le pluggin TOASTR
-        toastr.options = {
-            "closeButton": true,
-            "debug": false,
-            "progressBar": true,
-            "preventDuplicates": false,
-            "positionClass": "toast-top-full-width",
-            "onclick": null,
-            "showDuration": "400",
-            "hideDuration": "1000",
-            "timeOut": "7000",
-            "extendedTimeOut": "2000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        };
-        /** Affichage des messages du FlashBag sous forme de notifications (toastr) */
-        $(function () {
-            {% for type, messages in app.session.flashBag.all %}
-            //En cas de type "exotique"
-            {% set notif_type = (type=="danger")?"error":(type=="notice")?"info":(type=="primary")?"info":type %}
-            {% for message in messages %}
-            toastr["{{ notif_type }}"]("{{ message|raw }}", "{{ type|capitalize }}");
-            {% endfor %}
-            {% endfor %}
-        });
-    </script>
+<!-- Base : Config pluggin Toastr -->
+<script>
+    // Configuration des notifcations via le pluggin TOASTR
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "progressBar": true,
+        "preventDuplicates": false,
+        "positionClass": "toast-top-full-width",
+        "onclick": null,
+        "showDuration": "400",
+        "hideDuration": "1000",
+        "timeOut": "7000",
+        "extendedTimeOut": "2000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+    /** Affichage des messages du FlashBag sous forme de notifications (toastr) */
+    $(function () {
+        {% for type, messages in app.session.flashBag.all %}
+        //En cas de type "exotique"
+        {% set notif_type = (type=="danger")?"error":(type=="notice")?"info":(type=="primary")?"info":type %}
+        {% for message in messages %}
+        toastr["{{ notif_type }}"]("{{ message|raw }}", "{{ type|capitalize }}");
+        {% endfor %}
+        {% endfor %}
+    });
+</script>
+
 {% endblock %}
 </body>
 </html>
