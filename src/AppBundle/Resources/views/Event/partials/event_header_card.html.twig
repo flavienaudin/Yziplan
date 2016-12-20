@@ -10,20 +10,14 @@
 
     <div class="card-body card-padding p-t-25">
         <div class="pmb-block m-0 p-0" id="pmbblock_event_header">
-
-            <div class="pmbb-header p-10">
+            {% if eventForm is not null %}
+            <div class="text-right">
                 <ul class="actions">
-                    {% if eventForm is not null %}
                         <li><a id="event_header_edit_information" data-event-header-action="edit" data-event-header-action-target="#pmbblock_event_header" href="#" data-toggle="tooltip"
                                title="{{ "event.header.tootltip.edit"|trans }}"> <i class="zmdi zmdi-edit"></i></a></li>
-                    {% endif %}
-
-                    <li><a id="event_header_dupplicate" target="_blank" href="{{ path('duplicateEvent',{'token':userEventInvitation.event.token}) }}"
-                           title="{{ "event.header.tootltip.duplicate"|trans }}" class="toggle-tooltip"><i class="zmdi zmdi-collection-plus"></i></a></li>
                 </ul>
             </div>
-            {{ include("@App/Event/partials/event_help_popover.html.twig",{'userInvitation':userEventInvitation, 'divId':'event_header_edit_information', 'text':'event.help.popover.header'}) }}
-
+            {% endif %}
             <div class="pmbb-body">
                 <div class="pmbb-view">
                     {{ include("@App/Event/partials/event_header_card_show.html.twig", {'userEventInvitation':userEventInvitation}) }}
@@ -53,6 +47,7 @@
                 window.fos.Comment.thread_container = $('.commentable_thread ');
                 window.fos.Comment.initializeListeners();
             }
+
             /** Fonction pour eviter le double envoi de commentaire */
             $('#event_comment_thread')
                 .on('fos_comment_add_comment', function (event, commentHtml) {

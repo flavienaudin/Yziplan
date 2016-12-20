@@ -9,6 +9,13 @@
 <div class="row">
     <div class="col-xs-12 {{ eventHeaderLayout }}">
         <div class="well well-sm m-b-10">
+            {% set creatorsNames = "" %}
+            {% for creatorInvitation in userEventInvitation.event.creators %}
+                {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
+            {% endfor %}
+            {% if creatorsNames is not empty %}
+                <div class="pull-right"><i><small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}</small></i></div>
+            {% endif %}
             <dl>
                 <dt class="p-b-5">{{ "event.form.description.label"|trans }}</dt>
                 <dd>{% if userEventInvitation.event.description is not empty %}
