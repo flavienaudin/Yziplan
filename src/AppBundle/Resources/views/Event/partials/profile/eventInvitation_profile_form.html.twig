@@ -20,7 +20,7 @@
                 'attr':{'class':'input-sm', 'placeholder':'eventInvitation.form.email.placeholder'},
                 'widget_options':{'fgline' : true}
             }) }}
-            <div class="m-b-15 text-center">
+            <div class="text-center">
                 {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and userEventInvitation.displayableName is not empty %}
                     <i class="m-r-10"><a href="{{ path('disconnectEventInvitation', {'eventToken':userEventInvitation.event.token}) }}">
                             {{ "eventInvitation.profile.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}</a></i>
@@ -30,11 +30,6 @@
                 {% endif %}
             </div>
         </div>
-        {#<div class="col-sm-5 hidden-xs">
-            <div class="avatar-img-container-md center-block">
-                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userEventInvitation, isUserConnected : true}) }}
-            </div>
-        </div>#}
     </div>
     {{ form_rest(userEventInvitationForm) }}
     {{ form_end(userEventInvitationForm) }}

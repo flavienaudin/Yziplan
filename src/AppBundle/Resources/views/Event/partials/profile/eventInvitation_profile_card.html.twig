@@ -7,18 +7,7 @@ Données d'entrée :
 
 <div class="card c-dark z-depth-2" id="user-event-invitation-card">
     <div class="card-header palette-Teal bg m-b-10">
-        <div class="media">
-            <div class="pull-left">
-                <div class="avatar-img-container-sm center-block">
-                    {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userEventInvitation, isUserConnected : true}) }}
-                </div>
-            </div>
-            <div class="media-body">
-                <h2>
-                    {{ "eventInvitation.profile.card.title"|trans }}
-                </h2>
-            </div>
-        </div>
+        <h2>{{ "eventInvitation.profile.card.title"|trans }}</h2>
     </div>
     <div class="card-body card-padding-sm">
         {{ include('@App/Event/partials/profile/eventInvitation_profile_form.html.twig',{
