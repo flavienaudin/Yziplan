@@ -25,7 +25,7 @@
     left: 50%;
     width: 40px;
     margin-left: -20px;
-    background-color: rgba(240,240,240,0.5);
+    background-color: rgba(240, 240, 240, 0.5);
     border-radius: 50%;
 }
 
@@ -46,14 +46,6 @@
 
 .at-alert-no-js:hover {
     opacity: 0.25;
-}
-
-/*---------------------------------
-    Carousel
-----------------------------------*/
-.carousel .item {
-    height: 500px;
-    background-color: #777;
 }
 
 /*-----------------------------------
@@ -840,15 +832,19 @@ table.dataTable td.dataTables_empty {
 }
 
 /*---------------------------------
-    Index
----------------------------------*/
-.quote-img {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center center;
-    height: 100px;
-    width: 100px;
-    display: block;;
+    Index : Layout
+----------------------------------*/
+.index-main {
+    padding: 0 !important;
+    margin-top: 70px !important;
+}
+
+/*---------------------------------
+    Index : Carousel
+----------------------------------*/
+.carousel .item {
+    height: 500px;
+    background-color: #777;
 }
 
 .carousel-img {
@@ -857,5 +853,33 @@ table.dataTable td.dataTables_empty {
     background-position: center center;
     height: 100%;
     width: 100%;
+    display: block;;
+}
+
+/*---------------------------------
+    Index : Explications
+----------------------------------*/
+@media (min-width: 768px) {
+    .row-eq-height {
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: -ms-flexbox;
+        display: flex;
+    }
+
+    .row-eq-height > [class*="col-"] > div {
+        height: 100%;
+    }
+}
+
+/*---------------------------------
+    Index : Citations
+---------------------------------*/
+.quote-img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    height: 100px;
+    width: 100px;
     display: block;;
 }
