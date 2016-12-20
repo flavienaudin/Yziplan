@@ -1,14 +1,8 @@
 <div class="card c-dark z-depth-2" id="addModule-main-div">
-    <div class="card-header well-sm bg palette-Teal m-b-20">
-        <div class="media">
-            <div class="pull-left"></div>
-            <div class="pull-right"></div>
-            <div class="media-body">
-                <h2><span>{{ "addModule.display.title"|trans }}</span></h2>
-            </div>
-        </div>
+    <div class="card-header palette-Teal bg m-b-10">
+        <h2>{{ "addModule.display.title"|trans }}</h2>
     </div>
-    <div class="card-body card-padding" id="addModule-body-card">
+    <div class="card-body card-padding-sm" id="addModule-body-card">
         <div class="row">
             <div class="col-xs-6 col-sm-3 text-center">
                 <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),

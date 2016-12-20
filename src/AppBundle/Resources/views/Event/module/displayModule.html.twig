@@ -84,11 +84,11 @@
         {% endblock moduleHeader %}
     </div>
 
+    {# TODO décommenter : non nécessaire en version beta
     <div class="card-body">
         <div class="panel-group" role="tablist" aria-multiselectable="true">
             <div class="panel panel-collapse {% block moduleInformationClass %}{% endblock %}" {% block moduleInformationAttributs %}{% endblock %}>
                 {% block moduleInformation %}
-                    {# TODO décommenter : non nécessaire en version beta
                         <div class="panel-heading m-l-10 m-r-10" id="mInfo-PH-{{ module.token }}" role="tab">
                             <h4 class="panel-title">
                                 <a role="button" data-toggle="collapse" href="#collapse-mInfo-PH-{{ module.token }}" aria-expanded="false" aria-controls="collapse-mInfo-PH-{{ module.token }}">
@@ -125,11 +125,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>#}
+                        </div>
                 {% endblock moduleInformation %}
             </div>
         </div>
-    </div>
+    </div>#}
 
     <div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
         {% block moduleBody %}{% endblock moduleBody %}

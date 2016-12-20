@@ -76,6 +76,13 @@
     padding: 15px;
 }
 
+
+@media (max-width: 767px) {
+    .card-header{
+        padding: 10px 15px;
+    }
+
+}
 /*-----------------------------------
     FIX checkbox-inline, radio-inline
 -----------------------------------*/
@@ -803,6 +810,10 @@ table.dataTable td.dataTables_empty {
 
 .pmb-block.toggled .pmbb-view {
     display: none;
+}
+
+.pmb-block .pmbb-body:first-child{
+    padding-top: 10px;
 }
 
 .profile-tab .pmo-block {
