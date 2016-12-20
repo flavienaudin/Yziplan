@@ -176,6 +176,11 @@
             // Active l'autocomplétion des champs "Où" lors de l'ajout de proposition "Where"
             initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');
         }
+        {% if (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.name is empty %}
+        $(document).ready(function () {
+            $('#event_header_edit_information').click();
+        });
+        {% endif %}
     </script>
 
 {% endblock %}
