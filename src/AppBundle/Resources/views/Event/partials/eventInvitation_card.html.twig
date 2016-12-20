@@ -5,14 +5,8 @@
 
 
 <div class="card c-dark z-depth-2" id="eventInvitations-main-div">
-    <div class="card-header well-sm bg palette-Teal m-b-20">
-        <div class="media">
-            <div class="pull-left"></div>
-            <div class="pull-right"></div>
-            <div class="media-body">
-                <h2><span>{{ "invitations.display.title"|trans }}</span></h2>
-            </div>
-        </div>
+    <div class="card-header palette-Teal bg m-b-10">
+        <h2>{{ "invitations.display.title"|trans }}</h2>
     </div>
     <div class="card-body card-padding-sm" id="eventinvitation-body-card">
         {% if userEventInvitation.creator or userEventInvitation.administrator or (not userEventInvitation.event.invitationOnly and userEventInvitation.event.guestsCanInvite) %}

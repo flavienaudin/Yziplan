@@ -15,7 +15,7 @@ $(document).ready(function () {
     new Clipboard("#btn_url_event_public_invitation");
     new Clipboard('#btn_copy_invitation_url');
 
-    /** Profile About Edit Toggle */
+    /** Event Edit Toggle */
     if ($('[data-event-header-action]')[0]) {
         $('body').on('click', '[data-event-header-action]', function (e) {
             e.preventDefault();
@@ -64,13 +64,13 @@ function reorderCard() {
     // Changement de position des div liste d'invité et
     // invitation en fonction de la largeur de l'ecran
     var iW = $(window).innerWidth();
-    if (iW <= 768) {
+    if (iW < 768) {
         if (!$('#invitationCard').hasClass('grid-item')) {
             $('#invitationCard').addClass('grid-item');
             $('.grid').masonry('addItems',$('#invitationCard') );
         }
         $('#invitationCard').insertAfter('#eventModulesContainer');
-    } else if (iW > 768 && iW < 1200) {
+    } else if (iW >= 768 && iW < 1200) {
         if ($('#invitationCard').hasClass('grid-item')) {
             $('#invitationCard').removeClass('grid-item');
             $('.grid').masonry('destroy');

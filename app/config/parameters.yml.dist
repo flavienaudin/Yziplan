@@ -2,6 +2,8 @@
 # Set parameters here that may be different on each deployment target of the app, e.g. development, staging, production.
 # http://symfony.com/doc/current/best_practices/configuration.html#infrastructure-related-configuration
 parameters:
+    is_beta: true
+
     database_host:     127.0.0.1
     database_port:     ~
     database_name:     prototype2_main
@@ -38,3 +40,7 @@ parameters:
     mangopay.temporary.folder: "%kernel.root_dir%/var/tmp/"
     # Default is SandBox, for production : https://api.sandbox.mangopay.com
     mangopay.base.url:         ""
+
+    # Trello authentification
+    trello.token_or_login: 9963c393f717f1c909f722c29f79435e
+    trello.pass: 4354e0823c4d2cde3b058cf58e3674271ed78cb8a360fad3153d01f632dee052

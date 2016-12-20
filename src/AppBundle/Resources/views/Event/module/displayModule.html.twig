@@ -7,7 +7,7 @@
 #}
 
 <div class="card z-depth-2 {% block moduleCardClass %}c-dark{% endblock %}" id="module-{{ module.token }}">
-    <div class="card-header {% block moduleHeaderClass %}palette-Teal bg{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
+    <div class="card-header m-b-10 {% block moduleHeaderClass %}palette-Teal bg{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
         {% block moduleHeader %}
             <div class="media">
                 <div class="pull-left">
@@ -55,7 +55,6 @@
                                     });
                                 </script>
                             {% endif %}
-                            <li><a href="#"><i class="zmdi zmdi-arrow-left zmdi-hc-rotate-90"></i> {#{{ "global.link.top"|trans }}#}</a></li>
                         </ul>
                     {% endblock mhMediaRight %}
                 </div>
@@ -85,11 +84,11 @@
         {% endblock moduleHeader %}
     </div>
 
+    {# TODO décommenter : non nécessaire en version beta
     <div class="card-body">
         <div class="panel-group" role="tablist" aria-multiselectable="true">
             <div class="panel panel-collapse {% block moduleInformationClass %}{% endblock %}" {% block moduleInformationAttributs %}{% endblock %}>
                 {% block moduleInformation %}
-                    {# TODO décommenter : non nécessaire en version beta
                         <div class="panel-heading m-l-10 m-r-10" id="mInfo-PH-{{ module.token }}" role="tab">
                             <h4 class="panel-title">
                                 <a role="button" data-toggle="collapse" href="#collapse-mInfo-PH-{{ module.token }}" aria-expanded="false" aria-controls="collapse-mInfo-PH-{{ module.token }}">
@@ -126,11 +125,11 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>#}
+                        </div>
                 {% endblock moduleInformation %}
             </div>
         </div>
-    </div>
+    </div>#}
 
     <div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
         {% block moduleBody %}{% endblock moduleBody %}
