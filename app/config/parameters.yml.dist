@@ -38,3 +38,7 @@ parameters:
     mangopay.temporary.folder: "%kernel.root_dir%/var/tmp/"
     # Default is SandBox, for production : https://api.sandbox.mangopay.com
     mangopay.base.url:         ""
+
+    # Trello authentification
+    trello.token_or_login: 9963c393f717f1c909f722c29f79435e
+    trello.pass: 4354e0823c4d2cde3b058cf58e3674271ed78cb8a360fad3153d01f632dee052

@@ -431,3 +431,14 @@ appuser:
 email:
   salutation: Cordialement
   organisers: Les yzi-organisateurs
+
+# Modale suggestion :
+suggestion:
+  button: Donnez votre avis
+  modale:
+    texte: Envoyer une suggestion, un bogue, ...
+    champ_nom: Votre Nom
+    champ_email: Votre Email
+  success:
+    titre: Merci!
+    message: Votre suggestion a bien été envoyée. Nous l'étudierons avec attention.

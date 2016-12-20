@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -42,6 +43,25 @@ class CoreController extends Controller
             return $this->render('AppBundle:Core:testIndex2.html.twig');
         } else {
             return $this->redirectToRoute('home');
+        }
+    }
+
+    /**
+     * @Route("/add_suggestion", name="addSuggestion")
+     */
+    public function addSuggestionAction(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $datas = $request->request->all();
+            $this->get("at.manager.retour_utilisateur")->posterSuggestion($datas);
+            return new JsonResponse(array(
+                "type" => "success",
+                "titre" => $this->get('translator.default')->trans("suggestion.success.titre"),
+                "message" => $this->get('translator.default')->trans("suggestion.success.message")
+            ));
+        } else {
+            $this->addFlash("error", $this->get("translator.default")->trans("flashMessage.erreur_requete"));
+            return $this->redirectToRoute("home");
         }
     }
 }
