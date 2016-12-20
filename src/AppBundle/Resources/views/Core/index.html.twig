@@ -16,86 +16,108 @@
     {#<div class="card z-depth-3">
         <div class="card-body">#}
     <div class="w-100">
-            <div id="carousel-index" class="carousel slide" data-ride="carousel">
-                <!-- Indicators -->
-                <ol class="carousel-indicators">
-                    <li data-target="#carousel-index" data-slide-to="0" class="active"></li>
-                    <li data-target="#carousel-index" data-slide-to="1" class=""></li>
-                    <li data-target="#carousel-index" data-slide-to="2" class=""></li>
-                </ol>
+        <div id="carousel-index" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#carousel-index" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-index" data-slide-to="1" class=""></li>
+                <li data-target="#carousel-index" data-slide-to="2" class=""></li>
+            </ol>
 
-                <!-- Wrapper for slides -->
-                <div class="carousel-inner" role="listbox">
-                    <div class="item active">
-                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/nouvel-an-2017.jpg') }})"></div>
-                        <div class="carousel-caption">
-                            <h3>{{ "landing_page.carousel.new_year.title"|trans }}</h3>
-                            <p>{{ "landing_page.carousel.new_year.text"|trans }}</p>
-                            <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                        </div>
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/nouvel-an-2017.jpg') }})"></div>
+                    <div class="carousel-caption">
+                        <h3>{{ "landing_page.carousel.new_year.title"|trans }}</h3>
+                        <p>{{ "landing_page.carousel.new_year.text"|trans }}</p>
+                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
                     </div>
-                    <div class="item">
-                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/noel.jpg') }})"></div>
-                        <div class="carousel-caption">
-                            <h3>{{ "landing_page.carousel.christmas.title"|trans }}</h3>
-                            <p>{{ "landing_page.carousel.christmas.text"|trans }}</p>
-                            <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/galette.jpg') }})"></div>
-                        <div class="carousel-caption">
-                            <h3>{{ "landing_page.carousel.king_cake.title"|trans }}</h3>
-                            <p>{{ "landing_page.carousel.king_cake.text"|trans }}</p>
-                            <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                        </div>
-                    </div>
-                    {#
-                    <div class="item active">
-                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-bar.jpg') }})"></div>
-                        <div class="carousel-caption">
-                            <h3>{{ "landing_page.carousel.after_work.title"|trans }}</h3>
-                            <p>{{ "landing_page.carousel.after_work.text"|trans }}</p>
-                            <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-reunion.jpg') }})"></div>
-                        <div class="carousel-caption">
-                            <h3>{{ "landing_page.carousel.meeting.title"|trans }}</h3>
-                            <p>{{ "landing_page.carousel.meeting.text"|trans }}</p>
-                            <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-soiree.jpg') }})"></div>
-                        <div class="carousel-caption">
-                            <h3>{{ "landing_page.carousel.party.title"|trans }}</h3>
-                            <p>{{ "landing_page.carousel.party.text"|trans }}</p>
-                            <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-vacances.jpg') }})"></div>
-                        <div class="carousel-caption">
-                            <h3>{{ "landing_page.carousel.holiday.title"|trans }}</h3>
-                            <p>{{ "landing_page.carousel.holiday.text"|trans }}</p>
-                            <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                        </div>
-                    </div>#}
                 </div>
-
-                <!-- Controls -->
-                <a class="left carousel-control" href="#carousel-index" role="button" data-slide="prev">
-                    <span class="zmdi zmdi-chevron-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
-                </a>
-                <a class="right carousel-control" href="#carousel-index" role="button" data-slide="next">
-                    <span class="zmdi zmdi-chevron-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
-                </a>
+                <div class="item">
+                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/noel.jpg') }})"></div>
+                    <div class="carousel-caption">
+                        <h3>{{ "landing_page.carousel.christmas.title"|trans }}</h3>
+                        <p>{{ "landing_page.carousel.christmas.text"|trans }}</p>
+                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/galette.jpg') }})"></div>
+                    <div class="carousel-caption">
+                        <h3>{{ "landing_page.carousel.king_cake.title"|trans }}</h3>
+                        <p>{{ "landing_page.carousel.king_cake.text"|trans }}</p>
+                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
+                    </div>
+                </div>
+                {#
+                <div class="item active">
+                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-bar.jpg') }})"></div>
+                    <div class="carousel-caption">
+                        <h3>{{ "landing_page.carousel.after_work.title"|trans }}</h3>
+                        <p>{{ "landing_page.carousel.after_work.text"|trans }}</p>
+                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-reunion.jpg') }})"></div>
+                    <div class="carousel-caption">
+                        <h3>{{ "landing_page.carousel.meeting.title"|trans }}</h3>
+                        <p>{{ "landing_page.carousel.meeting.text"|trans }}</p>
+                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-soiree.jpg') }})"></div>
+                    <div class="carousel-caption">
+                        <h3>{{ "landing_page.carousel.party.title"|trans }}</h3>
+                        <p>{{ "landing_page.carousel.party.text"|trans }}</p>
+                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-vacances.jpg') }})"></div>
+                    <div class="carousel-caption">
+                        <h3>{{ "landing_page.carousel.holiday.title"|trans }}</h3>
+                        <p>{{ "landing_page.carousel.holiday.text"|trans }}</p>
+                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
+                    </div>
+                </div>#}
             </div>
+
+            <!-- Controls -->
+            <a class="left carousel-control" href="#carousel-index" role="button" data-slide="prev">
+                <span class="zmdi zmdi-chevron-left" aria-hidden="true"></span> <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#carousel-index" role="button" data-slide="next">
+                <span class="zmdi zmdi-chevron-right" aria-hidden="true"></span> <span class="sr-only">Next</span>
+            </a>
+        </div>
         {#</div>
     </div>#}
     </div>
+
+    {% if display_beta %}
+        <div class="row">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                <div class="card palette-Red-50 bg z-depth-3 m-t-20">
+                    <div class="card-header c-boxed text-center">
+                        <h1><strong>Bêta !</strong></h1>
+                    </div>
+                    <div class="card-body c-boxed card-padding">
+                        <p>Le site est actuellement en version bêta, tu y trouveras donc surement quelques bugs ou tu auras peut-être quelques suggestions d'amélioration.</p>
+                        <p>Dans tous les cas ne nous ménage pas et envoie nous tes retours! (le bouton est disponible en bas de chaque page)</p>
+                        <div class="text-center">
+                            <a href="#" data-toggle="modal" data-target="#addSuggestion" id="lienOuvreSuggestion" class="btn btn-primary text-center">
+                                <span class="palette-White text"> {{ "Envoyer une suggestion"|trans }} </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
 
     <div class="">
         <div class="card-header c-boxed text-center">

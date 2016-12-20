@@ -46,6 +46,7 @@ twig:
         google_client_id: "%oauth.google.id%"
         google_maps_api_id: "%maps_api.google.id%"
         facebook_client_id: "%oauth.facebook.id%"
+        display_beta: "%is_beta%"
     form_themes:
         - 'Form/app_forms_layout.html.twig'
 

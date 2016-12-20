@@ -48,6 +48,9 @@
 {% endblock top_javascripts %}
 
 
+{% if display_beta %}
+    <img src="{{ asset("bundles/app/img/beta.png") }}" style="position:fixed;top:0;left:0;z-index:10000;width:80px;"/>
+{% endif %}
 {% block header_body %}
     <header id="header" class="media header-fixed-top palette-Teal bg z-depth-3-bottom">
         <div class="container {% block header_class %}{% endblock %}">
@@ -276,86 +279,86 @@
 </div><![endif]-->
 
 {% block javascripts %}
-<script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
-<script src="{{ asset("bundles/app/js/waves.min.js") }}"></script>
-<script src="{{ asset("bundles/app/js/jquery.bootgrid-updated.js") }}"></script>
-<script src="{{ asset("bundles/app/js/bootstrap-clockpicker.min.js") }}"></script>
-<script src="{{ asset("bundles/app/js/bootstrap-datetimepicker.min.js") }}"></script>
-<script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
-<script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
-<script src="{{ asset("bundles/app/js/palette.js") }}"></script>
-<script src="{{ asset("bundles/app/js/toastr.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/waves.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery.bootgrid-updated.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-datetimepicker.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/palette.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/toastr.min.js") }}"></script>
 
-<!-- for IE support : SweetAlert2 -->
-<script src="{{ asset("bundles/app/js/es6-promise.auto.min.js") }}"></script>
+    <!-- for IE support : SweetAlert2 -->
+    <script src="{{ asset("bundles/app/js/es6-promise.auto.min.js") }}"></script>
 
-<script src="{{ asset("bundles/app/js/sweetalert2.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/sweetalert2.min.js") }}"></script>
 
-<script src="{{ asset("bundles/app/js/letter-avatar.js") }}"></script>
-<script src="{{ asset("bundles/app/js/fullcalendar-3.0.1.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/letter-avatar.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/fullcalendar-3.0.1.min.js") }}"></script>
 
-<script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
-<script src="{{ asset("bundles/app/js/autosize.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/autosize.min.js") }}"></script>
 
-<!-- Placeholder for IE9 -->
-<!--[if IE 9 ]>
-<script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->
+    <!-- Placeholder for IE9 -->
+    <!--[if IE 9 ]>
+    <script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->
 
 
-{# /!\ en cas d'ajout de nouveaux widgets venant du Template AdminExtended, vérifier dans le fichier ci-dessus
-les functions appelées et les ajouter au fichier "app.js" au cas par cas
-<script src="{{ asset("bundles/app/js/functions.js") }}"></script>#}
-<script src="{{ asset("bundles/app/js/actions.js") }}"></script>
-<script src="{{ asset("includes/js/app.js") }}"></script>
+    {# /!\ en cas d'ajout de nouveaux widgets venant du Template AdminExtended, vérifier dans le fichier ci-dessus
+    les functions appelées et les ajouter au fichier "app.js" au cas par cas
+    <script src="{{ asset("bundles/app/js/functions.js") }}"></script>#}
+    <script src="{{ asset("bundles/app/js/actions.js") }}"></script>
+    <script src="{{ asset("includes/js/app.js") }}"></script>
 
-<!-- Connexion/Registration Modals -->
-<script>
-    {# Fermeture des modals Inscription/Connexion à l'ouverture de l'autre #}
-    $('#modalLogin').on('show.bs.modal', function () {
-        // Load up a new modal...
-        $('#modalRegistration').modal('hide')
-    });
+    <!-- Connexion/Registration Modals -->
+    <script>
+        {# Fermeture des modals Inscription/Connexion à l'ouverture de l'autre #}
+        $('#modalLogin').on('show.bs.modal', function () {
+            // Load up a new modal...
+            $('#modalRegistration').modal('hide')
+        });
 
-    $('#modalRegistration').on('show.bs.modal', function () {
-        // Load up a new modal...
-        $('#modalLogin').modal('hide')
-    });
-</script>
+        $('#modalRegistration').on('show.bs.modal', function () {
+            // Load up a new modal...
+            $('#modalLogin').modal('hide')
+        });
+    </script>
 
-<script>
-    var locale_js = "{{ app.request.locale }}";
-</script>
+    <script>
+        var locale_js = "{{ app.request.locale }}";
+    </script>
 
-<!-- Base : Config pluggin Toastr -->
-<script>
-    // Configuration des notifcations via le pluggin TOASTR
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "progressBar": true,
-        "preventDuplicates": false,
-        "positionClass": "toast-top-full-width",
-        "onclick": null,
-        "showDuration": "400",
-        "hideDuration": "1000",
-        "timeOut": "7000",
-        "extendedTimeOut": "2000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    };
-    /** Affichage des messages du FlashBag sous forme de notifications (toastr) */
-    $(function () {
-        {% for type, messages in app.session.flashBag.all %}
-        //En cas de type "exotique"
-        {% set notif_type = (type=="danger")?"error":(type=="notice")?"info":(type=="primary")?"info":type %}
-        {% for message in messages %}
-        toastr["{{ notif_type }}"]("{{ message|raw }}", "{{ type|capitalize }}");
-        {% endfor %}
-        {% endfor %}
-    });
-</script>
+    <!-- Base : Config pluggin Toastr -->
+    <script>
+        // Configuration des notifcations via le pluggin TOASTR
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "progressBar": true,
+            "preventDuplicates": false,
+            "positionClass": "toast-top-full-width",
+            "onclick": null,
+            "showDuration": "400",
+            "hideDuration": "1000",
+            "timeOut": "7000",
+            "extendedTimeOut": "2000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        /** Affichage des messages du FlashBag sous forme de notifications (toastr) */
+        $(function () {
+            {% for type, messages in app.session.flashBag.all %}
+            //En cas de type "exotique"
+            {% set notif_type = (type=="danger")?"error":(type=="notice")?"info":(type=="primary")?"info":type %}
+            {% for message in messages %}
+            toastr["{{ notif_type }}"]("{{ message|raw }}", "{{ type|capitalize }}");
+            {% endfor %}
+            {% endfor %}
+        });
+    </script>
 
 {% endblock %}
 </body>
