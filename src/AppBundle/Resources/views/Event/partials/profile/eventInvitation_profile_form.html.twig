@@ -7,7 +7,7 @@
     {{ include("@App/Event/partials/event_help_popover.html.twig",{'userInvitation':userEventInvitation,'divId':'event_invitation_guestName','text': 'event.help.popover.name'}) }}
     {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationProfile'}}) }}
     <div class="row">
-        <div class="col-sm-7">
+        <div class="col-xs-12">
             {{ form_row(userEventInvitationForm.guestName, {
                 'label':'eventInvitation.form.guestname.label'|trans,
                 'label_attr':{'class':'sr-only'},
@@ -20,23 +20,23 @@
                 'attr':{'class':'input-sm', 'placeholder':'eventInvitation.form.email.placeholder'},
                 'widget_options':{'fgline' : true}
             }) }}
+            <div class="m-b-15 text-center">
+                {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and userEventInvitation.displayableName is not empty %}
+                    <i class="m-r-10"><a href="{{ path('disconnectEventInvitation', {'eventToken':userEventInvitation.event.token}) }}">
+                            {{ "eventInvitation.profile.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}</a></i>
+                {% endif %}
+                {% if userEventInvitationForm is defined %}
+                    <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+                {% endif %}
+            </div>
         </div>
-        <div class="col-sm-5">
+        {#<div class="col-sm-5 hidden-xs">
             <div class="avatar-img-container-md center-block">
                 {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userEventInvitation, isUserConnected : true}) }}
             </div>
-        </div>
+        </div>#}
     </div>
     {{ form_rest(userEventInvitationForm) }}
-    <div class="p-t-15 p-b-15 text-right">
-        {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and userEventInvitation.displayableName is not empty %}
-            <i class="m-r-10"><a href="{{ path('disconnectEventInvitation', {'eventToken':userEventInvitation.event.token}) }}">
-                    {{ "eventInvitation.profile.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}</a></i>
-        {% endif %}
-        {% if userEventInvitationForm is defined %}
-            <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
-        {% endif %}
-    </div>
     {{ form_end(userEventInvitationForm) }}
     <script>
         $('form#userEventInvitationProfile').on("submit", function (e) {
