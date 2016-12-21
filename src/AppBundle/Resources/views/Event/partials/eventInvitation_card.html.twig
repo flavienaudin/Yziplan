@@ -83,7 +83,7 @@
                 createFilter: createFilterEmail,
                 create: createUser
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                , preload: 'focus',
+                , /*preload: 'focus',*/
                 load: function (query, callback) {
                     $.ajax({
                         url: '{{ path('searchContacts') }}',
