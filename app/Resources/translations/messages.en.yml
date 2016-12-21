@@ -28,11 +28,15 @@ landing_page:
     new_year:
       alt: New Year
       title: New Year
-      text: Not organised for the New Year? It's not to late!
+      text: No plan for New Year's Eve dinner?
     christmas:
       alt: Christmas
       title: Christmas
-      text: Christmas, this is the time of sharing, What better way to organize collaboratively?
+      text: To meet your near relation and make delicious Christmas cakes
+    ski:
+      alt: Week-end
+      title: Week-end
+      text: Want to organise a weekend with friends?
     king_cake:
       alt: Epiphany
       title: Epiphany
