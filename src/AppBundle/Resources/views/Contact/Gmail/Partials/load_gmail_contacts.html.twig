@@ -2,20 +2,24 @@
 - event (Event|null) L'événement pour lequel l'utilisateur peut envoyer des invitations à ses contacts
 #}
 
-
-<script src="https://apis.google.com/js/client.js"></script>
-<script src="https://apis.google.com/js/client.js"></script>
+<script async src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
 <script>
     var GMAIL_CONTACTS = [];
     var bootGridTable = null;
 
+    {# Your Client ID is retrieved from your project in the Developer Console => https://console.developers.google.com#}
+    var CLIENT_ID = '{{ google_client_id }}';
+    var SCOPES = ["https://www.googleapis.com/auth/contacts.readonly"];
+
+    /**
+     * Check if current user has authorized this application.
+     */
+    function checkAuth() {
+        gapi.auth.authorize({'client_id': CLIENT_ID,'scope': SCOPES.join(' '),'immediate': true}, null);
+    }
+
     function authClick() {
-        {# Your Client ID is retrieved from your project in the Developer Console => https://console.developers.google.com#}
-        var CLIENT_ID = '{{ google_client_id }}';
-        var SCOPES = ["https://www.googleapis.com/auth/contacts.readonly"];
-
-        gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: false}, authResult);
-
+        gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: false},authResult);
         return false;
     }
 
@@ -40,25 +44,26 @@
      */
     function loadPeopleApi() {
         gapi.client.load('https://people.googleapis.com/$discovery/rest', 'v1', loadContacts);
+
     }
 
     /*  function displayContacts() {
      loadContacts(null);
      }*/
 
-    function loadContacts(pageToken) {
-        pageToken = typeof pageToken !== 'undefined' ? pageToken : null;
+    function loadContacts(/*pageToken*/) {
+        /*pageToken = typeof pageToken !== 'undefined' ? pageToken : null;*/
         var options = {
-            'resourceName': 'people/me',
-            'pageSize': 50,
+            /*'resource': 'people/me',
+            'pageSize': 50,*/
             'sortOrder': 'FIRST_NAME_ASCENDING',
             'requestMask.includeField': 'person.photos,person.email_addresses,person.names'
         };
-        if (pageToken != null) {
+        /*if (pageToken != null) {
             options['pageToken'] = pageToken;
 
-        }
-        var request = gapi.client.people.people.connections.list(options);
+        }*/
+        var request = gapi.client.people.people.me.connections.list(options);
         request.execute(function (resp) {
             var connections = resp.connections;
 
@@ -89,6 +94,7 @@
             }
         });
     }
+
 
     /**
      * Show Contacts Details display on a table pagesize = 100 connections.
@@ -135,7 +141,9 @@
         });
         document.getElementById('gmail-preloader').style.display = 'none';
     }
-</script><a data-toggle="modal" href="#gmail-contact-container" class="btn btn-lg btn-block btn-danger waves-effect" onclick="authClick()"> <i
+</script>
+
+<a id="testLoadContacts" data-toggle="modal" href="#gmail-contact-container" class="btn btn-lg btn-block btn-danger waves-effect"> <!--onclick="authClick()"-->  <i
             class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "invitations.button.via_gmail_contact"|trans }}</a>
 
 <div>
@@ -153,6 +161,7 @@
                         </svg>
                     </div>
                 </div>
+
                 <div id="divauthresult"></div>
                     <div class="table-responsive">
                         <div id="divtableresult" class="modal-body"></div>
@@ -170,6 +179,9 @@
                         </button>#}
                     </div>
                     <script>
+                        $('#testLoadContacts').on('click', function(e){
+                            authClick();
+                        });
                         $('#inviteSelectedContacts').on('click', function (e) {
                             if(bootGridTable !== null) {
                                 if (!eventInvitationValid && askGuestName !== undefined) {
