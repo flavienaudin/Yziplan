@@ -66,7 +66,7 @@
             {% endif %}
 
             {% if invitationsForm is not null %}
-            $('#eventInvitations_newEmails').selectize({
+            {#$('#eventInvitations_newEmails').selectize({
                 persist: false,
                 maxItems: null,
                 placeholder: "{{ "invitations.form.invitations.placeholder"|trans }}",
@@ -98,7 +98,7 @@
                     });
                 }
                 {% endif %}
-            });
+            });#}
 
             $('form#eventInvitations').on('submit', function (e) {
                 if (!eventInvitationValid && askGuestName !== undefined) {
