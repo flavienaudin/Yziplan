@@ -49,7 +49,9 @@
 
 
 {% if display_beta %}
+<a href="{{ path('home') }}" class="di-block">
     <img src="{{ asset("bundles/app/img/beta.png") }}" style="position:fixed;top:0;left:0;z-index:10000;width:80px;"/>
+</a>
 {% endif %}
 {% block header_body %}
     <header id="header" class="media header-fixed-top palette-Teal bg z-depth-3-bottom">
