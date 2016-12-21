@@ -27,12 +27,16 @@ landing_page:
       new_event: C'est par ici
     new_year:
       alt: Nouvel an
-      title: Nouvel An
-      text: Pas encore organisé pour le nouvel an ? C'est le moment d'y remédier !
+      title: Nouvel an
+      text: Pas encore de plan pour le reveillon du nouvel an !
     christmas:
       alt: Noël
       title: Noël
-      text: Noël c'est le moment du partage, quoi de mieux que de s'organiser collaborativement ?
+      text: Pour retrouver tes proches et faire de délicieux gâteaux de Noël
+    ski:
+      alt: Week-end
+      title: Week-end
+      text: Envie d'organiser un week-end entre amis ?
     king_cake:
       alt: Epiphanie
       title: Epiphanie
