@@ -51,18 +51,18 @@
      loadContacts(null);
      }*/
 
-    function loadContacts(/*pageToken*/) {
-        /*pageToken = typeof pageToken !== 'undefined' ? pageToken : null;*/
+    function loadContacts(pageToken) {
+        pageToken = typeof pageToken !== 'undefined' ? pageToken : null;
         var options = {
-            /*'resource': 'people/me',
-            'pageSize': 50,*/
+            //'resource': 'people/me',
+            'pageSize': 100,
             'sortOrder': 'FIRST_NAME_ASCENDING',
             'requestMask.includeField': 'person.photos,person.email_addresses,person.names'
         };
-        /*if (pageToken != null) {
+        if (pageToken != null) {
             options['pageToken'] = pageToken;
 
-        }*/
+        }
         var request = gapi.client.people.people.me.connections.list(options);
         request.execute(function (resp) {
             var connections = resp.connections;
