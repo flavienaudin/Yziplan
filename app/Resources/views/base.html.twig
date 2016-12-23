@@ -34,7 +34,7 @@
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 </head>
-<body data-ma-header="teal">
+<body data-ma-header="teal" class="{% if display_beta %} beta {% endif %}">
 <noscript>
     <div class="alert alert-danger  at-alert-no-js" role="alert">
         <i class="zmdi zmdi-alert-triangle zmdi-hc-2x"></i> {{ "global.error.javascrip_disabled"|trans }}
@@ -48,11 +48,6 @@
 {% endblock top_javascripts %}
 
 
-{% if display_beta %}
-<a href="{{ path('home') }}" class="di-block">
-    <img src="{{ asset("bundles/app/img/beta.png") }}" style="position:fixed;top:0;left:0;z-index:10000;width:80px;"/>
-</a>
-{% endif %}
 {% block header_body %}
     <header id="header" class="media header-fixed-top palette-Teal bg z-depth-3-bottom">
         <div class="container {% block header_class %}{% endblock %}">
