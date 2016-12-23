@@ -520,7 +520,9 @@ table.dataTable td.dataTables_empty {
 }
 
 .pop-help-event > .popover-content {
-    margin-top: 10px;
+    margin: 0px;
+    padding: 5px;
+    font-size: x-small;
 }
 
 .popover.right.pop-help-event > .arrow {
