@@ -17,7 +17,7 @@ base:
 
 navbar:
   subtitle: To organise you, it's IZI !
-  new_event: Yziplan
+  new_event: New event
 
 main_menu:
 
@@ -439,7 +439,7 @@ appuser:
 # Emails
 email:
   salutation: Cordially
-  organisers: The yzi-organisers
+  organisers: The organisers
 
 # Modale suggestion :
 suggestion:
