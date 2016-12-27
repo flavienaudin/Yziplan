@@ -13013,7 +13013,7 @@ html:not(.ie9) .select.fg-line:before {
 
 .toggle-switch .ts-label {
     display: inline-block;
-    margin: 0 20px 0 0;
+    margin: 0;
     vertical-align: top;
     -webkit-transition: color 0.56s cubic-bezier(0.4, 0, 0.2, 1);
     transition: color 0.56s cubic-bezier(0.4, 0, 0.2, 1);

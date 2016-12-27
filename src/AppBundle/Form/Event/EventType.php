@@ -44,13 +44,14 @@ class EventType extends AbstractType
                 'time_widget' => 'single_text',
                 'date_format' => 'dd/MM/yyyy'
             ))
+            /* TODO décommenter quand la date limite de réponse sera utilisée
             ->add("responseDeadline", DateTimeType::class, array(
                 "required" => false,
                 'html5' => false,
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
                 'date_format' => 'dd/MM/yyyy'
-            ))
+            ))*/
             ->add("invitationOnly", CheckboxType::class, array(
                 'required' => false
             ))
