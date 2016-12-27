@@ -149,7 +149,7 @@ function isMobile() {
  *  - datepicker
  *  - selectpicker
  *  - tooltip
- *  - mansorny
+ *  - masonry
  */
 function jsPlugginActivation() {
     /** Autosize **/
@@ -162,7 +162,7 @@ function jsPlugginActivation() {
 
     $('.clockpicker').clockpicker();
     var locale_format = "DD/MM/YYYY";
-    if(locale_js == 'en'){
+    if (locale_js == 'en') {
         locale_format = "MM/DD/YYYY";
     }
     $('.ag-date-picker').datetimepicker({
@@ -244,7 +244,7 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
     } else {
         urlTarget = $(target).attr('href');
     }
-    if(typeof method === "undefined") {
+    if (typeof method === "undefined") {
         method = 'post';
     }
 

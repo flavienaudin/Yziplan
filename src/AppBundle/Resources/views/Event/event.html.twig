@@ -95,17 +95,17 @@
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/fileinput.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/datatables.min.css") }}"/>
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootstrap-touchspin.min.css") }}"/>
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/datatables.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootstrap-touchspin.min.css") }}">
 {% endblock stylesheets %}
 
 {% block top_javascripts %}
     {{ parent() }}
-    <script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/yzi-selectize.js") }}"></script>
+    {#<script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>#}
     <script src="{{ asset("bundles/app/js/datatables.min.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jquery.bootstrap-touchspin.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/yzi-selectize.js") }}"></script>
     <script>
         var eventInvitationValid = true;
     </script>
