@@ -98,19 +98,19 @@
                                 <li role="presentation"><a class="user-public-name">{{ app.user.displayableName is not empty ? app.user.displayableName:"global.user_anonyme"|trans }}</a>
                                 </li>
                                 <li role="separator" class="divider"></li>
-                                <li role="presentation" class="hmp-alerts">
-                                    {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
+                                {#<li role="presentation" class="hmp-alerts">
+                                    #}{# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
                                     {# TODO decommenter : non necessaire pour la version beta
                                     <div class="hmp-alert" data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
                                         <a href="#"><i class="hm-icon zmdi zmdi-email"></i></a>
                                     </div>#}
                                     {# Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
-                                    {# TODO decommenter : non necessaire pour la version beta
+                                    {#TODO decommenter : non necessaire pour la version beta
                                     <div class="hmp-alert" data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
                                         <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
-                                    </div>#}
+                                    </div>#}{#
                                 </li>
-                                <li role="separator" class="hmp-alerts divider"></li>
+                                {#<li role="separator" class="hmp-alerts divider"></li>#}
                                 <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a>
                                 </li>
                                 <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a>
