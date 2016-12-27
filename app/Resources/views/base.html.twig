@@ -62,17 +62,14 @@
                     </div>
                 {% endblock sidebar_collapse_cmd %}
 
-                <a href="{{ path('home') }}" class="di-block"><img
-                            src="{{ asset('includes/img/logo/logo_prop3_transp_header.png') }}" class="img-responsive"
-                            alt="{{ "global.project_name"|trans }}">
+                <a href="{{ path('home') }}" class="di-block"><img src="{{ asset('includes/img/logo/logo_prop3_transp_header.png') }}" class="img-responsive" alt="{{ "global.project_name"|trans }}">
                 </a>
             </div>
 
             <div class="pull-right h-menu-wrapper">
                 <ul class="h-menu">
                     <li class="hm-new-event-link">
-                        <a href="{{ path('createEvent') }}" class="btn btn-link navbar-btn c-teal"> <i
-                                    class="zmdi zmdi-calendar"></i> <span> {{ 'navbar.new_event'|trans() }}</span></a>
+                        <a href="{{ path('createEvent') }}" class="btn btn-link navbar-btn c-teal"> <i class="zmdi zmdi-plus-circle-o-duplicate"></i> <span> {{ 'navbar.new_event'|trans() }}</span></a>
                     </li>
 
                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
@@ -92,16 +89,13 @@
                             <a data-toggle="dropdown" href="#">
                                 {# TODO : mettre l'avatar de l'utilisateur #}
                                 {% if app.user.applicationUser.appUserInformation.avatar is not null %}
-                                    <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}"
-                                         class="avatar-img">
+                                    <img src="{{ asset('uploads/user/avatar/'~app.user.applicationUser.appUserInformation.avatar) }}" class="avatar-img">
                                 {% else %}
-                                    <img src="{{ asset('bundles/app/img/user/avatar/menu_avatar_default.png') }}"
-                                         class="avatar-img">
+                                    <img src="{{ asset('bundles/app/img/user/avatar/menu_avatar_default.png') }}" class="avatar-img">
                                 {% endif %}
                             </a>
                             <ul class="dropdown-menu pull-right dm-icon" role="menu">
-                                <li role="presentation"><a
-                                            class="user-public-name">{{ app.user.displayableName is not empty ? app.user.displayableName:"global.user_anonyme"|trans }}</a>
+                                <li role="presentation"><a class="user-public-name">{{ app.user.displayableName is not empty ? app.user.displayableName:"global.user_anonyme"|trans }}</a>
                                 </li>
                                 <li role="separator" class="divider"></li>
                                 <li role="presentation" class="hmp-alerts">
@@ -117,29 +111,22 @@
                                     </div>#}
                                 </li>
                                 <li role="separator" class="hmp-alerts divider"></li>
-                                <li role="presentation"><a
-                                            href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a>
+                                <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a>
                                 </li>
-                                <li role="presentation"><a
-                                            href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a>
+                                <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a>
                                 </li>
                                 <li role="separator" class="divider"></li>
                                 {# TODO : définir le menu déroulant de l'utilisateur connecté : profil, déconnexion, ... #}
-                                <li role="presentation"><a
-                                            href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a>
+                                <li role="presentation"><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a>
                                 </li>
                             </ul>
                         </li>
                     {% else %}
                         <li class="hm-registration-link hidden-xs">
-                            <a data-toggle="modal" href="#modalRegistration" class="navbar-btn"> <i
-                                        class="zmdi zmdi-sign-in"></i>
-                                <span> {{ 'layout.register'|trans({}, 'FOSUserBundle') }}</span></a>
+                            <a data-toggle="modal" href="#modalRegistration" class="navbar-btn"> <i class="zmdi zmdi-sign-in"></i> <span> {{ 'layout.register'|trans({}, 'FOSUserBundle') }}</span></a>
                         </li>
                         <li class="hm-login-link">
-                            <a data-toggle="modal" href="#modalLogin" class="navbar-btn"> <i
-                                        class="zmdi zmdi-power"></i>
-                                <span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</span></a></li>
+                            <a data-toggle="modal" href="#modalLogin" class="navbar-btn"> <i class="zmdi zmdi-power"></i> <span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</span></a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -163,8 +150,7 @@
             <ul class="tab-nav tn-justified tn-icon m-t-10" data-tab-color="teal">
                 <li><a class="sua-messages" href="#sua-messages" data-toggle="tab"><i class="zmdi zmdi-email"></i></a>
                 </li>
-                <li><a class="sua-notifications" href="#sua-notifications" data-toggle="tab"><i
-                                class="zmdi zmdi-notifications"></i></a></li>
+                <li><a class="sua-notifications" href="#sua-notifications" data-toggle="tab"><i class="zmdi zmdi-notifications"></i></a></li>
             </ul>
 
             <div class="tab-content">
@@ -241,32 +227,27 @@
     <div class="iew-container">
         <ul class="iew-download">
             <li>
-                <a href="http://www.google.com/chrome/"> <img src="{{ asset('bundles/app/img/browsers/chrome.png') }}"
-                                                              alt="Chrome">
+                <a href="http://www.google.com/chrome/"> <img src="{{ asset('bundles/app/img/browsers/chrome.png') }}" alt="Chrome">
                     <div>{{ "base.ie_warning.browser.chrome"|trans }}</div>
                 </a>
             </li>
             <li>
-                <a href="https://www.mozilla.org/en-US/firefox/new/"> <img
-                        src="{{ asset('bundles/app/img/browsers/firefox.png') }}" alt="Firefox">
+                <a href="https://www.mozilla.org/en-US/firefox/new/"> <img src="{{ asset('bundles/app/img/browsers/firefox.png') }}" alt="Firefox">
                     <div>{{ "base.ie_warning.browser.firefox"|trans }}</div>
                 </a>
             </li>
             <li>
-                <a href="http://www.opera.com"> <img src="{{ asset('bundles/app/img/browsers/opera.png') }}"
-                                                     alt="Opera">
+                <a href="http://www.opera.com"> <img src="{{ asset('bundles/app/img/browsers/opera.png') }}" alt="Opera">
                     <div>{{ "base.ie_warning.browser.opera"|trans }}</div>
                 </a>
             </li>
             <li>
-                <a href="https://www.apple.com/safari/"> <img src="{{ asset('bundles/app/img/browsers/safari.png') }}"
-                                                              alt="Safari">
+                <a href="https://www.apple.com/safari/"> <img src="{{ asset('bundles/app/img/browsers/safari.png') }}" alt="Safari">
                     <div>{{ "base.ie_warning.browser.safari"|trans }}</div>
                 </a>
             </li>
             <li>
-                <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie"> <img
-                        src="{{ asset('bundles/app/img/browsers/ie.png') }}" alt="Internet Explorer">
+                <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie"> <img src="{{ asset('bundles/app/img/browsers/ie.png') }}" alt="Internet Explorer">
                     <div>{{ "base.ie_warning.browser.ie"|trans }}</div>
                 </a>
             </li>
