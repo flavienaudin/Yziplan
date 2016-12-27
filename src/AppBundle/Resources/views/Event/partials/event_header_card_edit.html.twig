@@ -14,84 +14,90 @@
         }) }}
         {{ form_row(eventForm.description, {
             'label':'event.form.description.label',
+            'label_attr':{'class':'sr-only'},
             'attr':{'placeholder':'event.form.description.placeholder','rows':3},
             'widget_options':{'fgline':true}
         }) }}
         {{ form_row(eventForm.when, {
             'label':'event.form.when.label',
             'attr':{'placeholder':'event.form.when.placeholder'},
-            'widget_options':{'fgline':true, 'displayInRow' : true}
+            'widget_options':{'fgline':true, 'displayInRow' : true},
+            'help': 'event.form.when.help' |trans
         }) }}
         {{ form_row(eventForm.whereName, {
             'label':'event.form.whereName.label',
             'attr':{'placeholder':'event.form.whereName.placeholder'},
-            'widget_options':{'fgline':true, 'displayInRow' : true}
+            'widget_options':{'fgline':true, 'displayInRow' : true},
+            'help': 'event.form.whereName.help' |trans
         }) }}
         {{ form_row(eventForm.whereGooglePlaceId) }}
+        {# TODO Décommenter quand la date limite de réponse sera utilisée : Décommenter aussi dans "EventType.php:47"
         {{ form_row(eventForm.responseDeadline, {
             'label':'event.form.responseDeadline.label',
             'attr':{'placeholder':'event.form.responseDeadline.placeholder'},
             'widget_options':{'fgline':true, 'displayInRow' : true}
+        }) }}#}
+        {{ form_row(eventForm.invitationOnly, {
+            'label':'event.form.invitationOnly.label',
+            'attr':{'class':'md-toogle-switch'},
+            'help': 'event.form.invitationOnly.help' |trans
+        }) }}
+        {{ form_row(eventForm.guestsCanInvite, {
+            'label':'event.form.guestsCanInvite.label',
+            'attr':{'class':'md-toogle-switch'},
+            'help': 'event.form.guestsCanInvite.help' |trans
         }) }}
 
-        <div class="row">
-            {# Todo:décommenter et supprimer la div d'en dessous.
-            <div class="col-xs-12 col-sm-6">
-            #}
-            <div class="col-xs-12">
-                {{ form_row(eventForm.invitationOnly, {'label':'event.form.invitationOnly.label','attr':{'class':'md-toogle-switch'}}) }}
-                {{ form_row(eventForm.guestsCanInvite, {'label':'event.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
-            </div>
-            {# Todo:décommenter
-            <div class="col-xs-12 col-sm-6">
-                <dl class="dl-horizontal">
-                    <dt>{{ "event.form.status.label"|trans }}</dt>
-                    <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span>
-                        {% if userEventInvitation.event.status == constant("AppBundle\\Utils\\enum\\EventStatus::IN_CREATION")
-                        or userEventInvitation.event.status == constant ("AppBundle\\Utils\\enum\\EventStatus::IN_ORGANIZATION") %}
-                            <a id="validateEventLink" href="{{ path('validateEvent', {'token' : userEventInvitation.event.token }) }}" class="btn btn-success">
-                                {{ "global.button.valid"|trans }}
-                            </a>
-                            <script>
-                                $(document).ready(function () {
-                                    $('#validateEventLink').on('click', function (e) {
-                                        e.preventDefault();
-                                        var link = $(this);
-                                        // TODO Test la migration vers SweetAlert 2
-                                        swal({
-                                            title: "{{ "event.form.status.swal.title"|trans }}",
-                                            text: "{{ "event.form.status.swal.text"|trans }}",
-                                            type: "info",
-                                            showCancelButton: true,
-                                            //confirmButtonColor: "#DD6B55",
-                                            confirmButtonText: '{{ "global.button.valid"|trans }}',
-                                            showLoaderOnConfirm: true
-                                        }).then(function () {
-                                            ajaxRequest(link, null, e, null, null, null);
-                                            // close edition block
-                                            var t = $form.data('event-header-pmb-block-target');
-                                            $(t).removeClass('toggled');
+        <div class="text-center">
+            <button data-event-header-action="reset" data-event-header-action-target="#pmbblock_event_header" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
+            <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                {{ "global.button.save"|trans }}
+            </button>
+            <div class="visible-xs visible-sm m-b-10"></div>
+        </div>
+        {# Todo:décommenter
+        <div class="col-xs-12 col-sm-6">
+            <dl class="dl-horizontal">
+                <dt>{{ "event.form.status.label"|trans }}</dt>
+                <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span>
+                    {% if userEventInvitation.event.status == constant("AppBundle\\Utils\\enum\\EventStatus::IN_CREATION")
+                    or userEventInvitation.event.status == constant ("AppBundle\\Utils\\enum\\EventStatus::IN_ORGANIZATION") %}
+                        <a id="validateEventLink" href="{{ path('validateEvent', {'token' : userEventInvitation.event.token }) }}" class="btn btn-success">
+                            {{ "global.button.valid"|trans }}
+                        </a>
+                        <script>
+                            $(document).ready(function () {
+                                $('#validateEventLink').on('click', function (e) {
+                                    e.preventDefault();
+                                    var link = $(this);
+                                    // TODO Test la migration vers SweetAlert 2
+                                    swal({
+                                        title: "{{ "event.form.status.swal.title"|trans }}",
+                                        text: "{{ "event.form.status.swal.text"|trans }}",
+                                        type: "info",
+                                        showCancelButton: true,
+                                        //confirmButtonColor: "#DD6B55",
+                                        confirmButtonText: '{{ "global.button.valid"|trans }}',
+                                        showLoaderOnConfirm: true
+                                    }).then(function () {
+                                        ajaxRequest(link, null, e, null, null, null);
+                                        // close edition block
+                                        var t = $form.data('event-header-pmb-block-target');
+                                        $(t).removeClass('toggled');
 
-                                        });
                                     });
                                 });
-                            </script>
-                        {% endif %}
-                    </dd>
-                </dl>
-            </div>#}
-        </div>
+                            });
+                        </script>
+                    {% endif %}
+                </dd>
+            </dl>
+        </div>#}
         {{ form_rest(eventForm) }}
     </div>
     <div class="col-xs-12 col-md-4">
         <div id="eventEditGoogleMap" style="height: 200px;"></div>
     </div>
-</div>
-<div class="text-right">
-    <button data-event-header-action="reset" data-event-header-action-target="#pmbblock_event_header" class="btn btn-default btn-sm">{{ "global.button.cancel"|trans }}</button>
-    <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
-        {{ "global.button.save"|trans }}
-    </button>
 </div>
 {{ form_end(eventForm) }}
 <script>

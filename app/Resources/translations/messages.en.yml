@@ -17,7 +17,7 @@ base:
 
 navbar:
   subtitle: To organise you, it's IZI !
-  new_event: New event
+  new_event: Yziplan
 
 main_menu:
 
@@ -112,11 +112,13 @@ event:
     whereName:
       label: "Where:"
       placeholder: Where
-      tootlip.title: Set where your event will take place or add a poll to consult your guest
+      help: "You already know where the event will take place? Say it here"
+      tootlip: Set where your event will take place or add a poll to consult your guest
     when:
       label: "When:"
       placeholder: When
-      tootlip.title: Set the date of your event or add a poll to consult your guest
+      help: "You already know the event date? Fill the following input"
+      tootlip: Set the date of your event or add a poll to consult your guest
     status:
       label: "Status:"
       placeholder: Event status
@@ -126,6 +128,7 @@ event:
     invitationOnly:
       label: Invitation only
       placeholder: Invitation only
+      help: "Only friends who received an invitation can yziplan. If non-checked, you can give the event URL to people you want to invite."
       text.true: An invitation is required to participate (private event)
       text.false: Makes the event accessible to all persons receiving the link
     public_invitation:
@@ -133,6 +136,7 @@ event:
     guestsCanInvite:
       label: Allow your friends to invite
       placeholder: Allow your friends to invite
+      help:  "All guest will be able to sent new email invitations"
       text.true: Your friends can invite
       text.false: Your friends can not invite
 #    guestsCanAddModule:

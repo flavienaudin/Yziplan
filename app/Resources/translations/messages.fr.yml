@@ -17,7 +17,7 @@ base:
 
 navbar:
   subtitle: Pour s'organiser, c'est IZI !
-  new_event: Créer un événement
+  new_event: Yziplanifier
 
 main_menu:
 
@@ -112,11 +112,13 @@ event:
     whereName:
       label: "Où :"
       placeholder: Où
-      tootlip.title: Fixe le lieu où se déroule ton événement ou ajoute un sondage pour consulter tes invités
+      help: "Tu sais déjà où ça va se passer ? Indique l'adresse ici."
+      tootlip: Fixe le lieu où se déroule ton événement ou ajoute un sondage pour consulter tes invités
     when:
       label: "Quand :"
       placeholder: Quand
-      tootlip.title: Fixe la date de ton événement ou ajoute un sondage pour consulter tes invités
+      help: "Tu connais déjà la date de l'événement ? Indique-le à tes amis"
+      tootlip: Fixe la date de ton événement ou ajoute un sondage pour consulter tes invités
     status:
       label: "Etat :"
       placeholder: Etat de l'événement
@@ -126,6 +128,7 @@ event:
     invitationOnly:
       label: Seulement sur invitation
       placeholder: Seulement sur invitation
+      help: "Seuls les amis ayant reçu une invitation par e-mail pourront yziplanifier. Si non coché, vous pouvez transmettre le lien de l'évément pour inviter."
       text.true: Seuls les invités peuvent participer (événement privé)
       text.false: Tout le monde peut participer (événement public)
     public_invitation:
@@ -133,6 +136,7 @@ event:
     guestsCanInvite:
       label: Permettre à vos amis d'inviter
       placeholder: Permettre à vos amis d'inviter
+      help:  "Tous les invités pourront envoyer de nouvelles invitations par e-mail"
       text.true: Tes amis peuvent inviter
       text.false: Tes amis ne peuvent pas inviter
 #    guestsCanAddModule:

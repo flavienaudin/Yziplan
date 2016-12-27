@@ -14,7 +14,9 @@
                 {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
             {% endfor %}
             {% if creatorsNames is not empty %}
-                <div class="pull-right"><i><small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}</small></i></div>
+                <div class="pull-right"><i>
+                        <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}</small>
+                    </i></div>
             {% endif %}
             <dl>
                 <dt class="p-b-5">{{ "event.form.description.label"|trans }}</dt>
@@ -29,44 +31,20 @@
         <dl class="dl-horizontal">
             {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.when is not empty %}
                 <dt><i class="zmdi zmdi-calendar zmdi-hc-fw"></i> {{ "event.form.when.label"|trans }}</dt>
-                <dd>
-                    {% if userEventInvitation.event.when is empty %}
-                        <div class="btn-group btn-group-xs">
-                            <a href="{{ url('addEventModule', {'token': userEventInvitation.event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
-                                'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHEN')}) }}" class="add-pollmodule-shortcut btn btn-icon-text waves-effect palette-Blue bg">
-                                <i class="zmdi zmdi-plus-circle zmdi-hc-fw"></i> {{ "global.button.poll"|trans }}</a>
-                            <a data-event-header-action="edit" data-event-header-action-target="#pmbblock_event_header" class="btn btn-default btn-icon-text waves-effect">
-                                <i class="zmdi zmdi-edit zmdi-hc-fw"></i> {{ "global.button.set"|trans }}</a>
-                            <a data-toggle="tooltip" title="{{ "event.form.when.tootlip.title"|trans }}" class="btn btn-default btn-icon-text waves-effect">
-                                <i class="zmdi zmdi-info zmdi-hc-fw"></i></a>
-                        </div>
-                    {% else %}
-                        {{ userEventInvitation.event.when|localizeddate }}
-                    {% endif %}
-                </dd>
+                <dd><span {% if userEventInvitation.creator or userEventInvitation.administrator %}data-toggle="tooltip" title="{{ "event.form.when.tootlip"|trans }}"{% endif %}>
+                        {% if userEventInvitation.event.when is empty %}<i class="zmdi zmdi-info-outline"></i>{% else %}{{ userEventInvitation.event.when|localizeddate }}{% endif %}</span></dd>
             {% endif %}
             {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.whereName is not empty %}
                 <dt><i class="zmdi zmdi-pin zmdi-hc-fw"></i> {{ "event.form.whereName.label"|trans }}</dt>
-                <dd>
-                    {% if userEventInvitation.event.whereName is empty %}
-                        <div class="btn-group btn-group-xs" role="group">
-                            <a href="{{ url('addEventModule', {'token': userEventInvitation.event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
-                                'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHERE')}) }}" class="add-pollmodule-shortcut btn btn-icon-text waves-effect palette-Green bg">
-                                <i class="zmdi zmdi-plus-circle zmdi-hc-fw"></i> {{ "global.button.poll"|trans }}</a>
-                            <a data-event-header-action="edit" data-event-header-action-target="#pmbblock_event_header" class="btn btn-default btn-icon-text waves-effect">
-                                <i class="zmdi zmdi-edit zmdi-hc-fw"></i> {{ "global.button.set"|trans }}</a>
-                            <a data-toggle="tooltip" title="{{ "event.form.whereName.tootlip.title"|trans }}" class="btn btn-default btn-icon-text waves-effect">
-                                <i class="zmdi zmdi-info zmdi-hc-fw"></i></a>
-                        </div>
-                    {% else %}
-                        {{ userEventInvitation.event.whereName }}
-                    {% endif %}
-                </dd>
+                <dd><span {% if userEventInvitation.creator or userEventInvitation.administrator %}data-toggle="tooltip" title="{{ "event.form.whereName.tootlip"|trans }}"{% endif %}>
+                    {% if userEventInvitation.event.whereName is empty %}<i class="zmdi zmdi-info-outline"></i>{% else %} {{ userEventInvitation.event.whereName }}{% endif %}</span></dd>
             {% endif %}
+            {# TODO Décommenter quand la date limite de réponse sera utilisée
             {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.responseDeadline is not empty %}
                 <dt>{{ "event.form.responseDeadline.label"|trans }}</dt>
                 <dd>{{ userEventInvitation.event.responseDeadline is not null ? userEventInvitation.event.responseDeadline|localizeddate:'-' }}</dd>
             {% endif %}
+            #}
             {# Todo: décommenter
              <dt>{{ "event.form.status.label"|trans }}</dt>
             <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span></dd>#}
