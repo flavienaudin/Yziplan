@@ -42,8 +42,8 @@
         {% endif %}
 
         {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly %}
-            <div class="m-t-10 palette-Teal-50 bg p-15">
-                <div id="event_public_invitation_display" class="form-group animated">
+            <div id="event_public_invitation_display" class="m-t-10 palette-Teal-50 bg p-15">
+                <div class="form-group animated">
                     <label class="control-label text-info" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
                     <div class="input-group">
                         <input id="url_event_public_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}"> <span

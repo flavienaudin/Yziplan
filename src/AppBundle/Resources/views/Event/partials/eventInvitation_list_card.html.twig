@@ -51,12 +51,6 @@
         </div>
     </div>
     <script>
-        {% if userEventInvitation.creator or userEventInvitation.administrator %}
-        {% if userEventInvitation.event.invitationOnly %}
-        $('#event_public_invitation_display').hide();
-        {% endif %}
-        {% endif %}
-
         $('.eventInvitations_list').find('li a.cancelInvitation').each(function () {
             var $link = $(this);
             $link.on('click', function (e) {
