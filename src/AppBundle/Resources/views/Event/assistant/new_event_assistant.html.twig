@@ -1,0 +1,49 @@
+{% extends "@App/Event/layout_cboxed.html.twig" %}
+
+{# Données d'entrée :
+- event (Event) L'événement en cours de création
+Selon l'étape en cours :
+- eventForm (Form|null) Formulaire d'édition des information général de l'événement
+- eventInvitationForm (Form|null) Formulaire de l'invitation de l'utilisateur (Mon Profil)
+#}
+
+{% block title %}{{ parent() }} - {{ event.name is empty?"event.page.meta_title.new_event"|trans:event.name }}{% endblock %}
+
+{% set form = eventForm is not null?eventForm:(eventInvitationForm is not null?eventInvitationForm ) %}
+
+{% block event_content %}
+    <div class="card z-depth-2">
+        <div class="card-header">
+            <h2>Organise ton événement
+                <small>Assitant de création de votre événement.</small>
+            </h2>
+        </div>
+
+        <div class="card-body card-padding">
+            <div id="newEventWizard">
+                {% if eventForm is not null %}
+                    {{ form_start(eventForm, {'action':path('wizardNewEvent',{'token':event.token,'stepIndex':1}),
+                        'attr':{'id':'wizardNewEvent'}}) }}
+                    <h2>Votre événement</h2>
+                    <div>
+                        {{ form(eventForm) }}
+                        <button type="submit">{{ "global.button.save"|trans }}</button>
+                    </div>
+                    {{ form_end(eventForm) }}
+                {% elseif eventInvitationForm is not null %}
+                    {{ form_start(eventInvitationForm, {'action':path('wizardNewEvent',{'token':event.token,'stepIndex':2}),
+                        'attr':{'id':'wizardNewEvent'}}) }}
+                    <h2>Mon profil</h2>
+                    <div>
+                        {{ form(eventInvitationForm) }}
+                        <button type="submit">{{ "global.button.save"|trans }}</button>
+                    </div>
+                    {{ form_end(eventInvitationForm) }}
+                {% endif %}
+            </div>
+            <div>
+                <p><a href="{{ path("displayEvent", {'token' : event.token}) }}">Passer cet assitant et se rendre directement sur la page de l'événement</a></p>
+            </div>
+        </div>
+    </div>
+{% endblock event_content %}
