@@ -456,29 +456,18 @@ table.dataTable.compact tbody td {
     padding: 0 1px;
 }
 
-.poll-container table td {
-    min-width: 40px;
-    max-width: 40px;
-    width: 40px;
+.poll-container table td.response-column {
+    min-width: 50px;
+    max-width: 100px;
+    width: 60px;
     text-align: center;
 }
 
-.poll-container table th.pollproposal-column {
-    text-align: left;
-    font-weight: bold;
-    min-width: 150px !important;
-    max-width: 300px !important;
-}
-
 .poll-container table td.voting-column {
-    min-width: 40px;
-    max-width: 50px;
-}
-
-.poll-container table td.end-spacer {
-    min-width: 0;
-    max-width: none;
-    width: auto;
+    min-width: 50px;
+    max-width: 100px;
+    width: 60px;
+    text-align: center;
 }
 
 table.dataTable td.dataTables_empty {
