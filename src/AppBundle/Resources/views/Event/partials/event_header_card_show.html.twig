@@ -94,7 +94,6 @@
             var service = new google.maps.places.PlacesService(mapEventShow);
 
             {% if userEventInvitation.event.whereGooglePlaceId != null %}
-
             var infowindow = new google.maps.InfoWindow();
             service.getDetails({
                     placeId: '{{ userEventInvitation.event.whereGooglePlaceId }}'
@@ -130,14 +129,5 @@
             {% endif %}
         }
     }
-
-    $('.add-pollmodule-shortcut').on('click', function (e) {
-        ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
-            var eventModulesContainer = $('#eventModulesContainer');
-            $(document).scrollTop($(eventModulesContainer).children().last().offset().top - 100);
-            $('.grid').masonry('layout');
-            LetterAvatar.transform();
-        }, null, null);
-    });
 </script>
 

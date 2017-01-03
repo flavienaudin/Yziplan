@@ -89,15 +89,14 @@ event:
       new_event: New event
   header:
     organised_by: "Organised by %creator%"
-    tootltip:
-      edit: Edit the event
-      duplicate: Duplicate the event
   picture:
     link: Change the picture
     update_modal:
       title: Upload a picture
       button:
         submit_title: Upload the picture and use it for the event
+  modal.edit:
+      title: Edit the event
   form:
     name:
       label: Title

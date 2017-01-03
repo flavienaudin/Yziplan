@@ -5,37 +5,30 @@
 - comments(Comment[]) Les commentaires appartenant au fil de discussion de l'événement
 #}
 
-<div class="card z-depth-2" id="event-header-card">
+<div class="card z-depth-1" id="event-header-card">
     {{ include('@App/Event/partials/event_header_card_header.html.twig', {'userEventInvitation':userEventInvitation, 'editEvent' : eventForm is not null }) }}
 
     <div class="card-body card-padding-sm">
         <div class="pmb-block m-0 p-0" id="pmbblock_event_header">
             {% if eventForm is not null %}
-            <div class="text-right">
-                <ul class="actions">
-                        <li><a id="event_header_edit_information" data-event-header-action="edit" data-event-header-action-target="#pmbblock_event_header" href="#" data-toggle="tooltip"
-                               title="{{ "event.header.tootltip.edit"|trans }}"> <i class="zmdi zmdi-edit"></i></a></li>
-                </ul>
-            </div>
+                <div class="text-right">
+                    <ul class="actions">
+                        <li><a id="event_header_edit_information" href="#eventEditModal" data-toggle="modal"><i class="zmdi zmdi-edit"></i></a></li>
+                    </ul>
+                </div>
             {% endif %}
             <div class="pmbb-body">
-                <div class="pmbb-view">
-                    {{ include("@App/Event/partials/event_header_card_show.html.twig", {'userEventInvitation':userEventInvitation}) }}
-                </div>
-                <div class="pmbb-edit">
-                    {% if eventForm is not null %}
-                        {{ include("@App/Event/partials/event_header_card_edit.html.twig", {'userEventInvitation':userEventInvitation, 'eventForm':eventForm}) }}
-                    {% endif %}
-                </div>
+                {{ include("@App/Event/partials/event_header_card_show.html.twig", {'userEventInvitation':userEventInvitation}) }}
             </div>
         </div>
     </div>
 
-    {% if  thread is defined and thread is not null %}
+    {% if thread is defined and thread is not null %}
         <div id="event_comment_thread" data-thread="{{ thread.id }}" class="commentable_thread wall-comment-list">
             {% include 'FOSCommentBundle:Thread:comments.html.twig' with {'comments':comments, 'thread':thread, 'view':'flat', 'userEventInvitation':userEventInvitation} %}
         </div>
     {% endif %}
+
 
     <script>
         $(document).ready(function () {
@@ -48,6 +41,7 @@
                 window.fos.Comment.initializeListeners();
             }
 
+            {% if  thread is defined and thread is not null %}
             /** Fonction pour eviter le double envoi de commentaire */
             $('#event_comment_thread')
                 .on('fos_comment_add_comment', function (event, commentHtml) {
@@ -56,6 +50,7 @@
                 .on('fos_comment_submitting_form', function () {
                     $('#event_comment_thread .fos_comment_submit > button[type=submit], #event_comment_thread .fos_comment_submit > input[type=submit]').attr("disabled", "disabled");
                 });
+            {% endif %}
         });
     </script>
 </div>

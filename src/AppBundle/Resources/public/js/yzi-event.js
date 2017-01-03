@@ -15,26 +15,6 @@ $(document).ready(function () {
     new Clipboard("#btn_url_event_public_invitation");
     new Clipboard('#btn_copy_invitation_url');
 
-    /** Event Edit Toggle */
-    if ($('[data-event-header-action]')[0]) {
-        $('body').on('click', '[data-event-header-action]', function (e) {
-            e.preventDefault();
-            var d = $(this).data('event-header-action');
-            var t = $(this).data('event-header-action-target');
-
-            if (d === "edit") {
-                $(t).toggleClass('toggled');
-                $('.grid').masonry('layout');
-            }
-            if (d === "reset") {
-                $(t).removeClass('toggled');
-                $('.grid').masonry('layout');
-            }
-
-            initEventEditMap();
-        });
-    }
-
     $('textarea, .auto-size').on('autosize:resized', function () {
         $('.grid').masonry('layout');
     });

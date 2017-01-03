@@ -1,0 +1,231 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
+- eventForm (Form|null) Formulaire d'édition des information général de l'événement (si les droits le permettent)
+#}
+<div id="eventEdit_form_container">
+    {{ form_start(eventForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'eventHeader', 'data-event-header-pmb-block-target':'#pmbblock_event_header'}}) }}
+    <div class="row">
+        <div class="col-xs-12 col-md-8">
+            {{ form_row(eventForm.name, {
+                'label':'event.form.name.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'placeholder':'event.form.name.placeholder'},
+                'widget_options':{'fgline':true}
+            }) }}
+            {{ form_row(eventForm.description, {
+                'label':'event.form.description.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'placeholder':'event.form.description.placeholder','rows':3},
+                'widget_options':{'fgline':true}
+            }) }}
+            {{ form_row(eventForm.when, {
+                'label':'event.form.when.label',
+                'attr':{'placeholder':'event.form.when.placeholder'},
+                'widget_options':{'fgline':true, 'displayInRow' : true},
+                'help': 'event.form.when.help' |trans
+            }) }}
+            {{ form_row(eventForm.whereName, {
+                'label':'event.form.whereName.label',
+                'attr':{'placeholder':'event.form.whereName.placeholder'},
+                'widget_options':{'fgline':true, 'displayInRow' : true},
+                'help': 'event.form.whereName.help' |trans
+            }) }}
+            {{ form_row(eventForm.whereGooglePlaceId) }}
+            {# TODO Décommenter quand la date limite de réponse sera utilisée : Décommenter aussi dans "EventType.php:47"
+            {{ form_row(eventForm.responseDeadline, {
+                'label':'event.form.responseDeadline.label',
+                'attr':{'placeholder':'event.form.responseDeadline.placeholder'},
+                'widget_options':{'fgline':true, 'displayInRow' : true}
+            }) }}#}
+            {{ form_row(eventForm.invitationOnly, {
+                'label':'event.form.invitationOnly.label',
+                'attr':{'class':'md-toogle-switch'},
+                'help': 'event.form.invitationOnly.help' |trans
+            }) }}
+            {{ form_row(eventForm.guestsCanInvite, {
+                'label':'event.form.guestsCanInvite.label',
+                'attr':{'class':'md-toogle-switch'},
+                'help': 'event.form.guestsCanInvite.help' |trans
+            }) }}
+
+            <div class="text-center">
+                <button class="btn btn-default btn-sm" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                    {{ "global.button.save"|trans }}
+                </button>
+                <div class="visible-xs visible-sm m-b-10"></div>
+            </div>
+            {# Todo:décommenter
+            <div class="col-xs-12 col-sm-6">
+                <dl class="dl-horizontal">
+                    <dt>{{ "event.form.status.label"|trans }}</dt>
+                    <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span>
+                        {% if userEventInvitation.event.status == constant("AppBundle\\Utils\\enum\\EventStatus::IN_CREATION")
+                        or userEventInvitation.event.status == constant ("AppBundle\\Utils\\enum\\EventStatus::IN_ORGANIZATION") %}
+                            <a id="validateEventLink" href="{{ path('validateEvent', {'token' : userEventInvitation.event.token }) }}" class="btn btn-success">
+                                {{ "global.button.valid"|trans }}
+                            </a>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#validateEventLink').on('click', function (e) {
+                                        e.preventDefault();
+                                        var link = $(this);
+                                        // TODO Test la migration vers SweetAlert 2
+                                        swal({
+                                            title: "{{ "event.form.status.swal.title"|trans }}",
+                                            text: "{{ "event.form.status.swal.text"|trans }}",
+                                            type: "info",
+                                            showCancelButton: true,
+                                            //confirmButtonColor: "#DD6B55",
+                                            confirmButtonText: '{{ "global.button.valid"|trans }}',
+                                            showLoaderOnConfirm: true
+                                        }).then(function () {
+                                            ajaxRequest(link, null, e, null, null, null);
+                                            // close edition block
+                                            var t = $form.data('event-header-pmb-block-target');
+                                            $(t).removeClass('toggled');
+
+                                        });
+                                    });
+                                });
+                            </script>
+                        {% endif %}
+                    </dd>
+                </dl>
+            </div>#}
+            {{ form_rest(eventForm) }}
+        </div>
+        <div class="col-xs-12 col-md-4">
+            <div id="eventEditGoogleMap" style="height: 200px;"></div>
+        </div>
+    </div>
+    {{ form_end(eventForm) }}
+
+    <script>
+        // Initailisation de Gmap
+        var mapEventEdit = null;
+        var boundsEventEdit = null;
+
+        $(document).ready(function () {
+            var $eventEditModal = $('#eventEditModal');
+            $eventEditModal.on('shown.bs.modal', function (e) {
+                if (typeof initEventEditMap === "function") {
+                    initEventEditMap();
+                } else {
+                    console.error('initEventEditMap() is undefined')
+                }
+            });
+            if ($eventEditModal.hasClass('in')) {
+                if (typeof initEventEditMap === "function") {
+                    initEventEditMap();
+                } else {
+                    console.error('initEventEditMap() is undefined')
+                }
+            }
+
+            $('form#eventHeader').on("submit", function (e) {
+                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                    $('#eventEditModal').modal('hide');
+                }, function () {
+                    $('#eventEditModal').modal('handleUpdate');
+                }, function () {
+                    $('.grid').masonry('layout');
+                });
+            });
+            // Update the Event name while editing the form field
+            $('#event_name').on('input', function () {
+                $('#event-name').html($(this).val());
+            });
+            $('#event_invitationOnly').on('change', function (e) {
+                $('#event_public_invitation_display').fadeToggle();
+            });
+        });
+
+        function initEventEditMap() {
+            var mapDiv = document.getElementById('eventEditGoogleMap');
+            if (mapDiv != null) {
+                mapEventEdit = new google.maps.Map(mapDiv, {
+                    center: {lat: 47, lng: 2.30},
+                    zoom: 6,
+                    scrollwheel: false
+                });
+            }
+
+            var autocompletes = initPollProposalWhereElements('#event_whereName', '#event_whereGooglePlaceId');
+            if (autocompletes.length > 0) {
+                var autocomplete = autocompletes[0];
+                var marker = null;
+                google.maps.event.addListener(autocomplete, 'place_changed', function onPlaceChanged() {
+                    var infowindow = new google.maps.InfoWindow();
+                    // On enregistre les points pour definir la zone visible de la map
+                    if (boundsEventEdit == null) {
+                        boundsEventEdit = new google.maps.LatLngBounds();
+                    }
+
+                    infowindow.close();
+                    var place = autocomplete.getPlace();
+                    if (!place.geometry) {
+                        return;
+                    }
+
+                    var zoomChangeBoundsListener = google.maps.event.addListener(mapEventEdit, 'bounds_changed', function (event) {
+                        if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom == true) {
+                            // Change max/min zoom here
+                            mapEventEdit.setZoom(15);
+                            mapEventEdit.initialZoom = false;
+                        }
+                        google.maps.event.removeListener(zoomChangeBoundsListener);
+                    });
+                    mapEventEdit.initialZoom = true;
+                    boundsEventEdit.extend(place.geometry.location);
+                    mapEventEdit.fitBounds(boundsEventEdit);
+
+                    marker = new google.maps.Marker({
+                        map: mapEventEdit,
+                        position: place.geometry.location
+                    });
+
+                    google.maps.event.addListener(marker, 'click', function () {
+                        infowindow.setContent(place.name);
+                        infowindow.open(mapEventEdit, this);
+                    });
+                });
+
+                {% if userEventInvitation.event.whereGooglePlaceId != null %}
+                boundsEventEdit = new google.maps.LatLngBounds();
+                var service = new google.maps.places.PlacesService(mapEventEdit);
+
+                var infowindow = new google.maps.InfoWindow();
+                service.getDetails({placeId: '{{ userEventInvitation.event.whereGooglePlaceId }}'},
+                    function (place, status) {
+                        if (status === google.maps.places.PlacesServiceStatus.OK) {
+                            var marker = new google.maps.Marker({
+                                map: mapEventEdit,
+                                position: place.geometry.location
+                            });
+                            {# Permet de s'assurer que la map est pas trop zoomée, a priori  le zoom du firebounds se fait en asynchrone,
+                               donc il faut choper un event, et ne le fait que au premier passage #}
+
+                            google.maps.event.addListener(mapEventEdit, 'bounds_changed', function (event) {
+                                if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom == true) {
+                                    // Change max/min zoom here
+                                    mapEventEdit.setZoom(15);
+                                    mapEventEdit.initialZoom = false;
+                                }
+                            });
+                            mapEventEdit.initialZoom = true;
+                            // Rendre le marker clickable avec le nom
+                            google.maps.event.addListener(marker, 'click', function () {
+                                infowindow.setContent(place.name);
+                                infowindow.open(mapEventEdit, this);
+                            });
+                            boundsEventEdit.extend(place.geometry.location)
+                            mapEventEdit.fitBounds(boundsEventEdit);
+                        }
+                    }
+                );
+                {% endif %}
+            }
+        }
+    </script>
+</div>
