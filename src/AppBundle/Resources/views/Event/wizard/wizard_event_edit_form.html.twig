@@ -1,0 +1,24 @@
+{% extends "@App/Event/partials/event_edit_form.html.twig" %}
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation à afficher (incluant l'événement concerné)
+- eventForm (Form) Formulaire d'édition des information général de l'événement
+#}
+
+
+{% block form_start %}
+    {{ form_start(eventForm, {'action':path('wizardNewEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'eventHeader'}}) }}
+{% endblock form_start %}
+
+{% block action_buttons %}
+    <div class="text-center">
+        <a href="{{ path("displayEvent", {'token' : event.token}) }}" class="btn btn-default btn-sm">{{ "global.button.skip"|trans }}</a>
+        <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+            {{ "global.button.nextStep"|trans }}
+        </button>
+        <div class="visible-xs visible-sm m-b-10"></div>
+    </div>
+{% endblock action_buttons %}
+
+{% block js_document_ready %}
+
+{% endblock js_document_ready %}

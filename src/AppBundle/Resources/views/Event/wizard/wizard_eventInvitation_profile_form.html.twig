@@ -1,0 +1,31 @@
+{% extends "@App/Event/partials/profile/eventInvitation_profile_form.html.twig" %}
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) Invitation de l'utilisateur de l'utilisateur
+- userEventInvitationForm (Form) Formulaire du profil de l'invité pour l'invitation
+#}
+
+{% block form_start %}
+
+    {# TODO Il faut pouvoir rattacher l'invitation courante à l'utilisateur "connecté/inscris" et revenir sur cette page (voir dans l'action du wizard ?)
+    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        <p>{{ "event.wizard.profile.paragraphe"|trans }}</p>
+        <p class="text-center">
+            <a data-toggle="modal" href="#modalRegistration" class="btn btn-default"> <i class="zmdi zmdi-sign-in"></i> <span> {{ 'layout.register'|trans({}, 'FOSUserBundle') }}</span></a> <a
+                    data-toggle="modal" href="#modalLogin" class="btn btn-default"> <i class="zmdi zmdi-power"></i> <span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</span></a></p>
+    {% endif %}#}
+
+    {{ form_start(userEventInvitationForm, {
+        'action': path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")}),
+        'attr':{'id':'userEventInvitationProfile'}}) }}
+{% endblock form_start %}
+
+{% block action_buttons %}
+    <div class="text-center">
+        {% if userEventInvitationForm is defined %}
+            <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+        {% endif %}
+    </div>
+{% endblock action_buttons %}
+
+{% block js_form_submission %}{% endblock js_form_submission %}
+{% block js_functions %}{% endblock js_functions %}

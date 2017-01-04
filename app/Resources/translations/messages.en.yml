@@ -143,6 +143,11 @@ event:
 #      placeholder: Guests can add module
 #      text.true: Guests can add module to the event
 #      text.false: Guests can not add module to the event
+  wizard:
+      profile:
+        paragraphe: If you already have an account, login to automatically fill the following information or you can subscribe to save them for the next event.
+      error.message:
+        wrong_step: An error in the event creation process occrured. Pleaze, try again the operation.
   error.message:
     creation: An error occured while creating an event.
     unauthorized_access: You have not the authorization to access this event.
@@ -363,7 +368,7 @@ global:
     submit: Submit
     edit: Edit
     save: Save
-    nextStep: Next step
+    nextStep: Next
     delete: Delete
     add: Add
     loading: In progress...
@@ -372,6 +377,7 @@ global:
     set: Set
     poll: Survey
     close: Close
+    skip: Skip
   success:
     data_saved: Information saved
   error:

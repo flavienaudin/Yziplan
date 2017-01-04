@@ -29,12 +29,12 @@
             </dl>
         </div>
         <dl class="dl-horizontal">
-            {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.when is not empty %}
+            {% if userEventInvitation.organizer or userEventInvitation.event.when is not empty %}
                 <dt><i class="zmdi zmdi-calendar zmdi-hc-fw"></i> {{ "event.form.when.label"|trans }}</dt>
                 <dd><span {% if userEventInvitation.creator or userEventInvitation.administrator %}data-toggle="tooltip" title="{{ "event.form.when.tootlip"|trans }}"{% endif %}>
                         {% if userEventInvitation.event.when is empty %}<i class="zmdi zmdi-info-outline"></i>{% else %}{{ userEventInvitation.event.when|localizeddate }}{% endif %}</span></dd>
             {% endif %}
-            {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.whereName is not empty %}
+            {% if userEventInvitation.organizer or userEventInvitation.event.whereName is not empty %}
                 <dt><i class="zmdi zmdi-pin zmdi-hc-fw"></i> {{ "event.form.whereName.label"|trans }}</dt>
                 <dd><span {% if userEventInvitation.creator or userEventInvitation.administrator %}data-toggle="tooltip" title="{{ "event.form.whereName.tootlip"|trans }}"{% endif %}>
                     {% if userEventInvitation.event.whereName is empty %}<i class="zmdi zmdi-info-outline"></i>{% else %} {{ userEventInvitation.event.whereName }}{% endif %}</span></dd>
@@ -59,14 +59,16 @@
                 <i class="zmdi zmdi-check"></i> {{ "event.form.invitationOnly.text.false"|trans }}
             </div>
         {% endif %}#}
-        {% if userEventInvitation.event.guestsCanInvite %}
-            <div class="text-success">
-                <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
-            </div>
-        {% else %}
-            <div class="text-danger">
-                <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
-            </div>
+        {% if userEventInvitation.organizer %}
+            {% if userEventInvitation.event.guestsCanInvite %}
+                <div class="text-success">
+                    <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
+                </div>
+            {% else %}
+                <div class="text-danger">
+                    <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
+                </div>
+            {% endif %}
         {% endif %}
     </div>
     {% if userEventInvitation.event.whereGooglePlaceId is not null %}

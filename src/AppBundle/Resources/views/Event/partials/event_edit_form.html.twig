@@ -1,9 +1,11 @@
 {# Données d'entrée :
-- userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
-- eventForm (Form|null) Formulaire d'édition des information général de l'événement (si les droits le permettent)
+- userEventInvitation (EventInvitation) L'invitation à afficher (incluant l'événement concerné)
+- eventForm (Form) Formulaire d'édition des information général de l'événement
 #}
 <div id="eventEdit_form_container">
-    {{ form_start(eventForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'eventHeader', 'data-event-header-pmb-block-target':'#pmbblock_event_header'}}) }}
+    {% block form_start %}
+        {{ form_start(eventForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'eventHeader'}}) }}
+    {% endblock form_start %}
     <div class="row">
         <div class="col-xs-12 col-md-8">
             {{ form_row(eventForm.name, {
@@ -48,13 +50,15 @@
                 'help': 'event.form.guestsCanInvite.help' |trans
             }) }}
 
-            <div class="text-center">
-                <button class="btn btn-default btn-sm" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
-                <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
-                    {{ "global.button.save"|trans }}
-                </button>
-                <div class="visible-xs visible-sm m-b-10"></div>
-            </div>
+            {% block action_buttons %}
+                <div class="text-center">
+                    <button class="btn btn-default btn-sm" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                    <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                        {{ "global.button.save"|trans }}
+                    </button>
+                    <div class="visible-xs visible-sm m-b-10"></div>
+                </div>
+            {% endblock action_buttons %}
             {# Todo:décommenter
             <div class="col-xs-12 col-sm-6">
                 <dl class="dl-horizontal">
@@ -102,44 +106,10 @@
     {{ form_end(eventForm) }}
 
     <script>
+        {% block js_functions %}
         // Initailisation de Gmap
         var mapEventEdit = null;
         var boundsEventEdit = null;
-
-        $(document).ready(function () {
-            var $eventEditModal = $('#eventEditModal');
-            $eventEditModal.on('shown.bs.modal', function (e) {
-                if (typeof initEventEditMap === "function") {
-                    initEventEditMap();
-                } else {
-                    console.error('initEventEditMap() is undefined')
-                }
-            });
-            if ($eventEditModal.hasClass('in')) {
-                if (typeof initEventEditMap === "function") {
-                    initEventEditMap();
-                } else {
-                    console.error('initEventEditMap() is undefined')
-                }
-            }
-
-            $('form#eventHeader').on("submit", function (e) {
-                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                    $('#eventEditModal').modal('hide');
-                }, function () {
-                    $('#eventEditModal').modal('handleUpdate');
-                }, function () {
-                    $('.grid').masonry('layout');
-                });
-            });
-            // Update the Event name while editing the form field
-            $('#event_name').on('input', function () {
-                $('#event-name').html($(this).val());
-            });
-            $('#event_invitationOnly').on('change', function (e) {
-                $('#event_public_invitation_display').fadeToggle();
-            });
-        });
 
         function initEventEditMap() {
             var mapDiv = document.getElementById('eventEditGoogleMap');
@@ -227,5 +197,43 @@
                 {% endif %}
             }
         }
+        {% endblock js_functions %}
+
+        $(document).ready(function () {
+            {% block js_document_ready %}
+            var $eventEditModal = $('#eventEditModal');
+            $eventEditModal.on('shown.bs.modal', function (e) {
+                if (typeof initEventEditMap === "function") {
+                    initEventEditMap();
+                } else {
+                    console.error('initEventEditMap() is undefined')
+                }
+            });
+            if ($eventEditModal.hasClass('in')) {
+                if (typeof initEventEditMap === "function") {
+                    initEventEditMap();
+                } else {
+                    console.error('initEventEditMap() is undefined')
+                }
+            }
+
+            $('form#eventHeader').on("submit", function (e) {
+                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                    $('#eventEditModal').modal('hide');
+                }, function () {
+                    $('#eventEditModal').modal('handleUpdate');
+                }, function () {
+                    $('.grid').masonry('layout');
+                });
+            });
+            // Update the Event name while editing the form field
+            $('#event_name').on('input', function () {
+                $('#event-name').html($(this).val());
+            });
+            $('#event_invitationOnly').on('change', function (e) {
+                $('#event_public_invitation_display').fadeToggle();
+            });
+            {% endblock js_document_ready %}
+        });
     </script>
 </div>

@@ -143,6 +143,11 @@ event:
 #      placeholder: Autoriser les invités à ajouter un module
 #      text.true: Les invités peuvent ajouter un module
 #      text.false: Les invités ne peuvent pas ajouter un module
+  wizard:
+    profile:
+      paragraphe: Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant ou inscris-toi pour le prochain événement.
+    error.message:
+      wrong_step: Une erreur dans le processus de création de l'événement s'est produite. Merci de re-essayer l'opération.
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement.
     unauthorized_access: Tu n'as pas les autorisations pour accéder à cet événement.
@@ -362,7 +367,7 @@ global:
     submit: Soumettre
     edit: Editer
     save: Sauvegarder
-    nextStep: Prochaine étape
+    nextStep: Suivant
     delete: Supprimer
     add: Ajouter
     loading: En cours...
@@ -371,6 +376,7 @@ global:
     set: Définir
     poll: Sondage
     close: Fermer
+    skip: Passer
   success:
     data_saved: Données sauvegardées
   error:

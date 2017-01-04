@@ -39,6 +39,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
  */
 class EventController extends Controller
 {
+    const WIZARD_NEW_EVENT_STEP_MAIN = "main";
+    const WIZARD_NEW_EVENT_STEP_PROFILE = "profile";
+
     /**
      * @Route("/new", name="createEvent")
      */
@@ -54,14 +57,14 @@ class EventController extends Controller
             $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $currentEvent->getToken(), $currentEventInvitation->getToken());
         }
 
-        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => 1));
+        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_MAIN));
     }
 
     /**
      * @Route("/wizard/{token}/{stepIndex}", name="wizardNewEvent")
      * @ParamConverter("currentEvent", class="AppBundle:Event\Event")
      */
-    public function wizardNewEventAction(Event $currentEvent, $stepIndex = null, Request $request)
+    public function wizardNewEventAction(Event $currentEvent, $stepIndex = self::WIZARD_NEW_EVENT_STEP_MAIN, Request $request)
     {
         /** @var EventManager $eventManager */
         $eventManager = $this->get('at.manager.event');
@@ -76,85 +79,44 @@ class EventController extends Controller
             $eventForm = null;
             $eventInvitationForm = null;
             if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
-                if ($stepIndex <= 1 || $stepIndex == null) {
+                if ($stepIndex == self::WIZARD_NEW_EVENT_STEP_MAIN) {
                     // Event Form :
                     /** @var Form $eventForm */
                     $eventForm = $eventManager->initEventForm();
                     $eventForm->handleRequest($request);
                     if ($eventForm->isSubmitted()) {
-                        /*if ($request->isXmlHttpRequest()) {
-                            if ($eventForm->isValid()) {
-                                $eventManager->treatEventFormSubmission($eventForm);
-                                $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#event-header-card'] =
-                                    $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
-                                            'userEventInvitation' => $userEventInvitation,
-                                            'eventForm' => $eventForm->createView()
-                                        )
-                                    );
-                                return new AppJsonResponse($data, Response::HTTP_OK);
-                            } else {
-                                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');
-                                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#event-header-card'] =
-                                    $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
-                                            'userEventInvitation' => $userEventInvitation,
-                                            'eventForm' => $eventForm->createView()
-                                        )
-                                    );
-                                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                            }
-                        } else*/
                         if ($eventForm->isValid()) {
                             $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
                             $this->addFlash(FlashBagTypes::INFO_TYPE, 'step 1 form valide');
-                            return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => 2));
+                            return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_PROFILE));
                         }
                     }
-                } elseif ($stepIndex == 2) {
+
+                    return $this->render("@App/Event/wizard/step_event_main.html.twig", array(
+                        'event' => $currentEvent,
+                        'userEventInvitation' => $userEventInvitation,
+                        'eventForm' => $eventForm->createView()
+                    ));
+                } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_PROFILE) {
                     // Invitation Form :
                     $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
                     $eventInvitationForm->handleRequest($request);
                     if ($eventInvitationForm->isSubmitted()) {
-                        /*if ($request->isXmlHttpRequest()) {
-                            if ($eventInvitationForm->isValid()) {
-                                $userEventInvitation = $eventInvitationManager->treatEventInvitationFormSubmission($eventInvitationForm);
-                                // Update the form with the updated userEventInvitation
-                                $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
-                                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitationProfile_formContainer'] =
-                                    $this->renderView("@App/Event/partials/profile/eventInvitation_profile_form.html.twig", array(
-                                        'userEventInvitation' => $userEventInvitation,
-                                        'userEventInvitationForm' => $eventInvitationForm->createView()
-                                    ));
-                                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
-                                    $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
-                                        'userEventInvitation' => $userEventInvitation,
-                                        'eventInvitations' => $currentEvent->getEventInvitations()
-                                    ));
-                                $data[AppJsonResponse::DATA]['userDisplayableName'] = $userEventInvitation->getDisplayableName();
-                                return new AppJsonResponse($data, Response::HTTP_OK);
-                            } else {
-                                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitationProfile_formContainer'] =
-                                    $this->renderView('@App/Event/partials/profile/eventInvitation_profile_form.html.twig', array(
-                                        'userEventInvitationForm' => $eventInvitationForm->createView(),
-                                        'userEventInvitation' => $userEventInvitation,));
-                                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                            }
-                        } else*/
                         if ($eventInvitationForm->isValid()) {
                             $eventInvitationManager->treatEventInvitationFormSubmission($eventInvitationForm);
                             $this->addFlash(FlashBagTypes::INFO_TYPE, 'step 2 form valide');
                             return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                         }
                     }
+                    return $this->render("@App/Event/wizard/step_event_profile.html.twig", array(
+                        'event' => $currentEvent,
+                        'userEventInvitation' => $userEventInvitation,
+                        'userEventInvitationForm' => $eventInvitationForm->createView()
+                    ));
+                } else {
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.wizard.error.message.wrong_step'));
+                    return $this->redirectToRoute('home');
                 }
-
-                return $this->render("@App/Event/assistant/new_event_assistant.html.twig", array(
-                    'event' => $currentEvent,
-                    'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
-                    'eventInvitationForm' => ($eventInvitationForm != null ? $eventInvitationForm->createView() : null)
-                ));
-
-
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.error.message.unauthorized_access'));
                 return $this->redirectToRoute('home');
@@ -323,7 +285,7 @@ class EventController extends Controller
                             );
                         $eventForm = $eventManager->initEventForm();
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventEdit_form_container'] =
-                            $this->renderView("@App/Event/partials/event_edit_modal_form.html.twig", array(
+                            $this->renderView("@App/Event/partials/event_edit_form.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,
                                 'eventForm' => $eventForm->createView()
                             ));
@@ -331,7 +293,7 @@ class EventController extends Controller
                     } else {
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventEdit_form_container'] =
-                            $this->renderView("@App/Event/partials/event_edit_modal_form.html.twig", array(
+                            $this->renderView("@App/Event/partials/event_edit_form.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,
                                 'eventForm' => $eventForm->createView()
                             ));

@@ -1,0 +1,24 @@
+{% extends "@App/Event/layout_cboxed.html.twig" %}
+
+{# Données d'entrée :
+- event (Event) L'événement en cours de création
+- userEventInvitation (EventInvitation
+#}
+
+{% block title %}{{ parent() }} - {{ event.name is empty?"event.page.meta_title.new_event"|trans:event.name }}{% endblock %}
+
+{% block event_content %}
+    <div class="card z-depth-2">
+        <div class="card-header">
+            <h2>Organise ton événement
+                <small>Assitant de création de votre événement.</small>
+            </h2>
+        </div>
+
+        <div class="card-body card-padding">
+            <div id="newEventWizard">
+                {% block wizard_step %}{% endblock wizard_step %}
+            </div>
+        </div>
+    </div>
+{% endblock event_content %}
