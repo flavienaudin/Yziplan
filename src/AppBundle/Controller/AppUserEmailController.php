@@ -20,7 +20,7 @@ use ATUserBundle\Entity\AccountUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Test\FormInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
@@ -48,53 +48,56 @@ class AppUserEmailController extends Controller
             $newAppUserEmail = new AppUserEmail();
             $appUserEmailForm = $this->createForm(AppUserEmailType::class, $newAppUserEmail);
             $appUserEmailForm->handleRequest($request);
-            if ($appUserEmailForm->isValid()) {
-                $formTreatmentReturn = $applicationUserManager->treatAddAppUserEmailForm($appUserEmailForm);
-                $appUserEmail = null;
-                if ($formTreatmentReturn instanceof AppUserEmail) {
-                    // AppUserEmail directement retourné => tentative de rattachement à l'utilisateur connecté si validation par email OK
-                    $appUserEmail = $formTreatmentReturn;
-                } elseif ($formTreatmentReturn instanceof FormInterface && count($appUserEmailForm->getErrors(true)) === 0) {
-                    // L'email n'est pas existante pas d'ereur
-                    /** @var AppUserEmail $appUserEmail */
-                    $appUserEmail = $appUserEmailForm->getData();
-                }
-                if ($appUserEmail != null) {
-                    $userEmailEvent = new AppUserEmailEvent($appUserEmail);
-                    $eventDispatcher->dispatch(AppEvents::APPUSEREMAIL_ADD_SUCCESS, $userEmailEvent);
+            if ($appUserEmailForm->isSubmitted()) {
+                if ($appUserEmailForm->isValid()) {
+                    $formTreatmentReturn = $applicationUserManager->treatAddAppUserEmailForm($appUserEmailForm);
+                    $appUserEmail = null;
+                    if ($formTreatmentReturn instanceof AppUserEmail) {
+                        // AppUserEmail directement retourné => tentative de rattachement à l'utilisateur connecté si validation par email OK
+                        $appUserEmail = $formTreatmentReturn;
+                    } elseif ($formTreatmentReturn instanceof FormInterface && count($appUserEmailForm->getErrors(true)) === 0) {
+                        // L'email n'est pas existante pas d'ereur
+                        /** @var AppUserEmail $appUserEmail */
+                        $appUserEmail = $appUserEmailForm->getData();
+                    }
+                    if ($appUserEmail != null) {
+                        $userEmailEvent = new AppUserEmailEvent($appUserEmail);
+                        $eventDispatcher->dispatch(AppEvents::APPUSEREMAIL_ADD_SUCCESS, $userEmailEvent);
 
-                    $entityManager = $this->get('doctrine.orm.entity_manager');
-                    $entityManager->persist($appUserEmail);
-                    $entityManager->flush();
+                        $entityManager = $this->get('doctrine.orm.entity_manager');
+                        $entityManager->persist($appUserEmail);
+                        $entityManager->flush();
 
+                        if ($request->isXmlHttpRequest()) {
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]["#ul-profile-appuseremails"] =
+                                $this->renderView("@App/AppUserEmail/partials/display_appuseremail.html.twig", ['appuseremail' => $appUserEmail]);
+                            // Initialize a new Add Form for AppUserEmail
+                            $appUserEmailForm = $this->createForm(AppUserEmailType::class, new AppUserEmail());
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#addAppUserEmail_formcontainer"] =
+                                $this->renderView("@App/AppUserEmail/partials/appuseremail_form.html.twig", [
+                                    'modalIdPrefix' => 'addAppUserEmail', 'appuseremail' => null, 'form_appuseremail' => $appUserEmailForm->createView()
+                                ]);
+
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] =
+                                $this->get("translator")->trans("appuseremail.associate.message.check_mailbox", ["%email%" => $appUserEmail->getEmail()]);
+                            return new AppJsonResponse($data, Response::HTTP_OK);
+                        } else {
+                            $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("appuseremail.associate.message.check_mailbox", ["%email%" => $appUserEmail->getEmail()]));
+                            return $this->redirectToRoute("fos_user_profile_show");
+                        }
+                    }
+                } else {
                     if ($request->isXmlHttpRequest()) {
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]["#ul-profile-appuseremails"] =
-                            $this->renderView("@App/AppUserEmail/partials/display_appuseremail.html.twig", ['appuseremail' => $appUserEmail]);
-                        // Initialize a new Add Form for AppUserEmail
-                        $appUserEmailForm = $this->createForm(AppUserEmailType::class, new AppUserEmail());
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#addAppUserEmail_formcontainer"] =
                             $this->renderView("@App/AppUserEmail/partials/appuseremail_form.html.twig", [
                                 'modalIdPrefix' => 'addAppUserEmail', 'appuseremail' => null, 'form_appuseremail' => $appUserEmailForm->createView()
                             ]);
-
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] =
-                            $this->get("translator")->trans("appuseremail.associate.message.check_mailbox", ["%email%" => $appUserEmail->getEmail()]);
-                        return new AppJsonResponse($data, Response::HTTP_OK);
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     } else {
-                        $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("appuseremail.associate.message.check_mailbox", ["%email%" => $appUserEmail->getEmail()]));
+                        $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
                         return $this->redirectToRoute("fos_user_profile_show");
                     }
                 }
-            }
-            if ($request->isXmlHttpRequest()) {
-                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#addAppUserEmail_formcontainer"] =
-                    $this->renderView("@App/AppUserEmail/partials/appuseremail_form.html.twig", [
-                        'modalIdPrefix' => 'addAppUserEmail', 'appuseremail' => null, 'form_appuseremail' => $appUserEmailForm->createView()
-                    ]);
-                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-            } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("profile.message.update.error"));
-                return $this->redirectToRoute("fos_user_profile_show");
             }
         }
         if ($request->isXmlHttpRequest()) {
