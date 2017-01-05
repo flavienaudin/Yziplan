@@ -209,6 +209,7 @@ eventInvitation:
       creator: Créateur
       administrator: Administrateur
     text:
+      connexion: Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant ou inscris-toi pour le prochain événement.
       disconnect: Tu n'es pas %user% ?
     guestname_required_alert:
       title: Quel est ton nom ?

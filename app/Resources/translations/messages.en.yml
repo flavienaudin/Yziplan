@@ -209,6 +209,7 @@ eventInvitation:
       creator: Creator
       administrator: Administrator
     text:
+      connexion: If you already have an account, login to automatically fill the following information or you can subscribe to save them for the next event.
       disconnect: You are not %user%?
     guestname_required_alert:
       title: What's your name?
