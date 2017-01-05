@@ -10,13 +10,12 @@
     {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:null) %}
 {% endif %}
 <div id="popover-content_{{ pollProposal.id }}" class="hide">
-    <div class="btn-group-vertical btn-group-lg pollproposal-response" data-toggle="buttons" role="group">
+    <div id="pollProposalReponse_{{ pollProposal.id }}" class="btn-group-vertical btn-group-lg pollproposal-response" data-toggle="buttons" role="group">
         <label id="pollProposalReponse_{{ pollProposal.id }}_yes"
                class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}">
             <input type="radio" autocomplete="off"
                    name="pollProposalReponse_{{ pollProposal.id }}"
-                   value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"
-                    {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES" )?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up"></i>
+                   value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"> <i class="zmdi zmdi-thumb-up"></i>
         </label>
         {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE') %}
             <label id="pollProposalReponse_{{ pollProposal.id }}_maybe"
@@ -24,15 +23,13 @@
                 <input type="radio"
                        autocomplete="off"
                        name="pollProposalReponse_{{ pollProposal.id }}"
-                       value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"
-                        {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'checked="checked"' }}> <i
+                       value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"> <i
                         class="zmdi zmdi-thumb-up-down"></i> </label>
         {% endif %}
         <label id="pollProposalReponse_{{ pollProposal.id }}_no" class="btn response-no bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}">
             <input type="radio" autocomplete="off"
                    name="pollProposalReponse_{{ pollProposal.id }}"
-                   value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"
-                    {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-down"></i>
+                   value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"> <i class="zmdi zmdi-thumb-down"></i>
         </label>
     </div>
 </div>
@@ -81,11 +78,13 @@
                 var newContent = null;
                 if (data['value'] == '{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}') {
                     newContent = '<span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>';
+                    $('#pollProposalReponse_{{ pollProposal.id }}_yes input').click();
                     $('#pollProposalReponse_{{ pollProposal.id }}_yes').toggleClass('active');
                     $('#pollProposalReponse_{{ pollProposal.id }}_maybe').removeClass('active');
                     $('#pollProposalReponse_{{ pollProposal.id }}_no').removeClass('active');
                 } else if (data['value'] == '{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}') {
                     newContent = '<span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>';
+                    $('#pollProposalReponse_{{ pollProposal.id }}_yes input').click();
                     $('#pollProposalReponse_{{ pollProposal.id }}_maybe').toggleClass('active');
                     $('#pollProposalReponse_{{ pollProposal.id }}_yes').removeClass('active');
                     $('#pollProposalReponse_{{ pollProposal.id }}_no').removeClass('active');
