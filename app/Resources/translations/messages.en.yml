@@ -324,6 +324,9 @@ pollmodule:
     whobringswhat: Who brings what?
   display:
     no_proposal: No proposal yet
+    result:
+      vote: vote(s)
+      contribution: contribution(s)
   modal:
     addPollProposal:
       title: Add a proposal

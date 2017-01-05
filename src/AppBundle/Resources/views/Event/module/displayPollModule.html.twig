@@ -42,87 +42,13 @@
                 {% endfor %}
                 </tbody>
             </table>
+        </div>
+        <div class="text-center">
+            <button>
 
-            {#       <script>
-                       $(document).ready(function () {
-                           $('#pollmodule-table-{{ module.token }}2').DataTable({
-                               paging: false,
-                               ordering: false,
-                               info: false,
-                               searching: false,
-                               scrollX: false,
-                               autoWidth: false,
-                               columns: [
-                                   null,
-                                   { "width": "50px" },
-                                   { "width": "50px" }
-                               ],
-                               language: {
-                                   "emptyTable": "{{ "pollmodule.display.no_proposal"|trans }}"
-                               }
-                               /*,fixedColumns: {leftColumns: 2}*/
-                           });
-                       });
-                   </script>#}
+            </button>
         </div>
 
-
-        {#<div class="w-100 poll-container">
-            <table id="pollmodule-table-{{ module.token }}" class="compact stripe hover row-border" cellspacing="0" width="100%">
-                <thead>
-                <tr>
-                    <th class="pollproposal-column" style="width: 50px"></th>
-                    <td class="voting-column dt-head-center">
-                        <span class="userInvitation-avatar">
-                            <div class="avatar-img-container-sm center-block m-b-5">
-                                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userModuleInvitation, isUserConnected : true}) }}
-                            </div>
-                        </span>
-                    </td>
-                    {% for moduleInvitation in modulesInvitationsExceptUserMI %}
-                        <td class="dt-head-center" style="width: 40px">
-                            <div class="avatar-img-container-sm center-block m-b-5">
-                                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
-                            </div>
-                        </td>
-                    {% endfor %}
-                    <td class="end-spacer"></td>#}{#end spacer#}{#
-                </tr>
-                </thead>
-                <tbody class="palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
-                {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
-                    {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
-                        "pollProposal":pollProposal,
-                        "userModuleInvitation":userModuleInvitation,
-                        "moduleInvitations":modulesInvitationsExceptUserMI
-                    }) }}
-                {% endfor %}
-                </tbody>
-            </table>
-            <script>
-                $(document).ready(function () {
-                    $('#pollmodule-table-{{ module.token }}').DataTable({
-                        paging: false,
-                        ordering: false,
-                        info: false,
-                        searching: false,
-                        scrollX: true,
-                        /*stateSave: true,*/
-                        autoWidth: true,
-                        columnDefs: [
-                            {targets: 0, width: "150px"},
-                            {targets: 1, width: "50px"},
-                            {targets: -1, width: "auto"},
-                            {targets: '_all', width: "40px"}
-                        ],
-                        language: {
-                            "emptyTable": "{{ "pollmodule.display.no_proposal"|trans }}"
-                        }
-                        /*,fixedColumns: {leftColumns: 2}*/
-                    });
-                });
-            </script>
-        </div>#}
 
         {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
             {{ include('@App/Event/module/pollModulePartials/pollProposal_form_min.html.twig', {
