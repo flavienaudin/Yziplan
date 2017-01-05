@@ -1,0 +1,50 @@
+{# Données d'entrée :
+- pollProposal (PollProposal) La proposition à afficher
+- userModuleInvitation (ModuleInvitaion) L'invitation du module de l'utilisateur
+- moduleInvitations ([ModuleInvitaion]) les invitations du module
+#}
+
+{% set responseValue = null %}
+{% set userPPResponse = pollProposal.pollProposalResponsesOfModuleInvitations([userModuleInvitation]) %}
+{% if userPPResponse|length == 1 %}
+    {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:null) %}
+{% endif %}
+<label for="pollProposalReponse_{{ pollProposal.id }}" class="sr-only">{{ pollProposal.pollModule.votingType }}</label>
+<input type="text" class="input-sm w-100" name="pollProposalReponse_{{ pollProposal.id }}" min="0" value="{{ responseValue }}">
+<script>
+    $(document).ready(function () {
+        var touchSpinInput = $("input[name='pollProposalReponse_{{ pollProposal.id }}']").TouchSpin({
+            min: 0,
+            initval: 0,
+            verticalbuttons: true,
+            verticalupclass: 'zmdi zmdi-plus zmdi-hc-fw',
+            verticaldownclass: 'zmdi zmdi-minus zmdi-hc-fw'
+        });
+        touchSpinInput.on('change', function () {
+            $(touchSpinInput).trigger('blur');
+        });
+    });
+</script>
+<script>
+    $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('blur', function (e) {
+        var data = {
+            'pollProposalId': {{ pollProposal.id }},
+            'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
+            'value': $(this).val()
+        };
+        var icon = $(this).parent("label");
+        var urlTarget = "{{ path('answerPollModuleProposal') }}";
+        ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
+            var animation = 'bounceIn';
+            icon.addClass('animated ' + animation);
+            setTimeout(function () {
+                icon.removeClass(animation);
+            }, 1000);
+        }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+            {# Avertissement/Demande du nom pour valider la participation #}
+            if (!eventInvitationValid && askGuestName !== undefined) {
+                askGuestName();
+            }
+        });
+    });
+</script>

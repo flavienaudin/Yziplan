@@ -1,0 +1,73 @@
+{# Données d'entrée :
+- pollProposal (PollProposal) La proposition à afficher
+- userModuleInvitation (ModuleInvitaion) L'invitation du module de l'utilisateur
+- moduleInvitations ([ModuleInvitaion]) les invitations du module
+#}
+
+{% set numberOfResponse = 0 %}
+{% set numberOfResponseYes = 0 %}
+{% set numberOfResponseMaybe = 0 %}
+{% set numberOfResponseNo = 0 %}
+<div class="modal fade in" id="modalPollProposal{{ pollProposal.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {# <h4 class="modal-title">Test</h4>#}
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <tbody>
+                    {# Pour chaque réponse d'une proposition #}
+                    {% for moduleInvitation in moduleInvitations %}
+                        {% set guestPollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
+                        {% if guestPollProposalResponse is not null %}
+                            <tr>
+                                <td>
+                                    <div class="avatar-img-container-sm center-block m-b-5">
+                                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ moduleInvitation.getDisplayableName }}
+                                </td>
+                                <td>
+                                    {% set numberOfResponse = numberOfResponse + 1 %}
+                                    {% if guestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
+                                        {% set numberOfResponseYes = numberOfResponseYes + 1 %}
+                                        <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
+                                    {% elseif guestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
+                                        {% set numberOfResponseMaybe = numberOfResponseMaybe + 1 %}
+                                        <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                                    {% elseif guestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
+                                        {% set numberOfResponseNo = numberOfResponseNo + 1 %}
+                                        <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                                    {% else %}
+                                        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% set yesValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseYes / numberOfResponse %}
+{% set maybeValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseMaybe / numberOfResponse %}
+{% set noValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseNo / numberOfResponse %}
+<div class="progress m-b-5">
+    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ yesValue }}" aria-valuemin="0" aria-valuemax="100"
+         style="width:{{ yesValue }}%"></div>
+</div>
+<div class="progress m-b-5">
+    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ maybeValue }}" aria-valuemin="0" aria-valuemax="100"
+         style="width: {{ maybeValue }}%"></div>
+</div>
+<div class="progress m-b-5">
+    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ noValue }}" aria-valuemin="0" aria-valuemax="100"
+         style="width: {{ noValue }}%"></div>
+</div>
+<a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">{{ numberOfResponseYes + numberOfResponseMaybe + numberOfResponseNo }} votes</a>

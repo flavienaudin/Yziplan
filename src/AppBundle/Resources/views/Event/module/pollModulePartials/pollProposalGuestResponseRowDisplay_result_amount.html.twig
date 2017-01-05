@@ -1,0 +1,44 @@
+{# Données d'entrée :
+- pollProposal (PollProposal) La proposition à afficher
+- userModuleInvitation (ModuleInvitaion) L'invitation du module de l'utilisateur
+- moduleInvitations ([ModuleInvitaion]) les invitations du module
+#}
+
+{% set numberOfResponse = 0 %}
+<div class="modal fade in" id="modalPollProposal{{ pollProposal.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                {# <h4 class="modal-title">Test</h4>#}
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped">
+                    <tbody>
+                    {# Pour chaque réponse d'une proposition #}
+                    {% for moduleInvitation in moduleInvitations %}
+                        {% set guestPollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
+                        {% if guestPollProposalResponse is not null %}
+                            {% set numberOfResponse = numberOfResponse + 1 %}
+                            <tr>
+                                <td>
+                                    <div class="avatar-img-container-sm center-block m-b-5">
+                                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {{ moduleInvitation.getDisplayableName }}
+                                </td>
+                                <td>
+                                    {{ guestPollProposalResponse is null or guestPollProposalResponse.answer is null?0:guestPollProposalResponse.answer }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">{{ numberOfResponse }} votes</a>
