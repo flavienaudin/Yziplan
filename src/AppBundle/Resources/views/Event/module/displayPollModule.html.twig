@@ -24,191 +24,208 @@
     {% if module.pollModule is not null %}
         {% set modulesInvitationsExceptUserMI = module.filteredModuleInvitations(maxColModule, [userModuleInvitation]) %}
         <div class="w-100 poll-container">
-                <table id="pollmodule-table-{{ module.token }}2" class="table-striped w-100">
-                    <colgroup>
-                        <col>
-                        <col class="response-column">
-                        <col class="voting-column">
-                    </colgroup>
-                    <thead>
+            <table id="pollmodule-table-{{ module.token }}2" class="table-striped w-100">
+                {#                <thead>
+                                <tr>
+                                    <td>Description</td>
+                                    <td class="response-column">Résultats</td>
+                                    <td class="voting-column">Réponse</td>
+                                </tr>
+                                </thead>#}
+                <tbody id="pp-row-group-{{ module.token }}">
+                {# Pour chaque proposition #}
+                {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
                     <tr>
-                        <td>Description</td>
-                        <td class="response-column">Résultats</td>
-                        <td class="voting-column">Réponse</td>
-                    </tr>
-                    </thead>
-                    <tbody class="palette-Grey-100 bg" id="pp-row-group-{{ module.token }}">
-                    {# Pour chaque proposition #}
-                    {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
-                        <tr>
-                            <td>
-                                <div class="media">
-                                    <div class="pull-right">
-                                        {% if pollProposal.creator == userModuleInvitation %}
-                                            <div class="media-object">
-                                                <div class="btn-group-vertical btn-group-xs" role="group" aria-label="...">
-                                                    <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}"
-                                                       role="button"
-                                                       id="getPPEditionForm_{{ pollProposal.id }}" class="btn btn-default"> <i class="zmdi zmdi-edit"></i></a> <a
-                                                            href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}"
-                                                            role="button"
-                                                            id="removePP_{{ pollProposal.id }}" class="btn btn-default c-red"> <i class="zmdi zmdi-delete"></i></a>
-                                                </div>
-                                                <script>
-                                                    $('#getPPEditionForm_{{ pollProposal.id }}').on('click', function (e) {
-                                                        e.preventDefault();
-                                                        if (!eventInvitationValid && askGuestName !== undefined) {
-                                                            askGuestName();
+                        <td>
+                            <div class="media">
+                                <div class="pull-right">
+                                    {% if pollProposal.creator == userModuleInvitation %}
+                                        <div class="media-object">
+                                            <div class="btn-group-vertical btn-group-xs" role="group" aria-label="...">
+                                                <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}"
+                                                   role="button"
+                                                   id="getPPEditionForm_{{ pollProposal.id }}" class="btn btn-default"> <i class="zmdi zmdi-edit"></i></a> <a
+                                                        href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}"
+                                                        role="button"
+                                                        id="removePP_{{ pollProposal.id }}" class="btn btn-default c-red"> <i class="zmdi zmdi-delete"></i></a>
+                                            </div>
+                                            <script>
+                                                $('#getPPEditionForm_{{ pollProposal.id }}').on('click', function (e) {
+                                                    e.preventDefault();
+                                                    if (!eventInvitationValid && askGuestName !== undefined) {
+                                                        askGuestName();
+                                                    } else {
+                                                        var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
+                                                        var modals = $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id');
+                                                        if ($(modals).length > 0) {
+                                                            $(modals).first().modal('toggle');
                                                         } else {
-                                                            var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
-                                                            var modals = $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id');
-                                                            if ($(modals).length > 0) {
-                                                                $(modals).first().modal('toggle');
-                                                            } else {
-                                                                ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                                                                    $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
-                                                                }, function (jqXHR, textStatus, errorThrown) {
-                                                                    if (jqXHR.hasOwnProperty('responseJSON')) {
-                                                                        var responseJSON = jqXHR['responseJSON'];
-                                                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                                                            if (!eventInvitationValid && askGuestName !== undefined) {
-                                                                                askGuestName();
-                                                                            }
+                                                            ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
+                                                                $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
+                                                            }, function (jqXHR, textStatus, errorThrown) {
+                                                                if (jqXHR.hasOwnProperty('responseJSON')) {
+                                                                    var responseJSON = jqXHR['responseJSON'];
+                                                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                                                        if (!eventInvitationValid && askGuestName !== undefined) {
+                                                                            askGuestName();
                                                                         }
                                                                     }
-                                                                }, null);
-                                                            }
+                                                                }
+                                                            }, null);
                                                         }
-                                                    });
-                                                    $('#removePP_{{ pollProposal.id }}').on('click', function (e) {
-                                                        e.preventDefault();
-                                                        if (!eventInvitationValid && askGuestName !== undefined) {
-                                                            askGuestName();
-                                                        } else {
-                                                            var removePPLink = $(this);
-                                                            swal({
-                                                                title: '{{ "pollmodule.alert.confirm_proposal_deletion.title"|trans }}',
-                                                                text: '{{ "pollmodule.alert.confirm_proposal_deletion.message"|trans }}',
-                                                                type: "warning",
-                                                                showCancelButton: true,
-                                                                confirmButtonColor: "#DD6B55",
-                                                                confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                                                showLoaderOnConfirm: true
-                                                            }).then(function () {
-                                                                ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                                        $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable()
-                                                                            .row($('#pp_display_row_{{ pollProposal.id }}'))
-                                                                            .remove().draw();
-                                                                        var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
-                                                                        $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
-                                                                            $(this).remove();
-                                                                        });
-                                                                    }
-                                                                }, function (jqXHR, textStatus, errorThrown) {
-                                                                    if (jqXHR.hasOwnProperty('responseJSON')) {
-                                                                        var responseJSON = jqXHR['responseJSON'];
-                                                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                                                            if (!eventInvitationValid && askGuestName !== undefined) {
-                                                                                askGuestName();
-                                                                            }
+                                                    }
+                                                });
+                                                $('#removePP_{{ pollProposal.id }}').on('click', function (e) {
+                                                    e.preventDefault();
+                                                    if (!eventInvitationValid && askGuestName !== undefined) {
+                                                        askGuestName();
+                                                    } else {
+                                                        var removePPLink = $(this);
+                                                        swal({
+                                                            title: '{{ "pollmodule.alert.confirm_proposal_deletion.title"|trans }}',
+                                                            text: '{{ "pollmodule.alert.confirm_proposal_deletion.message"|trans }}',
+                                                            type: "warning",
+                                                            showCancelButton: true,
+                                                            confirmButtonColor: "#DD6B55",
+                                                            confirmButtonText: '{{ "global.button.delete"|trans }}',
+                                                            showLoaderOnConfirm: true
+                                                        }).then(function () {
+                                                            ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
+                                                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
+                                                                    $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable()
+                                                                        .row($('#pp_display_row_{{ pollProposal.id }}'))
+                                                                        .remove().draw();
+                                                                    var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
+                                                                    $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
+                                                                        $(this).remove();
+                                                                    });
+                                                                }
+                                                            }, function (jqXHR, textStatus, errorThrown) {
+                                                                if (jqXHR.hasOwnProperty('responseJSON')) {
+                                                                    var responseJSON = jqXHR['responseJSON'];
+                                                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                                                        if (!eventInvitationValid && askGuestName !== undefined) {
+                                                                            askGuestName();
                                                                         }
                                                                     }
-                                                                }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-                                                                    $('.grid').masonry('layout');
-                                                                });
+                                                                }
+                                                            }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                                                                $('.grid').masonry('layout');
                                                             });
-                                                        }
-                                                    });
-                                                </script>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="media-body">
-                                        <div {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
-                                            {% for ppElt in pollProposal.pollProposalElements %}
-                                                {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?ppElt.value|localizeddate:ppElt.value }}
-                                                {% if not loop.last %}<br>{% endif %}
-                                            {% endfor %}
+                                                        });
+                                                    }
+                                                });
+                                            </script>
                                         </div>
+                                    {% endif %}
+                                </div>
+                                <div class="media-body">
+                                    <div {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
+                                        {% for ppElt in pollProposal.pollProposalElements %}
+                                            {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?ppElt.value|localizeddate:ppElt.value }}
+                                            {% if not loop.last %}<br>{% endif %}
+                                        {% endfor %}
                                     </div>
                                 </div>
-                            </td>
-                            <td class="response-column">
-                                <div class="modal fade in" id="modalPollProposal{{ pollProposal.id }}" tabindex="-1" role="dialog" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title">Test</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <table class="table table-striped">
-                                                    <tbody>
-                                                    {# Pour chaque réponse d'une proposition #}
-                                                    {% for otherGuestPollProposalResponse in pollProposal.pollProposalResponsesOfModuleInvitations(modulesInvitationsExceptUserMI) %}
-                                                        <tr>
-                                                            <td>
-                                                                <div class="avatar-img-container-sm center-block m-b-5">
-                                                                    {% if otherGuestPollProposalResponse is not null %}
-                                                                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : otherGuestPollProposalResponse.moduleInvitation}) }}
-                                                                    {% endif %}
-                                                                </div>
-                                                            </td>
-                                                            <td>
+                            </div>
+                        </td>
+                        <td class="response-column">
+                            {% set numberOfResponse = 0 %}
+                            {% set numberOfResponseYes = 0 %}
+                            {% set numberOfResponseMaybe = 0 %}
+                            {% set numberOfResponseNo = 0 %}
+                            <div class="modal fade in" id="modalPollProposal{{ pollProposal.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            {# <h4 class="modal-title">Test</h4>#}
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table table-striped">
+                                                <tbody>
+                                                {# Pour chaque réponse d'une proposition #}
+                                                {% for moduleInvitation in modulesInvitationsExceptUserMI %}
+                                                    {% set otherGuestPollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
+                                                    <tr>
+                                                        <td>
+                                                            <div class="avatar-img-container-sm center-block m-b-5">
+                                                                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            {{ moduleInvitation.getDisplayableName }}
+                                                        </td>
+                                                        <td>
+                                                            {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
+                                                                {{ otherGuestPollProposalResponse is null or otherGuestPollProposalResponse.answer is null?0:otherGuestPollProposalResponse.answer }}
+                                                            {% else %}
+                                                                {% set numberOfResponse = numberOfResponse + 1 %}
                                                                 {% if otherGuestPollProposalResponse is not null %}
-                                                                    {{ otherGuestPollProposalResponse.moduleInvitation.getDisplayableName }}
-                                                                {% endif %}
-                                                            </td>
-                                                            <td>
-                                                                {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
-                                                                    {{ otherGuestPollProposalResponse is null or otherGuestPollProposalResponse.answer is null?0:otherGuestPollProposalResponse.answer }}
-                                                                {% else %}
-                                                                    {% if otherGuestPollProposalResponse is not null %}
-                                                                        {% if otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
-                                                                            <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
-                                                                        {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
-                                                                            <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
-                                                                        {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
-                                                                            <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
-                                                                        {% else %}
-                                                                            <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
-                                                                        {% endif %}
+                                                                    {% if otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
+                                                                        {% set numberOfResponseYes = numberOfResponseYes + 1 %}
+                                                                        <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
+                                                                    {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
+                                                                        {% set numberOfResponseMaybe = numberOfResponseMaybe + 1 %}
+                                                                        <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                                                                    {% elseif otherGuestPollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
+                                                                        {% set numberOfResponseNo = numberOfResponseNo + 1 %}
+                                                                        <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
                                                                     {% else %}
-                                                                        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline"></i></span>
+                                                                        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
                                                                     {% endif %}
+                                                                {% else %}
+                                                                    <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline"></i></span>
                                                                 {% endif %}
-                                                            </td>
-                                                        </tr>
-                                                    {% endfor %}
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                {% endfor %}
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
-                                <a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="btn btn-sm btn-default waves-effect m-l-5">X votes</a>
-                            </td>
-                            {# Affichage des votes #}
-                            <td class="voting-column">
-                                {% set responseValue = null %}
-                                {% set userPPResponse = pollProposal.pollProposalResponsesOfModuleInvitations([userModuleInvitation]) %}
-                                {% if userPPResponse|length == 1 %}
-                                    {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:null) %}
-                                {% endif %}
-                                {% if pollProposal.pollModule.votingType in [constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO'), constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE')] %}
-                                    {% set sendRequestEvent = "change" %}
+                            </div>
+                            {% set yesValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseYes / numberOfResponse %}
+                            {% set maybeValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseMaybe / numberOfResponse %}
+                            {% set noValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseNo / numberOfResponse %}
+                            <div class="progress m-b-5">
+                                <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ yesValue }}" aria-valuemin="0" aria-valuemax="100"
+                                     style="width:{{ yesValue }}%"></div>
+                            </div>
+                            <div class="progress m-b-5">
+                                <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ maybeValue }}" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: {{ maybeValue }}%"></div>
+                            </div>
+                            <div class="progress m-b-5">
+                                <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ noValue }}" aria-valuemin="0" aria-valuemax="100"
+                                     style="width: {{ noValue }}%"></div>
+                            </div>
+                            <a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">{{ numberOfResponseYes + numberOfResponseMaybe + numberOfResponseNo }} votes</a>
+                        </td>
+                        {# Affichage des votes #}
+                        <td class="voting-column">
+                            {% set responseValue = null %}
+                            {% set userPPResponse = pollProposal.pollProposalResponsesOfModuleInvitations([userModuleInvitation]) %}
+                            {% if userPPResponse|length == 1 %}
+                                {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:null) %}
+                            {% endif %}
+                            {% if pollProposal.pollModule.votingType in [constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO'), constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE')] %}
+                                {% set sendRequestEvent = "change" %}
+                                <div id="popover-content_{{ pollProposal.id }}" class="hide">
                                     <div class="btn-group-vertical btn-group-xs pollproposal-response" data-toggle="buttons" role="group">
-                                        <label class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}"> <input
+                                        <label class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}">
+                                            <input
                                                     type="radio" autocomplete="off"
                                                     name="pollProposalReponse_{{ pollProposal.id }}"
                                                     value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"
-                                                    {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up"></i>
+                                                    {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES" )?'checked="checked"' }}> <i class="zmdi zmdi-thumb-up"></i>
                                         </label>
                                         {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE') %}
                                             <label class="btn response-maybe bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}">
                                                 <input type="radio"
                                                        autocomplete="off"
-                                                       name="pollProposalReponse_{{ pollProposal.id }}"
+                                                        name="pollProposalReponse_{{ pollProposal.id }}"
                                                        value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"
                                                         {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'checked="checked"' }}> <i
                                                         class="zmdi zmdi-thumb-up-down"></i> </label>
@@ -220,26 +237,72 @@
                                                     {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'checked="checked"' }}> <i class="zmdi zmdi-thumb-down"></i>
                                         </label>
                                     </div>
-                                    {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
-                                    {% set sendRequestEvent = "blur" %}
-                                    <label for="pollProposalReponse_{{ pollProposal.id }}" class="sr-only">{{ pollProposal.pollModule.votingType }}</label>
-                                <input type="text" class="input-sm w-100" name="pollProposalReponse_{{ pollProposal.id }}" min="0" value="{{ responseValue }}">
-                                    <script>
-                                        $(document).ready(function () {
-                                            var touchSpinInput = $("input[name='pollProposalReponse_{{ pollProposal.id }}']").TouchSpin({
-                                                min: 0,
-                                                initval: 0,
-                                                verticalbuttons: true,
-                                                verticalupclass: 'zmdi zmdi-plus zmdi-hc-fw',
-                                                verticaldownclass: 'zmdi zmdi-minus zmdi-hc-fw'
-                                            });
-                                            touchSpinInput.on('change', function () {
-                                                $(touchSpinInput).trigger('blur');
+                                </div>
+                                <button id="popover_{{ pollProposal.id }}" class="btn waves-effect" data-toggle="popover" data-placement="left" data-html="true" title="Vote"
+                                        data-original-title="Vote">
+                                    {% if responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
+                                        <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
+                                    {% elseif responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
+                                        <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                                    {% elseif responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
+                                        <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                                    {% else %}
+                                        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
+                                    {% endif %}
+                                </button>
+
+                                <script>
+                                    $('#popover_{{ pollProposal.id }}').popover({
+                                        html: true,
+                                        content: function () {
+                                            var content = $('#popover-content_{{ pollProposal.id }}').html();
+                                            return content;
+                                        }
+                                    }).on('shown.bs.popover', function (event) {
+                                        $(this).next('.popover').find(":input").on('{{ sendRequestEvent }}', function (e) {
+                                            var data = {
+                                                'pollProposalId': {{ pollProposal.id }},
+                                                'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
+                                                'value': $(this).val()
+                                            };
+                                            var icon = $(this).parent("label");
+                                            var urlTarget = "{{ path('answerPollModuleProposal') }}";
+                                            ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
+                                                var animation = 'bounceIn';
+                                                icon.addClass('animated ' + animation);
+                                                setTimeout(function () {
+                                                    icon.removeClass(animation);
+                                                }, 1000);
+                                            }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                                                {# Avertissement/Demande du nom pour valider la participation #}
+                                                if (!eventInvitationValid && askGuestName !== undefined) {
+                                                    askGuestName();
+                                                }
                                             });
                                         });
-                                    </script>
-                                {% endif %}
+                                    });
+                                </script>
+                                {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
+                                {% set sendRequestEvent = "blur" %}
+                                <label for="pollProposalReponse_{{ pollProposal.id }}" class="sr-only">{{ pollProposal.pollModule.votingType }}</label>
+                            <input type="text" class="input-sm w-100" name="pollProposalReponse_{{ pollProposal.id }}" min="0" value="{{ responseValue }}">
                                 <script>
+                                    $(document).ready(function () {
+                                        var touchSpinInput = $("input[name='pollProposalReponse_{{ pollProposal.id }}']").TouchSpin({
+                                            min: 0,
+                                            initval: 0,
+                                            verticalbuttons: true,
+                                            verticalupclass: 'zmdi zmdi-plus zmdi-hc-fw',
+                                            verticaldownclass: 'zmdi zmdi-minus zmdi-hc-fw'
+                                        });
+                                        touchSpinInput.on('change', function () {
+                                            $(touchSpinInput).trigger('blur');
+                                        });
+                                    });
+                                </script>
+                            {% endif %}
+                            {#<script>
+                                /*$('#popover_{{ pollProposal.id }}').on('show.bs.popover', function () {*/
                                     $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('{{ sendRequestEvent }}', function (e) {
                                         var data = {
                                             'pollProposalId': {{ pollProposal.id }},
@@ -255,18 +318,19 @@
                                                 icon.removeClass(animation);
                                             }, 1000);
                                         }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-                                            {# Avertissement/Demande du nom pour valider la participation #}
+                                            #}{# Avertissement/Demande du nom pour valider la participation #}{#
                                             if (!eventInvitationValid && askGuestName !== undefined) {
                                                 askGuestName();
                                             }
                                         });
                                     });
-                                </script>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                                /*})*/
+                            </script>#}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
             {#       <script>
                        $(document).ready(function () {
                            $('#pollmodule-table-{{ module.token }}2').DataTable({

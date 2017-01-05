@@ -456,6 +456,15 @@ table.dataTable.compact tbody td {
     padding: 0 1px;
 }
 
+table.dataTable td.dataTables_empty {
+    text-align: center !important;
+    width: 100% !important;
+}
+
+.poll-container table td{
+    padding: 3px; !important;
+}
+
 .poll-container table td.response-column {
     min-width: 50px;
     max-width: 100px;
@@ -470,10 +479,7 @@ table.dataTable.compact tbody td {
     text-align: center;
 }
 
-table.dataTable td.dataTables_empty {
-    text-align: center !important;
-    width: 100% !important;
-}
+
 
 /*.poll-container .dataTables_scroll table td:last-child {
     min-width: 0;
