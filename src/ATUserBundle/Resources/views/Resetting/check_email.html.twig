@@ -5,12 +5,16 @@
 {% endblock %}
 
 {% block fos_user_content %}
-    <div class="card">
-        <div class="card-header">
-            <h1>{{ "resetting.check_email.page.title"|trans }}</h1>
-        </div>
-        <div class="card-body card-padding">
-            {{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime},'FOSUserBundle') }}
+    <div class="row">
+        <div class="col-xs-12 col-xs-p-lr-0 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1>{{ "resetting.check_email.page.title"|trans }}</h1>
+                </div>
+                <div class="card-body card-padding">
+                    {{ 'resetting.check_email'|trans({'%tokenLifetime%': tokenLifetime},'FOSUserBundle') }}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

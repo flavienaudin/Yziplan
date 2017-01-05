@@ -641,7 +641,7 @@ table.dataTable td.dataTables_empty {
 @media (max-width: 767px) {
     .profile-tab .pm-overview {
         width: 100%;
-        background: #333;
+        background: #f8f8f8;
         text-align: center;
     }
 }
@@ -871,7 +871,7 @@ table.dataTable td.dataTables_empty {
 ----------------------------------*/
 .index-main {
     padding: 0 !important;
-    margin-top: 70px !important;
+    padding-top: 70px !important;
 }
 
 /*---------------------------------

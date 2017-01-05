@@ -5,15 +5,19 @@
 {% endblock %}
 
 {% block fos_user_content %}
-    <div class="card">
-        <div class="card-header">
-            <h1>{{ "confirmed.page.title"|trans }}</h1>
-        </div>
-        <div class="card-body card-padding">
-            <p>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</p>
-            {% if targetUrl %}
-                <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>
-            {% endif %}
+    <div class="row">
+        <div class="col-xs-12 col-xs-p-lr-0 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <h1>{{ "confirmed.page.title"|trans }}</h1>
+                </div>
+                <div class="card-body card-padding">
+                    <p>{{ 'registration.confirmed'|trans({'%username%': user.username}, 'FOSUserBundle') }}</p>
+                    {% if targetUrl %}
+                        <p><a href="{{ targetUrl }}">{{ 'registration.back'|trans({}, 'FOSUserBundle') }}</a></p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock fos_user_content %}

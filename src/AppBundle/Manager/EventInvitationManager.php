@@ -117,10 +117,12 @@ class EventInvitationManager
                 $this->eventInvitation = null;
             }
         } else {
-            // Un utilisateur connecté ne peut récupérer une invitation en session sinon il y a risque de récupération d'une invitation qui ne lui appartient pas
-            // De plus, un EventInvitation devrait déjà être créé pour lui s'il a déjà tenté de participer à l'événement (ou alors il n'était pas connecté , auquel cas
-            // une nouvelle invitation sera créée.
-            if ($user == null && $this->session->has(self::TOKEN_SESSION_KEY.'/'.$event->getToken())) {
+            // TODO : confirmer : si on rajouter la condition : $user == null Alors :
+            // Un utilisateur connecté ne pourra pas récupérer une invitation en session sinon il y a risque de récupération d'une invitation qui ne lui appartient pas
+            // De plus, un EventInvitation devrait déjà être créé pour lui s'il a déjà tenté de participer à l'événement (ou alors il n'était pas connecté , auquel
+            // cas une nouvelle invitation sera créée.
+            // Sauf : que quand un organisateur se connecte/inscris, il ne peut retrouver le contrôle de l'organisation avec une nouvelle invitation
+            if ($this->session->has(self::TOKEN_SESSION_KEY.'/'.$event->getToken())) {
                 $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'token' => $this->session->get(self::TOKEN_SESSION_KEY.'/'.$event->getToken())));
             }
             if ($this->eventInvitation != null) {

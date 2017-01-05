@@ -57,6 +57,10 @@ landing_page:
       alt: holidays
       title: Vacation between friends?
       text: Organize yourself with your friends to know where and when to go on weekends or holidays!
+    chandeleur:
+      alt: Candlemas
+      title: Candlemas
+      text: Meet up with friends to share pancakes for the Candlemas!
 
 appuseremail:
   associate:
@@ -162,11 +166,11 @@ event:
 
 eventInvitations:
   user_menu:
-    entry: Your events
+    entry: My events
   page:
-    meta_title: Your events
-    title: Your events
-    subtitle: List of events you organize and events you are invited to
+    meta_title: My events
+    title: My events
+    subtitle: List of events I organize and events I am invited to
   table:
     event_name: Event name
     organiser: Organiser
@@ -209,6 +213,7 @@ eventInvitation:
       creator: Creator
       administrator: Administrator
     text:
+      connexion: If you already have an account, login to automatically fill the following information or you can subscribe to save them for the next event.
       disconnect: You are not %user%?
     guestname_required_alert:
       title: What's your name?
