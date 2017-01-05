@@ -57,6 +57,11 @@ landing_page:
       alt: vacances
       title: Retrouvailles entre amis ?
       text: Organisez-vous avec vos amis pour savoir où et quand partir en week-end ou vacances !
+    chandeleur:
+      alt: Chandeleur
+      title: Chandeleur
+      text: Retrouvez-vous entre amis pour partager des crêpes pour la chandeleur !
+
 
 appuseremail:
   associate:

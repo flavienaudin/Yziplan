@@ -9971,7 +9971,7 @@ pre {
 
 #main {
     position: relative;
-    margin-top: 100px;
+    padding-top: 70px;
 }
 
 @media (min-width: 1280px) {

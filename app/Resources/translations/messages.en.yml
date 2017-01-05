@@ -57,6 +57,10 @@ landing_page:
       alt: holidays
       title: Vacation between friends?
       text: Organize yourself with your friends to know where and when to go on weekends or holidays!
+    chandeleur:
+      alt: Candlemas
+      title: Candlemas
+      text: Meet up with friends to share pancakes for the Candlemas!
 
 appuseremail:
   associate:
