@@ -13,6 +13,7 @@ use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalResponse;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\Templating\EngineInterface;
 
 class PollProposalResponseManager
 {
@@ -20,12 +21,16 @@ class PollProposalResponseManager
     /** @var EntityManager */
     private $entityManager;
 
+    /** @var EngineInterface */
+    private $templating;
+
     /** @var $pollProposalResponse PollProposalResponse */
     private $pollProposalResponse;
 
-    public function __construct(EntityManager $doctrine)
+    public function __construct(EntityManager $doctrine, EngineInterface $templating)
     {
         $this->entityManager = $doctrine;
+        $this->templating = $templating;
     }
 
     public function initializePollProposalResponse(ModuleInvitation $moduleInvitation, PollProposal $pollProposal, $value)
@@ -54,4 +59,21 @@ class PollProposalResponseManager
         $this->entityManager->persist($this->pollProposalResponse);
         $this->entityManager->flush();
     }
+
+    /**
+     * @param Integer $pollProposalId
+     * @param EventInvitation $userEventInvitation
+     * @return string
+     */
+    public function displayPollProposalRowResultPartial($pollProposalId, ModuleInvitation $moduleInvitation)
+    {
+        $pollProposal = $this->entityManager->getRepository(PollProposal::class)->findOneBy(array('id' => $pollProposalId));
+
+        return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_result.html.twig", array(
+            'pollProposal' => $pollProposal,
+            'userModuleInvitation' => $moduleInvitation,
+            'moduleInvitations' => $pollProposal->getPollModule()->getModule()->getModuleInvitations()
+        ));
+    }
+
 }

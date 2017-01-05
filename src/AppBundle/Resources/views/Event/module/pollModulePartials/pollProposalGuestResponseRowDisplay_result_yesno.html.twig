@@ -8,6 +8,7 @@
 {% set numberOfResponseYes = 0 %}
 {% set numberOfResponseMaybe = 0 %}
 {% set numberOfResponseNo = 0 %}
+
 <div class="modal fade in" id="modalPollProposal{{ pollProposal.id }}" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -56,18 +57,20 @@
     </div>
 </div>
 {% set yesValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseYes / numberOfResponse %}
-{% set maybeValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseMaybe / numberOfResponse %}
-{% set noValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseNo / numberOfResponse %}
-<div class="progress m-b-5">
-    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ yesValue }}" aria-valuemin="0" aria-valuemax="100"
-         style="width:{{ yesValue }}%"></div>
-</div>
-<div class="progress m-b-5">
-    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ maybeValue }}" aria-valuemin="0" aria-valuemax="100"
-         style="width: {{ maybeValue }}%"></div>
-</div>
-<div class="progress m-b-5">
-    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ noValue }}" aria-valuemin="0" aria-valuemax="100"
-         style="width: {{ noValue }}%"></div>
-</div>
-<a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">{{ numberOfResponseYes + numberOfResponseMaybe + numberOfResponseNo }} votes</a>
+    {% set maybeValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseMaybe / numberOfResponse %}
+    {% set noValue = numberOfResponse == 0 ? 0 : 100 * numberOfResponseNo / numberOfResponse %}
+<a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">
+    <div class="progress m-b-5">
+        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="{{ yesValue }}" aria-valuemin="0" aria-valuemax="100"
+             style="width:{{ yesValue }}%"></div>
+    </div>
+    <div class="progress m-b-5">
+        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{{ maybeValue }}" aria-valuemin="0" aria-valuemax="100"
+             style="width: {{ maybeValue }}%"></div>
+    </div>
+    <div class="progress m-b-5">
+        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{{ noValue }}" aria-valuemin="0" aria-valuemax="100"
+             style="width: {{ noValue }}%"></div>
+    </div>
+    {{ numberOfResponseYes + numberOfResponseMaybe + numberOfResponseNo }} votes
+</a>

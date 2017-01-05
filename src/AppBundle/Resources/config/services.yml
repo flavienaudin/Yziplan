@@ -46,7 +46,7 @@ services:
 
   at.manager.pollproposal_response:
       class: AppBundle\Manager\PollProposalResponseManager
-      arguments: ['@doctrine.orm.entity_manager']
+      arguments: ['@doctrine.orm.entity_manager','@templating']
 
   at.manager.application_user:
     class: AppBundle\Manager\ApplicationUserManager

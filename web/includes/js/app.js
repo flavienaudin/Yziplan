@@ -362,7 +362,7 @@ function treatHtmlContents(htmlContents) {
             for (var htmlId in htmlContents[htmlContentAction]) {
                 if (htmlContents[htmlContentAction].hasOwnProperty(htmlId)) {
                     var hContent = htmlContents[htmlContentAction][htmlId];
-                    var eltParent = $(htmlId);
+                    var eltParent = $('#'+htmlId);
                     if (eltParent[0]) {
                         eltParent[htmlContentAction](hContent);
                     }

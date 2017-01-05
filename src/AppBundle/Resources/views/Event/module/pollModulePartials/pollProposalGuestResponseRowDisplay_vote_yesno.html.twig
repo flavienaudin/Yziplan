@@ -43,7 +43,7 @@
     {% elseif responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
         <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
     {% elseif responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
-        <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+        <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>
     {% else %}
         <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
     {% endif %}
@@ -104,7 +104,7 @@
                     askGuestName();
                 }
             });
-            {# On enlève le loader #}
+            {# enlever le loader en cas de probleme #}
         });
     });
 </script>
