@@ -5,24 +5,26 @@
 {% endblock %}
 
 {% block fos_user_content %}
-    <div class="col-xs-12 col-sm-6">
-        <div class="card">
-            <div class="card-header">
-                <h1>{{ "register.page.subtitle_email"|trans }}</h1>
-            </div>
-            <div class="card-body card-padding">
-                {{ include('@ATUser/Registration/partials/registration_form.html.twig') }}
+    <div class="row">
+        <div class="col-xs-12 col-xs-p-lr-0 col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1>{{ "register.page.subtitle_email"|trans }}</h1>
+                </div>
+                <div class="card-body card-padding-sm">
+                    {{ include('@ATUser/Registration/partials/registration_form.html.twig') }}
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="col-xs-12 col-sm-6">
-        <div class="card">
-            <div class="card-header">
-                <h1>{{ "register.page.subtitle_social_network"|trans }}</h1>
-            </div>
-            <div class="card-body card-padding">
-               {{  include('@ATUser/Security/partials/social_networks_connexion.html.twig') }}
+        <div class="col-xs-12 col-xs-p-lr-0 col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <h1>{{ "register.page.subtitle_social_network"|trans }}</h1>
+                </div>
+                <div class="card-body card-padding-sm">
+                    {{ include('@ATUser/Security/partials/social_networks_connexion.html.twig') }}
+                </div>
             </div>
         </div>
     </div>

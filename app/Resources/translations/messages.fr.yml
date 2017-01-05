@@ -167,7 +167,7 @@ eventInvitations:
   page:
     meta_title: Mes événements
     title: Mes événements
-    subtitle: Liste des événements que j'organises et des invitations que j'ai reçues
+    subtitle: Liste des événements que j'organise et des invitations que j'ai reçues
   table:
     event_name: Nom de l'événement
     organiser: Organisateur

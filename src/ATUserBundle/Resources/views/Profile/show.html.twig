@@ -15,50 +15,54 @@
 
 
 {% block fos_user_content %}
-    <div class="card" id="profile-card">
-        <div class="card-header">
-            <h2><span class="user-public-name">{{ user.displayableName }}</span>
-                <small class="user-email">{{ user.email }}</small>
-            </h2>
-        </div>
+    <div class="row">
+        <div class="col-xs-12 col-xs-p-lr-0 col-sm-12">
+            <div class="card" id="profile-card">
+                <div class="card-header">
+                    <h2><span class="user-public-name">{{ user.displayableName }}</span>
+                        <small class="user-email">{{ user.email }}</small>
+                    </h2>
+                </div>
 
-        <div class="card-body">
-            <div role="tabpanel">
-                <ul id="profile-tabs" class="tab-nav tn-justified" role="tablist">
-                    <li id="tab-profile-information" class="waves-effect">
-                        <a href="#profile-information" aria-controls="profile-information" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_information"|trans }}</a>
-                    </li>
-                    {# TODO non nécessaire sur la version beta
-                    <li id="tab-profile-contacts" class="waves-effect">
-                        <a href="#profile-contacts" aria-controls="profile-contacts" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_contacts"|trans }}</a>
-                    </li>
-                    <li id="tab-profile-preferences" class="waves-effect">
-                        <a href="#profile-preferences" aria-controls="profile-preferences" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_preferences"|trans }}</a>
-                    </li>#}
-                </ul>
+                <div class="card-body">
+                    <div role="tabpanel">
+                        <ul id="profile-tabs" class="tab-nav tn-justified" role="tablist">
+                            <li id="tab-profile-information" class="waves-effect">
+                                <a href="#profile-information" aria-controls="profile-information" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_information"|trans }}</a>
+                            </li>
+                            {# TODO non nécessaire sur la version beta
+                            <li id="tab-profile-contacts" class="waves-effect">
+                                <a href="#profile-contacts" aria-controls="profile-contacts" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_contacts"|trans }}</a>
+                            </li>
+                            <li id="tab-profile-preferences" class="waves-effect">
+                                <a href="#profile-preferences" aria-controls="profile-preferences" role="tab" data-toggle="tab">{{ "profile.show.tab.profile_preferences"|trans }}</a>
+                            </li>#}
+                        </ul>
 
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane" id="profile-information">
-                        {{ include('@ATUser/Profile/partials/profile_about.html.twig', {
-                            'user':user,
-                            'form_app_user_info_personals':form_app_user_info_personals,
-                            'form_contact_details':form_contact_details,
-                            'form_app_user_info_complementaries':form_app_user_info_complementaries
-                        }) }}
-                    </div>
-                    {# TODO non nécessaire sur la version beta
-                    <div role="tabpanel" class="tab-pane" id="profile-contacts">
-                        {# User -> Contacts|ContactGroups
-                        {{ include('@ATUser/Profile/partials/profile_contacts.html.twig', {
-                            'contacts':user.applicationUser.contacts,
-                            'contactGroups':user.applicationUser.contactGroups,
-                            'form_add_contact':form_add_contact }) }}
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="profile-preferences">
-                        Préférences
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane" id="profile-information">
+                                {{ include('@ATUser/Profile/partials/profile_about.html.twig', {
+                                    'user':user,
+                                    'form_app_user_info_personals':form_app_user_info_personals,
+                                    'form_contact_details':form_contact_details,
+                                    'form_app_user_info_complementaries':form_app_user_info_complementaries
+                                }) }}
+                            </div>
+                            {# TODO non nécessaire sur la version beta
+                            <div role="tabpanel" class="tab-pane" id="profile-contacts">
+                                {# User -> Contacts|ContactGroups
+                                {{ include('@ATUser/Profile/partials/profile_contacts.html.twig', {
+                                    'contacts':user.applicationUser.contacts,
+                                    'contactGroups':user.applicationUser.contactGroups,
+                                    'form_add_contact':form_add_contact }) }}
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="profile-preferences">
+                                Préférences
 
+                            </div>
+                            #}
+                        </div>
                     </div>
-                    #}
                 </div>
             </div>
         </div>

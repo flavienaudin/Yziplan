@@ -641,7 +641,7 @@ table.dataTable td.dataTables_empty {
 @media (max-width: 767px) {
     .profile-tab .pm-overview {
         width: 100%;
-        background: #333;
+        background: #f8f8f8;
         text-align: center;
     }
 }

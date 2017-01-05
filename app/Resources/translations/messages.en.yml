@@ -162,11 +162,11 @@ event:
 
 eventInvitations:
   user_menu:
-    entry: Your events
+    entry: My events
   page:
-    meta_title: Your events
-    title: Your events
-    subtitle: List of events you organize and events you are invited to
+    meta_title: My events
+    title: My events
+    subtitle: List of events I organize and events I am invited to
   table:
     event_name: Event name
     organiser: Organiser
