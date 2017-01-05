@@ -7,6 +7,10 @@
 #}
 
 
+{% block wizard_step_title %}{{ "event.wizard.profile.title"|trans }}
+    <small>{{ "event.wizard.profile.subtitle.text"|trans }}<br>
+    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}{{ "event.wizard.profile.subtitle.not_connected"|trans|raw }}{% endif %}</small>{% endblock %}
+
 {% block wizard_step %}
     {{ include('@App/Event/wizard/wizard_eventInvitation_profile_form.html.twig', {"userEventInvitation":userEventInvitation, "userEventInvitationForm":userEventInvitationForm }) }}
 {% endblock wizard_step %}

@@ -1,0 +1,24 @@
+{% extends "@App/Event/partials/event_invitations_form.html.twig" %}
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation à afficher (incluant l'événement concerné)
+- invitationsForm (Form) Formulaire permettant d'ajouter des emails
+#}
+
+
+{% block form_start %}
+    {{ form_start(invitationsForm , {'action':path('wizardNewEvent',{'token':userEventInvitation.event.token,
+        'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_INVITATIONS")})}) }}
+{% endblock form_start %}
+
+{% block action_buttons %}
+    <div class="text-center">
+        <a href="{{ path("displayEvent", {'token' : event.token}) }}" class="btn btn-default">{{ "global.button.skip"|trans}}</a>
+        <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")}) }}"
+           class="btn btn-default waves-effect">{{ "global.button.previousStep"|trans }}</a>
+        <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+            {{ "invitations.button.send_invitation"|trans }}</button>
+        <div class="visible-xs visible-sm m-b-10"></div>
+    </div>
+{% endblock action_buttons %}
+
+{% block js_document_ready %}{% endblock js_document_ready %}

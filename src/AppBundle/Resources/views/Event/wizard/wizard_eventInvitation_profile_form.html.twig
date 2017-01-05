@@ -5,25 +5,16 @@
 #}
 
 {% block form_start %}
-
-    {# TODO Il faut pouvoir rattacher l'invitation courante à l'utilisateur "connecté/inscris" et revenir sur cette page (voir dans l'action du wizard ?)
-    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-        <p>{{ "event.wizard.profile.paragraphe"|trans }}</p>
-        <p class="text-center">
-            <a data-toggle="modal" href="#modalRegistration" class="btn btn-default"> <i class="zmdi zmdi-sign-in"></i> <span> {{ 'layout.register'|trans({}, 'FOSUserBundle') }}</span></a> <a
-                    data-toggle="modal" href="#modalLogin" class="btn btn-default"> <i class="zmdi zmdi-power"></i> <span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</span></a></p>
-    {% endif %}#}
-
     {{ form_start(userEventInvitationForm, {
-        'action': path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")}),
-        'attr':{'id':'userEventInvitationProfile'}}) }}
+        'action': path('wizardNewEvent', {'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")})}) }}
 {% endblock form_start %}
 
 {% block action_buttons %}
     <div class="text-center">
-        {% if userEventInvitationForm is defined %}
-            <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
-        {% endif %}
+        <a href="{{ path("displayEvent", {'token' : event.token}) }}" class="btn btn-default">{{ "global.button.skip"|trans }}</a> <a
+                href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_MAIN")}) }}"
+                class="btn btn-default waves-effect">{{ "global.button.previousStep"|trans }}</a>
+        <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.nextStep"|trans }}</button>
     </div>
 {% endblock action_buttons %}
 

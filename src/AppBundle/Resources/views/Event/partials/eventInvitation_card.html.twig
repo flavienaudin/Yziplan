@@ -24,20 +24,7 @@
 
         {% if invitationsForm is not null %}
             <div class="m-t-10 palette-Teal-50 bg p-15">
-                {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),'attr':{'id':'eventInvitations'}}) }}
-                {{ form_row(invitationsForm.invitations, {
-                    'id':'eventInvitations_newEmails',
-                    'label':'invitations.form.invitations.label',
-                    'attr':{'class':'contacts'},
-                    'help':'invitations.form.invitations.help'|trans
-                }) }}
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}"
-                            data-original-text="{{ "invitations.button.send_invitation"|trans }}">
-                        {{ "invitations.button.send_invitation"|trans }}
-                    </button>
-                </div>
-                {{ form_end(invitationsForm) }}
+                {{ include("@App/Event/partials/event_invitations_form.html.twig", { 'userEventInvitation':userEventInvitation, 'invitationsForm':invitationsForm}) }}
             </div>
         {% endif %}
 
@@ -63,60 +50,6 @@
             {% if userEventInvitation.event.invitationOnly %}
             $('#event_public_invitation_display').hide();
             {% endif %}
-            {% endif %}
-
-            {% if invitationsForm is not null %}
-            $('#eventInvitations_newEmails').selectize({
-                persist: false,
-                maxItems: null,
-                placeholder: "{{ "invitations.form.invitations.placeholder"|trans }}",
-                valueField: 'value',
-                labelField: 'text',
-                searchField: ['text', 'value'],
-                hideSelected: true,
-                createOnBlur: true,
-                render: {
-                    item: renderUserAsItem,
-                    option: renderUserAsOption,
-                    option_create: renderOptionCreate
-                },
-                createFilter: createFilterEmail,
-                create: createUser
-                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                , preload: 'focus',
-                load: function (query, callback) {
-                    $.ajax({
-                        url: '{{ path('searchContacts') }}',
-                        data: {'search': query},
-                        type: 'POST',
-                        error: function () {
-                            callback();
-                        },
-                        success: function (res) {
-                            callback(res.slice(0, 15));
-                        }
-                    });
-                }
-                {% endif %}
-            });
-
-            $('form#eventInvitations').on('submit', function (e) {
-                if (!eventInvitationValid && askGuestName !== undefined) {
-                    e.preventDefault();
-                    askGuestName();
-                } else {
-                    ajaxFormSubmission(this, e, null, function(jqXHR, textStatus, errorThrown){
-                        if (jqXHR.hasOwnProperty('responseJSON')) {
-                            var responseJSON = jqXHR['responseJSON'];
-                            if(responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                if (!eventInvitationValid && askGuestName !== undefined) {
-                                    askGuestName();
-                                }
-                            }
-                        }
-                    }, null);
-                }
-            });
             {% endif %}
 
             if (isMobile()) {

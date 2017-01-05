@@ -41,6 +41,7 @@ class EventController extends Controller
 {
     const WIZARD_NEW_EVENT_STEP_MAIN = "main";
     const WIZARD_NEW_EVENT_STEP_PROFILE = "profile";
+    const WIZARD_NEW_EVENT_STEP_INVITATIONS = "invitations";
 
     /**
      * @Route("/new", name="createEvent")
@@ -76,8 +77,6 @@ class EventController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         } else {
-            $eventForm = null;
-            $eventInvitationForm = null;
             if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
                 if ($stepIndex == self::WIZARD_NEW_EVENT_STEP_MAIN) {
                     // Event Form :
@@ -98,20 +97,37 @@ class EventController extends Controller
                         'eventForm' => $eventForm->createView()
                     ));
                 } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_PROFILE) {
-                    // Invitation Form :
-                    $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
-                    $eventInvitationForm->handleRequest($request);
-                    if ($eventInvitationForm->isSubmitted()) {
-                        if ($eventInvitationForm->isValid()) {
-                            $eventInvitationManager->treatEventInvitationFormSubmission($eventInvitationForm);
+                    // Profile Form :
+                    /** @var Form $eventForm */
+                    $eventProfileForm = $eventInvitationManager->createEventInvitationForm();
+                    $eventProfileForm->handleRequest($request);
+                    if ($eventProfileForm->isSubmitted()) {
+                        if ($eventProfileForm->isValid()) {
+                            $eventInvitationManager->treatEventInvitationFormSubmission($eventProfileForm);
                             $this->addFlash(FlashBagTypes::INFO_TYPE, 'step 2 form valide');
-                            return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+                            return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_INVITATIONS));
                         }
                     }
                     return $this->render("@App/Event/wizard/step_event_profile.html.twig", array(
                         'event' => $currentEvent,
                         'userEventInvitation' => $userEventInvitation,
-                        'userEventInvitationForm' => $eventInvitationForm->createView()
+                        'userEventInvitationForm' => $eventProfileForm->createView()
+                    ));
+                } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_INVITATIONS) {
+                    // Invitations Form :
+                    $eventInvitationsForm = $eventManager->createEventInvitationsForm();
+                    $eventInvitationsForm->handleRequest($request);
+                    if ($eventInvitationsForm->isSubmitted()) {
+                        if ($eventInvitationsForm->isValid()) {
+                            $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm);
+                            $this->addFlash(FlashBagTypes::INFO_TYPE, 'step 3 form valide');
+                            return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+                        }
+                    }
+                    return $this->render("@App/Event/wizard/step_event_invitations.html.twig", array(
+                        'event' => $currentEvent,
+                        'userEventInvitation' => $userEventInvitation,
+                        'invitationsForm' => $eventInvitationsForm->createView()
                     ));
                 } else {
                     $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.wizard.error.message.wrong_step'));

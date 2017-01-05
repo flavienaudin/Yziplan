@@ -115,7 +115,7 @@ event:
       placeholder: Date limite de réponse
     whereName:
       label: "Où :"
-      placeholder: Où
+      placeholder: Chez moi, bar du coin, adresse,...
       help: "Tu sais déjà où ça va se passer ? Indique l'adresse ici."
       tootlip: Fixe le lieu où se déroule ton événement ou ajoute un sondage pour consulter tes invités
     when:
@@ -149,8 +149,19 @@ event:
 #      text.true: Les invités peuvent ajouter un module
 #      text.false: Les invités ne peuvent pas ajouter un module
   wizard:
+    main:
+      title: Description de l'événement
+      subtitle: Décris l'événement à tes invités. Tu peux donner la date et le lieu mais si tu ne les connais pas, la création de sondage te sera proposer dans une prochaine étape.
     profile:
-      paragraphe: Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant ou inscris-toi pour le prochain événement.
+      title: A propos de toi
+      subtitle:
+        text: Identifie-toi auprès de tes invités.
+        not_connected: |
+          Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant.<br>
+          Si tu t'inscris maintenant, copie l'adresse du navigateur pour reprendre l'organisation.
+    invitations:
+      title: Les invités
+      subtitle: Renseigne les adresses e-mail de tes invités. Ils recevront un message avec le lien de leur invitations personnelles.
     error.message:
       wrong_step: Une erreur dans le processus de création de l'événement s'est produite. Merci de re-essayer l'opération.
   error.message:
@@ -373,6 +384,7 @@ global:
     submit: Soumettre
     edit: Editer
     save: Sauvegarder
+    previousStep: Retour
     nextStep: Suivant
     delete: Supprimer
     add: Ajouter

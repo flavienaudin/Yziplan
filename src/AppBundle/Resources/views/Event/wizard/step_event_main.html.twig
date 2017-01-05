@@ -7,6 +7,9 @@
 #}
 
 
+{% block wizard_step_title %}
+    {{ "event.wizard.main.title"|trans }}<small>{{ "event.wizard.main.subtitle"|trans }}</small>{% endblock %}
+
 {% block wizard_step %}
     {{ include('@App/Event/wizard/wizard_event_edit_form.html.twig', {"userEventInvitation":userEventInvitation, "eventForm":eventForm }) }}
 {% endblock wizard_step %}
