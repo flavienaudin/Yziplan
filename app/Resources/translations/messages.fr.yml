@@ -163,11 +163,11 @@ event:
 
 eventInvitations:
   user_menu:
-    entry: Tes événements
+    entry: Mes événements
   page:
-    meta_title: Tes événements
-    title: Tes événements
-    subtitle: Liste des événements que tu organises et des invitations que tu as reçues
+    meta_title: Mes événements
+    title: Mes événements
+    subtitle: Liste des événements que j'organises et des invitations que j'ai reçues
   table:
     event_name: Nom de l'événement
     organiser: Organisateur

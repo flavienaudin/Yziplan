@@ -2009,6 +2009,13 @@ pre code {
     float: left;
 }
 
+@media (max-width: 767px) {
+    .col-xs-p-lr-0 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
 .col-xs-12 {
     width: 100%;
 }
@@ -2227,6 +2234,11 @@ pre code {
     .col-sm-11,
     .col-sm-12 {
         float: left;
+    }
+
+    .col-sm-p-lr-0 {
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .col-sm-12 {
@@ -2450,6 +2462,11 @@ pre code {
         float: left;
     }
 
+    .col-md-p-lr-0 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
     .col-md-12 {
         width: 100%;
     }
@@ -2669,6 +2686,11 @@ pre code {
     .col-lg-11,
     .col-lg-12 {
         float: left;
+    }
+
+    .col-lg-p-lr-0 {
+        padding-left: 0;
+        padding-right: 0;
     }
 
     .col-lg-12 {
@@ -9962,7 +9984,7 @@ pre {
 ----------------------------------*/
 
 .container {
-    padding: 0;
+    /*padding: 0;*/
 }
 
 .container.c-boxed {
@@ -9971,12 +9993,13 @@ pre {
 
 #main {
     position: relative;
-    padding-top: 70px;
+    padding-top: 90px;
 }
 
 @media (min-width: 1280px) {
     #main {
-        padding: 0 40px 30px;
+        padding-left: 40px;
+        padding-right: 40px;
         min-height: calc(100vh - 159px);
     }
 
@@ -9987,13 +10010,15 @@ pre {
 
 @media (max-width: 1279px) and (min-width: 768px) {
     #main {
-        padding: 0 40px 30px;
+        padding-left: 40px;
+        padding-right: 40px;
     }
 }
 
 @media (max-width: 767px) {
     #main {
-        padding: 0 0 30px;
+        /*padding-left: 0;
+        padding-right: 0;*/
     }
 }
 
@@ -10092,7 +10117,7 @@ pre {
     padding-right: 10px;
 }
 
-.h-menu > li.hm-new-event-link a{
+.h-menu > li.hm-new-event-link a {
     margin-top: 0;
     font-size: 14px;
     background-color: #fff;
@@ -15528,10 +15553,11 @@ body.o-hidden {
     top: -1px;
 }
 
-.wcl-form > form.fos_comment_comment_new_form + .media{
+.wcl-form > form.fos_comment_comment_new_form + .media {
     margin-top: 0;
 }
-.wcl-form > .media:last-child{
+
+.wcl-form > .media:last-child {
     margin-bottom: 15px;
 }
 
@@ -15540,7 +15566,7 @@ body.o-hidden {
 }
 
 .wcl-list .media:hover {
-    background-color:#EFEFEF;
+    background-color: #EFEFEF;
 }
 
 .wp-text {

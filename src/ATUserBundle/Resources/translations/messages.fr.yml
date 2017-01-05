@@ -69,18 +69,18 @@ resetting:
 
 profile:
   user_menu:
-    entry: Ton profil
+    entry: Mon profil
   show:
     page:
-      meta_title: Ton profil
-      title: Ton profil
+      meta_title: Mon profil
+      title: Mon profil
       avatar_update: Mettre à jour ton avatar
     tab:
       profile_information: Profil
       profile_contacts: Contacts
       profile_preferences: Préférences
     appuseremail:
-      title: Tes e-mails associés
+      title: Mes e-mails associés
       add_link: Associer un nouvel email
       waiting_validation: En attente de validation
       tooltip:
@@ -191,8 +191,8 @@ profile:
 
 contacts:
   left-menu:
-    title: Tes groupes
-    all_contacts: Tous tes contacts
+    title: Mes groupes
+    all_contacts: Tous mes contacts
     add_group:
       label: Nouveau
   menu:
