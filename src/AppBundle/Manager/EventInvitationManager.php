@@ -117,11 +117,13 @@ class EventInvitationManager
                 $this->eventInvitation = null;
             }
         } else {
-            // Un utilisateur connecté ne peut récupérer une invitation en session sinon il y a risque de récupération d'une invitation qui ne lui appartient pas
-            // De plus, un EventInvitation devrait déjà être créé pour lui s'il a déjà tenté de participer à l'événement (ou alors il n'était pas connecté , auquel cas
-            // une nouvelle invitation sera créée.
-            if ($user == null && $this->session->has(self::TOKEN_SESSION_KEY.'/'.$event->getToken())) {
-                $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'token' => $this->session->get(self::TOKEN_SESSION_KEY.'/'.$event->getToken())));
+            // TODO : confirmer : si on rajouter la condition : $user == null Alors :
+            // Un utilisateur connecté ne pourra pas récupérer une invitation en session sinon il y a risque de récupération d'une invitation qui ne lui appartient pas
+            // De plus, un EventInvitation devrait déjà être créé pour lui s'il a déjà tenté de participer à l'événement (ou alors il n'était pas connecté , auquel
+            // cas une nouvelle invitation sera créée.
+            // Sauf : que quand un organisateur se connecte/inscris, il ne peut retrouver le contrôle de l'organisation avec une nouvelle invitation
+            if ($this->session->has(self::TOKEN_SESSION_KEY . '/' . $event->getToken())) {
+                $this->eventInvitation = $eventInvitationRepo->findOneBy(array('event' => $event, 'token' => $this->session->get(self::TOKEN_SESSION_KEY . '/' . $event->getToken())));
             }
             if ($this->eventInvitation != null) {
                 if (!$this->authorizationChecker->isGranted(EventInvitationVoter::EDIT, $this->eventInvitation)) {
@@ -131,12 +133,18 @@ class EventInvitationManager
                         // On vérifie s'il est possible de rattacher l'invitation à l'utilisateur connecté
                         if ($this->eventInvitation->getApplicationUser() == null) {
                             $this->eventInvitation->setApplicationUser($user->getApplicationUser());
+                            if ($this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                                $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
+                            }
                             $this->persistEventInvitation();
                         } elseif ($this->eventInvitation->getApplicationUser()->getAccountUser() == null) {
                             // ApplicationUser de l'EventInvitation ne doit pas avoir d'AppUserEmail ni d'autre information (ni AppUserXxx, ni Contact, ni ContactGroup, ...)
                             // Sinon l'utilisateur aurait déjà récupéré les EventInvitation lors de son inscription
                             $this->applicationUserManager->mergeApplicationUsers($user->getApplicationUser(), $this->eventInvitation->getApplicationUser());
                             $this->eventInvitation->setApplicationUser($user->getApplicationUser());
+                            if ($this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                                $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
+                            }
                             $this->persistEventInvitation();
                         }
                     }
@@ -152,7 +160,7 @@ class EventInvitationManager
         }
         if ($saveInSession) {
             if ($this->eventInvitation != null) {
-                $this->session->set(self::TOKEN_SESSION_KEY.'/'.$event->getToken(), $this->eventInvitation->getToken());
+                $this->session->set(self::TOKEN_SESSION_KEY . '/' . $event->getToken(), $this->eventInvitation->getToken());
             } else {
                 $this->session->remove(self::TOKEN_SESSION_KEY);
             }
@@ -241,7 +249,7 @@ class EventInvitationManager
         $failedRecipients = (array)$failedRecipients;
         foreach ($emailsData as $email) {
             $eventInvitation = $this->getGuestEventInvitation($event, $email);
-            if($eventInvitation->getStatus() == EventInvitationStatus::CANCELLED){
+            if ($eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                 // Envoie d'une invitation => AWAITNG_ANSWER
                 $eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
             }
@@ -264,9 +272,9 @@ class EventInvitationManager
         $this->initializeEventInvitation($event, $applicationUser);
         $this->eventInvitation->setCreator(true);
         $this->eventInvitation->setAnswer(EventInvitationAnswer::YES);
-        if($applicationUser != null && $applicationUser->getAccountUser() instanceof AccountUser) {
+        if ($applicationUser != null && $applicationUser->getAccountUser() instanceof AccountUser) {
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
-        }else{
+        } else {
             $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
         }
         return $this->eventInvitation;

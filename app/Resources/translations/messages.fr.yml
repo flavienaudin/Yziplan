@@ -57,6 +57,11 @@ landing_page:
       alt: vacances
       title: Retrouvailles entre amis ?
       text: Organisez-vous avec vos amis pour savoir où et quand partir en week-end ou vacances !
+    chandeleur:
+      alt: Chandeleur
+      title: Chandeleur
+      text: Retrouvez-vous entre amis pour partager des crêpes pour la chandeleur !
+
 
 appuseremail:
   associate:
@@ -158,11 +163,11 @@ event:
 
 eventInvitations:
   user_menu:
-    entry: Tes événements
+    entry: Mes événements
   page:
-    meta_title: Tes événements
-    title: Tes événements
-    subtitle: Liste des événements que tu organises et des invitations que tu as reçues
+    meta_title: Mes événements
+    title: Mes événements
+    subtitle: Liste des événements que j'organise et des invitations que j'ai reçues
   table:
     event_name: Nom de l'événement
     organiser: Organisateur
@@ -204,6 +209,7 @@ eventInvitation:
       creator: Créateur
       administrator: Administrateur
     text:
+      connexion: Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant ou inscris-toi pour le prochain événement.
       disconnect: Tu n'es pas %user% ?
     guestname_required_alert:
       title: Quel est ton nom ?

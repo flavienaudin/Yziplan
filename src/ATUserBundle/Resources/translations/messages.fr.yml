@@ -21,7 +21,7 @@ register:
     already_an_account: Déjà un compte ?
   form_field:
     email: E-mail
-    publicName: Ton nom public
+    publicName: Mon nom public
   validation:
     email_already_used: Cet adresse e-mail est déjà utilisée
   check_email:
@@ -47,7 +47,7 @@ confirmed:
 change_password:
   page:
     meta_title: Modification du mot de passe
-    title: Modifier ton mot de passe
+    title: Modifier mon mot de passe
 
 resetting:
   check_email:
@@ -60,8 +60,8 @@ resetting:
       title: Mot de passe déjà requis
   reset:
     page:
-      meta_title: Initialisation de ton mot de passe
-      title: Initialisation de ton mot de passe
+      meta_title: Initialisation de mon mot de passe
+      title: Initialisation de mon mot de passe
   request:
     page:
       meta_title: Mot de passe oublié
@@ -69,18 +69,17 @@ resetting:
 
 profile:
   user_menu:
-    entry: Ton profil
+    entry: Mon profil
   show:
     page:
-      meta_title: Ton profil
-      title: Ton profil
-      avatar_update: Mettre à jour ton avatar
+      meta_title: Mon profil
+      title: Mon profil
     tab:
-      profile_information: Profil
-      profile_contacts: Contacts
-      profile_preferences: Préférences
+      profile_information: Mon Profil
+      profile_contacts: Mes Contacts
+      profile_preferences: Mes Préférences
     appuseremail:
-      title: Tes e-mails associés
+      title: Mes e-mails associés
       add_link: Associer un nouvel email
       waiting_validation: En attente de validation
       tooltip:
@@ -104,29 +103,29 @@ profile:
             none-selected-text: Type
           use_to_receive_email:
             label: Recevoir les notifications
-            help: Recevoir les notifications liées à cet e-mail dans sa boîte de réception plutôt que dans celle de l'e-mail de ton compte utilisateur.
+            help: Recevoir les notifications liées à cet e-mail dans sa boîte de réception plutôt que dans celle de l'e-mail de mon compte utilisateur.
           validation:
             email_already_used: Cet adresse e-mail est déjà associée à un compte
     profile_information:
       connexion_information:
-        title: Informations de connexion
+        title: Mes informations de connexion
         email:
           title: E-mail
           label: E-mail
           placeholder: E-mail
         password:
           title: Mot de passe
-          change: Modifier ton mot de passe
-          init: Initialiser ton mot de passe
+          change: Modifier mon mot de passe
+          init: Initialiser mon mot de passe
         social_network:
           title: Réseaux sociaux
       personal_information:
-        title: Informations Personnelles
+        title: Mes informations personnelles
         publicname:
           title: Nom public
           label: Nom public
           placeholder: Nom Public
-          help: Il s'agit de ton nom affiché publiquement par défault (par exemple pour les invitations ou ton profil public)
+          help: Il s'agit du nom affiché publiquement par défault (par exemple sur les invitations ou sur le profil public)
         firstname:
           title: Prénom
           label: Prénom
@@ -152,7 +151,7 @@ profile:
           label: Nationalité
           placeholder: Nationalité
       contact_details:
-        title: Coordonnées
+        title: Mes coordonnées
         living_country:
           title: Pays
           label: Pays
@@ -162,7 +161,7 @@ profile:
           label: Ville
           placeholder: Ville
       complementaries:
-        title: A propos de toi
+        title: A propos de moi
         marital_status:
           title: Situation Familiale
           label: Situation Familiale
@@ -170,18 +169,18 @@ profile:
         biography:
           title: Biographie
           label: Biographie
-          placeholder: Quelques mots à propos de toi...
-          empty: Tu n'as pas encore renseigné ta biographie
+          placeholder: Quelques mots à propos de moi...
+          empty: Je n'ai pas encore renseigné ma biographie
         interests:
           title: Centres d'intérêts
           label: Centres d'intérêts
-          placeholder: Quels sont tes centres d'intérêts...
-          empty: Tu n'as pas encore renseigné tes centres d'intérêts
+          placeholder: Quels sont mes centres d'intérêts...
+          empty: Je n'ai pas encore renseigné mes centres d'intérêts
         food_conveniences:
           title: Commodités Alimentaires
           label: Commodités Alimentaires
-          placeholder: Renseigne tes préférences et allergies alimentaires...
-          empty: Tu n'as pas encore renseigné tes commodités alimentaires
+          placeholder: Quelles sont mes préférences et allergies alimentaires...
+          empty: Je n'ai pas encore renseigné mes commodités alimentaires
   message:
     update:
       success: Informations mises à jour
@@ -191,8 +190,8 @@ profile:
 
 contacts:
   left-menu:
-    title: Tes groupes
-    all_contacts: Tous tes contacts
+    title: Mes groupes
+    all_contacts: Tous mes contacts
     add_group:
       label: Nouveau
   menu:

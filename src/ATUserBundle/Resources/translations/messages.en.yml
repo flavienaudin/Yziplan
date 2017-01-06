@@ -21,7 +21,7 @@ register:
     already_an_account: Already have an account?
   form_field:
     email: Email
-    publicName: Your public name
+    publicName: My public name
   validation:
     email_already_used: This email is already registered
   check_email:
@@ -74,13 +74,12 @@ profile:
     page:
       meta_title: My profile
       title: My profile
-      avatar_update: Update Profile Picture
     tab:
-      profile_information: Profile
-      profile_contacts: Contacts
-      profile_preferences: Preferences
+      profile_information: My Profile
+      profile_contacts: My Contacts
+      profile_preferences: My Preferences
     appuseremail:
-      title: Your associated emails
+      title: My associated emails
       add_link: Add a new email
       waiting_validation: Waiting email validation
       tooltip:
@@ -104,30 +103,30 @@ profile:
             none-selected-text: Type
           use_to_receive_email:
             label: Receive notifications
-            help: Receive notifications related to this email in its mailbox instead of the one of your email account.
+            help: Receive notifications related to this email in its mailbox instead of the one of my email account.
           validation:
             email_already_used: This email address is already associated to another account
 
     profile_information:
       connexion_information:
-        title: Connexion information
+        title: My login information
         email:
           title: Email
           label: Email
           placeholder: Email
         password:
           title: Password
-          change: Change your password
-          init: Initialize your password
+          change: Change my password
+          init: Initialize my password
         social_network:
           title: Social networks
       personal_information:
-        title: Basic Information
+        title: My Personnals
         publicname:
           title: Public Name
           label: Public Name
           placeholder: Public Name
-          help: This is your name displayed by default (for example in invitations or public profile)
+          help: This is my name displayed by default (for example in invitations or public profile)
         firstname:
           title: First Name
           label: First Name
@@ -153,7 +152,7 @@ profile:
           label: Nationality
           placeholder: Nationality
       contact_details:
-        title: Contact details
+        title: My contact details
         living_country:
           title: Country
           label: Country
@@ -163,7 +162,7 @@ profile:
           label: City
           placeholder: City
       complementaries:
-        title: A little more about you
+        title: A little more about me
         marital_status:
           title: Marital Status
           label: Marital Status
@@ -171,18 +170,18 @@ profile:
         biography:
           title: Biography
           label: Biography
-          placeholder: A little about your life...
-          empty: You didn't fill your biography yet
+          placeholder: A little about my life...
+          empty: I didn't fill my biography yet
         interests:
           title: Interests
           label: Interests
-          placeholder: A little about your insterests...
-          empty: You didn't fill your interests yet
+          placeholder: A little about my insterests...
+          empty: I didn't fill my interests yet
         food_conveniences:
           title: Food Conveniences
           label: Food Conveniences
-          placeholder: Describe your food ccnveniences (allergies or preferences) ...
-          empty: You didn't fill food conveniances yet
+          placeholder: Which are my food ccnveniences (allergies or preferences) ...
+          empty: I didn't fill my food conveniances yet
   message:
     update:
       success: Information updated
