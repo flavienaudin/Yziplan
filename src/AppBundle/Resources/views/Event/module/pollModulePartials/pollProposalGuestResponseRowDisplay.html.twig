@@ -31,16 +31,16 @@
                                         $(modals).first().modal('toggle');
                                     } else {
                                         ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
-                                        }, function (jqXHR, textStatus, errorThrown) {
-                                            if (jqXHR.hasOwnProperty('responseJSON')) {
-                                                var responseJSON = jqXHR['responseJSON'];
-                                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                                    if (!eventInvitationValid && askGuestName !== undefined) {
-                                                        askGuestName();
+                                                $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
+                                            }, function (jqXHR, textStatus, errorThrown) {
+                                                if (jqXHR.hasOwnProperty('responseJSON')) {
+                                                    var responseJSON = jqXHR['responseJSON'];
+                                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                                        if (!eventInvitationValid && askGuestName !== undefined) {
+                                                            askGuestName();
+                                                        }
                                                     }
                                                 }
-                                            }
                                         }, null);
                                     }
                                 }

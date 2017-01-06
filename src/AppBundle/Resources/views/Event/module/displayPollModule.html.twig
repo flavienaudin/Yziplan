@@ -44,11 +44,23 @@
             </table>
         </div>
         <div class="text-center m-20">
-                {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseTableDisplay.html.twig', {
-                    "moduleInvitations":module.moduleInvitations
-                }) }}
+            {# Conteneur pour la modale ajouté via ajax #}
+            <div id="pollModuleDisplayAllResult_{{ module.token }}_container"></div>
+            {#{{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseTableDisplay.html.twig', {
+                "moduleInvitations":module.moduleInvitations
+            }) }}
+#}
+            <a id="pollModuleDisplayAllResult_{{ module.token }}_button" role="button" href="{{ path('pollModuleDisplayResultTable', {"moduleToken": module.token }) }}"
+               class="btn btn-default waves-effect">Voir l'ensemble des réponses</a>
 
-            <a data-toggle="modal" href="#pollModuleDisplayAllResult_{{ module.token}}" class="btn btn-default waves-effect">Voir l'ensemble des réponses</a>
+            <script>
+                $('#pollModuleDisplayAllResult_{{ module.token }}_button').on('click', function (e) {
+                    ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
+                        LetterAvatar.transform();
+                       $('#pollModuleDisplayAllResult_{{ module.token }}_modale').modal('show');
+                    }, null, null);
+                });
+            </script>
         </div>
 
 

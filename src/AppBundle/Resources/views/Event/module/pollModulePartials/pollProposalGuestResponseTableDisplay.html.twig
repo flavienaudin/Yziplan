@@ -1,9 +1,10 @@
 {# Données d'entrée :
+- module ([Module]) module
 - moduleInvitations ([ModuleInvitation]) les invitations du module
 #}
 
 <div id="pollModuleDisplayAllResult_{{ module.token }}_container">
-    <div class="modal fade in" id="pollModuleDisplayAllResult_{{ module.token}}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade in" id="pollModuleDisplayAllResult_{{ module.token }}_modale" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -17,7 +18,7 @@
                             <tr>
                                 <th class="pollproposal-column" style="width: 100px !important;"></th>
                                 {% for moduleInvitation in moduleInvitations %}
-                                    <td class="dt-head-center">
+                                    <td class="dt-body-center" style="width:40px">
                                         <div class="avatar-img-container-sm center-block m-5">
                                             {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
                                         </div>
@@ -41,25 +42,25 @@
                                     {% for moduleInvitation in moduleInvitations %}
                                         {% set pollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
                                         {#{% if pollProposalResponse is not null %}#}
-                                            <td class="dt-body-center">
-                                                {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
-                                                    {{ pollProposalResponse is null or pollProposalResponse.answer is null?0:pollProposalResponse.answer }}
-                                                {% else %}
-                                                    {% if pollProposalResponse is not null %}
-                                                        {% if pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
-                                                            <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
-                                                        {% elseif pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
-                                                            <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
-                                                        {% elseif pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
-                                                            <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>
-                                                        {% else %}
-                                                            <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
-                                                        {% endif %}
+                                        <td class="dt-body-center" style="width:40px">
+                                            {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
+                                                {{ pollProposalResponse is null or pollProposalResponse.answer is null?0:pollProposalResponse.answer }}
+                                            {% else %}
+                                                {% if pollProposalResponse is not null %}
+                                                    {% if pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
+                                                        <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
+                                                    {% elseif pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
+                                                        <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                                                    {% elseif pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
+                                                        <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>
                                                     {% else %}
-                                                        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline"></i></span>
+                                                        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
                                                     {% endif %}
+                                                {% else %}
+                                                    <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline"></i></span>
                                                 {% endif %}
-                                            </td>
+                                            {% endif %}
+                                        </td>
                                         {#{% endif %}#}
                                     {% endfor %}
                                 </tr>
