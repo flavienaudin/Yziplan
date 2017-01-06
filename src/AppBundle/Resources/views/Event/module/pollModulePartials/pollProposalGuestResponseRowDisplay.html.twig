@@ -4,7 +4,7 @@
 - moduleInvitations ([ModuleInvitaion]) les invitations du module
 #}
 
-<tr>
+<tr id="pp_display_row_{{ pollProposal.id }}">
     {# Affichage de la proposition ################################################################################################################################################################ #}
     <td>
         <div class="media">
@@ -62,9 +62,7 @@
                                     }).then(function () {
                                         ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
                                             if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable()
-                                                    .row($('#pp_display_row_{{ pollProposal.id }}'))
-                                                    .remove().draw();
+                                                $('#pp_display_row_{{ pollProposal.id }}').remove();
                                                 var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
                                                 $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
                                                     $(this).remove();
@@ -105,7 +103,7 @@
         {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_result.html.twig', {
             "pollProposal":pollProposal,
             "userModuleInvitation":userModuleInvitation,
-            "moduleInvitations":module.moduleInvitations
+            "moduleInvitations":moduleInvitations
         }) }}
     </td>
 
@@ -115,13 +113,13 @@
             {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_vote_amount.html.twig', {
                 "pollProposal":pollProposal,
                 "userModuleInvitation":userModuleInvitation,
-                "moduleInvitations":module.moduleInvitations
+                "moduleInvitations":moduleInvitations
             }) }}
         {% else %}{# Dans le cas d'un yes/maybe/no ou d'un yes/no #}
             {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_vote_yesno.html.twig', {
                 "pollProposal":pollProposal,
                 "userModuleInvitation":userModuleInvitation,
-                "moduleInvitations":module.moduleInvitations
+                "moduleInvitations":moduleInvitations
             }) }}
         {% endif %}
     </td>

@@ -23,7 +23,7 @@
     {{ parent() }}
     {% if module.pollModule is not null %}
         <div class="w-100 poll-container">
-            <table id="pollmodule-table-{{ module.token }}2" class="table-striped w-100">
+            <table id="pollmodule-table-{{ module.token }}" class="table-striped w-100">
                 {#                <thead>
                                 <tr>
                                     <td>Description</td>
@@ -43,10 +43,12 @@
                 </tbody>
             </table>
         </div>
-        <div class="text-center">
-            <button>
+        <div class="text-center m-20">
+                {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseTableDisplay.html.twig', {
+                    "moduleInvitations":module.moduleInvitations
+                }) }}
 
-            </button>
+            <a data-toggle="modal" href="#pollModuleDisplayAllResult_{{ module.token}}" class="btn btn-default waves-effect">Voir l'ensemble des réponses</a>
         </div>
 
 

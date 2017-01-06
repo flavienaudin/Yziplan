@@ -1,0 +1,74 @@
+{# Données d'entrée :
+- moduleInvitations ([ModuleInvitation]) les invitations du module
+#}
+
+<div id="pollModuleDisplayAllResult_{{ module.token }}_container">
+    <div class="modal fade in" id="pollModuleDisplayAllResult_{{ module.token}}" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Résultats</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive">
+                        <table id="pollmodule-table-{{ module.token }}" class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th class="pollproposal-column" style="width: 100px !important;"></th>
+                                {% for moduleInvitation in moduleInvitations %}
+                                    <td class="dt-head-center">
+                                        <div class="avatar-img-container-sm center-block m-5">
+                                            {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                        </div>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                            </thead>
+                            <tbody class="palette-Grey-100 bg m-b-15" id="pp-row-group-{{ module.token }}">
+
+                            {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
+                                <tr>
+                                    <td class="text-left" style="width: 100px !important;">
+                                        <span {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
+                                            {% for ppElt in pollProposal.pollProposalElements %}
+                                                {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?ppElt.value|localizeddate:ppElt.value }}
+                                                {% if not loop.last %}<br>{% endif %}
+                                            {% endfor %}
+                                        </span>
+                                    </td>
+
+                                    {% for moduleInvitation in moduleInvitations %}
+                                        {% set pollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
+                                        {#{% if pollProposalResponse is not null %}#}
+                                            <td class="dt-body-center">
+                                                {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
+                                                    {{ pollProposalResponse is null or pollProposalResponse.answer is null?0:pollProposalResponse.answer }}
+                                                {% else %}
+                                                    {% if pollProposalResponse is not null %}
+                                                        {% if pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
+                                                            <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
+                                                        {% elseif pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
+                                                            <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                                                        {% elseif pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
+                                                            <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>
+                                                        {% else %}
+                                                            <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline"></i></span>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                        {#{% endif %}#}
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
