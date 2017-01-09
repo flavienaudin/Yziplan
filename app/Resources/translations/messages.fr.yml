@@ -242,13 +242,16 @@ eventInvitation:
         hello: "Bonjour %username%!"
         paragraph: "Tu participes à l'organisation de l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier ta participation, utilise le lien ci-dessous :"
 
-invitation_list:
+invitations_list:
   display:
     title: Liste des invités
+    all_answers: Voir l'ensemble des invitations
+    new_invitations: "Inviter des amis"
     list:
-      yes: "Ils seront là :"
-      maybe: "Ils n'ont pas encore répondu :"
-      no: "Ils ont décliné l'invitation :"
+      yes: "Ils seront là (%number%)"
+      dont_know: "Ils sont encore indécis (%number%)"
+      no: "Ils ont décliné l'invitation (%number%)"
+  no_answer: Pas encore de réponse
 
 invitations:
   display:

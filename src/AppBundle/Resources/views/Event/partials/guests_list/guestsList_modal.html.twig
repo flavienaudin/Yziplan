@@ -1,0 +1,63 @@
+{# Données d'entrée:
+- userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
+- eventInvitation_answer_yes (array) Liste des invitations ayant répondu YES
+- eventInvitation_answer_dont_know (array) Liste des invitations ayant répondu DONT_KNOW/MAYBE
+- eventInvitation_answer_no (array) Liste des invitations ayant répondu NO
+#}
+
+<div class="modal fade" id="guestsList_modal" tabindex="-1" role="dialog" aria-labelledby="guestsList_modal_title">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                <h4 class="modal-title" id="guestsList_modal_title">{{ "invitations_list.display.title"|trans }}</h4>
+            </div>
+            <div class="modal-body p-0">
+                <div class="list-group text-center">
+                    <div class="list-group-item">
+                        <small>{{ "invitations_list.display.list.yes"|trans({"%number%":eventInvitation_answer_yes|length}) }}</small>
+                        {% if eventInvitation_answer_yes|length>0 %}
+                            <ul class="list-inline eventInvitations_list">
+                                {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
+                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
+                                {% endif %}
+                                {% for eventInvitation in eventInvitation_answer_yes if eventInvitation != userEventInvitation %}
+                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item">
+                        <small>{{ "invitations_list.display.list.dont_know"|trans({"%number%":eventInvitation_answer_dont_know|length}) }}</small>
+                        {% if eventInvitation_answer_dont_know|length>0 %}
+                            <ul class="list-inline eventInvitations_list">
+                                {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') %}
+                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
+                                {% endif %}
+                                {% for eventInvitation in eventInvitation_answer_dont_know if eventInvitation != userEventInvitation %}
+                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                    <div class="list-group-item">
+                        <small>{{ "invitations_list.display.list.no"|trans ({"%number%":eventInvitation_answer_no|length}) }}</small>
+                        {% if eventInvitation_answer_no|length>0 %}
+                            <ul class="list-inline eventInvitations_list">
+                                {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
+                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
+                                {% endif %}
+                                {% for eventInvitation in eventInvitation_answer_no if eventInvitation != userEventInvitation %}
+                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
+            </div>
+        </div>
+    </div>
+</div>

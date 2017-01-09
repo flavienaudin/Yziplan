@@ -9983,10 +9983,6 @@ pre {
     LAYOUT
 ----------------------------------*/
 
-.container {
-    /*padding: 0;*/
-}
-
 .container.c-boxed {
     max-width: 1200px;
 }
@@ -10016,10 +10012,16 @@ pre {
 }
 
 @media (max-width: 767px) {
-    #main {
-        /*padding-left: 0;
-        padding-right: 0;*/
+    #content > .container {
+        padding-left: 0;
+        padding-right: 0;
     }
+
+    #content > .container .row{
+        margin-left: 0;
+        margin-right: 0;
+    }
+
 }
 
 /*---------------------------------

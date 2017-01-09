@@ -2,7 +2,6 @@
 Données d'entrée :
 - userEventInvitation (EventInvitation) Invitation de l'utilisateur de l'utilisateur
 - userEventInvitationForm (Form) Formulaire permettant de répondre à l'invitation
-- userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
 <div class="card c-dark z-depth-1" id="user-event-invitation-card">
@@ -13,12 +12,6 @@ Données d'entrée :
         {{ include('@App/Event/partials/profile/eventInvitation_profile_form.html.twig',{
             'userEventInvitation' : userEventInvitation,
             'userEventInvitationForm' : userEventInvitationForm
-        }) }}
-    </div>
-    <div class="card-body card-padding-sm">
-        {{ include('@App/Event/partials/profile/eventInvitation_profile_answer_form.html.twig',{
-            'userEventInvitation' : userEventInvitation,
-            'userEventInvitationAnswerForm' : userEventInvitationAnswerForm
         }) }}
     </div>
 

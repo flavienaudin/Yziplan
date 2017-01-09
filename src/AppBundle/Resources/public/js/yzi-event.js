@@ -4,11 +4,9 @@
 
 $(document).ready(function () {
     initialiseYziplanMasonry();
-    reorderCard();
     $('.grid').masonry('layout');
 
     window.onresize = function (event) {
-        reorderCard();
         $('.grid').masonry('layout');
     };
 
@@ -62,6 +60,7 @@ function initPollProposalWhereElements(selectorFieldsPlaceName, selectorPlaceId)
 
 // ScreenSize represente l'état précédent le redimensionnement (screen<768, 768<=screen<1200, 1200<=screen) pour ne rien faire si pas nécessaire
 // Pour éviter le bug lors de l'affichage du clavier sous Android qui redimensionne la fenetre et recache le clavier
+/* TODO Plus utilisée : à supprimer quand le layout sera validé
 var screenSize = -1;
 function reorderCard() {
     // Changement de position des div liste d'invité et
@@ -92,7 +91,7 @@ function reorderCard() {
         }
         invitationCard.insertAfter('#guestListCard');
     }
-}
+}*/
 
 function initialiseYziplanMasonry() {
     $('.grid').masonry({

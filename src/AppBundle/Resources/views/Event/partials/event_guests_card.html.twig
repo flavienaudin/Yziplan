@@ -1,0 +1,29 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
+- event (Event) L'événement courant pour afficher les invitations
+- userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
+#}
+
+
+<div class="card c-dark z-depth-1">
+    <div class="card-header palette-Teal bg">
+        <h2>{{ "invitations_list.display.title"|trans }}</h2>
+    </div>
+
+    <div class="card-body">
+        {{ include('@App/Event/partials/profile/eventInvitation_profile_answer_form.html.twig',{
+            'userEventInvitation' : userEventInvitation,
+            'userEventInvitationAnswerForm' : userEventInvitationAnswerForm
+        }) }}
+    </div>
+
+    <div class="card-body">
+        {{ include("@App/Event/partials/guests_list/guestsList_card_body.html.twig", {
+            'userEventInvitation' : userEventInvitation,
+            'event':event}) }}
+    </div>
+
+    <div class="card-footer ">
+        <a href="#" class="btn btn-lg btn-block btn-primary" data-toggle="modal"><i class="zmdi zmdi-email m-r-5"></i> {{ "invitations_list.display.new_invitations"|trans }}</a>
+    </div>
+</div>

@@ -242,13 +242,16 @@ eventInvitation:
         hello: "Hi %username%!"
         paragraph: "You participate to the organization of event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
 
-invitation_list:
+invitations_list:
   display:
     title: Guests list
+    all_answers: See all the invitations
+    new_invitations: "Invite friends"
     list:
-      yes: "They will be there:"
-      maybe: "They didn't answer yet:"
-      no: "They won't come:"
+      yes: "They will be there (%number%)"
+      dont_know: "They are still undecided (%number%)"
+      no: "They won't come (%number%)"
+  no_answer: No answer yet
 
 invitations:
   display:
