@@ -443,19 +443,6 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
-/* Fix : au dessus des éléments .active */
-.DTFC_LeftWrapper {
-    z-index: 5;
-}
-
-/* Surcharge datatable.css */
-table.dataTable.compact thead th,
-table.dataTable.compact thead td,
-table.dataTable.compact tbody th,
-table.dataTable.compact tbody td {
-    padding: 0 1px;
-}
-
 table.dataTable td.dataTables_empty {
     text-align: center !important;
     width: 100% !important;
@@ -479,6 +466,19 @@ table.dataTable td.dataTables_empty {
     text-align: center;
 }
 
+.poll-response table td.pollproposal-column {
+    min-width: 200px;
+    max-width: 400px;
+    width: 300px;
+    text-align: left;
+    white-space: normal !important;
+    padding-left: 10px !important;
+}
+
+.poll-response table td.response-column {
+    width: 40px !important;
+    padding: 0;
+}
 
 
 /*.poll-container .dataTables_scroll table td:last-child {
