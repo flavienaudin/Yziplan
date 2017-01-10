@@ -316,5 +316,17 @@ class ModuleManager
         }
     }
 
+    /**
+     * @param Module $module Le module à afficher
+     * @return string La vue HTML sous forme de string
+     */
+    public function displayPollModuleResultTable(Module $module)
+    {
+        return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalGuestResponseTableDisplay.html.twig", array(
+            "module" => $module,
+            "moduleInvitations" => $module->getModuleInvitations()
+        ));
+    }
+
 
 }

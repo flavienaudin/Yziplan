@@ -12,4 +12,16 @@ use Doctrine\ORM\EntityRepository;
  */
 class PollProposalRepository extends EntityRepository
 {
+    public function findOrderedByEventToken($eventToken)
+    {
+        $query = $this->getEntityManager()->createQuery(
+            "SELECT m, -m.orderIndex AS HIDDEN inversedOrderIndex FROM ".Module::class." m WHERE m.event = 
+                          (SELECT e FROM ".Event::class." e WHERE e.token = :eventToken)
+                          ORDER BY inversedOrderIndex DESC"
+        );
+        $query->execute(array(
+            'eventToken' => $eventToken
+        ));
+        return $query->getResult();
+    }
 }

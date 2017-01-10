@@ -334,6 +334,13 @@ pollmodule:
     whobringswhat: Qui apporte quoi ?
   display:
     no_proposal: Pas encore de proposition
+    result:
+     vote: vote(s)
+     contribution: contribution(s)
+     total: "Total :"
+     allresult: Voir l'ensemble des réponses
+     modal:
+      title: Réponses
   modal:
     addPollProposal:
       title: Ajouter une proposition

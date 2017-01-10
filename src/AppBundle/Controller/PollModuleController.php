@@ -9,6 +9,7 @@
 namespace AppBundle\Controller;
 
 
+use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Utils\enum\EventInvitationStatus;
@@ -81,6 +82,7 @@ class PollModuleController extends Controller
         }
     }
 
+
     /**
      * @Route("/pollproposal/remove/{pollProposalId}/{moduleInvitationToken}", name="removePollProposal")
      * @ParamConverter("pollProposal", class="AppBundle:Module\PollProposal", options={"id" = "pollProposalId"})
@@ -108,5 +110,24 @@ class PollModuleController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.unauthorized_access'));
             return $this->redirectToRoute("home");
         }
+    }
+
+    /**
+     * @Route("/result/display/{moduleToken}", name="pollModuleDisplayResultTable")
+     * @ParamConverter("module", class="AppBundle:Event\Module", options={"mapping" = {"moduleToken":"token"}})
+     */
+    public function displayResultTableAction(Module $module, Request $request)
+    {
+            if ($request->isXmlHttpRequest()) {
+                $moduleManager = $this->get("at.manager.module");
+                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollModuleDisplayAllResult_'.$module->getToken().'_container'] =
+                    $moduleManager->displayPollModuleResultTable($module);
+                return new AppJsonResponse($data, Response::HTTP_OK);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
+                return $this->redirectToRoute("home");
+            }
+
+
     }
 }

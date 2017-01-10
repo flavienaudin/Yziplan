@@ -334,6 +334,13 @@ pollmodule:
     whobringswhat: Who brings what?
   display:
     no_proposal: No proposal yet
+    result:
+      vote: vote(s)
+      contribution: contribution(s)
+      total: "Total:"
+      allresult: Show all answers
+      modal:
+        title: Answers
   modal:
     addPollProposal:
       title: Add a proposal

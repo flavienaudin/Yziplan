@@ -75,7 +75,7 @@ class PollProposalManager
         return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig", array(
             'pollProposal' => $pollProposal,
             'userModuleInvitation' => $userModuleInvitation,
-            'moduleInvitations' => $pollProposal->getPollModule()->getModule()->getFilteredModuleInvitations(ModuleInvitationManager::MAX_COLUMN_DISPLAYABLE, [$userModuleInvitation])
+            'moduleInvitations' => $pollProposal->getPollModule()->getModule()->getFilteredModuleInvitations(ModuleInvitationManager::MAX_COLUMN_DISPLAYABLE)
         ));
     }
 
