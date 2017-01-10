@@ -554,9 +554,13 @@ table.dataTable td.dataTables_empty {
     position: absolute;
     top: 0;
     left: 0;
-    margin: 0 2px;
 }
 
+.pollproposalamount-response {
+    width:50px;
+    display: table;
+    margin: 0 auto;
+}
 /*---------------------------------
     Help popover
 ---------------------------------*/

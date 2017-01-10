@@ -79,13 +79,11 @@
                 var newContent = null;
                 if (data['value'] == '{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}') {
                     newContent = '<span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>';
-                    $('#pollProposalReponse_{{ pollProposal.id }}_yes input').click();
                     $('#pollProposalReponse_{{ pollProposal.id }}_yes').toggleClass('active');
                     $('#pollProposalReponse_{{ pollProposal.id }}_maybe').removeClass('active');
                     $('#pollProposalReponse_{{ pollProposal.id }}_no').removeClass('active');
                 } else if (data['value'] == '{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}') {
                     newContent = '<span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>';
-                    $('#pollProposalReponse_{{ pollProposal.id }}_yes input').click();
                     $('#pollProposalReponse_{{ pollProposal.id }}_maybe').toggleClass('active');
                     $('#pollProposalReponse_{{ pollProposal.id }}_yes').removeClass('active');
                     $('#pollProposalReponse_{{ pollProposal.id }}_no').removeClass('active');
