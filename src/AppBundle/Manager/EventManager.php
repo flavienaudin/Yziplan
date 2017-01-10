@@ -166,6 +166,9 @@ class EventManager
         if ($this->event->getStatus() == EventStatus::IN_CREATION) {
             $this->event->setStatus(EventStatus::IN_ORGANIZATION);
         }
+        if (empty($this->event->getWhereName())) {
+            $this->event->setWhereGooglePlaceId(null);
+        }
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
 
@@ -204,7 +207,7 @@ class EventManager
             if ($duplicateModules) {
                 /** @var Module $originalModule */
                 foreach ($event->getModules() as $originalModule) {
-                    if($originalModule->getStatus() == ModuleStatus::IN_ORGANIZATION) {
+                    if ($originalModule->getStatus() == ModuleStatus::IN_ORGANIZATION) {
                         /** @var Module $duplicatedModule */
                         $duplicatedModule = $this->moduleManager->duplicateModule($originalModule);
                         $duplicatedEvent->addModule($duplicatedModule);
@@ -261,7 +264,7 @@ class EventManager
 
 
         // Create the thread after the module affectation to its event because of the thread ID is generate with the event token
-        $this->discussionManager->createCommentableThread($module );
+        $this->discussionManager->createCommentableThread($module);
 
         return $module;
     }

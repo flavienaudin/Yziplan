@@ -93,15 +93,14 @@ event:
       new_event: New event
   header:
     organised_by: "Organised by %creator%"
-    tootltip:
-      edit: Edit the event
-      duplicate: Duplicate the event
   picture:
     link: Change the picture
     update_modal:
       title: Upload a picture
       button:
         submit_title: Upload the picture and use it for the event
+  modal.edit:
+      title: Edit the event
   form:
     name:
       label: Title
@@ -115,7 +114,7 @@ event:
       placeholder: Response deadline
     whereName:
       label: "Where:"
-      placeholder: Where
+      placeholder: At home, bar on the corner, address...
       help: "You already know where the event will take place? Say it here"
       tootlip: Set where your event will take place or add a poll to consult your guest
     when:
@@ -148,6 +147,22 @@ event:
 #      placeholder: Guests can add module
 #      text.true: Guests can add module to the event
 #      text.false: Guests can not add module to the event
+  wizard:
+    main:
+      title: Description de l'événement
+      subtitle: Décris l'événement à tes invités. Tu peux donner la date et le lieu mais si tu ne les connais pas, la création de sondage te sera proposée dans une prochaine étape.
+    profile:
+      title: About you
+      subtitle:
+        text: Identify yourself to your guest.<br>
+        not_connected: |
+          If you already have an account, login to automatically fill the following information.<br>
+          If you subscrire now, copy the browser URL to come back here.
+    invitations:
+      title: The guests
+      subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link..
+    error.message:
+      wrong_step: An error in the event creation process occrured. Pleaze, try again the operation.
   error.message:
     creation: An error occured while creating an event.
     unauthorized_access: You have not the authorization to access this event.
@@ -381,7 +396,8 @@ global:
     submit: Submit
     edit: Edit
     save: Save
-    nextStep: Next step
+    previousStep: Previous
+    nextStep: Next
     delete: Delete
     add: Add
     loading: In progress...
@@ -390,6 +406,7 @@ global:
     set: Set
     poll: Survey
     close: Close
+    skip: Skip
   success:
     data_saved: Information saved
   error:

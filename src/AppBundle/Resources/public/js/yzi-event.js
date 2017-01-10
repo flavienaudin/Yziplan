@@ -13,26 +13,6 @@ $(document).ready(function () {
     new Clipboard("#btn_url_event_public_invitation");
     new Clipboard('#btn_copy_invitation_url');
 
-    /** Event Edit Toggle */
-    if ($('[data-event-header-action]')[0]) {
-        $('body').on('click', '[data-event-header-action]', function (e) {
-            e.preventDefault();
-            var d = $(this).data('event-header-action');
-            var t = $(this).data('event-header-action-target');
-
-            if (d === "edit") {
-                $(t).toggleClass('toggled');
-                $('.grid').masonry('layout');
-            }
-            if (d === "reset") {
-                $(t).removeClass('toggled');
-                $('.grid').masonry('layout');
-            }
-
-            initEventEditMap();
-        });
-    }
-
     $('textarea, .auto-size').on('autosize:resized', function () {
         $('.grid').masonry('layout');
     });
@@ -40,24 +20,6 @@ $(document).ready(function () {
 });
 
 /** Fonctions relatives à la page d'événement */
-
-/**
- * Active l'autocomplétion (GooglePlace) pour les champs WHERE de formulaire et ajoute un listener pour mettre à jour un champ HIDDEN dédié
- */
-function initPollProposalWhereElements(selectorFieldsPlaceName, selectorPlaceId) {
-    var autocompletes = [];
-    $(selectorFieldsPlaceName).each(function () {
-        var placeNameInput = $(this);
-        var autocomplete = new google.maps.places.Autocomplete(placeNameInput[0]);
-        google.maps.event.addListener(autocomplete, 'place_changed', function () {
-            var inputHidden = placeNameInput.closest('.form-group').next(selectorPlaceId);
-            inputHidden.val(autocomplete.getPlace().place_id);
-        });
-        autocompletes.push(autocomplete);
-
-    });
-    return autocompletes;
-}
 
 // ScreenSize represente l'état précédent le redimensionnement (screen<768, 768<=screen<1200, 1200<=screen) pour ne rien faire si pas nécessaire
 // Pour éviter le bug lors de l'affichage du clavier sous Android qui redimensionne la fenetre et recache le clavier
