@@ -56,6 +56,12 @@
     stroke-width: 4;
 }
 
+.center-content {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /*---------------------------------
     Avertisseur Ajax requis sur le site
 ----------------------------------*/
@@ -446,47 +452,65 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
-/* Fix : au dessus des éléments .active */
-.DTFC_LeftWrapper {
-    z-index: 5;
-}
-
-/* Surcharge datatable.css */
-table.dataTable.compact thead th,
-table.dataTable.compact thead td,
-table.dataTable.compact tbody th,
-table.dataTable.compact tbody td {
-    padding: 0 1px;
+table.dataTable td.dataTables_empty {
+    text-align: center !important;
+    width: 100% !important;
 }
 
 .poll-container table td {
-    min-width: 40px;
-    max-width: 40px;
-    width: 40px;
-    text-align: center;
+    padding: 3px;
+!important;
 }
 
-.poll-container table th.pollproposal-column {
-    text-align: left;
-    font-weight: bold;
-    min-width: 150px !important;
-    max-width: 300px !important;
+.poll-container table td.response-column {
+    min-width: 50px;
+    max-width: 120px;
+    width: 60px;
+    text-align: center;
 }
 
 .poll-container table td.voting-column {
     min-width: 40px;
-    max-width: 50px;
+    max-width: 100px;
+    width: 40px;
+    text-align: center;
 }
 
-.poll-container table td.end-spacer {
-    min-width: 0;
-    max-width: none;
-    width: auto;
+.poll-response table td.pollproposal-column {
+    min-width: 200px;
+    max-width: 400px;
+    width: 300px;
+    text-align: left;
+    white-space: normal !important;
+    padding-left: 10px !important;
 }
 
-table.dataTable td.dataTables_empty {
-    text-align: center !important;
-    width: 100% !important;
+.poll-response table td.response-column {
+    width: 40px !important;
+    padding-top: auto;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.pollmodule-nopropal {
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 5px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+
+    text-align: center;
+    font-style: italic;
+    border-top: solid;
+    border-bottom: solid;
+}
+
+.table-striped > tbody > tr:nth-of-type(even) .progress {
+    background-color: #f5f5f5;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) .progress {
+    background-color: white;
 }
 
 /*.poll-container .dataTables_scroll table td:last-child {
@@ -528,6 +552,17 @@ table.dataTable td.dataTables_empty {
     color: white !important;
 }
 
+.pollresponse-preloader {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.pollproposalamount-response {
+    width:50px;
+    display: table;
+    margin: 0 auto;
+}
 /*---------------------------------
     Help popover
 ---------------------------------*/

@@ -16,6 +16,7 @@ $(document).ready(function () {
     $('textarea, .auto-size').on('autosize:resized', function () {
         $('.grid').masonry('layout');
     });
+
 });
 
 /** Fonctions relatives à la page d'événement */
@@ -63,5 +64,7 @@ function initialiseYziplanMasonry() {
         percentPosition: true
     });
 }
+
+
 
 
