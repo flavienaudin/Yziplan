@@ -22,7 +22,7 @@
 {% block moduleBody %}
     {{ parent() }}
     {% if module.pollModule is not null %}
-        {% if module.pollModule.getValidPollProposal is not empty %}
+        {% set proposalList = module.pollModule.getValidPollProposal %}
             <div class="w-100 poll-container">
                 <table id="pollmodule-table-{{ module.token }}" class="table-striped w-100">
                     {#                <thead>
@@ -49,7 +49,7 @@
                 <div id="pollModuleDisplayAllResult_{{ module.token }}_container"></div>
 
                 <a id="pollModuleDisplayAllResult_{{ module.token }}_button" role="button" href="{{ path('pollModuleDisplayResultTable', {"moduleToken": module.token }) }}"
-                   class="btn btn-default waves-effect">{{ "pollmodule.display.result.allresult"|trans }}</a>
+                   class="btn btn-default waves-effect" {% if proposalList is empty %}style="display: none;"{% endif %}>{{ "pollmodule.display.result.allresult"|trans }}</a>
 
                 <script>
                     $('#pollModuleDisplayAllResult_{{ module.token }}_button').on('click', function (e) {
@@ -60,9 +60,15 @@
                     });
                 </script>
             </div>
-        {% else %}
-            <div class="pollmodule-nopropal">
+        {% if proposalList is empty %}
+            <div id="pollmodule-nopropal_{{ module.token }}" class="pollmodule-nopropal">
                 {{ "pollmodule.display.no_proposal"|trans }}
+                <script>
+                    $('#pollmodule-table-{{ module.token }}').bind("DOMSubtreeModified", function(e){
+                        $("#pollmodule-nopropal_{{ module.token }}").hide();
+                        $("#pollModuleDisplayAllResult_{{ module.token }}_button").show();
+                    })
+                </script>
             </div>
         {% endif %}
         {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
