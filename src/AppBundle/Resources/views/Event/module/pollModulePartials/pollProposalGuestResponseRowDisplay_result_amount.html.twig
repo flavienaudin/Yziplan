@@ -5,6 +5,7 @@
 #}
 
 {% set numberOfResponse = 0 %}
+{% set totalOfResponse = 0 %}
 <div class="modal fade in" id="modalPollProposal{{ pollProposal.id }}" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -19,26 +20,36 @@
                     {% for moduleInvitation in moduleInvitations %}
                         {% set guestPollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
                         {% if guestPollProposalResponse is not null %}
-                            {% set numberOfResponse = numberOfResponse + 1 %}
-                            <tr>
-                                <td>
-                                    <div class="avatar-img-container-sm center-block m-b-5">
-                                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
-                                    </div>
-                                </td>
-                                <td>
-                                    {{ moduleInvitation.getDisplayableName }}
-                                </td>
-                                <td>
-                                    {{ guestPollProposalResponse is null or guestPollProposalResponse.answer is null?0:guestPollProposalResponse.answer }}
-                                </td>
-                            </tr>
+                            {% set quantity = guestPollProposalResponse is null or guestPollProposalResponse.answer is null?0:guestPollProposalResponse.answer %}
+                            {% if quantity > 0 %}
+                                {% set totalOfResponse = totalOfResponse + quantity %}
+                                {% set numberOfResponse = numberOfResponse + 1 %}
+                                <tr>
+                                    <td>
+                                        <div class="avatar-img-container-sm center-block m-b-5">
+                                            {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ moduleInvitation.getDisplayableName }}
+                                    </td>
+                                    <td>
+                                        {{ quantity }}
+                                    </td>
+                                </tr>
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
                     </tbody>
                 </table>
+                <div class=" w-100">
+                    <h3>{{ "pollmodule.display.result.total"|trans }}&#8239;{{ totalOfResponse }}</h3>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">{{ numberOfResponse }} {{ "pollmodule.display.result.contribution"|trans }}</a>
+<a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">
+    {{ "pollmodule.display.result.total"|trans }}&#8239;{{ totalOfResponse }}
+    {{ numberOfResponse }}&#8239;{{ "pollmodule.display.result.contribution"|trans }}
+</a>

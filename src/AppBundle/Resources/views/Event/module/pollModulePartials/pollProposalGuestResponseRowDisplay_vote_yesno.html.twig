@@ -42,7 +42,7 @@
     {% elseif responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
         <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>
     {% else %}
-        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
+        <span class="answer-thumb text palette-White c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
     {% endif %}
 </button>
 
@@ -57,7 +57,7 @@
     }).on('shown.bs.popover', function (event) {
         $(this).next('.popover').find(":input").on('change', function (e) {
             {# On ajoute le loader sur le bouton #}
-            var loader = '<div style="position: absolute; top:0; left:0;">' +
+            var loader = '<div class="pollresponse-preloader">' +
                 '<div class="preloader pl-sm"><svg class="pl-circular" viewBox="25 25 50 50"><circle class="plc-path" cx="50" cy="50" r="20"></circle></svg></div></div>';
             $('#pollmodule_button_{{ pollProposal.id }}').append(loader);
 

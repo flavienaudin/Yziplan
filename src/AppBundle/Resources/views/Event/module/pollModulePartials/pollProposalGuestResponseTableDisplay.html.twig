@@ -9,7 +9,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Résultats</h4>
+                    <h4 class="modal-title">{{ "pollmodule.display.result.modal.title"|trans }}</h4>
                 </div>
                 <div class="modal-body poll-response">
                     <div class="table-responsive">
@@ -21,8 +21,10 @@
                                     {% if moduleInvitation.eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED')
                                     and moduleInvitation.eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
                                         <td class="response-column">
-                                            <div class="avatar-img-container-sm center-block m-5">
-                                                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                            <div class="center-content">
+                                                <div class="avatar-img-container-sm center-block m-5">
+                                                    {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                                </div>
                                             </div>
                                         </td>
                                     {% endif %}

@@ -55,6 +55,12 @@
     stroke-width: 4;
 }
 
+.center-content {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 /*---------------------------------
     Avertisseur Ajax requis sur le site
 ----------------------------------*/
@@ -454,7 +460,7 @@ table.dataTable td.dataTables_empty {
 
 .poll-container table td.response-column {
     min-width: 50px;
-    max-width: 100px;
+    max-width: 120px;
     width: 60px;
     text-align: center;
 }
@@ -477,7 +483,9 @@ table.dataTable td.dataTables_empty {
 
 .poll-response table td.response-column {
     width: 40px !important;
-    padding: 0;
+    padding-top: auto;
+    padding-left : 0;
+    padding-right: 0;
 }
 
 
@@ -518,6 +526,13 @@ table.dataTable td.dataTables_empty {
 .pollproposal-response > .response-no.active {
     background-color: #ff5722;
     color: white !important;
+}
+
+.pollresponse-preloader {
+    position: absolute;
+    top:0;
+    left:0;
+    margin: 0 2px;
 }
 
 /*---------------------------------

@@ -51,7 +51,7 @@
             }) }}
 #}
             <a id="pollModuleDisplayAllResult_{{ module.token }}_button" role="button" href="{{ path('pollModuleDisplayResultTable', {"moduleToken": module.token }) }}"
-               class="btn btn-default waves-effect">Voir l'ensemble des réponses</a>
+               class="btn btn-default waves-effect">{{ "pollmodule.display.result.allresult"|trans }}</a>
 
             <script>
                 $('#pollModuleDisplayAllResult_{{ module.token }}_button').on('click', function (e) {
