@@ -82,6 +82,13 @@
     </div>
 {% endblock event_content %}
 
+{% block page_modal_container %}
+    {{ parent() }}
+    {% if eventForm is not null %}
+        {{ include("@App/Event/partials/event_edit_modal.html.twig", {'userEventInvitation':userEventInvitation, 'eventForm':eventForm}) }}
+    {% endif %}
+{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     {# Necessaire ? <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.css") }}">#}

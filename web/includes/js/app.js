@@ -400,3 +400,23 @@ function refuserToucheEntree(event) {
     }
 }
 
+
+/** Google Map related function */
+
+/**
+ * Active l'autocomplétion (GooglePlace) pour les champs WHERE de formulaire et ajoute un listener pour mettre à jour un champ HIDDEN dédié
+ */
+function initPollProposalWhereElements(selectorFieldsPlaceName, selectorPlaceId) {
+    var autocompletes = [];
+    $(selectorFieldsPlaceName).each(function () {
+        var placeNameInput = $(this);
+        var autocomplete = new google.maps.places.Autocomplete(placeNameInput[0]);
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var inputHidden = placeNameInput.closest('.form-group').next(selectorPlaceId);
+            inputHidden.val(autocomplete.getPlace().place_id);
+        });
+        autocompletes.push(autocomplete);
+
+    });
+    return autocompletes;
+}

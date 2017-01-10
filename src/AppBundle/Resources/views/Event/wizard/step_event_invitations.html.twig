@@ -1,0 +1,28 @@
+{% extends "@App/Event/wizard/new_event_wizard_page.html.twig" %}
+
+{# Données d'entrée :
+- event (Event) L'événement en cours de création
+- userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
+- invitationsForm (Form) Formulaire permettant d'ajouter des emails
+#}
+
+
+{% block wizard_step_title %}{{ "event.wizard.invitations.title"|trans }}
+    <small>{{ "event.wizard.invitations.subtitle"|trans }}<br>
+    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}{{ "event.wizard.profile.subtitle.not_connected"|trans|raw }}{% endif %}</small>{% endblock %}
+
+{% block wizard_step %}
+    {{ include('@App/Event/wizard/wizard_event_invitations_form.html.twig', {"userEventInvitation":userEventInvitation, "invitationsForm":invitationsForm }) }}
+{% endblock wizard_step %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
+{% endblock stylesheets %}
+
+{% block top_javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/yzi-selectize.js") }}"></script>
+{% endblock %}
