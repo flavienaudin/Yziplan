@@ -2,7 +2,7 @@
 /*---------------------------------
    Beta
 ----------------------------------*/
-.beta:after{
+.beta:after {
     content: "beta";
     position: fixed;
     width: 150px;
@@ -17,11 +17,12 @@
     font-weight: bold;
     color: #fff;
     line-height: 35px;
-    -ms-transform:rotate(-45deg);
-    -webkit-transform:rotate(-45deg);
-    transform:rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
     z-index: 10000;
 }
+
 /*---------------------------------
    Connexion
 ----------------------------------*/
@@ -104,13 +105,13 @@
     padding: 15px;
 }
 
-
 @media (max-width: 767px) {
-    .card-header{
+    .card-header {
         padding: 10px 15px;
     }
 
 }
+
 /*-----------------------------------
     FIX checkbox-inline, radio-inline
 -----------------------------------*/
@@ -454,8 +455,9 @@ table.dataTable td.dataTables_empty {
     width: 100% !important;
 }
 
-.poll-container table td{
-    padding: 3px; !important;
+.poll-container table td {
+    padding: 3px;
+!important;
 }
 
 .poll-container table td.response-column {
@@ -466,9 +468,9 @@ table.dataTable td.dataTables_empty {
 }
 
 .poll-container table td.voting-column {
-    min-width: 50px;
+    min-width: 40px;
     max-width: 100px;
-    width: 60px;
+    width: 40px;
     text-align: center;
 }
 
@@ -484,10 +486,30 @@ table.dataTable td.dataTables_empty {
 .poll-response table td.response-column {
     width: 40px !important;
     padding-top: auto;
-    padding-left : 0;
+    padding-left: 0;
     padding-right: 0;
 }
 
+.pollmodule-nopropal {
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 5px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+
+    text-align: center;
+    font-style: italic;
+    border-top: solid;
+    border-bottom: solid;
+}
+
+.table-striped > tbody > tr:nth-of-type(even) .progress {
+    background-color: #f5f5f5;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) .progress {
+    background-color: white;
+}
 
 /*.poll-container .dataTables_scroll table td:last-child {
     min-width: 0;
@@ -530,8 +552,8 @@ table.dataTable td.dataTables_empty {
 
 .pollresponse-preloader {
     position: absolute;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     margin: 0 2px;
 }
 
@@ -846,7 +868,7 @@ table.dataTable td.dataTables_empty {
     display: none;
 }
 
-.pmb-block .pmbb-body:first-child{
+.pmb-block .pmbb-body:first-child {
     padding-top: 10px;
 }
 
@@ -929,7 +951,7 @@ table.dataTable td.dataTables_empty {
     display: block;;
 }
 
-.beta:after{
+.beta:after {
     content: "beta";
     position: fixed;
     width: 150px;
@@ -944,8 +966,8 @@ table.dataTable td.dataTables_empty {
     font-weight: bold;
     color: #fff;
     line-height: 35px;
-    -ms-transform:rotate(-45deg);
-    -webkit-transform:rotate(-45deg);
-    transform:rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
     z-index: 10000;
 }

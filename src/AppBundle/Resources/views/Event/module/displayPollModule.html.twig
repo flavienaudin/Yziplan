@@ -22,48 +22,49 @@
 {% block moduleBody %}
     {{ parent() }}
     {% if module.pollModule is not null %}
-        <div class="w-100 poll-container">
-            <table id="pollmodule-table-{{ module.token }}" class="table-striped w-100">
-                {#                <thead>
-                                <tr>
-                                    <td>Description</td>
-                                    <td class="response-column">Résultats</td>
-                                    <td class="voting-column">Réponse</td>
-                                </tr>
-                                </thead>#}
-                <tbody id="pp-row-group-{{ module.token }}">
-                {# Pour chaque proposition #}
-                {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
-                    {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
-                        "pollProposal":pollProposal,
-                        "userModuleInvitation":userModuleInvitation,
-                        "moduleInvitations":module.moduleInvitations
-                    }) }}
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        <div class="text-center m-20">
-            {# Conteneur pour la modale ajouté via ajax #}
-            <div id="pollModuleDisplayAllResult_{{ module.token }}_container"></div>
-            {#{{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseTableDisplay.html.twig', {
-                "moduleInvitations":module.moduleInvitations
-            }) }}
-#}
-            <a id="pollModuleDisplayAllResult_{{ module.token }}_button" role="button" href="{{ path('pollModuleDisplayResultTable', {"moduleToken": module.token }) }}"
-               class="btn btn-default waves-effect">{{ "pollmodule.display.result.allresult"|trans }}</a>
+        {% if module.pollModule.getValidPollProposal is not empty %}
+            <div class="w-100 poll-container">
+                <table id="pollmodule-table-{{ module.token }}" class="table-striped w-100">
+                    {#                <thead>
+                                    <tr>
+                                        <td>Description</td>
+                                        <td class="response-column">Résultats</td>
+                                        <td class="voting-column">Réponse</td>
+                                    </tr>
+                                    </thead>#}
+                    <tbody id="pp-row-group-{{ module.token }}">
+                    {# Pour chaque proposition #}
+                    {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
+                        {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
+                            "pollProposal":pollProposal,
+                            "userModuleInvitation":userModuleInvitation,
+                            "moduleInvitations":module.moduleInvitations
+                        }) }}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-center m-20">
+                {# Conteneur pour la modale ajouté via ajax #}
+                <div id="pollModuleDisplayAllResult_{{ module.token }}_container"></div>
 
-            <script>
-                $('#pollModuleDisplayAllResult_{{ module.token }}_button').on('click', function (e) {
-                    ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                        LetterAvatar.transform();
-                       $('#pollModuleDisplayAllResult_{{ module.token }}_modale').modal('show');
-                    }, null, null);
-                });
-            </script>
-        </div>
+                <a id="pollModuleDisplayAllResult_{{ module.token }}_button" role="button" href="{{ path('pollModuleDisplayResultTable', {"moduleToken": module.token }) }}"
+                   class="btn btn-default waves-effect">{{ "pollmodule.display.result.allresult"|trans }}</a>
 
-
+                <script>
+                    $('#pollModuleDisplayAllResult_{{ module.token }}_button').on('click', function (e) {
+                        ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
+                            LetterAvatar.transform();
+                            $('#pollModuleDisplayAllResult_{{ module.token }}_modale').modal('show');
+                        }, null, null);
+                    });
+                </script>
+            </div>
+        {% else %}
+            <div class="pollmodule-nopropal">
+                {{ "pollmodule.display.no_proposal"|trans }}
+            </div>
+        {% endif %}
         {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
             {{ include('@App/Event/module/pollModulePartials/pollProposal_form_min.html.twig', {
                 'userModuleInvitation' : userModuleInvitation,
