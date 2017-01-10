@@ -4,7 +4,7 @@ Données d'entrée :
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
-<div id="eventInvitation-answer-panel" class="text-center">
+<div id="eventInvitation-answer-panel" class="p-l-10 p-r-10 text-center">
     {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED') %}
         <div class="well well-sm palette-Purple-300 bg c-white">{{ "eventInvitation.message.warning.invitation_cancelled"|trans }}</div>
     {% else %}

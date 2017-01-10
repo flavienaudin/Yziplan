@@ -55,7 +55,9 @@
                 </ul>
             {% endif %}
         </div>
-        <a href="#guestsList_modal" data-toggle="modal" class="list-group-item view-more hidden-lg m-t-0 b-0">{{ "invitations_list.display.all_answers"|trans }}</a>
+        <div class="list-group-item hidden-lg m-b-10">
+            <a href="#guestsList_modal" data-toggle="modal" class="btn btn-default waves-effect">{{ "invitations_list.display.all_answers"|trans }}</a>
+        </div>
     </div>
     <script>
         $('.eventInvitations_list').find('li a.cancelInvitation').each(function () {

@@ -23,7 +23,14 @@
             'event':event}) }}
     </div>
 
-    <div class="card-footer ">
-        <a href="#" class="btn btn-lg btn-block btn-primary" data-toggle="modal"><i class="zmdi zmdi-email m-r-5"></i> {{ "invitations_list.display.new_invitations"|trans }}</a>
-    </div>
+
+    {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly or invitationsForm is not null %}
+        <div class="card-footer text-center">
+            {#<div id="invitationCard" class="grid-item col-xs-12 col-sm-6 col-lg-12">
+                {{ include('@App/Event/partials/invitations/eventInvitation_card.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
+            </div>#}
+            <a href="#" class="btn btn-lg btn-primary m-b-10 waves-effect" data-toggle="modal"><i class="zmdi zmdi-email m-r-5"></i> {{ "invitations_list.display.new_invitations"|trans }}</a>
+        </div>
+    {% endif %}
+
 </div>

@@ -308,6 +308,11 @@ h1.event-title {
 /*----------------------------------
     Event Invitations
 -----------------------------------*/
+.list-group.lg-guest-lists .list-group-item{
+    border: 0;
+    margin: 0;
+    padding: 0 5px;
+}
 
 .userInvitation-avatar {
     position: relative;
