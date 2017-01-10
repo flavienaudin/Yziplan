@@ -51,7 +51,7 @@ class EventController extends Controller
         /** @var EventInvitation $currentEventInvitation Only one EventInvitation added when initialize an Event. */
         $currentEventInvitation = $currentEvent->getEventInvitations()->first();
         if ($currentEventInvitation != null) {
-            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY.'/'.$currentEvent->getToken(), $currentEventInvitation->getToken());
+            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $currentEvent->getToken(), $currentEventInvitation->getToken());
         }
         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
     }
@@ -85,7 +85,7 @@ class EventController extends Controller
                     }
                 }
             }
-            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY.'/'.$duplicatedEvent->getToken(), $userEventInvitation->getToken());
+            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $duplicatedEvent->getToken(), $userEventInvitation->getToken());
         }
 
         $entityManager = $this->get('doctrine.orm.entity_manager');
@@ -255,10 +255,9 @@ class EventController extends Controller
                         $currentEvent = $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm);
                         $eventInvitationsForm = $eventManager->createEventInvitationsForm();
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("invitations.message.success");
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitations-main-div'] =
-                            $this->renderView("@App/Event/partials/eventInvitation_card.html.twig", array(
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_forms_container'] =
+                            $this->renderView("@App/Event/partials/invitations/invitations_new_forms.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,
-                                'eventInvitations' => $currentEvent->getEventInvitations(),
                                 'invitationsForm' => $eventInvitationsForm->createView()
 
                             ));
@@ -269,10 +268,9 @@ class EventController extends Controller
                             ));
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitations-main-div'] =
-                            $this->renderView("@App/Event/partials/eventInvitation_card.html.twig", array(
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_forms_container'] =
+                            $this->renderView("@App/Event/partials/invitations/invitations_new_forms.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,
-                                'eventInvitations' => $currentEvent->getEventInvitations(),
                                 'invitationsForm' => $eventInvitationsForm->createView()
                             ));
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);

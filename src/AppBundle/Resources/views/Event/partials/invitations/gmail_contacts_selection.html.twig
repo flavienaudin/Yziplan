@@ -1,0 +1,52 @@
+{% extends "@App/Contact/Gmail/Partials/load_gmail_contacts.html.twig" %}
+{# Données d'entrée :
+- event (Event) L'événement pour lequel l'utilisateur peut envoyer des invitations à ses contacts
+#}
+
+{% block selectionContactsAction %}
+    {#<button type="button" class="btn btn-primary waves-effect" id="inviteSelectedContacts" data-loading-text="{{ "global.button.loading"|trans }}"
+            data-original-text="{{ "contactsgmail.button.invite"|trans }}">{{ "contactsgmail.button.invite"|trans }}</button>
+    <script>
+        $('#inviteSelectedContacts').on('click', function (e) {
+            if (bootGridTable !== null) {
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    e.preventDefault();
+                    askGuestName();
+                } else {
+                    var emails = bootGridTable.bootgrid('getSelectedRows');
+                    var data = {'emails': emails};
+                    ajaxRequest("{{ path('sendEventInvitations', {'token':event.token}) }}", data, e, function (responseJSON, textStatus, jqXHR) {
+                        $('#gmail-contact-container').modal('hide')
+                    }, function (jqXHR, textStatus, errorThrown) {
+                        if (jqXHR.hasOwnProperty('responseJSON')) {
+                            var responseJSON = jqXHR['responseJSON'];
+                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                if (!eventInvitationValid && askGuestName !== undefined) {
+                                    $('#gmail-contact-container').modal('hide');
+                                    askGuestName();
+                                }
+                            }
+                        }
+                    }, null);
+                }
+            }
+        });
+    </script>#}
+{% endblock selectionContactsAction %}
+
+{#<script>#}
+    {% block js_onBootgrid_selection %}
+    for (var i = 0; i < rows.length; i++) {
+        $newEmailsSelectize.addOption({value: rows[i].email, text: rows[i].name});
+        $newEmailsSelectize.addItem(rows[i].email);
+    }
+
+
+    {% endblock js_onBootgrid_selection %}
+
+    {% block js_onBootgrid_deselection %}
+    for (var j = 0; j < rows.length; j++) {
+        $newEmailsSelectize.removeItem(rows[j].email);
+    }
+    {% endblock js_onBootgrid_deselection %}
+{#</script>#}

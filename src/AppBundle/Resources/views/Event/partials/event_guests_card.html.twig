@@ -24,13 +24,13 @@
     </div>
 
 
-    {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly or invitationsForm is not null %}
+    {% if (userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.guestsCanInvite) and (invitationsForm is not null
+    or not userEventInvitation.event.invitationOnly) %}
         <div class="card-footer text-center">
-            {#<div id="invitationCard" class="grid-item col-xs-12 col-sm-6 col-lg-12">
-                {{ include('@App/Event/partials/invitations/eventInvitation_card.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
-            </div>#}
-            <a href="#" class="btn btn-lg btn-primary m-b-10 waves-effect" data-toggle="modal"><i class="zmdi zmdi-email m-r-5"></i> {{ "invitations_list.display.new_invitations"|trans }}</a>
+            <a href="#invitations_new_modal" class="btn btn-lg btn-primary m-b-10 waves-effect" data-toggle="modal"> <i class="zmdi zmdi-email m-r-5"></i>
+                {{ "invitations_list.display.new_invitations"|trans }}</a>
         </div>
+        {{ include('@App/Event/partials/invitations/invitations_new_modal.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
     {% endif %}
 
 </div>

@@ -277,7 +277,9 @@ invitations:
   button:
     send_invitation: Send invitations
     via_facebook: Via Facebook
-    via_gmail_contact: Via Gmail Contacts
+    via_gmail_contact:
+      show: My  Gmail Contacts
+      hide: Close Gmail Contacts
 
 contactsgmail:
   title: Gmail contacts
