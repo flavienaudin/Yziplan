@@ -352,7 +352,7 @@ pollmodule:
     result:
      vote: vote(s)
      contribution: contribution(s)
-     total: "Total :"
+     total: "Total:"
      allresult: Voir l'ensemble des réponses
      modal:
       title: Réponses

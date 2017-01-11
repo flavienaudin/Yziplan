@@ -50,7 +50,12 @@
                                             {#{% if pollProposalResponse is not null %}#}
                                             <td class="response-column">
                                                 {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
-                                                    {{ pollProposalResponse is null or pollProposalResponse.answer is null?0:pollProposalResponse.answer }}
+                                                    {% set responseToDisplay = pollProposalResponse is null or pollProposalResponse.answer is null ? 0 : pollProposalResponse.answer %}
+                                                    {% if responseToDisplay > 0 %}
+                                                        <span class="answer-thumb palette-Light-Green-100 bg strong">{{ responseToDisplay }}</span>
+                                                    {% else %}
+                                                        {{ responseToDisplay }}
+                                                    {% endif %}
                                                 {% else %}
                                                     {% if pollProposalResponse is not null %}
                                                         {% if pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
