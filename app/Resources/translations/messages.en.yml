@@ -147,6 +147,8 @@ event:
 #      placeholder: Guests can add module
 #      text.true: Guests can add module to the event
 #      text.false: Guests can not add module to the event
+  comment:
+    display_comment: Display comments (%number%)
   wizard:
     button:
       skip_wizard: Skip the wizard

@@ -17,11 +17,22 @@ Données d'entrée :
 
 {% set depth = depth|default(0) %}
 {% set view = view|default('flat') %}
+{% set nb_comments = 0 %}
+
+{% set commentsListBlock %}
+    <div class="wcl-list {{ depth == 0? "collapse" }}" {% if depth == 0 %}id="eventCommentListCollapse_{{ thread.id }}"{% endif %} }}>
+        {% for commentinfo in comments if commentinfo.comment is not fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
+            {% set nb_comments = nb_comments + 1 %}
+            {% include "FOSCommentBundle:Thread:comment.html.twig" with { "children": commentinfo.children, "comment": commentinfo.comment, "depth": depth, "view": view, 'userEventInvitation':userEventInvitation } %}
+        {% endfor %}
+    </div>
+{% endset %}
+
 {% if depth == 0 %}
     {% if fos_comment_can_comment_thread(thread) %}
         {{ render(url('fos_comment_new_thread_comments', {"id": thread.id})) }}
     {% endif %}
-    <a href="#eventCommentListCollapse_{{ thread.id }}" data-toggle="collapse">Afficher les commentaires</a>
+    <a href="#eventCommentListCollapse_{{ thread.id }}" data-toggle="collapse">{{ "event.comment.display_comment"|trans({"%number%": nb_comments }) }}</a>
 
     {% if fos_comment_can_edit_thread(thread) %}
         <div class="fos_comment_thread_commentable">
@@ -31,11 +42,8 @@ Données d'entrée :
         </div>
     {% endif %}
 {% endif %}
-<div class="wcl-list {{ depth == 0? "collapse" }}" {% if depth == 0 %}id="eventCommentListCollapse_{{ thread.id}}"{% endif %} }}>
-    {% for commentinfo in comments if commentinfo.comment is not fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
-        {% include "FOSCommentBundle:Thread:comment.html.twig" with { "children": commentinfo.children, "comment": commentinfo.comment, "depth": depth, "view": view, 'userEventInvitation':userEventInvitation } %}
-    {% endfor %}
-</div>
+
+{{ commentsListBlock }}
 
 {% if depth == 0 %}
     <script>
