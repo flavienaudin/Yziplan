@@ -30,14 +30,22 @@
         </div>
         <dl class="dl-horizontal">
             {% if userEventInvitation.organizer or userEventInvitation.event.when is not empty %}
-                <dt><i class="zmdi zmdi-calendar zmdi-hc-fw"></i> {{ "event.form.when.label"|trans }}</dt>
-                <dd><span {% if userEventInvitation.creator or userEventInvitation.administrator %}data-toggle="tooltip" title="{{ "event.form.when.tootlip"|trans }}"{% endif %}>
-                        {% if userEventInvitation.event.when is empty %}<i class="zmdi zmdi-info-outline"></i>{% else %}{{ userEventInvitation.event.when|localizeddate }}{% endif %}</span></dd>
+                <dt><i class="zmdi zmdi-calendar zmdi-hc-fw"></i> {{ "event.form.when.label"|trans }}
+                    {% if userEventInvitation.organizer %}
+                        <i class="zmdi zmdi-info-outline" data-toggle="tooltip" title="{{ "event.form.when.tootlip"|trans }}"></i>
+                    {% endif %}
+                </dt>
+                <dd>
+                    {% if userEventInvitation.event.when is not empty %}{{ userEventInvitation.event.when|localizeddate }}{% endif %}
+                </dd>
             {% endif %}
             {% if userEventInvitation.organizer or userEventInvitation.event.whereName is not empty %}
-                <dt><i class="zmdi zmdi-pin zmdi-hc-fw"></i> {{ "event.form.whereName.label"|trans }}</dt>
-                <dd><span {% if userEventInvitation.creator or userEventInvitation.administrator %}data-toggle="tooltip" title="{{ "event.form.whereName.tootlip"|trans }}"{% endif %}>
-                    {% if userEventInvitation.event.whereName is empty %}<i class="zmdi zmdi-info-outline"></i>{% else %} {{ userEventInvitation.event.whereName }}{% endif %}</span></dd>
+                <dt><i class="zmdi zmdi-pin zmdi-hc-fw"></i> {{ "event.form.whereName.label"|trans }}
+                    {% if userEventInvitation.organizer %}
+                        <i class="zmdi zmdi-info-outline" data-toggle="tooltip" title="{{ "event.form.whereName.tootlip"|trans }}"></i>
+                    {% endif %}
+                </dt>
+                <dd>{% if userEventInvitation.event.whereName is not empty %}{{ userEventInvitation.event.whereName }}{% endif %}</dd>
             {% endif %}
             {# TODO Décommenter quand la date limite de réponse sera utilisée
             {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.responseDeadline is not empty %}
