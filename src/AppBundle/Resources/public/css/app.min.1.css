@@ -10012,6 +10012,10 @@ pre {
 }
 
 @media (max-width: 767px) {
+    #main {
+        padding-top: 70px;
+    }
+
     #content > .container {
         padding-left: 0;
         padding-right: 0;
