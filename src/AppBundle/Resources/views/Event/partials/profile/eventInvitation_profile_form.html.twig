@@ -6,14 +6,13 @@
 <div id="eventInvitationProfile_formContainer">
 
     {% block form_start %}
-        {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        {#{% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
             <p class="text-center">
                 <button data-toggle="modal" data-target="#modalLogin" class="btn btn-info"><i class="zmdi zmdi-power"></i> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</button>
                 <button role="button" class="btn btn btn-default" data-toggle="popover" data-content="{{ "eventInvitation.profile.card.text.connexion"|trans }}" title="Info" data-placement="bottom"
                         data-trigger="focus"><i class="zmdi zmdi-info-outline"></i></button>
             </p>
-        {% endif %}
-        {{ include("@App/Event/partials/event_help_popover.html.twig",{'userInvitation':userEventInvitation,'divId':'event_invitation_guestName','text': 'event.help.popover.name'}) }}
+        {% endif %}#}
         {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationProfile'}}) }}
     {% endblock form_start %}
 
