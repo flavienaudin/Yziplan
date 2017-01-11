@@ -20,7 +20,7 @@
     -ms-transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
     transform: rotate(-45deg);
-    z-index: 10000;
+    z-index: 1049;
 }
 
 /*---------------------------------
@@ -111,6 +111,29 @@
     }
 }
 
+@media (max-width: 767px) {
+    .modal .modal-body {
+        padding: 0 15px 10px;
+    }
+
+    .table.table-condensed > thead > tr > th:first-child,
+    .table.table-condensed > tbody > tr > th:first-child,
+    .table.table-condensed > tfoot > tr > th:first-child,
+    .table.table-condensed > thead > tr > td:first-child,
+    .table.table-condensed > tbody > tr > td:first-child,
+    .table.table-condensed > tfoot > tr > td:first-child {
+        padding-left: 10px;
+    }
+
+    .table.table-condensed > thead > tr > th:last-child,
+    .table.table-condensed > tbody > tr > th:last-child,
+    .table.table-condensed > tfoot > tr > th:last-child,
+    .table.table-condensed > thead > tr > td:last-child,
+    .table.table-condensed > tbody > tr > td:last-child,
+    .table.table-condensed > tfoot > tr > td:last-child {
+        padding-right: 10px;
+    }
+}
 /*-----------------------------------
     FIX checkbox-inline, radio-inline
 -----------------------------------*/
@@ -314,7 +337,7 @@ h1.event-title {
 /*----------------------------------
     Event Invitations
 -----------------------------------*/
-.list-group.lg-guest-lists .list-group-item{
+.list-group.lg-guest-lists .list-group-item {
     border: 0;
     margin: 0;
     padding: 0 5px;
@@ -452,11 +475,6 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
-table.dataTable td.dataTables_empty {
-    text-align: center !important;
-    width: 100% !important;
-}
-
 .poll-container table td {
     padding: 3px;
 !important;
@@ -489,7 +507,7 @@ table.dataTable td.dataTables_empty {
     width: 40px !important;
     padding-top: auto;
     padding-left: 0;
-    padding-right: 0;
+    padding-right: 0 !important;
 }
 
 .pollmodule-nopropal {
@@ -552,17 +570,27 @@ table.dataTable td.dataTables_empty {
     color: white !important;
 }
 
-.pollresponse-preloader {
+/*.pollresponse-preloader {
     position: absolute;
     top: 0;
     left: 0;
+}*/
+.pollresponse-preloader {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
 }
 
 .pollproposalamount-response {
-    width:50px;
+    width: 50px;
     display: table;
     margin: 0 auto;
 }
+
 /*---------------------------------
     Help popover
 ---------------------------------*/
@@ -957,23 +985,3 @@ table.dataTable td.dataTables_empty {
     display: block;;
 }
 
-.beta:after {
-    content: "beta";
-    position: fixed;
-    width: 150px;
-    height: 35px;
-    background: #EE8E4A;
-    top: 20px;
-    left: -37px;
-    text-align: center;
-    font-size: 20px;
-    font-family: sans-serif;
-    text-transform: uppercase;
-    font-weight: bold;
-    color: #fff;
-    line-height: 35px;
-    -ms-transform: rotate(-45deg);
-    -webkit-transform: rotate(-45deg);
-    transform: rotate(-45deg);
-    z-index: 10000;
-}

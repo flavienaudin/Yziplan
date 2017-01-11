@@ -49,7 +49,13 @@
         </div>
     </div>
 </div>
-<a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">
+{% if totalOfResponse > 0 %}
+    <a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">
+        {{ "pollmodule.display.result.total"|trans }}&#8239;{{ totalOfResponse }}
+        {# A voir si on garde le nombre de contribuions #}
+        {#{{ numberOfResponse }}&#8239;{{ "pollmodule.display.result.contribution"|trans }}#}
+    </a>
+{% else %}
     {{ "pollmodule.display.result.total"|trans }}&#8239;{{ totalOfResponse }}
-    {{ numberOfResponse }}&#8239;{{ "pollmodule.display.result.contribution"|trans }}
-</a>
+    {#{{ numberOfResponse }}&#8239;{{ "pollmodule.display.result.contribution"|trans }}#}
+{% endif %}

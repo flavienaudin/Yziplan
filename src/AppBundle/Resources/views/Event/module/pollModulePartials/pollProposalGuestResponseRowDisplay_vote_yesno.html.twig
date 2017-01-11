@@ -10,7 +10,7 @@
     {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:null) %}
 {% endif %}
 <div id="popover-content_{{ pollProposal.id }}" class="hide">
-    <div id="pollProposalReponse_{{ pollProposal.id }}" class="btn-group-vertical btn-group-lg pollproposal-response m-t-10" data-toggle="buttons" role="group">
+    <div id="pollProposalReponse_{{ pollProposal.id }}" class="btn-group-vertical btn-group-lg pollproposal-response m-t-15" data-toggle="buttons" role="group">
         <label id="pollProposalReponse_{{ pollProposal.id }}_yes"
                class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}">
             <input type="radio" autocomplete="off"
@@ -33,7 +33,7 @@
         </label>
     </div>
 </div>
-<button id="pollmodule_button_{{ pollProposal.id }}" class="btn btn-primary waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title=""
+<button id="pollmodule_button_{{ pollProposal.id }}" class="btn c-bluegray waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title=""
         data-original-title="">
     {% if responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
         <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
@@ -93,7 +93,7 @@
                     $('#pollProposalReponse_{{ pollProposal.id }}_yes').removeClass('active');
                     $('#pollProposalReponse_{{ pollProposal.id }}_maybe').removeClass('active');
                 } else {
-                    newContent = '<span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>';
+                    newContent = '<span class="answer-thumb text palette-White">?</span>';
                 }
                 document.getElementById("pollmodule_button_{{ pollProposal.id }}").innerHTML = newContent;
                 LetterAvatar.transform();
