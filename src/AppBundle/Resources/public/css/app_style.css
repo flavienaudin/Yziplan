@@ -134,6 +134,7 @@
         padding-right: 10px;
     }
 }
+
 /*-----------------------------------
     FIX checkbox-inline, radio-inline
 -----------------------------------*/
@@ -337,7 +338,7 @@ h1.event-title {
 /*----------------------------------
     Event Invitations
 -----------------------------------*/
-.list-group.lg-guest-lists .list-group-item {
+.list-group.lg-padding-xs .list-group-item {
     border: 0;
     margin: 0;
     padding: 0 5px;
