@@ -8,25 +8,25 @@
                 <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                     'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHAT')}) }}" id="addWhatPollModule">
                     <i class="waves-effect zmdi zmdi-pin-help zmdi-hc-3x"></i>
-                    <p>{% trans %}pollmodule.add_link.what{% endtrans %}</p></a>
+                    <p>{{ "pollmodule.add_link.what"|trans }}</p></a>
             </div>
             <div class="col-xs-3 text-center">
                 <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                     'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHEN')}) }}" id="addWhenPollModule">
                     <i class="waves-effect zmdi zmdi-calendar zmdi-hc-3x"></i>
-                    <p>{% trans %}pollmodule.add_link.when{% endtrans %}</p></a>
+                    <p>{{ "pollmodule.add_link.when"|trans }}</p></a>
             </div>
             <div class="col-xs-3 text-center">
                 <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                     'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHERE')}) }}" id="addWherePollModule">
                     <i class="waves-effect zmdi zmdi-pin zmdi-hc-3x"></i>
-                    <p>{% trans %}pollmodule.add_link.where{% endtrans %}</p> </a>
+                    <p>{{ "pollmodule.add_link.where"|trans }}</p> </a>
             </div>
             <div class="col-xs-3 text-center">
                 <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
                     'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHO_BRINGS_WHAT')}) }}" id="addWhoBringsWhatPollModule">
                     <i class="waves-effect zmdi zmdi-format-list-bulleted zmdi-hc-3x"></i>
-                    <p>{% trans %}pollmodule.add_link.whobringswhat{% endtrans %}</p></a>
+                    <p>{{ "pollmodule.add_link.whobringswhat"|trans }}</p></a>
 
             </div>
         </div>
