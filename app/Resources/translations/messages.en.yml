@@ -148,6 +148,8 @@ event:
 #      text.true: Guests can add module to the event
 #      text.false: Guests can not add module to the event
   wizard:
+    button:
+      skip_wizard: Skip the wizard
     main:
       title: Description de l'événement
       subtitle: Décris l'événement à tes invités. Tu peux donner la date et le lieu mais si tu ne les connais pas, la création de sondage te sera proposée dans une prochaine étape.
@@ -407,6 +409,7 @@ global:
     poll: Survey
     close: Close
     skip: Skip
+    finish: Finish
   success:
     data_saved: Information saved
   error:

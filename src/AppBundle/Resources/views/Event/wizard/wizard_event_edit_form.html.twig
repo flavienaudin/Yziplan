@@ -11,9 +11,11 @@
 
 {% block action_buttons %}
     <div class="text-center">
-        <a href="{{ path("displayEvent", {'token' : event.token}) }}" class="btn btn-default">{{ "global.button.skip"|trans}}</a>
-        <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
-            {{ "global.button.nextStep"|trans }}</button>
+        <a href="" class="btn btn-default waves-effect m-b-10 disabled">{{ "global.button.previousStep"|trans }}</a>
+        <button type="submit" class="btn btn-primary waves-effect m-b-10">{{ "global.button.nextStep"|trans }}</button>
+        <div>
+            <a href="{{ path("displayEvent", {'token' : event.token}) }}" class="btn btn-default waves-effect">{{ "event.wizard.button.skip_wizard"|trans }}</a>
+        </div>
         <div class="visible-xs visible-sm m-b-10"></div>
     </div>
 {% endblock action_buttons %}

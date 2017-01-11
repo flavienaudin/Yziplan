@@ -11,12 +11,15 @@
 
 {% block action_buttons %}
     <div class="text-center">
-        <a href="{{ path("displayEvent", {'token' : event.token}) }}" class="btn btn-default">{{ "global.button.skip"|trans }}</a> <a
-                href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_MAIN")}) }}"
-                class="btn btn-default waves-effect">{{ "global.button.previousStep"|trans }}</a>
-        <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.nextStep"|trans }}</button>
+        <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_MAIN")}) }}"
+           class="btn btn-default waves-effect m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
+        <button type="submit" class="btn btn-primary waves-effect m-b-10">{{ "global.button.nextStep"|trans }}</button>
+        <div>
+            <a href="{{ path("displayEvent", {'token' : event.token}) }}" class="btn btn-default waves-effect">{{ "event.wizard.button.skip_wizard"|trans }}</a>
+        </div>
     </div>
 {% endblock action_buttons %}
 
 {% block js_form_submission %}{% endblock js_form_submission %}
+
 {% block js_functions %}{% endblock js_functions %}
