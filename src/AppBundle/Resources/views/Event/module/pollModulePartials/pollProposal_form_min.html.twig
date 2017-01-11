@@ -42,7 +42,8 @@
                 ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                         $form[0].reset();
                         if (responseJSON.hasOwnProperty('data')) {
-                            $('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable().row.add($(responseJSON['data'])).draw();
+                            {#$('#pollmodule-table-{{ userModuleInvitation.module.token }}').DataTable().row.add($(responseJSON['data'])).draw();#}
+                            $('#pollmodule-table-{{ userModuleInvitation.module.token }} > tbody:last-child').append(responseJSON['data']);
                         }
                     }, function(jqXHR, textStatus, errorThrown){
                         if (jqXHR.hasOwnProperty('responseJSON')) {

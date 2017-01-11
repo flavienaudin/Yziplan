@@ -1,0 +1,21 @@
+{% extends "@App/Contact/Gmail/Partials/load_gmail_contacts.html.twig" %}
+{# Données d'entrée :
+- event (Event) L'événement pour lequel l'utilisateur peut envoyer des invitations à ses contacts
+#}
+
+{% block selectionContactsAction %}{% endblock selectionContactsAction %}
+
+{#<script>#}
+    {% block js_onBootgrid_selection %}
+    for (var i = 0; i < rows.length; i++) {
+        $newEmailsSelectize.addOption({value: rows[i].email, text: rows[i].name});
+        $newEmailsSelectize.addItem(rows[i].email);
+    }
+    {% endblock js_onBootgrid_selection %}
+
+    {% block js_onBootgrid_deselection %}
+    for (var j = 0; j < rows.length; j++) {
+        $newEmailsSelectize.removeItem(rows[j].email);
+    }
+    {% endblock js_onBootgrid_deselection %}
+{#</script>#}

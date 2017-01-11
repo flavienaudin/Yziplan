@@ -1,0 +1,36 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
+- event (Event) L'événement courant pour afficher les invitations
+- userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
+#}
+
+
+<div class="card c-dark z-depth-1">
+    <div class="card-header palette-Teal bg">
+        <h2>{{ "invitations_list.display.title"|trans }}</h2>
+    </div>
+
+    <div class="card-body">
+        {{ include('@App/Event/partials/profile/eventInvitation_profile_answer_form.html.twig',{
+            'userEventInvitation' : userEventInvitation,
+            'userEventInvitationAnswerForm' : userEventInvitationAnswerForm
+        }) }}
+    </div>
+
+    <div class="card-body">
+        {{ include("@App/Event/partials/guests_list/guestsList_card_body.html.twig", {
+            'userEventInvitation' : userEventInvitation,
+            'event':event}) }}
+    </div>
+
+
+    {% if (userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.guestsCanInvite) and (invitationsForm is not null
+    or not userEventInvitation.event.invitationOnly) %}
+        <div class="card-footer text-center">
+            <a href="#invitations_new_modal" class="btn btn-lg btn-primary m-b-10 waves-effect" data-toggle="modal"> <i class="zmdi zmdi-email m-r-5"></i>
+                {{ "invitations_list.display.new_invitations"|trans }}</a>
+        </div>
+        {{ include('@App/Event/partials/invitations/invitations_new_modal.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
+    {% endif %}
+
+</div>

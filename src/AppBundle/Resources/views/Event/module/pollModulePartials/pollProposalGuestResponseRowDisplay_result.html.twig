@@ -1,0 +1,21 @@
+{# Données d'entrée :
+- pollProposal (PollProposal) La proposition à afficher
+- userModuleInvitation (ModuleInvitaion) L'invitation du module de l'utilisateur
+- moduleInvitations ([ModuleInvitaion]) les invitations du module
+#}
+
+<div id="resultCellPollProposal_{{ pollProposal.id }}">
+    {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
+        {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_result_amount.html.twig', {
+            "pollProposal":pollProposal,
+            "userModuleInvitation":userModuleInvitation,
+            "moduleInvitations":moduleInvitations
+        }) }}
+    {% else %}{# Dans le cas d'un yes/maybe/no ou d'un yes/no #}
+        {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_result_yesno.html.twig', {
+            "pollProposal":pollProposal,
+            "userModuleInvitation":userModuleInvitation,
+            "moduleInvitations":moduleInvitations
+        }) }}
+    {% endif %}
+</div>

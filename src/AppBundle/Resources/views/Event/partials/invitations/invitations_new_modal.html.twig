@@ -1,0 +1,21 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
+- invitationsForm (Form|null) Formulaire permettant d'inviter (renseignement des e-mails des invités)
+#}
+
+<div class="modal fade" id="invitations_new_modal" tabindex="-1" role="dialog" aria-labelledby="invitations_new_title">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                <h4 class="modal-title" id="invitations_new_title">{{ "invitations.display.title"|trans }}</h4>
+            </div>
+            <div class="modal-body">
+                {{ include("@App/Event/partials/invitations/invitations_new_forms.html.twig", {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
+            </div>
+        </div>
+    </div>
+</div>

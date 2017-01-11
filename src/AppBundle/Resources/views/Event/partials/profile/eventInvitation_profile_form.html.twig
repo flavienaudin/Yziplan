@@ -4,8 +4,18 @@
 #}
 
 <div id="eventInvitationProfile_formContainer">
-    {{ include("@App/Event/partials/event_help_popover.html.twig",{'userInvitation':userEventInvitation,'divId':'event_invitation_guestName','text': 'event.help.popover.name'}) }}
-    {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationProfile'}}) }}
+
+    {% block form_start %}
+        {#{% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+            <p class="text-center">
+                <button data-toggle="modal" data-target="#modalLogin" class="btn btn-info"><i class="zmdi zmdi-power"></i> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</button>
+                <button role="button" class="btn btn btn-default" data-toggle="popover" data-content="{{ "eventInvitation.profile.card.text.connexion"|trans }}" title="Info" data-placement="bottom"
+                        data-trigger="focus"><i class="zmdi zmdi-info-outline"></i></button>
+            </p>
+        {% endif %}#}
+        {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationProfile'}}) }}
+    {% endblock form_start %}
+
     <div class="row">
         <div class="col-xs-7">
             {{ form_row(userEventInvitationForm.guestName, {
@@ -20,15 +30,17 @@
                 'attr':{'class':'input-sm', 'placeholder':'eventInvitation.form.email.placeholder'},
                 'widget_options':{'fgline' : true}
             }) }}
-            <div class="text-center">
-                {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and userEventInvitation.displayableName is not empty %}
-                    <i class="m-r-10"><a href="{{ path('disconnectEventInvitation', {'eventToken':userEventInvitation.event.token}) }}">
-                            {{ "eventInvitation.profile.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}</a></i>
-                {% endif %}
-                {% if userEventInvitationForm is defined %}
-                    <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
-                {% endif %}
-            </div>
+            {% block action_buttons %}
+                <div class="text-center">
+                    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and userEventInvitation.displayableName is not empty %}
+                        <i class="m-r-10"><a href="{{ path('disconnectEventInvitation', {'eventToken':userEventInvitation.event.token}) }}">
+                                {{ "eventInvitation.profile.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}</a></i>
+                    {% endif %}
+                    {% if userEventInvitationForm is defined %}
+                        <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+                    {% endif %}
+                </div>
+            {% endblock action_buttons %}
         </div>
         <div class="col-xs-5">
             <div class="avatar-img-container-md center-block">
@@ -38,7 +50,10 @@
     </div>
     {{ form_rest(userEventInvitationForm) }}
     {{ form_end(userEventInvitationForm) }}
+
     <script>
+
+        {% block js_form_submission %}
         $('form#userEventInvitationProfile').on("submit", function (e) {
             ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                 if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
@@ -47,7 +62,9 @@
                 }
             }, null, null);
         });
+        {% endblock js_form_submission %}
 
+        {% block js_functions %}
         {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
         eventInvitationValid = false;
         /**
@@ -87,5 +104,6 @@
         {% else %}
         eventInvitationValid = true;
         {% endif %}
+        {% endblock js_functions %}
     </script>
 </div>

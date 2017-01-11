@@ -1,0 +1,25 @@
+{% extends "@App/Event/partials/profile/eventInvitation_profile_form.html.twig" %}
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) Invitation de l'utilisateur de l'utilisateur
+- userEventInvitationForm (Form) Formulaire du profil de l'invité pour l'invitation
+#}
+
+{% block form_start %}
+    {{ form_start(userEventInvitationForm, {
+        'action': path('wizardNewEvent', {'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")})}) }}
+{% endblock form_start %}
+
+{% block action_buttons %}
+    <div class="text-center">
+        <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_MAIN")}) }}"
+           class="btn btn-default waves-effect m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
+        <button type="submit" class="btn btn-primary waves-effect m-b-10">{{ "global.button.nextStep"|trans }}</button>
+        <div>
+            <a href="{{ path("displayEvent", {'token' : event.token}) }}" class="btn btn-default waves-effect">{{ "event.wizard.button.skip_wizard"|trans }}</a>
+        </div>
+    </div>
+{% endblock action_buttons %}
+
+{% block js_form_submission %}{% endblock js_form_submission %}
+
+{% block js_functions %}{% endblock js_functions %}

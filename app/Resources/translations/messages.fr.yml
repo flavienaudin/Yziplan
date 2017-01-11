@@ -57,6 +57,11 @@ landing_page:
       alt: vacances
       title: Retrouvailles entre amis ?
       text: Organisez-vous avec vos amis pour savoir où et quand partir en week-end ou vacances !
+    chandeleur:
+      alt: Chandeleur
+      title: Chandeleur
+      text: Retrouvez-vous entre amis pour partager des crêpes pour la chandeleur !
+
 
 appuseremail:
   associate:
@@ -89,15 +94,14 @@ event:
       new_event: Nouvel événement
   header:
     organised_by: "Organisé par %creator%"
-    tootltip:
-      edit: Editer l'événement
-      duplicate: Dupliquer l'événement
   picture:
     link: Changer l'image
     update_modal:
       title: Charger une image
       button:
         submit_title: Transférer l'image et l'utiliser pour l'événement
+  modal.edit:
+    title: Modifier l'événement
   form:
     name:
       label: Titre
@@ -111,7 +115,7 @@ event:
       placeholder: Date limite de réponse
     whereName:
       label: "Où :"
-      placeholder: Où
+      placeholder: Chez moi, bar du coin, adresse,...
       help: "Tu sais déjà où ça va se passer ? Indique l'adresse ici."
       tootlip: Fixe le lieu où se déroule ton événement ou ajoute un sondage pour consulter tes invités
     when:
@@ -144,6 +148,26 @@ event:
 #      placeholder: Autoriser les invités à ajouter un module
 #      text.true: Les invités peuvent ajouter un module
 #      text.false: Les invités ne peuvent pas ajouter un module
+  comment:
+    display_comment: Afficher les commentaires (%number%)
+  wizard:
+    button:
+      skip_wizard: Passer le pas à pas
+    main:
+      title: Description de l'événement
+      subtitle: Décris l'événement à tes invités. Tu peux donner la date et le lieu mais si tu ne les connais pas, la création de sondage te sera proposer dans une prochaine étape.
+    profile:
+      title: A propos de toi
+      subtitle:
+        text: Identifie-toi auprès de tes invités.
+        not_connected: |
+          Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant.<br>
+          Si tu t'inscris maintenant, copie l'adresse du navigateur pour reprendre l'organisation.
+    invitations:
+      title: Les invités
+      subtitle: Renseigne les adresses e-mail de tes invités. Ils recevront un message avec le lien de leur invitations personnelles.
+    error.message:
+      wrong_step: Une erreur dans le processus de création de l'événement s'est produite. Merci de re-essayer l'opération.
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement.
     unauthorized_access: Tu n'as pas les autorisations pour accéder à cet événement.
@@ -158,11 +182,11 @@ event:
 
 eventInvitations:
   user_menu:
-    entry: Tes événements
+    entry: Mes événements
   page:
-    meta_title: Tes événements
-    title: Tes événements
-    subtitle: Liste des événements que tu organises et des invitations que tu as reçues
+    meta_title: Mes événements
+    title: Mes événements
+    subtitle: Liste des événements que j'organise et des invitations que j'ai reçues
   table:
     event_name: Nom de l'événement
     organiser: Organisateur
@@ -204,6 +228,7 @@ eventInvitation:
       creator: Créateur
       administrator: Administrateur
     text:
+      connexion: Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant ou inscris-toi pour le prochain événement.
       disconnect: Tu n'es pas %user% ?
     guestname_required_alert:
       title: Quel est ton nom ?
@@ -236,13 +261,16 @@ eventInvitation:
         hello: "Bonjour %username%!"
         paragraph: "Tu participes à l'organisation de l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier ta participation, utilise le lien ci-dessous :"
 
-invitation_list:
+invitations_list:
   display:
     title: Liste des invités
+    all_answers: Voir l'ensemble des invitations
+    new_invitations: "Inviter des amis"
     list:
-      yes: "Ils seront là :"
-      maybe: "Ils n'ont pas encore répondu :"
-      no: "Ils ont décliné l'invitation :"
+      yes: "Ils seront là (%number%)"
+      dont_know: "Ils sont encore indécis (%number%)"
+      no: "Ils ont décliné l'invitation (%number%)"
+  no_answer: Pas encore de réponse
 
 invitations:
   display:
@@ -268,7 +296,9 @@ invitations:
   button:
     send_invitation: Envoyer les invitations
     via_facebook: Via Facebook
-    via_gmail_contact: Via Gmail Contacts
+    via_gmail_contact:
+      show: Mes contacts Gmail
+      hide: Fermer les Contacts Gmail
 
 contactsgmail:
   title: Contacts Gmail
@@ -317,12 +347,19 @@ module:
 
 pollmodule:
   add_link:
-    what: Quoi ?
-    when: Quand ?
-    where: Où ?
-    whobringswhat: Qui apporte quoi ?
+    what: Quoi?
+    when: Quand?
+    where: Où?
+    whobringswhat: Qui apporte quoi?
   display:
     no_proposal: Pas encore de proposition
+    result:
+     vote: vote(s)
+     contribution: contribution(s)
+     total: "Total:"
+     allresult: Voir l'ensemble des réponses
+     modal:
+      title: Réponses
   modal:
     addPollProposal:
       title: Ajouter une proposition
@@ -363,7 +400,8 @@ global:
     submit: Soumettre
     edit: Editer
     save: Sauvegarder
-    nextStep: Prochaine étape
+    previousStep: Précédent
+    nextStep: Suivant
     delete: Supprimer
     add: Ajouter
     loading: En cours...
@@ -372,6 +410,8 @@ global:
     set: Définir
     poll: Sondage
     close: Fermer
+    skip: Passer
+    finish: Terminer
   success:
     data_saved: Données sauvegardées
   error:

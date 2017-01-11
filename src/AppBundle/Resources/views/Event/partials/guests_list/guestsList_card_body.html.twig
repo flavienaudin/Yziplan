@@ -1,0 +1,95 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
+- event (Event) L'événement courant pour afficher les invitations
+#}
+
+<div id="guests_list">
+    {% set eventInvitation_answer_yes = event.eventInvitationByAnswer(constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES')) %}
+    {% set eventInvitation_answer_dont_know = event.eventInvitationByAnswer(constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')) %}
+    {% set eventInvitation_answer_no = event.eventInvitationByAnswer(constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO')) %}
+
+    {{ include('@App/Event/partials/guests_list/guestsList_modal.html.twig', {
+        "userEventInvitation":userEventInvitation,
+        "eventInvitation_answer_yes":eventInvitation_answer_yes,
+        "eventInvitation_answer_dont_know":eventInvitation_answer_dont_know,
+        "eventInvitation_answer_no": eventInvitation_answer_no
+    }) }}
+
+    <div class="list-group lg-padding-xs text-center">
+        <div class="list-group-item">
+            <h5><a href="#guestsList_modal" data-toggle="modal">{{ "invitations_list.display.list.yes"|trans({"%number%":eventInvitation_answer_yes|length}) }}</a></h5>
+            {% if eventInvitation_answer_yes|length>0 %}
+                <ul class="list-inline eventInvitations_list">
+                    {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
+                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
+                    {% endif %}
+                    {% for eventInvitation in eventInvitation_answer_yes if eventInvitation != userEventInvitation %}
+                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="list-group-item visible-lg">
+            <h5><a href="#guestsList_modal" data-toggle="modal">{{ "invitations_list.display.list.dont_know"|trans({"%number%":eventInvitation_answer_dont_know|length}) }}</a></h5>
+            {% if eventInvitation_answer_dont_know|length>0 %}
+                <ul class="list-inline eventInvitations_list">
+                    {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') %}
+                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
+                    {% endif %}
+                    {% for eventInvitation in eventInvitation_answer_dont_know if eventInvitation != userEventInvitation %}
+                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="list-group-item visible-lg">
+            <h5><a href="#guestsList_modal" data-toggle="modal">{{ "invitations_list.display.list.no"|trans({"%number%":eventInvitation_answer_no|length}) }}</a></h5>
+            {% if eventInvitation_answer_no|length>0 %}
+                <ul class="list-inline eventInvitations_list ">
+                    {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
+                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
+                    {% endif %}
+                    {% for eventInvitation in eventInvitation_answer_no if eventInvitation != userEventInvitation %}
+                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="list-group-item hidden-lg p-b-10">
+            <a href="#guestsList_modal" data-toggle="modal" class="btn btn-default waves-effect">{{ "invitations_list.display.all_answers"|trans }}</a>
+        </div>
+    </div>
+    <script>
+        $('.eventInvitations_list').find('li a.cancelInvitation').each(function () {
+            var $link = $(this);
+            $link.on('click', function (e) {
+                e.preventDefault();
+                var text = "";
+                if ($link.data('guestname') == "") {
+                    text = "{{ "invitations.display.cancel.swal.text_noname"|trans }}";
+                } else {
+                    text = "{{ "invitations.display.cancel.swal.text"|trans }}";
+                    text = text.replace('%name%', $link.data('guestname'));
+                }
+                swal({
+                    title: "{{ "invitations.display.cancel.swal.title"|trans }}",
+                    text: text,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: '{{ "global.button.delete"|trans }}',
+                    showLoaderOnConfirm: true
+                }).then(function () {
+                    ajaxRequest($link, null, e, function (responseJSON, textStatus, jqXHR) {
+                        $($link).closest('li').remove();
+                    }, null, null);
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            LetterAvatar.transform();
+        });
+    </script>
+</div>
+

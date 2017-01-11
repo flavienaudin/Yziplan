@@ -4,6 +4,8 @@ namespace AppBundle\Entity\Event;
 
 use AppBundle\Entity\Comment\CommentableInterface;
 use AppBundle\Entity\Comment\Thread;
+use AppBundle\Utils\enum\EventInvitationAnswer;
+use AppBundle\Utils\enum\EventInvitationStatus;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -525,4 +527,17 @@ class Event implements CommentableInterface
         return $this->eventInvitations->matching($criteria);
     }
 
+    /**
+     * Retrieve EventInvitations that are valid and matching the given $answer
+     * @param (string|null) $answer
+     * @return Collection
+     */
+    public function getEventInvitationByAnswer($answer = null)
+    {
+        $criteria = Criteria::create()->where(Criteria::expr()->in("status", [EventInvitationStatus::AWAITING_ANSWER, "status", EventInvitationStatus::VALID]));
+        if ($answer != null) {
+            $criteria->andWhere(Criteria::expr()->eq("answer", $answer));
+        }
+        return $this->eventInvitations->matching($criteria);
+    }
 }

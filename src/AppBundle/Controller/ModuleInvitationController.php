@@ -37,7 +37,8 @@ class ModuleInvitationController extends Controller
                 if ($this->isGranted(ModuleInvitationVoter::EDIT, $moduleInvitation)) {
                     $pollroposalResponseManager = $this->get("at.manager.pollproposal_response");
                     $pollroposalResponseManager->answerPollModuleProposal($moduleInvitation, $request->request->get('pollProposalId'), $request->request->get('value'));
-                    $data = array();
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#resultCellPollProposal_' . $request->request->get('pollProposalId')] =
+                        $pollroposalResponseManager->displayPollProposalRowResultPartial($request->request->get('pollProposalId'), $moduleInvitation);
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('moduleInvitation.error.message.unauthorized_access');

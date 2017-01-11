@@ -253,6 +253,19 @@ class PollProposal
 
     /**
      * Return PollProposalReponses concerning the PollProposal, of the ModuleInvitation
+     * @param $moduleInvitation
+     */
+    public function getPollProposalResponsesOfModuleInvitation($moduleInvitation)
+    {
+        $miPollProposalResponse = $moduleInvitation->getPollProposalResponses();
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("pollProposal", $this));
+        $criteria->setMaxResults(1);
+        $response = $miPollProposalResponse->matching($criteria);
+        return $response[0];
+    }
+
+    /**
+     * Return PollProposalReponses concerning the PollProposal, of the ModuleInvitation
      * @param $moduleInvitations
      */
     public function getPollProposalResponsesOfModuleInvitations($moduleInvitations)
@@ -260,12 +273,7 @@ class PollProposal
         $pollProposalResponses = array();
         /** @var ModuleInvitation $moduleInvitation */
         foreach ($moduleInvitations as $moduleInvitation) {
-            $miPollProposalResponse = $moduleInvitation->getPollProposalResponses();
-            $criteria = Criteria::create()->where(Criteria::expr()->eq("pollProposal", $this));
-            $criteria->setMaxResults(1);
-            $response = $miPollProposalResponse->matching($criteria);
-            $pollProposalResponses[] = $response[0];
-
+            $pollProposalResponses[] = $this->getPollProposalResponsesOfModuleInvitation($moduleInvitation);
         }
         return $pollProposalResponses;
     }

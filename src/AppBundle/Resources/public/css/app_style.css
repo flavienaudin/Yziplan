@@ -2,26 +2,50 @@
 /*---------------------------------
    Beta
 ----------------------------------*/
-.beta:after{
+.beta:after {
     content: "beta";
     position: fixed;
-    width: 150px;
-    height: 35px;
+    width: 100px;
+    height: 20px;
     background: #EE8E4A;
-    top: 20px;
-    left: -37px;
+    top: 10px;
+    left: -30px;
     text-align: center;
-    font-size: 20px;
+    font-size: 15px;
     font-family: sans-serif;
     text-transform: uppercase;
     font-weight: bold;
     color: #fff;
-    line-height: 35px;
-    -ms-transform:rotate(-45deg);
-    -webkit-transform:rotate(-45deg);
-    transform:rotate(-45deg);
-    z-index: 10000;
+    line-height: 20px;
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    z-index: 1049;
 }
+
+@media (min-width: 768px) {
+    .beta:after {
+        content: "beta";
+        position: fixed;
+        width: 150px;
+        height: 35px;
+        background: #EE8E4A;
+        top: 20px;
+        left: -37px;
+        text-align: center;
+        font-size: 20px;
+        font-family: sans-serif;
+        text-transform: uppercase;
+        font-weight: bold;
+        color: #fff;
+        line-height: 35px;
+        -ms-transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+        z-index: 1049;
+    }
+}
+
 /*---------------------------------
    Connexion
 ----------------------------------*/
@@ -53,6 +77,12 @@
 
 .at-global-preloader .plc-path {
     stroke-width: 4;
+}
+
+.center-content {
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /*---------------------------------
@@ -98,13 +128,36 @@
     padding: 15px;
 }
 
-
 @media (max-width: 767px) {
-    .card-header{
+    .card-header {
         padding: 10px 15px;
     }
-
 }
+
+@media (max-width: 767px) {
+    .modal .modal-body {
+        padding: 0 15px 10px;
+    }
+
+    .table.table-condensed > thead > tr > th:first-child,
+    .table.table-condensed > tbody > tr > th:first-child,
+    .table.table-condensed > tfoot > tr > th:first-child,
+    .table.table-condensed > thead > tr > td:first-child,
+    .table.table-condensed > tbody > tr > td:first-child,
+    .table.table-condensed > tfoot > tr > td:first-child {
+        padding-left: 10px;
+    }
+
+    .table.table-condensed > thead > tr > th:last-child,
+    .table.table-condensed > tbody > tr > th:last-child,
+    .table.table-condensed > tfoot > tr > th:last-child,
+    .table.table-condensed > thead > tr > td:last-child,
+    .table.table-condensed > tbody > tr > td:last-child,
+    .table.table-condensed > tfoot > tr > td:last-child {
+        padding-right: 10px;
+    }
+}
+
 /*-----------------------------------
     FIX checkbox-inline, radio-inline
 -----------------------------------*/
@@ -269,7 +322,7 @@ h1.event-title {
 
 .answer-form .btn-answer-false.active,
 .answer-form .btn-answer-false:active {
-    background-color: #ff5722;
+    background-color: #f44336;
     font-weight: bold;
 }
 
@@ -308,6 +361,11 @@ h1.event-title {
 /*----------------------------------
     Event Invitations
 -----------------------------------*/
+.list-group.lg-padding-xs .list-group-item {
+    border: 0;
+    margin: 0;
+    padding: 0 5px;
+}
 
 .userInvitation-avatar {
     position: relative;
@@ -397,8 +455,6 @@ h1.event-title {
     transform: rotate(-360deg);
 }
 
-/** end Colored Header **/
-
 /*---------------------------------
     Borders : b-Position-Color
 ---------------------------------*/
@@ -443,47 +499,60 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
-/* Fix : au dessus des éléments .active */
-.DTFC_LeftWrapper {
-    z-index: 5;
-}
-
-/* Surcharge datatable.css */
-table.dataTable.compact thead th,
-table.dataTable.compact thead td,
-table.dataTable.compact tbody th,
-table.dataTable.compact tbody td {
-    padding: 0 1px;
-}
-
 .poll-container table td {
-    min-width: 40px;
-    max-width: 40px;
-    width: 40px;
-    text-align: center;
+    padding: 3px;
+!important;
 }
 
-.poll-container table th.pollproposal-column {
-    text-align: left;
-    font-weight: bold;
-    min-width: 150px !important;
-    max-width: 300px !important;
+.poll-container table td.response-column {
+    min-width: 50px;
+    max-width: 120px;
+    width: 60px;
+    text-align: center;
 }
 
 .poll-container table td.voting-column {
     min-width: 40px;
-    max-width: 50px;
+    max-width: 100px;
+    width: 40px;
+    text-align: center;
 }
 
-.poll-container table td.end-spacer {
-    min-width: 0;
-    max-width: none;
-    width: auto;
+.poll-response table td.pollproposal-column {
+    min-width: 200px;
+    max-width: 400px;
+    width: 300px;
+    text-align: left;
+    white-space: normal !important;
+    padding-left: 10px !important;
 }
 
-table.dataTable td.dataTables_empty {
-    text-align: center !important;
-    width: 100% !important;
+.poll-response table td.response-column {
+    width: 40px !important;
+    padding-top: auto;
+    padding-left: 0;
+    padding-right: 0 !important;
+}
+
+.pollmodule-nopropal {
+    width: 100%;
+    margin-top: 10px;
+    padding-top: 5px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+
+    text-align: center;
+    font-style: italic;
+    border-top: solid;
+    border-bottom: solid;
+}
+
+.table-striped > tbody > tr:nth-of-type(even) .progress {
+    background-color: #f5f5f5;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) .progress {
+    background-color: white;
 }
 
 /*.poll-container .dataTables_scroll table td:last-child {
@@ -523,6 +592,27 @@ table.dataTable td.dataTables_empty {
 .pollproposal-response > .response-no.active {
     background-color: #ff5722;
     color: white !important;
+}
+
+/*.pollresponse-preloader {
+    position: absolute;
+    top: 0;
+    left: 0;
+}*/
+.pollresponse-preloader {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.pollproposalamount-response {
+    width: 50px;
+    display: table;
+    margin: 0 auto;
 }
 
 /*---------------------------------
@@ -641,7 +731,7 @@ table.dataTable td.dataTables_empty {
 @media (max-width: 767px) {
     .profile-tab .pm-overview {
         width: 100%;
-        background: #333;
+        background: #f8f8f8;
         text-align: center;
     }
 }
@@ -836,7 +926,7 @@ table.dataTable td.dataTables_empty {
     display: none;
 }
 
-.pmb-block .pmbb-body:first-child{
+.pmb-block .pmbb-body:first-child {
     padding-top: 10px;
 }
 
@@ -871,7 +961,7 @@ table.dataTable td.dataTables_empty {
 ----------------------------------*/
 .index-main {
     padding: 0 !important;
-    margin-top: 70px !important;
+    padding-top: 70px !important;
 }
 
 /*---------------------------------
@@ -919,23 +1009,3 @@ table.dataTable td.dataTables_empty {
     display: block;;
 }
 
-.beta:after{
-    content: "beta";
-    position: fixed;
-    width: 150px;
-    height: 35px;
-    background: #EE8E4A;
-    top: 20px;
-    left: -37px;
-    text-align: center;
-    font-size: 20px;
-    font-family: sans-serif;
-    text-transform: uppercase;
-    font-weight: bold;
-    color: #fff;
-    line-height: 35px;
-    -ms-transform:rotate(-45deg);
-    -webkit-transform:rotate(-45deg);
-    transform:rotate(-45deg);
-    z-index: 10000;
-}

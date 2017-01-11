@@ -1,0 +1,109 @@
+{# Données d'entrée :
+- pollProposal (PollProposal) La proposition à afficher
+- userModuleInvitation (ModuleInvitaion) L'invitation du module de l'utilisateur
+- moduleInvitations ([ModuleInvitaion]) les invitations du module
+#}
+
+{% set responseValue = null %}
+{% set userPPResponse = pollProposal.pollProposalResponsesOfModuleInvitations([userModuleInvitation]) %}
+{% if userPPResponse|length == 1 %}
+    {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:null) %}
+{% endif %}
+<div id="popover-content_{{ pollProposal.id }}" class="hide">
+    <div id="pollProposalReponse_{{ pollProposal.id }}" class="btn-group-vertical btn-group-lg pollproposal-response m-t-15" data-toggle="buttons" role="group">
+        <label id="pollProposalReponse_{{ pollProposal.id }}_yes"
+               class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}">
+            <input type="radio" autocomplete="off"
+                   name="pollProposalReponse_{{ pollProposal.id }}"
+                   value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"> <i class="zmdi zmdi-thumb-up"></i>
+        </label>
+        {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE') %}
+            <label id="pollProposalReponse_{{ pollProposal.id }}_maybe"
+                   class="btn response-maybe bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}">
+                <input type="radio"
+                       autocomplete="off"
+                       name="pollProposalReponse_{{ pollProposal.id }}"
+                       value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"> <i
+                        class="zmdi zmdi-thumb-up-down"></i> </label>
+        {% endif %}
+        <label id="pollProposalReponse_{{ pollProposal.id }}_no" class="btn response-no bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}">
+            <input type="radio" autocomplete="off"
+                   name="pollProposalReponse_{{ pollProposal.id }}"
+                   value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"> <i class="zmdi zmdi-thumb-down"></i>
+        </label>
+    </div>
+</div>
+<button id="pollmodule_button_{{ pollProposal.id }}" class="btn c-bluegray waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title=""
+        data-original-title="">
+    {% if responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
+        <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
+    {% elseif responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
+        <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+    {% elseif responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
+        <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>
+    {% else %}
+        <span class="answer-thumb text palette-White">?</span>
+        {#<span class="answer-thumb text palette-White c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>#}
+    {% endif %}
+</button>
+
+<script>
+    $('#pollmodule_button_{{ pollProposal.id }}').popover({
+        html: true,
+        content: function () {
+            var content = $('#popover-content_{{ pollProposal.id }}').html();
+            return content;
+        },
+        trigger: 'focus'
+    }).on('shown.bs.popover', function (event) {
+        $(this).next('.popover').find(":input").on('change', function (e) {
+            {# On ajoute le loader sur le bouton #}
+            var loader = '<div class="pollresponse-preloader">' +
+                '<div class="preloader pl-sm"><svg class="pl-circular" viewBox="25 25 50 50"><circle class="plc-path" cx="50" cy="50" r="20"></circle></svg></div></div>';
+            $('#pollmodule_button_{{ pollProposal.id }}').append(loader);
+
+            var data = {
+                'pollProposalId': {{ pollProposal.id }},
+                'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
+                'value': $(this).val()
+            };
+            var icon = $(this).parent("label");
+            var urlTarget = "{{ path('answerPollModuleProposal') }}";
+            ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
+                var animation = 'bounceIn';
+                icon.addClass('animated ' + animation);
+                setTimeout(function () {
+                    icon.removeClass(animation);
+                }, 1000);
+                {# On met a jour le bouton de reponse et les boutons radio #}
+                var newContent = null;
+                if (data['value'] == '{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}') {
+                    newContent = '<span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>';
+                    $('#pollProposalReponse_{{ pollProposal.id }}_yes').toggleClass('active');
+                    $('#pollProposalReponse_{{ pollProposal.id }}_maybe').removeClass('active');
+                    $('#pollProposalReponse_{{ pollProposal.id }}_no').removeClass('active');
+                } else if (data['value'] == '{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}') {
+                    newContent = '<span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>';
+                    $('#pollProposalReponse_{{ pollProposal.id }}_maybe').toggleClass('active');
+                    $('#pollProposalReponse_{{ pollProposal.id }}_yes').removeClass('active');
+                    $('#pollProposalReponse_{{ pollProposal.id }}_no').removeClass('active');
+                } else if (data['value'] == '{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}') {
+                    newContent = ' <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>';
+                    $('#pollProposalReponse_{{ pollProposal.id }}_no').toggleClass('active');
+                    $('#pollProposalReponse_{{ pollProposal.id }}_yes').removeClass('active');
+                    $('#pollProposalReponse_{{ pollProposal.id }}_maybe').removeClass('active');
+                } else {
+                    newContent = '<span class="answer-thumb text palette-White">?</span>';
+                }
+                document.getElementById("pollmodule_button_{{ pollProposal.id }}").innerHTML = newContent;
+                LetterAvatar.transform();
+            }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                {# Avertissement/Demande du nom pour valider la participation #}
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    askGuestName();
+                }
+            });
+            {# enlever le loader en cas de probleme #}
+        });
+    });
+</script>

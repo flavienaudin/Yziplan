@@ -17,30 +17,30 @@
 
 {% block event_content %}
     <div class="grid row">
-        <div class="grid-item col-xs-12 col-lg-8">
+        <div class="grid-item col-xs-12 col-xs-p-lr-0 col-lg-8">
             {{ include("@App/Event/partials/event_header_card.html.twig", {'userEventInvitation':userEventInvitation, 'eventForm':eventForm, 'thread':thread, 'comments':comments}) }}
         </div>
 
-        <div class="grid-item col-xs-12 col-lg-4">
+        <div class="grid-item col-xs-12 col-xs-p-lr-0 col-lg-4">
             <div class="row">
-                <div id="profileCard" class="col-xs-12 col-sm-6 col-lg-12">
+                <div id="profileCard" class="col-xs-12 col-xs-p-lr-0 col-sm-6 col-lg-12">
                     {{ include("@App/Event/partials/profile/eventInvitation_profile_card.html.twig", {
                         "userEventInvitation":userEventInvitation,
-                        'userEventInvitationForm' : userEventInvitationForm,
-                        'userEventInvitationAnswerForm':userEventInvitationAnswerForm}) }}
+                        'userEventInvitationForm' : userEventInvitationForm}) }}
                 </div>
 
-                <div id="guestListCard" class="col-xs-12">
-                    {{ include('@App/Event/partials/eventInvitation_list_card.html.twig', {
+                <div id="guestListCard" class="col-xs-12 col-xs-p-lr-0 col-sm-6 col-lg-12">
+                    {{ include('@App/Event/partials/event_guests_card.html.twig', {
                         'userEventInvitation':userEventInvitation,
-                        'eventInvitations':event.eventInvitations
+                        'event':event,
+                        'userEventInvitationAnswerForm':userEventInvitationAnswerForm
                     }) }}
                 </div>
             </div>
         </div>
 
         {# Affiche les modules de l'événement, les modules ajoutés via Ajax sont ajoutés à la fin de la div #eventModulesContainer #}
-        <div class="grid-item col-xs-12 col-lg-8" id="eventModulesContainer">
+        <div class="grid-item col-xs-12 col-xs-p-lr-0 col-lg-8" id="eventModulesContainer">
             {% for moduleDescription in modules if moduleDescription.module.status != constant("AppBundle\\Utils\\enum\\ModuleStatus::DELETED") %}
                 {% set userModuleInvitation = userEventInvitation.getModuleInvitationForModule(moduleDescription.module) %}
                 {% if userModuleInvitation != null %}
@@ -73,21 +73,21 @@
 
         {# Carte permettant l'ajout de modules supplémentaires, n'est affiché que si l'utilisateur a le droit #}
         {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
-            <div class="grid-item col-xs-12 col-lg-8" id="addModule">
+            <div class="grid-item col-xs-12 col-xs-p-lr-0 col-lg-8" id="addModule">
                 {{ include('@App/Event/module/displayAddModule.html.twig',{'event': event}) }}
             </div>
         {% endif %}
-
-        {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly or invitationsForm is not null %}
-            <div id="invitationCard" class="grid-item col-xs-12 col-sm-6 col-lg-12">
-                {{ include('@App/Event/partials/eventInvitation_card.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
-            </div>
-        {% endif %}
-
         <!-- .grid-sizer empty element, only used for element sizing -->
-        <div class="grid-sizer col-xs-12 col-lg-4"></div>
+        <div class="grid-sizer col-xs-12 col-xs-p-lr-0 col-sm-6 col-lg-4"></div>
     </div>
 {% endblock event_content %}
+
+{% block page_modal_container %}
+    {{ parent() }}
+    {% if eventForm is not null %}
+        {{ include("@App/Event/partials/event_edit_modal.html.twig", {'userEventInvitation':userEventInvitation, 'eventForm':eventForm}) }}
+    {% endif %}
+{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}

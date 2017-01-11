@@ -162,7 +162,7 @@
                                 {% set biography = user.applicationUser.appUserInformation.biography|nl2br %}
                                 {{ biography|raw }}
                             {% else %}
-                                {{ "profile.show.profile_information.complementaries.biography.empty"|trans }}
+                                <i>{{ "profile.show.profile_information.complementaries.biography.empty"|trans }}</i>
                             {% endif %}
                         </dd>
                     </dl>
@@ -175,7 +175,7 @@
                                 {% set interests = user.applicationUser.appUserInformation.interests|nl2br %}
                                 {{ interests|raw }}
                             {% else %}
-                                {{ "profile.show.profile_information.complementaries.interests.empty"|trans }}
+                                <i>{{ "profile.show.profile_information.complementaries.interests.empty"|trans }}</i>
                             {% endif %}
                         </dd>
                     </dl>
@@ -188,7 +188,7 @@
                                 {% set foodConveniences = user.applicationUser.appUserInformation.foodConveniences|nl2br %}
                                 {{ foodConveniences|raw }}
                             {% else %}
-                                {{ "profile.show.profile_information.complementaries.food_conveniences.empty"|trans }}
+                                <i>{{ "profile.show.profile_information.complementaries.food_conveniences.empty"|trans }}</i>
                             {% endif %}
                         </dd>
                     </dl>

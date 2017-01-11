@@ -130,10 +130,10 @@ class EventInvitationController extends Controller
                 }
 
                 if ($request->isXmlHttpRequest()) {
-                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitation_list_card'] =
-                        $this->renderView("@App/Event/partials/eventInvitation_list_card.html.twig", array(
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#guests_list'] =
+                        $this->renderView("@App/Event/partials/guests_list/guestsList_card_body.html.twig", array(
                             'userEventInvitation' => $userEventInvitation,
-                            'eventInvitations' => $event->getEventInvitations()
+                            'event' => $event
                         ));
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
