@@ -345,10 +345,10 @@ module:
 
 pollmodule:
   add_link:
-    what: Quoi ?
-    when: Quand ?
-    where: Où ?
-    whobringswhat: Qui apporte quoi ?
+    what: Quoi?
+    when: Quand?
+    where: Où?
+    whobringswhat: Qui apporte quoi?
   display:
     no_proposal: Pas encore de proposition
     result:

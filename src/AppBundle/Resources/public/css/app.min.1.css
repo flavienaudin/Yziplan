@@ -10012,6 +10012,10 @@ pre {
 }
 
 @media (max-width: 767px) {
+    #main {
+        padding-top: 70px;
+    }
+
     #content > .container {
         padding-left: 0;
         padding-right: 0;
@@ -10021,7 +10025,6 @@ pre {
         margin-left: 0;
         margin-right: 0;
     }
-
 }
 
 /*---------------------------------
@@ -10048,7 +10051,7 @@ pre {
 
 @media (max-width: 767px) {
     #header {
-        padding: 10px 25px;
+        padding: 10px 0;
     }
 }
 
