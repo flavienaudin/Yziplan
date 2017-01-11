@@ -396,7 +396,7 @@ global:
     submit: Soumettre
     edit: Editer
     save: Sauvegarder
-    previousStep: Retour
+    previousStep: Précédent
     nextStep: Suivant
     delete: Supprimer
     add: Ajouter
