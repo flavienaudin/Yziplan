@@ -343,10 +343,10 @@ module:
 
 pollmodule:
   add_link:
-    what: Quoi ?
-    when: Quand ?
-    where: Où ?
-    whobringswhat: Qui apporte quoi ?
+    what: Quoi&#8239;?
+    when: Quand&#8239;?
+    where: Où&#8239;?
+    whobringswhat: Qui apporte quoi&#8239;?
   display:
     no_proposal: Pas encore de proposition
     result:
