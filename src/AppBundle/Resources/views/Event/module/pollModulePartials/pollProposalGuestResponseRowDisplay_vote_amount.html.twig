@@ -33,7 +33,7 @@
     {% if responseValue > 0 %}
         <span class="answer-thumb palette-Light-Green-100 bg strong"><span class="palette-Black text">{{ responseValue }}</span></span>
     {% else %}
-        <span class="answer-thumb text palette-White">0</span>
+        <span class="answer-thumb text palette-White"><i class="zmdi zmdi-plus"></i></span>
         {#<span class="answer-thumb text palette-White c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>#}
     {% endif %}
 </button>
@@ -84,7 +84,7 @@
                     if (data['value'] > 0) {
                         newContent = '<span class="answer-thumb palette-Light-Green-100 bg strong"><span class="palette-Black text">' + data['value'] + '</span></span>';
                     } else {
-                        newContent = '<span class="answer-thumb text palette-White">0</span>';
+                        newContent = '<span class="answer-thumb text palette-White"><i class="zmdi zmdi-plus zmdi-hc-2x"></i></span>';
                     }
                     document.getElementById("pollmodule_button_{{ pollProposal.id }}").innerHTML = newContent;
                     LetterAvatar.transform();
