@@ -53,7 +53,7 @@ class RegistrationController extends BaseController
                 $emailAccountUser = $userManager->findUserByEmail($email);
                 if ($emailAccountUser != null) {
                     // Un utilisateur avec l'email utilisé existe déjà en base : on refuse l'inscription
-                    $form->get('email')->addError(new FormError($this->get("translator.default")->trans("register.validation.email_already_used")));
+                    $form->get('email')->addError(new FormError($this->get("translator")->trans("register.validation.email_already_used")));
                     return $this->render('FOSUserBundle:Registration:register.html.twig', array('form' => $form->createView()));
                 }
 

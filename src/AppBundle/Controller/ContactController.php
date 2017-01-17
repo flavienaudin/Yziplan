@@ -194,7 +194,7 @@ class ContactController extends Controller
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("contacts.message.remove_contact.success");
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator.default")->trans("contacts.message.remove_contact.success"));
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("contacts.message.remove_contact.success"));
                     return $this->redirectToRoute('fos_user_profile_show');
                 }
             } else {
@@ -202,16 +202,16 @@ class ContactController extends Controller
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("contacts.message.remove_contact.error");
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else {
-                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator.default")->trans("contacts.message.remove_contact.error"));
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("contacts.message.remove_contact.error"));
                     return $this->redirectToRoute('fos_user_profile_show');
                 }
             }
         } else {
             if ($request->isXmlHttpRequest()) {
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator.default")->trans("global.error.invalid_form");
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("global.error.invalid_form");
                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator.default")->trans("global.error.invalid_form"));
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("global.error.invalid_form"));
                 return $this->redirectToRoute('home');
             }
         }

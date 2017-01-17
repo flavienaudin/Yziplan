@@ -17,9 +17,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Util\CanonicalizerInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
-use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ApplicationUserManager
 {
@@ -28,7 +28,7 @@ class ApplicationUserManager
     private $entityManager;
     /** @var CanonicalizerInterface $emailCanonicalizer */
     private $emailCanonicalizer;
-    /** @var Translator $translator */
+    /** @var TranslatorInterface $translator */
     private $translator;
     /** @var ApplicationUser */
     private $applicationUser;
@@ -40,7 +40,7 @@ class ApplicationUserManager
      * @param EntityManager $entityManager
      * @param CanonicalizerInterface $emailCanonicalizer
      */
-    public function __construct(EntityManager $entityManager, CanonicalizerInterface $emailCanonicalizer, Translator $translator, TokenGeneratorInterface $tokenGenerator)
+    public function __construct(EntityManager $entityManager, CanonicalizerInterface $emailCanonicalizer, TranslatorInterface $translator, TokenGeneratorInterface $tokenGenerator)
     {
         $this->entityManager = $entityManager;
         $this->emailCanonicalizer = $emailCanonicalizer;
@@ -139,12 +139,12 @@ class ApplicationUserManager
             /** @var AppUserEmail $newAppUserEmail */
             $newAppUserEmail = $appUserEmailForm->getData();
             $existingAppUserEmail = $this->findAppUserEmailByEmail($newAppUserEmail->getEmail());
-            if ($existingAppUserEmail != null){
-                if($existingAppUserEmail->getApplicationUser()->getAccountUser() != null) {
+            if ($existingAppUserEmail != null) {
+                if ($existingAppUserEmail->getApplicationUser()->getAccountUser() != null) {
                     // L'email est déjà attatché à un AccountUser, il ne peut être utilisé
                     $appUserEmailForm->get('email')->addError(new FormError($this->translator->trans("profile.show.appuseremail.modal.form.validation.email_already_used")));
                     return $appUserEmailForm;
-                }else{
+                } else {
                     // l'email existe mais n'est pas rattaché à un AccountUser, il pourra être rattaché à l'utilisateur uniquement après validation par email
                     // pour ne pas bloquer les éventuelles invitations qui seraient rattachés à son ApplicationUser
                     $existingAppUserEmail->setType($newAppUserEmail->getType());
@@ -153,7 +153,7 @@ class ApplicationUserManager
                     $this->entityManager->flush();
                     return $existingAppUserEmail;
                 }
-            }else {
+            } else {
                 // L'email n'est pas connu en base, on l'attache à l'utilisateur directement (peut être soumis à validation par email)
                 $newAppUserEmail->setEmailCanonical($this->emailCanonicalizer->canonicalize($newAppUserEmail->getEmail()));
                 $this->applicationUser->addAppUserEmail($newAppUserEmail);

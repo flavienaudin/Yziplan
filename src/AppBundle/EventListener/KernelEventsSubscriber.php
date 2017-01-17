@@ -21,12 +21,12 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class KernelEventsSubscriber implements EventSubscriberInterface
 {
 
-    /** @var Translator */
+    /** @var TranslatorInterface */
     private $translator;
 
     /** @var FlashBag */
@@ -35,7 +35,7 @@ class KernelEventsSubscriber implements EventSubscriberInterface
     /** @var RouterInterface */
     private $router;
 
-    public function __construct(Translator $translator, FlashBag $flashBag, RouterInterface $router)
+    public function __construct(TranslatorInterface $translator, FlashBag $flashBag, RouterInterface $router)
     {
         $this->translator = $translator;
         $this->flashBag = $flashBag;
