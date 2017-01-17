@@ -320,10 +320,8 @@ module:
   form:
     name:
       label: Module name
-      placeholder: Module name
     description:
-      label: Description
-      placeholder: Description
+      label: Module description
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline

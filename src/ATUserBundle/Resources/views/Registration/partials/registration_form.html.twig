@@ -1,6 +1,6 @@
 {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register')}) }}
 
-<div class="input-group m-t-25 m-b-25 fg-float {% if (not form.publicName.vars.compound or form.publicName.vars.force_error|default(false)) and not form.publicName.vars.valid %} has-error{% endif %}">
+<div class="input-group fg-float {% if (not form.publicName.vars.compound or form.publicName.vars.force_error|default(false)) and not form.publicName.vars.valid %} has-error{% endif %}">
     <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
     <div class="fg-line">
         {{ form_widget(form.publicName, {"attr":{"class":"input-lg","autocomplete":"off"}}) }}
@@ -9,7 +9,7 @@
     {{ form_errors(form.publicName) }}
 </div>
 
-<div class="input-group m-b-25 fg-float {% if (not form.email.vars.compound or form.email.vars.force_error|default(false)) and not form.email.vars.valid %} has-error{% endif %}">
+<div class="input-group fg-float {% if (not form.email.vars.compound or form.email.vars.force_error|default(false)) and not form.email.vars.valid %} has-error{% endif %}">
     <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
     <div class="fg-line">
         {{ form_widget(form.email, {"attr":{"class":"input-lg","autocomplete":"off"}}) }}
@@ -19,7 +19,7 @@
 </div>
 
 {% for passwordField in form.plainPassword %}
-    <div class="input-group m-b-25 fg-float {% if (not passwordField.vars.compound or passwordField.vars.force_error|default(false)) and not passwordField.vars.valid %} has-error{% endif %}">
+    <div class="input-group fg-float {% if (not passwordField.vars.compound or passwordField.vars.force_error|default(false)) and not passwordField.vars.valid %} has-error{% endif %}">
         {% if loop.index == 1 %}
             <span class="input-group-addon"><i class="zmdi zmdi-lock"></i></span>
             {% set password_label = "form.password"|trans({}, 'FOSUserBundle') %}
@@ -36,7 +36,7 @@
 {% endfor %}
 
 <div class="row">
-    <div class="col-xs-12 m-b-30">
+    <div class="col-xs-12 m-t-25 m-b-25">
         <button type="submit" class="btn btn-block btn-lg palette-Teal bg waves-effect">
             {{ 'registration.submit'|trans({}, 'FOSUserBundle') }}
         </button>

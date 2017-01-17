@@ -12,32 +12,19 @@
         <div class="col-sm-12">
             {{ form_row(moduleForm.name, {
                 'label': 'module.form.name.label',
-                'label_attr':{'class':'sr-only'},
-                'attr':{'placeholder':'module.form.name.placeholder'},
-                'widget_options':{'fgline':true}
+                'attr':{},
+                'widget_options':{'fgfloat':true, 'fgline':true}
             }) }}
             {{ form_row(moduleForm.description, {
                 'label':'module.form.description.label',
-                'label_attr':{'class':'sr-only'},
-                'attr':{'placeholder':'module.form.description.placeholder','rows':3},
-                'widget_options':{'fgline':true}
+                'attr':{'rows':3},
+                'widget_options':{'fgfloat':true, 'fgline':true}
             }) }}
         </div>
-        {#<div class="col-sm-12">
-            {{ form_row(moduleForm.responseDeadline, {
-                'label':'module.form.responseDeadline.label',
-                'attr':{'placeholder':'module.form.responseDeadline.placeholder'},
-                'widget_options':{'fgline':true, 'displayInRow' : true}
-            }) }}
-            {{ form_row(moduleForm.invitationOnly, {'label':'module.form.invitationOnly.label', 'label_attr':{'class' : 'radio radio-inline'}}) }}
-            {{ form_row(moduleForm.guestsCanInvite, {'label':'module.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
-        </div>#}
     </div>
     {% block action_buttons %}
         <div class="pull-right m-r-20">
-            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-                <a href="{{ path('removeEventModule', {'token':module.token}) }}" id="modal_removeModule_{{ module.token }}" class="text-danger">{{ "global.button.delete"|trans }}</a>
-            {% endif %}
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
             <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
         </div>
     {% endblock action_buttons %}
@@ -59,45 +46,6 @@
             });
 
             {% block js_document_ready %}
-            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-            $('#modal_removeModule_{{ module.token }}').on('click', function (e) {
-                e.preventDefault();
-                if (!eventInvitationValid && askGuestName !== undefined) {
-                    askGuestName();
-                } else {
-                    var removeModuleLink = $(this);
-                    swal({
-                        title: '{{ "module.alert.confirm_deletion.title"|trans }}',
-                        text: '{{ "module.alert.confirm_deletion.message"|trans }}',
-                        type: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#DD6B55",
-                        confirmButtonText: '{{ "global.button.delete"|trans }}',
-                        showLoaderOnConfirm: true
-                    }).then(function () {
-                        $("#moduleEdit_modal_{{ module.token }}").modal('hide');
-                        ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                // Si on supprime depuis la modal
-                                $('#module-{{ module.token }}').remove();
-                                $('.grid').masonry('layout');
-                            }
-                        }, function (jqXHR, textStatus, errorThrown) {
-                            if (jqXHR.hasOwnProperty('responseJSON')) {
-                                var responseJSON = jqXHR['responseJSON'];
-                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                    if (!eventInvitationValid && askGuestName !== undefined) {
-                                        askGuestName();
-                                    }
-                                }
-                            }
-                        }, null);
-                    });
-                }
-            });
-            {% endif %}
-
-
             $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
                 ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                     $("#moduleEdit_modal_{{ module.token }}").modal('hide');
