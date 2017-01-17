@@ -7,206 +7,94 @@
 #}
 
 <div class="card z-depth-1 {% block moduleCardClass %}c-dark{% endblock %}" id="module-{{ module.token }}">
-    <div class="card-header m-b-10 {% block moduleHeaderClass %}palette-Teal bg{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
-        {% block moduleHeader %}
-        <div class="media">
-            <div class="pull-left">
-                {% block mhMediaLeft %}{% endblock mhMediaLeft %}
-            </div>
-            <div class="pull-right">
-                {% block mhMediaRight %}
-                {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation)
-                or is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-                {# Modale d'edition du module #}
-                <div id="module-header-modal-settings-{{ module.token }}" class="modal fade in" tabindex="-1" role="dialog" aria-hidden="true" padding-right: 17px;
-                ">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h3 class="modal-title">Configuration</h3>
+    {{ include("@App/Event/module/displayModule_header.html.twig", {'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation}) }}
+
+    {{ include('@App/Event/module/displayModule_informations.html.twig', {'module':module}) }}
+
+    {# TODO décommenter : non nécessaire en version beta
+    <div class="card-body">
+        <div class="panel-group" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-collapse {% block moduleInformationClass %}{% endblock %}" {% block moduleInformationAttributs %}{% endblock %}>
+                {% block moduleInformation %}
+                        <div class="panel-heading m-l-10 m-r-10" id="mInfo-PH-{{ module.token }}" role="tab">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" href="#collapse-mInfo-PH-{{ module.token }}" aria-expanded="false" aria-controls="collapse-mInfo-PH-{{ module.token }}">
+                                    {{ "module.main_information.title"|trans }}</a>
+                            </h4>
                         </div>
-                        <div class="modal-body">
-                            {{ include('@App/Event/module/displayModule_form.html.twig',{'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation}) }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <ul class="actions a-alt">
-                <li class="dropdown">
-                    <a href="" data-toggle="dropdown" aria-expanded="false">
-                        <i class="zmdi zmdi-settings"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
-                            <li>
-                                <a data-toggle="modal" href="#module-header-modal-settings-{{ module.token }}"><i class="zmdi zmdi-edit"></i> Editer</a>
-                            </li>
-                        {% endif %}
-                        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-                            <li><a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"> <i
-                                            class="zmdi zmdi-delete c-red"></i> Supprimer</a></li>
-                            <script>
-                                $('#removeModule{{ module.token }}').on('click', function (e) {
-                                    e.preventDefault();
-                                    if (!eventInvitationValid && askGuestName !== undefined) {
-                                        askGuestName();
-                                    } else {
-                                        var removeModuleLink = $(this);
-                                        swal({
-                                            title: '{{ "module.alert.confirm_deletion.title"|trans }}',
-                                            text: '{{ "module.alert.confirm_deletion.message"|trans }}',
-                                            type: "warning",
-                                            showCancelButton: true,
-                                            confirmButtonColor: "#DD6B55",
-                                            confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                            showLoaderOnConfirm: true
-                                        }).then(function () {
-                                            ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                    $('#module-{{ module.token }}').remove();
-                                                    $('.grid').masonry('layout');
-                                                }
-                                            }, function (jqXHR, textStatus, errorThrown) {
-                                                if (jqXHR.hasOwnProperty('responseJSON')) {
-                                                    var responseJSON = jqXHR['responseJSON'];
-                                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                                        if (!eventInvitationValid && askGuestName !== undefined) {
-                                                            askGuestName();
-                                                        }
-                                                    }
-                                                }
-                                            }, null);
-                                        });
-                                    }
-                                });
-                            </script>
-                        {% endif %}
-                    </ul>
-                </li>
-            </ul>
-            {% endif %}
-            {% endblock mhMediaRight %}
-        </div>
-        <div class="media-body">
-            {% block mhMediaBody %}
-                {% set creatorsNames = "" %}
-                {% for creatorInvitation in module.creators %}
-                    {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
-                {% endfor %}
-                <h2><span id="module_{{ module.token }}_name">{{ module.name is not empty?module.name|trans }}</span>
-                    {% if creatorsNames is not empty %}
-                        <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}
-                            {# TODO décommenter <span class="label label-default">{{ module.status|trans}}</span>#}
-                        </small>
-                    {% endif %}
-                </h2>
-            {% endblock mhMediaBody %}
-        </div>
-    </div>
-    {% block mhBtnFloat %}
-        {#{% if module.expenseModule is null and module.pollModule is null %}
-            <a href="#addSubModule">
-                <button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
-            </a>
-        {% endif %}#}
-    {% endblock mhBtnFloat %}
-    {% endblock moduleHeader %}
-</div>
-
-<div class="card-body {% block moduleInformationClass %}{% endblock %} " {% block moduleInformationAttributs %}{% endblock %}>
-    {% block moduleInformation %}
-        {% if module.description is not empty %}
-            <div class="well well-sm m-10">
-                {{ module.description|nl2br }}
-            </div>
-        {% endif %}
-    {% endblock moduleInformation %}
-</div>
-
-
-{# TODO décommenter : non nécessaire en version beta
-<div class="card-body">
-    <div class="panel-group" role="tablist" aria-multiselectable="true">
-        <div class="panel panel-collapse {% block moduleInformationClass %}{% endblock %}" {% block moduleInformationAttributs %}{% endblock %}>
-            {% block moduleInformation %}
-                    <div class="panel-heading m-l-10 m-r-10" id="mInfo-PH-{{ module.token }}" role="tab">
-                        <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" href="#collapse-mInfo-PH-{{ module.token }}" aria-expanded="false" aria-controls="collapse-mInfo-PH-{{ module.token }}">
-                                {{ "module.main_information.title"|trans }}</a>
-                        </h4>
-                    </div>
-                    <div id="collapse-mInfo-PH-{{ module.token }}" class="collapse" role="tabpanel" aria-labelledby="mInfo-PH-{{ module.token }}">
-                        <div class="panel-body">
-                            <ul class="tab-nav tn-icon" role="tablist">
-                                <li role="presentation" class="active">
-                                    <a href="#tab_info_{{ module.token }}" aria-controls="#tab_info_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-home icon-tab"></i></a>
-                                </li>
-                                <li role="presentation">
-                                    <a href="#tab_module_guest_{{ module.token }}" aria-controls="#tab_module_guest_{{ module.token }}" role="tab" data-toggle="tab"> <i
-                                                class="zmdi zmdi-accounts-list-alt icon-tab"></i></a>
-                                </li>
-                            </ul>
-                            <div class="tab-content p-20 b-b-w">
-                                <div role="tabpanel" class="tab-pane animated fadeIn in active" id="tab_info_{{ module.token }}">
-                                    {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
-                                        {{ include('@App/Event/module/displayModule_form.html.twig',{'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation}) }}
-                                    {% else %}
-                                        <dl>
-                                            <dt>Description</dt>
-                                            <dd>{{ module.description|nl2br|raw }}</dd>
-                                        </dl>
-                                        #}{#{% if module.paymentModule is not null %}
-                                            {{ include("@App/Event/module/displayPaymentModule.html.twig", {"module":module}) }}
-                                        {% endif %}#}{#
-                                    {% endif %}
-                                </div>
-                                <div role="tabpanel" class="tab-pane animated fadeIn" id="tab_module_guest_{{ module.token }}">
-                                    <h2>Liste des invités</h2>
+                        <div id="collapse-mInfo-PH-{{ module.token }}" class="collapse" role="tabpanel" aria-labelledby="mInfo-PH-{{ module.token }}">
+                            <div class="panel-body">
+                                <ul class="tab-nav tn-icon" role="tablist">
+                                    <li role="presentation" class="active">
+                                        <a href="#tab_info_{{ module.token }}" aria-controls="#tab_info_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-home icon-tab"></i></a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a href="#tab_module_guest_{{ module.token }}" aria-controls="#tab_module_guest_{{ module.token }}" role="tab" data-toggle="tab"> <i
+                                                    class="zmdi zmdi-accounts-list-alt icon-tab"></i></a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content p-20 b-b-w">
+                                    <div role="tabpanel" class="tab-pane animated fadeIn in active" id="tab_info_{{ module.token }}">
+                                        {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
+                                            {{ include('@App/Event/module/displayModule_form.html.twig',{'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation}) }}
+                                        {% else %}
+                                            <dl>
+                                                <dt>Description</dt>
+                                                <dd>{{ module.description|nl2br|raw }}</dd>
+                                            </dl>
+                                            #}{#{% if module.paymentModule is not null %}
+                                                {{ include("@App/Event/module/displayPaymentModule.html.twig", {"module":module}) }}
+                                            {% endif %}#}{#
+                                        {% endif %}
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane animated fadeIn" id="tab_module_guest_{{ module.token }}">
+                                        <h2>Liste des invités</h2>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-            {% endblock moduleInformation %}
-        </div>
-    </div>
-</div>#}
-
-<div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
-    {% block moduleBody %}{% endblock moduleBody %}
-</div>
-<div class="{% block moduleFooterClass %}card-footer{% endblock moduleFooterClass %}">
-    {% block moduleFooter %}{% endblock moduleFooter %}
-
-    {% block moduleDiscussion %}
-        {% if thread is defined and thread is not null %}
-            <div id="module_{{ module.token }}_comment_thread" data-thread="{{ thread.id }}" class="commentable_thread wall-comment-list">
-                {% include 'FOSCommentBundle:Thread:comments.html.twig' with {'comments':comments, 'thread':thread, 'view':'flat', 'userEventInvitation':userModuleInvitation.eventInvitation} %}
+                {% endblock moduleInformation %}
             </div>
-            <script>
-                $(document).ready(function () {
-                    if (typeof window.fos !== 'undefined' && typeof window.fos.Comment !== "undefined") {
-                        window.fos.Comment.thread_container = $('.commentable_thread ');
-                        window.fos.Comment.initializeListeners();
-                    }
-                    /** Fonction pour eviter le double envoi de commentaire */
-                    $('#module_{{ module.token }}_comment_thread')
-                        .on('fos_comment_add_comment', function (event, commentHtml) {
-                            $('#module_{{ module.token }}_comment_thread .fos_comment_submit > button[type=submit], #module_{{ module.token }}_comment_thread .fos_comment_submit > input[type=submit]').removeAttr("disabled");
-                        })
-                        .on('fos_comment_submitting_form', function () {
-                            $('#module_{{ module.token }}_comment_thread .fos_comment_submit > button[type=submit], #module_{{ module.token }}_comment_thread .fos_comment_submit > input[type=submit]').attr("disabled", "disabled");
-                        });
-                });
-            </script>
+        </div>
+    </div>#}
+
+    <div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
+        {% block moduleBody %}{% endblock moduleBody %}
+    </div>
+    <div class="{% block moduleFooterClass %}card-footer{% endblock moduleFooterClass %}">
+        {% block moduleFooter %}{% endblock moduleFooter %}
+
+        {% block moduleDiscussion %}
+            {% if thread is defined and thread is not null %}
+                <div id="module_{{ module.token }}_comment_thread" data-thread="{{ thread.id }}" class="commentable_thread wall-comment-list">
+                    {% include 'FOSCommentBundle:Thread:comments.html.twig' with {'comments':comments, 'thread':thread, 'view':'flat', 'userEventInvitation':userModuleInvitation.eventInvitation} %}
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        if (typeof window.fos !== 'undefined' && typeof window.fos.Comment !== "undefined") {
+                            window.fos.Comment.thread_container = $('.commentable_thread ');
+                            window.fos.Comment.initializeListeners();
+                        }
+                        /** Fonction pour eviter le double envoi de commentaire */
+                        $('#module_{{ module.token }}_comment_thread')
+                            .on('fos_comment_add_comment', function (event, commentHtml) {
+                                $('#module_{{ module.token }}_comment_thread .fos_comment_submit > button[type=submit], #module_{{ module.token }}_comment_thread .fos_comment_submit > input[type=submit]').removeAttr("disabled");
+                            })
+                            .on('fos_comment_submitting_form', function () {
+                                $('#module_{{ module.token }}_comment_thread .fos_comment_submit > button[type=submit], #module_{{ module.token }}_comment_thread .fos_comment_submit > input[type=submit]').attr("disabled", "disabled");
+                            });
+                    });
+                </script>
+            {% endif %}
+        {% endblock moduleDiscussion %}
+    </div>
+
+    <div id="modal-container-block-{{ module.token }}">
+        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
+            {{ include('@App/Event/module/displayModule_edition_modal.html.twig', {'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation} ) }}
         {% endif %}
-    {% endblock moduleDiscussion %}
-</div>
+        {% block module_modal_container %}{% endblock module_modal_container %}
+    </div>
 
-<div id="modal-container-block-{{ module.token }}">
-    {% block module_modal_container %}{% endblock module_modal_container %}
-</div>
-
-{% block JSmodule %}{% endblock %}
+    {% block JSmodule %}{% endblock %}
 </div>

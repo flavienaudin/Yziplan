@@ -32,6 +32,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class ModuleManager
 {
@@ -62,12 +63,15 @@ class ModuleManager
     /** @var PollProposalManager */
     private $pollProposalManager;
 
+    /** @var TranslatorInterface $translator */
+    private $translator;
+
     /** @var Module Le module en cours de traitement */
     private $module;
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory,
                                 GenerateursToken $generateurToken, EngineInterface $templating, ModuleInvitationManager $moduleInvitationManager, PollProposalManager $pollProposalManager,
-                                DiscussionManager $discussionManager)
+                                DiscussionManager $discussionManager, TranslatorInterface $translator)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -76,8 +80,9 @@ class ModuleManager
         $this->generateursToken = $generateurToken;
         $this->templating = $templating;
         $this->moduleInvitationManager = $moduleInvitationManager;
-        $this->pollProposalManager = $pollProposalManager;
         $this->discussionManager = $discussionManager;
+        $this->pollProposalManager = $pollProposalManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -129,19 +134,19 @@ class ModuleManager
             $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
 
             if ($subtype == PollModuleType::WHEN) {
-                $this->module->setName("pollmodule.add_link.when");
+                $this->module->setName($this->translator->trans("pollmodule.add_link.when"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollElement->setType(PollElementType::DATETIME);
             } elseif ($subtype == PollModuleType::WHAT) {
-                $this->module->setName("pollmodule.add_link.what");
+                $this->module->setName($this->translator->trans("pollmodule.add_link.what"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollElement->setType(PollElementType::STRING);
             } elseif ($subtype == PollModuleType::WHERE) {
-                $this->module->setName("pollmodule.add_link.where");
+                $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollElement->setType(PollElementType::GOOGLE_PLACE_ID);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
-                $this->module->setName("pollmodule.add_link.whobringswhat");
+                $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollElement->setType(PollElementType::STRING);
                 $pollModule->setVotingType(PollModuleVotingType::AMOUNT);

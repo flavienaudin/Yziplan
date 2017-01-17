@@ -4,8 +4,10 @@
 - userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
 #}
 
-<div id="module_info_form_{{ module.token }}">
-    {{ form_start(moduleForm, {'action':path('displayEvent', {'token':module.event.token}), 'attr':{'id':"moduleForm-"~module.token} }) }}
+<div id="moduleEdit_form_{{ module.token }}">
+    {% block form_start %}
+        {{ form_start(moduleForm, {'action':path('displayEvent', {'token':module.event.token}), 'attr':{'id':"moduleForm-"~module.token} }) }}
+    {% endblock form_start %}
     <div class="row">
         <div class="col-sm-12">
             {{ form_row(moduleForm.name, {
@@ -31,58 +33,83 @@
             {{ form_row(moduleForm.guestsCanInvite, {'label':'module.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
         </div>#}
     </div>
-    <div class="pull-right m-r-20">
-{#        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-            <a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"
-               class="text-danger">{{ "global.button.delete"|trans }}</a>
-        {% endif %}#}
-
-        <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
-    </div>
+    {% block action_buttons %}
+        <div class="pull-right m-r-20">
+            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
+                <a href="{{ path('removeEventModule', {'token':module.token}) }}" id="modal_removeModule_{{ module.token }}" class="text-danger">{{ "global.button.delete"|trans }}</a>
+            {% endif %}
+            <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+        </div>
+    {% endblock action_buttons %}
     <div class="hidden">
         {{ form_rest(moduleForm) }}
     </div>
     {{ form_end(moduleForm) }}
     <div class="clearfix"></div>
+
     <script>
-        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-        $('#removeModule{{ module.token }}').on('click', function (e) {
-            e.preventDefault();
-            var removeModuleLink = $(this);
-            swal({
-                title: '{{ "module.alert.confirm_deletion.title"|trans }}',
-                text: '{{ "module.alert.confirm_deletion.message"|trans }}',
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: '{{ "global.button.delete"|trans }}',
-                closeOnConfirm: true,
-                showLoaderOnConfirm: true
-            }).then(function () {
-                ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                        $('#module-{{ module.token }}').remove();
-                        $('.grid').masonry('layout');
-                    }
-                }, null, null);
+        $(document).ready(function () {
+            // Update the Event name while editing the form field
+            $('#module_form_{{ module.token }}_name').on('input', function () {
+                var moduleName = $(this).val();
+                if (moduleName == "") {
+                    moduleName = "{{ "module.form.name.label"|trans }}";
+                }
+                $('#module_{{ module.token }}_name').html(moduleName);
             });
-        });
-        {% endif %}
 
-        // Update the Event name while editing the form field
-        $('#module_form_{{ module.token }}_name').on('input', function () {
-            var moduleName = $(this).val();
-            if (moduleName == "") {
-                moduleName = "{{ "module.form.name.label"|trans }}";
-            }
-            $('#module_{{ module.token }}_name').html(moduleName);
-        });
-
-        $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
-            ajaxFormSubmission(this, e, null, null, function () {
-                $('.grid').masonry('layout');
+            {% block js_document_ready %}
+            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
+            $('#modal_removeModule_{{ module.token }}').on('click', function (e) {
+                e.preventDefault();
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    askGuestName();
+                } else {
+                    var removeModuleLink = $(this);
+                    swal({
+                        title: '{{ "module.alert.confirm_deletion.title"|trans }}',
+                        text: '{{ "module.alert.confirm_deletion.message"|trans }}',
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: '{{ "global.button.delete"|trans }}',
+                        showLoaderOnConfirm: true
+                    }).then(function () {
+                        $("#moduleEdit_modal_{{ module.token }}").modal('hide');
+                        ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
+                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
+                                // Si on supprime depuis la modal
+                                $('#module-{{ module.token }}').remove();
+                                $('.grid').masonry('layout');
+                            }
+                        }, function (jqXHR, textStatus, errorThrown) {
+                            if (jqXHR.hasOwnProperty('responseJSON')) {
+                                var responseJSON = jqXHR['responseJSON'];
+                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                    if (!eventInvitationValid && askGuestName !== undefined) {
+                                        askGuestName();
+                                    }
+                                }
+                            }
+                        }, null);
+                    });
+                }
             });
+            {% endif %}
+
+
+            $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
+                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                    $("#moduleEdit_modal_{{ module.token }}").modal('hide');
+                }, null, function () {
+                    $('.grid').masonry('layout');
+                });
+            });
+            {% endblock js_document_ready %}
+
         });
+
+
     </script>
 </div>
 

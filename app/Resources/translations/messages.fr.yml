@@ -314,6 +314,9 @@ contactsgmail:
 module:
   main_information:
     title: Informations générales
+  modal:
+    settings:
+      title: Configuration
   form:
     name:
       label: Nom du module

@@ -1,0 +1,13 @@
+{# Données d'entrée :
+- module (Module) Le module à afficher
+#}
+
+<div id="module-information-{{ module.token }}" class="card-body {% block moduleInformationClass %}{% endblock %}" {% block moduleInformationAttributs %}{% endblock %}>
+    {% block moduleInformation %}
+        {% if module.description is not empty %}
+            <div class="well well-sm m-10">
+                {{ module.description|nl2br }}
+            </div>
+        {% endif %}
+    {% endblock moduleInformation %}
+</div>

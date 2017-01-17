@@ -29,7 +29,7 @@ services:
 
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
-    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation','@at.manager.pollproposal','@at.manager.discussion']
+    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation','@at.manager.pollproposal','@at.manager.discussion','@translator']
 
   at.manager.event_invitation:
     class: AppBundle\Manager\EventInvitationManager
