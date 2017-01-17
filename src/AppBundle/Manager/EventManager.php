@@ -299,8 +299,7 @@ class EventManager
                     $moduleDescription['thread'] = $thread;
                     $moduleDescription['comments'] = $comments;
 
-                    if (false && $this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
-                        // TODO always false : non nécessaire en version BETA
+                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
                         $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
                     }
                     if ($module->getPollModule() != null) {

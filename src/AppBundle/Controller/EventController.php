@@ -380,8 +380,7 @@ class EventController extends Controller
         $modules = $eventManager->getModulesToDisplay($userEventInvitation);
         $moduleManager = $this->get("at.manager.module");
         foreach ($modules as $moduleId => $moduleDescription) {
-            // TODO non nécessaire en version BETA
-            if (false && key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
+            if (key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
                 /** @var Form $moduleForm */
                 $moduleForm = $moduleDescription['moduleForm'];
                 $moduleForm->handleRequest($request);
