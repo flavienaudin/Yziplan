@@ -14,7 +14,7 @@ Données d'entrée :
             <div class="pull-right">
                 {% block mhMediaRight %}
                     {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) or is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-                        <ul class="actions a-alt">
+                        <ul class="actions">
                             <li class="dropdown">
                                 <a href="" data-toggle="dropdown" aria-expanded="false"> <i class="zmdi zmdi-settings"></i> </a>
                                 <ul class="dropdown-menu dropdown-menu-right">
