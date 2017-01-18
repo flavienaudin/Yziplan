@@ -499,9 +499,15 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
+.poll-container tbody,
+.poll-container tfoot {
+    border-top: 1px solid #bdbdbd;
+    border-bottom: 1px solid #bdbdbd;
+    border-radius: 2px;
+}
+
 .poll-container table td {
-    padding: 3px;
-!important;
+    padding: 3px !important;
 }
 
 .poll-container table td.response-column {
@@ -534,17 +540,13 @@ label.required:after {
     padding-right: 0 !important;
 }
 
-.pollmodule-nopropal {
-    width: 100%;
-    margin-top: 10px;
-    padding-top: 5px;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
+.poll-container table .tr-no-proposal:not(:first-child){
+    display: none;
+}
 
+.tr-no-proposal {
     text-align: center;
     font-style: italic;
-    border-top: solid;
-    border-bottom: solid;
 }
 
 .table-striped > tbody > tr:nth-of-type(even) .progress {

@@ -435,22 +435,14 @@ class EventController extends Controller
                                 $pollProposalManager = $this->get('at.manager.pollproposal');
                                 $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
                                 $data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
-
-                                $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']);
-                                $pollProposalAddForm = $this->get('at.manager.pollproposal')->createPollProposalAddForm($moduleDescription['module']->getPollModule(), $userModuleInvitation);
-                                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
-                                    $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form_min.html.twig', array(
-                                        'userModuleInvitation' => $userModuleInvitation,
-                                        'pollProposalForm' => $pollProposalAddForm->createView(),
-                                        'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken()
-                                    ));
                                 return new AppJsonResponse($data, Response::HTTP_OK);
                             } else {
                                 $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
-                                    $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form_min.html.twig', array(
+                                    $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
                                         'userModuleInvitation' => $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']),
                                         'pollProposalForm' => $pollProposalAddForm->createView(),
-                                        'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken()
+                                        'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
+                                        'edition' => false
                                     ));
                                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                             }

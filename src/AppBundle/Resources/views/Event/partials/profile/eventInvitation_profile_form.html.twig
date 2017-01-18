@@ -37,7 +37,7 @@
                                 {{ "eventInvitation.profile.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}</a></i>
                     {% endif %}
                     {% if userEventInvitationForm is defined %}
-                        <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+                        <button type="submit" class="btn {{ userEventInvitation.guestName is empty?"btn-primary":"btn-default" }}">{{ "global.button.save"|trans }}</button>
                     {% endif %}
                 </div>
             {% endblock action_buttons %}

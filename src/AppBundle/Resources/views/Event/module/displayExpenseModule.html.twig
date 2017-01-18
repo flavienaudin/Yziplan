@@ -15,86 +15,88 @@
 {% endblock mhBtnFloat %}
 
 {% block moduleBody %}
-    <div role="tabpanel">
-        <ul class="tab-nav" role="tablist">
-            <li class="active"><a href="#displayExpense" aria-controls="displayExpense" role="tab" data-toggle="tab" aria-expanded="false">Dépenses</a></li>
-            <li class=""><a href="#balanceExpense" aria-controls="profile11" role="tab" data-toggle="tab" aria-expanded="true">Equilibre</a></li>
-            <li class=""><a href="#preferenceExpense" aria-controls="preferenceExpense" role="tab" data-toggle="tab" aria-expanded="false">Paramètre</a></li>
-        </ul>
+    <div class="card-body card-padding-sm">
+        <div role="tabpanel">
+            <ul class="tab-nav" role="tablist">
+                <li class="active"><a href="#displayExpense" aria-controls="displayExpense" role="tab" data-toggle="tab" aria-expanded="false">Dépenses</a></li>
+                <li class=""><a href="#balanceExpense" aria-controls="profile11" role="tab" data-toggle="tab" aria-expanded="true">Equilibre</a></li>
+                <li class=""><a href="#preferenceExpense" aria-controls="preferenceExpense" role="tab" data-toggle="tab" aria-expanded="false">Paramètre</a></li>
+            </ul>
 
-        <div class="tab-content p-20">
-            <div role="tabpanel" class="tab-pane active" id="displayExpense">
-                <div class="table-responsive">
-                    <table id="event-data-table-expense-1" class="table bootgrid-table table-condensed" aria-busy="false">
-                        <thead>
-                        <tr>
-                            <th data-column-id="Qui" data-formatter="image">Qui</th>
-                            <th data-column-id="Quoi">Quoi</th>
-                            <th data-column-id="Combien">Combien</th>
-                            <th data-column-id="PourVous">Pour Vous</th>
-                            <th data-column-id="Quand">Quand</th>
-                            <th data-column-id="PourQui" data-formatter="image">Pour Qui</th>
-                            <th data-column-id="Info">Info</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for proposal in module.expenseModule.expenseProposals %}
-                            <tr data-row-id="{{ proposal.id }}">
-                                <td>
-                                    {% if proposal.creator.applicationUser.accountUser.avatar is defined and proposal.creator.applicationUser.accountUser.avatar is not null %}
-                                        {"avatars" : [{"avatarSrc" : "{{ asset(proposal.creator.applicationUser.accountUser.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}] }
-                                    {% else %}
-                                        {"avatars" : [{"pseudo" : "{{ proposal.creator.name }}"}] }
-                                    {% endif %}
-                                </td>
-                                <td>{{ proposal.name }}</td>
-                                <td>{{ proposal.amount|number_format(2, ',', '') }}</td>
-                                <td>To define</td>
-                                <td>{{ proposal.expenseDate|date("d/m/Y") }}</td>
-                                <td>
-                                    {#Construction du Json avec la liste des participants#}
-                                    {"avatars" : [
-                                    {% set firstElt = true %}
-                                    {% for participant in proposal.listOfParticipants %}
-                                        {% if firstElt %}
-                                            {% set firstElt = false %}
-                                        {% else %}
-                                            ,
-                                        {% endif %}
-                                        {% if participant.applicationUser.accountUser.avatar is defined
-                                        and participant.applicationUser.accountUser.avatar is not null %}
-                                            {"avatarSrc" : "{{ asset(proposal.creator.applicationUser.accountUser.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}
-                                        {% else %}
-                                            {"pseudo" : "{{ participant.name }}"}
-                                        {% endif %}
-                                    {% endfor %}
-                                    ]}
-                                </td>
-                                <td class="p-5">
-                                    Ajouter information et édition
-                                </td>
+            <div class="tab-content p-20">
+                <div role="tabpanel" class="tab-pane active" id="displayExpense">
+                    <div class="table-responsive">
+                        <table id="event-data-table-expense-1" class="table bootgrid-table table-condensed" aria-busy="false">
+                            <thead>
+                            <tr>
+                                <th data-column-id="Qui" data-formatter="image">Qui</th>
+                                <th data-column-id="Quoi">Quoi</th>
+                                <th data-column-id="Combien">Combien</th>
+                                <th data-column-id="PourVous">Pour Vous</th>
+                                <th data-column-id="Quand">Quand</th>
+                                <th data-column-id="PourQui" data-formatter="image">Pour Qui</th>
+                                <th data-column-id="Info">Info</th>
                             </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            {% for proposal in module.expenseModule.expenseProposals %}
+                                <tr data-row-id="{{ proposal.id }}">
+                                    <td>
+                                        {% if proposal.creator.applicationUser.accountUser.avatar is defined and proposal.creator.applicationUser.accountUser.avatar is not null %}
+                                            {"avatars" : [{"avatarSrc" : "{{ asset(proposal.creator.applicationUser.accountUser.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}] }
+                                        {% else %}
+                                            {"avatars" : [{"pseudo" : "{{ proposal.creator.name }}"}] }
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ proposal.name }}</td>
+                                    <td>{{ proposal.amount|number_format(2, ',', '') }}</td>
+                                    <td>To define</td>
+                                    <td>{{ proposal.expenseDate|date("d/m/Y") }}</td>
+                                    <td>
+                                        {#Construction du Json avec la liste des participants#}
+                                        {"avatars" : [
+                                        {% set firstElt = true %}
+                                        {% for participant in proposal.listOfParticipants %}
+                                            {% if firstElt %}
+                                                {% set firstElt = false %}
+                                            {% else %}
+                                                ,
+                                            {% endif %}
+                                            {% if participant.applicationUser.accountUser.avatar is defined
+                                            and participant.applicationUser.accountUser.avatar is not null %}
+                                                {"avatarSrc" : "{{ asset(proposal.creator.applicationUser.accountUser.avatar) }}", "pseudo" : "{{ proposal.creator.name }}"}
+                                            {% else %}
+                                                {"pseudo" : "{{ participant.name }}"}
+                                            {% endif %}
+                                        {% endfor %}
+                                        ]}
+                                    </td>
+                                    <td class="p-5">
+                                        Ajouter information et édition
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="balanceExpense">
-                <p>Morbi mattis ullamcorper velit. Etiam rhoncus. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Cras id dui. Curabitur turpis. Etiam ut purus mattis mauris sodales
-                    aliquam. Aenean viverra rhoncus pede. Nulla sit amet est. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Praesent ac sem eget est egestas volutpat. Cras varius.
-                    Morbi mollis tellus ac sapien. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Fusce vel dui.</p>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="preferenceExpense">
-                <p>Etiam rhoncus. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Cras id dui. Curabitur turpis. Etiam ut purus mattis mauris sodales aliquam. Aenean viverra rhoncus
-                    pede. Nulla sit amet est. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Praesent ac sem eget est egestas volutpat. Cras varius. Morbi mollis tellus ac sapien.
-                    In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Fusce vel dui.Morbi mattis ullamcorper velit.
-                    Etiam rhoncus. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Cras id dui. Curabitur turpis. Etiam ut purus mattis mauris sodales aliquam. Aenean viverra rhoncus
-                    pede. Nulla sit amet est. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Praesent ac sem eget est egestas volutpat. Cras varius. Morbi mollis tellus ac sapien.
-                    In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Fusce vel dui.</p>
+                <div role="tabpanel" class="tab-pane" id="balanceExpense">
+                    <p>Morbi mattis ullamcorper velit. Etiam rhoncus. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Cras id dui. Curabitur turpis. Etiam ut purus mattis mauris
+                        sodales aliquam. Aenean viverra rhoncus pede. Nulla sit amet est. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Praesent ac sem eget est egestas volutpat.
+                        Cras varius. Morbi mollis tellus ac sapien. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus.
+                        Fusce vel dui.</p>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="preferenceExpense">
+                    <p>Etiam rhoncus. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Cras id dui. Curabitur turpis. Etiam ut purus mattis mauris sodales aliquam. Aenean viverra
+                        rhoncus pede. Nulla sit amet est. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Praesent ac sem eget est egestas volutpat. Cras varius. Morbi mollis tellus
+                        ac sapien. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Fusce vel dui.Morbi mattis
+                        ullamcorper velit. Etiam rhoncus. Phasellus leo dolor, tempus non, auctor et, hendrerit quis, nisi. Cras id dui. Curabitur turpis. Etiam ut purus mattis mauris sodales aliquam.
+                        Aenean viverra rhoncus pede. Nulla sit amet est. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi. Praesent ac sem eget est egestas volutpat. Cras varius. Morbi
+                        mollis tellus ac sapien. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nam ipsum risus, rutrum vitae, vestibulum eu, molestie vel, lacus. Fusce vel dui.</p>
+                </div>
             </div>
         </div>
     </div>
-
 {% endblock moduleBody %}
 
 {% block moduleFooter %}{% endblock moduleFooter %}
@@ -111,8 +113,7 @@
                     <div class="input-group m-b-30">
                         <span class="input-group-addon"><i class="zmdi zmdi-account"></i></span>
                         <div class="form-group">
-                            <label class="fg-label">Qui a payé</label>
-                            <select class="selectpicker" type="text" data-live-search="true" name="1rst">
+                            <label class="fg-label">Qui a payé</label> <select class="selectpicker" type="text" data-live-search="true" name="1rst">
                                 <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''>
                                 Paul</span>"></option>
                                 <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''>
@@ -135,61 +136,60 @@
                     </div>
                     {#http://stackoverflow.com/questions/25066417/how-to-display-all-selected-options-using-multiple-bootstrap-select#}
 
-                        <div class="input-group fg-float m-b-30">
-                            <span class="input-group-addon"><i class="zmdi zmdi-accounts-alt"></i></span>
-                            <div class="form-group">
-                                <label class="">Pour qui</label>
-                                <select class="selectpicker" type="text" multiple data-live-search="true" name="2nd">
-                                    <option data-content="<span class='insecable-white-space' ><div class='avatar-char palette-Cyan-200 bg' name='Raymond' style='display: inline-block;'>R</div>
+                    <div class="input-group fg-float m-b-30">
+                        <span class="input-group-addon"><i class="zmdi zmdi-accounts-alt"></i></span>
+                        <div class="form-group">
+                            <label class="">Pour qui</label> <select class="selectpicker" type="text" multiple data-live-search="true" name="2nd">
+                                <option data-content="<span class='insecable-white-space' ><div class='avatar-char palette-Cyan-200 bg' name='Raymond' style='display: inline-block;'>R</div>
                                     Raymond</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de
                                     l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de
                                     l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de
                                     l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
-                                    <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
+                                <option data-content="<span class='insecable-white-space' ><img class='avatar-img' src='{{ asset("bundles/app/img/test/contact/1.jpg") }}' alt=''> Le nom de l'utilisateur</span>"></option>
 
-                                    {#       <option>Mustard</option>
-                                           <option>Ketchup</option>
-                                           <option>Relish</option>
-                                           <option>Toasted</option>
-                                           <option>Mustard</option>
-                                           <option>Ketchup</option>
-                                           <option>Relish</option>
-                                           <option>Toasted</option>
-                                           <option>Mustard</option>
-                                           <option>Ketchup</option>
-                                           <option>Relish</option>
-                                           <option>Toasted</option>
-                                           <option>Mustard</option>
-                                           <option>Ketchup</option>
-                                           <option>Relish</option>
-                                           <option>Toasted</option>
-                                           <option>Mustard</option>
-                                           <option>Ketchup</option>
-                                           <option>Relish</option>
-                                           <option>Toasted</option>
-                                           <option>Mustard</option>
-                                           <option>Ketchup</option>
-                                           <option>Relish</option>
-                                           <option>Toasted</option>#}
-                                </select>
-                            </div>
+                                {#       <option>Mustard</option>
+                                       <option>Ketchup</option>
+                                       <option>Relish</option>
+                                       <option>Toasted</option>
+                                       <option>Mustard</option>
+                                       <option>Ketchup</option>
+                                       <option>Relish</option>
+                                       <option>Toasted</option>
+                                       <option>Mustard</option>
+                                       <option>Ketchup</option>
+                                       <option>Relish</option>
+                                       <option>Toasted</option>
+                                       <option>Mustard</option>
+                                       <option>Ketchup</option>
+                                       <option>Relish</option>
+                                       <option>Toasted</option>
+                                       <option>Mustard</option>
+                                       <option>Ketchup</option>
+                                       <option>Relish</option>
+                                       <option>Toasted</option>
+                                       <option>Mustard</option>
+                                       <option>Ketchup</option>
+                                       <option>Relish</option>
+                                       <option>Toasted</option>#}
+                            </select>
                         </div>
+                    </div>
 
 
                     <div class="input-group fg-float m-b-30">
