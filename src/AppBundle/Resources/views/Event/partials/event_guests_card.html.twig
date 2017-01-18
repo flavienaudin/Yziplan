@@ -27,8 +27,8 @@
     {% if (userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.guestsCanInvite) and (invitationsForm is not null
     or not userEventInvitation.event.invitationOnly) %}
         <div class="card-footer text-center">
-            <a href="#invitations_new_modal" class="btn btn-lg btn-primary m-b-10 waves-effect" data-toggle="modal"> <i class="zmdi zmdi-email m-r-5"></i>
-                {{ "invitations_list.display.new_invitations"|trans }}</a>
+            <a href="#invitations_new_modal" class="btn btn-primary btn-lg btn-icon-text m-b-10" data-toggle="modal">
+                <i class="zmdi zmdi-email"></i> {{ "invitations_list.display.new_invitations"|trans }}</a>
         </div>
         {{ include('@App/Event/partials/invitations/invitations_new_modal.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
     {% endif %}
