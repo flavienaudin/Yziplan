@@ -51,11 +51,7 @@ class CoreController extends Controller
      */
     public function testIndex3Action(Request $request)
     {
-        if ($this->get('kernel')->getEnvironment() == "dev") {
-            return $this->render('AppBundle:Core:testIndex3.html.twig');
-        } else {
-            return $this->redirectToRoute('home');
-        }
+        return $this->render('AppBundle:Core:testIndex3.html.twig');
     }
 
     /**
