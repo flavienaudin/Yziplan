@@ -7,82 +7,9 @@
 #}
 
 <div class="card z-depth-1 {% block moduleCardClass %}c-dark{% endblock %}" id="module-{{ module.token }}">
-    <div class="card-header m-b-10 {% block moduleHeaderClass %}palette-Teal bg{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
-        {% block moduleHeader %}
-            <div class="media">
-                <div class="pull-left">
-                    {% block mhMediaLeft %}{% endblock mhMediaLeft %}
-                </div>
-                <div class="pull-right">
-                    {% block mhMediaRight %}
-                        <ul class="actions a-alt">
-                            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-                                <li><a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"> <i
-                                                class="zmdi zmdi-delete c-red"></i></a></li>
-                                <script>
-                                    $('#removeModule{{ module.token }}').on('click', function (e) {
-                                        e.preventDefault();
-                                        if (!eventInvitationValid && askGuestName !== undefined) {
-                                            askGuestName();
-                                        } else {
-                                            var removeModuleLink = $(this);
-                                            swal({
-                                                title: '{{ "module.alert.confirm_deletion.title"|trans }}',
-                                                text: '{{ "module.alert.confirm_deletion.message"|trans }}',
-                                                type: "warning",
-                                                showCancelButton: true,
-                                                confirmButtonColor: "#DD6B55",
-                                                confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                                showLoaderOnConfirm: true
-                                            }).then(function () {
-                                                ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                        $('#module-{{ module.token }}').remove();
-                                                        $('.grid').masonry('layout');
-                                                    }
-                                                }, function (jqXHR, textStatus, errorThrown) {
-                                                    if (jqXHR.hasOwnProperty('responseJSON')) {
-                                                        var responseJSON = jqXHR['responseJSON'];
-                                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                                            if (!eventInvitationValid && askGuestName !== undefined) {
-                                                                askGuestName();
-                                                            }
-                                                        }
-                                                    }
-                                                }, null);
-                                            });
-                                        }
-                                    });
-                                </script>
-                            {% endif %}
-                        </ul>
-                    {% endblock mhMediaRight %}
-                </div>
-                <div class="media-body">
-                    {% block mhMediaBody %}
-                        {% set creatorsNames = "" %}
-                        {% for creatorInvitation in module.creators %}
-                            {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
-                        {% endfor %}
-                        <h2><span id="module_{{ module.token }}_name">{{ module.name is not empty?module.name|trans }}</span>
-                            {% if creatorsNames is not empty %}
-                                <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}
-                                    {# TODO décommenter <span class="label label-default">{{ module.status|trans}}</span>#}
-                                </small>
-                            {% endif %}
-                        </h2>
-                    {% endblock mhMediaBody %}
-                </div>
-            </div>
-            {% block mhBtnFloat %}
-                {#{% if module.expenseModule is null and module.pollModule is null %}
-                    <a href="#addSubModule">
-                        <button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
-                    </a>
-                {% endif %}#}
-            {% endblock mhBtnFloat %}
-        {% endblock moduleHeader %}
-    </div>
+    {{ include("@App/Event/module/displayModule_header.html.twig", {'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation}) }}
+
+    {{ include('@App/Event/module/displayModule_informations.html.twig', {'module':module}) }}
 
     {# TODO décommenter : non nécessaire en version beta
     <div class="card-body">
@@ -163,6 +90,9 @@
     </div>
 
     <div id="modal-container-block-{{ module.token }}">
+        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
+            {{ include('@App/Event/module/displayModule_edition_modal.html.twig', {'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation} ) }}
+        {% endif %}
         {% block module_modal_container %}{% endblock module_modal_container %}
     </div>
 

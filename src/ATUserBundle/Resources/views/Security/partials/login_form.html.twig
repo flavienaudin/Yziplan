@@ -13,7 +13,7 @@
         <input type="hidden" name="_target_path" value="{{ url(app.request.get('parentRequest').get('_route'), app.request.get('parentRequest').get('_route_params')) }}"/>
     {% endif %}
 
-    <div class="input-group m-t-25 m-b-25 fg-float">
+    <div class="input-group fg-float">
         <span class="input-group-addon"><i class="zmdi zmdi-email"></i></span>
         <div class="fg-line">
             <input type="text" class="form-control input-lg" id="username" name="_username" value="{{ last_username }}" required="required"/> <label class="fg-label"
@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <div class="input-group m-b-25 fg-float">
+    <div class="input-group fg-float">
         <span class="input-group-addon"><i class="zmdi zmdi-lock"></i></span>
         <div class="fg-line">
             <input type="password" class="form-control input-lg" id="password" name="_password" required="required"/> <label class="fg-label"
@@ -29,14 +29,14 @@
         </div>
     </div>
 
-    <div class="checkbox m-b-25">
+    <div class="checkbox">
         <label class="pull-left"> <input type="checkbox" id="remember_me" name="_remember_me" value="on" checked="checked"> <i class="input-helper"></i>
             {{ "security.login.remember_me"|trans({},"FOSUserBundle") }}
         </label> <em><a href="{{ path("fos_user_resetting_request") }}" class="pull-right">{{ "security.form.forgot_password"|trans }}&nbsp;?</a></em>
     </div>
 
     <div class="row">
-        <div class="col-xs-12 m-b-30">
+        <div class="col-xs-12 m-t-25 m-b-25">
             <button type="submit" class="btn btn-block btn-lg palette-Teal bg waves-effect">
                 {{ 'security.login.submit'|trans({}, "FOSUserBundle") }}
             </button>

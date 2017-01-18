@@ -4,84 +4,60 @@
 - userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
 #}
 
-<div id="module_info_form_{{ module.token }}">
-    {{ form_start(moduleForm, {'action':path('displayEvent', {'token':module.event.token}), 'attr':{'id':"moduleForm-"~module.token} }) }}
+<div id="moduleEdit_form_{{ module.token }}">
+    {% block form_start %}
+        {{ form_start(moduleForm, {'action':path('displayEvent', {'token':module.event.token}), 'attr':{'id':"moduleForm-"~module.token} }) }}
+    {% endblock form_start %}
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-12">
             {{ form_row(moduleForm.name, {
                 'label': 'module.form.name.label',
-                'label_attr':{'class':'sr-only'},
-                'attr':{'placeholder':'module.form.name.placeholder'},
-                'widget_options':{'fgline':true}
+                'attr':{},
+                'widget_options':{'fgfloat':true, 'fgline':true}
             }) }}
             {{ form_row(moduleForm.description, {
                 'label':'module.form.description.label',
-                'label_attr':{'class':'sr-only'},
-                'attr':{'placeholder':'module.form.description.placeholder','rows':3},
-                'widget_options':{'fgline':true}
+                'attr':{'rows':3},
+                'widget_options':{'fgfloat':true, 'fgline':true}
             }) }}
         </div>
-        <div class="col-sm-6">
-            {{ form_row(moduleForm.responseDeadline, {
-                'label':'module.form.responseDeadline.label',
-                'attr':{'placeholder':'module.form.responseDeadline.placeholder'},
-                'widget_options':{'fgline':true, 'displayInRow' : true}
-            }) }}
-            {{ form_row(moduleForm.invitationOnly, {'label':'module.form.invitationOnly.label', 'label_attr':{'class' : 'radio radio-inline'}}) }}
-            {{ form_row(moduleForm.guestsCanInvite, {'label':'module.form.guestsCanInvite.label','attr':{'class':'md-toogle-switch'}}) }}
+    </div>
+    {% block action_buttons %}
+        <div class="pull-right m-r-20">
+            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+            <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
         </div>
+    {% endblock action_buttons %}
+    <div class="hidden">
+        {{ form_rest(moduleForm) }}
     </div>
-    <div class="pull-right m-r-20">
-        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-            <a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"
-               class="text-danger">{{ "global.button.delete"|trans }}</a>
-        {% endif %}
-
-        <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
-    </div>
-
-    {{ form_rest(moduleForm) }}
     {{ form_end(moduleForm) }}
     <div class="clearfix"></div>
+
     <script>
-        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-        $('#removeModule{{ module.token }}').on('click', function (e) {
-            e.preventDefault();
-            var removeModuleLink = $(this);
-            swal({
-                title: '{{ "module.alert.confirm_deletion.title"|trans }}',
-                text: '{{ "module.alert.confirm_deletion.message"|trans }}',
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: '{{ "global.button.delete"|trans }}',
-                closeOnConfirm: true,
-                showLoaderOnConfirm: true
-            }).then(function () {
-                ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                        $('#module-{{ module.token }}').remove();
-                        $('.grid').masonry('layout');
-                    }
-                }, null, null);
+        $(document).ready(function () {
+            // Update the Event name while editing the form field
+            $('#module_form_{{ module.token }}_name').on('input', function () {
+                var moduleName = $(this).val();
+                if (moduleName == "") {
+                    moduleName = "{{ "module.form.name.label"|trans }}";
+                }
+                $('#module_{{ module.token }}_name').html(moduleName);
             });
-        });
-        {% endif %}
 
-        // Update the Event name while editing the form field
-        $('#module_form_{{ module.token }}_name').on('input', function () {
-            var moduleName = $(this).val();
-            if (moduleName == "") {
-                moduleName = "{{ "module.form.name.label"|trans }}";
-            }
-            $('#module_{{ module.token }}_name').html(moduleName);
+            {% block js_document_ready %}
+            $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
+                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                    $("#moduleEdit_modal_{{ module.token }}").modal('hide');
+                }, null, function () {
+                    $('.grid').masonry('layout');
+                });
+            });
+            {% endblock js_document_ready %}
+
         });
 
-        $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
-            ajaxFormSubmission(this, e, null, null, function () {
-                $('.grid').masonry('layout');
-            });
-        });
+
     </script>
 </div>
 

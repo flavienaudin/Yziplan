@@ -380,8 +380,7 @@ class EventController extends Controller
         $modules = $eventManager->getModulesToDisplay($userEventInvitation);
         $moduleManager = $this->get("at.manager.module");
         foreach ($modules as $moduleId => $moduleDescription) {
-            // TODO non nécessaire en version BETA
-            if (false && key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
+            if (key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
                 /** @var Form $moduleForm */
                 $moduleForm = $moduleDescription['moduleForm'];
                 $moduleForm->handleRequest($request);
@@ -390,11 +389,17 @@ class EventController extends Controller
                         if ($moduleForm->isValid()) {
                             $currentModule = $moduleManager->treatUpdateFormModule($moduleForm);
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-' . $currentModule->getToken()] =
-                                $moduleManager->displayModulePartial($currentModule, $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']));
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-header-' . $currentModule->getToken()] =
+                                $this->renderView("@App/Event/module/displayModule_header.html.twig", array(
+                                    'module' => $moduleDescription['module'],
+                                    'moduleForm' => $moduleForm->createView(),
+                                    'userModuleInvitation' => $userEventInvitation->getModuleInvitationForModule($moduleDescription['module'])
+                                ));
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-information-' . $currentModule->getToken()] =
+                                $this->renderView("@App/Event/module/displayModule_informations.html.twig", array('module' => $moduleDescription['module']));
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module_info_form_' . $moduleDescription['module']->getToken()] =
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#moduleEdit_form_' . $moduleDescription['module']->getToken()] =
                                 $this->renderView('@App/Event/module/displayModule_form.html.twig', array(
                                     'module' => $moduleDescription['module'],
                                     'moduleForm' => $moduleForm->createView(),

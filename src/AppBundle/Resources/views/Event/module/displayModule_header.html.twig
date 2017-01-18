@@ -1,0 +1,90 @@
+{# Entête d'un module
+Données d'entrée :
+- module (Module) Le module à afficher
+- moduleForm (Form|null) Le formulaire d'édition du module
+- userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
+#}
+
+<div id="module-header-{{ module.token }}" class="card-header m-b-10 {% block moduleHeaderClass %}palette-Teal bg{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
+    {% block moduleHeader %}
+        <div class="media">
+            <div class="pull-left">
+                {% block mhMediaLeft %}{% endblock mhMediaLeft %}
+            </div>
+            <div class="pull-right">
+                {% block mhMediaRight %}
+                    {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) or is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
+                        <ul class="actions a-alt">
+                            <li class="dropdown">
+                                <a href="" data-toggle="dropdown" aria-expanded="false"> <i class="zmdi zmdi-settings"></i> </a>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
+                                        <li>
+                                            <a data-toggle="modal" href="#moduleEdit_modal_{{ module.token }}"><i class="zmdi zmdi-edit"></i> {{ "global.button.edit"|trans }}</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
+                                        <li>
+                                            <a href="{{ path('removeEventModule', {'token':module.token}) }}" id="menu_removeModule_{{ module.token }}"> <i class="zmdi zmdi-delete c-red"></i>
+                                                {{ "global.button.delete"|trans }}</a></li>
+                                        <script>
+                                            $('#menu_removeModule_{{ module.token }}').on('click', function (e) {
+                                                e.preventDefault();
+                                                if (!eventInvitationValid && askGuestName !== undefined) {
+                                                    askGuestName();
+                                                } else {
+                                                    var removeModuleLink = $(this);
+                                                    swal({
+                                                        title: '{{ "module.alert.confirm_deletion.title"|trans }}',
+                                                        text: '{{ "module.alert.confirm_deletion.message"|trans }}',
+                                                        type: "warning",
+                                                        showCancelButton: true,
+                                                        confirmButtonColor: "#DD6B55",
+                                                        confirmButtonText: '{{ "global.button.delete"|trans }}',
+                                                        showLoaderOnConfirm: true
+                                                    }).then(function () {
+                                                        ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
+                                                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
+                                                                $('#module-{{ module.token }}').remove();
+                                                                $('.grid').masonry('layout');
+                                                            }
+                                                        }, function (jqXHR, textStatus, errorThrown) {
+                                                            if (jqXHR.hasOwnProperty('responseJSON')) {
+                                                                var responseJSON = jqXHR['responseJSON'];
+                                                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                                                    if (!eventInvitationValid && askGuestName !== undefined) {
+                                                                        askGuestName();
+                                                                    }
+                                                                }
+                                                            }
+                                                        }, null);
+                                                    });
+                                                }
+                                            });
+                                        </script>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    {% endif %}
+                {% endblock mhMediaRight %}
+            </div>
+            <div class="media-body">
+                {% block mhMediaBody %}
+                    {% set creatorsNames = "" %}
+                    {% for creatorInvitation in module.creators %}
+                        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
+                    {% endfor %}
+                    <h2><span id="module_{{ module.token }}_name">{{ module.name is not empty?module.name }}</span>
+                        {% if creatorsNames is not empty %}
+                            <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}
+                                {# TODO décommenter <span class="label label-default">{{ module.status|trans}}</span>#}
+                            </small>
+                        {% endif %}
+                    </h2>
+                {% endblock mhMediaBody %}
+            </div>
+        </div>
+        {% block mhBtnFloat %}{% endblock mhBtnFloat %}
+    {% endblock moduleHeader %}
+</div>

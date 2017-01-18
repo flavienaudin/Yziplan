@@ -56,6 +56,7 @@ class ModuleController extends Controller
             if ($request->isXmlHttpRequest()) {
                 if ($module != null) {
                     $moduleManager = $this->get('at.manager.module');
+                    $data[AppJsonResponse::DATA]['moduleToken'] = $module->getToken();
                     $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#eventModulesContainer'] =
                         $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module));
                     return new AppJsonResponse($data, Response::HTTP_OK);
