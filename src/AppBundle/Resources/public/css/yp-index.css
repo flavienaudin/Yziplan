@@ -28,7 +28,7 @@ hr.small {
     position: relative;
     width: 100%;
     height: calc(100vh - 70px);
-    background: url("/yziplan/web/bundles/app/img/index/Ski_raw.jpg") no-repeat center center scroll;
+    background: no-repeat center center scroll;
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
