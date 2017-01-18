@@ -47,6 +47,18 @@ class CoreController extends Controller
     }
 
     /**
+     * @Route("/testindex3", name="testhome3")
+     */
+    public function testIndex3Action(Request $request)
+    {
+        if ($this->get('kernel')->getEnvironment() == "dev") {
+            return $this->render('AppBundle:Core:testIndex3.html.twig');
+        } else {
+            return $this->redirectToRoute('home');
+        }
+    }
+
+    /**
      * @Route("/add_suggestion", name="addSuggestion")
      */
     public function addSuggestionAction(Request $request)
