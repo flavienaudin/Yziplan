@@ -5,7 +5,7 @@ Données d'entrée :
 - userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
 #}
 
-<div id="module-header-{{ module.token }}" class="card-header m-b-10 {% block moduleHeaderClass %}palette-Teal bg{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
+<div id="module-header-{{ module.token }}" class="card-header {% block moduleHeaderClass %}{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
     {% block moduleHeader %}
         <div class="media">
             <div class="pull-left">

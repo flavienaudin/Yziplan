@@ -12641,6 +12641,12 @@ fieldset[disabled] .btn-inverse:active {
     margin-right: 5px;
 }
 
+.btn-lg.btn-icon-text > .zmdi{
+    font-size: 17px;
+    vertical-align: baseline;
+    margin-top: 0;
+}
+
 .btn-float {
     width: 50px;
     height: 50px;
