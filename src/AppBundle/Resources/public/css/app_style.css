@@ -304,7 +304,7 @@
 }
 
 .event-title {
-    text-shadow: 0 0 20px rgb(0, 0, 0);
+    text-shadow: 0 0 10px rgb(0, 0, 0);
 }
 
 h1.event-title {
@@ -499,8 +499,7 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
-.poll-container tbody,
-.poll-container tfoot {
+.poll-container tbody {
     border-top: 1px solid #bdbdbd;
     border-bottom: 1px solid #bdbdbd;
     border-radius: 2px;
