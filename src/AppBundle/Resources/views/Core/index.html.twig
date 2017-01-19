@@ -10,218 +10,324 @@
 
 {% block stylesheets %}
     {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/yp-index.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/jqcloud.min.css") }}">
 {% endblock %}
 
 {% block content_body %}
+    <!-- Header -->
     <div class="row">
-        <div id="carousel-index" class="carousel slide" data-ride="carousel">
-            <!-- Indicators -->
-            <ol class="carousel-indicators">
-                <li data-target="#carousel-index" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel-index" data-slide-to="1" class=""></li>
-                <li data-target="#carousel-index" data-slide-to="2" class=""></li>
-            </ol>
-
-            <!-- Wrapper for slides -->
-            <div class="carousel-inner" role="listbox">
-                <div class="item active">
-                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/galette.jpg') }})"></div>
-                    <div class="carousel-caption">
-                        <h3>{{ "landing_page.carousel.king_cake.title"|trans }}</h3>
-                        <p>{{ "landing_page.carousel.king_cake.text"|trans }}</p>
-                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/chandeleur-2017.jpg') }})"></div>
-                    <div class="carousel-caption">
-                        <h3>{{ "landing_page.carousel.chandeleur.title"|trans }}</h3>
-                        <p>{{ "landing_page.carousel.chandeleur.text"|trans }}</p>
-                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/index/carousel/Ski_raw.jpg') }})"></div>
-                    <div class="carousel-caption">
-                        <h3>{{ "landing_page.carousel.ski.title"|trans }}</h3>
-                        <p>{{ "landing_page.carousel.ski.text"|trans }}</p>
-                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                    </div>
-                </div>
-                {#
-                <div class="item active">
-                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-bar.jpg') }})"></div>
-                    <div class="carousel-caption">
-                        <h3>{{ "landing_page.carousel.after_work.title"|trans }}</h3>
-                        <p>{{ "landing_page.carousel.after_work.text"|trans }}</p>
-                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-reunion.jpg') }})"></div>
-                    <div class="carousel-caption">
-                        <h3>{{ "landing_page.carousel.meeting.title"|trans }}</h3>
-                        <p>{{ "landing_page.carousel.meeting.text"|trans }}</p>
-                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-soiree.jpg') }})"></div>
-                    <div class="carousel-caption">
-                        <h3>{{ "landing_page.carousel.party.title"|trans }}</h3>
-                        <p>{{ "landing_page.carousel.party.text"|trans }}</p>
-                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="carousel-img" style="background-image: url({{ asset('bundles/app/img/carousel/carousel-vacances.jpg') }})"></div>
-                    <div class="carousel-caption">
-                        <h3>{{ "landing_page.carousel.holiday.title"|trans }}</h3>
-                        <p>{{ "landing_page.carousel.holiday.text"|trans }}</p>
-                        <p class="m-t-15"><a href="{{ path('createEvent') }}" class="btn btn-lg palette-Teal bg waves-effect">{{ "landing_page.carousel.button.new_event"|trans }}</a></p>
-                    </div>
-                </div>#}
+        <section id="top" class="header" style="background-image: url({{ asset('bundles/app/img/index/organisation.jpeg') }})">
+            <div class="text-vertical-center">
+                <h1 class="c-white">{{ "index.header.title"|trans }}</h1>
+                <h3 class="c-white">{{ "index.header.subtitle"|trans }}</h3>
+                <br>
+                <a href="{{ path('createEvent') }}" class="btn btn-action bgm-teal btn-lg">{{ "index.header.button"|trans }}</a>
             </div>
+        </section>
 
-            <!-- Controls -->
-            <a class="left carousel-control" href="#carousel-index" role="button" data-slide="prev"> <span class="zmdi zmdi-chevron-left" aria-hidden="true"></span> <span
-                        class="sr-only">Previous</span> </a> <a class="right carousel-control" href="#carousel-index" role="button" data-slide="next"> <span class="zmdi zmdi-chevron-right"
-                                                                                                                                                             aria-hidden="true"></span> <span
-                        class="sr-only">Next</span> </a>
-        </div>
-    </div>
-
-    {% if display_beta %}
-        <div class="row">
-            {#<div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">#}
-                <div class="card palette-Red-50 bg z-depth-2">
-                    <div class="card-header text-center">
-                        <h1><strong>Bêta !</strong></h1>
-                    </div>
-                    <div class="card-body card-padding">
-                        <p>Le site est actuellement en version bêta, tu y trouveras donc surement quelques bugs ou tu auras peut-être quelques suggestions d'amélioration.</p>
-                        <p>Dans tous les cas ne nous ménage pas et envoie nous tes retours! (le bouton est disponible en bas de chaque page)</p>
-                        <div class="text-center">
-                            <a href="#" data-toggle="modal" data-target="#addSuggestion" id="lienOuvreSuggestion" class="btn btn-primary text-center"> <span
-                                        class="palette-White text"> {{ "Envoyer une suggestion"|trans }} </span> </a>
-                        </div>
+        <!-- About -->
+        <section id="index-about" class="index-about">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <img src="{{ asset('includes/img/logo/logo_prop3_inv_header.png') }}" class="img-responsive center-block" alt="{{ "global.project_name"|trans }}">
+                        <h2>{{ "index.about.title"|trans }}</h2>
+                        <p class="lead">{{ "index.about.subtitle"|trans }}</p>
                     </div>
                 </div>
-            {#</div>#}
-        </div>
-    {% endif %}
-
-
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="card-header text-center">
-                <h1><strong>Comment ça marche?</strong></h1>
+                <!-- /.row -->
             </div>
-            <div class="card-body card-padding">
-                <div class="row row-eq-height">
-                    <div class="col-xs-12 col-sm-4">
-                        <div class="card z-depth-1">
-                            <div class="card-header text-center">
-                                <h3><strong><i class="zmdi zmdi-border-color zmdi-hc-2x"></i><br>Créez votre évènement</strong></h3>
-                            </div>
-                            <div class="card-body card-padding">
-                                <p>Puis posez vos questions :</p>
-                                <div class="list-md-icon m-b-10">
-                                    <ul>
-                                        <li class="ng-binding"><i class="zmdi zmdi-help-outline"></i>On fait quoi ?</li>
-                                        <li class="ng-binding"><i class="zmdi zmdi-calendar"></i>Vous êtes disponible quand ?</li>
-                                        <li class="ng-binding"><i class="zmdi zmdi-pin"></i>On part où ?</li>
-                                        <li class="ng-binding"><i class="zmdi zmdi-accounts"></i>Qui vient?</li>
-                                        <li class="ng-binding"><i class="zmdi zmdi-check-all"></i>Qui apporte quoi ?</li>
-                                        <li class="ng-binding">...</li>
-                                    </ul>
+            <!-- /.container -->
+        </section>
+
+        <section id="index-section-use" class="index-section bgm-teal">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <h2 class="c-white">{{ "index.section_use.title"|trans }}</h2>
+                        <hr class="small">
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6">
+                                <div class="service-item">
+                                    <span class="zmdi-hc-stack zmdi-hc-5x">
+                                        <i class="zmdi zmdi-circle zmdi-hc-stack-2x c-white"></i>
+                                        <i class="zmdi zmdi-edit zmdi-hc-stack-1x c-teal"></i>
+                                    </span>
+                                    <h4 class="c-white">
+                                        <strong>{{ "index.section_use.create"|trans }}</strong>
+                                    </h4>
+                                    {#<p class="c-white">Simple et rapide</p>#}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <div class="card z-depth-1">
-                            <div class="card-header text-center">
-                                <h3><strong><i class="zmdi zmdi-account-add zmdi-hc-2x"></i><br>Invitez vos amis.</strong></h3>
-                            </div>
-                            <div class="card-body card-padding">
-                                <p>Répondez ensuite aux questions précédentes de manière collaborative.</p>
-                                <p><strong>De nombreux avantages:</strong></p>
-                                <div class="list-md-icon m-b-10">
-                                    <ul>
-                                        <li class="ng-binding"><i class="zmdi zmdi-chevron-right"></i></i>Un endroit unique pour les centraliser toutes, et dans la simplicité s'organiser.</li>
-                                        <li class="ng-binding"><i class="zmdi zmdi-chevron-right"></i></i>(Presque) Plus besoin de courir après vos amis pour avoir des réponses.</li>
-                                        <li class="ng-binding"><i class="zmdi zmdi-chevron-right"></i></i>Eviter le syndrome du "Comme vous voulez!" généralisé !</li>
-                                    </ul>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="service-item">
+                                    <span class="zmdi-hc-stack zmdi-hc-5x">
+                                        <i class="zmdi zmdi-circle zmdi-hc-stack-2x c-white"></i>
+                                        <i class="zmdi zmdi-share zmdi-hc-stack-1x c-teal"></i>
+                                    </span>
+                                    <h4 class="c-white">
+                                        <strong>{{ "index.section_use.share"|trans }}</strong>
+                                    </h4>
+                                    {#<p class="c-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>#}
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-4">
-                        <div class="card z-depth-1">
-                            <div class="card-header text-center">
-                                <h3><strong><i class="zmdi zmdi-check zmdi-hc-2x"></i><br>Profitez de l'évènement</strong></h3>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="service-item">
+                                    <span class="zmdi-hc-stack zmdi-hc-5x">
+                                        <i class="zmdi zmdi-circle zmdi-hc-stack-2x c-white"></i>
+                                        <i class="zmdi zmdi-thumb-up-down zmdi-hc-stack-1x c-teal"></i>
+                                    </span>
+                                    <h4 class="c-white">
+                                        <strong>{{ "index.section_use.organise"|trans }}</strong>
+                                    </h4>
+                                    {#<p class="c-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>#}
+                                </div>
                             </div>
-                            <div class="card-body card-padding">
-                                <p><strong>Il ne vous reste plus qu'à vous amuser avec vos amis!</strong></p>
-
-                                <p>Et retrouvez bientôt de nouvelles fonctionnalités pour gérer l'après événement :</p>
-                                <div class="list-md-icon m-b-10">
-                                    <ul>
-                                        <li class="ng-binding"><i class="zmdi zmdi-image"></i>Partage de photos</li>
-                                        <li class="ng-binding"><i class="zmdi zmdi-balance-wallet"></i></i>Remboursements</li>
-                                        <li class="ng-binding">...</li>
-                                    </ul>
+                            <div class="col-md-3 col-sm-6">
+                                <div class="service-item">
+                                    <span class="zmdi-hc-stack zmdi-hc-5x">
+                                        <i class="zmdi zmdi-circle zmdi-hc-stack-2x c-white"></i>
+                                        <i class="zmdi zmdi-calendar-check zmdi-hc-stack-1x c-teal"></i>
+                                    </span>
+                                    <h4 class="c-white">
+                                        <strong>{{ "index.section_use.enjoy"|trans }}</strong>
+                                    </h4>
+                                    {#<p class="c-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>#}
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
 
-    <div class="row">
-        <div class="card palette-Green-50 bg z-depth-2">
-            <div class="card-header text-center">
-                <h1><strong>Ils en parlent</strong></h1>
+        <aside id="callout1" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/drinks.jpg") }}')">
+            <div class="text-vertical-center">
+               <h1 class="c-white">{{ "index.callout1"|trans }}</h1>
             </div>
-            <div class="card-body card-padding">
-                <blockquote class="blockquote m-b-25">
-                    <div class="quote-table">
-                        <div class="quote-tr">
-                            <div class="quote-img quote-td pull-left m-r-15" style="background-image: url({{ asset('bundles/app/img/index/quote-mi.jpg') }})"></div>
-                            <div class="quote-td p-l-10">
-                                <p>On devait organiser une mission d'infiltration.<br>On pensait que c'était mission impossible, puis on a découvert Yziplan.</p>
-                                <footer>Ethan Hunt - <cite title="Source Title">Mission Impossible</cite></footer>
+        </aside>
+
+        <!-- Portfolio -->
+        <section id="section-event" class="section-event">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 col-lg-offset-1 text-center">
+                        <h2>{{ "index.section_event.tiltle"|trans }}</h2>
+                        <hr class="small">
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-4 col-md-3">
+                                <div class="event-item" style="background-image:url('{{ asset("bundles/app/img/index/eventtype/event-party.jpg") }}')">
+                                    <div class="event-wrapper">
+                                        <div class="event-text">
+                                            <p>{{ "index.section_event.party"|trans }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6  col-sm-4 col-md-3">
+                                <div class="event-item" style="background-image:url('{{ asset("bundles/app/img/index/eventtype/event-afterwork.jpg")}}')">
+                                    <div class="event-wrapper">
+                                        <div class="event-text">
+                                            <p>{{ "index.section_event.after-work"|trans }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6  col-sm-4 col-md-3">
+                                <div class="event-item" style="background-image:url('{{ asset("bundles/app/img/index/eventtype/event-holidays.jpeg") }}')">
+                                    <div class="event-wrapper">
+                                        <div class="event-text">
+                                            <p>{{ "index.section_event.holidays"|trans }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 col-sm-4 col-md-3">
+                                <div class="event-item" style="background-image:url('{{ asset("bundles/app/img/index/eventtype/event-sortie.jpg") }}')">
+                                    <div class="event-wrapper">
+                                        <div class="event-text">
+                                            <p>{{ "index.section_event.outing"|trans }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6  col-sm-4 col-md-3">
+                                <div class="event-item" style="background-image:url('{{ asset("bundles/app/img/index/eventtype/event-cinema.jpg")}}')">
+                                    <div class="event-wrapper">
+                                        <div class="event-text">
+                                            <p>{{ "index.section_event.cinema"|trans }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6  col-sm-4 col-md-3">
+                                <div class="event-item" style="background-image:url('{{ asset("bundles/app/img/index/eventtype/event-activity.jpg") }}')">
+                                    <div class="event-wrapper">
+                                        <div class="event-text">
+                                            <p>{{ "index.section_event.activity"|trans }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6  col-sm-4 col-md-3">
+                                <div class="event-item" style="background-image:url('{{ asset("bundles/app/img/index/eventtype/event-bbq.jpg") }}')">
+                                    <div class="event-wrapper">
+                                        <div class="event-text">
+                                            <p>{{ "index.section_event.barbecue"|trans }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-6  col-sm-4 col-md-3">
+                                <div class="event-item" style="background-image:url('{{ asset("bundles/app/img/index/eventtype/event-weekend.jpg") }}')">
+                                    <div class="event-wrapper">
+                                        <div class="event-text">
+                                            <p>{{ "index.section_event.weekend"|trans }}</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </blockquote>
-                <blockquote class="blockquote-reverse m-b-25">
-                    <div class="quote-table">
-                        <div class="quote-tr">
-                            <div class="quote-img quote-td pull-right m-l-15" style="background-image: url({{ asset('bundles/app/img/index/quote-hannibal.jpg') }})"></div>
-                            <div class="quote-td p-r-10">
-                                <p>J'aime quand un plan se déroule sans accroc. </p>
-                                <footer>Hannibal - <cite title="Source Title">Agence tous risques</cite></footer>
-                            </div>
-                        </div>
-                    </div>
-                </blockquote>
-                <blockquote class="blockquote m-b-25">
-                    <div class="quote-table">
-                        <div class="quote-tr">
-                            <div class="quote-img quote-td pull-left m-r-15" style="background-image: url({{ asset('bundles/app/img/index/quote-ocean.jpg') }})"></div>
-                            <div class="quote-td p-l-10">
-                                <p>On se demandait comment on allait pouvoir cambrioler 3 casinos simultanément.<br>Yziplan nous a permis d'atteindre notre objectif en toute sérénité !</p>
-                                <footer>Daniel "Danny" Ocean - <cite title="Source Title">Ocean's Eleven</cite></footer>
-                            </div>
-                        </div>
-                    </div>
-                </blockquote>
+                    <!-- /.col-lg-10 -->
+                </div>
+                <!-- /.row -->
             </div>
-        </div>
-        <div class="clearfix"></div>
-    </div>
+            <!-- /.container -->
+        </section>
+
+        <aside id="callout2" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/concert.jpg") }}')">
+            <div class="text-vertical-center">
+                <h1 class="c-white">{{ "index.callout2"|trans }}</h1>
+            </div>
+        </aside>
+
+        <section id="index-section-features" class="index-section bgm-teal">
+            <div class="container">
+                <div class="row text-center">
+                    <h2 class="c-white">{{ "index.section_feature.title"|trans }}</h2>
+                    <hr class="small">
+                    <div id="index-feature"></div>
+                </div>
+            </div>
+        </section>
+
+
+        <aside id="callout3" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/coworking.jpg") }}')">
+            <div class="text-vertical-center">
+                <h1 class="c-white">{{ "index.callout3"|trans }}</h1>
+            </div>
+        </aside>
+
+        <section id="index-section-quote" class="index-section bgm-white">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <h2>{{ "index.section_quote.title"|trans }}</h2>
+                        <hr class="small">
+                         <blockquote>
+                            <div class="quote-img quote-td pull-left m-r-15" style="background-image: url({{ asset('bundles/app/img/index/quotes/quote-mi.jpg') }})"></div>
+                            {{ "index.section_quote.quote1.sentense1"|trans }}<br>{{ "index.section_quote.quote1.sentense2"|trans }}
+                            <cite>{{ "index.section_quote.quote1.author"|trans }}</cite>
+                         </blockquote>
+                         <blockquote class="blockquote-reverse">
+                            <div class="quote-img quote-td pull-right m-l-15" style="background-image: url({{  asset('bundles/app/img/index/quotes/quote-hannibal.jpg')  }})"></div>
+                            {{ "index.section_quote.quote2.sentense"|trans }}
+                            <cite>{{ "index.section_quote.quote2.author"|trans }}</cite>
+                         </blockquote>
+                         <blockquote>
+                            <div class="quote-img quote-td pull-left m-r-15" style="background-image: url({{ asset('bundles/app/img/index/quotes/quote-ocean.jpg') }})"></div>
+                            {{ "index.section_quote.quote3.sentense1"|trans }}<br>{{ "index.section_quote.quote3.sentense2"|trans }}
+                            <cite>{{ "index.section_quote.quote3.author"|trans }}</cite>
+                         </blockquote>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.col-lg-10 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </section>
+
+        <aside id="callout4" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/tchin.jpg") }}')">
+            <div class="text-vertical-center">
+                <h1 class="c-white">{{ "index.callout4"|trans }}</h1>
+            </div>
+        </aside>
+
+         <section class="index-section  bgm-white">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 col-lg-offset-1 text-center">
+                    <h2><strong>{{ "index.section_social.title"|trans }}</strong></h2>
+                        <hr class="small">
+                        <p>{{ "index.section_social.subtitle"|trans }}</p>
+                        <br>
+                        <ul class="list-inline">
+                            <li>
+                                <a href="https://www.facebook.com/YziPlan" target="_blank" class="m-r-15"><i class="zmdi zmdi-facebook-box zmdi-hc-4x"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/Yziplan" target="_blank" class="m-l-15"><i class="zmdi zmdi-twitter zmdi-hc-4x"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+         </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent () }}
+    <script src="{{ asset("bundles/app/js/jquery.parallax-1.1.3.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jqcloud.js") }}"></script>
+    <script>
+        $(document).ready(function(){
+            $('#callout1').parallax("center", null, 0.5, true);
+            $('#callout2').parallax("center", null, 0.5, true);
+            $('#callout3').parallax("center", null, 0.5, true);
+            $('#callout4').parallax("center", null, 0.5, true);
+        })
+    </script>
+    <script>
+        var words = [
+            {# Fonctionnalité #}
+            {text: "Organiser", weight: 20},
+            {text: "Quoi ?", weight: 16},
+            {text: "Quand ?", weight: 16},
+            {text: "Ou ?", weight: 15},
+            {text: "Qui ?", weight: 15},
+            {text: "Qui apporte quoi ?", weight: 12},
+            {text: "Inviter", weight: 17},
+            {text: "Checklist", weight: 9},
+            {text: "Collaboratif", weight: 8},
+            {text: "Sondage", weight: 7},
+            {text: "Planifier", weight: 14},
+            {text: "Decider", weight: 8},
+            {text: "Discuter", weight: 11},
+
+            {# Activités #}
+            {text: "Activités", weight: 5},
+            {text: "Soirées", weight: 5},
+            {text: "Week-ends", weight: 8},
+            {text: "Vacances", weight: 5},
+            {text: "Sorties", weight: 4},
+            {text: "Fêtes", weight: 4},
+            {text: "Anniversaires", weight: 4},
+            {text: "After-works", weight: 4},
+            {# Ambiancage #}
+            {text: "Amis", weight: 5},
+            {text: "Contacts", weight: 2},
+            {text: "Loisir", weight: 4},
+            {text: "Fun", weight: 2},
+            {text: "Simple", weight: 3},
+            {text: "Utile", weight: 3},
+        ];
+
+        $('#index-feature').jQCloud(words,{
+            autoResize : true,
+            colors: ["#FFFFFF", "#F5F5F5", "#DFF2FF", "#BBD2E1", "#EFEFEF", "#DCDCDC", "#D3D3D3", "#CECECE", "#C0C0C0", "#A9A9A9"],
+        });
+    </script>
 {% endblock %}
