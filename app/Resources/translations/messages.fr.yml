@@ -491,3 +491,51 @@ suggestion:
   success:
     titre: Merci!
     message: Votre suggestion a bien été envoyée. Nous l'étudierons avec attention.
+
+index:
+  header:
+    title: Yziplan
+    subtitle: Organisez-vous avec vos amis.
+    button: C'est parti!
+  about:
+    title: Pour s'organiser c'est Yzi!
+    subtitle: Organisez soirées, activités, sorties, vacances,... avec vos amis en toute simplicité.
+  section_use:
+    title: Fonctionnement :
+    create: Créez votre événement
+    share: Partagez-le
+    organise: Organisez-vous
+    enjoy: Profitez !
+  section_event:
+    tiltle: Pour tous vos événements :
+    party: Soirée
+    after-work: After-work
+    holidays: Vacances
+    outing: Sortie
+    cinema: Cinéma
+    activity: Activité
+    barbecue: Barbecue
+    weekend: Week-end
+  section_feature:
+    title: Fonctionnalités :
+  section_quote:
+    title: Ils en parlent :
+    quote1:
+      sentense1: On devait organiser une mission d'infiltration.
+      sentense2: On pensait que c'était mission impossible, puis on a découvert Yziplan.
+      author: Ethan Hunt - Mission Impossible
+    quote2:
+      sentense: J'aime quand un plan se déroule sans accroc.
+      author: Colonel John "Hannibal" Smith - Agence tous risques
+    quote3:
+      sentense1: On se demandait comment on allait pouvoir cambrioler 3 casinos simultanément.
+      sentense2: Yziplan nous a permis d'atteindre notre objectif en toute sérénité!
+      author: Daniel "Danny" Ocean - Ocean's Eleven
+  section_social:
+    title: Suivez-nous sur les réseaux sociaux!
+    subtitle: Et ne manquez rien des nouveautés à venir.
+  callout1: Sortez
+  callout2: Amusez-vous
+  callout3: Planifiez
+  callout4: Profitez
+
