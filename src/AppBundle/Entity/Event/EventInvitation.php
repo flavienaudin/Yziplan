@@ -69,6 +69,11 @@ class EventInvitation
      */
     private $administrator = false;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="inviation_email_sent_at", type="datetime", nullable=true)
+     */
+    private $inviationEmailSentAt;
 
     /**************************************************************************************************************
      *                                      Jointures
@@ -257,6 +262,24 @@ class EventInvitation
     }
 
     /**
+     * @return \DateTime
+     */
+    public function getInviationEmailSentAt()
+    {
+        return $this->inviationEmailSentAt;
+    }
+
+    /**
+     * @param \DateTime $inviationEmailSentAt
+     * @return EventInvitation
+     */
+    public function setInviationEmailSentAt($inviationEmailSentAt)
+    {
+        $this->inviationEmailSentAt = $inviationEmailSentAt;
+        return $this;
+    }
+
+    /**
      * Get applicationUser
      *
      * @return ApplicationUser
@@ -359,7 +382,7 @@ class EventInvitation
     {
         $displayableEmail = null;
         if ($this->getApplicationUser() != null) {
-            if ($this->getApplicationUser()->getAccountUser() == null &&  $this->getApplicationUser()->getAppUserEmails()->count() > 0) {
+            if ($this->getApplicationUser()->getAccountUser() == null && $this->getApplicationUser()->getAppUserEmails()->count() > 0) {
                 $displayableEmail = $this->getApplicationUser()->getAppUserEmails()->first()->getEmail();
             } elseif ($this->getApplicationUser()->getAccountUser() != null) {
                 $displayableEmail = $this->getApplicationUser()->getAccountUser()->getEmail();
@@ -372,7 +395,8 @@ class EventInvitation
      * Indique si l'invité est un organisateur : Créateur ou administrateur
      * @return bool
      */
-    public function isOrganizer(){
+    public function isOrganizer()
+    {
         return $this->isCreator() || $this->isAdministrator();
     }
 

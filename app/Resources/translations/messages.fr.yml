@@ -150,10 +150,14 @@ event:
 #      text.false: Les invités ne peuvent pas ajouter un module
   wizard:
     button:
-      skip_wizard: Passer le pas à pas
+      skip_wizard: Aller à la page de l'événement
+      preview: Apercu de l'événement
+      send_invitations: Envoyer les invitations
     main:
       title: Description de l'événement
-      subtitle: Décris l'événement à tes invités. Tu peux donner la date et le lieu mais si tu ne les connais pas, la création de sondage te sera proposer dans une prochaine étape.
+      subtitle: |
+        Décris l'événement à tes invités.
+        Tu connais déjà la date et le lieux ? Fixe-les maintenant sinon lance un sondage plus tard!
     profile:
       title: A propos de toi
       subtitle:
@@ -265,9 +269,9 @@ invitations_list:
     all_answers: Voir l'ensemble des invitations
     new_invitations: "Inviter des amis"
     list:
-      yes: "Ils seront là (%number%)"
-      dont_know: "Ils sont encore indécis (%number%)"
-      no: "Ils ont décliné l'invitation (%number%)"
+      yes: "Présents (%number%)"
+      dont_know: "Indécis (%number%)"
+      no: "Absents (%number%)"
   no_answer: Pas encore de réponse
 
 invitations:

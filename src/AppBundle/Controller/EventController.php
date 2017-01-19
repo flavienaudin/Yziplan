@@ -117,7 +117,7 @@ class EventController extends Controller
                     $eventInvitationsForm->handleRequest($request);
                     if ($eventInvitationsForm->isSubmitted()) {
                         if ($eventInvitationsForm->isValid()) {
-                            $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm);
+                            $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $request->get('sendInvitations'));
                             return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                         }
                     }

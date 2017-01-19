@@ -19,7 +19,6 @@ use AppBundle\Form\Event\EventInvitationAnswerType;
 use AppBundle\Form\Event\EventInvitationType;
 use AppBundle\Mailer\AppTwigSiwftMailer;
 use AppBundle\Security\EventInvitationVoter;
-use AppBundle\Utils\enum\AppUserStatus;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
@@ -241,23 +240,27 @@ class EventInvitationManager
     /**
      * Create and send invitations using emails
      * @param Event $event
-     * @param $emailsData
-     * @param $failedRecipients array of email address which the email could not be sent to
+     * @param array $emailsData
+     * @param boolean $sendEmail
+     * @param array $failedRecipients Array of emails address which the email could not be sent to
      */
-    public function sendInvitations(Event $event, $emailsData, &$failedRecipients = array())
+    public function createInvitations(Event $event, $emailsData, $sendEmail, &$failedRecipients = array())
     {
         $failedRecipients = (array)$failedRecipients;
         foreach ($emailsData as $email) {
-            $eventInvitation = $this->getGuestEventInvitation($event, $email);
-            if ($eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
+            $this->eventInvitation = $this->getGuestEventInvitation($event, $email);
+            if ($this->eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                 // Envoie d'une invitation => AWAITNG_ANSWER
-                $eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+                $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
             }
-            if ($this->appTwigSiwftMailer->sendEventInvitationEmail($eventInvitation)) {
-                $this->persistEventInvitation();
-            } else {
-                $failedRecipients[] = $email;
+            if ($sendEmail) {
+                if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation)) {
+                    $this->eventInvitation->setInviationEmailSentAt(new \DateTime());
+                } else {
+                    $failedRecipients[] = $email;
+                }
             }
+            $this->persistEventInvitation();
         }
     }
 

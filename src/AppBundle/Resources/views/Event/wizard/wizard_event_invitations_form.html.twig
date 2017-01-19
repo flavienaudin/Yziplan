@@ -4,7 +4,6 @@
 - invitationsForm (Form) Formulaire permettant d'ajouter des emails
 #}
 
-
 {% block form_start %}
     {{ form_start(invitationsForm , {'action':path('wizardNewEvent',{'token':userEventInvitation.event.token,
         'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_INVITATIONS")})}) }}
@@ -12,12 +11,12 @@
 
 {% block action_buttons %}
     <div class="text-center">
+        <div>
+            <button type="submit" class="btn btn-primary m-b-10" id="invitations_preview" name="sendInvitations" value="0">{{ "event.wizard.button.preview"|trans }}</button>
+            <button type="submit" class="btn btn-default m-b-10" id="invitations_sendInvitations" name="sendInvitations" value="1">{{ "event.wizard.button.send_invitations"|trans }}</button>
+        </div>
         <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")}) }}"
            class="btn btn-default waves-effect m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
-        <button type="submit" class="btn btn-primary waves-effect m-b-10">{{ "global.button.finish"|trans }}</button>
-        <div>
-            <a href="{{ path("displayEvent", {'token' : event.token}) }}" class="btn btn-default">{{ "event.wizard.button.skip_wizard"|trans }}</a>
-        </div>
     </div>
 {% endblock action_buttons %}
 

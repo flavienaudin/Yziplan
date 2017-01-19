@@ -150,9 +150,13 @@ event:
   wizard:
     button:
       skip_wizard: Skip the wizard
+      preview: Event preview
+      send_invitations: Send invitations
     main:
-      title: Description de l'événement
-      subtitle: Décris l'événement à tes invités. Tu peux donner la date et le lieu mais si tu ne les connais pas, la création de sondage te sera proposée dans une prochaine étape.
+      title: Event description
+      subtitle: |
+        Describe the event to your guests.
+        You already know the date and the place ? Set them definitively right now or start a poll later!
     profile:
       title: About you
       subtitle:
@@ -265,9 +269,9 @@ invitations_list:
     all_answers: See all the invitations
     new_invitations: "Invite friends"
     list:
-      yes: "They will be there (%number%)"
-      dont_know: "They are still undecided (%number%)"
-      no: "They won't come (%number%)"
+      yes: "Presents (%number%)"
+      dont_know: "Undecided (%number%)"
+      no: "Absents (%number%)"
   no_answer: No answer yet
 
 invitations:

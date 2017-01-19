@@ -106,7 +106,7 @@ class EventInvitationController extends Controller
                 }
 
                 $failedRecipients = array();
-                $eventInvitationManager->sendInvitations($event, $emails, $failedRecipients);
+                $eventInvitationManager->createInvitations($event, $emails, true, $failedRecipients);
 
                 if (count($failedRecipients) > 0) {
                     $emails = "";
