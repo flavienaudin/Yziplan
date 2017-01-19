@@ -6,7 +6,7 @@
 - comments(Comment[]) Les commentaires appartenant au fil de discussion du module
 #}
 
-<div class="card z-depth-1 {% block moduleCardClass %}{% endblock %}" id="module-{{ module.token }}">
+<div class="card c-dark z-depth-1 {% block moduleCardClass %}{% endblock %}" id="module-{{ module.token }}">
     {{ include("@App/Event/module/displayModule_header.html.twig", {'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation}) }}
 
     {{ include('@App/Event/module/displayModule_informations.html.twig', {'module':module}) }}
