@@ -71,9 +71,9 @@ class EventInvitation
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="inviation_email_sent_at", type="datetime", nullable=true)
+     * @ORM\Column(name="invitation_email_sent_at", type="datetime", nullable=true)
      */
-    private $inviationEmailSentAt;
+    private $invitationEmailSentAt;
 
     /**************************************************************************************************************
      *                                      Jointures
@@ -264,18 +264,18 @@ class EventInvitation
     /**
      * @return \DateTime
      */
-    public function getInviationEmailSentAt()
+    public function getInvitationEmailSentAt()
     {
-        return $this->inviationEmailSentAt;
+        return $this->invitationEmailSentAt;
     }
 
     /**
-     * @param \DateTime $inviationEmailSentAt
+     * @param \DateTime $invitationEmailSentAt
      * @return EventInvitation
      */
-    public function setInviationEmailSentAt($inviationEmailSentAt)
+    public function setInvitationEmailSentAt($invitationEmailSentAt)
     {
-        $this->inviationEmailSentAt = $inviationEmailSentAt;
+        $this->invitationEmailSentAt = $invitationEmailSentAt;
         return $this;
     }
 

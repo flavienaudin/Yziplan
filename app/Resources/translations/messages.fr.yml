@@ -268,10 +268,15 @@ invitations_list:
     title: Liste des invités
     all_answers: Voir l'ensemble des invitations
     new_invitations: "Inviter des amis"
+    send_email: Envoyer les invitations
     list:
       yes: "Présents (%number%)"
       dont_know: "Indécis (%number%)"
       no: "Absents (%number%)"
+  swal:
+    send_email_invitations:
+      title: Envoyer les e-mails d'invitation
+      text: Un e-mail d'invitation va être envoyer aux invités qui ne l'ont pas encore reçu
   no_answer: Pas encore de réponse
 
 invitations:
@@ -321,9 +326,9 @@ module:
       title: Configuration
   form:
     name:
-      label: Nom du module
+      label: Intitulé du module
     description:
-      label: Description du module
+      label: A quoi va servir ce sondage ?
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse

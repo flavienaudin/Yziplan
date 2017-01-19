@@ -268,10 +268,15 @@ invitations_list:
     title: Guests list
     all_answers: See all the invitations
     new_invitations: "Invite friends"
+    send_email: Send invitations
     list:
       yes: "Presents (%number%)"
       dont_know: "Undecided (%number%)"
       no: "Absents (%number%)"
+  swal:
+    send_email_invitations:
+      title: Send invitation email
+      text: An invitation email will be sent to guests who haven't received one yet
   no_answer: No answer yet
 
 invitations:
@@ -323,7 +328,7 @@ module:
     name:
       label: Module name
     description:
-      label: Module description
+      label: What is the purpose of this poll?
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline

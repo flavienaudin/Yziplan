@@ -23,6 +23,7 @@ use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use ATUserBundle\Entity\AccountUser;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -255,10 +256,27 @@ class EventInvitationManager
             }
             if ($sendEmail) {
                 if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation)) {
-                    $this->eventInvitation->setInviationEmailSentAt(new \DateTime());
+                    $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
                 } else {
                     $failedRecipients[] = $email;
                 }
+            }
+            $this->persistEventInvitation();
+        }
+    }
+
+    /**
+     * @param Collection $eventInvitations
+     */
+    public function sendInvitations($eventInvitations, &$failedRecipients = array())
+    {
+        /** @var EventInvitation $eventInvitation */
+        foreach ($eventInvitations as $eventInvitation) {
+            $this->eventInvitation = $eventInvitation;
+            if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation)) {
+                $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
+            } else {
+                $failedRecipients[] = $this->eventInvitation->getDisplayableEmail();
             }
             $this->persistEventInvitation();
         }

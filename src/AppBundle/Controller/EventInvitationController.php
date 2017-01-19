@@ -62,7 +62,7 @@ class EventInvitationController extends Controller
             }
         }
 
-        $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY.'/'.$eventInvitation->getEvent()->getToken(), $eventInvitation->getToken());
+        $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $eventInvitation->getEvent()->getToken(), $eventInvitation->getToken());
         return $this->redirectToRoute("displayEvent", array('token' => $eventInvitation->getEvent()->getToken()));
     }
 
@@ -72,7 +72,7 @@ class EventInvitationController extends Controller
     public function disconnectEventInvitationAction($eventToken, Request $request)
     {
         if ($request->hasSession()) {
-            $request->getSession()->remove(EventInvitationManager::TOKEN_SESSION_KEY.'/'.$eventToken);
+            $request->getSession()->remove(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $eventToken);
         }
         return $this->redirectToRoute("displayEvent", array('token' => $eventToken));
     }
@@ -85,7 +85,7 @@ class EventInvitationController extends Controller
     {
         $eventInvitationManager = $this->get("at.manager.event_invitation");
         $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($event, false, false, $this->getUser());
-        if ($userEventInvitation == null) {
+        if ($userEventInvitation == null || !$userEventInvitation->isOrganizer()) {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         } else {
@@ -100,13 +100,8 @@ class EventInvitationController extends Controller
                     return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
                 }
             } else {
-                $emails = array();
-                if ($request->request->has('emails')) {
-                    $emails = $request->request->get('emails');
-                }
-
                 $failedRecipients = array();
-                $eventInvitationManager->createInvitations($event, $emails, true, $failedRecipients);
+                $eventInvitationManager->sendInvitations($event->getEventInvitationEmailNotSent(), $failedRecipients);
 
                 if (count($failedRecipients) > 0) {
                     $emails = "";
@@ -137,7 +132,6 @@ class EventInvitationController extends Controller
                         ));
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("invitations.message.success"));
                     return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
                 }
             }

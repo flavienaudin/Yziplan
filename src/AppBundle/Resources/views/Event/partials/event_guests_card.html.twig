@@ -27,8 +27,29 @@
     {% if (userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.guestsCanInvite) and (invitationsForm is not null
     or not userEventInvitation.event.invitationOnly) %}
         <div class="card-footer text-center">
-            <a href="#invitations_new_modal" class="btn btn-primary btn-lg btn-icon-text m-b-10" data-toggle="modal">
-                <i class="zmdi zmdi-email"></i> {{ "invitations_list.display.new_invitations"|trans }}</a>
+            <a href="#invitations_new_modal" class="btn btn-primary m-b-10" data-toggle="modal">{{ "invitations_list.display.new_invitations"|trans }}</a>
+            {% if event.eventInvitationEmailNotSent|length > 0 %}
+                <a href="{{ path('sendEventInvitations', {"token":event.token}) }}" id="sendEmailInvitations" class="btn btn-danger m-b-10">{{ "invitations_list.display.send_email"|trans }}</a>
+                <script>
+                    $('#sendEmailInvitations').on('click', function (e) {
+                        e.preventDefault();
+                        var $link = $(this);
+                        swal({
+                            title: "{{ "invitations_list.swal.send_email_invitations.title"|trans }}",
+                            text: "{{ "invitations_list.swal.send_email_invitations.text"|trans }}",
+                            type: "question",
+                            showCancelButton: true,
+                            confirmButtonColor: "#2196f3",
+                            confirmButtonText: '{{ "global.button.valid"|trans }}',
+                            showLoaderOnConfirm: true
+                        }).then(function () {
+                            ajaxRequest($link, null, e, function (responseJSON, textStatus, jqXHR) {
+                                $link.remove();
+                            }, null, null);
+                        });
+                    });
+                </script>
+            {% endif %}
         </div>
         {{ include('@App/Event/partials/invitations/invitations_new_modal.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
     {% endif %}
