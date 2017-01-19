@@ -29,13 +29,12 @@ Données d'entrée :
 {% endset %}
 
 {% if depth == 0 %}
-
     <div class="media">
         <div class="pull-left">
             <ul class="wall-attrs clearfix list-inline list-unstyled">
                 <li class="wa-stats">
                     <span><a href="#eventCommentListCollapse_{{ thread.id }}" data-toggle="collapse">
-                        <i class="zmdi zmdi-comments"></i> {{ nb_comments }}{#{{ "event.comment.display_comment"|trans({"%number%": nb_comments })}}#}</a>
+                        <i class="zmdi zmdi-comments"></i> {{ nb_comments }}</a>
                     </span>
                 </li>
             </ul>

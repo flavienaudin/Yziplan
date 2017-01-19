@@ -29,7 +29,7 @@ class InvitationsType extends AbstractType
     private $tokenStorage;
     /** @var ValidatorInterface */
     private $validator;
-    /** @var TranslatorInterface  */
+    /** @var TranslatorInterface */
     private $translator;
 
     public function __construct(AuthorizationCheckerInterface $authorizationChecker, TokenStorageInterface $tokenStorage, ValidatorInterface $validator, TranslatorInterface $translator)

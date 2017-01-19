@@ -148,8 +148,6 @@ event:
 #      placeholder: Autoriser les invités à ajouter un module
 #      text.true: Les invités peuvent ajouter un module
 #      text.false: Les invités ne peuvent pas ajouter un module
-  comment:
-    display_comment: Afficher les commentaires (%number%)
   wizard:
     button:
       skip_wizard: Passer le pas à pas

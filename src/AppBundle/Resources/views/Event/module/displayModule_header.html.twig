@@ -5,7 +5,7 @@ Données d'entrée :
 - userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
 #}
 
-<div id="module-header-{{ module.token }}" class="card-header {% block moduleHeaderClass %}{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
+<div id="module-header-{{ module.token }}" class="card-header {% block moduleHeaderClass %}palette-Teal bg m-b-10{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
     {% block moduleHeader %}
         <div class="media">
             <div class="pull-left">
@@ -14,7 +14,7 @@ Données d'entrée :
             <div class="pull-right">
                 {% block mhMediaRight %}
                     {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) or is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-                        <ul class="actions">
+                        <ul class="actions a-alt">
                             <li class="dropdown">
                                 <a href="" data-toggle="dropdown" aria-expanded="false"> <i class="zmdi zmdi-settings"></i> </a>
                                 <ul class="dropdown-menu dropdown-menu-right">

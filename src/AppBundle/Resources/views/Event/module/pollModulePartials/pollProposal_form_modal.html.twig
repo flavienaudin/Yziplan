@@ -13,6 +13,7 @@
                 <div class="modal-title" id="{{ pp_form_modal_prefix }}_modal_title">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
                     <h3>{{ (edition?"pollmodule.modal.editPollProposal.title":"pollmodule.modal.addPollProposal.title")|trans }}</h3>
+                    <small class="module-{{ userModuleInvitation.module.token }}-description">{{ userModuleInvitation.module.description|nl2br }}</small>
                 </div>
             </div>
             <div class="modal-body">

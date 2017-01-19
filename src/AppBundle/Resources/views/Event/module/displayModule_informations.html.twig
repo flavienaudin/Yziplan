@@ -2,10 +2,9 @@
 - module (Module) Le module à afficher
 #}
 
-{% if module.description is not empty %}
-    <div id="module-information-{{ module.token }}" class="card-body {% block moduleInformationClass %}card-padding-sm{% endblock %}" {% block moduleInformationAttributs %}{% endblock %}>
-        {% block moduleInformation %}
-            <div>{{ module.description|nl2br }}</div>
-        {% endblock moduleInformation %}
-    </div>
-{% endif %}
+<div id="module-information-{{ module.token }}" class="card-body {% block moduleInformationClass %}{{ module.description is empty?"hidden" }} card-padding-sm{% endblock %}"
+        {% block moduleInformationAttributs %}{% endblock %}>
+    {% block moduleInformation %}
+        <div>{{ module.description|nl2br }}</div>
+    {% endblock moduleInformation %}
+</div>
