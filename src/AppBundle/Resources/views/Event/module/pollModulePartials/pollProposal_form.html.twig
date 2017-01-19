@@ -46,6 +46,7 @@
                         {% if not edition %}
                     $form[0].reset();
                     $('#pollmodule-table-{{ userModuleInvitation.module.token }} > tbody > tr:nth-last-child(1)').before(responseJSON['data']);
+                    $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').show();
                         {% endif %}
                     $('#{{ pp_form_modal_prefix }}_modal_id').modal('hide');
                 },
