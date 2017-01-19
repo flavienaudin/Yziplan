@@ -5,7 +5,8 @@ Données d'entrée :
 - userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
 #}
 
-<div id="module-header-{{ module.token }}" class="card-header {% block moduleHeaderClass %}palette-Teal bg m-b-10{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
+
+<div id="module-header-{{ module.token }}" class="card-header {% block moduleHeaderClass %} bgm-teal m-b-10{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
     {% block moduleHeader %}
         <div class="media">
             <div class="pull-left">
@@ -75,7 +76,11 @@ Données d'entrée :
                     {% for creatorInvitation in module.creators %}
                         {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
                     {% endfor %}
-                    <h2><span id="module_{{ module.token }}_name">{{ module.name is not empty?module.name }}</span>
+                    <h2>
+                        <i class="zmdi zmdi-help zmdi-hc-lg c-white m-r-10"></i>
+                        <span id="module_{{ module.token }}_name">
+                           {{ module.name is not empty?module.name }}
+                        </span>
                         {% if creatorsNames is not empty %}
                             <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}
                                 {# TODO décommenter <span class="label label-default">{{ module.status|trans}}</span>#}
