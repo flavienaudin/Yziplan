@@ -47,14 +47,6 @@ class CoreController extends Controller
     }
 
     /**
-     * @Route("/testindex3", name="testhome3")
-     */
-    public function testIndex3Action(Request $request)
-    {
-        return $this->render('AppBundle:Core:testIndex3.html.twig');
-    }
-
-    /**
      * @Route("/add_suggestion", name="addSuggestion")
      */
     public function addSuggestionAction(Request $request)
