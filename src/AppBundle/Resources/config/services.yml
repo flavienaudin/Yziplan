@@ -101,7 +101,7 @@ services:
 # Event Subscribers
   at.event_subscriber.kernel_events.:
     class: AppBundle\EventListener\KernelEventsSubscriber
-    arguments: ['@translator','@session.flash_bag','@router']
+    arguments: ['@translator.default','@session.flash_bag','@router']
     tags:
       - { name: kernel.event_subscriber }
 
