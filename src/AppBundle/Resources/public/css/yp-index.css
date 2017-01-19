@@ -38,13 +38,13 @@ hr.small {
 
 /* About */
 
-.about {
+.index-about {
     padding: 50px 0;
 }
 
 /* Services */
 
-.services {
+.index-section {
     padding: 50px 0;
 }
 
@@ -132,45 +132,11 @@ hr.small {
     opacity: 0.8;
 }
 
-/* Call to Action */
-
-.call-to-action {
-    padding: 50px 0;
+#index-feature{
+    height: 400px;
+    width: 100vw ;
+    position:relative;
 }
-
-.call-to-action .btn {
-    margin: 10px;
-}
-
-/* Map */
-
-.map {
-    height: 500px;
-}
-
-@media (max-width: 768px) {
-    .map {
-        height: 75%;
-    }
-}
-
-.map iframe {
-    pointer-events: none;
-}
-
-/* Footer */
-
-footer {
-    padding: 100px 0;
-}
-
-#to-top {
-    display: none;
-    position: fixed;
-    bottom: 5px;
-    right: 5px;
-}
-
 /****************************************************************************************************
 ******************************                 Quote                        *************************
 *************************************************************************************************** */
@@ -214,3 +180,5 @@ blockquote cite {
 blockquote cite:before {
     content: "\2014 \2009";
 }
+
+
