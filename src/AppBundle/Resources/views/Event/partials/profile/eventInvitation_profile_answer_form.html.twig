@@ -8,12 +8,16 @@ Données d'entrée :
     {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::CANCELLED') %}
         <div class="well well-sm palette-Purple-300 bg c-white">{{ "eventInvitation.message.warning.invitation_cancelled"|trans }}</div>
     {% else %}
-        <h4>{{ "eventInvitation.form.answer.label"|trans }}</h4>
         {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
-        {{ form_row(userEventInvitationAnswerForm.answer,{
-            'label_attr':{'class' : 'sr-only'},
-            'attr':{'type' : 'answer'}
-        }) }}
+
+        <h4>{{ "eventInvitation.form.answer.label"|trans }}
+            <div class="di-block">
+                {{ form_row(userEventInvitationAnswerForm.answer,{
+                    'label_attr':{'class' : 'sr-only'},
+                    'attr':{'type' : 'answer'}
+                }) }}
+            </div>
+        </h4>
 
         {{ form_rest(userEventInvitationAnswerForm) }}
         {{ form_end(userEventInvitationAnswerForm) }}

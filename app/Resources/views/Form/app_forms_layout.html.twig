@@ -160,9 +160,9 @@
 
 {% block choice_widget_expanded -%}
     {% if attr.type is defined and attr.type == 'answer' -%}
-        <div class="btn-group btn-group-lg btn-group-justified" data-toggle="buttons" role="group">
+        <div data-toggle="buttons" role="group">
             {%- for child in form %}
-                {% set label_attr = label_attr|merge({'class': "btn"}) %}
+                {% set label_attr = label_attr|merge({'class': "btn btn-default btn-icon"}) %}
                 {{- form_widget(child, {
                     parent_label_class: label_attr.class|default(''),
                     translation_domain: choice_translation_domain,

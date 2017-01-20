@@ -48,12 +48,13 @@ class EventInvitationAnswerType extends AbstractType
                         ),
                         'choice_attr' => function ($val, $key, $index) {
                             if ($val == EventInvitationAnswer::INTERESTED) {
-                                $data_class = 'btn-answer-true';
+                                $data_class = 'btn-answer-true zmdi zmdi-check';
                             } else {
-                                $data_class = 'btn-answer-false';
+                                $data_class = 'btn-answer-false zmdi zmdi-close';
                             }
                             return ['dataclass' => $data_class];
-                        }
+                        },
+                        'choice_label' => false
                     ));
                     //} elseif ($event->getStatus() == EventStatus::VALIDATED) {
                 } elseif (true) {
@@ -68,14 +69,15 @@ class EventInvitationAnswerType extends AbstractType
                         ),
                         'choice_attr' =>function($val, $key, $index) {
                             if($val == EventInvitationAnswer::YES) {
-                                $data_class = 'btn-answer-true';
+                                $data_class = 'btn-answer-true zmdi zmdi-check';
                             }elseif($val == EventInvitationAnswer::NO) {
-                                $data_class = 'btn-answer-false';
+                                $data_class = 'btn-answer-false zmdi zmdi-close';
                             }else{
-                                $data_class = 'btn-answer-maybe';
+                                $data_class = 'btn-answer-maybe zmdi zmdi-thumb-up-down';
                             }
                             return ['dataclass' => $data_class];
-                        }
+                        },
+                        'choice_label' => false
                     ));
                 }
             });
