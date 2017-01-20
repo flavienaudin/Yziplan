@@ -330,7 +330,7 @@ module:
       title: Configuration
   form:
     name:
-      label: Intitulé du module
+      label: Intitulé du sondage
     description:
       label: A quoi va servir ce sondage ?
     responseDeadline:

@@ -66,7 +66,7 @@
 ----------------------------------*/
 .at-global-preloader {
     position: fixed;
-    z-index: 100;
+    z-index: 10000;
     top: 10px;
     left: 50%;
     width: 40px;
@@ -83,6 +83,10 @@
     display: table;
     margin-left: auto;
     margin-right: auto;
+}
+
+.border-bottom{
+    border: 1px solid lightgrey;
 }
 
 /*---------------------------------
@@ -317,11 +321,12 @@ h1.event-title {
 -----------------------------------*/
 
 .answer-form [class*=btn-answer] {
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    font-size: 28px;
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    font-size: 40px;
     font-weight: 900;
+    margin: 10px;
 }
 .answer-form .btn-answer-false {
     color: #ff5722;

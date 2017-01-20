@@ -67,13 +67,13 @@ class EventInvitationAnswerType extends AbstractType
                             EventInvitationAnswer::DONT_KNOW => EventInvitationAnswer::DONT_KNOW,
                             EventInvitationAnswer::NO => EventInvitationAnswer::NO
                         ),
-                        'choice_attr' =>function($val, $key, $index) {
-                            if($val == EventInvitationAnswer::YES) {
+                        'choice_attr' => function ($val, $key, $index) {
+                            if ($val == EventInvitationAnswer::YES) {
                                 $data_class = 'btn-answer-true zmdi zmdi-check';
-                            }elseif($val == EventInvitationAnswer::NO) {
+                            } elseif ($val == EventInvitationAnswer::NO) {
                                 $data_class = 'btn-answer-false zmdi zmdi-close';
-                            }else{
-                                $data_class = 'btn-answer-maybe zmdi zmdi-thumb-up-down';
+                            } else {
+                                $data_class = 'btn-answer-maybe zmdi zmdi-more';
                             }
                             return ['dataclass' => $data_class];
                         },
