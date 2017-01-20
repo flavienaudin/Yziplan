@@ -29,7 +29,7 @@ services:
 
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
-    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation','@at.manager.pollproposal','@at.manager.discussion']
+    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation','@at.manager.pollproposal','@at.manager.discussion','@translator']
 
   at.manager.event_invitation:
     class: AppBundle\Manager\EventInvitationManager
@@ -50,7 +50,7 @@ services:
 
   at.manager.application_user:
     class: AppBundle\Manager\ApplicationUserManager
-    arguments: ['@doctrine.orm.entity_manager','@fos_user.util.email_canonicalizer','@translator.default','@fos_user.util.token_generator']
+    arguments: ['@doctrine.orm.entity_manager','@fos_user.util.email_canonicalizer','@translator','@fos_user.util.token_generator']
 
   at.manager.app_user_information:
       class: AppBundle\Manager\AppUserInformationManager
@@ -94,7 +94,7 @@ services:
 # FormTypes
   at.form_type.invitation:
     class: AppBundle\Form\Event\InvitationsType
-    arguments: ['@security.authorization_checker', '@security.token_storage', '@validator', '@translator.default']
+    arguments: ['@security.authorization_checker', '@security.token_storage', '@validator', '@translator']
     tags:
     - { name: form.type }
 

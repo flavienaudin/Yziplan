@@ -1,0 +1,184 @@
+/**
+ * Created by Patman on 18/01/2017.
+ */
+
+.text-vertical-center {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.text-vertical-center h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 4.5em;
+    font-weight: 700;
+}
+
+/* Custom Horizontal Rule */
+
+hr.small {
+    max-width: 100px;
+}
+
+/* Header */
+
+.header {
+    display: table;
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 70px);
+    background: no-repeat center center scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    text-shadow: 0px 0px 15px #000000;
+}
+
+/* About */
+
+.index-about {
+    padding: 50px 0;
+}
+
+/* Services */
+
+.index-section {
+    padding: 50px 0;
+}
+
+.service-item {
+    margin-bottom: 30px;
+}
+
+/* Callout */
+
+.callout {
+    display: table;
+    width: 100%;
+    height: 400px;
+    background: center 0 no-repeat fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+    text-shadow: 0px 0px 15px #000000;
+    color: white;
+}
+
+/* event */
+
+.section-event {
+    padding: 50px 0;
+}
+
+.event-item {
+    display: block;
+    height: 100px;
+    margin-bottom: 30px;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+}
+
+@media (min-width: 768px) {
+    .event-item {
+        height: 200px;
+    }
+}
+
+.event-wrapper {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.event-item .event-text {
+    display: table;
+    opacity: 0;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    padding: 2px 0px;
+    height: 100%;
+    width: 100%;
+    color: #ffffff;
+    background:  #009688;
+    text-decoration: none;
+    -webkit-transition: opacity 500ms;
+    -moz-transition: opacity 500ms;
+    -o-transition: opacity 500ms;
+    transition: opacity 500ms;
+
+}
+.event-item:hover .event-text  {
+    opacity: 0.8;
+}
+
+.event-text > p {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.img-event {
+    margin: 0 auto;
+}
+
+.img-event:hover {
+    opacity: 0.8;
+}
+
+#index-feature{
+    height: 400px;
+    width: 100vw ;
+    position:relative;
+}
+/****************************************************************************************************
+******************************                 Quote                        *************************
+*************************************************************************************************** */
+
+blockquote {
+    font-family: Georgia, serif;
+    font-size: 18px;
+    font-style: italic;
+/*    width: 500px;*/
+    text-align: left;
+    margin: 0.25em 0;
+    padding: 0.25em 40px;
+    line-height: 1.45;
+    position: relative;
+    color: #383838;
+    min-height: 110px;
+}
+
+blockquote:before {
+    display: block;
+    content: "\201C";
+    font-size: 80px;
+    position: absolute;
+    left: -20px;
+    top: -20px;
+    color: #7a7a7a;
+}
+
+blockquote.blockquote-reverse::before{
+    right: -10px;
+    content: "\201D";
+}
+
+blockquote cite {
+    color: #999999;
+    font-size: 14px;
+    display: block;
+    margin-top: 5px;
+}
+
+blockquote cite:before {
+    content: "\2014 \2009";
+}
+
+

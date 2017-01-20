@@ -1,0 +1,20 @@
+{# Modale d'edition du module :
+Données d'entrée :
+- module (Module) Le module à afficher
+- moduleForm (Form|null) Le formulaire d'édition du module
+- userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
+#}
+
+<div class="modal fade" id="moduleEdit_modal_{{ module.token }}" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="#mhms_title">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                <h3 id="mhms_title" class="modal-title">{{ "module.modal.settings.title"|trans }}</h3>
+            </div>
+            <div class="modal-body">
+                {{ include('@App/Event/module/displayModule_form.html.twig', {'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation}) }}
+            </div>
+        </div>
+    </div>
+</div>

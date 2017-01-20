@@ -66,7 +66,7 @@
 ----------------------------------*/
 .at-global-preloader {
     position: fixed;
-    z-index: 100;
+    z-index: 10000;
     top: 10px;
     left: 50%;
     width: 40px;
@@ -83,6 +83,10 @@
     display: table;
     margin-left: auto;
     margin-right: auto;
+}
+
+.border-bottom{
+    border: 1px solid lightgrey;
 }
 
 /*---------------------------------
@@ -304,7 +308,7 @@
 }
 
 .event-title {
-    text-shadow: 0 0 20px rgb(0, 0, 0);
+    text-shadow: 0 0 10px rgb(0, 0, 0);
 }
 
 h1.event-title {
@@ -316,33 +320,44 @@ h1.event-title {
     Event Invitation Answer
 -----------------------------------*/
 
+.answer-form [class*=btn-answer] {
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    font-size: 40px;
+    font-weight: 900;
+    margin: 10px;
+}
 .answer-form .btn-answer-false {
-    background-color: #ffccbc;
+    color: #ff5722;
 }
 
 .answer-form .btn-answer-false.active,
 .answer-form .btn-answer-false:active {
-    background-color: #f44336;
+    background-color: #ff5722;
+    color:white;
     font-weight: bold;
 }
 
 .answer-form .btn-answer-maybe {
-    background-color: #b3e5fc;
+    color: #ffc107;
 }
 
 .answer-form .btn-answer-maybe.active,
 .answer-form .btn-answer-maybe:active {
-    background-color: #03a9f4;
+    background-color: #ffc107;
+    color:white;
     font-weight: bold;
 }
 
 .answer-form .btn-answer-true {
-    background-color: #b2dfdb;
+    color: #4caf50;
 }
 
 .answer-form .btn-answer-true.active,
 .answer-form .btn-answer-true:active {
-    background-color: teal;
+    background-color: #4caf50;
+    color:white;
     font-weight: bold;
 }
 
@@ -499,9 +514,14 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
+.poll-container tbody {
+    border-top: 1px solid #bdbdbd;
+    border-bottom: 1px solid #bdbdbd;
+    border-radius: 2px;
+}
+
 .poll-container table td {
-    padding: 3px;
-!important;
+    padding: 3px !important;
 }
 
 .poll-container table td.response-column {
@@ -532,19 +552,16 @@ label.required:after {
     padding-top: auto;
     padding-left: 0;
     padding-right: 0 !important;
+    text-align: center;
 }
 
-.pollmodule-nopropal {
-    width: 100%;
-    margin-top: 10px;
-    padding-top: 5px;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
+.poll-container table .tr-no-proposal:not(:first-child){
+    display: none;
+}
 
+.tr-no-proposal {
     text-align: center;
     font-style: italic;
-    border-top: solid;
-    border-bottom: solid;
 }
 
 .table-striped > tbody > tr:nth-of-type(even) .progress {

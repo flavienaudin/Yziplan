@@ -20,20 +20,22 @@
         {% for pollProposalElement in pollProposalForm.pollProposalElements %}
             {{ form_errors(pollProposalElement) }}
             {{ form_widget(pollProposalElement, {
-            'widget_options':{'fgline' : true, 'displayInRow' : true}
+                'widget_options':{
+                    'fgfloat':(pollProposalElement.valDatetime is not defined),
+                    'fgline':true,
+                    'displayInRow':(pollProposalElement.valDatetime is defined)}
             }) }}
         {% endfor %}
         {{ form_rest(pollProposalForm) }}
     </div>
 
     <div class="pull-right">
-        <button type="button" class="btn btn-danger waves-effect" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
         <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
     </div>
     {{ form_end(pollProposalForm) }}
 
     <script type="text/javascript">
-
         if (typeof google === 'object' && typeof google.maps === 'object') {
             initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');
         }
@@ -42,14 +44,16 @@
             var $form = $(this);
             ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                         {% if not edition %}
-                        $form[0].reset();
+                    $form[0].reset();
+                    $('#pollmodule-table-{{ userModuleInvitation.module.token }} > tbody > tr:nth-last-child(1)').before(responseJSON['data']);
+                    $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').show();
                         {% endif %}
-                        $('#{{ pp_form_modal_prefix }}_modal_id').modal('toggle');
-                    },
-                    null,
-                    function () {
-                        $('.grid').masonry('layout');
-                    }
+                    $('#{{ pp_form_modal_prefix }}_modal_id').modal('hide');
+                },
+                null,
+                function () {
+                    $('.grid').masonry('layout');
+                }
             );
         });
     </script>

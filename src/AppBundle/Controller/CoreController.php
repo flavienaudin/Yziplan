@@ -56,11 +56,11 @@ class CoreController extends Controller
             $this->get("at.manager.retour_utilisateur")->posterSuggestion($datas);
             return new JsonResponse(array(
                 "type" => "success",
-                "titre" => $this->get('translator.default')->trans("suggestion.success.titre"),
-                "message" => $this->get('translator.default')->trans("suggestion.success.message")
+                "titre" => $this->get('translator')->trans("suggestion.success.titre"),
+                "message" => $this->get('translator')->trans("suggestion.success.message")
             ));
         } else {
-            $this->addFlash("error", $this->get("translator.default")->trans("flashMessage.erreur_requete"));
+            $this->addFlash("error", $this->get("translator")->trans("flashMessage.erreur_requete"));
             return $this->redirectToRoute("home");
         }
     }

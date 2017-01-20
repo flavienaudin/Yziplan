@@ -226,11 +226,12 @@ class EventManager
         return $this->formFactory->create(InvitationsType::class);
     }
 
-    public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm)
+    public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm, $sendInvitations = true)
     {
         if ($this->event != null) {
             $emailsData = $eventInvitationsForm->get("invitations")->getData();
-            $this->eventInvitationManager->sendInvitations($this->event, $emailsData);
+            $this->eventInvitationManager->createInvitations($this->event, $emailsData, $sendInvitations);
+
             $this->entityManager->persist($this->event);
             $this->entityManager->flush();
             return $this->event;
@@ -299,8 +300,7 @@ class EventManager
                     $moduleDescription['thread'] = $thread;
                     $moduleDescription['comments'] = $comments;
 
-                    if (false && $this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
-                        // TODO always false : non nécessaire en version BETA
+                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
                         $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
                     }
                     if ($module->getPollModule() != null) {

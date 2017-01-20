@@ -48,12 +48,13 @@ class EventInvitationAnswerType extends AbstractType
                         ),
                         'choice_attr' => function ($val, $key, $index) {
                             if ($val == EventInvitationAnswer::INTERESTED) {
-                                $data_class = 'btn-answer-true';
+                                $data_class = 'btn-answer-true zmdi zmdi-check';
                             } else {
-                                $data_class = 'btn-answer-false';
+                                $data_class = 'btn-answer-false zmdi zmdi-close';
                             }
                             return ['dataclass' => $data_class];
-                        }
+                        },
+                        'choice_label' => false
                     ));
                     //} elseif ($event->getStatus() == EventStatus::VALIDATED) {
                 } elseif (true) {
@@ -66,16 +67,17 @@ class EventInvitationAnswerType extends AbstractType
                             EventInvitationAnswer::DONT_KNOW => EventInvitationAnswer::DONT_KNOW,
                             EventInvitationAnswer::NO => EventInvitationAnswer::NO
                         ),
-                        'choice_attr' =>function($val, $key, $index) {
-                            if($val == EventInvitationAnswer::YES) {
-                                $data_class = 'btn-answer-true';
-                            }elseif($val == EventInvitationAnswer::NO) {
-                                $data_class = 'btn-answer-false';
-                            }else{
-                                $data_class = 'btn-answer-maybe';
+                        'choice_attr' => function ($val, $key, $index) {
+                            if ($val == EventInvitationAnswer::YES) {
+                                $data_class = 'btn-answer-true zmdi zmdi-check';
+                            } elseif ($val == EventInvitationAnswer::NO) {
+                                $data_class = 'btn-answer-false zmdi zmdi-close';
+                            } else {
+                                $data_class = 'btn-answer-maybe zmdi zmdi-more';
                             }
                             return ['dataclass' => $data_class];
-                        }
+                        },
+                        'choice_label' => false
                     ));
                 }
             });

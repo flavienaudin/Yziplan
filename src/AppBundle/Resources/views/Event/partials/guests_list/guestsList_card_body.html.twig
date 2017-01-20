@@ -17,7 +17,7 @@
 
     <div class="list-group lg-padding-xs text-center">
         <div class="list-group-item">
-            <h5><a href="#guestsList_modal" data-toggle="modal">{{ "invitations_list.display.list.yes"|trans({"%number%":eventInvitation_answer_yes|length}) }}</a></h5>
+            <a href="#guestsList_modal" class="btn btn-flat" data-toggle="modal">{{ "invitations_list.display.list.yes"|trans({"%number%":eventInvitation_answer_yes|length}) }}</a>
             {% if eventInvitation_answer_yes|length>0 %}
                 <ul class="list-inline eventInvitations_list">
                     {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
@@ -30,7 +30,7 @@
             {% endif %}
         </div>
         <div class="list-group-item visible-lg">
-            <h5><a href="#guestsList_modal" data-toggle="modal">{{ "invitations_list.display.list.dont_know"|trans({"%number%":eventInvitation_answer_dont_know|length}) }}</a></h5>
+            <a href="#guestsList_modal" class="btn btn-flat" data-toggle="modal">{{ "invitations_list.display.list.dont_know"|trans({"%number%":eventInvitation_answer_dont_know|length}) }}</a>
             {% if eventInvitation_answer_dont_know|length>0 %}
                 <ul class="list-inline eventInvitations_list">
                     {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') %}
@@ -43,7 +43,7 @@
             {% endif %}
         </div>
         <div class="list-group-item visible-lg">
-            <h5><a href="#guestsList_modal" data-toggle="modal">{{ "invitations_list.display.list.no"|trans({"%number%":eventInvitation_answer_no|length}) }}</a></h5>
+            <a href="#guestsList_modal" class="btn btn-flat" data-toggle="modal">{{ "invitations_list.display.list.no"|trans({"%number%":eventInvitation_answer_no|length}) }}</a>
             {% if eventInvitation_answer_no|length>0 %}
                 <ul class="list-inline eventInvitations_list ">
                     {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
@@ -56,7 +56,10 @@
             {% endif %}
         </div>
         <div class="list-group-item hidden-lg p-b-10">
-            <a href="#guestsList_modal" data-toggle="modal" class="btn btn-default waves-effect">{{ "invitations_list.display.all_answers"|trans }}</a>
+            <a href="#guestsList_modal" data-toggle="modal" class="btn btn-flat">
+                {{ "invitations_list.display.list.dont_know"|trans({"%number%":eventInvitation_answer_dont_know|length}) }} /
+                {{ "invitations_list.display.list.no"|trans({"%number%":eventInvitation_answer_no|length}) }}
+            </a>
         </div>
     </div>
     <script>

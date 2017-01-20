@@ -6,134 +6,14 @@
 - comments(Comment[]) Les commentaires appartenant au fil de discussion du module
 #}
 
+
 <div class="card z-depth-1 {% block moduleCardClass %}c-dark{% endblock %}" id="module-{{ module.token }}">
-    <div class="card-header m-b-10 {% block moduleHeaderClass %}palette-Teal bg{% endblock %}" {% block moduleHeaderAttributs %}{% endblock %}>
-        {% block moduleHeader %}
-            <div class="media">
-                <div class="pull-left">
-                    {% block mhMediaLeft %}{% endblock mhMediaLeft %}
-                </div>
-                <div class="pull-right">
-                    {% block mhMediaRight %}
-                        <ul class="actions a-alt">
-                            {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), userModuleInvitation) %}
-                                <li><a href="{{ path('removeEventModule', {'token':module.token}) }}" id="removeModule{{ module.token }}" data-target="{{ module.token }}"> <i
-                                                class="zmdi zmdi-delete c-red"></i></a></li>
-                                <script>
-                                    $('#removeModule{{ module.token }}').on('click', function (e) {
-                                        e.preventDefault();
-                                        if (!eventInvitationValid && askGuestName !== undefined) {
-                                            askGuestName();
-                                        } else {
-                                            var removeModuleLink = $(this);
-                                            swal({
-                                                title: '{{ "module.alert.confirm_deletion.title"|trans }}',
-                                                text: '{{ "module.alert.confirm_deletion.message"|trans }}',
-                                                type: "warning",
-                                                showCancelButton: true,
-                                                confirmButtonColor: "#DD6B55",
-                                                confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                                showLoaderOnConfirm: true
-                                            }).then(function () {
-                                                ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                        $('#module-{{ module.token }}').remove();
-                                                        $('.grid').masonry('layout');
-                                                    }
-                                                }, function (jqXHR, textStatus, errorThrown) {
-                                                    if (jqXHR.hasOwnProperty('responseJSON')) {
-                                                        var responseJSON = jqXHR['responseJSON'];
-                                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                                            if (!eventInvitationValid && askGuestName !== undefined) {
-                                                                askGuestName();
-                                                            }
-                                                        }
-                                                    }
-                                                }, null);
-                                            });
-                                        }
-                                    });
-                                </script>
-                            {% endif %}
-                        </ul>
-                    {% endblock mhMediaRight %}
-                </div>
-                <div class="media-body">
-                    {% block mhMediaBody %}
-                        {% set creatorsNames = "" %}
-                        {% for creatorInvitation in module.creators %}
-                            {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
-                        {% endfor %}
-                        <h2><span id="module_{{ module.token }}_name">{{ module.name is not empty?module.name|trans }}</span>
-                            {% if creatorsNames is not empty %}
-                                <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}
-                                    {# TODO décommenter <span class="label label-default">{{ module.status|trans}}</span>#}
-                                </small>
-                            {% endif %}
-                        </h2>
-                    {% endblock mhMediaBody %}
-                </div>
-            </div>
-            {% block mhBtnFloat %}
-                {#{% if module.expenseModule is null and module.pollModule is null %}
-                    <a href="#addSubModule">
-                        <button class="btn palette-Light-Green bg btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-plus"></i></button>
-                    </a>
-                {% endif %}#}
-            {% endblock mhBtnFloat %}
-        {% endblock moduleHeader %}
-    </div>
+    {{ include("@App/Event/module/displayModule_header.html.twig", {'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation}) }}
 
-    {# TODO décommenter : non nécessaire en version beta
-    <div class="card-body">
-        <div class="panel-group" role="tablist" aria-multiselectable="true">
-            <div class="panel panel-collapse {% block moduleInformationClass %}{% endblock %}" {% block moduleInformationAttributs %}{% endblock %}>
-                {% block moduleInformation %}
-                        <div class="panel-heading m-l-10 m-r-10" id="mInfo-PH-{{ module.token }}" role="tab">
-                            <h4 class="panel-title">
-                                <a role="button" data-toggle="collapse" href="#collapse-mInfo-PH-{{ module.token }}" aria-expanded="false" aria-controls="collapse-mInfo-PH-{{ module.token }}">
-                                    {{ "module.main_information.title"|trans }}</a>
-                            </h4>
-                        </div>
-                        <div id="collapse-mInfo-PH-{{ module.token }}" class="collapse" role="tabpanel" aria-labelledby="mInfo-PH-{{ module.token }}">
-                            <div class="panel-body">
-                                <ul class="tab-nav tn-icon" role="tablist">
-                                    <li role="presentation" class="active">
-                                        <a href="#tab_info_{{ module.token }}" aria-controls="#tab_info_{{ module.token }}" role="tab" data-toggle="tab"> <i class="zmdi zmdi-home icon-tab"></i></a>
-                                    </li>
-                                    <li role="presentation">
-                                        <a href="#tab_module_guest_{{ module.token }}" aria-controls="#tab_module_guest_{{ module.token }}" role="tab" data-toggle="tab"> <i
-                                                    class="zmdi zmdi-accounts-list-alt icon-tab"></i></a>
-                                    </li>
-                                </ul>
-                                <div class="tab-content p-20 b-b-w">
-                                    <div role="tabpanel" class="tab-pane animated fadeIn in active" id="tab_info_{{ module.token }}">
-                                        {% if moduleForm is not null and is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
-                                            {{ include('@App/Event/module/displayModule_form.html.twig',{'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation}) }}
-                                        {% else %}
-                                            <dl>
-                                                <dt>Description</dt>
-                                                <dd>{{ module.description|nl2br|raw }}</dd>
-                                            </dl>
-                                            #}{#{% if module.paymentModule is not null %}
-                                                {{ include("@App/Event/module/displayPaymentModule.html.twig", {"module":module}) }}
-                                            {% endif %}#}{#
-                                        {% endif %}
-                                    </div>
-                                    <div role="tabpanel" class="tab-pane animated fadeIn" id="tab_module_guest_{{ module.token }}">
-                                        <h2>Liste des invités</h2>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                {% endblock moduleInformation %}
-            </div>
-        </div>
-    </div>#}
+    {{ include('@App/Event/module/displayModule_informations.html.twig', {'module':module}) }}
 
-    <div class="card-body {% block moduleBodyClass %}{% endblock %}" {% block moduleBodyAttributs %}{% endblock %}>
-        {% block moduleBody %}{% endblock moduleBody %}
-    </div>
+    {% block moduleBody %}{% endblock moduleBody %}
+
     <div class="{% block moduleFooterClass %}card-footer{% endblock moduleFooterClass %}">
         {% block moduleFooter %}{% endblock moduleFooter %}
 
@@ -163,6 +43,9 @@
     </div>
 
     <div id="modal-container-block-{{ module.token }}">
+        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
+            {{ include('@App/Event/module/displayModule_edition_modal.html.twig', {'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation} ) }}
+        {% endif %}
         {% block module_modal_container %}{% endblock module_modal_container %}
     </div>
 

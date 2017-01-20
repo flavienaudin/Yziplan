@@ -147,14 +147,17 @@ event:
 #      placeholder: Guests can add module
 #      text.true: Guests can add module to the event
 #      text.false: Guests can not add module to the event
-  comment:
-    display_comment: Display comments (%number%)
   wizard:
     button:
       skip_wizard: Skip the wizard
+      preview: Event preview
+      send_invitations_later: Later
+      send_invitations: Send invitations
     main:
-      title: Description de l'événement
-      subtitle: Décris l'événement à tes invités. Tu peux donner la date et le lieu mais si tu ne les connais pas, la création de sondage te sera proposée dans une prochaine étape.
+      title: Event description
+      subtitle: |
+        Describe the event to your guests.
+        You already know the date and the place ? Set them definitively right now or start a poll later!
     profile:
       title: About you
       subtitle:
@@ -266,10 +269,18 @@ invitations_list:
     title: Guests list
     all_answers: See all the invitations
     new_invitations: "Invite friends"
+    send_email: Send invitations
     list:
-      yes: "They will be there (%number%)"
-      dont_know: "They are still undecided (%number%)"
-      no: "They won't come (%number%)"
+      yes: "Presents (%number%)"
+      dont_know: "Undecided (%number%)"
+      no: "Absents (%number%)"
+  swal:
+    no_email_selected:
+      title: No selected email
+      text: You can skip and invite from the event page
+    send_email_invitations:
+      title: Send invitation email
+      text: An invitation email will be sent to guests who haven't received one yet
   no_answer: No answer yet
 
 invitations:
@@ -314,13 +325,14 @@ contactsgmail:
 module:
   main_information:
     title: General Information
+  modal:
+    settings:
+      title: Settings
   form:
     name:
       label: Module name
-      placeholder: Module name
     description:
-      label: Description
-      placeholder: Description
+      label: What is the purpose of this poll?
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline
@@ -395,6 +407,7 @@ global:
   link:
     top: Top
   button:
+    ok: OK
     valid: Validate
     cancel: Cancel
     submit: Submit
@@ -490,3 +503,50 @@ suggestion:
   success:
     titre: Thank you!
     message: Your suggestion has been sent. We will read it carefully.
+
+index:
+  header:
+    title: Yziplan
+    subtitle: Get organised with your friends.
+    button: Let's go!
+  about:
+    title: To get organised it's Yzi!
+    subtitle: Easily organised parties, acivities, outings, holidays,... with your friends
+  section_use:
+    title: How it works:
+    create: Create your event
+    share: Share it
+    organise: Get organised
+    enjoy: Enjoy!
+  section_event:
+    tiltle: For all kind of event:
+    party: Party
+    after-work: After-work
+    holidays: Holidays
+    outing: Outing
+    cinema: Movie theater
+    activity: Activity
+    barbecue: Barbecue
+    weekend: Week-end
+  section_feature:
+    title: Features:
+  section_quote:
+    title: They speak about us:
+    quote1:
+      sentense1: We had to organize an infiltration mission.
+      sentense2: "We thought it was mission: impossible, then we discovered Yziplan."
+      author: "Ethan Hunt - Mission: Impossible"
+    quote2:
+      sentense: I love it when a plan comes together.
+      author: Colonel John "Hannibal" Smith - The A team
+    quote3:
+      sentense1: We wondered how we could burglar 3 casinos simultaneously.
+      sentense2: Yziplan helped us to achieve our goal with serenity!
+      author: Daniel "Danny" Ocean - Ocean's Eleven
+  section_social:
+    title: Follow us on social networks!
+    subtitle: And do not miss anything new to come.
+  callout1: Go out
+  callout2: Have fun
+  callout3: Plan
+  callout4: Enjoy

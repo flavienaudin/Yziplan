@@ -67,6 +67,9 @@
                                                 $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
                                                     $(this).remove();
                                                 });
+                                                if($('#pp-row-group-{{ userModuleInvitation.module.token }} > tr').length == 1) {
+                                                    $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').hide();
+                                                }
                                             }
                                         }, function (jqXHR, textStatus, errorThrown) {
                                             if (jqXHR.hasOwnProperty('responseJSON')) {

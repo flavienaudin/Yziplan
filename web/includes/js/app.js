@@ -19,19 +19,6 @@ $(document).ready(function () {
     /* --------------------------------------------------------
      Scrollbar
      ----------------------------------------------------------*/
-    function scrollBar(selector, theme, mousewheelaxis) {
-        $(selector).mCustomScrollbar({
-            theme: theme,
-            scrollInertia: 100,
-            axis: 'yx',
-            mouseWheel: {
-                enable: true,
-                axis: mousewheelaxis,
-                preventDefault: true
-            }
-        });
-    }
-
     if (!$html.hasClass('ismobile')) {
         //On Custom Class
         if ($('.c-overflow')[0]) {
@@ -72,17 +59,6 @@ $(document).ready(function () {
             else {
                 $(this).closest('.fg-line').removeClass('fg-toggled');
             }
-        });
-    }
-
-    //Add blue border for pre-valued fg-flot text feilds
-    if ($('.fg-float')[0]) {
-        $('.fg-float .form-control').each(function () {
-            var i = $(this).val();
-            if (i.length != 0) {
-                $(this).closest('.fg-line').addClass('fg-toggled');
-            }
-
         });
     }
 
@@ -141,6 +117,22 @@ function isMobile() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
+/**
+ * Active the plugin mCustomScrollBar
+ */
+function scrollBar(selector, theme, mousewheelaxis) {
+    $(selector).mCustomScrollbar({
+        theme: theme,
+        scrollInertia: 100,
+        axis: 'yx',
+        mouseWheel: {
+            enable: true,
+            axis: mousewheelaxis,
+            preventDefault: true
+        }
+    });
+}
+
 
 /**
  * Active les pluggins JS/CSS après une requête Ajax et au chargement d'une page
@@ -192,6 +184,16 @@ function jsPlugginActivation() {
     if (masonryGrid[0] && Masonry.data(masonryGrid[0])) {
         // If a masonry is initialized
         masonryGrid.masonry('layout');
+    }
+
+    //Add blue border for pre-valued fg-flot text feilds
+    if ($('.fg-float')[0]) {
+        $('.fg-float .form-control').each(function () {
+            var i = $(this).val();
+            if (i.length != 0) {
+                $(this).closest('.fg-line').addClass('fg-toggled');
+            }
+        });
     }
 }
 

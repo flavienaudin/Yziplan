@@ -31,7 +31,7 @@
                                 {% endfor %}
                             </tr>
                             </thead>
-                            <tbody class="" id="pp-row-group-{{ module.token }}">
+                            <tbody>
                             {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
                                 <tr>
                                     <td class="pollproposal-column">

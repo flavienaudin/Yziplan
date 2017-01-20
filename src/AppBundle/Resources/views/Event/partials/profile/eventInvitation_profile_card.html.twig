@@ -6,7 +6,9 @@ Données d'entrée :
 
 <div class="card c-dark z-depth-1" id="user-event-invitation-card">
     <div class="card-header palette-Teal bg m-b-10">
-        <h2>{{ "eventInvitation.profile.card.title"|trans }}</h2>
+        <h2>
+            <i class="zmdi zmdi-account-circle zmdi-hc-lg c-white m-r-15"></i>{{ "eventInvitation.profile.card.title"|trans }}
+        </h2>
     </div>
     <div class="card-body card-padding-sm">
         {{ include('@App/Event/partials/profile/eventInvitation_profile_form.html.twig',{

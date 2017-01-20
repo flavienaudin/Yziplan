@@ -148,14 +148,17 @@ event:
 #      placeholder: Autoriser les invités à ajouter un module
 #      text.true: Les invités peuvent ajouter un module
 #      text.false: Les invités ne peuvent pas ajouter un module
-  comment:
-    display_comment: Afficher les commentaires (%number%)
   wizard:
     button:
-      skip_wizard: Passer le pas à pas
+      skip_wizard: Aller à la page de l'événement
+      preview: Apercu de l'événement
+      send_invitations_later: Plus tard
+      send_invitations: Envoyer les invitations
     main:
       title: Description de l'événement
-      subtitle: Décris l'événement à tes invités. Tu peux donner la date et le lieu mais si tu ne les connais pas, la création de sondage te sera proposer dans une prochaine étape.
+      subtitle: |
+        Décris l'événement à tes invités.
+        Tu connais déjà la date et le lieux ? Fixe-les maintenant sinon lance un sondage plus tard!
     profile:
       title: A propos de toi
       subtitle:
@@ -266,10 +269,18 @@ invitations_list:
     title: Liste des invités
     all_answers: Voir l'ensemble des invitations
     new_invitations: "Inviter des amis"
+    send_email: Envoyer les invitations
     list:
-      yes: "Ils seront là (%number%)"
-      dont_know: "Ils sont encore indécis (%number%)"
-      no: "Ils ont décliné l'invitation (%number%)"
+      yes: "Présents (%number%)"
+      dont_know: "Indécis (%number%)"
+      no: "Absents (%number%)"
+  swal:
+    no_email_selected:
+      title: Pas d'e-mail sélectionné
+      text: Vous pouvez passer et inviter depuis la page d'événément
+    send_email_invitations:
+      title: Envoyer les e-mails d'invitation
+      text: Un e-mail d'invitation va être envoyer aux invités qui ne l'ont pas encore reçu
   no_answer: Pas encore de réponse
 
 invitations:
@@ -314,13 +325,14 @@ contactsgmail:
 module:
   main_information:
     title: Informations générales
+  modal:
+    settings:
+      title: Configuration
   form:
     name:
-      label: Nom du module
-      placeholder: Nom du module
+      label: Intitulé du sondage
     description:
-      label: Description
-      placeholder: Description
+      label: A quoi va servir ce sondage ?
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse
@@ -395,6 +407,7 @@ global:
   link:
     top: Haut
   button:
+    ok: OK
     valid: Valider
     cancel: Annuler
     submit: Soumettre
@@ -490,3 +503,51 @@ suggestion:
   success:
     titre: Merci!
     message: Votre suggestion a bien été envoyée. Nous l'étudierons avec attention.
+
+index:
+  header:
+    title: Yziplan
+    subtitle: Organisez-vous avec vos amis.
+    button: C'est parti!
+  about:
+    title: Pour s'organiser c'est Yzi!
+    subtitle: Organisez soirées, activités, sorties, vacances,... avec vos amis en toute simplicité.
+  section_use:
+    title: Fonctionnement :
+    create: Créez votre événement
+    share: Partagez-le
+    organise: Organisez-vous
+    enjoy: Profitez !
+  section_event:
+    tiltle: Pour tous vos événements :
+    party: Soirée
+    after-work: After-work
+    holidays: Vacances
+    outing: Sortie
+    cinema: Cinéma
+    activity: Activité
+    barbecue: Barbecue
+    weekend: Week-end
+  section_feature:
+    title: Fonctionnalités :
+  section_quote:
+    title: Ils en parlent :
+    quote1:
+      sentense1: On devait organiser une mission d'infiltration.
+      sentense2: On pensait que c'était mission impossible, puis on a découvert Yziplan.
+      author: Ethan Hunt - Mission Impossible
+    quote2:
+      sentense: J'aime quand un plan se déroule sans accroc.
+      author: Colonel John "Hannibal" Smith - Agence tous risques
+    quote3:
+      sentense1: On se demandait comment on allait pouvoir cambrioler 3 casinos simultanément.
+      sentense2: Yziplan nous a permis d'atteindre notre objectif en toute sérénité!
+      author: Daniel "Danny" Ocean - Ocean's Eleven
+  section_social:
+    title: Suivez-nous sur les réseaux sociaux!
+    subtitle: Et ne manquez rien des nouveautés à venir.
+  callout1: Sortez
+  callout2: Amusez-vous
+  callout3: Planifiez
+  callout4: Profitez
+

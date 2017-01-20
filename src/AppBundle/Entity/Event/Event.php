@@ -540,4 +540,22 @@ class Event implements CommentableInterface
         }
         return $this->eventInvitations->matching($criteria);
     }
+
+    /**
+     * Retourne les EventInvitations pour lesquels l'email d'invitation n'a pas été envoyée
+     * @return Collection
+     */
+    public function getEventInvitationEmailNotSent($excludeOrganizer = true)
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull("invitationEmailSentAt"))
+            ->andWhere(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED)) // TODO Verifier que ca marche quand la fonction sera utilisée
+            ->andWhere(Criteria::expr()->neq("applicationUser", null));
+        if($excludeOrganizer){
+            $criteria
+                ->andWhere(Criteria::expr()->eq('creator', false))
+                ->andWhere(Criteria::expr()->eq('administrator', false));
+        }
+        return $this->eventInvitations->matching($criteria);
+    }
 }
