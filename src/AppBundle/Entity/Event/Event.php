@@ -549,6 +549,7 @@ class Event implements CommentableInterface
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->isNull("invitationEmailSentAt"))
+            ->andWhere(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED)) // TODO Verifier que ca marche quand la fonction sera utilisée
             ->andWhere(Criteria::expr()->neq("applicationUser", null));
         if($excludeOrganizer){
             $criteria

@@ -5,22 +5,40 @@
 #}
 
 {% block form_start %}
-    {{ form_start(invitationsForm , {'action':path('wizardNewEvent',{'token':userEventInvitation.event.token,
-        'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_INVITATIONS")})}) }}
+    {{ form_start(invitationsForm , {'attr':{'id': 'guestEmails'},
+        'action':path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_INVITATIONS")})}) }}
 {% endblock form_start %}
 
 {% block action_buttons %}
     <div class="text-center">
         <div>
-            <button type="submit" class="btn btn-primary m-b-10" id="invitations_preview" name="sendInvitations" value="0">{{ "event.wizard.button.preview"|trans }}</button>
-            <button type="submit" class="btn btn-default m-b-10" id="invitations_sendInvitations" name="sendInvitations" value="1">{{ "event.wizard.button.send_invitations"|trans }}</button>
+            <a href="{{ path('displayEvent',{'token':userEventInvitation.event.token}) }}" id="invitations_later" class="btn btn-default waves-effect m-b-10"
+               role="button">{{ "event.wizard.button.send_invitations_later"|trans }}</a>
+            <button type="submit" class="btn btn-primary m-b-10" id="invitations_sendInvitations" name="sendInvitations" value="1">{{ "event.wizard.button.send_invitations"|trans }}</button>
         </div>
         <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")}) }}"
            class="btn btn-default waves-effect m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
     </div>
 {% endblock action_buttons %}
 
+{#<script>#}
 {% block js_document_ready %}
     $('#shareEventFB_container').remove();
     $('#event_public_invitation_display').remove();
+    $('form#guestEmails').on('submit', function (e) {
+        if ($('#eventInvitations_newEmails').val().length == 0) {
+            e.preventDefault();
+            swal({
+                title: "{{ "invitations_list.swal.no_email_selected.title"|trans }}",
+                text: "{{ "invitations_list.swal.no_email_selected.text"|trans }}",
+                type: "warning",
+                showCancelButton: true,
+                showLoaderOnConfirm: true
+            }).then(function () {
+                window.location = $('#invitations_later').attr('href');
+            });
+
+        }
+    });
 {% endblock js_document_ready %}
+{#</script>#}

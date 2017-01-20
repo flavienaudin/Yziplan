@@ -78,8 +78,9 @@ class EventInvitationController extends Controller
     }
 
     /**
-     * @Route("/send/{token}", name="sendEventInvitations" )
-     * @ParamConverter("event", class="AppBundle:Event\Event")
+     * TODO Not used yet
+     * @ Route("/send/{token}", name="sendEventInvitations" )
+     * @ ParamConverter("event", class="AppBundle:Event\Event")
      */
     public function sendEventInvitationAction(Event $event, Request $request)
     {

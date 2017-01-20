@@ -152,6 +152,7 @@ event:
     button:
       skip_wizard: Aller à la page de l'événement
       preview: Apercu de l'événement
+      send_invitations_later: Plus tard
       send_invitations: Envoyer les invitations
     main:
       title: Description de l'événement
@@ -274,6 +275,9 @@ invitations_list:
       dont_know: "Indécis (%number%)"
       no: "Absents (%number%)"
   swal:
+    no_email_selected:
+      title: Pas d'e-mail sélectionné
+      text: Vous pouvez passer et inviter depuis la page d'événément
     send_email_invitations:
       title: Envoyer les e-mails d'invitation
       text: Un e-mail d'invitation va être envoyer aux invités qui ne l'ont pas encore reçu
@@ -403,6 +407,7 @@ global:
   link:
     top: Haut
   button:
+    ok: OK
     valid: Valider
     cancel: Annuler
     submit: Soumettre

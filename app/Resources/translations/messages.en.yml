@@ -151,6 +151,7 @@ event:
     button:
       skip_wizard: Skip the wizard
       preview: Event preview
+      send_invitations_later: Later
       send_invitations: Send invitations
     main:
       title: Event description
@@ -274,6 +275,9 @@ invitations_list:
       dont_know: "Undecided (%number%)"
       no: "Absents (%number%)"
   swal:
+    no_email_selected:
+      title: No selected email
+      text: You can skip and invite from the event page
     send_email_invitations:
       title: Send invitation email
       text: An invitation email will be sent to guests who haven't received one yet
@@ -403,6 +407,7 @@ global:
   link:
     top: Top
   button:
+    ok: OK
     valid: Validate
     cancel: Cancel
     submit: Submit
