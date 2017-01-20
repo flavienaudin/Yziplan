@@ -316,33 +316,41 @@ h1.event-title {
     Event Invitation Answer
 -----------------------------------*/
 
+.answer-form [class*=btn-answer] {
+    font-size: 18px;
+    line-height: 40px;
+    text-align: center;
+}
 .answer-form .btn-answer-false {
-    background-color: #ffccbc;
+    color: #ff5722;
 }
 
 .answer-form .btn-answer-false.active,
 .answer-form .btn-answer-false:active {
-    background-color: #f44336;
+    background-color: #ff5722;
+    color:white;
     font-weight: bold;
 }
 
 .answer-form .btn-answer-maybe {
-    background-color: #b3e5fc;
+    color: #ffc107;
 }
 
 .answer-form .btn-answer-maybe.active,
 .answer-form .btn-answer-maybe:active {
-    background-color: #03a9f4;
+    background-color: #ffc107;
+    color:white;
     font-weight: bold;
 }
 
 .answer-form .btn-answer-true {
-    background-color: #b2dfdb;
+    color: #4caf50;
 }
 
 .answer-form .btn-answer-true.active,
 .answer-form .btn-answer-true:active {
-    background-color: teal;
+    background-color: #4caf50;
+    color:white;
     font-weight: bold;
 }
 
