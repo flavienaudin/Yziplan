@@ -552,6 +552,7 @@ label.required:after {
     padding-top: auto;
     padding-left: 0;
     padding-right: 0 !important;
+    text-align: center;
 }
 
 .poll-container table .tr-no-proposal:not(:first-child){
