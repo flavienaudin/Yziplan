@@ -1,0 +1,16 @@
+{% extends "@App/Event/module/displayModule_form.html.twig" %}
+
+{% block container_class %}well{% endblock %}
+
+{% block form_start %}
+    {{ form_start(moduleForm, {'action':path('wizardNewEvent', {'token':module.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_INVITATIONS")}),
+        'attr':{'id':"moduleForm-"~module.token} }) }}
+{% endblock form_start %}
+
+
+{% block action_buttons %}
+    <div class="text-center">
+        <button type="button" class="btn btn-default waves-effect">{{ "global.button.cancel"|trans }}</button>
+        <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+    </div>
+{% endblock action_buttons %}

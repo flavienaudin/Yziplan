@@ -168,6 +168,9 @@ event:
     invitations:
       title: The guests
       subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link..
+    add_module:
+      title: The event is almost ready!
+      subtitle: Add a module using links below or finish the wizard
     error.message:
       wrong_step: An error in the event creation process occrured. Pleaze, try again the operation.
   error.message:
@@ -327,7 +330,7 @@ module:
     title: General Information
   modal:
     settings:
-      title: Settings
+      title: Element settings
   form:
     name:
       label: Module name

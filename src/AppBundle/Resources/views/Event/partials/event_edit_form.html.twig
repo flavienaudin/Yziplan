@@ -223,7 +223,10 @@
                 }, function () {
                     $('#eventEditModal').modal('handleUpdate');
                 }, function () {
-                    $('.grid').masonry('layout');
+                    $grid = $('.grid');
+                    if($grid[0]) {
+                        $grid.masonry('layout');
+                    }
                 });
             });
             // Update the Event name while editing the form field

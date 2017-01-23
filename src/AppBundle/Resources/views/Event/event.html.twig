@@ -74,7 +74,7 @@
         {# Carte permettant l'ajout de modules supplémentaires, n'est affiché que si l'utilisateur a le droit #}
         {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
             <div class="grid-item col-xs-12 col-xs-p-lr-0 col-lg-8" id="addModule">
-                {{ include('@App/Event/module/displayAddModule.html.twig',{'event': event}) }}
+                {{ include('@App/Event/module/displayAddModule_card.html.twig',{'event': event}) }}
             </div>
         {% endif %}
         <!-- .grid-sizer empty element, only used for element sizing -->
@@ -148,7 +148,10 @@
             document.getElementsByTagName('body')[0].appendChild(fos_comment_script);
 
             $(document).on('fos_comment_add_comment fos_comment_show_form fos_comment_show_edit_form fos_comment_cancel_form', function (event, data) {
-                $('.grid').masonry('layout');
+                $grid = $('.grid');
+                if($grid[0]) {
+                    $grid.masonry('layout');
+                }
                 LetterAvatar.transform();
             });
         });

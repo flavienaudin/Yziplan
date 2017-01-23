@@ -12,8 +12,8 @@
 {% block action_buttons %}
     <div class="text-center">
         <div>
-            <a href="{{ path('displayEvent',{'token':userEventInvitation.event.token}) }}" id="invitations_later" class="btn btn-default waves-effect m-b-10"
-               role="button">{{ "event.wizard.button.send_invitations_later"|trans }}</a>
+            <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token, 'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_ADD_MODULE")}) }}"
+               id="invitations_later" class="btn btn-default waves-effect m-b-10" role="button">{{ "event.wizard.button.send_invitations_later"|trans }}</a>
             <button type="submit" class="btn btn-primary m-b-10" id="invitations_sendInvitations" name="sendInvitations" value="1">{{ "event.wizard.button.send_invitations"|trans }}</button>
         </div>
         <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")}) }}"
@@ -37,7 +37,6 @@
             }).then(function () {
                 window.location = $('#invitations_later').attr('href');
             });
-
         }
     });
 {% endblock js_document_ready %}

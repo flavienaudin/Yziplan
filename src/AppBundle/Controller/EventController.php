@@ -42,6 +42,7 @@ class EventController extends Controller
     const WIZARD_NEW_EVENT_STEP_MAIN = "main";
     const WIZARD_NEW_EVENT_STEP_PROFILE = "profile";
     const WIZARD_NEW_EVENT_STEP_INVITATIONS = "invitations";
+    const WIZARD_NEW_EVENT_STEP_ADD_MODULE = "addmodule";
 
     /**
      * @Route("/new", name="createEvent")
@@ -118,7 +119,7 @@ class EventController extends Controller
                     if ($eventInvitationsForm->isSubmitted()) {
                         if ($eventInvitationsForm->isValid()) {
                             $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $request->get('sendInvitations'));
-                            return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+                            return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_ADD_MODULE));
                         }
                     }
                     return $this->render("@App/Event/wizard/step_event_invitations.html.twig", array(
@@ -126,6 +127,8 @@ class EventController extends Controller
                         'userEventInvitation' => $userEventInvitation,
                         'invitationsForm' => $eventInvitationsForm->createView()
                     ));
+                } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_ADD_MODULE) {
+                    return $this->render("@App/Event/wizard/step_event_addModule.html.twig", array('event' => $currentEvent));
                 } else {
                     $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.wizard.error.message.wrong_step'));
                     return $this->redirectToRoute('home');

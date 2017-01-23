@@ -47,7 +47,10 @@ Données d'entrée :
                                                         ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
                                                             if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
                                                                 $('#module-{{ module.token }}').remove();
-                                                                $('.grid').masonry('layout');
+                                                                $grid = $('.grid');
+                                                                if($grid[0]) {
+                                                                    $grid.masonry('layout');
+                                                                }
                                                             }
                                                         }, function (jqXHR, textStatus, errorThrown) {
                                                             if (jqXHR.hasOwnProperty('responseJSON')) {

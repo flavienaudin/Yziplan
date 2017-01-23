@@ -2,7 +2,6 @@
 
 {# Données d'entrée :
 - event (Event) L'événement en cours de création
-- userEventInvitation (EventInvitation
 #}
 
 {% block title %}{{ parent() }} - {{ event.name is empty?"event.page.meta_title.new_event"|trans:event.name }}{% endblock %}

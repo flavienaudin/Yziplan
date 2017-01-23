@@ -52,7 +52,10 @@
                 },
                 null,
                 function () {
-                    $('.grid').masonry('layout');
+                    $grid = $('.grid');
+                    if($grid[0]) {
+                        $grid.masonry('layout');
+                    }
                 }
             );
         });

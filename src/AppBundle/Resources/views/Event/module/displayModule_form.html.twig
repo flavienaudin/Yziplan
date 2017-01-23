@@ -50,14 +50,14 @@
                 ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                     $("#moduleEdit_modal_{{ module.token }}").modal('hide');
                 }, null, function () {
-                    $('.grid').masonry('layout');
+                    $grid = $('.grid');
+                    if($grid[0]) {
+                        $grid.masonry('layout');
+                    }
                 });
             });
             {% endblock js_document_ready %}
-
         });
-
-
     </script>
 </div>
 

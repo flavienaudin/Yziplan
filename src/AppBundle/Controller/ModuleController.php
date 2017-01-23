@@ -68,8 +68,11 @@ class ModuleController extends Controller
                 if ($module == null) {
                     $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('module.error.message.add'));
                 }
-                return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . ($module != null ? '#module-' . $module->getToken() : ''));
-
+                $routeParam = array('token' => $event->getToken());
+                if ($module != null) {
+                    $routeParam ['addmodule'] = $module->getToken();
+                }
+                return $this->redirectToRoute('displayEvent', $routeParam);
             }
         }
     }
