@@ -328,7 +328,8 @@ h1.event-title {
     font-weight: 900;
     margin: 10px;
 }
-.answer-form .btn-answer-false {
+.answer-form .btn-answer-false,
+.answer-form .btn-answer-false:hover {
     color: #ff5722;
 }
 
@@ -339,7 +340,8 @@ h1.event-title {
     font-weight: bold;
 }
 
-.answer-form .btn-answer-maybe {
+.answer-form .btn-answer-maybe,
+.answer-form .btn-answer-maybe:hover {
     color: #ffc107;
 }
 
@@ -350,7 +352,8 @@ h1.event-title {
     font-weight: bold;
 }
 
-.answer-form .btn-answer-true {
+.answer-form .btn-answer-true,
+.answer-form .btn-answer-true:hover {
     color: #4caf50;
 }
 

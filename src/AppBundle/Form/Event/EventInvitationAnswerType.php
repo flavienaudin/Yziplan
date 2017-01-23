@@ -11,7 +11,6 @@ namespace AppBundle\Form\Event;
 
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Utils\enum\EventInvitationAnswer;
-use AppBundle\Utils\enum\EventStatus;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -73,11 +72,19 @@ class EventInvitationAnswerType extends AbstractType
                             } elseif ($val == EventInvitationAnswer::NO) {
                                 $data_class = 'btn-answer-false zmdi zmdi-close';
                             } else {
-                                $data_class = 'btn-answer-maybe zmdi zmdi-more';
+                                $data_class = 'btn-answer-maybe';
                             }
                             return ['dataclass' => $data_class];
                         },
-                        'choice_label' => false
+                        'choice_label' => function ($val, $key, $index) {
+                            if ($val == EventInvitationAnswer::YES) {
+                                return false;
+                            } elseif ($val == EventInvitationAnswer::NO) {
+                                return false;
+                            } else {
+                                return "?";
+                            }
+                        }
                     ));
                 }
             });
