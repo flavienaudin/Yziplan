@@ -15,8 +15,8 @@
             <dd>
                 {% if widget_options.fgline is defined and widget_options.fgline %}<div class="fg-line">{% endif %}
                     {{- form_widget(form,{'widget_options':widget_options}) -}}
-                    {{- form_errors(form) -}}
                 {% if widget_options.fgline is defined and widget_options.fgline %}</div>{% endif %}
+                {{- form_errors(form) -}}
             </dd>
         </dl>
     {% elseif widget_options.formHorizontal is defined and widget_options.formHorizontal %}
@@ -25,8 +25,8 @@
             <div class="col-sm-10">
                 {% if widget_options.fgline is defined and widget_options.fgline %}<div class="fg-line">{% endif %}
                     {{- form_widget(form,{'widget_options':widget_options}) -}}
-                    {{- form_errors(form) -}}
                 {% if widget_options.fgline is defined and widget_options.fgline %}</div>{% endif %}
+                {{- form_errors(form) -}}
             </div>
         </div>
     {% else %}
@@ -37,8 +37,8 @@
             {% if widget_options.fgline is defined and widget_options.fgline %}<div class="fg-line">{% endif %}
                 {{- form_label(form, null, {'label_attr':label_attr}) -}}
                 {{- form_widget(form,{'attr':attr}) -}}
-                {{- form_errors(form) -}}
             {% if widget_options.fgline is defined and widget_options.fgline %}</div>{% endif %}
+            {{- form_errors(form) -}}
         </div>
     {% endif %}
 {%- endblock form_row %}
