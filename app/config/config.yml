@@ -43,6 +43,7 @@ twig:
     globals:
         locale: "%locale%"
         base_template: "base.html.twig"
+        google_analytics_ua: "%universal_analytics%"
         google_client_id: "%oauth.google.id%"
         google_maps_api_id: "%maps_api.google.id%"
         facebook_client_id: "%oauth.facebook.id%"
