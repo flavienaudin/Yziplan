@@ -78,63 +78,59 @@ class EventController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         } else {
-            if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
-                if ($stepIndex == self::WIZARD_NEW_EVENT_STEP_MAIN) {
-                    // Event Form :
-                    /** @var Form $eventForm */
-                    $eventForm = $eventManager->initEventForm();
-                    $eventForm->handleRequest($request);
-                    if ($eventForm->isSubmitted()) {
-                        if ($eventForm->isValid()) {
-                            $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
-                            return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_PROFILE));
-                        }
+            $this->denyAccessUnlessGranted(EventVoter::EDIT, $userEventInvitation);
+            if ($stepIndex == self::WIZARD_NEW_EVENT_STEP_MAIN) {
+                // Event Form :
+                /** @var Form $eventForm */
+                $eventForm = $eventManager->initEventForm();
+                $eventForm->handleRequest($request);
+                if ($eventForm->isSubmitted()) {
+                    if ($eventForm->isValid()) {
+                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_PROFILE));
                     }
-
-                    return $this->render("@App/Event/wizard/step_event_main.html.twig", array(
-                        'event' => $currentEvent,
-                        'userEventInvitation' => $userEventInvitation,
-                        'eventForm' => $eventForm->createView()
-                    ));
-                } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_PROFILE) {
-                    // Profile Form :
-                    /** @var Form $eventForm */
-                    $eventProfileForm = $eventInvitationManager->createEventInvitationForm();
-                    $eventProfileForm->handleRequest($request);
-                    if ($eventProfileForm->isSubmitted()) {
-                        if ($eventProfileForm->isValid()) {
-                            $eventInvitationManager->treatEventInvitationFormSubmission($eventProfileForm);
-                            return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_INVITATIONS));
-                        }
-                    }
-                    return $this->render("@App/Event/wizard/step_event_profile.html.twig", array(
-                        'event' => $currentEvent,
-                        'userEventInvitation' => $userEventInvitation,
-                        'userEventInvitationForm' => $eventProfileForm->createView()
-                    ));
-                } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_INVITATIONS) {
-                    // Invitations Form :
-                    $eventInvitationsForm = $eventManager->createEventInvitationsForm();
-                    $eventInvitationsForm->handleRequest($request);
-                    if ($eventInvitationsForm->isSubmitted()) {
-                        if ($eventInvitationsForm->isValid()) {
-                            $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $request->get('sendInvitations'));
-                            return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_ADD_MODULE));
-                        }
-                    }
-                    return $this->render("@App/Event/wizard/step_event_invitations.html.twig", array(
-                        'event' => $currentEvent,
-                        'userEventInvitation' => $userEventInvitation,
-                        'invitationsForm' => $eventInvitationsForm->createView()
-                    ));
-                } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_ADD_MODULE) {
-                    return $this->render("@App/Event/wizard/step_event_addModule.html.twig", array('event' => $currentEvent));
-                } else {
-                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.wizard.error.message.wrong_step'));
-                    return $this->redirectToRoute('home');
                 }
+
+                return $this->render("@App/Event/wizard/step_event_main.html.twig", array(
+                    'event' => $currentEvent,
+                    'userEventInvitation' => $userEventInvitation,
+                    'eventForm' => $eventForm->createView()
+                ));
+            } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_PROFILE) {
+                // Profile Form :
+                /** @var Form $eventForm */
+                $eventProfileForm = $eventInvitationManager->createEventInvitationForm();
+                $eventProfileForm->handleRequest($request);
+                if ($eventProfileForm->isSubmitted()) {
+                    if ($eventProfileForm->isValid()) {
+                        $eventInvitationManager->treatEventInvitationFormSubmission($eventProfileForm);
+                        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_INVITATIONS));
+                    }
+                }
+                return $this->render("@App/Event/wizard/step_event_profile.html.twig", array(
+                    'event' => $currentEvent,
+                    'userEventInvitation' => $userEventInvitation,
+                    'userEventInvitationForm' => $eventProfileForm->createView()
+                ));
+            } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_INVITATIONS) {
+                // Invitations Form :
+                $eventInvitationsForm = $eventManager->createEventInvitationsForm();
+                $eventInvitationsForm->handleRequest($request);
+                if ($eventInvitationsForm->isSubmitted()) {
+                    if ($eventInvitationsForm->isValid()) {
+                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $request->get('sendInvitations'));
+                        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_ADD_MODULE));
+                    }
+                }
+                return $this->render("@App/Event/wizard/step_event_invitations.html.twig", array(
+                    'event' => $currentEvent,
+                    'userEventInvitation' => $userEventInvitation,
+                    'invitationsForm' => $eventInvitationsForm->createView()
+                ));
+            } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_ADD_MODULE) {
+                return $this->render("@App/Event/wizard/step_event_addModule.html.twig", array('event' => $currentEvent));
             } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.error.message.unauthorized_access'));
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.wizard.error.message.wrong_step'));
                 return $this->redirectToRoute('home');
             }
         }
@@ -392,7 +388,7 @@ class EventController extends Controller
                         if ($moduleForm->isValid()) {
                             $currentModule = $moduleManager->treatUpdateFormModule($moduleForm);
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['.module-'.$currentModule->getToken().'-description'] = $currentModule->getDescription();
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['.module-' . $currentModule->getToken() . '-description'] = $currentModule->getDescription();
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-header-' . $currentModule->getToken()] =
                                 $this->renderView("@App/Event/module/displayModule_header.html.twig", array(
                                     'module' => $moduleDescription['module'],

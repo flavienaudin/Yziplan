@@ -31,6 +31,7 @@ security:
                 failure_handler: at.security.ajax_authentication_handler
                 use_referer: true
                 default_target_path: home
+                target_path_parameter: _target_path
                 csrf_token_generator: security.csrf.token_manager
             logout:
                 path:   fos_user_security_logout

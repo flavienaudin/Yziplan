@@ -142,9 +142,9 @@ fos_user:
 hwi_oauth:
     firewall_names: [main]
     # optional target_path_parameter to provide an explicit return URL
-    #target_path_parameter: _target_path
+    target_path_parameter: _target_path
     # ne pas utiliser le referer sinon redirection vers le formulaire de login
-    use_referer: false
+    use_referer: true
     connect:
         account_connector: at.provider.user
     resource_owners:
