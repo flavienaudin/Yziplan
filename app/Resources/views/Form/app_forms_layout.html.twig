@@ -2,7 +2,9 @@
 
 {# Désactive la validation HTML5 par les navigateurs (DEV MOD #}
 {%- block form_start -%}
-    {% set attr = attr|merge({'novalidate':'novalidate'}) %}
+    {% if not form_client_validation %}
+        {% set attr = attr|merge({'novalidate':'novalidate'}) %}
+    {% endif %}
     {{- parent() -}}
 {%- endblock form_start -%}
 
