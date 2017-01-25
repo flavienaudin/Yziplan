@@ -236,10 +236,10 @@ eventInvitation:
       connexion: You already have an account? Login and this information will already be filled
       disconnect: You are not %user%?
     guestname_required_alert:
-      title: What's your name?
-      message: Enter your name in order to identify yourself with other guests
+      title: Please enter your name
+      message: This participation requires that you validated your invitation with your name.<br> Watch out! You will have to try again your action after the validation
       inputError: It's better with non-empty name.
-      dismiss: Your participation doesn't count until you fill a name.
+      dismiss: Your participation wasn't taken into account
       error_message:
         unauthorized_action: In order to collaborate to this event organization, you should validate your invitation by entering your name.
   message:
