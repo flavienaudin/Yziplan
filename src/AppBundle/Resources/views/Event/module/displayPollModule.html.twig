@@ -62,7 +62,8 @@
                     $('#pollModuleDisplayAllResult_{{ module.token }}_button').on('click', function (e) {
                         ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
                             LetterAvatar.transform();
-                            $('#pollModuleDisplayAllResult_{{ module.token }}_modale').modal('show');
+                            closeModalOnReturn('#pollModuleDisplayAllResult_{{ module.token }}_modal');
+                            $('#pollModuleDisplayAllResult_{{ module.token }}_modal').modal('show');
                         }, null, null);
                     });
                 </script>

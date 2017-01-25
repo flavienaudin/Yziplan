@@ -132,7 +132,26 @@ function scrollBar(selector, theme, mousewheelaxis) {
         }
     });
 }
+/**
+ * Fermeture des modals ouvertes lors du "retour arrière"
+ */
+function closeModalOnReturn(modalsSelector) {
+    $(modalsSelector).on('show.bs.modal', function () {
+        var modal = this;
+        var hash = modal.id;
+        window.location.hash = hash;
+        window.onhashchange = function () {
+            if (!location.hash) {
+                $(modal).modal('hide');
+            }
+        };
+    });
 
+    $(modalsSelector).on('hide.bs.modal', function () {
+        var hash = this.id;
+        history.pushState('', document.title, window.location.pathname);
+    });
+}
 
 /**
  * Active les pluggins JS/CSS après une requête Ajax et au chargement d'une page
