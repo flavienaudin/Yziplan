@@ -228,7 +228,7 @@ eventInvitation:
     label: Your invitation
     text: Keep this link to come back here
   profile.card:
-    title: Your profile
+    title: About you
     badge:
       guest: Guest
       creator: Creator

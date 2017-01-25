@@ -228,7 +228,7 @@ eventInvitation:
     label: Ton invitation
     text: Conserve ce lien pour revenir sur cette page
   profile.card:
-    title: Ton profil
+    title: Profil
     badge:
       guest: Invité
       creator: Créateur
