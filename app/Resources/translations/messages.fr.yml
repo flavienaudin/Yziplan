@@ -152,7 +152,6 @@ event:
     button:
       skip_wizard: Aller à la page de l'événement
       preview: Apercu de l'événement
-      send_invitations_later: Plus tard
       send_invitations: Envoyer les invitations
     main:
       title: Description de l'événement
@@ -234,7 +233,7 @@ eventInvitation:
       creator: Créateur
       administrator: Administrateur
     text:
-      connexion: Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant ou inscris-toi pour le prochain événement.
+      connexion: Tu possèdes déjà un compte ? Connecte-toi et ces informations seront déjà renseignés
       disconnect: Tu n'es pas %user% ?
     guestname_required_alert:
       title: Quel est ton nom ?
@@ -428,6 +427,7 @@ global:
     close: Fermer
     skip: Passer
     finish: Terminer
+    later: Plus tard
   success:
     data_saved: Données sauvegardées
   error:

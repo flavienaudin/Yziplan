@@ -151,7 +151,6 @@ event:
     button:
       skip_wizard: Skip the wizard
       preview: Event preview
-      send_invitations_later: Later
       send_invitations: Send invitations
     main:
       title: Event description
@@ -234,7 +233,7 @@ eventInvitation:
       creator: Creator
       administrator: Administrator
     text:
-      connexion: If you already have an account, login to automatically fill the following information or you can subscribe to save them for the next event.
+      connexion: You already have an account? Login and this information will already be filled
       disconnect: You are not %user%?
     guestname_required_alert:
       title: What's your name?
@@ -428,6 +427,7 @@ global:
     close: Close
     skip: Skip
     finish: Finish
+    later: Later
   success:
     data_saved: Information saved
   error:

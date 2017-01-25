@@ -38,6 +38,6 @@
     <div class="text-center">
         <a href="{{ path('wizardNewEvent',{'token':event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_INVITATIONS")}) }}"
            class="btn btn-default waves-effect m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
-       <a href="{{ path('displayEvent',{'token':event.token}) }}" class="btn btn-primary waves-effect m-b-10" role="button">{{ "global.button.finish"|trans }}</a>
+       <a href="{{ path('displayEvent',{'token':event.token}) }}" class="btn btn-primary waves-effect m-b-10" role="button">{{ "global.button.later"|trans }}</a>
     </div>
 {% endblock wizard_step %}
