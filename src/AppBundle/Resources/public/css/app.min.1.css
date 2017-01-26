@@ -3782,6 +3782,7 @@ select[multiple].input-lg {
     margin-bottom: 0;
     font-weight: 400;
     text-align: center;
+    text-transform: uppercase;
     vertical-align: middle;
     touch-action: manipulation;
     cursor: pointer;

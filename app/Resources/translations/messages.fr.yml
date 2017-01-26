@@ -297,7 +297,6 @@ invitations:
       link: Annuler l'invitation de %name%
       link_noname: Annuler l'invitation
       swal:
-        title: Annulation
         text: Es-tu sûr de vouloir annuler l'invitation de %name% ?
         text_noname: Es-tu sûr de vouloir annuler cette invitation ?
       message:
@@ -420,7 +419,7 @@ global:
     submit: Soumettre
     edit: Editer
     save: Sauvegarder
-    previousStep: Précédent
+    previousStep: Retour
     nextStep: Suivant
     delete: Supprimer
     add: Ajouter
@@ -433,6 +432,7 @@ global:
     skip: Passer
     finish: Terminer
     later: Plus tard
+    decline: Non merci
   success:
     data_saved: Données sauvegardées
   error:

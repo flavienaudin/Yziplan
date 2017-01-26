@@ -40,8 +40,8 @@
                         <tfoot>
                         <tr>
                             <td colspan="3">
-                                <a id="{{ add_pp_form_modal_prefix }}_modal_open_link" href="#{{ add_pp_form_modal_prefix }}_modal_id"><i class="zmdi zmdi-plus-square m-t-10 m-b-10"></i>
-                                    {{ "pollmodule.modal.addPollProposal.title"|trans }}</a>
+                                <a id="{{ add_pp_form_modal_prefix }}_modal_open_link" class="btn btn-link btn-icon-text c-blue p-l-0" href="#{{ add_pp_form_modal_prefix }}_modal_id"> <i
+                                            class="zmdi zmdi-plus-square"></i>{{ "pollmodule.modal.addPollProposal.title"|trans }}</a>
                                 <script>
                                     $('#{{ add_pp_form_modal_prefix }}_modal_open_link').on('click', function (e) {
                                         if (!eventInvitationValid && askGuestName !== undefined) {
