@@ -9855,6 +9855,10 @@ a.waves-effect .waves-ripple {
     border: 0 !important;
 }
 
+.b-1 {
+    border: 1px solid #cccccc !important;
+}
+
 /*
  * width
  */
