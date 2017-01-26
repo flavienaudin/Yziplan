@@ -51,95 +51,94 @@
     {{ form_rest(userEventInvitationForm) }}
     {{ form_end(userEventInvitationForm) }}
 
-    {% use "@App/Event/partials/block/invitationUrl_copyClipboardInput.html.twig" %}
-    {% set ma_variable = block('inviationUrl_copyCLipboardInput_block') %}
-    <script>
-        $(document).ready(function(){
-            new Clipboard('#btn_copy_invitation_url');
-        });
+    {% block js_script %}
+        {% use "@App/Event/partials/block/invitationUrl_copyClipboardInput.html.twig" %}
+        {% set htmlInputBlock = block('inviationUrl_copyCLipboardInput_block') %}
+        <script>
+            $(document).ready(function () {
+                new Clipboard('#btn_copy_invitation_url');
+            });
 
-        {% block js_form_submission %}
-        $('form#userEventInvitationProfile').on("submit", function (e) {
-            e.preventDefault();
-            var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
-            var $form = $(this);
-            if (profileEmail.trim() == "") {
-                swal({
-                    titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
-                    html: '{{ ma_variable|raw }}<br>{{ "eventInvitation.profile.card.guestemail_empty_alert.html"|trans }}',
-                    input: "email",
-                    showCancelButton: true,
-                    buttonsStyling: false,
-                    cancelButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.cancel"|trans }}",
-                    cancelButtonClass: "btn btn-default btn-link btn-lg c-blue m-b-10 m-l-5 m-r-5",
-                    confirmButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.confirm"|trans }}",
-                    confirmButtonClass: "btn btn-primary btn-lg m-b-10  m-l-5 m-r-5",
-                    reverseButtons: true,
-                    animation: "slide-from-top",
-                    inputPlaceholder: "{{ "eventInvitation.form.email.placeholder"|trans|raw }}"
-                }).then(function (inputValue) {
-                    $('#{{ userEventInvitationForm.email.vars.id }}').val(inputValue);
-                    ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
-                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
-                            LetterAvatar.setConnectedUserName(responseJSON['data']['userDisplayableName']);
-                            LetterAvatar.transform();
-                        }
-                    }, null, null);
-                }, function (dismiss) {
-                    if (dismiss !== 'cancel') {
-                        submitCancelled = true;
-                    } else {
-                        ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
-                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
-                                LetterAvatar.setConnectedUserName(responseJSON['data']['userDisplayableName']);
-                                LetterAvatar.transform();
-                            }
-                        }, null, null);
-                    }
-                });
-            }
-        });
-        {% endblock js_form_submission %}
-
-        {% block js_functions %}
-        {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
-        eventInvitationValid = false;
-        /**
-         * Affichage d'une fenêtre "dialog" pour demander le nom de l'invité et d'executer la fonction donnée (ex : soumission d'un formulaire)
-         */
-        function askGuestName() {
-            if (!eventInvitationValid) {
-                swal({
-                    titleText: "{{ "eventInvitation.profile.card.guestname_required_alert.title"|trans }}",
-                    html: "{{ "eventInvitation.profile.card.guestname_required_alert.message"|trans|raw }}",
-                    input: "text",
-                    showCancelButton: false,
-                    animation: "slide-from-top",
-                    inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}",
-                    preConfirm: function (input) {
-                        return new Promise(function (resolve, reject) {
-                            if (input === false || input.trim() === '') {
-                                reject("{{ "eventInvitation.profile.card.guestname_required_alert.inputError"|trans|raw }}");
-                            } else {
-                                resolve();
-                            }
-                        })
-                    }
-                }).then(function (inputValue) {
-                    $('#{{ userEventInvitationForm.guestName.vars.id }}').val(inputValue);
-                    $('form#userEventInvitationProfile').submit();
-                }, function (dismiss) {
+            $('form#userEventInvitationProfile').on("submit", function (e) {
+                e.preventDefault();
+                var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
+                var $form = $(this);
+                if (profileEmail.trim() == "") {
                     swal({
-                        title: "{{ "global.swal.title.warning"|trans }}",
-                        text: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans|raw }}",
-                        type: "error"
+                        titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
+                        html: '{{ htmlInputBlock|raw }}<br>{{ "eventInvitation.profile.card.guestemail_empty_alert.html"|trans }}',
+                        input: "email",
+                        showCancelButton: true,
+                        buttonsStyling: false,
+                        cancelButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.cancel"|trans }}",
+                        cancelButtonClass: "btn btn-default btn-link btn-lg c-blue m-b-10 m-l-5 m-r-5",
+                        confirmButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.confirm"|trans }}",
+                        confirmButtonClass: "btn btn-primary btn-lg m-b-10  m-l-5 m-r-5",
+                        reverseButtons: true,
+                        animation: "slide-from-top",
+                        inputPlaceholder: "{{ "eventInvitation.form.email.placeholder"|trans|raw }}"
+                    }).then(function (inputValue) {
+                        $('#{{ userEventInvitationForm.email.vars.id }}').val(inputValue);
+                        submitForm($form, e);
+                    }, function (dismiss) {
+                        if (dismiss === 'cancel') {
+                            submitForm($form, e);
+                        }
                     });
-                });
+                } else {
+                    submitForm($form, e);
+                }
+            });
+
+            /**
+             */
+            function submitForm($form, e) {
+                ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
+                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
+                        LetterAvatar.setConnectedUserName(responseJSON['data']['userDisplayableName']);
+                        LetterAvatar.transform();
+                    }
+                }, null, null);
             }
-        }
-        {% else %}
-        eventInvitationValid = true;
-        {% endif %}
-        {% endblock js_functions %}
-    </script>
+
+            {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
+            eventInvitationValid = false;
+            /**
+             * Affichage d'une fenêtre "dialog" pour demander le nom de l'invité et d'executer la fonction donnée (ex : soumission d'un formulaire)
+             */
+            function askGuestName() {
+                if (!eventInvitationValid) {
+                    swal({
+                        titleText: "{{ "eventInvitation.profile.card.guestname_required_alert.title"|trans }}",
+                        html: "{{ "eventInvitation.profile.card.guestname_required_alert.message"|trans|raw }}",
+                        input: "text",
+                        showCancelButton: false,
+                        animation: "slide-from-top",
+                        inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}",
+                        preConfirm: function (input) {
+                            return new Promise(function (resolve, reject) {
+                                if (input === false || input.trim() === '') {
+                                    reject("{{ "eventInvitation.profile.card.guestname_required_alert.inputError"|trans|raw }}");
+                                } else {
+                                    resolve();
+                                }
+                            })
+                        }
+                    }).then(function (inputValue) {
+                        $('#{{ userEventInvitationForm.guestName.vars.id }}').val(inputValue);
+                        $('form#userEventInvitationProfile').submit();
+                    }, function (dismiss) {
+                        swal({
+                            title: "{{ "global.swal.title.warning"|trans }}",
+                            text: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans|raw }}",
+                            type: "error"
+                        });
+                    });
+                }
+            }
+            {% else %}
+            eventInvitationValid = true;
+            {% endif %}
+        </script>
+    {% endblock js_script %}
 </div>

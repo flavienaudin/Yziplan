@@ -14,3 +14,9 @@
 {% block wizard_step %}
     {{ include('@App/Event/wizard/wizard_eventInvitation_profile_form.html.twig', {"userEventInvitation":userEventInvitation, "userEventInvitationForm":userEventInvitationForm }) }}
 {% endblock wizard_step %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# Plugin for cliplboard field (copy into clipboard by clicking) #}
+    <script src="{{ asset('bundles/app/js/clipboard.min.js') }}"></script>
+{% endblock %}

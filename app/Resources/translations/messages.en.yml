@@ -160,16 +160,14 @@ event:
     profile:
       title: About you
       subtitle:
-        text: Identify yourself to your guest.<br>
-        not_connected: |
-          If you already have an account, login to automatically fill the following information.<br>
-          If you subscrire now, copy the browser URL to come back here.
+        text: Identify yourself to your guest.
+        not_connected: If you already have an account, login to automatically fill the following information.
     invitations:
       title: The guests
       subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link..
     add_module:
       title: The event is almost ready!
-      subtitle: Add a module using links below or finish the wizard
+      subtitle: Add a module using links below or do it later
     error.message:
       wrong_step: An error in the event creation process occrured. Pleaze, try again the operation.
   error.message:
