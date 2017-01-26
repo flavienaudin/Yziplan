@@ -504,10 +504,18 @@ email:
 # Modale suggestion :
 suggestion:
   button: Envoyer une suggestion
-  modale:
-    texte: Envoyer une suggestion, un bogue, ...
-    champ_nom: Votre Nom
-    champ_email: Votre Email
+  modal:
+    text: Envoyer une suggestion, un bogue, ...
+    form:
+      title:
+        label: Titre
+      description:
+        label: Description
+        placeholder: Décris-nous tes remarques, suggestions, bugs, messages de soutien, ...
+      name:
+        label: Ton nom
+      email:
+        label: Ton e-mail
   success:
     titre: Merci!
     message: Votre suggestion a bien été envoyée. Nous l'étudierons avec attention.

@@ -504,10 +504,18 @@ email:
 # Modale suggestion :
 suggestion:
   button: Give your opinion
-  modale:
-    texte: Send a suggestion, bugs, ...
-    champ_nom: Your Name
-    champ_email: Your Email
+  modal:
+    text: Send a suggestion, bugs, ...
+    form:
+      title:
+        label: Title
+      description:
+        label: Description
+        placeholder: Describe your remarks, suggestions, bugs, messages of support...
+      name:
+        label: Your name
+      email:
+        label: Your email
   success:
     titre: Thank you!
     message: Your suggestion has been sent. We will read it carefully.
