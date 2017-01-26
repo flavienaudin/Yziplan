@@ -18,9 +18,9 @@
         {{ form_errors(pollProposalElement) }}
         {{ form_widget(pollProposalElement, {
             'widget_options':{
-                'fgfloat':(pollProposalElement.valDatetime is not defined),
+                'fgfloat':(pollProposalElement.valDatetime is not defined and pollProposalElement.valEndDatetime is not defined),
                 'fgline':true,
-                'displayInRow':(pollProposalElement.valDatetime is defined)}
+                'displayInRow':(pollProposalElement.valDatetime is defined or pollProposalElement.valEndDatetime is defined)}
         }) }}
     {% endfor %}
     {{ form_rest(pollProposalForm) }}

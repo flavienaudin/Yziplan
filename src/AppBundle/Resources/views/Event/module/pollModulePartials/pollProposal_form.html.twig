@@ -5,12 +5,12 @@
 - edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
 - type (string) : type of pollmodule, available type : 'when'
 #}
-{% if is not defined type %}
+{% if type is not defined %}
     {% set type = '' %}
 {% endif %}
 
 <div id="{{ pp_form_modal_prefix }}_formContainer">
-    {% it type == 'when' %}
+    {% if type == 'when' %}
         {{ include('@App/Event/module/pollModulePartials/pollProposal_form_when.html.twig', {
             "userModuleInvitation":userModuleInvitation,
             "pollProposalForm":pollProposalForm,

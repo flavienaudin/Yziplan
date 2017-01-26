@@ -80,7 +80,7 @@ class PollElement
 
     /**
      * @param String $name
-     * @param PollElementType $type
+     * @param String $type
      * @param int $orderIndex
      */
     public function create($name, $type, $orderIndex )

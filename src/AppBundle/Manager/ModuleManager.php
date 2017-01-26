@@ -135,9 +135,9 @@ class ModuleManager
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
 
                 $pollElementDate = new PollElement();
-                $pollElementDate->create($subtype, 0, PollElementType::DATETIME);
+                $pollElementDate->create($subtype, PollElementType::DATETIME, 0);
                 $pollElementEndDate = new PollElement();
-                $pollElementEndDate->create($subtype, 1, PollElementType::ENDDATETIME);
+                $pollElementEndDate->create($subtype, PollElementType::END_DATETIME, 1);
                 $pollElements->add($pollElementDate);
                 $pollElements->add($pollElementEndDate);
             } elseif ($subtype == PollModuleType::WHAT) {
@@ -145,21 +145,22 @@ class ModuleManager
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
 
                 $pollElement = new PollElement();
-                $pollElement->create($subtype, 0, PollElementType::STRING);
+                $pollElement->create($subtype, PollElementType::STRING, 0);
                 $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::WHERE) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
 
                 $pollElement = new PollElement();
-                $pollElement->create($subtype, 0, PollElementType::GOOGLE_PLACE_ID);
+                $pollElement->create($subtype, PollElementType::GOOGLE_PLACE_ID, 0);
                 $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+                $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
 
                 $pollElement = new PollElement();
-                $pollElement->create($subtype, 0, PollElementType::AMOUNT);
+                $pollElement->create($subtype, PollElementType::STRING, 0);
                 $pollElements->add($pollElement);
             }
             $pollModule->addPollElements($pollElements);

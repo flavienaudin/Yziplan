@@ -295,7 +295,7 @@ class PollProposalElement
             case PollElementType::DATETIME:
                 $val = $this->getValDatetime();
                 break;
-            case PollElementType::ENDDATETIME:
+            case PollElementType::END_DATETIME:
                 $val = $this->getValEndDatetime();
                 break;
             case PollElementType::INTEGER :
