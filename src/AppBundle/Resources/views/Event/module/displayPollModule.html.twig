@@ -66,7 +66,8 @@
             </div>
 
             <div class="text-center m-t-10 m-b-10">
-                <a class="btn btn-default" id="pollModuleDisplayAllResult_{{ module.token }}_button" role="button" href="{{ path('pollModuleDisplayResultTable', {"moduleToken": module.token }) }}"
+                <a class="btn btn-default btn-link b-1" id="pollModuleDisplayAllResult_{{ module.token }}_button" role="button" href="{{ path('pollModuleDisplayResultTable', {"moduleToken": module
+                    .token }) }}"
                    {% if proposalList is empty %}style="display: none;"{% endif %}>{{ "pollmodule.display.result.allresult"|trans }}</a>
                 <script>
                     $('#pollModuleDisplayAllResult_{{ module.token }}_button').on('click', function (e) {
