@@ -503,7 +503,7 @@ email:
 
 # Modale suggestion :
 suggestion:
-  button: Envoyer une suggestion
+  button: On t'écoute
   modal:
     text: Envoyer une suggestion, un bogue, ...
     form:

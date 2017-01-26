@@ -503,7 +503,7 @@ email:
 
 # Modale suggestion :
 suggestion:
-  button: Give your opinion
+  button: We are listening
   modal:
     text: Send a suggestion, bugs, ...
     form:
