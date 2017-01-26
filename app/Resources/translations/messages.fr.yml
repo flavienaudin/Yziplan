@@ -242,6 +242,13 @@ eventInvitation:
       dismiss: Ta participation n'a pas été prise en compte
       error_message:
         unauthorized_action: Afin de participer à l'organisation de cet événement, tu dois valider ton invitation en renseignant ton nom.
+    guestemail_empty_alert:
+      title: Important
+      email_input_label: "Note bien le lien suivant pour revenir sur ton invitation"
+      html: "Pour le recevoir par email, saisis ton adresse ci-dessous"
+      button:
+        confirm: Recevoir par e-mail
+        cancel: J'ai bien noté le lien
   message:
     warning:
       email_owned_by_accountuser: Attention! Cet e-mail est associé à un compte utilisateur. Connecte-toi afin de profiter de toutes les fonctionnalités.

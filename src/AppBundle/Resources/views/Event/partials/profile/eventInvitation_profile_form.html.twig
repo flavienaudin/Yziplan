@@ -4,18 +4,18 @@
 #}
 
 <div id="eventInvitationProfile_formContainer">
-
     {% block form_start %}
-        {#{% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-            <p class="text-center">
-                <button data-toggle="modal" data-target="#modalLogin" class="btn btn-info"><i class="zmdi zmdi-power"></i> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</button>
-                <button role="button" class="btn btn btn-default" data-toggle="popover" data-content="{{ "eventInvitation.profile.card.text.connexion"|trans }}" title="Info" data-placement="bottom"
-                        data-trigger="focus"><i class="zmdi zmdi-info-outline"></i></button>
-            </p>
-        {% endif %}#}
         {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationProfile'}}) }}
     {% endblock form_start %}
 
+
+    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        <div class="row">
+            <div class="col-xs-12 text-center m-b-10">
+                <a data-toggle="modal" href="#modalLogin" class="btn btn-link btn-icon-text c-blue" role="button"><i class="zmdi zmdi-sign-in"></i> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+            </div>
+        </div>
+    {% endif %}
     <div class="row">
         <div class="col-xs-7">
             {{ form_row(userEventInvitationForm.guestName, {
@@ -51,16 +51,53 @@
     {{ form_rest(userEventInvitationForm) }}
     {{ form_end(userEventInvitationForm) }}
 
+    {% use "@App/Event/partials/block/invitationUrl_copyClipboardInput.html.twig" %}
+    {% set ma_variable = block('inviationUrl_copyCLipboardInput_block') %}
     <script>
+        $(document).ready(function(){
+            new Clipboard('#btn_copy_invitation_url');
+        });
 
         {% block js_form_submission %}
         $('form#userEventInvitationProfile').on("submit", function (e) {
-            ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
-                    LetterAvatar.setConnectedUserName(responseJSON['data']['userDisplayableName']);
-                    LetterAvatar.transform();
-                }
-            }, null, null);
+            e.preventDefault();
+            var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
+            var $form = $(this);
+            if (profileEmail.trim() == "") {
+                swal({
+                    titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
+                    html: '{{ ma_variable|raw }}<br>{{ "eventInvitation.profile.card.guestemail_empty_alert.html"|trans }}',
+                    input: "email",
+                    showCancelButton: true,
+                    buttonsStyling: false,
+                    cancelButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.cancel"|trans }}",
+                    cancelButtonClass: "btn btn-default btn-link btn-lg c-blue m-b-10 m-l-5 m-r-5",
+                    confirmButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.confirm"|trans }}",
+                    confirmButtonClass: "btn btn-primary btn-lg m-b-10  m-l-5 m-r-5",
+                    reverseButtons: true,
+                    animation: "slide-from-top",
+                    inputPlaceholder: "{{ "eventInvitation.form.email.placeholder"|trans|raw }}"
+                }).then(function (inputValue) {
+                    $('#{{ userEventInvitationForm.email.vars.id }}').val(inputValue);
+                    ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
+                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
+                            LetterAvatar.setConnectedUserName(responseJSON['data']['userDisplayableName']);
+                            LetterAvatar.transform();
+                        }
+                    }, null, null);
+                }, function (dismiss) {
+                    if (dismiss !== 'cancel') {
+                        submitCancelled = true;
+                    } else {
+                        ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
+                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
+                                LetterAvatar.setConnectedUserName(responseJSON['data']['userDisplayableName']);
+                                LetterAvatar.transform();
+                            }
+                        }, null, null);
+                    }
+                });
+            }
         });
         {% endblock js_form_submission %}
 
@@ -73,9 +110,8 @@
         function askGuestName() {
             if (!eventInvitationValid) {
                 swal({
-                    title: "{{ "eventInvitation.profile.card.guestname_required_alert.title"|trans|raw }}",
-                    text: "{{ "eventInvitation.profile.card.guestname_required_alert.message"|trans|raw }}",
-                    type: "question",
+                    titleText: "{{ "eventInvitation.profile.card.guestname_required_alert.title"|trans }}",
+                    html: "{{ "eventInvitation.profile.card.guestname_required_alert.message"|trans|raw }}",
                     input: "text",
                     showCancelButton: false,
                     animation: "slide-from-top",
@@ -90,11 +126,11 @@
                         })
                     }
                 }).then(function (inputValue) {
-                    $('#event_invitation_guestName').val(inputValue);
+                    $('#{{ userEventInvitationForm.guestName.vars.id }}').val(inputValue);
                     $('form#userEventInvitationProfile').submit();
                 }, function (dismiss) {
                     swal({
-                        title: "{{ "global.swal.title.error"|trans }}",
+                        title: "{{ "global.swal.title.warning"|trans }}",
                         text: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans|raw }}",
                         type: "error"
                     });
