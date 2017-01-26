@@ -53,6 +53,33 @@ class PollProposalElement
     private $valDatetime;
 
     /**
+     * true si on doit prendre en compte l'heure de valDateTime
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="has_time", type="boolean", nullable=false)
+     */
+    private $time = false;
+
+    /**
+     * Contient la valeur si le type == PollElementType::DATETIME
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(name="val_enddatetime", type="datetime", nullable=true)
+     */
+    private $valEndDatetime;
+
+    /**
+     * true si on doit prendre en compte l'heure de valEndDateTime
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="has_end_time", type="boolean", nullable=false)
+     */
+    private $endTime = false;
+
+    /**
      * Contient la valeur du Google Place Id si le PollElement est de Type PollElementType::GOOGLE_PLACE_ID
      *
      * @var string
@@ -150,6 +177,55 @@ class PollProposalElement
     }
 
     /**
+     * @return bool
+     */
+    public function hasTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param bool $hasTime
+     */
+    public function setTime($hasTime)
+    {
+        $this->time = $hasTime;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getValEndDatetime()
+    {
+        return $this->valEndDatetime;
+    }
+
+    /**
+     * @param \DateTime $valEndDatetime
+     */
+    public function setValEndDatetime($valEndDatetime)
+    {
+        $this->valEndDatetime = $valEndDatetime;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasEndTime()
+    {
+        return $this->endTime;
+    }
+
+    /**
+     * @param bool $hasEndTime
+     */
+    public function setEndTime($hasEndTime)
+    {
+        $this->endTime = $hasEndTime;
+    }
+
+
+    /**
      * @return string
      */
     public function getValGooglePlaceId()
@@ -218,6 +294,9 @@ class PollProposalElement
 
             case PollElementType::DATETIME:
                 $val = $this->getValDatetime();
+                break;
+            case PollElementType::ENDDATETIME:
+                $val = $this->getValEndDatetime();
                 break;
             case PollElementType::INTEGER :
                 $val = $this->getValInteger();

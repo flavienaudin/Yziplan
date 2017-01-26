@@ -3,38 +3,28 @@
 - pollProposalForm (FormInterface) Le formulaire d'ajout/édition d'un PollProposal
 - pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
 - edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
+- type (string) : type of pollmodule, available type : 'when'
 #}
-
+{% if is not defined type %}
+    {% set type = '' %}
+{% endif %}
 
 <div id="{{ pp_form_modal_prefix }}_formContainer">
-    {% if edition %}
-        {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
-            'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
+    {% it type == 'when' %}
+        {{ include('@App/Event/module/pollModulePartials/pollProposal_form_when.html.twig', {
+            "userModuleInvitation":userModuleInvitation,
+            "pollProposalForm":pollProposalForm,
+            "pp_form_modal_prefix":pp_form_modal_prefix,
+            "edition":edition
+        }) }}
     {% else %}
-        {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
+        {{ include('@App/Event/module/pollModulePartials/pollProposal_form_default.html.twig', {
+            "userModuleInvitation":userModuleInvitation,
+            "pollProposalForm":pollProposalForm,
+            "pp_form_modal_prefix":pp_form_modal_prefix,
+            "edition":edition
+        }) }}
     {% endif %}
-    <div>
-        {{ form_label(pollProposalForm.pollProposalElements, null, {'label_attr':{'class':'sr-only'}}) }}
-        {{ form_errors(pollProposalForm.pollProposalElements) }}
-
-        {% for pollProposalElement in pollProposalForm.pollProposalElements %}
-            {{ form_errors(pollProposalElement) }}
-            {{ form_widget(pollProposalElement, {
-                'widget_options':{
-                    'fgfloat':(pollProposalElement.valDatetime is not defined),
-                    'fgline':true,
-                    'displayInRow':(pollProposalElement.valDatetime is defined)}
-            }) }}
-        {% endfor %}
-        {{ form_rest(pollProposalForm) }}
-    </div>
-
-    <div class="pull-right">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
-        <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
-    </div>
-    {{ form_end(pollProposalForm) }}
-
     <script type="text/javascript">
         if (typeof google === 'object' && typeof google.maps === 'object') {
             initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');

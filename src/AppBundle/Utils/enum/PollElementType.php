@@ -13,9 +13,10 @@ class PollElementType extends AbstractEnumType
 {
 
     const GOOGLE_PLACE_ID ="googlePlaceId";
+    const ENDDATETIME = 'endDateTime';
     // Values already in AbstractEnumType's constantes
 
     protected $name = 'enum_pollproposal_elementtype';
-    protected $values = array(self::STRING, self::INTEGER, self::DATETIME, self::GOOGLE_PLACE_ID);
+    protected $values = array(self::STRING, self::INTEGER, self::DATETIME, self::ENDDATETIME, self::GOOGLE_PLACE_ID);
 
 }

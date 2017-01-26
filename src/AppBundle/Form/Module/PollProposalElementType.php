@@ -12,6 +12,7 @@ namespace AppBundle\Form\Module;
 use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Utils\enum\PollElementType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -40,7 +41,18 @@ class PollProposalElementType extends AbstractType
                     'date_widget' => 'single_text',
                     'time_widget' => 'single_text',
                     'date_format' => 'dd/MM/yyyy'
-                ));
+                ))
+                    ->add('time', CheckboxType::class);
+            } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::ENDDATETIME) {
+                $form->add('valEndDatetime', DateTimeType::class, array(
+                    'required' => true,
+                    'label' => $pollProposalElement->getPollElement()->getName(),
+                    'html5' => false,
+                    'date_widget' => 'single_text',
+                    'time_widget' => 'single_text',
+                    'date_format' => 'dd/MM/yyyy'
+                ))
+                    ->add('endTime', CheckboxType::class);
             } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::INTEGER) {
                 $form->add('valInteger', IntegerType::class, array(
                     'required' => true,

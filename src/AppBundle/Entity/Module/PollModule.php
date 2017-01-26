@@ -179,6 +179,18 @@ class PollModule
     }
 
     /**
+     * @param ArrayCollection $pollElements
+     * @return PollModule
+     */
+    public function addPollElements(ArrayCollection $pollElements)
+    {
+        foreach ($pollElements as $pollElement){
+            $this->addPollElement($pollElement);
+        }
+        return $this;
+    }
+
+    /**
      * @param PollElement $pollElement
      */
     public function removePollElement(PollElement $pollElement)
@@ -208,12 +220,13 @@ class PollModule
         return null;
     }
 
-    public function getValidPollProposal(){
+    public function getValidPollProposal()
+    {
         //if not pollProposal.deleted and pollProposal.id is not null
         $criteria = Criteria::create()->where(
             Criteria::expr()->andX(
                 Criteria::expr()->eq("deleted", false),
-                Criteria::expr()->neq("id",null)
+                Criteria::expr()->neq("id", null)
             )
         );
         return $this->pollProposals->matching($criteria);

@@ -24,6 +24,7 @@ use AppBundle\Utils\enum\ModuleType as EnumModuleType;
 use AppBundle\Utils\enum\PollElementType;
 use AppBundle\Utils\enum\PollModuleType;
 use AppBundle\Utils\enum\PollModuleVotingType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -125,33 +126,43 @@ class ModuleManager
         $this->module->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         if ($type == EnumModuleType::POLL_MODULE) {
             $pollModule = new PollModule();
-            $pollElement = new PollElement();
-            $pollElement->setName($subtype);
-            $pollElement->setOrderIndex(0);
-
-            // default config
-            $pollElement->setType(PollElementType::STRING);
             $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
+
+            $pollElements = new ArrayCollection();
 
             if ($subtype == PollModuleType::WHEN) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.when"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-                $pollElement->setType(PollElementType::DATETIME);
+
+                $pollElementDate = new PollElement();
+                $pollElementDate->create($subtype, 0, PollElementType::DATETIME);
+                $pollElementEndDate = new PollElement();
+                $pollElementEndDate->create($subtype, 1, PollElementType::ENDDATETIME);
+                $pollElements->add($pollElementDate);
+                $pollElements->add($pollElementEndDate);
             } elseif ($subtype == PollModuleType::WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.what"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-                $pollElement->setType(PollElementType::STRING);
+
+                $pollElement = new PollElement();
+                $pollElement->create($subtype, 0, PollElementType::STRING);
+                $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::WHERE) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-                $pollElement->setType(PollElementType::GOOGLE_PLACE_ID);
+
+                $pollElement = new PollElement();
+                $pollElement->create($subtype, 0, PollElementType::GOOGLE_PLACE_ID);
+                $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-                $pollElement->setType(PollElementType::STRING);
-                $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
+
+                $pollElement = new PollElement();
+                $pollElement->create($subtype, 0, PollElementType::AMOUNT);
+                $pollElements->add($pollElement);
             }
-            $pollModule->addPollElement($pollElement);
+            $pollModule->addPollElements($pollElements);
 
             $this->module->setPollModule($pollModule);
         }
@@ -229,6 +240,9 @@ class ModuleManager
                             $duplicatedPollProposalElement->setValString($originialPollProposalElement->getValString());
                             $duplicatedPollProposalElement->setValInteger($originialPollProposalElement->getValInteger());
                             $duplicatedPollProposalElement->setValDatetime($originialPollProposalElement->getValDatetime());
+                            $duplicatedPollProposalElement->setTime($originialPollProposalElement->hasTime());
+                            $duplicatedPollProposalElement->setValEndDatetime($originialPollProposalElement->getValEdDatetime());
+                            $duplicatedPollProposalElement->setEndTime($originialPollProposalElement->hasEndTime());
                             $duplicatedPollProposalElement->setValGooglePlaceId($originialPollProposalElement->getValGooglePlaceId());
                             $mapOrigPPEltIdToDuplPPel[$originialPollProposalElement->getPollElement()->getId()]->addPollProposalElement($duplicatedPollProposalElement);
                             $duplicatedPollProposal->addPollProposalElement($duplicatedPollProposalElement);
