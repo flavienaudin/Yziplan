@@ -112,7 +112,9 @@
                         titleText: "{{ "eventInvitation.profile.card.guestname_required_alert.title"|trans }}",
                         html: "{{ "eventInvitation.profile.card.guestname_required_alert.message"|trans|raw }}",
                         input: "text",
-                        showCancelButton: false,
+                        showCancelButton: true,
+                        cancelButtonText: "{{ "global.button.cancel"|trans }}",
+                        reverseButtons: true,
                         animation: "slide-from-top",
                         inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}",
                         preConfirm: function (input) {
@@ -130,7 +132,7 @@
                     }, function (dismiss) {
                         swal({
                             title: "{{ "global.swal.title.warning"|trans }}",
-                            text: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans|raw }}",
+                            html: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans }}",
                             type: "error"
                         });
                     });

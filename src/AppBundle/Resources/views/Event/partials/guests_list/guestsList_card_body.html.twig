@@ -67,16 +67,15 @@
             var $link = $(this);
             $link.on('click', function (e) {
                 e.preventDefault();
-                var text = "";
+                var title = "";
                 if ($link.data('guestname') == "") {
-                    text = "{{ "invitations.display.cancel.swal.text_noname"|trans }}";
+                    title = "{{ "invitations.display.cancel.swal.text_noname"|trans }}";
                 } else {
-                    text = "{{ "invitations.display.cancel.swal.text"|trans }}";
-                    text = text.replace('%name%', $link.data('guestname'));
+                    title = "{{ "invitations.display.cancel.swal.text"|trans }}";
+                    title = title.replace('%name%', $link.data('guestname'));
                 }
                 swal({
-                    title: "{{ "invitations.display.cancel.swal.title"|trans }}",
-                    text: text,
+                    title: title,
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
