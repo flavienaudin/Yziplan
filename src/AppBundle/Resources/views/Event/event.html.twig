@@ -97,6 +97,7 @@
     <link rel="stylesheet" href="{{ asset("bundles/app/css/fileinput.min.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/datatables.min.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootstrap-touchspin.min.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/focuspoint.css") }}">
 {% endblock stylesheets %}
 
 {% block top_javascripts %}
@@ -135,6 +136,8 @@
 
     {# Plugin for cliplboard field (copy into clipboard by clicking) #}
     <script src="{{ asset('bundles/app/js/clipboard.min.js') }}"></script>
+    {# Plugin to maange focuspoint on event image#}
+    <script src="{{ asset('bundles/app/js/jquery.focuspoint.min.js') }}"></script>
 
     <script>
         var fos_comment_thread_container = $('.commentable_thread ');
@@ -149,7 +152,7 @@
 
             $(document).on('fos_comment_add_comment fos_comment_show_form fos_comment_show_edit_form fos_comment_cancel_form', function (event, data) {
                 $grid = $('.grid');
-                if($grid[0]) {
+                if ($grid[0]) {
                     $grid.masonry('layout');
                 }
                 LetterAvatar.transform();

@@ -56,6 +56,34 @@ class Event implements CommentableInterface
     private $picture;
 
     /**
+     * @var float
+     *
+     * @ORM\Column(name="picture_focus_x", type="float", nullable=true)
+     */
+    private $pictureFocusX;
+
+    /**
+     * @var float
+     *
+     * @ORM\Column(name="picture_focus_y", type="float", nullable=true)
+     */
+    private $pictureFocusY;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="picture_width", type="integer", nullable=true)
+     */
+    private $pictureWidth;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="picture_height", type="integer", nullable=true)
+     */
+    private $pictureHeight;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="where_name", type="string", length=255, nullable=true)
@@ -231,6 +259,78 @@ class Event implements CommentableInterface
     public function setPicture($picture)
     {
         $this->picture = $picture;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPictureFocusX()
+    {
+        return $this->pictureFocusX;
+    }
+
+    /**
+     * @param float $pictureFocusX
+     * @return Event
+     */
+    public function setPictureFocusX($pictureFocusX)
+    {
+        $this->pictureFocusX = $pictureFocusX;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPictureFocusY()
+    {
+        return $this->pictureFocusY;
+    }
+
+    /**
+     * @param float $pictureFocusY
+     * @return Event
+     */
+    public function setPictureFocusY($pictureFocusY)
+    {
+        $this->pictureFocusY = $pictureFocusY;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPictureWidth()
+    {
+        return $this->pictureWidth;
+    }
+
+    /**
+     * @param int $pictureWidth
+     * @return Event
+     */
+    public function setPictureWidth($pictureWidth)
+    {
+        $this->pictureWidth = $pictureWidth;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPictureHeight()
+    {
+        return $this->pictureHeight;
+    }
+
+    /**
+     * @param int $pictureHeight
+     * @return Event
+     */
+    public function setPictureHeight($pictureHeight)
+    {
+        $this->pictureHeight = $pictureHeight;
         return $this;
     }
 
@@ -549,9 +649,9 @@ class Event implements CommentableInterface
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->isNull("invitationEmailSentAt"))
-            ->andWhere(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED)) // TODO Verifier que ca marche quand la fonction sera utilisée
+            ->andWhere(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED))// TODO Verifier que ca marche quand la fonction sera utilisée
             ->andWhere(Criteria::expr()->neq("applicationUser", null));
-        if($excludeOrganizer){
+        if ($excludeOrganizer) {
             $criteria
                 ->andWhere(Criteria::expr()->eq('creator', false))
                 ->andWhere(Criteria::expr()->eq('administrator', false));

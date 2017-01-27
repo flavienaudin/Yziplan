@@ -492,6 +492,24 @@ class EventController extends Controller
             }
 
             $imageFile = $request->files->get('eventPictureInput');
+            $pictureFocusX = $request->get('focusX');
+            if ($pictureFocusX == null) {
+                $pictureFocusX = 0;
+            } elseif ($pictureFocusX < -1) {
+                $pictureFocusX = -1;
+            } elseif ($pictureFocusX > 1) {
+                $pictureFocusX = 1;
+            }
+
+            $pictureFocusY = $request->get('focusY');
+            if ($pictureFocusY == null) {
+                $pictureFocusY = 0;
+            } elseif ($pictureFocusY < -1) {
+                $pictureFocusY = -1;
+            } elseif ($pictureFocusY > 1) {
+                $pictureFocusY = 1;
+            }
+
             /** @var EventManager $eventManager */
             $eventManager = $this->get("at.manager.event");
             $eventManager->setEvent($event);
@@ -499,11 +517,27 @@ class EventController extends Controller
                 $this->get('at.uploader.event_picture')->delete($event->getPicture());
             }
             $event->setPicture($imageFile);
+            if ($imageFile != null) {
+                $imageSizes = getimagesize($imageFile);
+                $event->setPictureWidth($imageSizes[0]);
+                $event->setPictureHeight($imageSizes[1]);
+                $event->setPictureFocusX($pictureFocusX);
+                $event->setPictureFocusY($pictureFocusY);
+            } else {
+                $event->setPictureWidth(null);
+                $event->setPictureHeight(null);
+                $event->setPictureFocusX(null);
+                $event->setPictureFocusY(null);
+            }
             $eventManager->persistEvent();
             $data = array();
             if ($event->getPicture() != null) {
                 $avatarDirURL = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/' . $this->get('at.uploader.event_picture')->getWebRelativeTargetDir();
-                $data[AppJsonResponse::DATA] = $avatarDirURL . '/' . $event->getPicture();
+                $data[AppJsonResponse::DATA]['picture_url'] = $avatarDirURL . '/' . $event->getPicture();
+                $data[AppJsonResponse::DATA]['picture_focus_x'] = $event->getPictureFocusX();
+                $data[AppJsonResponse::DATA]['picture_focus_y'] = $event->getPictureFocusY();
+                $data[AppJsonResponse::DATA]['picture_width'] = $event->getPictureWidth();
+                $data[AppJsonResponse::DATA]['picture_height'] = $event->getPictureHeight();
             }
             return new AppJsonResponse($data, Response::HTTP_OK);
 
