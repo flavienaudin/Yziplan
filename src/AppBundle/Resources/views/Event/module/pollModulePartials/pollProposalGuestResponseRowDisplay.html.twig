@@ -31,16 +31,16 @@
                                         $(modals).first().modal('toggle');
                                     } else {
                                         ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                                                $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
-                                            }, function (jqXHR, textStatus, errorThrown) {
-                                                if (jqXHR.hasOwnProperty('responseJSON')) {
-                                                    var responseJSON = jqXHR['responseJSON'];
-                                                    if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                                        if (!eventInvitationValid && askGuestName !== undefined) {
-                                                            askGuestName();
-                                                        }
+                                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
+                                        }, function (jqXHR, textStatus, errorThrown) {
+                                            if (jqXHR.hasOwnProperty('responseJSON')) {
+                                                var responseJSON = jqXHR['responseJSON'];
+                                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                                                    if (!eventInvitationValid && askGuestName !== undefined) {
+                                                        askGuestName();
                                                     }
                                                 }
+                                            }
                                         }, null);
                                     }
                                 }
@@ -67,7 +67,7 @@
                                                 $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
                                                     $(this).remove();
                                                 });
-                                                if($('#pp-row-group-{{ userModuleInvitation.module.token }} > tr').length == 1) {
+                                                if ($('#pp-row-group-{{ userModuleInvitation.module.token }} > tr').length == 1) {
                                                     $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').hide();
                                                 }
                                             }
@@ -82,7 +82,7 @@
                                             }
                                         }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
                                             $grid = $('.grid');
-                                            if($grid[0]) {
+                                            if ($grid[0]) {
                                                 $grid.masonry('layout');
                                             }
                                         });
@@ -96,7 +96,8 @@
             <div class="media-body">
                 <div {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
                     {% for ppElt in pollProposal.pollProposalElements %}
-                        {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?ppElt.value|localizeddate:ppElt.value }}
+                        {{ (ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')
+                        or ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::END_DATETIME')) ? ppElt.value|localizeddate:ppElt.value }}
                         {% if not loop.last %}<br>{% endif %}
                     {% endfor %}
                 </div>

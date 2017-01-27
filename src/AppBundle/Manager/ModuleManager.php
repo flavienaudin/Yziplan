@@ -242,7 +242,8 @@ class ModuleManager
                             $duplicatedPollProposalElement->setValInteger($originialPollProposalElement->getValInteger());
                             $duplicatedPollProposalElement->setValDatetime($originialPollProposalElement->getValDatetime());
                             $duplicatedPollProposalElement->setTime($originialPollProposalElement->hasTime());
-                            $duplicatedPollProposalElement->setValEndDatetime($originialPollProposalElement->getValEdDatetime());
+                            $duplicatedPollProposalElement->setValEndDatetime($originialPollProposalElement->getValEndDatetime());
+                            $duplicatedPollProposalElement->setEndDate($originialPollProposalElement->hasEndDate());
                             $duplicatedPollProposalElement->setEndTime($originialPollProposalElement->hasEndTime());
                             $duplicatedPollProposalElement->setValGooglePlaceId($originialPollProposalElement->getValGooglePlaceId());
                             $mapOrigPPEltIdToDuplPPel[$originialPollProposalElement->getPollElement()->getId()]->addPollProposalElement($duplicatedPollProposalElement);

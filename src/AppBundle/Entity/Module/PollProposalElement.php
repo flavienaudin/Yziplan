@@ -71,6 +71,15 @@ class PollProposalElement
     private $valEndDatetime;
 
     /**
+     * true si on doit prendre en compte la date de valEndDateTime
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="has_end_date", type="boolean", nullable=false)
+     */
+    private $endDate = false;
+
+    /**
      * true si on doit prendre en compte l'heure de valEndDateTime
      *
      * @var boolean
@@ -211,6 +220,23 @@ class PollProposalElement
     /**
      * @return bool
      */
+    public function hasEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param bool $endDate
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
+
+    /**
+     * @return bool
+     */
     public function hasEndTime()
     {
         return $this->endTime;
@@ -308,4 +334,81 @@ class PollProposalElement
         }
         return $val;
     }
+
+    public function getArrayFromDate()
+    {
+        if (!empty($this->valDatetime)) {
+            $date['year'] = $this->valDatetime->format('Y');
+            $date['month'] = $this->valDatetime->format('m');
+            $date['day'] = $this->valDatetime->format('d');
+            return $date;
+        }
+        return null;
+    }
+
+    public function getArrayFromTime()
+    {
+        if (!empty($this->valDatetime) && $this->time) {
+            $date['hour'] = $this->valDatetime->format('H');
+            $date['minute'] = $this->valDatetime->format('i');
+            return $date;
+        }
+        return null;
+    }
+
+    public function getArrayFromEndDate()
+    {
+        if (!empty($this->valEndDatetime) && $this->endDate) {
+            $date['year'] = $this->valEndDatetime->format('Y');
+            $date['month'] = $this->valEndDatetime->format('m');
+            $date['day'] = $this->valEndDatetime->format('d');
+            return $date;
+        }
+        return null;
+    }
+
+    public function getArrayFromEndTime()
+    {
+        if (!empty($this->valEndDatetime) && $this->endTime) {
+            $date['hour'] = $this->valEndDatetime->format('H');
+            $date['minute'] = $this->valEndDatetime->format('i');
+            return $date;
+        }
+        return null;
+    }
+
+    // $pollProposalElement->format('Y-m-d H:i:s');
+    /*public function getArrayFromDate()
+    {
+        $date['year'] = !empty($this->valDatetime) ? $this->valDatetime->format('Y') : null;
+        $date['month'] = !empty($this->valDatetime) ? $this->valDatetime->format('m') : null;
+        $date['date'] = !empty($this->valDatetime) ? $this->valDatetime->format('d') : null;
+
+        return $date;
+    }
+
+    public function getArrayFromTime()
+    {
+        $date['year'] = !empty($this->valDatetime) && $this->time ? $this->valDatetime->format('H') : null;
+        $date['month'] = !empty($this->valDatetime) && $this->time ? $this->valDatetime->format('i') : null;
+
+        return $date;
+    }
+
+    public function getArrayFromEndDate()
+    {
+        $date['year'] = !empty($this->valEndDatetime) && $this->endDate ? $this->valEndDatetime->format('Y') : null;
+        $date['month'] = !empty($this->valEndDatetime) && $this->endDate ? $this->valEndDatetime->format('m') : null;
+        $date['date'] = !empty($this->valEndDatetime) && $this->endDate ? $this->valEndDatetime->format('d') : null;
+
+        return $date;
+    }
+
+    public function getArrayFromEndTime()
+    {
+        $date['year'] = !empty($this->valEndDatetime) && $this->endTime ? $this->valEndDatetime->format('H') : null;
+        $date['month'] = !empty($this->valEndDatetime) && $this->endTime ? $this->valEndDatetime->format('i') : null;
+
+        return $date;
+    }*/
 }

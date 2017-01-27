@@ -36,29 +36,34 @@ services:
     arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.application_user','@at.manager.module_invitation','@app.mailer.twig_swift']
 
   at.manager.module_invitation:
-      class: AppBundle\Manager\ModuleInvitationManager
-      arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@at.service.gentoken']
+    class: AppBundle\Manager\ModuleInvitationManager
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@at.service.gentoken']
 
   at.manager.pollproposal:
-      class: AppBundle\Manager\PollProposalManager
-      arguments: ['@doctrine.orm.entity_manager','@form.factory','@templating']
-      lazy:  true
+    class: AppBundle\Manager\PollProposalManager
+    arguments: ['@doctrine.orm.entity_manager','@form.factory','@templating','@at.manager.pollproposal_element']
+    lazy:  true
+
+  at.manager.pollproposal_element:
+    class: AppBundle\Manager\PollProposalElementManager
+    arguments: ['@doctrine.orm.entity_manager','@form.factory','@templating']
+    lazy:  true
 
   at.manager.pollproposal_response:
-      class: AppBundle\Manager\PollProposalResponseManager
-      arguments: ['@doctrine.orm.entity_manager','@templating']
+    class: AppBundle\Manager\PollProposalResponseManager
+    arguments: ['@doctrine.orm.entity_manager','@templating']
 
   at.manager.application_user:
     class: AppBundle\Manager\ApplicationUserManager
     arguments: ['@doctrine.orm.entity_manager','@fos_user.util.email_canonicalizer','@translator','@fos_user.util.token_generator']
 
   at.manager.app_user_information:
-      class: AppBundle\Manager\AppUserInformationManager
-      arguments: ['@doctrine.orm.entity_manager','@form.factory','@at.uploader.avatar']
+    class: AppBundle\Manager\AppUserInformationManager
+    arguments: ['@doctrine.orm.entity_manager','@form.factory','@at.uploader.avatar']
 
   at.manager.contact:
-      class: AppBundle\Manager\ContactManager
-      arguments: ['@doctrine.orm.entity_manager','@at.manager.user']
+    class: AppBundle\Manager\ContactManager
+    arguments: ['@doctrine.orm.entity_manager','@at.manager.user']
 
 # Voters
   at.voter.event:
