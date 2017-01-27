@@ -53,6 +53,26 @@
     background-color: #3b5998;
 }
 
+.link-facebook {
+    color: #3b5998;
+}
+
+.btn-twitter {
+    background-color: #1da1f2;
+}
+
+.link-twitter {
+    color: #1da1f2;
+}
+
+.btn-instagram {
+    background-color: #333333;
+}
+
+.link-instagram {
+    color: #333333;
+}
+
 /*---------------------------------
     TOASTR
 ----------------------------------*/

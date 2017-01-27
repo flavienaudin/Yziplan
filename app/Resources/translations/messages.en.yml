@@ -529,8 +529,8 @@ index:
     title: To get organised it's Yzi!
     subtitle: Easily organised parties, acivities, outings, holidays,... with your friends
   section_use:
-    title: How it works:
-    create: Create your event
+    title: How it works
+    create: Create the event
     share: Share it
     organise: Get organised
     enjoy: Enjoy!
@@ -545,12 +545,12 @@ index:
     barbecue: Barbecue
     weekend: Week-end
   section_feature:
-    title: Features:
+    title: Features
   section_quote:
-    title: They speak about us:
+    title: They speak about us
     quote1:
       sentense1: We had to organize an infiltration mission.
-      sentense2: "We thought it was mission: impossible, then we discovered Yziplan."
+      sentense2: "We thought it was an impossible mission, then we discovered Yziplan."
       author: "Ethan Hunt - Mission: Impossible"
     quote2:
       sentense: I love it when a plan comes together.
@@ -561,8 +561,8 @@ index:
       author: Daniel "Danny" Ocean - Ocean's Eleven
   section_social:
     title: Follow us on social networks!
-    subtitle: And do not miss anything new to come.
-  callout1: Go out
-  callout2: Have fun
-  callout3: Plan
-  callout4: Enjoy
+    subtitle: And do not miss anything new to come
+  callout1: Have fun
+  callout2: Share your activities
+  callout3: Plan is fun
+  callout4: And specially, enjoy!

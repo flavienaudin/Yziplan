@@ -256,6 +256,8 @@ text:
   social_network:
     google: Google
     facebook: Facebook
+    twitter: Twitter
+    instagram: Instagram
 
 form:
   public_name: Public name
