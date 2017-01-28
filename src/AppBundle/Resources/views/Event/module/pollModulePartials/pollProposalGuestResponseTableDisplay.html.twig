@@ -37,7 +37,8 @@
                                     <td class="pollproposal-column">
                                         <span {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
                                             {% for ppElt in pollProposal.pollProposalElements %}
-                                                {{ ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')?ppElt.value|localizeddate:ppElt.value }}
+                                                {{ (ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')
+                                                or ppElt.pollElement.type==constant('AppBundle\\Utils\\enum\\PollElementType::END_DATETIME')) ? ppElt.value|localizeddate:ppElt.value }}
                                                 {% if not loop.last %}<br>{% endif %}
                                             {% endfor %}
                                         </span>

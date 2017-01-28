@@ -62,16 +62,14 @@ class PollProposalResponseManager
 
     /**
      * @param Integer $pollProposalId
-     * @param EventInvitation $userEventInvitation
      * @return string
      */
-    public function displayPollProposalRowResultPartial($pollProposalId, ModuleInvitation $moduleInvitation)
+    public function displayPollProposalRowResultPartial($pollProposalId)
     {
         $pollProposal = $this->entityManager->getRepository(PollProposal::class)->findOneBy(array('id' => $pollProposalId));
 
         return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_result.html.twig", array(
             'pollProposal' => $pollProposal,
-            'userModuleInvitation' => $moduleInvitation,
             'moduleInvitations' => $pollProposal->getPollModule()->getModule()->getModuleInvitations()
         ));
     }

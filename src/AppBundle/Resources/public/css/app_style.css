@@ -53,6 +53,26 @@
     background-color: #3b5998;
 }
 
+.link-facebook {
+    color: #3b5998;
+}
+
+.btn-twitter {
+    background-color: #1da1f2;
+}
+
+.link-twitter {
+    color: #1da1f2;
+}
+
+.btn-instagram {
+    background-color: #333333;
+}
+
+.link-instagram {
+    color: #333333;
+}
+
 /*---------------------------------
     TOASTR
 ----------------------------------*/
@@ -85,7 +105,7 @@
     margin-right: auto;
 }
 
-.border-bottom{
+.border-bottom {
     border-bottom: 1px solid lightgrey;
 }
 
@@ -292,7 +312,19 @@
     Event Picture
 -----------------------------------*/
 
-#event_picture_update_modal .kv-avatar .file-preview-frame, .kv-avatar .file-preview-frame:hover {
+#event-header-card-header {
+    height: 250px;
+}
+
+#header-picture-focuspoint {
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    height: 250px;
+}
+
+#event_picture_update_modal .kv-avatar .file-preview-frame,
+#event_picture_update_modal .kv-avatar .file-preview-frame:hover {
     margin: 0;
     padding: 0;
     border: none;
@@ -302,22 +334,68 @@
 
 #event_picture_update_modal .kv-avatar .file-input {
     display: block;
-    width: 95%;
-    min-height: 150px;
+    width: 100%;
     margin: 0 auto;
 }
 
+img.focuspoint-selector {
+    cursor: pointer;
+    opacity: 0.01;
+}
+
+/* !HELPER TOOL TARGETING SYSTEM */
+.helper-tool-target {
+    position: relative;
+    width: 300px;
+    overflow: hidden;
+    margin-bottom: 1em;
+}
+
+.helper-tool-target img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.helper-tool-target img.target-overlay,
+.helper-tool-target img.reticle {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.helper-tool-target img.target-overlay {
+    cursor: pointer;
+    opacity: 0.01;
+}
+
+.helper-tool-target img.reticle {
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    transition: all 500ms ease-in-out;
+    -webkit-transition: all 500ms ease-in-out;
+    -moz-transition: all 500ms ease-in-out;
+}
+
+.event-change-picture {
+    top: 30px;
+}
+
 .event-title {
+    position: absolute;
+    left: 30px;
     text-shadow: 0 0 10px rgb(0, 0, 0);
 }
 
 h1.event-title {
-    position: absolute;
     bottom: 0;
 }
 
 /*----------------------------------
-    Event Invitation Answer
+    Event Invitation Aswer
 -----------------------------------*/
 
 .answer-form [class*=btn-answer] {
@@ -328,6 +406,7 @@ h1.event-title {
     font-weight: 900;
     margin: 10px;
 }
+
 .answer-form .btn-answer-false,
 .answer-form .btn-answer-false:hover {
     color: #ff5722;
@@ -336,7 +415,7 @@ h1.event-title {
 .answer-form .btn-answer-false.active,
 .answer-form .btn-answer-false:active {
     background-color: #ff5722;
-    color:white;
+    color: white;
     font-weight: bold;
 }
 
@@ -348,7 +427,7 @@ h1.event-title {
 .answer-form .btn-answer-maybe.active,
 .answer-form .btn-answer-maybe:active {
     background-color: #ffc107;
-    color:white;
+    color: white;
     font-weight: bold;
 }
 
@@ -360,7 +439,7 @@ h1.event-title {
 .answer-form .btn-answer-true.active,
 .answer-form .btn-answer-true:active {
     background-color: #4caf50;
-    color:white;
+    color: white;
     font-weight: bold;
 }
 
@@ -558,7 +637,7 @@ label.required:after {
     text-align: center;
 }
 
-.poll-container table .tr-no-proposal:not(:first-child){
+.poll-container table .tr-no-proposal:not(:first-child) {
     display: none;
 }
 

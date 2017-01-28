@@ -3782,6 +3782,7 @@ select[multiple].input-lg {
     margin-bottom: 0;
     font-weight: 400;
     text-align: center;
+    text-transform: uppercase;
     vertical-align: middle;
     touch-action: manipulation;
     cursor: pointer;
@@ -9852,6 +9853,10 @@ a.waves-effect .waves-ripple {
 
 .b-0 {
     border: 0 !important;
+}
+
+.b-1 {
+    border: 1px solid #cccccc !important;
 }
 
 /*

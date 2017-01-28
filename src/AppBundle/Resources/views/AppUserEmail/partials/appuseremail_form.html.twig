@@ -40,14 +40,13 @@
 
     <div class="p-t-15 p-b-15 text-right">
         {% if appuseremail is not null and appuseremail.emailCanonical != appuseremail.applicationUser.accountUser.emailCanonical %}
-            <a id="deleteAppUserEmail_{{ appuseremail.id }}" href="{{ path('deleteAppUserEmail', {'id':appuseremail.id}) }}" class="text-danger">{{ "global.button.delete"|trans }}</a>
+            <a id="deleteAppUserEmail_{{ appuseremail.id }}" href="{{ path('deleteAppUserEmail', {'id':appuseremail.id}) }}" class="btn btn-flat c-red">{{ "global.button.delete"|trans }}</a>
             <script>
                 $('#deleteAppUserEmail_{{ appuseremail.id }}').on('click', function (e) {
                     e.preventDefault();
                     var link = $(this);
                     swal({
                         title: '{{ "profile.show.appuseremail.modal.delete.swal_title"|trans }}',
-                        text: '{{ "profile.show.appuseremail.modal.delete.swal_text"|trans }}',
                         type: "warning",
                         showCancelButton: true,
                         confirmButtonColor: "#DD6B55",
@@ -63,7 +62,7 @@
                 });
             </script>
         {% endif %}
-        <button type="button" class="btn btn-default" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+        <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
         <button type="submit" class="btn btn-primary">{{ "global.button.save"|trans }}</button>
     </div>
     {{ form_end(form_appuseremail) }}

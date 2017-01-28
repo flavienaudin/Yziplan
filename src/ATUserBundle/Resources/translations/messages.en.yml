@@ -92,8 +92,7 @@ profile:
         edit:
           title: Edit email "%email%"
         delete:
-          swal_title: Email deleting
-          swal_text: Are you sure you want to delete this email ?
+          swal_title: Are you sure you want to delete this email ?
         form:
           email:
             label: E-mail
@@ -239,8 +238,7 @@ contacts:
     selection_button: Create an event
     empty_contact_list: You do not have contact, search
   alert:
-    remove_contact_confirmation_title: Are you sure you want to delete this contact?
-    remove_contact_confirmation_text: This action is irreversible
+    remove_contact.confirmation.title: Are you sure you want to delete this contact?
   message:
     add_contact:
       success: Contact added successfully.
@@ -258,6 +256,8 @@ text:
   social_network:
     google: Google
     facebook: Facebook
+    twitter: Twitter
+    instagram: Instagram
 
 form:
   public_name: Public name
