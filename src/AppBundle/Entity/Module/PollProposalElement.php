@@ -376,39 +376,4 @@ class PollProposalElement
         }
         return null;
     }
-
-    // $pollProposalElement->format('Y-m-d H:i:s');
-    /*public function getArrayFromDate()
-    {
-        $date['year'] = !empty($this->valDatetime) ? $this->valDatetime->format('Y') : null;
-        $date['month'] = !empty($this->valDatetime) ? $this->valDatetime->format('m') : null;
-        $date['date'] = !empty($this->valDatetime) ? $this->valDatetime->format('d') : null;
-
-        return $date;
-    }
-
-    public function getArrayFromTime()
-    {
-        $date['year'] = !empty($this->valDatetime) && $this->time ? $this->valDatetime->format('H') : null;
-        $date['month'] = !empty($this->valDatetime) && $this->time ? $this->valDatetime->format('i') : null;
-
-        return $date;
-    }
-
-    public function getArrayFromEndDate()
-    {
-        $date['year'] = !empty($this->valEndDatetime) && $this->endDate ? $this->valEndDatetime->format('Y') : null;
-        $date['month'] = !empty($this->valEndDatetime) && $this->endDate ? $this->valEndDatetime->format('m') : null;
-        $date['date'] = !empty($this->valEndDatetime) && $this->endDate ? $this->valEndDatetime->format('d') : null;
-
-        return $date;
-    }
-
-    public function getArrayFromEndTime()
-    {
-        $date['year'] = !empty($this->valEndDatetime) && $this->endTime ? $this->valEndDatetime->format('H') : null;
-        $date['month'] = !empty($this->valEndDatetime) && $this->endTime ? $this->valEndDatetime->format('i') : null;
-
-        return $date;
-    }*/
 }
