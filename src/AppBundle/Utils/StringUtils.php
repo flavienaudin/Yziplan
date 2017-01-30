@@ -25,19 +25,16 @@ class StringUtils
             if (($pos = strpos($email, '@')) !== false) {
                 $email = substr($email, 0, $pos);
             }
-            $value = "";
-            $emailLength = strlen($email);
-            $chaine = "abcdefghijklmnpqrstuvwxy123456789";
-            $chaineLength = strlen($chaine);
-            srand((double)microtime() * 1000000);
-            for ($i = 0; $i < 3; $i++) {
-                if ($i < $emailLength) {
-                    $value .= $email[$i];
-                } else {
-                    $value .= $chaine[rand() % $chaineLength];
+            $emailLen = strlen($email);
+            if ($emailLen >= 9) {
+                $value = substr($email, 0, $emailLen - 6) . "***" . substr($email, -3, 3);
+            } else {
+                $first = substr($email, 0, min(3, max($emailLen - 1, 1)));
+                $value = $first . "***";
+                if ($emailLen >= 7) {
+                    substr($email, 7, $emailLen - 6);
                 }
             }
-            $value .= "***";
         }
         return $value;
     }
