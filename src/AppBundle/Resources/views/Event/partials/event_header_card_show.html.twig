@@ -11,7 +11,7 @@
         <div class="well well-sm m-b-10">
             {% set creatorsNames = "" %}
             {% for creatorInvitation in userEventInvitation.event.creators %}
-                {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
+                {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, not userEventInvitation.organizer)%}
             {% endfor %}
             {% if creatorsNames is not empty %}
                 <div class="pull-right"><i>

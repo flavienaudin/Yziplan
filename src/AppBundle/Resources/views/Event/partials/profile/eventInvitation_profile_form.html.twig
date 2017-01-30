@@ -1,5 +1,5 @@
 {# Données d'entrée :
-- userEventInvitation (EventInvitation) Invitation de l'utilisateur de l'utilisateur
+- userEventInvitation (EventInvitation) Invitation de l'utilisateur en cours
 - userEventInvitationForm (Form) Formulaire du profil de l'invité pour l'invitation
 #}
 
@@ -32,9 +32,9 @@
             }) }}
             {% block action_buttons %}
                 <div class="text-center">
-                    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and userEventInvitation.displayableName is not empty %}
+                    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and userEventInvitation.displayableName(false) is not empty %}
                         <i class="m-r-10"><a href="{{ path('disconnectEventInvitation', {'eventToken':userEventInvitation.event.token}) }}">
-                                {{ "eventInvitation.profile.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName}) }}</a></i>
+                                {{ "eventInvitation.profile.card.text.disconnect"|trans({'%user%': userEventInvitation.displayableName(false)}) }}</a></i>
                     {% endif %}
                     {% if userEventInvitationForm is defined %}
                         <button type="submit" class="btn {{ userEventInvitation.guestName is empty?"btn-primary":"btn-default" }}">{{ "global.button.save"|trans }}</button>
@@ -44,7 +44,7 @@
         </div>
         <div class="col-xs-5">
             <div class="avatar-img-container-md center-block">
-                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : userEventInvitation, isUserConnected : true}) }}
+                {{ include("@App/Avatar/partials/avatar_display.html.twig",{"invitation" : userEventInvitation, "userEventInvitation": userEventInvitation}) }}
             </div>
         </div>
     </div>

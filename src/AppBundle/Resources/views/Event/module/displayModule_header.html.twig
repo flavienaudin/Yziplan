@@ -77,7 +77,7 @@ Données d'entrée :
                 {% block mhMediaBody %}
                     {% set creatorsNames = "" %}
                     {% for creatorInvitation in module.creators %}
-                        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
+                        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, not userModuleInvitation.eventInvitation.organizer) %}
                     {% endfor %}
                     <h2>
                         <i class="zmdi zmdi-help zmdi-hc-lg c-white m-r-10"></i>
