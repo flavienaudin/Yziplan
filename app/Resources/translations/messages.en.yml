@@ -409,7 +409,7 @@ moduleInvitation:
 global:
   project_name: Yziplan
   event: event
-  user_anonyme: Ysiplanor anonyme
+  user_anonyme: Yziplanor anonyme
   link:
     top: Top
   button:
