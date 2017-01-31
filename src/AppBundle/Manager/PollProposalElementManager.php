@@ -67,7 +67,7 @@ class PollProposalElementManager
      * @param Module $module
      * @return PollProposal|mixed
      */
-    public function treatPollProposalElementForm(FormInterface $pollProposalElementForm, PollProposal $pollProposal)
+    public function treatPollProposalElementForm(FormInterface $pollProposalElementForm)
     {
         $this->pollProposalElement = $pollProposalElementForm->getData();
         if ($this->pollProposalElement->getPollElement()->getType() == PollElementType::DATETIME) {
@@ -107,8 +107,6 @@ class PollProposalElementManager
             }
             $this->pollProposalElement->setValEndDatetime($datetimeValue);
         }
-
-        $pollProposal->addPollProposalElement($this->pollProposalElement);
         return $this->pollProposalElement;
     }
 }

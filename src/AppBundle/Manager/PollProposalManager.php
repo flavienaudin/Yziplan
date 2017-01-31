@@ -117,7 +117,7 @@ class PollProposalManager
     {
         $this->pollProposal = $pollProposalForm->getData();
         foreach ($pollProposalForm->get('pollProposalElements') as $pollProposalElementForm){
-            $this->pollProposalElementManager->treatPollProposalElementForm($pollProposalElementForm, $this->pollProposal);
+            $this->pollProposalElementManager->treatPollProposalElementForm($pollProposalElementForm);
         }
         if ($module != null && $this->pollProposal->getPollModule() == null) {
             $module->getPollModule()->addPollProposal($this->pollProposal);
