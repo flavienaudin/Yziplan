@@ -118,10 +118,10 @@
                                     {% endif %}
                                 {% else %}
                                     <div>
-                                        <div style=" display:inline-block; width: 45px; font-style:italic">Début : </div> <div style=" display:inline-block;">{{ ppElt.value|localizeddate("medium", "none", null, null,'ccc dd MMM HH:mm') }}</div>
+                                        <div style=" display:inline-block; width: 45px; font-style:italic">Début : </div> <div style=" display:inline-block;">{{ ppElt.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if ppElt.hasTime %} {{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
                                     </div>
                                     <div>
-                                        <div style=" display:inline-block; width:45px; font-style:italic">Fin : </div> <div style=" display:inline-block;">{{ endDate.value|localizeddate("medium", "none", null, null,'ccc dd MMM HH:mm') }}</div>
+                                        <div style=" display:inline-block; width:45px; font-style:italic">Fin : </div> <div style=" display:inline-block;">{{ endDate.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if endDate.hasEndTime %} {{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
                                     </div>
                                 {% endif %}
                             </div>
