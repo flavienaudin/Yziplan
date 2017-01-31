@@ -151,7 +151,6 @@ event:
     button:
       skip_wizard: Skip the wizard
       preview: Event preview
-      send_invitations_later: Later
       send_invitations: Send invitations
     main:
       title: Event description
@@ -161,13 +160,14 @@ event:
     profile:
       title: About you
       subtitle:
-        text: Identify yourself to your guest.<br>
-        not_connected: |
-          If you already have an account, login to automatically fill the following information.<br>
-          If you subscrire now, copy the browser URL to come back here.
+        text: Identify yourself to your guest.
+        not_connected: If you already have an account, login to automatically fill the following information.
     invitations:
       title: The guests
       subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link..
+    add_module:
+      title: The event is almost ready!
+      subtitle: Add a module using links below or do it later
     error.message:
       wrong_step: An error in the event creation process occrured. Pleaze, try again the operation.
   error.message:
@@ -225,21 +225,28 @@ eventInvitation:
     label: Your invitation
     text: Keep this link to come back here
   profile.card:
-    title: Your profile
+    title: About you
     badge:
       guest: Guest
       creator: Creator
       administrator: Administrator
     text:
-      connexion: If you already have an account, login to automatically fill the following information or you can subscribe to save them for the next event.
+      connexion: You already have an account? Login and this information will already be filled
       disconnect: You are not %user%?
     guestname_required_alert:
-      title: What's your name?
-      message: Enter your name in order to identify yourself with other guests
+      title: Please enter your name
+      message: This participation requires that you validated your invitation with your name.<br> Watch out! You will have to try again your action after the validation
       inputError: It's better with non-empty name.
-      dismiss: Your participation doesn't count until you fill a name.
+      dismiss: Your participation wasn't taken into account
       error_message:
         unauthorized_action: In order to collaborate to this event organization, you should validate your invitation by entering your name.
+    guestemail_empty_alert:
+      title: Important
+      email_input_label: "Note the following link to come back to your invitation"
+      html: "To receive it by email, enter your address below"
+      button:
+        confirm: Receive an email
+        cancel: I saved the link
   message:
     warning:
       email_owned_by_accountuser: Warning! This email address is associated to a user account. Please, login before participating to enjoy all the features.
@@ -290,7 +297,6 @@ invitations:
       link: Cancel %name%'s invitation
       link_noname: Cancel invitation
       swal:
-        title: Cancellattion
         text: Are you sure you want to cancel %name%'s invitation?
         text_noname: Are you sure you want to cancel this invitation?
       message:
@@ -309,7 +315,6 @@ invitations:
     via_facebook: Via Facebook
     via_gmail_contact:
       show: My  Gmail Contacts
-      hide: Close Gmail Contacts
 
 contactsgmail:
   title: Gmail contacts
@@ -327,7 +332,7 @@ module:
     title: General Information
   modal:
     settings:
-      title: Settings
+      title: Element settings
   form:
     name:
       label: Module name
@@ -385,6 +390,10 @@ pollmodule:
           label: Add an integer
         datetime_collection:
           label: Add a datetime
+    when:
+      startDate: "Start Date/Hour:"
+      endDate: "End Date/Hour:"
+      tooltip: "Select an end date only if it is different from the start date."
   alert:
     confirm_proposal_deletion:
       title: Are you sure you want to delete this proposal?
@@ -403,7 +412,7 @@ moduleInvitation:
 global:
   project_name: Yziplan
   event: event
-  user_anonyme: Ysiplanor anonyme
+  user_anonyme: Yziplanor anonyme
   link:
     top: Top
   button:
@@ -413,7 +422,7 @@ global:
     submit: Submit
     edit: Edit
     save: Save
-    previousStep: Previous
+    previousStep: Back
     nextStep: Next
     delete: Delete
     add: Add
@@ -425,6 +434,8 @@ global:
     close: Close
     skip: Skip
     finish: Finish
+    later: Not now
+    decline: No thanks
   success:
     data_saved: Information saved
   error:
@@ -441,6 +452,8 @@ global:
       error: Error
       warning: Warning
       success: OK
+  form:
+    optional: Optional
 
 # Enums
 gender:
@@ -495,11 +508,19 @@ email:
 
 # Modale suggestion :
 suggestion:
-  button: Give your opinion
-  modale:
-    texte: Send a suggestion, bugs, ...
-    champ_nom: Your Name
-    champ_email: Your Email
+  button: We are listening
+  modal:
+    text: Send a suggestion, bugs, ...
+    form:
+      title:
+        label: Title
+      description:
+        label: Description
+        placeholder: Describe your remarks, suggestions, bugs, messages of support...
+      name:
+        label: Your name
+      email:
+        label: Your email
   success:
     titre: Thank you!
     message: Your suggestion has been sent. We will read it carefully.
@@ -513,8 +534,8 @@ index:
     title: To get organised it's Yzi!
     subtitle: Easily organised parties, acivities, outings, holidays,... with your friends
   section_use:
-    title: How it works:
-    create: Create your event
+    title: How it works
+    create: Create the event
     share: Share it
     organise: Get organised
     enjoy: Enjoy!
@@ -529,12 +550,12 @@ index:
     barbecue: Barbecue
     weekend: Week-end
   section_feature:
-    title: Features:
+    title: Features
   section_quote:
-    title: They speak about us:
+    title: They speak about us
     quote1:
       sentense1: We had to organize an infiltration mission.
-      sentense2: "We thought it was mission: impossible, then we discovered Yziplan."
+      sentense2: "We thought it was an impossible mission, then we discovered Yziplan."
       author: "Ethan Hunt - Mission: Impossible"
     quote2:
       sentense: I love it when a plan comes together.
@@ -545,8 +566,8 @@ index:
       author: Daniel "Danny" Ocean - Ocean's Eleven
   section_social:
     title: Follow us on social networks!
-    subtitle: And do not miss anything new to come.
-  callout1: Go out
-  callout2: Have fun
-  callout3: Plan
-  callout4: Enjoy
+    subtitle: And do not miss anything new to come
+  callout1: Have fun
+  callout2: Share your activities
+  callout3: Plan is fun
+  callout4: And specially, enjoy!

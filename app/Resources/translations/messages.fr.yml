@@ -16,8 +16,8 @@ base:
     home: Accueil
 
 navbar:
-  subtitle: Pour s'organiser, c'est IZI !
-  new_event: Créer un événement
+  subtitle: Pour s'organiser, c'est Yzi !
+  new_event: S'organiser
 
 main_menu:
 
@@ -152,7 +152,6 @@ event:
     button:
       skip_wizard: Aller à la page de l'événement
       preview: Apercu de l'événement
-      send_invitations_later: Plus tard
       send_invitations: Envoyer les invitations
     main:
       title: Description de l'événement
@@ -163,12 +162,13 @@ event:
       title: A propos de toi
       subtitle:
         text: Identifie-toi auprès de tes invités.
-        not_connected: |
-          Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant.<br>
-          Si tu t'inscris maintenant, copie l'adresse du navigateur pour reprendre l'organisation.
+        not_connected: Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant.
     invitations:
       title: Les invités
-      subtitle: Renseigne les adresses e-mail de tes invités. Ils recevront un message avec le lien de leur invitations personnelles.
+      subtitle: Renseigne les adresses e-mail de tes invités. Ils recevront un message avec le lien de leur invitation personnelle.
+    add_module:
+      title: L'événement est presque prêt!
+      subtitle: Ajoute un sondage en cliquant sur l'un des liens ci-dessous ou fais le plus tard
     error.message:
       wrong_step: Une erreur dans le processus de création de l'événement s'est produite. Merci de re-essayer l'opération.
   error.message:
@@ -225,21 +225,28 @@ eventInvitation:
     label: Ton invitation
     text: Conserve ce lien pour revenir sur cette page
   profile.card:
-    title: Ton profil
+    title: Profil
     badge:
       guest: Invité
       creator: Créateur
       administrator: Administrateur
     text:
-      connexion: Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant ou inscris-toi pour le prochain événement.
+      connexion: Tu possèdes déjà un compte ? Connecte-toi et ces informations seront déjà renseignés
       disconnect: Tu n'es pas %user% ?
     guestname_required_alert:
-      title: Quel est ton nom ?
-      message: Renseigne ton nom afin t'identifier auprès des autres invités
-      inputError: C'est bien mieux avec quelques lettres.
-      dismiss: Ton invitation ne sera pas prise en compte si tu restes inconnu.
+      title: Merci de saisir ton nom
+      message: Cette participation nécessite que tu aies validé ton invitation avec ton nom. <br>Attention! Tu devras recommencer ton action après la validation
+      inputError: Ca serait bien mieux avec quelques lettres
+      dismiss: Ta participation n'a pas été prise en compte
       error_message:
         unauthorized_action: Afin de participer à l'organisation de cet événement, tu dois valider ton invitation en renseignant ton nom.
+    guestemail_empty_alert:
+      title: Important
+      email_input_label: "Note bien le lien suivant pour revenir sur ton invitation"
+      html: "Pour le recevoir par email, saisis ton adresse ci-dessous"
+      button:
+        confirm: Recevoir par e-mail
+        cancel: J'ai bien noté le lien
   message:
     warning:
       email_owned_by_accountuser: Attention! Cet e-mail est associé à un compte utilisateur. Connecte-toi afin de profiter de toutes les fonctionnalités.
@@ -290,7 +297,6 @@ invitations:
       link: Annuler l'invitation de %name%
       link_noname: Annuler l'invitation
       swal:
-        title: Annulation
         text: Es-tu sûr de vouloir annuler l'invitation de %name% ?
         text_noname: Es-tu sûr de vouloir annuler cette invitation ?
       message:
@@ -309,7 +315,6 @@ invitations:
     via_facebook: Via Facebook
     via_gmail_contact:
       show: Mes contacts Gmail
-      hide: Fermer les Contacts Gmail
 
 contactsgmail:
   title: Contacts Gmail
@@ -327,7 +332,7 @@ module:
     title: Informations générales
   modal:
     settings:
-      title: Configuration
+      title: Configuration de l'élément
   form:
     name:
       label: Intitulé du sondage
@@ -385,6 +390,10 @@ pollmodule:
           label: Ajouter un nombre
         datetime_collection:
           label: Ajouter une date
+    when:
+      startDate: "Date/Horaire de début:"
+      endDate: "Date/Horaire de fin:"
+      tooltip: "Ne renseigner la date de fin que si celle-ci est différente de la date de début."
   alert:
     confirm_proposal_deletion:
       title: Es-tu sûr de vouloir supprimer cette proposition ?
@@ -403,7 +412,7 @@ moduleInvitation:
 global:
   project_name: Yziplan
   event: événement
-  user_anonyme: Ysiplaneur anonyme
+  user_anonyme: Yziplaneur anonyme
   link:
     top: Haut
   button:
@@ -413,7 +422,7 @@ global:
     submit: Soumettre
     edit: Editer
     save: Sauvegarder
-    previousStep: Précédent
+    previousStep: Retour
     nextStep: Suivant
     delete: Supprimer
     add: Ajouter
@@ -425,6 +434,8 @@ global:
     close: Fermer
     skip: Passer
     finish: Terminer
+    later: Plus tard
+    decline: Non merci
   success:
     data_saved: Données sauvegardées
   error:
@@ -439,8 +450,10 @@ global:
   swal:
     title:
       error: Erreur
-      warning: Avertissement
-      success: OK
+      warning: Attention
+      success:
+  form:
+    optional: Optionnel
 
 # Enums
 gender:
@@ -495,11 +508,19 @@ email:
 
 # Modale suggestion :
 suggestion:
-  button: Envoyer une suggestion
-  modale:
-    texte: Envoyer une suggestion, un bogue, ...
-    champ_nom: Votre Nom
-    champ_email: Votre Email
+  button: On t'écoute
+  modal:
+    text: Envoyer une suggestion, un bogue, ...
+    form:
+      title:
+        label: Titre
+      description:
+        label: Description
+        placeholder: Décris-nous tes remarques, suggestions, bugs, messages de soutien, ...
+      name:
+        label: Ton nom
+      email:
+        label: Ton e-mail
   success:
     titre: Merci!
     message: Votre suggestion a bien été envoyée. Nous l'étudierons avec attention.
@@ -507,19 +528,19 @@ suggestion:
 index:
   header:
     title: Yziplan
-    subtitle: Organisez-vous avec vos amis.
+    subtitle: Organisez-vous entre amis.
     button: C'est parti!
   about:
     title: Pour s'organiser c'est Yzi!
-    subtitle: Organisez soirées, activités, sorties, vacances,... avec vos amis en toute simplicité.
+    subtitle: Organise soirées, activités, sorties, vacances,... avec tes amis en toute simplicité.
   section_use:
-    title: Fonctionnement :
-    create: Créez votre événement
-    share: Partagez-le
+    title: Comment ça marche
+    create: Crée l'événement
+    share: Partage-le
     organise: Organisez-vous
     enjoy: Profitez !
   section_event:
-    tiltle: Pour tous vos événements :
+    tiltle: Pour tous les événements :
     party: Soirée
     after-work: After-work
     holidays: Vacances
@@ -529,9 +550,9 @@ index:
     barbecue: Barbecue
     weekend: Week-end
   section_feature:
-    title: Fonctionnalités :
+    title: Fonctionnalités
   section_quote:
-    title: Ils en parlent :
+    title: Ils en parlent
     quote1:
       sentense1: On devait organiser une mission d'infiltration.
       sentense2: On pensait que c'était mission impossible, puis on a découvert Yziplan.
@@ -544,10 +565,9 @@ index:
       sentense2: Yziplan nous a permis d'atteindre notre objectif en toute sérénité!
       author: Daniel "Danny" Ocean - Ocean's Eleven
   section_social:
-    title: Suivez-nous sur les réseaux sociaux!
-    subtitle: Et ne manquez rien des nouveautés à venir.
-  callout1: Sortez
-  callout2: Amusez-vous
-  callout3: Planifiez
-  callout4: Profitez
-
+    title: Retrouve-nous sur les réseaux sociaux!
+    subtitle: Et ne manque rien des nouveautés à venir
+  callout1: Amuse-toi
+  callout2: Partage tes activités
+  callout3: S'organiser devient un plaisir
+  callout4: Et surtout profite!

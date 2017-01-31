@@ -1,0 +1,42 @@
+{% extends "@App/Event/wizard/new_event_wizard_page.html.twig" %}
+
+{# Données d'entrée :
+- event (Event) L'événement en cours de création
+#}
+
+{% block wizard_step_title %}
+    {{ "event.wizard.add_module.title"|trans }}
+    <small>{{ "event.wizard.add_module.subtitle"|trans }}</small>
+{% endblock %}
+
+{% block wizard_step %}
+    <div class="row">
+        <div class="col-xs-3 text-center">
+            <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHAT')}) }}" id="addWhatPollModule"> <i class="zmdi zmdi-pin-help zmdi-hc-3x waves-effect"></i>
+                <p>{{ "pollmodule.add_link.what"|trans }}</p></a>
+        </div>
+        <div class="col-xs-3 text-center">
+            <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHEN')}) }}" id="addWhenPollModule"> <i class="zmdi zmdi-calendar zmdi-hc-3x waves-effect"></i>
+                <p>{{ "pollmodule.add_link.when"|trans }}</p></a>
+        </div>
+        <div class="col-xs-3 text-center">
+            <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHERE')}) }}" id="addWherePollModule"> <i class="zmdi zmdi-pin zmdi-hc-3x waves-effect"></i>
+                <p>{{ "pollmodule.add_link.where"|trans }}</p></a>
+        </div>
+        <div class="col-xs-3 text-center">
+            <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHO_BRINGS_WHAT')}) }}" id="addWhoBringsWhatPollModule"> <i
+                        class="zmdi zmdi-format-list-bulleted zmdi-hc-3x waves-effect"></i>
+                <p>{{ "pollmodule.add_link.whobringswhat"|trans }}</p></a>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <a href="{{ path('wizardNewEvent',{'token':event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_INVITATIONS")}) }}" class="btn btn-flat m-b-10"
+           role="button">{{ "global.button.previousStep"|trans }}</a> <a href="{{ path('displayEvent',{'token':event.token}) }}" class="btn btn-flat f-700 c-blue m-b-10"
+                                                                         role="button">{{ "global.button.later"|trans }}</a>
+    </div>
+{% endblock wizard_step %}

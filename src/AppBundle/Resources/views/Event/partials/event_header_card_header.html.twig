@@ -2,10 +2,20 @@
 - userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
 - editEvent (boolean) If true : link to change the event picture is displayed
 #}
+{% set event = userEventInvitation.event %}
 
-<div id="event-header-card-header" class="card-header ch-img"
-     style="background-image: url({{ userEventInvitation.event.picture is not null ? asset("uploads/events/pictures/"~userEventInvitation.event.picture) :
-     asset("bundles/app/img/event-header/organisation.jpeg") }});height:250px;">
+<div id="event-header-card-header" class="card-header ch-img p-0">
+
+    <div id="header-picture-focuspoint" class="focuspoint"
+         data-focus-x="{{ event.pictureFocusX is not null ? event.pictureFocusX:0 }}"
+         data-focus-y="{{ event.pictureFocusY is not null ? event.pictureFocusY:0 }}"
+         data-image-w="{{ event.pictureWidth is not null ? event.pictureWidth:1024 }}"
+         data-image-h="{{ event.pictureHeight is not null ? event.pictureHeight:669 }}">
+        <img src="{{ userEventInvitation.event.picture is not null ? asset("uploads/events/pictures/"~userEventInvitation.event.picture) :
+        asset("bundles/app/img/event-header/organisation.jpeg") }}" alt="{{ userEventInvitation.event.name }}" height="250px"/>
+    </div>
+
+
     {% if editEvent %}
         <a href="#event_picture_update_modal" class="c-white event-title event-change-picture" data-toggle="modal">
                 <span class="zmdi-hc-stack zmdi-hc-2x">
@@ -21,4 +31,9 @@
         <button id="event_header_edit_information" data-event-header-action="edit" data-event-header-action-target="#pmbblock_event_header"
                 class="btn btn-default btn-float waves-effect waves-circle waves-float"><i class="zmdi zmdi-edit"></i></button>
     {% endif %}#}
+    <script>
+        $(document).ready(function () {
+            $('#header-picture-focuspoint').focusPoint();
+        });
+    </script>
 </div>

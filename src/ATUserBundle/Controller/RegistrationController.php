@@ -63,12 +63,31 @@ class RegistrationController extends BaseController
 
                 $userManager->updateUser($user);
 
+                // Check for a return path and store it before redirect
+                if ($request->hasSession()) {
+                    // initialize the session for preventing SessionUnavailableException
+                    $session = $request->getSession();
+                    $session->start();
+                    $firewallName = $this->container->getParameter('fos_user.firewall_name');
+                    $sessionKey = '_security.'.$firewallName .'.target_path';
+                    if ($targetUrl = $request->get("_target_path")) {
+                        $session->set($sessionKey, $targetUrl);
+                    }
+                }
+
                 if (null === $response = $formEvent->getResponse()) {
                     $url = $this->generateUrl('fos_user_registration_confirmed');
                     $response = new RedirectResponse($url);
                 }
 
                 $dispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
+                return $response;
+            }
+
+            $formEvent = new FormEvent($form, $request);
+            $dispatcher->dispatch(FOSUserEvents::REGISTRATION_FAILURE, $formEvent);
+
+            if (null !== $response = $formEvent->getResponse()) {
                 return $response;
             }
         }

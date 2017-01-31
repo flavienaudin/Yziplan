@@ -31,7 +31,7 @@ class EventInvitationType extends AbstractType
             $form = $formEvent->getForm();
             /** @var EventInvitation $eventInvitation */
             $eventInvitation = $formEvent->getData();
-            $displayableName = $eventInvitation->getDisplayableName();
+            $displayableName = $eventInvitation->getDisplayableName(false);
             $form
                 ->add('guestName', TextType::class, array(
                     'required' => true,

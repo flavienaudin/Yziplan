@@ -28,6 +28,9 @@ parameters:
     oauth.facebook.id: ~
     oauth.facebook.secret: ~
 
+    # Google Analytics (beta : UA-89508627-1)
+    universal_analytics: null
+
     # API configuration
     maps_api.google.id: ~
 

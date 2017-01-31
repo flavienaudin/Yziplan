@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Module;
 
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Utils\enum\PollElementType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -276,5 +277,19 @@ class PollProposal
             $pollProposalResponses[] = $this->getPollProposalResponsesOfModuleInvitation($moduleInvitation);
         }
         return $pollProposalResponses;
+    }
+
+    /**
+     * @return PollProposalElement
+     */
+    public function getPollProposalEndDateElement()
+    {
+        foreach ($this->pollProposalElements as $elt){
+            /** @var PollProposalElement $elt */
+            if ($elt->getPollElement()->getType() == PollElementType::END_DATETIME){
+                return $elt;
+            }
+        }
+        return null;
     }
 }

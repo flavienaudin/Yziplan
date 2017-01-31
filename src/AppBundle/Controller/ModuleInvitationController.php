@@ -38,7 +38,7 @@ class ModuleInvitationController extends Controller
                     $pollroposalResponseManager = $this->get("at.manager.pollproposal_response");
                     $pollroposalResponseManager->answerPollModuleProposal($moduleInvitation, $request->request->get('pollProposalId'), $request->request->get('value'));
                     $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#resultCellPollProposal_' . $request->request->get('pollProposalId')] =
-                        $pollroposalResponseManager->displayPollProposalRowResultPartial($request->request->get('pollProposalId'), $moduleInvitation);
+                        $pollroposalResponseManager->displayPollProposalRowResultPartial($request->request->get('pollProposalId'));
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('moduleInvitation.error.message.unauthorized_access');

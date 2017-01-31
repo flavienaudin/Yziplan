@@ -43,10 +43,12 @@ twig:
     globals:
         locale: "%locale%"
         base_template: "base.html.twig"
+        google_analytics_ua: "%universal_analytics%"
         google_client_id: "%oauth.google.id%"
         google_maps_api_id: "%maps_api.google.id%"
         facebook_client_id: "%oauth.facebook.id%"
         display_beta: "%is_beta%"
+        form_client_validation: true
     form_themes:
         - 'Form/app_forms_layout.html.twig'
 
@@ -142,9 +144,9 @@ fos_user:
 hwi_oauth:
     firewall_names: [main]
     # optional target_path_parameter to provide an explicit return URL
-    #target_path_parameter: _target_path
+    target_path_parameter: _target_path
     # ne pas utiliser le referer sinon redirection vers le formulaire de login
-    use_referer: false
+    use_referer: true
     connect:
         account_connector: at.provider.user
     resource_owners:

@@ -5,21 +5,52 @@
 #}
 
 {% block form_start %}
-    {{ form_start(userEventInvitationForm, {
+    {{ form_start(userEventInvitationForm, {'attr':{'id':'profileForm'},
         'action': path('wizardNewEvent', {'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")})}) }}
 {% endblock form_start %}
 
 {% block action_buttons %}
     <div class="text-center">
         <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_MAIN")}) }}"
-           class="btn btn-default waves-effect m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
-        <button type="submit" class="btn btn-primary waves-effect m-b-10">{{ "global.button.nextStep"|trans }}</button>
-        <div>
-            <a href="{{ path("displayEvent", {'token' : event.token}) }}" class="">{{ "event.wizard.button.skip_wizard"|trans }}</a>
-        </div>
+           class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
+        <button id="profile_form_submit" type="submit" class="btn btn-primary m-b-10">{{ "global.button.nextStep"|trans }}</button>
     </div>
 {% endblock action_buttons %}
 
-{% block js_form_submission %}{% endblock js_form_submission %}
+{% block js_script %}
+    {% use "@App/Event/partials/block/invitationUrl_copyClipboardInput.html.twig" %}
+    {% set htmlInputBlock = block('inviationUrl_copyCLipboardInput_block') %}
+    <script>
+        $(document).ready(function () {
+            new Clipboard('#btn_copy_invitation_url');
 
-{% block js_functions %}{% endblock js_functions %}
+            $('button#profile_form_submit').on("click", function (e) {
+                var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
+                if (profileEmail.trim() == "") {
+                    e.preventDefault();
+                    swal({
+                        titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
+                        html: '{{ htmlInputBlock|raw }}<br>{{ "eventInvitation.profile.card.guestemail_empty_alert.html"|trans }}',
+                        input: "email",
+                        showCancelButton: true,
+                        buttonsStyling: false,
+                        cancelButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.cancel"|trans }}",
+                        cancelButtonClass: "btn btn-default btn-link btn-lg c-blue m-b-10 m-l-5 m-r-5",
+                        confirmButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.confirm"|trans }}",
+                        confirmButtonClass: "btn btn-primary btn-lg m-b-10  m-l-5 m-r-5",
+                        reverseButtons: true,
+                        animation: "slide-from-top",
+                        inputPlaceholder: "{{ "eventInvitation.form.email.placeholder"|trans|raw }}"
+                    }).then(function (inputValue) {
+                        $('#{{ userEventInvitationForm.email.vars.id }}').val(inputValue);
+                        $('form#profileForm').submit();
+                    }, function (dismiss) {
+                        if (dismiss == 'cancel') {
+                            $('form#profileForm').submit();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock js_script %}

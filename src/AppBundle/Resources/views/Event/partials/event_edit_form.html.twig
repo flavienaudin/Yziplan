@@ -52,8 +52,8 @@
 
             {% block action_buttons %}
                 <div class="text-center">
-                    <button class="btn btn-default btn-sm" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
-                    <button type="submit" class="btn btn-primary waves-effect" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                    <button class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                    <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
                         {{ "global.button.save"|trans }}
                     </button>
                     <div class="visible-xs visible-sm m-b-10"></div>
@@ -223,7 +223,10 @@
                 }, function () {
                     $('#eventEditModal').modal('handleUpdate');
                 }, function () {
-                    $('.grid').masonry('layout');
+                    $grid = $('.grid');
+                    if($grid[0]) {
+                        $grid.masonry('layout');
+                    }
                 });
             });
             // Update the Event name while editing the form field

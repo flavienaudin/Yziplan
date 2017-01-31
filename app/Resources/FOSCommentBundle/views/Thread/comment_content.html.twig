@@ -12,18 +12,20 @@ Données d'entrée :
  - comment (Comment) Le commentaire courant
  - depth (int) Profondeur en cours d'affichage
  - view (string) Mode d'affichage
-  - userEventInvitation (EventInvitation|null) L'invitation en cours
+ - userEventInvitation (EventInvitation|null) L'invitation en cours
 #}
+
+{% set userEventInvitation = userEventInvitation is defined?userEventInvitation:null %}
 
 {% block fos_comment_comment %}
     <div id="fos_comment_{{ comment.id }}" class="fos_comment_comment_show fos_comment_comment_depth_{{ depth }} media"
          {% if parent is defined and parent is not null %}data-parent="{{ parent.id }}"{% endif %}>
         {% if comment.author is defined %}
-            {% set isConnected = (comment.author is not null and userEventInvitation is defined and comment.author == userEventInvitation) %}
+            {% set isConnected = (comment.author is not null and userEventInvitation is not null and comment.author == userEventInvitation) %}
             <div class="{{ isConnected?'pull-right':'pull-left' }}">
                 <div class="userInvitation-avatar">
                     <div class="avatar-img-container-sm">
-                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : comment.author, isUserConnected : isConnected}) }}
+                        {{ include("@App/Avatar/partials/avatar_display.html.twig",{"invitation" : comment.author, "userEventInvitation": userEventInvitation}) }}
                     </div>
                 </div>
             </div>

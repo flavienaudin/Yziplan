@@ -42,6 +42,7 @@ class EventController extends Controller
     const WIZARD_NEW_EVENT_STEP_MAIN = "main";
     const WIZARD_NEW_EVENT_STEP_PROFILE = "profile";
     const WIZARD_NEW_EVENT_STEP_INVITATIONS = "invitations";
+    const WIZARD_NEW_EVENT_STEP_ADD_MODULE = "addmodule";
 
     /**
      * @Route("/new", name="createEvent")
@@ -77,61 +78,59 @@ class EventController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         } else {
-            if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
-                if ($stepIndex == self::WIZARD_NEW_EVENT_STEP_MAIN) {
-                    // Event Form :
-                    /** @var Form $eventForm */
-                    $eventForm = $eventManager->initEventForm();
-                    $eventForm->handleRequest($request);
-                    if ($eventForm->isSubmitted()) {
-                        if ($eventForm->isValid()) {
-                            $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
-                            return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_PROFILE));
-                        }
+            $this->denyAccessUnlessGranted(EventVoter::EDIT, $userEventInvitation);
+            if ($stepIndex == self::WIZARD_NEW_EVENT_STEP_MAIN) {
+                // Event Form :
+                /** @var Form $eventForm */
+                $eventForm = $eventManager->initEventForm();
+                $eventForm->handleRequest($request);
+                if ($eventForm->isSubmitted()) {
+                    if ($eventForm->isValid()) {
+                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_PROFILE));
                     }
-
-                    return $this->render("@App/Event/wizard/step_event_main.html.twig", array(
-                        'event' => $currentEvent,
-                        'userEventInvitation' => $userEventInvitation,
-                        'eventForm' => $eventForm->createView()
-                    ));
-                } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_PROFILE) {
-                    // Profile Form :
-                    /** @var Form $eventForm */
-                    $eventProfileForm = $eventInvitationManager->createEventInvitationForm();
-                    $eventProfileForm->handleRequest($request);
-                    if ($eventProfileForm->isSubmitted()) {
-                        if ($eventProfileForm->isValid()) {
-                            $eventInvitationManager->treatEventInvitationFormSubmission($eventProfileForm);
-                            return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_INVITATIONS));
-                        }
-                    }
-                    return $this->render("@App/Event/wizard/step_event_profile.html.twig", array(
-                        'event' => $currentEvent,
-                        'userEventInvitation' => $userEventInvitation,
-                        'userEventInvitationForm' => $eventProfileForm->createView()
-                    ));
-                } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_INVITATIONS) {
-                    // Invitations Form :
-                    $eventInvitationsForm = $eventManager->createEventInvitationsForm();
-                    $eventInvitationsForm->handleRequest($request);
-                    if ($eventInvitationsForm->isSubmitted()) {
-                        if ($eventInvitationsForm->isValid()) {
-                            $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $request->get('sendInvitations'));
-                            return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
-                        }
-                    }
-                    return $this->render("@App/Event/wizard/step_event_invitations.html.twig", array(
-                        'event' => $currentEvent,
-                        'userEventInvitation' => $userEventInvitation,
-                        'invitationsForm' => $eventInvitationsForm->createView()
-                    ));
-                } else {
-                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.wizard.error.message.wrong_step'));
-                    return $this->redirectToRoute('home');
                 }
+
+                return $this->render("@App/Event/wizard/step_event_main.html.twig", array(
+                    'event' => $currentEvent,
+                    'userEventInvitation' => $userEventInvitation,
+                    'eventForm' => $eventForm->createView()
+                ));
+            } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_PROFILE) {
+                // Profile Form :
+                /** @var Form $eventForm */
+                $eventProfileForm = $eventInvitationManager->createEventInvitationForm();
+                $eventProfileForm->handleRequest($request);
+                if ($eventProfileForm->isSubmitted()) {
+                    if ($eventProfileForm->isValid()) {
+                        $eventInvitationManager->treatEventInvitationFormSubmission($eventProfileForm);
+                        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_INVITATIONS));
+                    }
+                }
+                return $this->render("@App/Event/wizard/step_event_profile.html.twig", array(
+                    'event' => $currentEvent,
+                    'userEventInvitation' => $userEventInvitation,
+                    'userEventInvitationForm' => $eventProfileForm->createView()
+                ));
+            } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_INVITATIONS) {
+                // Invitations Form :
+                $eventInvitationsForm = $eventManager->createEventInvitationsForm();
+                $eventInvitationsForm->handleRequest($request);
+                if ($eventInvitationsForm->isSubmitted()) {
+                    if ($eventInvitationsForm->isValid()) {
+                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $request->get('sendInvitations'));
+                        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_ADD_MODULE));
+                    }
+                }
+                return $this->render("@App/Event/wizard/step_event_invitations.html.twig", array(
+                    'event' => $currentEvent,
+                    'userEventInvitation' => $userEventInvitation,
+                    'invitationsForm' => $eventInvitationsForm->createView()
+                ));
+            } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_ADD_MODULE) {
+                return $this->render("@App/Event/wizard/step_event_addModule.html.twig", array('event' => $currentEvent));
             } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.error.message.unauthorized_access'));
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.wizard.error.message.wrong_step'));
                 return $this->redirectToRoute('home');
             }
         }
@@ -218,7 +217,7 @@ class EventController extends Controller
                                 'userEventInvitation' => $userEventInvitation,
                                 'event' => $currentEvent
                             ));
-                        $data[AppJsonResponse::DATA]['userDisplayableName'] = $userEventInvitation->getDisplayableName();
+                        $data[AppJsonResponse::DATA]['userDisplayableName'] = $userEventInvitation->getDisplayableName(false);
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitationProfile_formContainer'] =
@@ -389,7 +388,7 @@ class EventController extends Controller
                         if ($moduleForm->isValid()) {
                             $currentModule = $moduleManager->treatUpdateFormModule($moduleForm);
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['.module-'.$currentModule->getToken().'-description'] = $currentModule->getDescription();
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['.module-' . $currentModule->getToken() . '-description'] = $currentModule->getDescription();
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-header-' . $currentModule->getToken()] =
                                 $this->renderView("@App/Event/module/displayModule_header.html.twig", array(
                                     'module' => $moduleDescription['module'],
@@ -493,6 +492,24 @@ class EventController extends Controller
             }
 
             $imageFile = $request->files->get('eventPictureInput');
+            $pictureFocusX = $request->get('focusX');
+            if ($pictureFocusX == null) {
+                $pictureFocusX = 0;
+            } elseif ($pictureFocusX < -1) {
+                $pictureFocusX = -1;
+            } elseif ($pictureFocusX > 1) {
+                $pictureFocusX = 1;
+            }
+
+            $pictureFocusY = $request->get('focusY');
+            if ($pictureFocusY == null) {
+                $pictureFocusY = 0;
+            } elseif ($pictureFocusY < -1) {
+                $pictureFocusY = -1;
+            } elseif ($pictureFocusY > 1) {
+                $pictureFocusY = 1;
+            }
+
             /** @var EventManager $eventManager */
             $eventManager = $this->get("at.manager.event");
             $eventManager->setEvent($event);
@@ -500,11 +517,27 @@ class EventController extends Controller
                 $this->get('at.uploader.event_picture')->delete($event->getPicture());
             }
             $event->setPicture($imageFile);
+            if ($imageFile != null) {
+                $imageSizes = getimagesize($imageFile);
+                $event->setPictureWidth($imageSizes[0]);
+                $event->setPictureHeight($imageSizes[1]);
+                $event->setPictureFocusX($pictureFocusX);
+                $event->setPictureFocusY($pictureFocusY);
+            } else {
+                $event->setPictureWidth(null);
+                $event->setPictureHeight(null);
+                $event->setPictureFocusX(null);
+                $event->setPictureFocusY(null);
+            }
             $eventManager->persistEvent();
             $data = array();
             if ($event->getPicture() != null) {
                 $avatarDirURL = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/' . $this->get('at.uploader.event_picture')->getWebRelativeTargetDir();
-                $data[AppJsonResponse::DATA] = $avatarDirURL . '/' . $event->getPicture();
+                $data[AppJsonResponse::DATA]['picture_url'] = $avatarDirURL . '/' . $event->getPicture();
+                $data[AppJsonResponse::DATA]['picture_focus_x'] = $event->getPictureFocusX();
+                $data[AppJsonResponse::DATA]['picture_focus_y'] = $event->getPictureFocusY();
+                $data[AppJsonResponse::DATA]['picture_width'] = $event->getPictureWidth();
+                $data[AppJsonResponse::DATA]['picture_height'] = $event->getPictureHeight();
             }
             return new AppJsonResponse($data, Response::HTTP_OK);
 

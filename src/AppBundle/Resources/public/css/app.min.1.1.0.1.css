@@ -3782,6 +3782,7 @@ select[multiple].input-lg {
     margin-bottom: 0;
     font-weight: 400;
     text-align: center;
+    text-transform: uppercase;
     vertical-align: middle;
     touch-action: manipulation;
     cursor: pointer;
@@ -3789,7 +3790,7 @@ select[multiple].input-lg {
     border: 1px solid transparent;
     white-space: nowrap;
     padding: 6px 12px;
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.42857143;
     border-radius: 2px;
     -webkit-touch-callout: none;
@@ -4672,28 +4673,26 @@ input[type="button"].btn-block {
 /** Button flat */
 .btn-flat {
     border: none;
-    border-radius: 2px;
-    display: inline-block;
-    height: 36px;
-    line-height: 36px;
-    padding: 0 2rem;
+    line-height: 1.42857143;
+    padding: 6px 12px;
     text-transform: uppercase;
-    vertical-align: middle;
     -webkit-tap-highlight-color: transparent;
 
+    color: #797979;
     box-shadow: none;
     background-color: transparent;
-    cursor: pointer;
     transition: background-color .2s;
 }
 
 .btn-flat:focus, .btn-flat:active {
     background-color: transparent;
+    color: #0a0a0a;
 }
 
 .btn-flat:focus, .btn-flat:hover {
     background-color: rgba(0, 0, 0, 0.1);
     box-shadow: none;
+    color: #0a0a0a;
 }
 
 .btn-flat:active {
@@ -4705,7 +4704,6 @@ input[type="button"].btn-block {
     color: #b3b3b3 !important;
     cursor: default;
 }
-
 
 /** effects */
 .fade {
@@ -9854,6 +9852,10 @@ a.waves-effect .waves-ripple {
     border: 0 !important;
 }
 
+.b-1 {
+    border: 1px solid #cccccc !important;
+}
+
 /*
  * width
  */
@@ -10060,7 +10062,7 @@ pre {
         padding-right: 0;
     }
 
-    #content > .container .row{
+    #content > .container .row {
         margin-left: 0;
         margin-right: 0;
     }
@@ -11273,7 +11275,6 @@ pre {
     }
 }
 
-
 .card-body > .btn-float {
     bottom: 30px;
     right: 30px;
@@ -12441,7 +12442,7 @@ pre {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.16), 0 2px 10px rgba(0, 0, 0, 0.12);
 }
 
-.btn:not(.palette-White):not(.btn-default):not(.btn-flat) {
+.btn:not(.palette-White):not(.btn-default):not(.btn-flat):not(.btn-link) {
     color: #fff;
 }
 
@@ -12641,7 +12642,7 @@ fieldset[disabled] .btn-inverse:active {
     margin-right: 5px;
 }
 
-.btn-lg.btn-icon-text > .zmdi{
+.btn-lg.btn-icon-text > .zmdi {
     font-size: 17px;
     vertical-align: baseline;
     margin-top: 0;

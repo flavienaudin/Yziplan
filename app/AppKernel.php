@@ -17,7 +17,6 @@ class AppKernel extends Kernel
             new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
-            //new YziCommentBundle\YziCommentBundle(),
 
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
 
@@ -25,9 +24,6 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new ATUserBundle\ATUserBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
-
-            // KeyValueFormType
-            new Burgov\Bundle\KeyValueFormBundle\BurgovKeyValueFormBundle(),
 
             // FosComment
             new FOS\RestBundle\FOSRestBundle(),

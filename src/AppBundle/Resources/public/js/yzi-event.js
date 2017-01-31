@@ -4,17 +4,25 @@
 
 $(document).ready(function () {
     initialiseYziplanMasonry();
-    $('.grid').masonry('layout');
+    $grid = $('.grid');
+    if($grid[0]) {
+        $grid.masonry('layout');
+    }
 
     window.onresize = function (event) {
-        $('.grid').masonry('layout');
+        $grid = $('.grid');
+        if($grid[0]) {
+            $grid.masonry('layout');
+        }
     };
 
     new Clipboard("#btn_url_event_public_invitation");
-    new Clipboard('#btn_copy_invitation_url');
 
     $('textarea, .auto-size').on('autosize:resized', function () {
-        $('.grid').masonry('layout');
+        $grid = $('.grid');
+        if($grid[0]) {
+            $grid.masonry('layout');
+        }
     });
 
 });

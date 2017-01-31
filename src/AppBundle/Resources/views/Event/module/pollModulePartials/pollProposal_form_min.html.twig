@@ -56,7 +56,10 @@
                         }
                     }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
                         $('#module-{{ userModuleInvitation.module.token }}').trigger("resize");
-                        $('.grid').masonry('layout');
+                        $grid = $('.grid');
+                        if($grid[0]) {
+                            $grid.masonry('layout');
+                        }
                     }
                 );
             }

@@ -16,15 +16,4 @@ Données d'entrée :
             'userEventInvitationForm' : userEventInvitationForm
         }) }}
     </div>
-
-    {% if userEventInvitation.applicationUser is null or userEventInvitation.applicationUser.accountUser is null %}
-        <div class="card-footer card-padding">
-            <label class="control-label text-info" for="url_user_invitation">{{ "eventInvitation.url.text"|trans }}&nbsp;: </label>
-            <div class="input-group">
-                <input id="url_user_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}"> <span
-                        class="input-group-btn"><button type="button" id="btn_copy_invitation_url" class="btn btn-primary" data-clipboard-target="#url_user_invitation">
-                        <i class="zmdi zmdi-copy"></i> {{ "global.button.copy"|trans }}</button></span>
-            </div>
-        </div>
-    {% endif %}
 </div>

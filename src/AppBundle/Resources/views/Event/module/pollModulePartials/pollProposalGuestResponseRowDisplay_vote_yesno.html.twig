@@ -11,30 +11,26 @@
 {% endif %}
 <div id="popover-content_{{ pollProposal.id }}" class="hide">
     <div id="pollProposalReponse_{{ pollProposal.id }}" class="btn-group-vertical btn-group-lg pollproposal-response m-t-15" data-toggle="buttons" role="group">
-        <label id="pollProposalReponse_{{ pollProposal.id }}_yes"
-               class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}">
-            <input type="radio" autocomplete="off"
-                   name="pollProposalReponse_{{ pollProposal.id }}"
-                   value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"> <i class="zmdi zmdi-thumb-up"></i>
-        </label>
+        <label id="pollProposalReponse_{{ pollProposal.id }}_yes" for="pollProposalReponse_{{ pollProposal.id }}_yes"
+               class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}"> <input type="radio" autocomplete="off"
+                                                                                                                                                              name="pollProposalReponse_{{ pollProposal.id }}_yes"
+                                                                                                                                                              value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"><i
+                    class="zmdi zmdi-thumb-up"></i> </label>
         {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE') %}
-            <label id="pollProposalReponse_{{ pollProposal.id }}_maybe"
-                   class="btn response-maybe bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}">
-                <input type="radio"
-                       autocomplete="off"
-                       name="pollProposalReponse_{{ pollProposal.id }}"
-                       value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"> <i
-                        class="zmdi zmdi-thumb-up-down"></i> </label>
+            <label id="pollProposalReponse_{{ pollProposal.id }}_maybe" for="pollProposalReponse_{{ pollProposal.id }}_maybe"
+                   class="btn response-maybe bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}"> <input type="radio" autocomplete="off"
+                                                                                                                                                                      name="pollProposalReponse_{{ pollProposal.id }}_maybe"
+                                                                                                                                                                      value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}">
+                <i class="zmdi zmdi-thumb-up-down"></i> </label>
         {% endif %}
-        <label id="pollProposalReponse_{{ pollProposal.id }}_no" class="btn response-no bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}">
-            <input type="radio" autocomplete="off"
-                   name="pollProposalReponse_{{ pollProposal.id }}"
-                   value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"> <i class="zmdi zmdi-thumb-down"></i>
-        </label>
+        <label id="pollProposalReponse_{{ pollProposal.id }}_no" for="pollProposalReponse_{{ pollProposal.id }}_no"
+               class="btn response-no bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}"> <input type="radio" autocomplete="off"
+                                                                                                                                                            name="pollProposalReponse_{{ pollProposal.id }}_no"
+                                                                                                                                                            value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}">
+            <i class="zmdi zmdi-thumb-down"></i> </label>
     </div>
 </div>
-<button id="pollmodule_button_{{ pollProposal.id }}" class="btn c-bluegray waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title=""
-        data-original-title="">
+<button id="pollmodule_button_{{ pollProposal.id }}" class="btn c-bluegray waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title="" data-original-title="">
     {% if responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
         <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
     {% elseif responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}

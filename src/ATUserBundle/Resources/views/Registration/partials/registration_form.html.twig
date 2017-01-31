@@ -1,5 +1,9 @@
 {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register')}) }}
 
+{% if app.request.get('parentRequest') is not null %}
+    <input type="hidden" name="_target_path" value="{{ url(app.request.get('parentRequest').get('_route'), app.request.get('parentRequest').get('_route_params')) }}"/>
+{% endif %}
+
 <div class="input-group fg-float {% if (not form.publicName.vars.compound or form.publicName.vars.force_error|default(false)) and not form.publicName.vars.valid %} has-error{% endif %}">
     <span class="input-group-addon"><i class="zmdi zmdi-account-box"></i></span>
     <div class="fg-line">

@@ -15,6 +15,12 @@
     font-weight: 700;
 }
 
+@media (max-width: 767px) {
+    aside.callout .text-vertical-center h1 {
+        font-size: 45px;
+    }
+}
+
 /* Custom Horizontal Rule */
 
 hr.small {
@@ -106,7 +112,7 @@ hr.small {
     height: 100%;
     width: 100%;
     color: #ffffff;
-    background:  #009688;
+    background: #009688;
     text-decoration: none;
     -webkit-transition: opacity 500ms;
     -moz-transition: opacity 500ms;
@@ -114,7 +120,8 @@ hr.small {
     transition: opacity 500ms;
 
 }
-.event-item:hover .event-text  {
+
+.event-item:hover .event-text {
     opacity: 0.8;
 }
 
@@ -132,11 +139,12 @@ hr.small {
     opacity: 0.8;
 }
 
-#index-feature{
+#index-feature {
     height: 400px;
-    width: 100vw ;
-    position:relative;
+    width: 100vw;
+    position: relative;
 }
+
 /****************************************************************************************************
 ******************************                 Quote                        *************************
 *************************************************************************************************** */
@@ -165,7 +173,7 @@ blockquote:before {
     color: #7a7a7a;
 }
 
-blockquote.blockquote-reverse::before{
+blockquote.blockquote-reverse::before {
     right: -10px;
     content: "\201D";
 }

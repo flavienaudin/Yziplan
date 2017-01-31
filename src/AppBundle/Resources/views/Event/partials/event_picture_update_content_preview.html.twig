@@ -1,0 +1,128 @@
+{# données d'entrée :
+- userEventInvitation (EventInvitation) The EventInvitation of the user
+#}
+{% set focuspointTarget = asset('bundles/app/img/focuspoint-target.png') %}
+<div>
+    <div id="kv-avatar-errors-1" class="center-block" style="width:95%; display:none"></div>
+
+    <div class="kv-avatar center-block" style="width:100%">
+        <input id="eventPictureInput" name="eventPictureInput" type="file" class="file-loading">
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var pictureFocusX = 0, pictureFocusY = 0,
+                fileInputOptions = {
+                    uploadUrl: "{{ path('updateEventPicture', {"token":userEventInvitation.event.token}) }}",
+                    uploadExtraData: function (previewId, index) {
+                        return {
+                            focusX: pictureFocusX,
+                            focusY: pictureFocusY
+                        };
+                    },
+                    browseOnZoneClick: false,
+                    overwriteInitial: true,
+                    maxFileSize: 2000,
+                    showClose: false,
+                    fileActionSettings: {
+                        showUpload: false,
+                        showZoom: false,
+                        showDrag: false
+                    },
+                    showCaption: false,
+                    browseLabel: '',
+                    removeLabel: '',
+                    uploadTitle: "{{ 'event.picture.update_modal.button.submit_title'|trans }}",
+                    uploadLabel: "{{ 'global.button.save'|trans }}",
+                    //browseIcon: '<i class="zmdi zmdi-folder"></i>',
+                    //removeIcon: '<i class="zmdi zmdi-delete"></i>',
+                    //removeTitle: 'Cancel or reset changes',
+                    elErrorContainer: '#kv-avatar-errors-1',
+                    msgErrorClass: 'alert alert-block alert-danger',
+                    defaultPreviewContent: '<i class="zmdi zmdi-image-o zmdi-hc-5x"></i>',
+                    layoutTemplates: {
+                        main2: '{preview} <div class="text-center">{remove} {browse} {upload}</div>'
+                    },
+                    previewTemplates: {
+                        image: '<div class="file-preview-frame" id="{previewId}" data-fileindex="{fileindex}" data-template="{template}">\n' +
+                        '   <div class="kv-file-content">' +
+                        '       <div class="helper-tool-target">' +
+                        '           <img src="{data}" class="kv-preview-data file-preview-image helper-tool-img" title="{caption}" alt="{caption}" style="max-height: 300px;">\n' +
+                        '           <img class="reticle" src="{{ focuspointTarget }}">' +
+                        '           <img src="{data}" class="kv-preview-data file-preview-image target-overlay" title="{caption}" alt="{caption}" style="max-height: 300px;">\n' +
+                        '       </div>' +
+
+                        '   </div>\n' +
+                        /*'   {footer}\n' +*/
+                        '</div>\n'
+                    },
+                    allowedFileExtensions: ["jpg", "jpeg", "png", "gif"]
+                };
+
+            {% if app.request.attributes.has('_locale') %}
+            fileInputOptions['language'] = '{{ app.request.attributes.get('_locale') }}';
+            {% endif %}
+
+            // initialize with defaults
+            $('#eventPictureInput').fileinput(fileInputOptions)
+                .on('fileselect', function (e, numFiles, label) {
+                    var $fileinput = $(this);
+                    $('#event_picture_update_modal').children('img.reticle').show();
+                    $('img.helper-tool-img, img.target-overlay').on('click', function (e) {
+                        var imageW = $(this).width();
+                        var imageH = $(this).height();
+
+                        //Calculate FocusPoint coordinates
+                        var offsetX = e.pageX - $(this).offset().left;
+                        var offsetY = e.pageY - $(this).offset().top;
+                        var focusX = (offsetX / imageW - .5) * 2;
+                        var focusY = (offsetY / imageH - .5) * -2;
+
+                        //Calculate CSS Percentages
+                        var percentageX = (offsetX / imageW) * 100;
+                        var percentageY = (offsetY / imageH) * 100;
+                        var backgroundPosition = percentageX.toFixed(0) + '% ' + percentageY.toFixed(0) + '%';
+                        var backgroundPositionCSS = 'background-position: ' + backgroundPosition + ';';
+
+                        pictureFocusX = focusX.toFixed(2);
+                        pictureFocusY = focusY.toFixed(2);
+
+                        //Leave a sweet target reticle at the focus point.
+                        $('.reticle').css({
+                            'top': percentageY + '%',
+                            'left': percentageX + '%'
+                        });
+                    });
+                })
+                .on('fileclear', function (e) {
+                    pictureFocusX = 0;
+                    pictureFocusY = 0;
+                })
+                .on('fileuploaded', function (event, data, previewId, index) {
+                    if (data['response'].hasOwnProperty('data')) {
+                        var $headerPictureFocuspoint = $('#header-picture-focuspoint');
+                        $headerPictureFocuspoint.children('img').attr('src', data['response']['data']['picture_url']);
+
+                        // These assignments using .data() are what counts.
+                        $headerPictureFocuspoint.data('focusX', data['response']['data']['picture_focus_x']);
+                        $headerPictureFocuspoint.data('focusY', data['response']['data']['picture_focus_y']);
+                        $headerPictureFocuspoint.data('imageW', data['response']['data']['picture_width']);
+                        $headerPictureFocuspoint.data('imageH', data['response']['data']['picture_height']);
+                        $headerPictureFocuspoint.focusPoint('adjustFocus');
+
+                        // Mise à jour des attributs HTML pour que ce soit visible dans le DOM mais ça ne sert pas pour le plugin
+                        $headerPictureFocuspoint.attr({
+                            'data-focus-x': data['response']['data']['picture_focus_x'],
+                            'data-focus-y': data['response']['data']['picture_focus_y'],
+                            'data-image-w': data['response']['data']['picture_width'],
+                            'data-image-h': data['response']['data']['picture_height']
+                        });
+
+                        $('#event_picture_update_modal').modal('toggle');
+                        $(this).fileinput('clear');
+                        $(this).fileinput('enable');
+                    }
+                });
+        });
+    </script>
+</div>

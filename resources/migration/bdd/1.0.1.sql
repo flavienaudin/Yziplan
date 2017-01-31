@@ -1,0 +1,2 @@
+ALTER TABLE `module_poll_element` CHANGE `type` `type` ENUM('string','integer','datetime','googlePlaceId','endDatetime') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT '(DC2Type:enum_pollproposal_elementtype)';
+UPDATE `module_poll_proposal_element` SET `has_time`=1 WHERE 1

@@ -24,7 +24,7 @@
     </div>
     {% block action_buttons %}
         <div class="pull-right m-r-20">
-            <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+            <button type="button" class="btn btn-flat waves-effect" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
             <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
         </div>
     {% endblock action_buttons %}
@@ -50,14 +50,14 @@
                 ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                     $("#moduleEdit_modal_{{ module.token }}").modal('hide');
                 }, null, function () {
-                    $('.grid').masonry('layout');
+                    $grid = $('.grid');
+                    if($grid[0]) {
+                        $grid.masonry('layout');
+                    }
                 });
             });
             {% endblock js_document_ready %}
-
         });
-
-
     </script>
 </div>
 

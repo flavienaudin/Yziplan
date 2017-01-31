@@ -184,7 +184,7 @@ class EventInvitationManager
             // L'invitation est attaché un ApplicationUser => c'est une invitation directe (ie par email) => status = AWAITING_ANSWER
             $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
             $this->eventInvitation->setApplicationUser($applicationUser);
-            if (!empty($this->eventInvitation->getDisplayableName())) {
+            if (!empty($this->eventInvitation->getDisplayableName(false))) {
                 // Le nom de l'invité est déjà renseigné (ie attachement à un compte utilisateur) => status = VALID
                 $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
             }
@@ -347,7 +347,7 @@ class EventInvitationManager
     public function treatEventInvitationFormSubmission(Form $evtInvitForm)
     {
         $this->eventInvitation = $evtInvitForm->getData();
-        if (empty($this->eventInvitation->getDisplayableName()) && $this->eventInvitation->getStatus() == EventInvitationStatus::VALID) {
+        if (empty($this->eventInvitation->getDisplayableName(false)) && $this->eventInvitation->getStatus() == EventInvitationStatus::VALID) {
             // Si le nom est vide => l'invitation revient en attente de réponse
             $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
 
@@ -357,7 +357,7 @@ class EventInvitationManager
                     $moduleInvitation->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
                 }
             }
-        } elseif (!empty($this->eventInvitation->getDisplayableName()) &&
+        } elseif (!empty($this->eventInvitation->getDisplayableName(false)) &&
             ($this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
         ) {
             // Si le nom n'est pas vide => l'invitation devient valide
