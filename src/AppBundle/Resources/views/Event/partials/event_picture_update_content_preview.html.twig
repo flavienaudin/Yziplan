@@ -66,11 +66,9 @@
             // initialize with defaults
             $('#eventPictureInput').fileinput(fileInputOptions)
                 .on('fileselect', function (e, numFiles, label) {
-                    console.log("on change");
                     var $fileinput = $(this);
                     $('#event_picture_update_modal').children('img.reticle').show();
                     $('img.helper-tool-img, img.target-overlay').on('click', function (e) {
-                        console.log("img.focuspoint-selector CLICK");
                         var imageW = $(this).width();
                         var imageH = $(this).height();
 
@@ -86,7 +84,6 @@
                         var backgroundPosition = percentageX.toFixed(0) + '% ' + percentageY.toFixed(0) + '%';
                         var backgroundPositionCSS = 'background-position: ' + backgroundPosition + ';';
 
-                        console.log('FocusX:' + focusX.toFixed(2) + ', FocusY:' + focusY.toFixed(2) + ' (For CSS version: ' + backgroundPositionCSS + ')');
                         pictureFocusX = focusX.toFixed(2);
                         pictureFocusY = focusY.toFixed(2);
 
@@ -96,21 +93,13 @@
                             'left': percentageX + '%'
                         });
                     });
-                    console.log("on change END");
                 })
                 .on('fileclear', function (e) {
-                    console.log("on fileclear");
                     pictureFocusX = 0;
                     pictureFocusY = 0;
                 })
                 .on('fileuploaded', function (event, data, previewId, index) {
-                    console.log("on fileupload");
                     if (data['response'].hasOwnProperty('data')) {
-                        console.log(data['response']['data']['picture_focus_x']);
-                        console.log(data['response']['data']['picture_focus_y']);
-                        console.log(data['response']['data']['picture_width']);
-                        console.log(data['response']['data']['picture_height']);
-
                         var $headerPictureFocuspoint = $('#header-picture-focuspoint');
                         $headerPictureFocuspoint.children('img').attr('src', data['response']['data']['picture_url']);
 
@@ -133,9 +122,6 @@
                         $(this).fileinput('clear');
                         $(this).fileinput('enable');
                     }
-                    /*if (data.hasOwnProperty('htmlContents')) {
-                     treatHtmlContents(data['htmlContents']);
-                     }*/
                 });
         });
     </script>
