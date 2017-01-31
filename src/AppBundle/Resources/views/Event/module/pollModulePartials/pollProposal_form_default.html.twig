@@ -1,0 +1,36 @@
+{# Données d'entrée :
+- userModuleInvitation (ModueInvitation) Le ModuleInvitation de l'utilisateur connecté
+- pollProposalForm (FormInterface) Le formulaire d'ajout/édition d'un PollProposal
+- pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
+- edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
+#}
+{% if edition %}
+    {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
+        'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
+{% else %}
+    {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
+{% endif %}
+<div>
+    {{ form_label(pollProposalForm.pollProposalElements, null, {'label_attr':{'class':'sr-only'}}) }}
+    {{ form_errors(pollProposalForm.pollProposalElements) }}
+
+    {% for pollProposalElement in pollProposalForm.pollProposalElements %}
+        {{ form_errors(pollProposalElement) }}
+        {{ form_widget(pollProposalElement, {
+            'widget_options':{
+                'fgfloat':(pollProposalElement.valDatetime is not defined and pollProposalElement.valEndDatetime is not defined),
+                'fgline':true,
+                'displayInRow':(pollProposalElement.valDatetime is defined or pollProposalElement.valEndDatetime is defined)}
+        }) }}
+    {% endfor %}
+    {{ form_rest(pollProposalForm) }}
+</div>
+
+<div class="pull-right">
+    <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+    <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
+</div>
+{{ form_end(pollProposalForm) }}
+
+
+

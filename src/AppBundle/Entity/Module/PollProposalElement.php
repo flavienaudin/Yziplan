@@ -53,6 +53,42 @@ class PollProposalElement
     private $valDatetime;
 
     /**
+     * true si on doit prendre en compte l'heure de valDateTime
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="has_time", type="boolean", nullable=false)
+     */
+    private $time = false;
+
+    /**
+     * Contient la valeur si le type == PollElementType::DATETIME
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(name="val_enddatetime", type="datetime", nullable=true)
+     */
+    private $valEndDatetime;
+
+    /**
+     * true si on doit prendre en compte la date de valEndDateTime
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="has_end_date", type="boolean", nullable=false)
+     */
+    private $endDate = false;
+
+    /**
+     * true si on doit prendre en compte l'heure de valEndDateTime
+     *
+     * @var boolean
+     *
+     * @ORM\Column(name="has_end_time", type="boolean", nullable=false)
+     */
+    private $endTime = false;
+
+    /**
      * Contient la valeur du Google Place Id si le PollElement est de Type PollElementType::GOOGLE_PLACE_ID
      *
      * @var string
@@ -150,6 +186,72 @@ class PollProposalElement
     }
 
     /**
+     * @return bool
+     */
+    public function hasTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param bool $hasTime
+     */
+    public function setTime($hasTime)
+    {
+        $this->time = $hasTime;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getValEndDatetime()
+    {
+        return $this->valEndDatetime;
+    }
+
+    /**
+     * @param \DateTime $valEndDatetime
+     */
+    public function setValEndDatetime($valEndDatetime)
+    {
+        $this->valEndDatetime = $valEndDatetime;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasEndDate()
+    {
+        return $this->endDate;
+    }
+
+    /**
+     * @param bool $endDate
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function hasEndTime()
+    {
+        return $this->endTime;
+    }
+
+    /**
+     * @param bool $hasEndTime
+     */
+    public function setEndTime($hasEndTime)
+    {
+        $this->endTime = $hasEndTime;
+    }
+
+
+    /**
      * @return string
      */
     public function getValGooglePlaceId()
@@ -219,6 +321,9 @@ class PollProposalElement
             case PollElementType::DATETIME:
                 $val = $this->getValDatetime();
                 break;
+            case PollElementType::END_DATETIME:
+                $val = $this->getValEndDatetime();
+                break;
             case PollElementType::INTEGER :
                 $val = $this->getValInteger();
                 break;
@@ -228,5 +333,47 @@ class PollProposalElement
                 break;
         }
         return $val;
+    }
+
+    public function getArrayFromDate()
+    {
+        if (!empty($this->valDatetime)) {
+            $date['year'] = $this->valDatetime->format('Y');
+            $date['month'] = $this->valDatetime->format('m');
+            $date['day'] = $this->valDatetime->format('d');
+            return $date;
+        }
+        return null;
+    }
+
+    public function getArrayFromTime()
+    {
+        if (!empty($this->valDatetime) && $this->time) {
+            $date['hour'] = $this->valDatetime->format('H');
+            $date['minute'] = $this->valDatetime->format('i');
+            return $date;
+        }
+        return null;
+    }
+
+    public function getArrayFromEndDate()
+    {
+        if (!empty($this->valEndDatetime) && $this->endDate) {
+            $date['year'] = $this->valEndDatetime->format('Y');
+            $date['month'] = $this->valEndDatetime->format('m');
+            $date['day'] = $this->valEndDatetime->format('d');
+            return $date;
+        }
+        return null;
+    }
+
+    public function getArrayFromEndTime()
+    {
+        if (!empty($this->valEndDatetime) && $this->endTime) {
+            $date['hour'] = $this->valEndDatetime->format('H');
+            $date['minute'] = $this->valEndDatetime->format('i');
+            return $date;
+        }
+        return null;
     }
 }

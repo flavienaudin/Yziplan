@@ -14,6 +14,7 @@ use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Form\Module\PollProposalElementType;
 use AppBundle\Form\Module\PollProposalType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
@@ -27,6 +28,9 @@ class PollProposalManager
     /** @var EntityManager */
     private $entityManager;
 
+    /** @var PollProposalElementManager */
+    private $pollProposalElementManager;
+
     /** @var FormFactory */
     private $formFactory;
 
@@ -36,9 +40,10 @@ class PollProposalManager
     /** @var PollProposal */
     private $pollProposal;
 
-    public function __construct(EntityManager $doctrine, FormFactoryInterface $formFactory, EngineInterface $templating)
+    public function __construct(EntityManager $doctrine, FormFactoryInterface $formFactory, EngineInterface $templating, PollProposalElementManager $pollProposalElementManager )
     {
         $this->entityManager = $doctrine;
+        $this->pollProposalElementManager = $pollProposalElementManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
     }
@@ -111,6 +116,9 @@ class PollProposalManager
     public function treatPollProposalForm(FormInterface $pollProposalForm, Module $module = null)
     {
         $this->pollProposal = $pollProposalForm->getData();
+        foreach ($pollProposalForm->get('pollProposalElements') as $pollProposalElementForm){
+            $this->pollProposalElementManager->treatPollProposalElementForm($pollProposalElementForm);
+        }
         if ($module != null && $this->pollProposal->getPollModule() == null) {
             $module->getPollModule()->addPollProposal($this->pollProposal);
         }

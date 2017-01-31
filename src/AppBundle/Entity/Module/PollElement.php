@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Module;
 
+use AppBundle\Utils\enum\PollElementType;
 use AppBundle\Utils\enum\PollModuleType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -74,6 +75,20 @@ class PollElement
     public function __construct()
     {
         $this->pollProposalElements = new ArrayCollection();
+    }
+
+
+    /**
+     * @param String $name
+     * @param String $type
+     * @param int $orderIndex
+     */
+    public function create($name, $type, $orderIndex )
+    {
+        $this->setName($name);
+        $this->setType($type);
+        $this->setOrderIndex($orderIndex);
+
     }
 
 
