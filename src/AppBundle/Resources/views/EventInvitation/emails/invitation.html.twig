@@ -10,10 +10,10 @@
 {% block body_text %}
     {% set creatorsNames = "" %}
     {% for creatorInvitation in eventInvitation.event.creators|merge(eventInvitation.event.administrators) %}
-        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
+        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
     {% endfor %}
     {% autoescape false %}
-        {{ 'eventInvitation.email.invitation.body.hello'|trans({'%username%': eventInvitation.displayableName}) }}
+        {{ 'eventInvitation.email.invitation.body.hello'|trans({'%username%': eventInvitation.displayableName(true, false)}) }}
         {{ 'eventInvitation.email.invitation.body.paragraph'|trans({"%event_name%":eventInvitation.event.name}) }}
         {{ url('displayEventInvitation',{'token':eventInvitation.token}) }}
         {{ "email.salutation"|trans }},
@@ -23,7 +23,7 @@
 {% block body_html %}{% spaceless %}
     {% set creatorsNames = "" %}
     {% for creatorInvitation in eventInvitation.event.creators|merge(eventInvitation.event.administrators) %}
-        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName %}
+        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
     {% endfor %}
 
     <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100% !important; height: 100%;
@@ -45,7 +45,7 @@ line-height: 1.6; background-color: #f6f6f6;">
                                     <tr>
                                         <td style="padding: 0 0 20px;">
                                             <h3 style="font-size: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; margin: 40px 0 0; line-height: 1.2;
-                                        font-weight: 400;">{{ "eventInvitation.email.invitation.body.hello"|trans({"%username%":eventInvitation.displayableName}) }}</h3>
+                                        font-weight: 400;">{{ "eventInvitation.email.invitation.body.hello"|trans({"%username%":eventInvitation.displayableName(true, false)}) }}</h3>
                                         </td>
                                     </tr>
                                     <tr>

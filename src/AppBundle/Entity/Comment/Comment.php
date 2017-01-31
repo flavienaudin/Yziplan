@@ -52,11 +52,12 @@ class Comment extends BaseFosComment
     {
         return $this->author;
     }
+
     public function getAuthorName()
     {
         $name = null;
         if ($this->getAuthor() != null) {
-            $name = $this->getAuthor()->getDisplayableName();
+            $name = $this->getAuthor()->getDisplayableName(true, true);
         }
         if(empty($name)){
             $name = 'Yziplan-Onymous';

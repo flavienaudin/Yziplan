@@ -4,6 +4,7 @@ namespace AppBundle\Entity\User;
 
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Utils\enum\AppUserStatus;
+use AppBundle\Utils\StringUtils;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -372,6 +373,7 @@ class ApplicationUser
     {
         $this->mergedAppUsers->removeElement($mergedAppUser);
     }
+
     /**
      * @return ApplicationUser
      */
@@ -392,9 +394,25 @@ class ApplicationUser
     /***********************************************************************
      *                      Helpers
      ***********************************************************************/
-    public function getDisplayableName()
+    public function getDisplayableName($useEmail = false, $obfuscateEmail = true)
     {
-        return $this->appUserInformation->getDisplayableName();
+        $displayableName = $this->appUserInformation->getDisplayableName();
+        if (empty($displayableName) && $useEmail) {
+            if ($this->accountUser != null) {
+                $email = $this->accountUser->getEmailCanonical();
+            } else if (count($this->getAppUserEmails()) > 0) {
+                $appUserEmail = $this->getAppUserEmails()->get(0);
+                $email = $appUserEmail->getEmailCanonical();
+            }
+            if (!empty($email)) {
+                if ($obfuscateEmail) {
+                    $displayableName = StringUtils::getObfuscatedEmail($email);
+                } else {
+                    $displayableName = $email;
+                }
+            }
+        }
+        return $displayableName;
     }
 }
 

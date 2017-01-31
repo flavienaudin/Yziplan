@@ -363,12 +363,12 @@ class EventInvitation
      * Retourne le nom de l'invité à afficher en fonction des données renseignées et de l'utilisateur associé.
      * @return string
      */
-    public function getDisplayableName()
+    public function getDisplayableName($useEmail = false, $obfuscateEmail = true)
     {
         $displayableName = $this->guestName;
         if (empty($displayableName)) {
             if ($this->getApplicationUser() != null) {
-                $displayableName = $this->getApplicationUser()->getDisplayableName();
+                $displayableName = $this->getApplicationUser()->getDisplayableName($useEmail, $obfuscateEmail);
             }
         }
         return $displayableName;

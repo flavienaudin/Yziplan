@@ -22,7 +22,7 @@
             {% if event_invitation.applicationUser is defined and event_invitation.applicationUser.accountUser is defined and event_invitation.applicationUser.accountUser.getAvatarPath is defined %}
                 {% set avatar_path = event_invitation.applicationUser.accountUser.getAvatarPath %}
             {% endif %}
-            {% set userName = event_invitation.displayableName %}
+            {% set userName = event_invitation.displayableName(false) %}
             {% if avatar_path == '' %}
                 <option data-content="<span class='insecable-white-space' ><div class='avatar-char palette-Cyan-200 bg' name='{{ userName }}' style='display: inline-block;'>
                                     {{ userName|slice(0,1) }}</div> {{ userName }}</span>"></option>

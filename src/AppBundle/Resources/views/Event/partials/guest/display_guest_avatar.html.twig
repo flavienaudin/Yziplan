@@ -10,5 +10,6 @@ Données d'entrée :
 {% if eventInvitation.applicationUser is not null and eventInvitation.applicationUser.appUserInformation.avatar is not null %}
     <img class="avatar-img" src="{{ asset('uploads/user/avatar/'~eventInvitation.applicationUser.appUserInformation.avatar) }}" alt="">
 {% else %}
-    <span class="di-block avatar-char palette-Teal bg" title="{{ eventInvitation.displayableName }}">{{ eventInvitation.displayableName|slice(0,1)|upper }}</span>
+    <span class="di-block avatar-char palette-Teal bg" title="{{ eventInvitation.displayableName(true, not eventInvitation.organizer) }}">
+        {{ eventInvitation.displayableName(true, not eventInvitation.organizer)|slice(0,1)|upper }}</span>
 {% endif %}

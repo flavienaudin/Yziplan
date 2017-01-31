@@ -25,7 +25,7 @@ class AtTwigSiwftMailer extends TwigSwiftMailer
      */
     public function sendLoseAppUserEmail(AccountUser $user, $concernedEmail){
         $context = array(
-            "username" => $user->getDisplayableName(),
+            "username" => $user->getDisplayableName(true, false),
             "email" => $concernedEmail
         );
         $this->sendMessage("@ATUser/Registration/email_lossAppUserEmail.txt.twig", $context, $this->parameters['from_email']['confirmation'], $user->getEmail());
@@ -39,7 +39,7 @@ class AtTwigSiwftMailer extends TwigSwiftMailer
     {
         $url = $this->router->generate('confirmAppUserEmailAssociation', array('token' => $appUserEmail->getConfirmationToken()), UrlGeneratorInterface::ABSOLUTE_URL);
         $context = array(
-            "username" => $appUserEmail->getApplicationUser()->getDisplayableName(),
+            "username" => $appUserEmail->getApplicationUser()->getDisplayableName(true, false),
             "email" => $appUserEmail->getEmail(),
             'confirmationUrl' => $url
         );

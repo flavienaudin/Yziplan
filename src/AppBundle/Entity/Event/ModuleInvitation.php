@@ -386,8 +386,8 @@ class ModuleInvitation
      * Retourne le nom de l'invité à afficher en fonction des données renseignées et de l'utilisateur associé.
      * @return string
      */
-    public function getDisplayableName()
+    public function getDisplayableName($useEmail = false, $obfuscateEmail = true)
     {
-        return $displayableName = $this->eventInvitation->getDisplayableName();
+        return $displayableName = $this->eventInvitation->getDisplayableName($useEmail, $obfuscateEmail);
     }
 }

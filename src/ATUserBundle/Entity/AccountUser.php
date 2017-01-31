@@ -269,12 +269,12 @@ class AccountUser extends FosUser
      * Helpers
      ***********************************************************************/
 
-    public function getDisplayableName()
+    public function getDisplayableName($useEmail = false)
     {
         if ($this->applicationUser == null) {
             return null;
         }
-        return $this->applicationUser->getDisplayableName();
+        return $this->applicationUser->getDisplayableName($useEmail, false);
     }
 
     /**
