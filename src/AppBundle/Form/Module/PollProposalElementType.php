@@ -46,46 +46,42 @@ class PollProposalElementType extends AbstractType
                     'date_format' => 'dd/MM/yyyy',
                     'placeholder' => 'Select a value',
                 ));*/
-                $form->add('date', DateType::class, array(
+                $form->add('startDate', DateType::class, array(
                     'required' => true,
                     'input' => 'array',
                     'label' => $pollProposalElement->getPollElement()->getName(),
                     'html5' => false,
                     'widget' => 'single_text',
                     'format' => 'dd/MM/yyyy',
-                    'placeholder' => 'Select a value',
                     'mapped' => false,
                     'data' => $pollProposalElement->getArrayFromDate()
                 ))
-                    ->add('time', TimeType::class, array(
+                    ->add('startTime', TimeType::class, array(
                         'required' => false,
                         'input' => 'array',
                         'label' => $pollProposalElement->getPollElement()->getName(),
                         'html5' => false,
                         'widget' => 'single_text',
-                        'placeholder' => 'Optionnel',
                         'mapped' => false,
                         'data' => $pollProposalElement->getArrayFromTime()
                     ));
             } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::END_DATETIME) {
-                $form->add('date', DateType::class, array(
+                $form->add('endDate', DateType::class, array(
                     'required' => false,
                     'input' => 'array',
                     'label' => $pollProposalElement->getPollElement()->getName(),
                     'html5' => false,
                     'widget' => 'single_text',
                     'format' => 'dd/MM/yyyy',
-                    'placeholder' => 'Select a value',
                     'mapped' => false,
                     'data' => $pollProposalElement->getArrayFromEndDate()
                 ))
-                    ->add('time', TimeType::class, array(
+                    ->add('endTime', TimeType::class, array(
                         'required' => false,
                         'input' => 'array',
                         'label' => $pollProposalElement->getPollElement()->getName(),
                         'html5' => false,
                         'widget' => 'single_text',
-                        'placeholder' => 'Optionnel',
                         'mapped' => false,
                         'data' => $pollProposalElement->getArrayFromEndTime()
                     ));

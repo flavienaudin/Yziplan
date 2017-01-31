@@ -73,9 +73,9 @@ class PollProposalElementManager
         if ($this->pollProposalElement->getPollElement()->getType() == PollElementType::DATETIME) {
             $datetimeValue = new DateTime();
             /** @var array $valDate (e.g. array('year' => 2011, 'month' => 06, 'day' => 05)) */
-            $valDate = $pollProposalElementForm->get('date')->getData();
+            $valDate = $pollProposalElementForm->get('startDate')->getData();
             /** @var array $valTime (e.g. array('hour' => 12, 'minute' => 17, 'second' => 26)) */
-            $valTime = $pollProposalElementForm->get('time')->getData();
+            $valTime = $pollProposalElementForm->get('startTime')->getData();
             if (!empty($valDate)) {
                 $datetimeValue->setDate($valDate['year'], $valDate['month'], $valDate['day']);
             }
@@ -90,9 +90,9 @@ class PollProposalElementManager
         if ($this->pollProposalElement->getPollElement()->getType() == PollElementType::END_DATETIME) {
             $datetimeValue = new DateTime();
             /** @var array $valDate (e.g. array('year' => 2011, 'month' => 06, 'day' => 05)) */
-            $valDate = $pollProposalElementForm->get('date')->getData();
+            $valDate = $pollProposalElementForm->get('endDate')->getData();
             /** @var array $valTime (e.g. array('hour' => 12, 'minute' => 17, 'second' => 26)) */
-            $valTime = $pollProposalElementForm->get('time')->getData();
+            $valTime = $pollProposalElementForm->get('endTime')->getData();
             if (!empty($valDate) && !empty($valDate['year'])) {
                 $datetimeValue->setDate($valDate['year'], $valDate['month'], $valDate['day']);
                 $this->pollProposalElement->setEndDate(true);

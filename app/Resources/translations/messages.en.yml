@@ -391,6 +391,10 @@ pollmodule:
           label: Add an integer
         datetime_collection:
           label: Add a datetime
+    when:
+      startDate: "Start Date/Hour:"
+      endDate: "End Date/Hour:"
+      tooltip: "Select an end date only if it is different from the start date."
   alert:
     confirm_proposal_deletion:
       title: Are you sure you want to delete this proposal?
@@ -449,6 +453,8 @@ global:
       error: Error
       warning: Warning
       success: OK
+  form:
+    optional: Optional
 
 # Enums
 gender:

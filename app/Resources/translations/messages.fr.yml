@@ -391,6 +391,10 @@ pollmodule:
           label: Ajouter un nombre
         datetime_collection:
           label: Ajouter une date
+    when:
+      startDate: "Date/Horaire de début:"
+      endDate: "Date/Horaire de fin:"
+      tooltip: "Ne renseigner la date de fin que si celle-ci est différente de la date de début."
   alert:
     confirm_proposal_deletion:
       title: Es-tu sûr de vouloir supprimer cette proposition ?
@@ -448,7 +452,9 @@ global:
     title:
       error: Erreur
       warning: Attention
-      success: OK
+      success:
+  form:
+    optional: Optionnel
 
 # Enums
 gender:

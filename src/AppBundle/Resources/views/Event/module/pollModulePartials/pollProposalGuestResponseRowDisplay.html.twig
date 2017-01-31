@@ -109,28 +109,34 @@
                                 </div>
                                 {% if ppElt.hasTime %}
                                     <div style="display:inline-block">
-                                        <div style="font-size:16px">{{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
+                                        <div style="font-size:14px">{{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
                                         {% if not has2Date and endDate is not null and endDate.hasEndTime %}
-                                            <div style="font-size:16px">{{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
+                                            <div style="font-size:14px">{{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
                                         {% endif %}
                                     </div>
                                 {% endif %}
                                 {% if has2Date %}
-                                <div style="display:inline-block">
-                                à
-                                </div>
-                                    <div style="display:inline-block">
-                                        <div style="font-size:12px; font-weight: bold; text-transform: capitalize;">{{ endDate.value|localizeddate("medium", "none", null, null,'MMM') }}</div>
-                                        <div style="font-size:10px; text-transform: uppercase;">{{ endDate.value|localizeddate("medium", "none", null, null,"ccc") }}</div>
+                                    <div>
+                                        Début : {{ ppElt.value|localizeddate("medium", "none", null, null,'ccc dd MMM HH:mm') }}
                                     </div>
-                                    <div class="p-l-5 p-r-5" style="display:inline-block; font-size:22px">
-                                        <strong>{{ endDate.value|localizeddate("medium", "none", null, null,'dd') }}</strong>
+                                    <div>
+                                        Fin : {{ endDate.value|localizeddate("medium", "none", null, null,'ccc dd MMM HH:mm') }}
                                     </div>
-                                    {% if endDate.hasEndTime %}
+                                    {#<div style="display:inline-block">
+                                    à
+                                    </div>
                                         <div style="display:inline-block">
-                                            <div style="font-size:16px">{{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
+                                            <div style="font-size:12px; font-weight: bold; text-transform: capitalize;">{{ endDate.value|localizeddate("medium", "none", null, null,'MMM') }}</div>
+                                            <div style="font-size:10px; text-transform: uppercase;">{{ endDate.value|localizeddate("medium", "none", null, null,"ccc") }}</div>
                                         </div>
-                                    {% endif %}
+                                        <div class="p-l-5 p-r-5" style="display:inline-block; font-size:22px">
+                                            <strong>{{ endDate.value|localizeddate("medium", "none", null, null,'dd') }}</strong>
+                                        </div>
+                                        {% if endDate.hasEndTime %}
+                                            <div style="display:inline-block">
+                                                <div style="font-size:16px">{{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
+                                            </div>
+                                        {% endif %}#}
                                 {% endif %}
                             </div>
                         {% elseif not ppElt.pollElement.type == constant('AppBundle\\Utils\\enum\\PollElementType::END_DATETIME') %}

@@ -36,6 +36,15 @@ class PollModule
      */
     private $votingType;
 
+    /**
+     * Contient le type de module, utile pour les module pré-défini qui ont des traitements spécifiques, null sinon
+     *
+     * @var string
+     *
+     * @ORM\Column(name="poll_module_type", type="enum_pollmodule_type", nullable=true)
+     */
+    private $type;
+
 
     /***********************************************************************
      *                      Jointures
@@ -196,6 +205,22 @@ class PollModule
     public function removePollElement(PollElement $pollElement)
     {
         $this->pollElements->removeElement($pollElement);
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
     }
 
 

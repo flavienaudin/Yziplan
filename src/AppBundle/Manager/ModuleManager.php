@@ -133,6 +133,7 @@ class ModuleManager
             if ($subtype == PollModuleType::WHEN) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.when"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+                $pollModule->setType(PollModuleType::WHEN);
 
                 $pollElementDate = new PollElement();
                 $pollElementDate->create($subtype, PollElementType::DATETIME, 0);
@@ -143,6 +144,7 @@ class ModuleManager
             } elseif ($subtype == PollModuleType::WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.what"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+                $pollModule->setType(PollModuleType::WHAT);
 
                 $pollElement = new PollElement();
                 $pollElement->create($subtype, PollElementType::STRING, 0);
@@ -150,6 +152,7 @@ class ModuleManager
             } elseif ($subtype == PollModuleType::WHERE) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+                $pollModule->setType(PollModuleType::WHERE);
 
                 $pollElement = new PollElement();
                 $pollElement->create($subtype, PollElementType::GOOGLE_PLACE_ID, 0);
@@ -158,6 +161,7 @@ class ModuleManager
                 $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
+                $pollModule->setType(PollModuleType::WHO_BRINGS_WHAT);
 
                 $pollElement = new PollElement();
                 $pollElement->create($subtype, PollElementType::STRING, 0);
@@ -216,6 +220,7 @@ class ModuleManager
             if (($originalPollModule = $originalModule->getPollModule()) != null) {
                 $duplicatedPollModule = new PollModule();
                 $duplicatedPollModule->setVotingType($originalPollModule->getVotingType());
+                $duplicatedPollModule->setType($originalPollModule->getType());
 
                 $mapOrigPPEltIdToDuplPPel = array();
                 /** @var PollElement $originalPollElement */
