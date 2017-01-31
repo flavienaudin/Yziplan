@@ -12,8 +12,8 @@
 {% block action_buttons %}
     <div class="text-center">
         <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_MAIN")}) }}"
-           class="btn btn-default waves-effect m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
-        <button id="profile_form_submit" type="submit" class="btn btn-primary waves-effect m-b-10">{{ "global.button.nextStep"|trans }}</button>
+           class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
+        <button id="profile_form_submit" type="submit" class="btn btn-primary m-b-10">{{ "global.button.nextStep"|trans }}</button>
     </div>
 {% endblock action_buttons %}
 

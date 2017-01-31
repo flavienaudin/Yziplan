@@ -165,7 +165,7 @@ event:
         not_connected: Si tu possèdes déjà un compte, connecte-toi pour remplir automatiquement les informations de te concernant.
     invitations:
       title: Les invités
-      subtitle: Renseigne les adresses e-mail de tes invités. Ils recevront un message avec le lien de leur invitations personnelles.
+      subtitle: Renseigne les adresses e-mail de tes invités. Ils recevront un message avec le lien de leur invitation personnelle.
     add_module:
       title: L'événement est presque prêt!
       subtitle: Ajoute un sondage en cliquant sur l'un des liens ci-dessous ou fais le plus tard
@@ -315,7 +315,6 @@ invitations:
     via_facebook: Via Facebook
     via_gmail_contact:
       show: Mes contacts Gmail
-      hide: Fermer les Contacts Gmail
 
 contactsgmail:
   title: Contacts Gmail

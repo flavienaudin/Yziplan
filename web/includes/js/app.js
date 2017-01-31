@@ -37,68 +37,10 @@ $(document).ready(function () {
         $('.' + u).tab('show');
     });
 
-    /* --------------------------------------------------------
-     Text Fields
-     ----------------------------------------------------------*/
 
-    //Add blue animated border and remove with condition when focus and blur
-    if ($('.fg-line')[0]) {
-        $body.on('focus', '.fg-line .form-control', function () {
-            $(this).closest('.fg-line').addClass('fg-toggled');
-        });
+    /** Collapse Fix */
+    initCollapse();
 
-        $body.on('blur', '.form-control', function () {
-            var p = $(this).closest('.form-group, .input-group');
-            var i = p.find('.form-control').val();
-
-            if (p.hasClass('fg-float')) {
-                if (i.length == 0) {
-                    $(this).closest('.fg-line').removeClass('fg-toggled');
-                }
-            }
-            else {
-                $(this).closest('.fg-line').removeClass('fg-toggled');
-            }
-        });
-    }
-
-    /* --------------------------------------------------------
-     Waves Animation
-     ----------------------------------------------------------*/
-    (function () {
-        Waves.attach('.btn:not(.btn-icon):not(.btn-float)');
-        Waves.attach('.btn-icon, .btn-float', ['waves-circle', 'waves-float']);
-        Waves.init();
-    })();
-
-
-    /* --------------------------------------------------------
-     Collapse Fix
-     ----------------------------------------------------------*/
-    var $collapse = $('.collapse');
-    if ($collapse[0]) {
-        //Add active class for opened items
-        $collapse.on('show.bs.collapse', function () {
-            $(this).closest('.panel').find('.panel-heading').addClass('active');
-        });
-
-        $collapse.on('hide.bs.collapse', function () {
-            $(this).closest('.panel').find('.panel-heading').removeClass('active');
-        });
-
-        //Add active class for pre opened items
-        $('.collapse.in').each(function () {
-            $(this).closest('.panel').find('.panel-heading').addClass('active');
-        });
-    }
-
-    /* --------------------------------------------------------
-     Popover
-     ----------------------------------------------------------*/
-    var $popover = $('[data-toggle="popover"]');
-    if ($popover[0]) {
-        $popover.popover();
-    }
 
     /* --------------------------------------------------------
      IE 9 Placeholder
@@ -153,6 +95,87 @@ function closeModalOnReturn(modalsSelector) {
     });
 }
 
+/* --------------------------------------------------------
+ Waves Animation
+ ----------------------------------------------------------*/
+function initBtnWavesAnimation() {
+    Waves.attach('.btn:not(.btn-icon):not(.btn-float)');
+    Waves.attach('.btn-icon, .btn-float', ['waves-circle', 'waves-float']);
+    Waves.init();
+}
+
+/* --------------------------------------------------------
+ Text Fields
+ --------------------------------------------------------*/
+function initTextFieldsFgLineFloat() {
+    $body = $('body');
+
+    //Add blue animated border and remove with condition when focus and blur
+    if ($('.fg-line')[0]) {
+        $body.on('focus', '.fg-line .form-control', function () {
+            $(this).closest('.fg-line').addClass('fg-toggled');
+        });
+
+        $body.on('blur', '.form-control', function () {
+            var p = $(this).closest('.form-group, .input-group');
+            var i = p.find('.form-control').val();
+
+            if (p.hasClass('fg-float')) {
+                if (i.length == 0) {
+                    $(this).closest('.fg-line').removeClass('fg-toggled');
+                }
+            }
+            else {
+                $(this).closest('.fg-line').removeClass('fg-toggled');
+            }
+        });
+    }
+
+    //Add blue border for pre-valued fg-flot text feilds
+    if ($('.fg-float')[0]) {
+        $('.fg-float .form-control').each(function () {
+            var i = $(this).val();
+
+            if (!i.length == 0) {
+                $(this).closest('.fg-line').addClass('fg-toggled');
+            }
+        });
+    }
+}
+
+/* --------------------------------------------------------
+ Collapse Fix
+ ----------------------------------------------------------*/
+function initCollapse() {
+    var $collapse = $('.collapse');
+    if ($collapse[0]) {
+        //Add active class for opened items
+        $collapse.on('show.bs.collapse', function () {
+            $(this).closest('.panel').find('.panel-heading').addClass('active');
+        });
+
+        $collapse.on('hide.bs.collapse', function () {
+            $(this).closest('.panel').find('.panel-heading').removeClass('active');
+        });
+
+        //Add active class for pre opened items
+        $('.collapse.in').each(function () {
+            $(this).closest('.panel').find('.panel-heading').addClass('active');
+        });
+    }
+}
+
+
+/* --------------------------------------------------------
+ Popover
+ ----------------------------------------------------------*/
+function initPopover() {
+    var $popover = $('[data-toggle="popover"]');
+    if ($popover[0]) {
+        $popover.popover();
+    }
+}
+
 /**
  * Active les pluggins JS/CSS après une requête Ajax et au chargement d'une page
  *  - textarea autosize
@@ -161,6 +184,9 @@ function closeModalOnReturn(modalsSelector) {
  *  - selectpicker
  *  - tooltip
  *  - masonry
+ *  - Waves Effect
+ *  - FgLine/FgFloat text fields
+ *  - Popover
  */
 function jsPlugginActivation() {
     /** Autosize **/
@@ -205,7 +231,7 @@ function jsPlugginActivation() {
         masonryGrid.masonry('layout');
     }
 
-    //Add blue border for pre-valued fg-flot text feilds
+    // Toggle pre-valued fg-float text feilds
     if ($('.fg-float')[0]) {
         $('.fg-float .form-control').each(function () {
             var i = $(this).val();
@@ -214,6 +240,13 @@ function jsPlugginActivation() {
             }
         });
     }
+
+    /** Waves Animation */
+    initBtnWavesAnimation();
+    /** Text fields */
+    initTextFieldsFgLineFloat();
+    /** Popover */
+    initPopover();
 }
 
 /**
