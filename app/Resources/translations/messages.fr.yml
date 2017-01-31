@@ -16,8 +16,8 @@ base:
     home: Accueil
 
 navbar:
-  subtitle: Pour s'organiser, c'est IZI !
-  new_event: Créer un événement
+  subtitle: Pour s'organiser, c'est Yzi !
+  new_event: S'organiser
 
 main_menu:
 
@@ -528,7 +528,7 @@ suggestion:
 index:
   header:
     title: Yziplan
-    subtitle: Organise-toi avec tes amis.
+    subtitle: Organisez-vous entre amis.
     button: C'est parti!
   about:
     title: Pour s'organiser c'est Yzi!
