@@ -62,7 +62,6 @@ landing_page:
       title: Chandeleur
       text: Retrouvez-vous entre amis pour partager des crêpes pour la chandeleur !
 
-
 appuseremail:
   associate:
     message:
@@ -174,6 +173,7 @@ event:
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement.
     unauthorized_access: Tu n'as pas les autorisations pour accéder à cet événement.
+    valide_guestname_required: Cette action nécessitait que tu aies validé ton invitation en renseignant ton nom. Elle n'a pas été effectuée
   success.message:
     creation: Evénement créé avec succès.
   help:
@@ -235,7 +235,7 @@ eventInvitation:
       disconnect: Tu n'es pas %user% ?
     guestname_required_alert:
       title: Merci de saisir ton nom
-      message: Cette participation nécessite que tu aies validé ton invitation avec ton nom. <br>Attention! Tu devras recommencer ton action après la validation
+      message: Cette action nécessite que tu aies validé ton invitation avec ton nom
       inputError: Ca serait bien mieux avec quelques lettres
       dismiss: Ta participation n'a pas été prise en compte
       error_message:

@@ -47,7 +47,20 @@
 
             {% block js_document_ready %}
             $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
-                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
+                e.preventDefault();
+                var form = $(this);
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    $('#moduleEdit_modal_{{ module.token }}').modal('hide');
+                    askGuestName(submitModuleEditionForm, [form, e]);
+                }else{
+                    submitModuleEditionForm([form, e]);
+                }
+            });
+
+            function submitModuleEditionForm(params) {
+                var form = params[0];
+                var e = params[1];
+                ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
                     $("#moduleEdit_modal_{{ module.token }}").modal('hide');
                 }, null, function () {
                     $grid = $('.grid');
@@ -55,7 +68,7 @@
                         $grid.masonry('layout');
                     }
                 });
-            });
+            }
             {% endblock js_document_ready %}
         });
     </script>

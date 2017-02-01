@@ -8,9 +8,9 @@
         <button type="button" class="btn btn-facebook" id="shareEventFB" name="provider" style="display: none;">
             <i class="zmdi zmdi-facebook zmdi-hc-lg"></i> {{ "invitations.button.via_facebook"|trans }}
         </button>
-        <button type="button" class="btn btn-danger" id="loadContacts" >
+        <button type="button" class="btn btn-danger" id="loadContacts">
             <i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "invitations.button.via_gmail_contact.show"|trans }}</button>
-        <button type="button" class="btn btn-danger" id="hideContacts"  style="display: none;">{{ "global.button.close"|trans }}</button>
+        <button type="button" class="btn btn-danger" id="hideContacts" style="display: none;">{{ "global.button.close"|trans }}</button>
         {{ include('@App/Event/partials/invitations/gmail_contacts_selection.html.twig', {'event' : userEventInvitation.event}) }}
     </div>
 
@@ -93,27 +93,30 @@
 
                         {% block js_document_ready %}
                         $('form#eventInvitations').on('submit', function (e) {
+                            e.preventDefault();
+                            var $form = $(this);
                             if (!eventInvitationValid && askGuestName !== undefined) {
-                                e.preventDefault();
-                                askGuestName();
+                                $('#invitations_new_modal').modal('hide');
+                                askGuestName(submitNewInvitationsForm,[$form, e], function(){$('#invitations_new_modal').modal('show');});
                             } else {
-                                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                                    $hideContactsButton.click();
-                                    $('#invitations_new_modal').modal('hide');
-                                }, function (jqXHR, textStatus, errorThrown) {
-                                    if (jqXHR.hasOwnProperty('responseJSON')) {
-                                        var responseJSON = jqXHR['responseJSON'];
-                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                            if (!eventInvitationValid && askGuestName !== undefined) {
-                                                askGuestName();
-                                            }
-                                        }
-                                    }
-                                }, null);
+                                submitNewInvitationsForm([$form, e]);
                             }
                         });
+
+                        function submitNewInvitationsForm(params) {
+                            var $form = params[0];
+                            var e = params[1];
+                            ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
+                                $hideContactsButton.click();
+                                $('#invitations_new_modal').modal('hide');
+                            }, function(dataOrJqXHR, textStatus, jqXHROrErrorThrown){
+                                $('#invitations_new_modal').modal('show');
+                            }, null);
+                        }
                         {% endblock %}
                     });
+
+                    {% block js_function %}{% endblock js_function %}
                 </script>
             </div>
         </div>
@@ -125,8 +128,8 @@
             <div class="form-group animated">
                 <label class="control-label text-info" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
                 <div class="input-group">
-                    <input id="url_event_public_invitation" type="text" class="form-control" readonly="readonly"
-                           value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}"> <span class="input-group-btn">
+                    <input id="url_event_public_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}"> <span
+                            class="input-group-btn">
                                 <button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation">
                                     <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button>
                             </span>

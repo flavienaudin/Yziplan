@@ -36,38 +36,32 @@
                 if (modalContainer[0]) {
                     modalContainer.modal('hide');
                 }
-                askGuestName();
+                askGuestName(submitAddPollProposalForm, [$form, e]);
             } else {
-                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                            {% if not edition %}
-                        $form[0].reset();
-                        $('#pollmodule-table-{{ userModuleInvitation.module.token }} > tbody > tr:nth-last-child(1)').before(responseJSON['data']);
-                        $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').show();
-                            {% endif %}
-                        $('#{{ pp_form_modal_prefix }}_modal_id').modal('hide');
-                    }, function (jqXHR, textStatus, errorThrown) {
-                        if (jqXHR.hasOwnProperty('responseJSON')) {
-                            var responseJSON = jqXHR['responseJSON'];
-                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                if (!eventInvitationValid && askGuestName !== undefined) {
-                                    var modalContainer = $("#{{ pp_form_modal_prefix }}_modal_id");
-                                    if (modalContainer[0]) {
-                                        modalContainer.modal('hide');
-                                    }
-                                    askGuestName();
-                                }
-                            }
-                        }
-                    },
-                    function () {
-                        $grid = $('.grid');
-                        if ($grid[0]) {
-                            $grid.masonry('layout');
-                        }
-                    }
-                );
+                submitAddPollProposalForm([$form, e]);
             }
         });
+
+        function submitAddPollProposalForm(params){
+            var form = params[0];
+            var e = params[1];
+            ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
+                        {% if not edition %}
+                    $form[0].reset();
+                    $('#pollmodule-table-{{ userModuleInvitation.module.token }} > tbody > tr:nth-last-child(1)').before(responseJSON['data']);
+                    $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').show();
+                        {% endif %}
+                    $('#{{ pp_form_modal_prefix }}_modal_id').modal('hide');
+                }, function(jqXHR, textStatus, errorThrown){
+                    $('#{{ pp_form_modal_prefix }}_modal_id').modal('show');
+                }, function () {
+                    $grid = $('.grid');
+                    if ($grid[0]) {
+                        $grid.masonry('layout');
+                    }
+                }
+            );
+        }
     </script>
 </div>
 

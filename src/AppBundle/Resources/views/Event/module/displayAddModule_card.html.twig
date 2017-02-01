@@ -35,11 +35,18 @@
         <script>
             $('.add-pollmodule-link').on('click', function (e) {
                 {% block link_action_js %}
+                var target = $(this);
                 if (!eventInvitationValid && askGuestName !== undefined) {
                     e.preventDefault();
-                    askGuestName();
+                    askGuestName(addModuleAction, [target,e]);
                 } else {
-                    ajaxRequest(this, null, e, function (responseJSON, textStatus, jqXHR) {
+                    addModuleAction([target,e]);
+                }
+
+                function addModuleAction(params){
+                    var target = params[0];
+                    var e = params[1];
+                    ajaxRequest(target, null, e, function (responseJSON, textStatus, jqXHR) {
                         var eventModulesContainer = $('#eventModulesContainer');
                         $(document).scrollTop($(eventModulesContainer).children().last().offset().top - 100);
                         $grid = $('.grid');
@@ -50,16 +57,7 @@
                         if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('moduleToken')) {
                             $('#moduleEdit_modal_' + responseJSON['data']['moduleToken']).modal('show');
                         }
-                    }, function (jqXHR, textStatus, errorThrown) {
-                        if (jqXHR.hasOwnProperty('responseJSON')) {
-                            var responseJSON = jqXHR['responseJSON'];
-                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                if (!eventInvitationValid && askGuestName !== undefined) {
-                                    askGuestName();
-                                }
-                            }
-                        }
-                    }, null);
+                    }, null, null);
                 }
                 {% endblock link_action_js %}
             });

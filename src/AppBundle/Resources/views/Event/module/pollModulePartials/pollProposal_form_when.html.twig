@@ -4,13 +4,14 @@
 - pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
 - edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
 #}
-{% if edition %}
-    {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
-        'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
-{% else %}
-    {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
-{% endif %}
+
 <div>
+    {% if edition %}
+        {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
+            'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
+    {% else %}
+        {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
+    {% endif %}
     {{ form_label(pollProposalForm.pollProposalElements, null, {'label_attr':{'class':'sr-only'}}) }}
     {{ form_errors(pollProposalForm.pollProposalElements) }}
 
@@ -41,7 +42,7 @@
     {% endfor %}
     {% for pollProposalElement in pollProposalForm.pollProposalElements if pollProposalElement.endDate is defined %}
     {{ form_errors(pollProposalElement) }}
-   {{ "pollmodule.modal.when.endDate"|trans }} <i class="zmdi zmdi-info" data-toggle="tooltip" title="{{ "pollmodule.modal.when.tooltip"|trans }}"></i>
+    {{ "pollmodule.modal.when.endDate"|trans }} <i class="zmdi zmdi-info" data-toggle="tooltip" title="{{ "pollmodule.modal.when.tooltip"|trans }}"></i>
     <div class="row">
         <div class="col-xs-12 col-md-6">
             {{ form_row(pollProposalElement.endDate, {
@@ -72,6 +73,7 @@
         <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
     </div>
     {{ form_end(pollProposalForm) }}
+</div>
 
 
 

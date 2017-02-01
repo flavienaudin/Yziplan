@@ -25,12 +25,34 @@ Données d'entrée :
                 $(this).closest('form').submit();
             });
             $('form#userEventInvitationAnswer').on('submit', function (e) {
-                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                    if (!eventInvitationValid && askGuestName !== undefined) {
-                        askGuestName();
-                    }
-                }, null, null);
+                e.preventDefault();
+                var form = $(this);
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    askGuestName(submitEventInvitationAnswerForm, [form, e], function(){
+                        $('form#userEventInvitationAnswer')[0].reset();
+                        $('form#userEventInvitationAnswer label').removeClass('active');
+                        $('form#userEventInvitationAnswer input[checked=checked]').parent().addClass('active');
+                    });
+                }else{
+                    submitEventInvitationAnswerForm([form, e]);
+                }
             });
+
+            function submitEventInvitationAnswerForm(params){
+                var form = params[0];
+                var e = params[1];
+                ajaxFormSubmission(form, e, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                    if (dataOrJqXHR.hasOwnProperty('responseJSON')) {
+                        var responseJSON = dataOrJqXHR['responseJSON'];
+                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
+                            {# Ce cas ne devrait pas se produire mais au cas où, il faut traiter le retour de la vérification cote serveur, en conservant la vue de manière cohérente #}
+                            $('form#userEventInvitationAnswer')[0].reset();
+                            $('form#userEventInvitationAnswer label').removeClass('active');
+                            $('form#userEventInvitationAnswer input[checked=checked]').parent().addClass('active');
+                        }
+                    }
+                }, null);
+            }
         </script>
     {% endif %}
 </div>

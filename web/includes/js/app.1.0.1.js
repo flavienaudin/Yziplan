@@ -339,7 +339,7 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
     return false;
 }
 
-function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallback) {
+function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallback, async) {
     if (event != null) {
         event.preventDefault();
     }
@@ -358,10 +358,14 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         }
     });
 
+    if (typeof async !== "boolean") {
+        async = true
+    }
     $.ajax({
         url: $(form).attr('action'),
         type: $(form).attr('method'),
-        data: $(form).serialize()
+        data: $(form).serialize(),
+        async: async
     }).done(function (responseJSON, textStatus, jqXHR) {
         if (responseJSON.hasOwnProperty('htmlContents')) {
             treatHtmlContents(responseJSON['htmlContents']);

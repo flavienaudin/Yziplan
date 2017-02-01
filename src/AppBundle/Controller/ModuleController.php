@@ -39,14 +39,14 @@ class ModuleController extends Controller
     {
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
         $this->denyAccessUnlessGranted(EventVoter::ADD_EVENT_MODULE, $userEventInvitation);
-        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
             // Vérification serveur de la validité de l'invitation
             if ($request->isXmlHttpRequest()) {
                 $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] =
-                    $this->get('translator')->trans("eventInvitation.profile.card.guestname_required_alert.error_message.unauthorized_action");;
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");;
                 return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
             }
         } else {
@@ -85,14 +85,14 @@ class ModuleController extends Controller
     {
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($module->getEvent(), false, false, $this->getUser());
         $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
-        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
             // Vérification serveur de la validité de l'invitation
             if ($request->isXmlHttpRequest()) {
                 $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] =
-                    $this->get('translator')->trans("eventInvitation.profile.card.guestname_required_alert.error_message.unauthorized_action");;
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                 return $this->redirectToRoute('displayEvent', array('token' => $module->getEvent()->getToken()));
             }
         } else {

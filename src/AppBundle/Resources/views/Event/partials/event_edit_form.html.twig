@@ -220,7 +220,7 @@
             $('form#eventHeader').on("submit", function (e) {
                 ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
                     $('#eventEditModal').modal('hide');
-                }, function () {
+                }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
                     $('#eventEditModal').modal('handleUpdate');
                 }, function () {
                     $grid = $('.grid');

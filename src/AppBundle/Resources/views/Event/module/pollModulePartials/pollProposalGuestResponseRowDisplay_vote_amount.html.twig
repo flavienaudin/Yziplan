@@ -11,25 +11,21 @@
 {% endif %}
 <div id="popover-content_{{ pollProposal.id }}" class="hide">
     <div class="text-center m-t-10">
-        <a data-action="{{ pollProposal.id }}_plus" class="btn btn-primary btn-icon waves-effect waves-circle waves-float">
-            <i class="zmdi zmdi-plus zmdi-hc-2x"></i>
-        </a>
+        <a data-action="{{ pollProposal.id }}_plus" class="btn btn-primary btn-icon waves-effect waves-circle waves-float"> <i class="zmdi zmdi-plus zmdi-hc-2x"></i> </a>
     </div>
     <div id="pollProposalReponse_{{ pollProposal.id }}" class="pollproposalamount-response m-t-10">
-        <label for="pollProposalReponse_{{ pollProposal.id }}" class="sr-only">{{ pollProposal.pollModule.votingType }}</label>
-        <input type="text" class="input-sm w-100" name="pollProposalReponse_{{ pollProposal.id }}" min="0" value="{{ responseValue is null ? 0 : responseValue}}">
+        <label for="pollProposalReponse_{{ pollProposal.id }}" class="sr-only">{{ pollProposal.pollModule.votingType }}</label> <input type="text" class="input-sm w-100"
+                                                                                                                                       name="pollProposalReponse_{{ pollProposal.id }}" min="0"
+                                                                                                                                       value="{{ responseValue is null ? 0 : responseValue }}">
     </div>
     <div class="text-center m-t-10">
-        <a data-action="{{ pollProposal.id }}_minus" class="btn btn-primary btn-icon waves-effect waves-circle waves-float">
-            <i class="zmdi zmdi-minus zmdi-hc-2x"></i>
-        </a>
+        <a data-action="{{ pollProposal.id }}_minus" class="btn btn-primary btn-icon waves-effect waves-circle waves-float"> <i class="zmdi zmdi-minus zmdi-hc-2x"></i> </a>
     </div>
     <div class="text-center m-t-10">
         <button id="pollProposalReponse_{{ pollProposal.id }}_valider" class="btn btn-primary waves-effect waves-float">{{ "global.button.valid"|trans }}</button>
     </div>
 </div>
-<button id="pollmodule_button_{{ pollProposal.id }}" class="btn c-bluegray waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title=""
-        data-original-title="">
+<button id="pollmodule_button_{{ pollProposal.id }}" class="btn c-bluegray waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title="" data-original-title="">
     {% if responseValue > 0 %}
         <span class="answer-thumb palette-Light-Green-100 bg strong"><span class="palette-Black text">{{ responseValue }}</span></span>
     {% else %}
@@ -40,251 +36,76 @@
 
 
 <script>
-        $('#pollmodule_button_{{ pollProposal.id }}').popover({
-            html: true,
-            title : '<a class="close right" data-dismiss="close-popover">&times;</a>',
-            content: function () {
-                var content = $('#popover-content_{{ pollProposal.id }}').html();
-                return content;
-            }
-        }).on('shown.bs.popover', function (event) {
-            var popover = $(this).next('.popover');
-            popover.find('[data-action="{{ pollProposal.id }}_plus"]').on('click', function (e) {
-                var input = popover.find('input');
-                input.val(parseInt(input.val()) + 1);
-            });
-
-            popover.find('[data-action="{{ pollProposal.id }}_minus"]').on('click', function (e) {
-                var input = popover.find('input');
-                if (input.val() > 0) {
-                    input.val(parseInt(input.val()) - 1);
-                }
-            });
-
-            popover.find('[data-dismiss="close-popover"]').on('click', function (e) {
-                popover.popover('hide');
-            });
-
-            popover.find("#pollProposalReponse_{{ pollProposal.id }}_valider").on('click', function (e) {
-                var loader = '<div class="pollresponse-preloader">' +
-                    '<div class="preloader pl-sm"><svg class="pl-circular" viewBox="25 25 50 50"><circle class="plc-path" cx="50" cy="50" r="20"></circle></svg></div></div>';
-                $('#pollmodule_button_{{ pollProposal.id }}').append(loader);
-                popover.popover('hide');
-
-
-                var data = {
-                    'pollProposalId': {{ pollProposal.id }},
-                    'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
-                    'value': popover.find('input').val()
-                };
-
-                var urlTarget = "{{ path('answerPollModuleProposal') }}";
-                ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
-                    var newContent = null;
-                    if (data['value'] > 0) {
-                        newContent = '<span class="answer-thumb palette-Light-Green-100 bg strong"><span class="palette-Black text">' + data['value'] + '</span></span>';
-                    } else {
-                        newContent = '<span class="answer-thumb text palette-White"><i class="zmdi zmdi-plus zmdi-hc-2x"></i></span>';
-                    }
-                    document.getElementById("pollmodule_button_{{ pollProposal.id }}").innerHTML = newContent;
-                    LetterAvatar.transform();
-                }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-                    {# Avertissement/Demande du nom pour valider la participation #}
-                    if (!eventInvitationValid && askGuestName !== undefined) {
-                        askGuestName();
-                    }
-                });
-            });
-        }).on('hide.bs.popover', function (event) {
-            var popover = $(this).next('.popover');
-            var tempInput = popover.find('input');
-            var input = $('#popover-content_{{ pollProposal.id }}').find('input');
-            input.val(parseInt(tempInput.val()));
-        }).on('hidden.bs.popover', function (e) {
-            {# Pour se prémunir d'un bug bootstrap, sinon il faut cliquer 2 fois avant de réouvrir. #}
-            $(e.target).data("bs.popover").inState = { click: false, hover: false, focus: false }
-        });
-</script>
-{#<script>
-    $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('blur', function (e) {
-        var data = {
-            'pollProposalId': {{ pollProposal.id }},
-            'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
-            'value': $(this).val()
-        };
-        var icon = $(this).parent("label");
-        var urlTarget = "{{ path('answerPollModuleProposal') }}";
-        ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
-            var animation = 'bounceIn';
-            icon.addClass('animated ' + animation);
-            setTimeout(function () {
-                icon.removeClass(animation);
-            }, 1000);
-            LetterAvatar.transform();
-        }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-            #}{# Avertissement/Demande du nom pour valider la participation #}{#
-            if (!eventInvitationValid && askGuestName !== undefined) {
-                askGuestName();
-            }
-        });
-    });
-</script>#}
-
-{#{% set responseValue = null %}
-{% set userPPResponse = pollProposal.pollProposalResponsesOfModuleInvitations([userModuleInvitation]) %}
-{% if userPPResponse|length == 1 %}
-    {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:null) %}
-{% endif %}
-<label for="pollProposalReponse_{{ pollProposal.id }}" class="sr-only">{{ pollProposal.pollModule.votingType }}</label>
-<input type="text" class="input-sm w-100" name="pollProposalReponse_{{ pollProposal.id }}" min="0" value="{{ responseValue }}">
-<script>
-    $(document).ready(function () {
-        var touchSpinInput = $("input[name='pollProposalReponse_{{ pollProposal.id }}']").TouchSpin({
-            min: 0,
-            initval: 0,
-            verticalbuttons: true,
-            verticalupclass: 'zmdi zmdi-plus zmdi-hc-fw',
-            verticaldownclass: 'zmdi zmdi-minus zmdi-hc-fw'
-        });
-        touchSpinInput.on('change', function () {
-            $(touchSpinInput).trigger('blur');
-        });
-    });
-</script>
-<script>
-    $("input[name='pollProposalReponse_{{ pollProposal.id }}']").on('blur', function (e) {
-        var data = {
-            'pollProposalId': {{ pollProposal.id }},
-            'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
-            'value': $(this).val()
-        };
-        var icon = $(this).parent("label");
-        var urlTarget = "{{ path('answerPollModuleProposal') }}";
-        ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
-            var animation = 'bounceIn';
-            icon.addClass('animated ' + animation);
-            setTimeout(function () {
-                icon.removeClass(animation);
-            }, 1000);
-            LetterAvatar.transform();
-        }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-            #}{# Avertissement/Demande du nom pour valider la participation #}{#
-            if (!eventInvitationValid && askGuestName !== undefined) {
-                askGuestName();
-            }
-        });
-    });
-</script>#}
-
-{#  ------------------------------------------------------------------------------------------------ #}
-{# Données d'entrée :
-- pollProposal (PollProposal) La proposition à afficher
-- userModuleInvitation (ModuleInvitaion) L'invitation du module de l'utilisateur
-- moduleInvitations ([ModuleInvitaion]) les invitations du module
-#}
-
-{#{% set responseValue = null %}
-{% set userPPResponse = pollProposal.pollProposalResponsesOfModuleInvitations([userModuleInvitation]) %}
-{% if userPPResponse|length == 1 %}
-    {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:null) %}
-{% endif %}
-<div id="popover-content_{{ pollProposal.id }}" class="hide">
-    <div id="pollProposalReponse_{{ pollProposal.id }}" class="btn-group-vertical btn-group-lg pollproposal-response m-t-10" data-toggle="buttons" role="group">
-        <label id="pollProposalReponse_{{ pollProposal.id }}_yes"
-               class="btn response-yes bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES")?'active' }}">
-            <input type="radio" autocomplete="off"
-                   name="pollProposalReponse_{{ pollProposal.id }}"
-                   value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}"> <i class="zmdi zmdi-thumb-up"></i>
-        </label>
-        {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::YES_NO_MAYBE') %}
-            <label id="pollProposalReponse_{{ pollProposal.id }}_maybe"
-                   class="btn response-maybe bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE")?'active' }}">
-                <input type="radio"
-                       autocomplete="off"
-                       name="pollProposalReponse_{{ pollProposal.id }}"
-                       value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}"> <i
-                        class="zmdi zmdi-thumb-up-down"></i> </label>
-        {% endif %}
-        <label id="pollProposalReponse_{{ pollProposal.id }}_no" class="btn response-no bg waves-effect {{ responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO")?'active' }}">
-            <input type="radio" autocomplete="off"
-                   name="pollProposalReponse_{{ pollProposal.id }}"
-                   value="{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}"> <i class="zmdi zmdi-thumb-down"></i>
-        </label>
-    </div>
-</div>
-<button id="pollmodule_button_{{ pollProposal.id }}" class="btn btn-primary waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title=""
-        data-original-title="">
-    {% if responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
-        <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
-    {% elseif responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
-        <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
-    {% elseif responseValue == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
-        <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>
-    {% else %}
-        <span class="answer-thumb text palette-White">?</span>
-        #}{#<span class="answer-thumb text palette-White c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>#}{#
-    {% endif %}
-</button>
-
-<script>
     $('#pollmodule_button_{{ pollProposal.id }}').popover({
         html: true,
+        title: '<a class="close right" data-dismiss="close-popover">&times;</a>',
         content: function () {
-            var content = $('#popover-content_{{ pollProposal.id }}').html();
-            return content;
-        },
-        trigger: 'focus'
+            return $('#popover-content_{{ pollProposal.id }}').html();
+        }
     }).on('shown.bs.popover', function (event) {
-        $(this).next('.popover').find(":input").on('change', function (e) {
-            #}{# On ajoute le loader sur le bouton #}{#
+        var popover = $(this).next('.popover');
+        popover.find('[data-action="{{ pollProposal.id }}_plus"]').on('click', function (e) {
+            var input = popover.find('input');
+            input.val(parseInt(input.val()) + 1);
+        });
+
+        popover.find('[data-action="{{ pollProposal.id }}_minus"]').on('click', function (e) {
+            var input = popover.find('input');
+            if (input.val() > 0) {
+                input.val(parseInt(input.val()) - 1);
+            }
+        });
+
+        popover.find('[data-dismiss="close-popover"]').on('click', function (e) {
+            popover.popover('hide');
+        });
+
+        popover.find("#pollProposalReponse_{{ pollProposal.id }}_valider").on('click', function (e) {
             var loader = '<div class="pollresponse-preloader">' +
                 '<div class="preloader pl-sm"><svg class="pl-circular" viewBox="25 25 50 50"><circle class="plc-path" cx="50" cy="50" r="20"></circle></svg></div></div>';
             $('#pollmodule_button_{{ pollProposal.id }}').append(loader);
+            popover.popover('hide');
 
             var data = {
                 'pollProposalId': {{ pollProposal.id }},
                 'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
-                'value': $(this).val()
+                'value': popover.find('input').val()
             };
-            var icon = $(this).parent("label");
             var urlTarget = "{{ path('answerPollModuleProposal') }}";
-            ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
-                var animation = 'bounceIn';
-                icon.addClass('animated ' + animation);
-                setTimeout(function () {
-                    icon.removeClass(animation);
-                }, 1000);
-                #}{# On met a jour le bouton de reponse et les boutons radio #}{#
+            if (!eventInvitationValid && askGuestName !== undefined) {
+                askGuestName(voteAmountAction, [urlTarget, e, data], function () {
+                    $('.pollresponse-preloader').remove();
+                });
+            } else {
+                voteAmountAction([urlTarget, e, data]);
+            }
+        });
+    }).on('hide.bs.popover', function (event) {
+        var popover = $(this).next('.popover');
+        var tempInput = popover.find('input');
+        var input = $('#popover-content_{{ pollProposal.id }}').find('input');
+        input.val(parseInt(tempInput.val()));
+    }).on('hidden.bs.popover', function (e) {
+        {# Pour se prémunir d'un bug bootstrap, sinon il faut cliquer 2 fois avant de réouvrir. #}
+        $(e.target).data("bs.popover").inState = {click: false, hover: false, focus: false}
+    });
+
+    function voteAmountAction(params) {
+        var urlTarget = params[0];
+        var e = params[1];
+        var data = params[2];
+        ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
                 var newContent = null;
-                if (data['value'] == '{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") }}') {
-                    newContent = '<span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>';
-                    $('#pollProposalReponse_{{ pollProposal.id }}_yes input').click();
-                    $('#pollProposalReponse_{{ pollProposal.id }}_yes').toggleClass('active');
-                    $('#pollProposalReponse_{{ pollProposal.id }}_maybe').removeClass('active');
-                    $('#pollProposalReponse_{{ pollProposal.id }}_no').removeClass('active');
-                } else if (data['value'] == '{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") }}') {
-                    newContent = '<span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>';
-                    $('#pollProposalReponse_{{ pollProposal.id }}_yes input').click();
-                    $('#pollProposalReponse_{{ pollProposal.id }}_maybe').toggleClass('active');
-                    $('#pollProposalReponse_{{ pollProposal.id }}_yes').removeClass('active');
-                    $('#pollProposalReponse_{{ pollProposal.id }}_no').removeClass('active');
-                } else if (data['value'] == '{{ constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") }}') {
-                    newContent = ' <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>';
-                    $('#pollProposalReponse_{{ pollProposal.id }}_no').toggleClass('active');
-                    $('#pollProposalReponse_{{ pollProposal.id }}_yes').removeClass('active');
-                    $('#pollProposalReponse_{{ pollProposal.id }}_maybe').removeClass('active');
+                if (data['value'] > 0) {
+                    newContent = '<span class="answer-thumb palette-Light-Green-100 bg strong"><span class="palette-Black text">' + data['value'] + '</span></span>';
                 } else {
-                    newContent = '<span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>';
+                    newContent = '<span class="answer-thumb text palette-White"><i class="zmdi zmdi-plus zmdi-hc-2x"></i></span>';
                 }
                 document.getElementById("pollmodule_button_{{ pollProposal.id }}").innerHTML = newContent;
                 LetterAvatar.transform();
-            }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-                #}{# Avertissement/Demande du nom pour valider la participation #}{#
-                if (!eventInvitationValid && askGuestName !== undefined) {
-                    askGuestName();
-                }
+            }, null,
+            function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                $('.pollresponse-preloader').remove();
             });
-            #}{# enlever le loader en cas de probleme #}{#
-        });
-    });
-</script>#}
+    }
+</script>

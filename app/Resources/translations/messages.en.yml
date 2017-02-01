@@ -173,6 +173,7 @@ event:
   error.message:
     creation: An error occured while creating an event.
     unauthorized_access: You have not the authorization to access this event.
+    valide_guestname_required: This action required that you validated your invitation with your name. It was not handled
   success.message:
     creation: Event created successfully
   help:
@@ -200,7 +201,6 @@ eventInvitations:
     month_view: Month view
     week_view: Week view
     day_view: Day view
-
 
 eventInvitation:
   form:
@@ -235,7 +235,7 @@ eventInvitation:
       disconnect: You are not %user%?
     guestname_required_alert:
       title: Please enter your name
-      message: This participation requires that you validated your invitation with your name.<br> Watch out! You will have to try again your action after the validation
+      message: This action requires that you validated your invitation with your name
       inputError: It's better with non-empty name.
       dismiss: Your participation wasn't taken into account
       error_message:

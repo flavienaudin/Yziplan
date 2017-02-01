@@ -44,11 +44,14 @@
                                             class="zmdi zmdi-plus-square"></i>{{ "pollmodule.modal.addPollProposal.title"|trans }}</a>
                                 <script>
                                     $('#{{ add_pp_form_modal_prefix }}_modal_open_link').on('click', function (e) {
+                                        var modalId = $(this).attr('href');
                                         if (!eventInvitationValid && askGuestName !== undefined) {
                                             e.preventDefault();
-                                            askGuestName();
+                                            askGuestName(function () {
+                                                $(modalId).modal('show');
+                                            });
                                         } else {
-                                            $($(this).attr('href')).modal('show');
+                                            $(modalId).modal('show');
                                         }
                                     });
                                 </script>

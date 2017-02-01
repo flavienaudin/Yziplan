@@ -44,9 +44,12 @@ class PollModuleController extends Controller
             $pollProposalEditionForm = $pollProposalManager->createPollProposalForm($pollProposal);
             $pollProposalEditionForm->handleRequest($request);
             if ($pollProposalEditionForm->isSubmitted()) {
-                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
+                    || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER
+                ) {
                     // Vérification serveur de la validité de l'invitation
                     $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else {
                     if ($pollProposalEditionForm->isValid()) {
@@ -92,9 +95,12 @@ class PollModuleController extends Controller
     {
         if ($moduleInvitation == $pollProposal->getCreator()) {
             if ($request->isXmlHttpRequest()) {
-                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
+                    || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER
+                ) {
                     // Vérification serveur de la validité de l'invitation
                     $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else {
                     $pollProposalManager = $this->get("at.manager.pollproposal");
@@ -118,15 +124,15 @@ class PollModuleController extends Controller
      */
     public function displayResultTableAction(Module $module, Request $request)
     {
-            if ($request->isXmlHttpRequest()) {
-                $moduleManager = $this->get("at.manager.module");
-                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollModuleDisplayAllResult_'.$module->getToken().'_container'] =
-                    $moduleManager->displayPollModuleResultTable($module);
-                return new AppJsonResponse($data, Response::HTTP_OK);
-            } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
-                return $this->redirectToRoute("home");
-            }
+        if ($request->isXmlHttpRequest()) {
+            $moduleManager = $this->get("at.manager.module");
+            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollModuleDisplayAllResult_' . $module->getToken() . '_container'] =
+                $moduleManager->displayPollModuleResultTable($module);
+            return new AppJsonResponse($data, Response::HTTP_OK);
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
+            return $this->redirectToRoute("home");
+        }
 
 
     }
