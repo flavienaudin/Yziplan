@@ -447,6 +447,9 @@ global:
   exception:
     access_denied_http: You do not have access to these information. Please, connect with the appropriate user.
     method_not_allowed_http: This request is not allowed. Take care.
+  validator.constraint:
+    as_array: The format is not valid (%format%)
+    values_not_null: This value should not be blank
   swal:
     title:
       error: Error

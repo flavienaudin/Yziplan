@@ -9,13 +9,9 @@
 namespace AppBundle\Manager;
 
 
-use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
-use AppBundle\Entity\Event\ModuleInvitation;
-use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalElement;
-use AppBundle\Form\Module\PollProposalType;
 use AppBundle\Utils\enum\PollElementType;
 use DateTime;
 use Doctrine\ORM\EntityManager;
@@ -76,11 +72,12 @@ class PollProposalElementManager
             $valDate = $pollProposalElementForm->get('startDate')->getData();
             /** @var array $valTime (e.g. array('hour' => 12, 'minute' => 17, 'second' => 26)) */
             $valTime = $pollProposalElementForm->get('startTime')->getData();
-            if (!empty($valDate)) {
+
+            if ($this->castArrayValuesToInt($valDate)) {
                 $datetimeValue->setDate($valDate['year'], $valDate['month'], $valDate['day']);
             }
-            if (!empty($valTime) && !empty($valTime['hour']) && !empty($valTime['minute'])) {
-                $datetimeValue->setTime($valTime['hour'], $valTime['minute']);
+            if ($this->castArrayValuesToInt($valTime)) {
+                $datetimeValue->setTime((int)$valTime['hour'], (int)$valTime['minute']);
                 $this->pollProposalElement->setTime(true);
             } else {
                 $this->pollProposalElement->setTime(false);
@@ -93,13 +90,14 @@ class PollProposalElementManager
             $valDate = $pollProposalElementForm->get('endDate')->getData();
             /** @var array $valTime (e.g. array('hour' => 12, 'minute' => 17, 'second' => 26)) */
             $valTime = $pollProposalElementForm->get('endTime')->getData();
-            if (!empty($valDate) && !empty($valDate['year'])) {
+
+            if ($this->castArrayValuesToInt($valDate)) {
                 $datetimeValue->setDate($valDate['year'], $valDate['month'], $valDate['day']);
                 $this->pollProposalElement->setEndDate(true);
             } else {
                 $this->pollProposalElement->setEndDate(false);
             }
-            if (!empty($valTime) && !empty($valTime['hour']) && !empty($valTime['minute'])) {
+            if ($this->castArrayValuesToInt($valTime)) {
                 $datetimeValue->setTime($valTime['hour'], $valTime['minute']);
                 $this->pollProposalElement->setEndTime(true);
             } else {
@@ -109,4 +107,32 @@ class PollProposalElementManager
         }
         return $this->pollProposalElement;
     }
+
+    /**
+     * Cast to int each values in the array
+     * @param $array array with all values to cast
+     * @return bool true if all values were casted Else false
+     */
+    private function castArrayValuesToInt(&$array)
+    {
+        $valid = true;
+        $newValues = array();
+        foreach (array_keys($array) as $key) {
+            if ($array[$key] != "") {
+                $newValues[$key] = (int)$array[$key];
+            } else {
+                $valid &= false;
+            }
+        }
+        if ($valid) {
+            foreach (array_keys($array) as $key) {
+                $array[$key] = $newValues[$key];
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 }

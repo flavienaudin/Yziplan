@@ -4,7 +4,6 @@
 - pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
 - edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
 #}
-
 <div>
     {% if edition %}
         {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
@@ -74,6 +73,5 @@
     </div>
     {{ form_end(pollProposalForm) }}
 </div>
-
 
 

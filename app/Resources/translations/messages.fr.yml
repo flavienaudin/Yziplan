@@ -443,10 +443,13 @@ global:
     unauthorized_access: Tu n'es pas autorisé à accéder à cette section.
     internal_server_error: Une erreur interne est survenue. Merci de vérifier tes données et de réessayer ton action.
     javascrip_disabled: Ton navigateur a désactivé le javascript. Le site risque de mal s'afficher. Ré-active-le afin de profiter pleinement des fonctionnalités que nous te proposons
-    invalid_form: Des données du formulaire sont invalides.
+    invalid_form: Des données du formulaire sont invalides
   exception:
     access_denied_http: Tu n'as pas accès à ces données. Connecte-toi avec l'utilisateur adéquate.
     method_not_allowed_http: Cette requête n'est pas autorisée.
+  validator.constraint:
+    as_array: Le format n'est pas valide (%format%)
+    values_not_null: Cette valeur ne doit pas être vide
   swal:
     title:
       error: Erreur

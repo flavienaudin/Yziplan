@@ -465,12 +465,12 @@ class EventController extends Controller
                             $data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
 
                             // Form reset
-                            $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']);
-                            $newPollProposalAddForm = $pollProposalManager->createPollProposalAddForm($moduleDescription['module']->getPollModule(), $userModuleInvitation);
+                            $userModuleEventInvitation = $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']);
+                            $pollProposalAddForm = $pollProposalManager->createPollProposalAddForm($moduleDescription['module']->getPollModule(), $userModuleEventInvitation);
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
                                 $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
-                                    'userModuleInvitation' => $userModuleInvitation,
-                                    'pollProposalForm' => $newPollProposalAddForm->createView(),
+                                    'userModuleInvitation' => $userModuleEventInvitation,
+                                    'pollProposalForm' => $pollProposalAddForm->createView(),
                                     'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
                                     'edition' => false
                                 ));
