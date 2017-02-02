@@ -235,7 +235,7 @@ eventInvitation:
       disconnect: You are not %user%?
     guestname_required_alert:
       title: Please enter your name
-      message: This action requires that you validated your invitation with your name
+      message: This action requires that you are identified with the other guests
       inputError: It's better with non-empty name.
       dismiss: Your participation wasn't taken into account
       error_message:

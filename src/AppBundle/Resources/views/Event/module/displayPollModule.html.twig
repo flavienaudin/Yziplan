@@ -47,7 +47,7 @@
                                         var modalId = $(this).attr('href');
                                         if (!eventInvitationValid && askGuestName !== undefined) {
                                             e.preventDefault();
-                                            askGuestName(function () {
+                                            askGuestName(e, function () {
                                                 $(modalId).modal('show');
                                             });
                                         } else {

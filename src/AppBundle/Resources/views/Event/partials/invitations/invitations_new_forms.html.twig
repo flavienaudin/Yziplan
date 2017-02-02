@@ -97,7 +97,7 @@
                             var $form = $(this);
                             if (!eventInvitationValid && askGuestName !== undefined) {
                                 $('#invitations_new_modal').modal('hide');
-                                askGuestName(submitNewInvitationsForm,[$form, e], function(){$('#invitations_new_modal').modal('show');});
+                                askGuestName(e, submitNewInvitationsForm,[$form, e], function(){$('#invitations_new_modal').modal('show');});
                             } else {
                                 submitNewInvitationsForm([$form, e]);
                             }

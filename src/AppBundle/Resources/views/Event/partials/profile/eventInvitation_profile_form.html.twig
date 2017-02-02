@@ -58,37 +58,41 @@
             $(document).ready(function () {
                 new Clipboard('#btn_copy_invitation_url');
 
-                $('form#userEventInvitationProfile').on("submit", function (e) {
-                    e.preventDefault();
-                    var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
-                    var $form = $(this);
-                    if (profileEmail.trim() == "") {
-                        swal({
-                            titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
-                            html: '{{ htmlInputBlock|raw }}<br>{{ "eventInvitation.profile.card.guestemail_empty_alert.html"|trans }}',
-                            input: "email",
-                            showCancelButton: true,
-                            buttonsStyling: false,
-                            cancelButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.cancel"|trans }}",
-                            cancelButtonClass: "btn btn-default btn-link c-blue m-b-10 m-l-5 m-r-5",
-                            confirmButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.confirm"|trans }}",
-                            confirmButtonClass: "btn btn-primary m-b-10  m-l-5 m-r-5",
-                            animation: "slide-from-top",
-                            inputPlaceholder: "{{ "eventInvitation.form.email.placeholder"|trans|raw }}"
-                        }).then(function (inputValue) {
-                            $('#{{ userEventInvitationForm.email.vars.id }}').val(inputValue);
-                            submitEventInvitationProfileForm($form, e);
-                        }, function (dismiss) {
-                            if (dismiss === 'cancel') {
-                                // L'utilsiateur a cliqué sur le bouton "J'ai bien noté le lien" => pas d'email volontairement
-                                submitEventInvitationProfileForm($form, e);
-                            }
-                        });
-                    } else {
-                        submitEventInvitationProfileForm($form, e);
-                    }
-                });
+                $('form#userEventInvitationProfile').on("submit", preSubmitEventInvitationProfileForm);
             });
+
+            function preSubmitEventInvitationProfileForm(e) {
+                if (e != null) {
+                    e.preventDefault();
+                }
+                var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
+                var $form = $(this);
+                if (profileEmail.trim() == "") {
+                    swal({
+                        titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
+                        html: '{{ htmlInputBlock|raw }}<br>{{ "eventInvitation.profile.card.guestemail_empty_alert.html"|trans }}',
+                        input: "email",
+                        showCancelButton: true,
+                        buttonsStyling: false,
+                        cancelButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.cancel"|trans }}",
+                        cancelButtonClass: "btn btn-default btn-link c-blue m-b-10 m-l-5 m-r-5",
+                        confirmButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.confirm"|trans }}",
+                        confirmButtonClass: "btn btn-primary m-b-10  m-l-5 m-r-5",
+                        animation: "slide-from-top",
+                        inputPlaceholder: "{{ "eventInvitation.form.email.placeholder"|trans|raw }}"
+                    }).then(function (inputValue) {
+                        $('#{{ userEventInvitationForm.email.vars.id }}').val(inputValue);
+                        submitEventInvitationProfileForm($form, e);
+                    }, function (dismiss) {
+                        if (dismiss === 'cancel') {
+                            // L'utilsiateur a cliqué sur le bouton "J'ai bien noté le lien" => pas d'email volontairement
+                            submitEventInvitationProfileForm($form, e);
+                        }
+                    });
+                } else {
+                    submitEventInvitationProfileForm($form, e);
+                }
+            }
 
             /** Submit the profile form with ajax request */
             function submitEventInvitationProfileForm($form, e) {
@@ -98,39 +102,73 @@
                         LetterAvatar.transform();
                     }
                 }, null, null, profileFormAsynchronousAjaxSubmission);
+                profileFormAsynchronousAjaxSubmission = true;
             }
 
             {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') or
-                    userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_ANSWER') %}
+            userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_ANSWER') %}
             eventInvitationValid = false;
             /**
              * Affichage d'une fenêtre "dialog" pour demander le nom de l'invité et d'executer la fonction donnée (ex : soumission d'un formulaire)
              */
-            function askGuestName(thenConfirmCallback, thenConfirmCallbackParams, thenCancelCallback, thenCancelCallbackParams) {
+            function askGuestName(e, thenConfirmCallback, thenConfirmCallbackParams, thenCancelCallback, thenCancelCallbackParams) {
                 if (!eventInvitationValid) {
-                    swal({
-                        titleText: "{{ "eventInvitation.profile.card.guestname_required_alert.title"|trans }}",
-                        html: "{{ "eventInvitation.profile.card.guestname_required_alert.message"|trans|raw }}",
-                        input: "text",
-                        showCancelButton: true,
-                        cancelButtonText: "{{ "global.button.cancel"|trans }}",
-                        reverseButtons: true,
-                        animation: "slide-from-top",
-                        inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}",
-                        preConfirm: function (input) {
-                            return new Promise(function (resolve, reject) {
-                                if (input === false || input.trim() === '') {
-                                    reject("{{ "eventInvitation.profile.card.guestname_required_alert.inputError"|trans|raw }}");
-                                } else {
-                                    resolve();
-                                }
-                            })
+                    e.preventDefault();
+                    var currentStep = 0;
+                    var guestNameInput = 0;
+                    var form = $('form#userEventInvitationProfile');
+                    var steps = [
+                        {
+                            titleText: "{{ "eventInvitation.profile.card.guestname_required_alert.title"|trans }}",
+                            html: "{{ "eventInvitation.profile.card.guestname_required_alert.message"|trans|raw }}",
+                            input: "text",
+                            showCancelButton: true,
+                            cancelButtonText: "{{ "global.button.cancel"|trans }}",
+                            reverseButtons: true,
+                            animation: "slide-from-top",
+                            inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}",
+                            preConfirm: function (input) {
+                                return new Promise(function (resolve, reject) {
+                                    if (input === false || input.trim() === '') {
+                                        reject("{{ "eventInvitation.profile.card.guestname_required_alert.inputError"|trans|raw }}");
+                                    } else {
+                                        currentStep = 1;
+                                        $('#{{ userEventInvitationForm.guestName.vars.id }}').val(input);
+                                        resolve();
+                                    }
+                                })
+                            }
                         }
-                    }).then(function (inputValue) {
-                        $('#{{ userEventInvitationForm.guestName.vars.id }}').val(inputValue);
+                    ];
+
+
+                    var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
+                    if (profileEmail.trim() == "") {
+                        steps.push({
+                            titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
+                            html: '{{ htmlInputBlock|raw }}<br>{{ "eventInvitation.profile.card.guestemail_empty_alert.html"|trans }}',
+                            input: "email",
+                            buttonsStyling: false,
+                            showCancelButton: true,
+                            cancelButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.cancel"|trans }}",
+                            cancelButtonClass: "btn btn-default btn-link c-blue m-b-10 m-l-5 m-r-5",
+                            confirmButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.confirm"|trans }}",
+                            confirmButtonClass: "btn btn-primary m-b-10  m-l-5 m-r-5",
+                            animation: "slide-from-top",
+                            inputPlaceholder: "{{ "eventInvitation.form.email.placeholder"|trans|raw }}"
+                        });
+                    }
+                    swal.queue(steps).then(function (result) {
+                        console.log("result=" + result);
+                        console.log("currentStep =" + currentStep);
+                        $('#{{ userEventInvitationForm.guestName.vars.id }}').val(result[0]);
+
+                        if (result.length > 1) {
+                            $('#{{ userEventInvitationForm.email.vars.id }}').val(result[1]);
+                        }
                         profileFormAsynchronousAjaxSubmission = false;
-                        $('form#userEventInvitationProfile').submit();
-                        profileFormAsynchronousAjaxSubmission = true;
+                        submitEventInvitationProfileForm(form, e);
+
                         if (typeof thenConfirmCallback === 'function') {
                             if (thenConfirmCallbackParams == undefined) {
                                 thenConfirmCallbackParams = null;
@@ -138,11 +176,22 @@
                             thenConfirmCallback(thenConfirmCallbackParams)
                         }
                     }, function (dismiss) {
-                        swal({
-                            title: "{{ "global.swal.title.warning"|trans }}",
-                            html: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans }}",
-                            type: "error"
-                        });
+                        console.log("dismiss : " + dismiss);
+                        console.log("currentStep : " + currentStep);
+                        if (currentStep == 0) {
+                            swal({
+                                title: "{{ "global.swal.title.warning"|trans }}",
+                                html: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans }}",
+                                type: "error"
+                            });
+                        } else if (currentStep == 1) {
+                            if (dismiss === 'cancel') {
+                                // L'utilsiateur a cliqué sur le bouton "J'ai bien noté le lien" => pas d'email volontairement
+                                console.log(form);
+                                submitEventInvitationProfileForm(form, e);
+                            }
+                        }
+
                         if (typeof thenCancelCallback === 'function') {
                             if (thenCancelCallbackParams == undefined) {
                                 thenCancelCallbackParams = null;

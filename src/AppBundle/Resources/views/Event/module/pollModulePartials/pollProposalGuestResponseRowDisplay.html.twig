@@ -22,7 +22,7 @@
                                 e.preventDefault();
                                 var $form = $(this);
                                 if (!eventInvitationValid && askGuestName !== undefined) {
-                                    askGuestName(submitGetPollProposalEditionForm, [$form, e, '{{ pollProposal.pollmodule.module.token }}', '{{ pollProposal.id }}']);
+                                    askGuestName(e, submitGetPollProposalEditionForm, [$form, e, '{{ pollProposal.pollmodule.module.token }}', '{{ pollProposal.id }}']);
                                 } else {
                                     submitGetPollProposalEditionForm([$form, e, '{{ pollProposal.pollmodule.module.token }}', '{{ pollProposal.id }}']);
                                 }
@@ -52,7 +52,7 @@
                                 e.preventDefault();
                                 var removePPLink = $(this);
                                 if (!eventInvitationValid && askGuestName !== undefined) {
-                                    askGuestName(deletePollProposalAction([removePPLink, e]));
+                                    askGuestName(e, deletePollProposalAction([removePPLink, e]));
                                 } else {
                                     deletePollProposalAction([removePPLink, e]);
                                 }

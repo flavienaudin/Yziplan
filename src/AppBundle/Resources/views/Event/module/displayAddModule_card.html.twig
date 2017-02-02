@@ -38,7 +38,7 @@
                 var target = $(this);
                 if (!eventInvitationValid && askGuestName !== undefined) {
                     e.preventDefault();
-                    askGuestName(addModuleAction, [target,e]);
+                    askGuestName(e, addModuleAction, [target,e]);
                 } else {
                     addModuleAction([target,e]);
                 }

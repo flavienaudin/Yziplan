@@ -51,7 +51,7 @@
                 var form = $(this);
                 if (!eventInvitationValid && askGuestName !== undefined) {
                     $('#moduleEdit_modal_{{ module.token }}').modal('hide');
-                    askGuestName(submitModuleEditionForm, [form, e]);
+                    askGuestName(e, submitModuleEditionForm, [form, e]);
                 }else{
                     submitModuleEditionForm([form, e]);
                 }

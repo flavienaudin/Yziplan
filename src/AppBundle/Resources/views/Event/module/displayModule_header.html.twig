@@ -33,7 +33,7 @@ Données d'entrée :
                                                 e.preventDefault();
                                                 var removeModuleLink = $(this);
                                                 if (!eventInvitationValid && askGuestName !== undefined) {
-                                                    askGuestName(removeModuleAction, [removeModuleLink, e]);
+                                                    askGuestName(e, removeModuleAction, [removeModuleLink, e]);
                                                 } else {
                                                     removeModuleAction([removeModuleLink, e]);
                                                 }

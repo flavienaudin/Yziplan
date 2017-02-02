@@ -28,7 +28,7 @@ Données d'entrée :
                 e.preventDefault();
                 var form = $(this);
                 if (!eventInvitationValid && askGuestName !== undefined) {
-                    askGuestName(submitEventInvitationAnswerForm, [form, e], function(){
+                    askGuestName(e, submitEventInvitationAnswerForm, [form, e], function(){
                         $('form#userEventInvitationAnswer')[0].reset();
                         $('form#userEventInvitationAnswer label').removeClass('active');
                         $('form#userEventInvitationAnswer input[checked=checked]').parent().addClass('active');
