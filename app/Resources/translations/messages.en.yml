@@ -97,6 +97,7 @@ event:
     link: Change the picture
     update_modal:
       title: Upload a picture
+      subtitle: Once the picture loaded, you can click to select the image focus point, it will be centered automatically
       button:
         submit_title: Upload the picture and use it for the event
   modal.edit:
