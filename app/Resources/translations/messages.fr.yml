@@ -97,6 +97,7 @@ event:
     link: Changer l'image
     update_modal:
       title: Charger une image
+      subtitle: Une fois l'image sélectionnée, vous pourrez indiquer la zone importante en cliquant, l'image sera alors centrée automatiquement.
       button:
         submit_title: Transférer l'image et l'utiliser pour l'événement
   modal.edit:
