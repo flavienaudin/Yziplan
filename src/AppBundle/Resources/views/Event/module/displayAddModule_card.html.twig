@@ -30,6 +30,13 @@
                     <p>{{ "pollmodule.add_link.whobringswhat"|trans }}</p></a>
 
             </div>
+            <div class="col-xs-3 text-center">
+                <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+                    'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::ACTIVITY')}) }}" id="addActivityPollModule"> <i
+                            class="waves-effect zmdi zmdi-format-list-bulleted zmdi-hc-3x"></i>
+                    <p>{{ "pollmodule.add_link.activity"|trans }}</p></a>
+
+            </div>
         </div>
 
         <script>

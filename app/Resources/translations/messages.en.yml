@@ -368,6 +368,11 @@ pollmodule:
     when: When?
     where: Where?
     whobringswhat: Who brings what?
+    activity: Activity
+  poll_element:
+    name: Name
+    picture: Picture
+    description: Description
   display:
     no_proposal: No proposal yet
     result:

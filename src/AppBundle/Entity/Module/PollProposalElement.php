@@ -329,6 +329,8 @@ class PollProposalElement
                 break;
             case $type == PollElementType::GOOGLE_PLACE_ID:
             case PollElementType::STRING :
+            case PollElementType::RICHTEXT :
+            case PollElementType::PICTURE :
                 $val = $this->getValString();
                 break;
         }

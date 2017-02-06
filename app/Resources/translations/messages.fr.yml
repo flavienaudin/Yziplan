@@ -368,6 +368,11 @@ pollmodule:
     when: Quand?
     where: Où?
     whobringswhat: Qui apporte quoi?
+    activity: Activité
+  poll_element:
+    name: Nom
+    picture: Image
+    description: Description
   display:
     no_proposal: Pas encore de proposition
     result:
