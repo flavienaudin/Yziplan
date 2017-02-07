@@ -107,7 +107,7 @@ event:
       label: Titre
       placeholder: Titre de l'événement
     description:
-      label: "Description :"
+      label: "Détails"
       placeholder: Dites-en plus au sujet de votre événement
       empty: Les organisateurs n'ont pas donné plus de détail
     responseDeadline:

@@ -1231,6 +1231,15 @@ select.chosen {
     right: 15px;
 }
 
+
+/*************************/
+/*** SummerNote Editor ***/
+/*************************/
+
+.note-popover.popover.in {
+    z-index: 1052;
+}
+
 .note-editor .note-toolbar,
 .note-popover .note-toolbar,
 .note-editor .popover-content,
@@ -1249,6 +1258,8 @@ select.chosen {
     display: inline-block;
     float: none;
     box-shadow: none;
+    margin-top: 0;
+    margin-right: 0;
 }
 
 .note-editor .note-toolbar > .btn-group .btn,
@@ -1320,140 +1331,155 @@ select.chosen {
     border-color: #BCBCBC;
 }
 
-.note-editor .fa,
-.note-popover .fa {
+.note-editor [class^="note-icon-"],
+.note-popover [class^="note-icon-"] {
     font-style: normal;
     font-size: 20px;
     vertical-align: middle;
 }
 
-.note-editor .fa:before,
-.note-popover .fa:before {
+.note-editor [class^="note-icon-"]:before,
+.note-popover [class^="note-icon-"]:before {
     font-family: 'Material-Design-Iconic-Font';
 }
 
-.note-editor .fa.fa-magic:before,
-.note-popover .fa.fa-magic:before {
+.note-editor .note-icon-magic:before,
+.note-popover .note-icon-magic:before {
     content: "\f16a";
 }
 
-.note-editor .fa.fa-bold:before,
-.note-popover .fa.fa-bold:before {
+.note-editor .note-icon-caret:before,
+.note-popover .note-icon-caret:before {
+    content: "\f2f2";
+}
+
+.note-editor .note-icon-bold:before,
+.note-popover .note-icon-bold:before {
     content: "\f23d";
 }
 
-.note-editor .fa.fa-italic:before,
-.note-popover .fa.fa-italic:before {
+.note-editor .note-icon-italic:before,
+.note-popover .note-icon-italic:before {
     content: "\f245";
 }
 
-.note-editor .fa.fa-underline:before,
-.note-popover .fa.fa-underline:before {
+.note-editor .note-icon-underline:before,
+.note-popover .note-icon-underline:before {
     content: "\f24f";
 }
 
-.note-editor .fa.fa-font:before,
-.note-popover .fa.fa-font:before {
+.note-editor .note-icon-font:before,
+.note-popover .note-icon-font:before {
     content: "\f242";
 }
 
-.note-editor .fa.fa-list-ul:before,
-.note-popover .fa.fa-list-ul:before {
+.note-editor .note-icon-unorderedlist:before,
+.note-popover .note-icon-unorderedlist:before {
     content: "\f247";
 }
 
-.note-editor .fa.fa-list-ol:before,
-.note-popover .fa.fa-list-ol:before {
+.note-editor .note-icon-orderedlist:before,
+.note-popover .note-icon-orderedlist:before {
     content: "\f248";
 }
 
-.note-editor .fa.fa-align-left:before,
-.note-popover .fa.fa-align-left:before {
+.note-editor .note-icon-align-left:before,
+.note-popover .note-icon-align-left:before {
     content: "\f23b";
 }
 
-.note-editor .fa.fa-align-right:before,
-.note-popover .fa.fa-align-right:before {
+.note-editor .note-icon-align-right:before,
+.note-popover .note-icon-align-right:before {
     content: "\f23c";
 }
 
-.note-editor .fa.fa-align-center:before,
-.note-popover .fa.fa-align-center:before {
+.note-editor .note-icon-align-center:before,
+.note-popover .note-icon-align-center:before {
     content: "\f239";
 }
 
-.note-editor .fa.fa-align-justify:before,
-.note-popover .fa.fa-align-justify:before {
+.note-editor .note-icon-align-justify:before,
+.note-popover .note-icon-align-justify:before {
     content: "\f23a";
 }
 
-.note-editor .fa.fa-indent:before,
-.note-popover .fa.fa-indent:before {
+.note-editor .note-icon-align-indent:before,
+.note-popover .note-icon-align-indent:before {
     content: "\f244";
 }
 
-.note-editor .fa.fa-outdent:before,
-.note-popover .fa.fa-outdent:before {
+.note-editor .note-icon-align-outdent:before,
+.note-popover .note-icon-align-outdent:before {
     content: "\f243";
 }
 
-.note-editor .fa.fa-text-height:before,
-.note-popover .fa.fa-text-height:before {
+.note-editor .note-icon-text-height:before,
+.note-popover .note-icon-text-height:before {
     content: "\f246";
 }
 
-.note-editor .fa.fa-table:before,
-.note-popover .fa.fa-table:before {
+.note-editor .note-icon-table:before,
+.note-popover .note-icon-table:before {
     content: "\f320";
 }
 
-.note-editor .fa.fa-link:before,
-.note-popover .fa.fa-link:before {
+.note-editor .note-icon-link:before,
+.note-popover .note-icon-link:before {
     content: "\f18e";
 }
 
-.note-editor .fa.fa-picture-o:before,
-.note-popover .fa.fa-picture-o:before {
+.note-editor .note-icon-picture:before,
+.note-popover .note-icon-picture:before {
     content: "\f17f";
 }
 
-.note-editor .fa.fa-minus:before,
-.note-popover .fa.fa-minus:before {
+.note-editor .note-icon-video:before,
+.note-popover .note-icon-video:before {
+    content: "\f2e0";
+}
+
+.note-editor .note-icon-minus:before,
+.note-popover .note-icon-minus:before {
     content: "\f22f";
 }
 
-.note-editor .fa.fa-arrows-alt:before,
-.note-popover .fa.fa-arrows-alt:before {
+.note-editor .note-icon-arrows-alt:before,
+.note-popover .note-icon-arrows-alt:before {
     content: "\f16d";
 }
 
-.note-editor .fa.fa-code:before,
-.note-popover .fa.fa-code:before {
+.note-editor .note-icon-code:before,
+.note-popover .note-icon-code:before {
     content: "\f13a";
 }
 
-.note-editor .fa.fa-question:before,
-.note-popover .fa.fa-question:before {
+.note-editor .note-icon-question:before,
+.note-popover .note-icon-question:before {
     content: "\f1f5";
 }
 
-.note-editor .fa.fa-eraser:before,
-.note-popover .fa.fa-eraser:before {
+.note-editor .note-icon-eraser:before,
+.note-popover .note-icon-eraser:before {
     content: "\f23f";
 }
 
-.note-editor .fa.fa-square:before,
-.note-popover .fa.fa-square:before {
+.note-editor .note-icon-square:before,
+.note-popover .note-icon-square:before {
     content: "\f279";
 }
 
-.note-editor .fa.fa-circle-o:before,
-.note-popover .fa.fa-circle-o:before {
+.note-editor .note-icon-chain-broken:before,
+.note-popover .note-icon-chain-broken:before {
+    content: "\f119";
+}
+
+.note-editor .note-icon-circle-o:before,
+.note-popover .note-icon-circle-o:before {
     content: "\f26c";
 }
 
-.note-editor .fa.fa-times:before,
-.note-popover .fa.fa-times:before {
+.note-editor .note-icon-times:before,
+.note-popover .note-icon-times:before {
     content: "\f136";
 }
 

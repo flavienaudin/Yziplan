@@ -200,7 +200,10 @@
         {% endblock js_functions %}
 
         $(document).ready(function () {
+            var $dialogsInBody = false;
+
             {% block js_document_ready %}
+            $dialogsInBody = true;
             var $eventEditModal = $('#eventEditModal');
             $eventEditModal.on('shown.bs.modal', function (e) {
                 if (typeof initEventEditMap === "function") {
@@ -224,7 +227,7 @@
                     $('#eventEditModal').modal('handleUpdate');
                 }, function () {
                     $grid = $('.grid');
-                    if($grid[0]) {
+                    if ($grid[0]) {
                         $grid.masonry('layout');
                     }
                 });
@@ -237,6 +240,13 @@
                 $('#event_public_invitation_display').fadeToggle();
             });
             {% endblock js_document_ready %}
+            var summernoteOptions = {
+                dialogsInBody: $dialogsInBody
+            };
+            {% if app.request.locale == 'fr' %}
+            summernoteOptions.lang = 'fr-FR';
+            {% endif %}
+            $('#{{ eventForm.description.vars.id }}').summernote(summernoteOptions);
         });
     </script>
 </div>

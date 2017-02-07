@@ -21,7 +21,7 @@
             <dl>
                 <dt class="p-b-5">{{ "event.form.description.label"|trans }}</dt>
                 <dd>{% if userEventInvitation.event.description is not empty %}
-                        {{ userEventInvitation.event.description|nl2br }}
+                        {{ userEventInvitation.event.description|raw }}
                     {% else %}
                         <i class="text-muted">{{ "event.form.description.empty"|trans }}</i>
                     {% endif %}
