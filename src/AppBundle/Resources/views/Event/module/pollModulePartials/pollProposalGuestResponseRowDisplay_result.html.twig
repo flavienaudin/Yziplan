@@ -9,6 +9,11 @@
             "pollProposal":pollProposal,
             "moduleInvitations":moduleInvitations
         }) }}
+    {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::RANKING') %}
+        {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_result_ranking.html.twig', {
+            "pollProposal":pollProposal,
+            "moduleInvitations":moduleInvitations
+        }) }}
     {% else %}{# Dans le cas d'un yes/maybe/no ou d'un yes/no #}
         {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_result_yesno.html.twig', {
             "pollProposal":pollProposal,

@@ -380,6 +380,7 @@ pollmodule:
      vote: vote(s)
      contribution: contribution(s)
      total: "Total:"
+     moyenne: "Moyenne:"
      allresult: Voir l'ensemble des réponses
      modal:
       title: Réponses
