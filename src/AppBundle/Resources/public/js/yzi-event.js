@@ -138,6 +138,30 @@ function voteAmountAction(params) {
         });
 }
 
+function voteRankingAction(params) {
+    var urlTarget = params[0];
+    var e = params[1];
+    var data = params[2];
+    var pollProposalId = params[3];
+
+    ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
+        var icon = $('#pollmodule_button_' + pollProposalId);
+        var animation = 'bounceIn';
+        icon.addClass('animated ' + animation);
+        setTimeout(function () {
+            icon.removeClass(animation);
+        }, 1000);
+        // On met a jour le bouton de reponse et les boutons radio
+        var newContent = '<span class="answer-thumb palette-Yellow-100 bg c-amber strong">' + data.value + '<i class="zmdi zmdi-star"></i></span>'
+
+        document.getElementById("pollmodule_button_" + pollProposalId).innerHTML = newContent;
+        LetterAvatar.transform();
+    }, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+        $('.pollresponse-preloader-' + pollProposalId).remove();
+    });
+}
+
+
 function submitAddPollProposalForm(params) {
     var form = params[0];
     var e = params[1];
