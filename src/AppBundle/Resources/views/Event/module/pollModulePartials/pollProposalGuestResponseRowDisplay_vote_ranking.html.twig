@@ -1,0 +1,61 @@
+{# Données d'entrée :
+- pollProposal (PollProposal) La proposition à afficher
+- userModuleInvitation (ModuleInvitaion) L'invitation du module de l'utilisateur
+- moduleInvitations ([ModuleInvitaion]) les invitations du module
+#}
+
+{% set responseValue = null %}
+{% set userPPResponse = pollProposal.pollProposalResponsesOfModuleInvitations([userModuleInvitation]) %}
+{% if userPPResponse|length == 1 %}
+    {% set responseValue = (userPPResponse[0] is not null and userPPResponse[0].answer is not empty?userPPResponse[0].answer:0) %}
+{% endif %}
+<div id="popover-content_{{ pollProposal.id }}" class="hide">
+    <div id="pollProposalReponse_{{ pollProposal.id }}" class="rateYo m-t-15" style="width: 190px; height: 36px;">
+    </div>
+</div>
+<button id="pollmodule_button_{{ pollProposal.id }}" class="btn c-bluegray waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title="" data-original-title="">
+    {% if responseValue > 0 %}
+        <span class="answer-thumb palette-Yellow-100 bg c-amber strong">
+                {{ responseValue }} <i class="zmdi zmdi-star"></i>
+        </span>
+    {% else %}
+        <span class="answer-thumb text palette-White"> <i class="zmdi zmdi-star-half"></i> </span>
+        {#<span class="answer-thumb text palette-White c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>#}
+    {% endif %}
+</button>
+
+<script>
+    $('#pollmodule_button_{{ pollProposal.id }}').popover({
+        html: true,
+        content: function () {
+            var content = $('#popover-content_{{ pollProposal.id }}').html();
+            return content;
+        },
+        trigger: 'focus'
+    }).on('shown.bs.popover', function (event) {
+        $(this).next('.popover').find(".rateYo").rateYo({
+            rating: {{ responseValue }},
+            fullStar: true,
+            spacing: "5px",
+        }).on("rateyo.set", function (e, rateYoData) {
+            var loader = '<div id="pollresponse-preloader-{{ pollProposal.id }}" class="pollresponse-preloader">' +
+                '<div class="preloader pl-sm"><svg class="pl-circular" viewBox="25 25 50 50"><circle class="plc-path" cx="50" cy="50" r="20"></circle></svg></div></div>';
+            $('#pollmodule_button_{{ pollProposal.id }}').append(loader);
+
+            var data = {
+                'pollProposalId': {{ pollProposal.id }},
+                'userModuleInvitationToken': "{{ userModuleInvitation.token }}",
+                'value': rateYoData.rating
+            };
+            var urlTarget = "{{ path('answerPollModuleProposal') }}";
+            var pollProposalId = '{{ pollProposal.id }}';
+            if (!eventInvitationValid && askGuestName !== undefined) {
+                askGuestName(e, voteRankingAction, [urlTarget, e, data, pollProposalId], function () {
+                    $('.pollresponse-preloader').remove();
+                });
+            } else {
+                voteRankingAction([urlTarget, e, data, pollProposalId]);
+            }
+        });
+    });
+</script>

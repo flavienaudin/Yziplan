@@ -443,6 +443,7 @@ h1.event-title {
     font-weight: bold;
 }
 
+.answer-thumb-ranking,
 .answer-thumb {
     display: inline-block;
     margin-bottom: 0;
@@ -453,6 +454,12 @@ h1.event-title {
     font-size: 12px;
     line-height: 1.42857143;
     border-radius: 2px;
+}
+
+.answer-thumb-ranking {
+    white-space: normal;
+    padding: 2px 3px;
+    min-height: 30px;
 }
 
 /*----------------------------------

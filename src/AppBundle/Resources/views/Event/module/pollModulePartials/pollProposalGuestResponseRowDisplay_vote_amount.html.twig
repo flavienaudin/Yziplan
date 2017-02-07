@@ -61,7 +61,7 @@
         });
 
         popover.find("#pollProposalReponse_{{ pollProposal.id }}_valider").on('click', function (e) {
-            var loader = '<div class="pollresponse-preloader">' +
+            var loader = '<div id="pollresponse-preloader-{{ pollProposal.id }}" class="pollresponse-preloader">' +
                 '<div class="preloader pl-sm"><svg class="pl-circular" viewBox="25 25 50 50"><circle class="plc-path" cx="50" cy="50" r="20"></circle></svg></div></div>';
             $('#pollmodule_button_{{ pollProposal.id }}').append(loader);
             popover.popover('hide');
@@ -72,12 +72,13 @@
                 'value': popover.find('input').val()
             };
             var urlTarget = "{{ path('answerPollModuleProposal') }}";
+            var pollProposalId = '{{ pollProposal.id }}';
             if (!eventInvitationValid && askGuestName !== undefined) {
-                askGuestName(e, voteAmountAction, [urlTarget, e, data], function () {
-                    $('.pollresponse-preloader').remove();
+                askGuestName(e, voteAmountAction, [urlTarget, e, data, pollProposalId], function () {
+                    $('#pollresponse-preloader-{{ pollProposal.id }}').remove();
                 });
             } else {
-                voteAmountAction([urlTarget, e, data]);
+                voteAmountAction([urlTarget, e, data, pollProposalId]);
             }
         });
     }).on('hide.bs.popover', function (event) {
@@ -89,23 +90,4 @@
         {# Pour se prémunir d'un bug bootstrap, sinon il faut cliquer 2 fois avant de réouvrir. #}
         $(e.target).data("bs.popover").inState = {click: false, hover: false, focus: false}
     });
-
-    function voteAmountAction(params) {
-        var urlTarget = params[0];
-        var e = params[1];
-        var data = params[2];
-        ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
-                var newContent = null;
-                if (data['value'] > 0) {
-                    newContent = '<span class="answer-thumb palette-Light-Green-100 bg strong"><span class="palette-Black text">' + data['value'] + '</span></span>';
-                } else {
-                    newContent = '<span class="answer-thumb text palette-White"><i class="zmdi zmdi-plus zmdi-hc-2x"></i></span>';
-                }
-                document.getElementById("pollmodule_button_{{ pollProposal.id }}").innerHTML = newContent;
-                LetterAvatar.transform();
-            }, null,
-            function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-                $('.pollresponse-preloader').remove();
-            });
-    }
 </script>

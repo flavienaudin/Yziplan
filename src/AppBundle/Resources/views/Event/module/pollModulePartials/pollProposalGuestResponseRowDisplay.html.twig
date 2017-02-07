@@ -154,6 +154,12 @@
                 "userModuleInvitation":userModuleInvitation,
                 "moduleInvitations":moduleInvitations
             }) }}
+        {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::RANKING') %}
+            {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_vote_ranking.html.twig', {
+                "pollProposal":pollProposal,
+                "userModuleInvitation":userModuleInvitation,
+                "moduleInvitations":moduleInvitations
+            }) }}
         {% else %}{# Dans le cas d'un yes/maybe/no ou d'un yes/no #}
             {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_vote_yesno.html.twig', {
                 "pollProposal":pollProposal,
