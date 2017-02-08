@@ -61,6 +61,10 @@ class EventType extends AbstractType
             ))
             ->add("guestsCanInvite", CheckboxType::class, array(
                 'required' => false
+            ))
+            ->add('coordinates', EventCoordinatesType::class, array(
+                'required' => false,
+                'label_attr' => array('class' => 'sr-only')
             ));
     }
 

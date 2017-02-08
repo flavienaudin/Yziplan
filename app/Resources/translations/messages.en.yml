@@ -143,11 +143,36 @@ event:
       help:  "All guest will be able to sent new email invitations"
       text.true: Your friends can invite
       text.false: Your friends can not invite
-#    guestsCanAddModule:
-#      label: Guests can add module
-#      placeholder: Guests can add module
-#      text.true: Guests can add module to the event
-#      text.false: Guests can not add module to the event
+    coordinates:
+      link_collpase: Add more coordinates
+      website:
+        label: Website
+        placeholder: Website http://
+      email:
+        label: Email
+        placeholder: Email
+      phoneNumber:
+        label: Phone number
+        placeholder: Phone number
+      mobileNumber:
+        label: Mobile number
+        placeholder: Mobile number
+      faxNumber:
+        label: Fax number
+        placeholder: Fax number
+      facebookURL:
+        label: Facebook link
+        placeholder: Facebook link
+      googlePlusURL:
+        label: Google plus link
+        placeholder: Google plus link
+      twitterURL:
+        label: Twitter link
+        placeholder: Twitter link
+      instagramURL:
+        label: Instagram link
+        placeholder: Instagram link
+
   wizard:
     button:
       skip_wizard: Skip the wizard
@@ -177,12 +202,6 @@ event:
     valide_guestname_required: This action required that you validated your invitation with your name. It was not handled
   success.message:
     creation: Event created successfully
-  help:
-    popover:
-      header: Fill in information about your event.
-      name: Don't stay anonymous, enter your name!
-      response: Think about confirming your presence (you can do it later).
-      pollmodule: Your friends are waiting for your mind.
 
 eventInvitations:
   user_menu:

@@ -143,11 +143,36 @@ event:
       help:  "Tous les invités pourront envoyer de nouvelles invitations par e-mail"
       text.true: Tes amis peuvent inviter
       text.false: Tes amis ne peuvent pas inviter
-#    guestsCanAddModule:
-#      label: Autoriser les invités à ajouter un module
-#      placeholder: Autoriser les invités à ajouter un module
-#      text.true: Les invités peuvent ajouter un module
-#      text.false: Les invités ne peuvent pas ajouter un module
+    coordinates:
+      link_collpase: Ajouter des coordonnées
+      website:
+        label: Site internet
+        placeholder: Site internet http://
+      email:
+        label: E-mail
+        placeholder: E-mail
+      phoneNumber:
+        label: Téléphone
+        placeholder: Téléphone
+      mobileNumber:
+        label: Portable
+        placeholder: Portable
+      faxNumber:
+        label: Fax
+        placeholder: Fax
+      facebookURL:
+        label: Facebook
+        placeholder: Facebook
+      googlePlusURL:
+        label: Google plus
+        placeholder: Google plus
+      twitterURL:
+        label: Twitter
+        placeholder: Twitter
+      instagramURL:
+        label: Instagram
+        placeholder: Instagram
+
   wizard:
     button:
       skip_wizard: Aller à la page de l'événement
@@ -177,12 +202,6 @@ event:
     valide_guestname_required: Cette action nécessitait que tu aies validé ton invitation en renseignant ton nom. Elle n'a pas été effectuée
   success.message:
     creation: Evénement créé avec succès.
-  help:
-    popover:
-      header: Renseigne les informations relatives à l'événement.
-      name: Ne reste pas dans l'anonymat, renseigne ton nom!
-      response: Pense à confirmer ta présence (Tu peux le faire plus tard).
-      pollmodule: Tes amis attendent ton avis.
 
 eventInvitations:
   user_menu:

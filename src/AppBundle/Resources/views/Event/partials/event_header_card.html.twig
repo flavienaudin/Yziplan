@@ -13,7 +13,14 @@
             {% if eventForm is not null %}
                 <div class="text-right">
                     <ul class="actions">
-                        <li><a id="event_header_edit_information" href="#eventEditModal" data-toggle="modal"><i class="zmdi zmdi-edit"></i></a></li>
+                        <li class="dropdown">
+                            <a href="" data-toggle="dropdown" aria-expanded="false"> <i class="zmdi zmdi-settings"></i> </a>
+                            <ul class="dropdown-menu dropdown-menu-right dm-icon">
+                                <li>
+                                    <a id="event_header_edit_information" href="#eventEditModal" data-toggle="modal"><i class="zmdi zmdi-edit"></i> {{ "global.button.edit"|trans }}</a>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             {% endif %}
@@ -28,7 +35,6 @@
             {% include 'FOSCommentBundle:Thread:comments.html.twig' with {'comments':comments, 'thread':thread, 'view':'flat', 'userEventInvitation':userEventInvitation} %}
         </div>
     {% endif %}
-
 
     <script>
         $(document).ready(function () {

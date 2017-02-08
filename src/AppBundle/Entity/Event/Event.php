@@ -4,7 +4,6 @@ namespace AppBundle\Entity\Event;
 
 use AppBundle\Entity\Comment\CommentableInterface;
 use AppBundle\Entity\Comment\Thread;
-use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -172,6 +171,20 @@ class Event implements CommentableInterface
      */
     private $eventInvitations;
 
+    /**
+     * @var EventCoordinates
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Event\EventCoordinates", inversedBy="event", cascade={"persist"})
+     * @ORM\JoinColumn(name="coordinates_id", referencedColumnName="id", nullable=true)
+     */
+    private $coordinates;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Event\EventOpeningHours", mappedBy="event", cascade={"persist"})
+     */
+    private $openingHours;
+
 
     /***********************************************************************
      *                      Constructor
@@ -180,6 +193,7 @@ class Event implements CommentableInterface
     {
         $this->modules = new ArrayCollection();
         $this->eventInvitations = new ArrayCollection();
+        $this->openingHours = new ArrayCollection();
     }
 
 
@@ -601,6 +615,60 @@ class Event implements CommentableInterface
     {
         $this->eventInvitations->removeElement($eventInvitation);
     }
+
+    /**
+     * @return EventCoordinates
+     */
+    public function getCoordinates()
+    {
+        return $this->coordinates;
+    }
+
+    /**
+     * @param EventCoordinates $coordinates
+     * @return Event
+     */
+    public function setCoordinates($coordinates)
+    {
+        $this->coordinates = $coordinates;
+        return $this;
+    }
+
+    /**
+     * Get openingHours
+     *
+     * @return ArrayCollection
+     */
+    public function getOpeningHours()
+    {
+        return $this->openingHours;
+    }
+
+    /**
+     * Add eventInvitation
+     *
+     * @param EventInvitation $eventInvitation
+     *
+     * @return Event
+     */
+    public function addopeningHour(EventOpeningHours $openingHours)
+    {
+        $this->openingHours[] = $openingHours;
+        $openingHours->setEvent($this);
+        return $this;
+    }
+
+    /**
+     * Remove openingHour
+     *
+     * @param EventOpeningHours $openingHours
+     */
+    public function removeOpeningHour(EventOpeningHours $openingHours)
+    {
+        $this->openingHours->removeElement($openingHours);
+    }
+
+
 
 
     /***********************************************************************

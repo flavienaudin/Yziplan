@@ -1,17 +1,13 @@
 {# Données d'entrée :
 - userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
 #}
-{% set eventHeaderLayout = '' %}
-{% if userEventInvitation.event.whereGooglePlaceId is not null %}
-    {% set eventHeaderLayout = 'col-sm-8' %}
-{% endif %}
 
 <div class="row">
-    <div class="col-xs-12 {{ eventHeaderLayout }}">
+    <div class="col-xs-12{{ userEventInvitation.event.whereGooglePlaceId is not null?' col-sm-8' }}">
         <div class="well well-sm m-b-10">
             {% set creatorsNames = "" %}
             {% for creatorInvitation in userEventInvitation.event.creators %}
-                {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, not userEventInvitation.organizer)%}
+                {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, not userEventInvitation.organizer) %}
             {% endfor %}
             {% if creatorsNames is not empty %}
                 <div class="pull-right"><i>
@@ -20,7 +16,7 @@
             {% endif %}
             <dl>
                 <dt class="p-b-5">{{ "event.form.description.label"|trans }}</dt>
-                <dd>{% if userEventInvitation.event.description is not empty %}
+                <dd>{% if userEventInvitation.event.description is not empty and userEventInvitation.event.description != '<p><br></p>' %}
                         {{ userEventInvitation.event.description|raw }}
                     {% else %}
                         <i class="text-muted">{{ "event.form.description.empty"|trans }}</i>
@@ -57,6 +53,44 @@
              <dt>{{ "event.form.status.label"|trans }}</dt>
             <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span></dd>#}
         </dl>
+
+        {% if userEventInvitation.event.coordinates is not null %}
+            <div class="list-md-icon m-b-15">
+                <ul>
+                    {% if userEventInvitation.event.coordinates.website is not null %}
+                        <li><i class="zmdi zmdi-globe"></i> <a href="{{ userEventInvitation.event.coordinates.website }}"
+                                                               target="_blank">{{ userEventInvitation.event.coordinates.website|replace({'http://':''}) }}</a></li>
+                    {% endif %}
+                    {% if userEventInvitation.event.coordinates.email is not null %}
+                        <li><i class="zmdi zmdi-email"></i> <a href="mailto:{{ userEventInvitation.event.coordinates.email }}">{{ userEventInvitation.event.coordinates.email }}</a></li>
+                    {% endif %}
+                    {% if userEventInvitation.event.coordinates.phoneNumber is not null %}
+                        <li><i class="zmdi zmdi-phone"></i> {{ userEventInvitation.event.coordinates.phoneNumber }}</li>
+                    {% endif %}
+                    {% if userEventInvitation.event.coordinates.mobileNumber is not null %}
+                        <li><i class="zmdi zmdi-phone"></i> {{ userEventInvitation.event.coordinates.mobileNumber }}</li>
+                    {% endif %}
+                    {% if userEventInvitation.event.coordinates.faxNumber is not null %}
+                        <li><i class="zmdi zmdi-print"></i> {{ userEventInvitation.event.coordinates.faxNumber }}</li>
+                    {% endif %}
+                    <li>
+                        {% if userEventInvitation.event.coordinates.facebookURL is not null %}
+                            <a href="{{ userEventInvitation.event.coordinates.facebookURL }}" target="_blank"><span class="zmdi zmdi-facebook-box zmdi-hc-2x"></span></a>
+                        {% endif %}
+                        {% if userEventInvitation.event.coordinates.googlePlusURL is not null %}
+                            <a href="{{ userEventInvitation.event.coordinates.googlePlusURL }}" target="_blank"><span class="zmdi zmdi-google-plus zmdi-hc-2x"></span></a>
+                        {% endif %}
+                        {% if userEventInvitation.event.coordinates.twitterURL is not null %}
+                            <a href="{{ userEventInvitation.event.coordinates.twitterURL }}" target="_blank"><span class="zmdi zmdi-twitter zmdi-hc-2x"></span></a>
+                        {% endif %}
+                        {% if userEventInvitation.event.coordinates.instagramURL is not null %}
+                            <a href="{{ userEventInvitation.event.coordinates.instagramURL }}" target="_blank"><span class="zmdi zmdi-instagram zmdi-hc-2x"></span></a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+
         {# Todo: décommenter
         {% if userEventInvitation.event.invitationOnly %}
             <div class="text-danger">

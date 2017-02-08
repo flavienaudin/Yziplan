@@ -39,16 +39,85 @@
                 'attr':{'placeholder':'event.form.responseDeadline.placeholder'},
                 'widget_options':{'fgline':true, 'displayInRow' : true}
             }) }}#}
-            {{ form_row(eventForm.invitationOnly, {
-                'label':'event.form.invitationOnly.label',
-                'attr':{'class':'md-toogle-switch'},
-                'help': 'event.form.invitationOnly.help' |trans
-            }) }}
-            {{ form_row(eventForm.guestsCanInvite, {
-                'label':'event.form.guestsCanInvite.label',
-                'attr':{'class':'md-toogle-switch'},
-                'help': 'event.form.guestsCanInvite.help' |trans
-            }) }}
+
+            <div class="row">
+                <div class="col-xs-12 col-md-6">
+                    {{ form_row(eventForm.invitationOnly, {
+                        'label':'event.form.invitationOnly.label',
+                        'attr':{'class':'md-toogle-switch'},
+                        'help': 'event.form.invitationOnly.help' |trans
+                    }) }}
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    {{ form_row(eventForm.guestsCanInvite, {
+                        'label':'event.form.guestsCanInvite.label',
+                        'attr':{'class':'md-toogle-switch'},
+                        'help': 'event.form.guestsCanInvite.help' |trans
+                    }) }}
+                </div>
+            </div>
+
+            <a href="#eventCoordinatesCollpase" data-toggle="collapse" class="btn btn-link btn-icon-text c-blue collapsed" aria-expanded="false" aria-controls="eventCoordinatesCollpase"> <i
+                        class="zmdi zmdi-plus-square"></i><i class="zmdi zmdi-minus-square"></i> {{ "event.form.coordinates.link_collpase"|trans }}</a>
+
+            <div id="eventCoordinatesCollpase" class="m-b-10 collapse">
+                {{ form_row(eventForm.coordinates.website, {
+                    'label':'event.form.coordinates.website.label',
+                    'label_attr':{'class':'sr-only'},
+                    'attr':{'placeholder':'event.form.coordinates.website.placeholder'},
+                    'widget_options':{'fgline':true, 'label_icon':'zmdi-globe'}
+                }) }}
+                {{ form_row(eventForm.coordinates.email, {
+                    'label':'event.form.coordinates.email.label',
+                    'label_attr':{'class':'sr-only'},
+                    'attr':{'placeholder':'event.form.coordinates.email.placeholder'},
+                    'widget_options':{'fgline':true, 'label_icon':'zmdi-email'}
+                }) }}
+                {{ form_row(eventForm.coordinates.phoneNumber, {
+                    'label':'event.form.coordinates.phoneNumber.label',
+                    'label_attr':{'class':'sr-only'},
+                    'attr':{'placeholder':'event.form.coordinates.phoneNumber.placeholder'},
+                    'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
+                }) }}
+                {{ form_row(eventForm.coordinates.mobileNumber, {
+                    'label':'event.form.coordinates.mobileNumber.label',
+                    'label_attr':{'class':'sr-only'},
+                    'attr':{'placeholder':'event.form.coordinates.mobileNumber.placeholder'},
+                    'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
+                }) }}
+                {{ form_row(eventForm.coordinates.faxNumber, {
+                    'label':'event.form.coordinates.faxNumber.label',
+                    'label_attr':{'class':'sr-only'},
+                    'attr':{'placeholder':'event.form.coordinates.faxNumber.placeholder'},
+                    'widget_options':{'fgline':true, 'label_icon':'zmdi-print'}
+                }) }}
+                {{ form_row(eventForm.coordinates.facebookURL, {
+                    'label':'event.form.coordinates.facebookURL.label',
+                    'label_attr':{'class':'sr-only'},
+                    'attr':{'placeholder':'event.form.coordinates.facebookURL.placeholder'},
+                    'widget_options':{'fgline':true, 'label_icon':'zmdi-facebook'}
+                }) }}
+                {{ form_row(eventForm.coordinates.googlePlusURL, {
+                    'label':'event.form.coordinates.googlePlusURL.label',
+                    'label_attr':{'class':'sr-only'},
+                    'attr':{'placeholder':'event.form.coordinates.googlePlusURL.placeholder'},
+                    'widget_options':{'fgline':true, 'label_icon':'zmdi-google-plus'}
+                }) }}
+                {{ form_row(eventForm.coordinates.twitterURL, {
+                    'label':'event.form.coordinates.twitterURL.label',
+                    'label_attr':{'class':'sr-only'},
+                    'attr':{'placeholder':'event.form.coordinates.twitterURL.placeholder'},
+                    'widget_options':{'fgline':true, 'label_icon':'zmdi-twitter'}
+                }) }}
+                {{ form_row(eventForm.coordinates.instagramURL, {
+                    'label':'event.form.coordinates.instagramURL.label',
+                    'label_attr':{'class':'sr-only'},
+                    'attr':{'placeholder':'event.form.coordinates.instagramURL.placeholder'},
+                    'widget_options':{'fgline':true, 'label_icon':'zmdi-instagram'}
+                }) }}
+
+                {{ form_rest(eventForm) }}
+            </div>
 
             {% block action_buttons %}
                 <div class="text-center">
@@ -59,44 +128,6 @@
                     <div class="visible-xs visible-sm m-b-10"></div>
                 </div>
             {% endblock action_buttons %}
-            {# Todo:décommenter
-            <div class="col-xs-12 col-sm-6">
-                <dl class="dl-horizontal">
-                    <dt>{{ "event.form.status.label"|trans }}</dt>
-                    <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span>
-                        {% if userEventInvitation.event.status == constant("AppBundle\\Utils\\enum\\EventStatus::IN_CREATION")
-                        or userEventInvitation.event.status == constant ("AppBundle\\Utils\\enum\\EventStatus::IN_ORGANIZATION") %}
-                            <a id="validateEventLink" href="{{ path('validateEvent', {'token' : userEventInvitation.event.token }) }}" class="btn btn-success">
-                                {{ "global.button.valid"|trans }}
-                            </a>
-                            <script>
-                                $(document).ready(function () {
-                                    $('#validateEventLink').on('click', function (e) {
-                                        e.preventDefault();
-                                        var link = $(this);
-                                        // TODO Test la migration vers SweetAlert 2
-                                        swal({
-                                            title: "{{ "event.form.status.swal.title"|trans }}",
-                                            text: "{{ "event.form.status.swal.text"|trans }}",
-                                            type: "info",
-                                            showCancelButton: true,
-                                            //confirmButtonColor: "#DD6B55",
-                                            confirmButtonText: '{{ "global.button.valid"|trans }}',
-                                            showLoaderOnConfirm: true
-                                        }).then(function () {
-                                            ajaxRequest(link, null, e, null, null, null);
-                                            // close edition block
-                                            var t = $form.data('event-header-pmb-block-target');
-                                            $(t).removeClass('toggled');
-
-                                        });
-                                    });
-                                });
-                            </script>
-                        {% endif %}
-                    </dd>
-                </dl>
-            </div>#}
             {{ form_rest(eventForm) }}
         </div>
         <div class="hidden-xs col-sm-4">
@@ -240,6 +271,7 @@
                 $('#event_public_invitation_display').fadeToggle();
             });
             {% endblock js_document_ready %}
+
             var summernoteOptions = {
                 dialogsInBody: $dialogsInBody
             };
