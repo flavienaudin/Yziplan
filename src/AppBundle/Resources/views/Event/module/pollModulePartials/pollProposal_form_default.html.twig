@@ -22,59 +22,93 @@
                 'fgline':true,
                 'displayInRow':(pollProposalElement.valDatetime is defined or pollProposalElement.valEndDatetime is defined)}
         }) }}
+
         {% if false and pollProposalElement.picture is defined %}
-            <script>
-                $(document).ready(function () {
-                    var fileInputOptions = {
-                        {#uploadUrl: "{{ path('updateEventPicture', {"token":userEventInvitation.event.token}) }}",#}
-                        browseOnZoneClick: false,
-                        overwriteInitial: true,
-                        maxFileSize: 2000,
-                        showClose: false,
-                        fileActionSettings: {
-                            showUpload: false,
-                            showZoom: false,
-                            showDrag: false
+        <script>
+            $(document).ready(function () {
+                var fileInputOptions = {
+                    {#uploadUrl: "{{ path('updateEventPicture', {"token":userEventInvitation.event.token}) }}",#}
+                    browseOnZoneClick: false,
+                    overwriteInitial: true,
+                    maxFileSize: 2000,
+                    showClose: false,
+                    fileActionSettings: {
+                        showUpload: false,
+                        showZoom: false,
+                        showDrag: false
+                    },
+                    showCaption: false,
+                    browseLabel: '',
+                    removeLabel: '',
+                    uploadTitle: "{{ 'event.picture.update_modal.button.submit_title'|trans }}",
+                    uploadLabel: "{{ 'global.button.save'|trans }}",
+                    //browseIcon: '<i class="zmdi zmdi-folder"></i>',
+                    //removeIcon: '<i class="zmdi zmdi-delete"></i>',
+                    //removeTitle: 'Cancel or reset changes',
+                    elErrorContainer: '#kv-avatar-errors-1',
+                    msgErrorClass: 'alert alert-block alert-danger',
+                    defaultPreviewContent: '<i class="zmdi zmdi-image-o zmdi-hc-5x"></i>',
+                    layoutTemplates: {
+                        main2: '{preview} <div class="text-center">{remove} {browse} {upload}</div>'
+                    },
+                    {#
+                    previewTemplates: {
+                            image: '<div class="file-preview-frame" id="{previewId}" data-fileindex="{fileindex}" data-template="{template}">\n' +
+                            '   <div class="kv-file-content">' +
+                            '       <div class="helper-tool-target">' +
+                            '           <img src="{data}" class="kv-preview-data file-preview-image helper-tool-img" title="{caption}" alt="{caption}" style="max-height: 300px;">\n' +
+                            '           <img class="reticle" src="{{ focuspointTarget }}">' +
+                            '           <img src="{data}" class="kv-preview-data file-preview-image target-overlay" title="{caption}" alt="{caption}" style="max-height: 300px;">\n' +
+                            '       </div>' +
+
+                            '   </div>\n' +
+                            /!*'   {footer}\n' +*!/
+                            '</div>\n'
                         },
-                        showCaption: false,
-                        browseLabel: '',
-                        removeLabel: '',
-                        uploadTitle: "{{ 'event.picture.update_modal.button.submit_title'|trans }}",
-                        uploadLabel: "{{ 'global.button.save'|trans }}",
-                        //browseIcon: '<i class="zmdi zmdi-folder"></i>',
-                        //removeIcon: '<i class="zmdi zmdi-delete"></i>',
-                        //removeTitle: 'Cancel or reset changes',
-                        elErrorContainer: '#kv-avatar-errors-1',
-                        msgErrorClass: 'alert alert-block alert-danger',
-                        defaultPreviewContent: '<i class="zmdi zmdi-image-o zmdi-hc-5x"></i>',
-                        layoutTemplates: {
-                            main2: '{preview} <div class="text-center">{remove} {browse} {upload}</div>'
-                        },
-                        {#previewTemplates: {
-                                image: '<div class="file-preview-frame" id="{previewId}" data-fileindex="{fileindex}" data-template="{template}">\n' +
-                                '   <div class="kv-file-content">' +
-                                '       <div class="helper-tool-target">' +
-                                '           <img src="{data}" class="kv-preview-data file-preview-image helper-tool-img" title="{caption}" alt="{caption}" style="max-height: 300px;">\n' +
-                                '           <img class="reticle" src="{{ focuspointTarget }}">' +
-                                '           <img src="{data}" class="kv-preview-data file-preview-image target-overlay" title="{caption}" alt="{caption}" style="max-height: 300px;">\n' +
-                                '       </div>' +
+                        #}
+                    allowedFileExtensions: ["jpg", "jpeg", "png", "gif"]
+                };
 
-                                '   </div>\n' +
-                                /!*'   {footer}\n' +*!/
-                                '</div>\n'
-                            },#}
-                        allowedFileExtensions: ["jpg", "jpeg", "png", "gif"]
-                    };
+                {% if app.request.attributes.has('_locale') %}
+                fileInputOptions['language'] = '{{ app.request.attributes.get('_locale') }}';
+                {% endif %}
 
-                    {% if app.request.attributes.has('_locale') %}
-                    fileInputOptions['language'] = '{{ app.request.attributes.get('_locale') }}';
-                    {% endif %}
-
-                    // initialize with defaults
-                    {#$('#{{ pollProposalElement.picture.vars.id }}').fileinput(fileInputOptions)#}
-                });
-            </script>
+                // initialize with defaults
+                {#$('#{{ pollProposalElement.picture.vars.id }}').fileinput(fileInputOptions)#}
+            });
+        </script>
         {% endif %}
+
+        {% if pollProposalElement.vars.value.getPollElement.getType == constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT') %}
+        {{ form_row(pollProposalElement.valString, {
+            'label':'',
+            'label_attr':{'class':'sr-only'},
+            'attr':{'rows':5},
+            'widget_options':{'fgline':true}
+        }) }}
+        <script>
+            $(document).ready(function () {
+                var $dialogsInBody = true;
+
+                var summernoteOptions = {
+                    dialogsInBody: $dialogsInBody
+                };
+                {% if app.request.locale == 'fr' %}
+                summernoteOptions.lang = 'fr-FR';
+                {% endif %}
+                $('#{{ pollProposalElement.valString.vars.id }}').summernote(summernoteOptions);
+            });
+        </script>
+    {% else %}
+        {{ form_widget(pollProposalElement, {
+            'widget_options':{
+                'fgfloat':(pollProposalElement.valDatetime is not defined and pollProposalElement.valEndDatetime is not defined),
+                'fgline':true,
+                'displayInRow':(pollProposalElement.valDatetime is defined or pollProposalElement.valEndDatetime is defined)}
+        }) }}
+        {% endif %}
+
+
     {% endfor %}
     {{ form_rest(pollProposalForm) }}
 </div>

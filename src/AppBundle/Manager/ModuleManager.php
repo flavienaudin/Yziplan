@@ -172,14 +172,14 @@ class ModuleManager
                 $pollModule->setVotingType(PollModuleVotingType::RANKING);
                 $pollModule->setType(PollModuleType::ACTIVITY);
 
-                $pollElementPicture = new PollElement();
-                $pollElementPicture->create($this->translator->trans("pollmodule.poll_element.picture"), PollElementType::PICTURE, 0);
-                $pollElements->add($pollElementPicture);
                 $pollElementName = new PollElement();
-                $pollElementName->create($this->translator->trans("pollmodule.poll_element.name"), PollElementType::STRING, 1);
+                $pollElementName->create($this->translator->trans("pollmodule.poll_element.name"), PollElementType::STRING, 0);
                 $pollElements->add($pollElementName);
                 $pollElementPicture = new PollElement();
-                $pollElementPicture->create($this->translator->trans("pollmodule.poll_element.description"), PollElementType::RICHTEXT, 2);
+                $pollElementPicture->create($this->translator->trans("pollmodule.poll_element.description"), PollElementType::RICHTEXT, 1);
+                $pollElements->add($pollElementPicture);
+                $pollElementPicture = new PollElement();
+                $pollElementPicture->create($this->translator->trans("pollmodule.poll_element.picture"), PollElementType::PICTURE, 2);
                 $pollElements->add($pollElementPicture);
             }
             $pollModule->addPollElements($pollElements);
