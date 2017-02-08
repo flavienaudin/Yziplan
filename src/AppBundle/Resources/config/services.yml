@@ -15,6 +15,10 @@ services:
     class: AppBundle\Utils\File\FileUploader
     arguments: ['%event_picture_directory%', 'event_picture']
 
+  at.uploader.pollproposalelement_picture:
+    class: AppBundle\Utils\File\FileUploader
+    arguments: ['%pollproposalelement_picture_directory%', 'pollproposalelement_picture']
+
   at.manager.mangopay:
     class: AppBundle\Manager\MangoPayManager
     arguments: ['%mangopay.client.id%', "%mangopay.client.password%", "%mangopay.temporary.folder%", "%mangopay.base.url%", '@doctrine.orm.entity_manager','@security.authorization_checker']
@@ -132,6 +136,13 @@ services:
   at.event_listener.event_picture_upload:
     class: AppBundle\EventListener\Event\EventUploadListener
     arguments: ['@at.uploader.event_picture']
+    tags:
+      - { name: doctrine.event_listener, event: prePersist }
+      - { name: doctrine.event_listener, event: preUpdate }
+
+  at.event_listener.pollproposalelement_picture_upload:
+    class: AppBundle\EventListener\PollModule\PollProposalElementUploadListener
+    arguments: ['@at.uploader.pollproposalelement_picture']
     tags:
       - { name: doctrine.event_listener, event: prePersist }
       - { name: doctrine.event_listener, event: preUpdate }

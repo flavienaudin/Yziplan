@@ -83,8 +83,7 @@ class PollProposalElementManager
                 $this->pollProposalElement->setTime(false);
             }
             $this->pollProposalElement->setValDatetime($datetimeValue);
-        }
-        if ($this->pollProposalElement->getPollElement()->getType() == PollElementType::END_DATETIME) {
+        }else if ($this->pollProposalElement->getPollElement()->getType() == PollElementType::END_DATETIME) {
             $datetimeValue = new DateTime();
             /** @var array $valDate (e.g. array('year' => 2011, 'month' => 06, 'day' => 05)) */
             $valDate = $pollProposalElementForm->get('endDate')->getData();
@@ -104,6 +103,8 @@ class PollProposalElementManager
                 $this->pollProposalElement->setEndTime(false);
             }
             $this->pollProposalElement->setValEndDatetime($datetimeValue);
+        }else if ($this->pollProposalElement->getPollElement()->getType() == PollElementType::END_DATETIME) {
+
         }
         return $this->pollProposalElement;
     }

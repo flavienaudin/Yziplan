@@ -96,6 +96,13 @@ class PollProposalElement
      */
     private $valGooglePlaceId;
 
+    /**
+     * This attributes stores the filename of the file for the database
+     * @var string
+     * @ORM\Column(name="picture_filename", type="string", length=255, nullable=true)
+     */
+    private $picture;
+
 
     /***********************************************************************
      *                      Jointures
@@ -266,6 +273,24 @@ class PollProposalElement
     public function setValGooglePlaceId($valGooglePlaceId)
     {
         $this->valGooglePlaceId = $valGooglePlaceId;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+
+    /**
+     * @param string $picture
+     * @return PollProposalElement
+     */
+    public function setPicture($picture)
+    {
+        $this->picture = $picture;
         return $this;
     }
 

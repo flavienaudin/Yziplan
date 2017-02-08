@@ -2,21 +2,22 @@
 /**
  * Created by PhpStorm.
  * User: Flavien
- * Date: 25/10/2016
- * Time: 11:44
+ * Date: 08/02/2017
+ * Time: 18:39
  */
 
-namespace AppBundle\EventListener\Event;
+namespace AppBundle\EventListener\PollModule;
 
 
-use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Utils\File\FileUploader;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class EventUploadListener
+class PollProposalElementUploadListener
 {
+
     /** @var FileUploader */
     private $uploader;
 
@@ -39,8 +40,8 @@ class EventUploadListener
 
     private function uploadFile($entity)
     {
-        // upload only works for Event entities
-        if (!$entity instanceof Event) {
+        // upload only works for PollProposalElement entities
+        if (!$entity instanceof PollProposalElement) {
             return;
         }
 

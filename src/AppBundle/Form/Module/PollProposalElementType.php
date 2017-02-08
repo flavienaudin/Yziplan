@@ -14,6 +14,7 @@ use AppBundle\Utils\enum\PollElementType;
 use AppBundle\Validator\Constraints\IntValuesInArray;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -100,6 +101,13 @@ class PollProposalElementType extends AbstractType
                     'label' => $pollProposalElement->getPollElement()->getName(),
                     'attr' => array(
                         'class' => 'googlePlaceId_value'
+                    )
+                ));
+            } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::PICTURE) {
+                $form->add('picture', FileType::class, array(
+                    'required' => false,
+                    'label_attr' => array(
+                        'class' => 'sr-only'
                     )
                 ));
             } else {
