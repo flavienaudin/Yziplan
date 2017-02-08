@@ -96,43 +96,82 @@
             </div>
             <div class="media-body">
                 <div {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
-                    {% for ppElt in pollProposal.pollProposalElements %}
-                        {% if ppElt.pollElement.type == constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME') %}
-                            {% set endDate = ppElt.pollProposal.getPollProposalEndDateElement %}
-                            {% set has2Date = endDate is not null and endDate.hasEndDate and ppElt.value|localizeddate("medium", "none", null, null,'ddMMyyyy') != endDate.value|localizeddate("medium", "none", null, null,'ddMMyyyy') %}
-                            <div>
-                                {% if not has2Date %}
+                    {# Les elements sont sous forme de tableau a 2 dimentions, mais il n'y a qu'un element dans la deuxieme
+                           c'est en prévision du futur #}
+                    {% set ppElts = pollProposal.getAllElements %}
+                    {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')] is defined %}
+                        {% set ppElt = ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')][0] %}
+                        {% set endDate =  (ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::END_DATETIME')] is defined ? ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::END_DATETIME')][0] : null) %}
+                        {% set has2Date = endDate is not null and endDate.hasEndDate and ppElt.value|localizeddate("medium", "none", null, null,'ddMMyyyy') != endDate.value|localizeddate("medium", "none", null, null,'ddMMyyyy') %}
+                        <div>
+                            {% if not has2Date %}
+                                <div style="display:inline-block; vertical-align: middle;">
+                                    <div style="font-size:12px; font-weight: bold; text-transform: capitalize;">{{ ppElt.value|localizeddate("medium", "none", null, null,'MMM') }}</div>
+                                    <div style="font-size:10px; text-transform: uppercase;">{{ ppElt.value|localizeddate("medium", "none", null, null,"ccc") }}</div>
+                                </div>
+                                <div class="p-l-5 p-r-5" style="display:inline-block; font-size:22px; vertical-align: middle;">
+                                    <strong>{{ ppElt.value|localizeddate("medium", "none", null, null,'dd') }}</strong>
+                                </div>
+                                {% if ppElt.hasTime %}
                                     <div style="display:inline-block; vertical-align: middle;">
-                                        <div style="font-size:12px; font-weight: bold; text-transform: capitalize;">{{ ppElt.value|localizeddate("medium", "none", null, null,'MMM') }}</div>
-                                        <div style="font-size:10px; text-transform: uppercase;">{{ ppElt.value|localizeddate("medium", "none", null, null,"ccc") }}</div>
-                                    </div>
-                                    <div class="p-l-5 p-r-5" style="display:inline-block; font-size:22px; vertical-align: middle;">
-                                        <strong>{{ ppElt.value|localizeddate("medium", "none", null, null,'dd') }}</strong>
-                                    </div>
-                                    {% if ppElt.hasTime %}
-                                        <div style="display:inline-block; vertical-align: middle;">
-                                            <div style="font-size:14px">{{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
-                                            {% if not has2Date and endDate is not null and endDate.hasEndTime %}
-                                                <div style="font-size:14px">{{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
-                                {% else %}
-                                    <div>
-                                        <div style=" display:inline-block; width: 45px; font-style:italic">Début :</div>
-                                        <div style=" display:inline-block;">{{ ppElt.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if ppElt.hasTime %} {{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
-                                    </div>
-                                    <div>
-                                        <div style=" display:inline-block; width:45px; font-style:italic">Fin :</div>
-                                        <div style=" display:inline-block;">{{ endDate.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if endDate.hasEndTime %} {{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
+                                        <div style="font-size:14px">{{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
+                                        {% if not has2Date and endDate is not null and endDate.hasEndTime %}
+                                            <div style="font-size:14px">{{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
+                                        {% endif %}
                                     </div>
                                 {% endif %}
+                            {% else %}
+                                <div>
+                                    <div style=" display:inline-block; width: 45px; font-style:italic">Début :</div>
+                                    <div style=" display:inline-block;">{{ ppElt.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if ppElt.hasTime %} {{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
+                                </div>
+                                <div>
+                                    <div style=" display:inline-block; width:45px; font-style:italic">Fin :</div>
+                                    <div style=" display:inline-block;">{{ endDate.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if endDate.hasEndTime %} {{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div>
+                            {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')] is defined %}
+                                <div class="pp-elt-picture">
+                                    <img src="{{ asset('bundles/app/img/index/organisation.jpeg') }}" alt="test" height="50" width="50">
+                                    {#{{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')][0].getValue }}#}
+                                </div>
+                            {% endif %}
+                            {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::STRING')] is defined %}
+                                <div class="pp-elt-string">
+                                    {{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::STRING')][0].getValue }}
+                                </div>
+                            {% endif %}
+                            {# Picture + string #}
+                        </div>
+                        {# Text area #}
+                        {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT')] is defined %}
+                            <div>
+                                <div class="modal fade" id="pollModuleElementInfo_{{ pollProposal.id }}_modal" tabindex="-1" role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                                                <h4 class="modal-title">{{ "pollmodule.poll_element.more"|trans }}</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>{{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT')][0].getValue|nl2br }}</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a class="btn-icon-text c-blue p-l-0 text" id="pollModuleElementInfo_{{ pollProposal.id }}_button"
+                                   href="#pollModuleElementInfo_{{ pollProposal.id }}_modal" data-toggle="modal">
+                                    <i class="zmdi zmdi-info"></i>{{ "pollmodule.poll_element.more"|trans }}
+                                </a>
                             </div>
-                        {% elseif not (ppElt.pollElement.type == constant('AppBundle\\Utils\\enum\\PollElementType::END_DATETIME')) %}
-                            {{ ppElt.value }}
-                            {% if not loop.first %}<br>{% endif %}
                         {% endif %}
-                    {% endfor %}
+                    {% endif %}
                 </div>
             </div>
         </div>

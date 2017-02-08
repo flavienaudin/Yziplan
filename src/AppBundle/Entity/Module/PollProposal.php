@@ -292,4 +292,17 @@ class PollProposal
         }
         return null;
     }
+
+    /**
+     * @return $result
+     */
+    public function getAllElements()
+    {
+        $result = array();
+        /** @var PollProposalElement $elt */
+        foreach ($this->pollProposalElements as $elt){
+            $result[$elt->getPollElement()->getType()][] = $elt;
+        }
+        return $result;
+    }
 }

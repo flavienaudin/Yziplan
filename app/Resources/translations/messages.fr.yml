@@ -374,6 +374,7 @@ pollmodule:
     name: Nom
     picture: Image
     description: Description
+    more: Plus d'informations
   display:
     no_proposal: Pas encore de proposition
     result:
