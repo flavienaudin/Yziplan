@@ -55,7 +55,7 @@
         </div>
     </div>
 </div>
-{% set average = numberOfResponse > 0 ? totalOfResponse/numberOfResponse | number_format(1) : 0 %}
+{% set average = numberOfResponse > 0 ? (totalOfResponse/numberOfResponse) | number_format(1) : 0 %}
 {% if totalOfResponse > 0 %}
     <a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">
         <span>

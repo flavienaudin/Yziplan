@@ -670,14 +670,19 @@ label.required:after {
     Poll Proposal Display
 ----------------------------------*/
 .pp-elt-picture {
-    display: inline-block;
+    display: block;
     width: 50px;
     height: 50px;
     background-size: cover;
     background: no-repeat center center;
 }
 
-.pp-elt-string {
+.pp-elt-picture-info {
+    max-height: 300px;
+    max-width: 300px;
+}
+
+.pp-elt {
     display: inline-block;
     vertical-align: center;
 }

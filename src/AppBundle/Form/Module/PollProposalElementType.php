@@ -16,6 +16,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -102,9 +103,18 @@ class PollProposalElementType extends AbstractType
                         'class' => 'googlePlaceId_value'
                     )
                 ));
-            } else {
+            } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::RICHTEXT) {
+                $form->add('valString', TextareaType::class, array(
+                    'required' => false,
+                ));
+            }
+            else {
+                $required = false;
+                if($pollProposalElement->getPollElement()->getType() == PollElementType::STRING){
+                    $required = true;
+                }
                 $form->add('valString', TextType::class, array(
-                    'required' => true,
+                    'required' => $required,
                     'label' => $pollProposalElement->getPollElement()->getName(),
                     'constraints' => new NotBlank()
                 ));

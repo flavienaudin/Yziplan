@@ -16,12 +16,35 @@
 
     {% for pollProposalElement in pollProposalForm.pollProposalElements %}
         {{ form_errors(pollProposalElement) }}
-        {{ form_widget(pollProposalElement, {
-            'widget_options':{
-                'fgfloat':(pollProposalElement.valDatetime is not defined and pollProposalElement.valEndDatetime is not defined),
-                'fgline':true,
-                'displayInRow':(pollProposalElement.valDatetime is defined or pollProposalElement.valEndDatetime is defined)}
-        }) }}
+        {% if pollProposalElement.vars.value.getPollElement.getType == constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT') %}
+            {{ form_row(pollProposalElement.valString, {
+                'label':'',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'rows':5},
+                'widget_options':{'fgline':true}
+            }) }}
+            <script>
+                $(document).ready(function () {
+                    var $dialogsInBody = true;
+
+                    var summernoteOptions = {
+                        dialogsInBody: $dialogsInBody
+                    };
+                    {% if app.request.locale == 'fr' %}
+                    summernoteOptions.lang = 'fr-FR';
+                    {% endif %}
+                    $('#{{ pollProposalElement.valString.vars.id }}').summernote(summernoteOptions);
+                });
+            </script>
+        {% else %}
+            {{ form_widget(pollProposalElement, {
+                'widget_options':{
+                    'fgfloat':(pollProposalElement.valDatetime is not defined and pollProposalElement.valEndDatetime is not defined),
+                    'fgline':true,
+                    'displayInRow':(pollProposalElement.valDatetime is defined or pollProposalElement.valEndDatetime is defined)}
+            }) }}
+        {% endif %}
+
     {% endfor %}
     {{ form_rest(pollProposalForm) }}
 </div>

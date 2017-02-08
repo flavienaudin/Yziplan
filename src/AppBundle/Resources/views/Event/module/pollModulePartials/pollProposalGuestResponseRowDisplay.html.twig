@@ -134,13 +134,14 @@
                     {% else %}
                         <div>
                             {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')] is defined %}
-                                <div class="pp-elt-picture">
-                                    <img src="{{ asset('bundles/app/img/index/organisation.jpeg') }}" alt="test" height="50" width="50">
+                                <div class="pp-elt">
+                                    <div class="pp-elt-picture"></div>
+                                    {#<img src="{{ asset('bundles/app/img/index/organisation.jpeg') }}" alt="test" height="50" width="50">#}
                                     {#{{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')][0].getValue }}#}
                                 </div>
                             {% endif %}
                             {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::STRING')] is defined %}
-                                <div class="pp-elt-string">
+                                <div class="pp-elt">
                                     {{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::STRING')][0].getValue }}
                                 </div>
                             {% endif %}
@@ -154,10 +155,15 @@
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
-                                                <h4 class="modal-title">{{ "pollmodule.poll_element.more"|trans }}</h4>
+                                                <h4 class="modal-title">{{ "pollmodule.poll_element.more"|trans }}:</h4>
                                             </div>
+                                            {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')] is defined %}
+                                                <div class="modal-body text-center m-b-10">
+                                                    <img class="pp-elt-picture-info" src="{{ asset('bundles/app/img/index/organisation.jpeg') }}" alt="test">
+                                                </div>
+                                            {% endif %}
                                             <div class="modal-body">
-                                                <p>{{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT')][0].getValue|nl2br }}</p>
+                                                <p>{{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT')][0].getValue|raw }}</p>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
