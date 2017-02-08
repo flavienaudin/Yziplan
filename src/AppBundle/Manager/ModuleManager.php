@@ -166,6 +166,21 @@ class ModuleManager
                 $pollElement = new PollElement();
                 $pollElement->create($subtype, PollElementType::STRING, 0);
                 $pollElements->add($pollElement);
+            }  elseif ($subtype == PollModuleType::ACTIVITY) {
+                $this->module->setName($this->translator->trans("pollmodule.add_link.activity"));
+                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+                $pollModule->setVotingType(PollModuleVotingType::RANKING);
+                $pollModule->setType(PollModuleType::ACTIVITY);
+
+                $pollElementPicture = new PollElement();
+                $pollElementPicture->create($this->translator->trans("pollmodule.poll_element.picture"), PollElementType::PICTURE, 0);
+                $pollElements->add($pollElementPicture);
+                $pollElementName = new PollElement();
+                $pollElementName->create($this->translator->trans("pollmodule.poll_element.name"), PollElementType::STRING, 1);
+                $pollElements->add($pollElementName);
+                $pollElementPicture = new PollElement();
+                $pollElementPicture->create($this->translator->trans("pollmodule.poll_element.description"), PollElementType::RICHTEXT, 2);
+                $pollElements->add($pollElementPicture);
             }
             $pollModule->addPollElements($pollElements);
 

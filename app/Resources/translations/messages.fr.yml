@@ -388,12 +388,19 @@ pollmodule:
     when: Quand?
     where: Où?
     whobringswhat: Qui apporte quoi?
+    activity: Activité
+  poll_element:
+    name: Nom
+    picture: Image
+    description: Description
+    more: Plus d'informations
   display:
     no_proposal: Pas encore de proposition
     result:
      vote: vote(s)
      contribution: contribution(s)
      total: "Total:"
+     moyenne: "Moyenne:"
      allresult: Voir l'ensemble des réponses
      modal:
       title: Réponses

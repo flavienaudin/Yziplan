@@ -36,31 +36,11 @@
                 if (modalContainer[0]) {
                     modalContainer.modal('hide');
                 }
-                askGuestName(e, submitAddPollProposalForm, [$form, e]);
+                askGuestName(e, submitAddPollProposalForm, [$form, e, '{{ userModuleInvitation.module.token }}', '{{ pp_form_modal_prefix }}', '{{ edition }}']);
             } else {
-                submitAddPollProposalForm([$form, e]);
+                submitAddPollProposalForm([$form, e, '{{ userModuleInvitation.module.token }}', '{{ pp_form_modal_prefix }}', '{{ edition }}']);
             }
         });
-
-        function submitAddPollProposalForm(params){
-            var form = params[0];
-            var e = params[1];
-            ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
-                        {% if not edition %}
-                    $('#pollmodule-table-{{ userModuleInvitation.module.token }} > tbody > tr:nth-last-child(1)').before(responseJSON['data']);
-                    $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').show();
-                        {% endif %}
-                    $('#{{ pp_form_modal_prefix }}_modal_id').modal('hide');
-                }, function(jqXHR, textStatus, errorThrown){
-                    $('#{{ pp_form_modal_prefix }}_modal_id').modal('show');
-                }, function () {
-                    $grid = $('.grid');
-                    if ($grid[0]) {
-                        $grid.masonry('layout');
-                    }
-                }
-            );
-        }
     </script>
 </div>
 

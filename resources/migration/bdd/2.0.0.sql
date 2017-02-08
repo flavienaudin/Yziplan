@@ -1,0 +1,2 @@
+ALTER TABLE `module_poll_element` CHANGE `type` `type` ENUM('string','integer','datetime','googlePlaceId','endDatetime','richText','picture') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL COMMENT '(DC2Type:enum_pollproposal_elementtype)';
+ALTER TABLE `module_poll_module` CHANGE `poll_module_type` `poll_module_type` ENUM('pollmoduletype.what','pollmoduletype.when','pollmoduletype.where','pollmoduletype.whobringswhat','pollmoduletype.activity') CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT NULL COMMENT '(DC2Type:enum_pollmodule_type)';
