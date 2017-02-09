@@ -677,22 +677,25 @@ label.required:after {
 /*---------------------------------
     Poll Proposal Display
 ----------------------------------*/
+
+/* TODO : Revoir la présentation des images, c'est pas ouf */
 .pp-elt-picture {
-    display: block;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    -webkit-background-size: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.pp-elt-picture.picture-small {
     width: 50px;
     height: 50px;
-    background-size: cover;
-    background: no-repeat center center;
 }
 
-.pp-elt-picture-info {
-    max-height: 300px;
-    max-width: 300px;
-}
-
-.pp-elt {
-    display: inline-block;
-    vertical-align: center;
+.pp-elt-picture.picture-large {
+    height: 150px;
+    width: 150px;
 }
 
 /*---------------------------------

@@ -358,56 +358,68 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         }
     });
 
-    if (typeof async !== "boolean") {
-        async = true
-    }
-    $.ajax({
+    var ajaxOptions = {
         url: $(form).attr('action'),
-        type: $(form).attr('method'),
-        data: $(form).serialize(),
-        async: async
-    }).done(function (responseJSON, textStatus, jqXHR) {
-        if (responseJSON.hasOwnProperty('htmlContents')) {
-            treatHtmlContents(responseJSON['htmlContents']);
-        }
-        if (doneCallback) {
-            doneCallback(responseJSON, textStatus, jqXHR);
-        }
-    }).fail(function (jqXHR, textStatus, errorThrown) {
-        var responseJSON = jqXHR['responseJSON'];
-        if (responseJSON.hasOwnProperty('htmlContents')) {
-            treatHtmlContents(responseJSON['htmlContents']);
-        }
-        if (failCallback) {
-            failCallback(jqXHR, textStatus, errorThrown);
-        }
-    }).always(function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-        if (alwaysCallback) {
-            alwaysCallback(dataOrJqXHR, textStatus, jqXHROrErrorThrown);
-        }
-        if (dataOrJqXHR.hasOwnProperty('responseJSON')) {
-            dataOrJqXHR = dataOrJqXHR['responseJSON'];
-        }
-        if (dataOrJqXHR.hasOwnProperty('messages')) {
-            var messages = dataOrJqXHR['messages'];
-            for (var messageType in messages) {
-                if (messages.hasOwnProperty(messageType)) {
-                    messages[messageType].forEach(function (mess) {
-                        toastr[messageType](mess);
-                    });
+        type: $(form).attr('method')
+    };
+
+    if (typeof async == "boolean") {
+        ajaxOptions.async = async;
+    }
+
+    if ($(form).attr("enctype") == "multipart/form-data") {
+        ajaxOptions.data = new FormData($(form)[0]);
+        ajaxOptions.contentType = false;
+        ajaxOptions.processData = false;
+    } else {
+        ajaxOptions.data = $(form).serialize();
+    }
+
+    $.ajax(ajaxOptions)
+        .done(function (responseJSON, textStatus, jqXHR) {
+            if (responseJSON.hasOwnProperty('htmlContents')) {
+                treatHtmlContents(responseJSON['htmlContents']);
+            }
+            if (doneCallback) {
+                doneCallback(responseJSON, textStatus, jqXHR);
+            }
+        })
+        .fail(function (jqXHR, textStatus, errorThrown) {
+            var responseJSON = jqXHR['responseJSON'];
+            if (responseJSON.hasOwnProperty('htmlContents')) {
+                treatHtmlContents(responseJSON['htmlContents']);
+            }
+            if (failCallback) {
+                failCallback(jqXHR, textStatus, errorThrown);
+            }
+        })
+        .always(function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+            if (alwaysCallback) {
+                alwaysCallback(dataOrJqXHR, textStatus, jqXHROrErrorThrown);
+            }
+            if (dataOrJqXHR.hasOwnProperty('responseJSON')) {
+                dataOrJqXHR = dataOrJqXHR['responseJSON'];
+            }
+            if (dataOrJqXHR.hasOwnProperty('messages')) {
+                var messages = dataOrJqXHR['messages'];
+                for (var messageType in messages) {
+                    if (messages.hasOwnProperty(messageType)) {
+                        messages[messageType].forEach(function (mess) {
+                            toastr[messageType](mess);
+                        });
+                    }
                 }
             }
-        }
-        $(preloader).hide();
-        $(form).find('[type=submit]').each(function () {
-            $(this).off('click');
-            $(this).removeProp("disabled");
-            $(this).removeClass("disabled");
-            if ($(this).data('original-text')) {
-                $(this).html($(this).data('original-text'));
-            }
+            $(preloader).hide();
+            $(form).find('[type=submit]').each(function () {
+                $(this).off('click');
+                $(this).removeProp("disabled");
+                $(this).removeClass("disabled");
+                if ($(this).data('original-text')) {
+                    $(this).html($(this).data('original-text'));
+                }
+            });
         });
-    });
 }
 
 /**

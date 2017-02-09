@@ -352,10 +352,12 @@ class PollProposalElement
             case PollElementType::INTEGER :
                 $val = $this->getValInteger();
                 break;
+            case PollElementType::PICTURE :
+                $val = $this->getPicture();
+                break;
             case $type == PollElementType::GOOGLE_PLACE_ID:
             case PollElementType::STRING :
             case PollElementType::RICHTEXT :
-            case PollElementType::PICTURE :
                 $val = $this->getValString();
                 break;
         }

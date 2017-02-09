@@ -107,6 +107,13 @@ services:
     tags:
     - { name: form.type }
 
+
+  at.form_type.poll_proposal_element:
+    class: AppBundle\Form\Module\PollProposalElementType
+    arguments: ['@at.uploader.pollproposalelement_picture']
+    tags:
+    - { name: form.type }
+
 # Event Subscribers
   at.event_subscriber.kernel_events.:
     class: AppBundle\EventListener\KernelEventsSubscriber

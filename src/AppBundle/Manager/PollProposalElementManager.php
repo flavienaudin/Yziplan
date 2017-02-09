@@ -103,8 +103,6 @@ class PollProposalElementManager
                 $this->pollProposalElement->setEndTime(false);
             }
             $this->pollProposalElement->setValEndDatetime($datetimeValue);
-        }else if ($this->pollProposalElement->getPollElement()->getType() == PollElementType::END_DATETIME) {
-
         }
         return $this->pollProposalElement;
     }

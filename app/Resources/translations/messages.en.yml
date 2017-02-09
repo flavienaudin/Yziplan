@@ -409,14 +409,11 @@ pollmodule:
       title: Add a proposal
     editPollProposal:
       title: Edit proposal
-    all:
+    pollproposal:
       form:
-        string_collection:
-          label: Add a text
-        integer_collection:
-          label: Add an integer
-        datetime_collection:
-          label: Add a datetime
+        description:
+          label: Description
+          placeholder: Description
     when:
       startDate: "Start Date/Hour:"
       endDate: "End Date/Hour:"
