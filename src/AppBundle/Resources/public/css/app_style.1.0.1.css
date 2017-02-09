@@ -689,6 +689,8 @@ label.required:after {
     -o-background-size: cover;
     -webkit-background-size: cover;
     background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .pp-elt-picture.picture-small {
