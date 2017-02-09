@@ -105,7 +105,7 @@ class PollModuleController extends Controller
                 } else {
                     $pollProposalManager = $this->get("at.manager.pollproposal");
                     $pollProposalManager->removePollProposal($pollProposal);
-                    $data[AppJsonResponse::DATA]['actionResult'] = true;
+                    $data[AppJsonResponse::DATA]['pollProposalId'] = $pollProposal->getId();
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 }
             } else {

@@ -69,10 +69,11 @@
                                     showLoaderOnConfirm: true
                                 }).then(function () {
                                     ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                            $('#pp_display_row_{{ pollProposal.id }}').remove();
+                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('pollProposalId')) {
+                                            var pollProposalId = responseJSON['data']['pollProposalId'];
+                                            $('#pp_display_row_' + pollProposalId).remove();
                                             var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
-                                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
+                                            $(moduleModalsContainer).children('#pollProposalEdition_' + pollProposalId + '_modal_id').each(function () {
                                                 $(this).remove();
                                             });
                                             if ($('#pp-row-group-{{ userModuleInvitation.module.token }} > tr').length == 1) {
