@@ -80,8 +80,7 @@ function voteYesNoAction(params) {
     var urlTarget = params[0];
     var e = params[1];
     var data = params[2];
-
-    var pollProposalId = params[4];
+    var pollProposalId = params[3];
 
     ajaxRequest(urlTarget, data, e, function (responseJSON, textStatus, jqXHR) {
         var animation = 'bounceIn';
