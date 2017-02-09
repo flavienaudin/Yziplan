@@ -27,7 +27,15 @@
                 $(document).ready(function () {
                     var summernoteOptions = {
                         dialogsInBody: true,
-                        placeholder: "{{ 'pollmodule.modal.pollproposal.form.description.placeholder'|trans }}"
+                        placeholder : '{{ 'pollmodule.modal.pollproposal.form.description.placeholder'|trans }}',
+                        height: 150,
+                        toolbar: [
+                            ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                            ['fontsize', ['fontsize']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['insert', ['link', 'picture', 'video' ]]
+                        ]
                     };
                     {% if app.request.locale == 'fr' %}
                     summernoteOptions.lang = 'fr-FR';
