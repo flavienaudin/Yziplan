@@ -172,7 +172,18 @@ event:
       instagramURL:
         label: Instagram
         placeholder: Instagram
-
+    opening_hour:
+      link_collpase: Horaires d'ouverture
+      add_link: Ajouter une plage horaire
+      day_of_week:
+        label: Jour
+        placeholder: Jour
+      time_open:
+        label: Heure d'ouverture
+        placeholder: Heure d'ouverture
+      time_closed:
+        label: Heure de fermeture
+        placeholder: Heure de fermeture
   wizard:
     button:
       skip_wizard: Aller à la page de l'événement
@@ -527,6 +538,15 @@ appuser:
   status:
     main: Princpal
     merged: Fusionné
+
+day_of_week:
+  monday: Lundi
+  tuesday: Mardi
+  wednesday: Mercredi
+  thursday: Jeudi
+  friday: Vendredi
+  saturday: Samedi
+  sunday: Dimanche
 
 # Emails
 email:

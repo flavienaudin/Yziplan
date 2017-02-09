@@ -277,6 +277,35 @@
 {%- endblock md_toggle_switch_widget %}
 
 
+
+{% block event_openinghours_widget %}
+    {{ form_row(form.dayOfWeek, {
+        'label':'event.form.opening_hour.day_of_week.label',
+        'label_attr':{'class':'sr-only'},
+        'attr':{
+            'placeholder':'event.form.opening_hour.day_of_week.placeholder',
+            'class':'selectpicker w-150px'
+        },
+        'widget_options':{'fgline':true}
+    }) }}
+    {{ form_row(form.timeOpen, {
+        'label':'event.form.opening_hour.time_open.label',
+        'label_attr':{'class':'sr-only'},
+        'attr':{
+            'placeholder':'event.form.opening_hour.time_open.placeholder'
+        },
+        'widget_options':{'fgline':true}
+    }) }}
+    {{ form_row(form.timeClosed, {
+        'label':'event.form.opening_hour.time_closed.label',
+        'label_attr':{'class':'sr-only'},
+        'attr':{
+            'placeholder':'event.form.opening_hour.time_closed.placeholder'
+        },
+        'widget_options':{'fgline':true}
+    }) }}
+{% endblock event_openinghours_widget %}
+
 {# Support #}
 
 {# Surchage complète du block #}

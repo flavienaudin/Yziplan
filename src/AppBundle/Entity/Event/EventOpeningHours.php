@@ -24,7 +24,7 @@ class EventOpeningHours
     /**
      * @var int
      *
-     * @ORM\Column(name="dayOfWeek", type="smallint")
+     * @ORM\Column(name="dayOfWeek", type="enum_day_of_week")
      */
     private $dayOfWeek;
 
@@ -38,9 +38,9 @@ class EventOpeningHours
     /**
      * @var int
      *
-     * @ORM\Column(name="openingDuration", type="integer")
+     * @ORM\Column(name="time_closed", type="time")
      */
-    private $openingDuration;
+    private $timeClosed;
 
 
     /**************************************************************************************************************
@@ -79,7 +79,6 @@ class EventOpeningHours
     public function setDayOfWeek($dayOfWeek)
     {
         $this->dayOfWeek = $dayOfWeek;
-
         return $this;
     }
 
@@ -103,7 +102,6 @@ class EventOpeningHours
     public function setTimeOpen($timeOpen)
     {
         $this->timeOpen = $timeOpen;
-
         return $this;
     }
 
@@ -118,27 +116,21 @@ class EventOpeningHours
     }
 
     /**
-     * Set openingDuration
-     *
-     * @param integer $openingDuration
-     *
-     * @return EventOpeningHours
+     * @return int
      */
-    public function setOpeningDuration($openingDuration)
+    public function getTimeClosed()
     {
-        $this->openingDuration = $openingDuration;
-
-        return $this;
+        return $this->timeClosed;
     }
 
     /**
-     * Get openingDuration
-     *
-     * @return int
+     * @param int $timeClosed
+     * @return EventOpeningHours
      */
-    public function getOpeningDuration()
+    public function setTimeClosed($timeClosed)
     {
-        return $this->openingDuration;
+        $this->timeClosed = $timeClosed;
+        return $this;
     }
 
     /**

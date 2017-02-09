@@ -172,7 +172,18 @@ event:
       instagramURL:
         label: Instagram link
         placeholder: Instagram link
-
+    opening_hour:
+      link_collpase: Opening hours
+      add_link: Add a time slot
+      day_of_week:
+        label: Day
+        placeholder: Day
+      time_open:
+        label: Opening time
+        placeholder: Opening time
+      time_closed:
+        label: Closing time
+        placeholder: Closing time
   wizard:
     button:
       skip_wizard: Skip the wizard
@@ -527,6 +538,15 @@ appuser:
   status:
     main: Main
     merged: Merged
+
+day_of_week:
+  monday: Monday
+  tuesday: Tuesday
+  wednesday: Wednesday
+  thursday: Thursday
+  friday: Friday
+  saturday: Saturday
+  sunday: sunday
 
 # Emails
 email:

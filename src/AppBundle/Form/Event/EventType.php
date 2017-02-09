@@ -11,6 +11,7 @@ namespace AppBundle\Form\Event;
 use AppBundle\Entity\Event\Event;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -65,6 +66,17 @@ class EventType extends AbstractType
             ->add('coordinates', EventCoordinatesType::class, array(
                 'required' => false,
                 'label_attr' => array('class' => 'sr-only')
+            ))
+            ->add('openingHours', CollectionType::class, array(
+                'required' => false,
+                'label_attr' => array(
+                    'class' => 'sr-only'
+                ),
+                'entry_type' => EventOpeningHoursType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'by_reference' => false
             ));
     }
 

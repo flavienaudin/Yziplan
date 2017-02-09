@@ -666,6 +666,7 @@ class Event implements CommentableInterface
     public function removeOpeningHour(EventOpeningHours $openingHours)
     {
         $this->openingHours->removeElement($openingHours);
+        $openingHours->setEvent(null);
     }
 
 

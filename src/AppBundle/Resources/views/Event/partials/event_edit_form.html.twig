@@ -56,69 +56,105 @@
                     }) }}
                 </div>
             </div>
+        </div>
+        <div class="hidden-xs col-sm-4">
+            <div id="eventEditGoogleMap" style="height: 200px;"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div id="eventMoreInfo" class="panel-group" role="tablist" aria-multiselectable="false">
+                <div class="panel panel-collapse">
+                    <div class="panel-heading" role="tab" id="eventCoordinates">
+                        <h4 class="panel-title">
+                            <a href="#eventCoordinatesCollpase" data-toggle="collapse" data-parent="#eventMoreInfo" class="collapsed" aria-expanded="false" aria-controls="eventCoordinatesCollpase">
+                                {{ "event.form.coordinates.link_collpase"|trans }}</a>
+                        </h4>
+                    </div>
+                    <div id="eventCoordinatesCollpase" class="collapse" role="tabpanel" aria-labelledby="eventCoordinates" aria-expanded="false">
+                        {{ form_row(eventForm.coordinates.website, {
+                            'label':'event.form.coordinates.website.label',
+                            'label_attr':{'class':'sr-only'},
+                            'attr':{'placeholder':'event.form.coordinates.website.placeholder'},
+                            'widget_options':{'fgline':true, 'label_icon':'zmdi-globe'}
+                        }) }}
+                        {{ form_row(eventForm.coordinates.email, {
+                            'label':'event.form.coordinates.email.label',
+                            'label_attr':{'class':'sr-only'},
+                            'attr':{'placeholder':'event.form.coordinates.email.placeholder'},
+                            'widget_options':{'fgline':true, 'label_icon':'zmdi-email'}
+                        }) }}
+                        {{ form_row(eventForm.coordinates.phoneNumber, {
+                            'label':'event.form.coordinates.phoneNumber.label',
+                            'label_attr':{'class':'sr-only'},
+                            'attr':{'placeholder':'event.form.coordinates.phoneNumber.placeholder'},
+                            'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
+                        }) }}
+                        {{ form_row(eventForm.coordinates.mobileNumber, {
+                            'label':'event.form.coordinates.mobileNumber.label',
+                            'label_attr':{'class':'sr-only'},
+                            'attr':{'placeholder':'event.form.coordinates.mobileNumber.placeholder'},
+                            'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
+                        }) }}
+                        {{ form_row(eventForm.coordinates.faxNumber, {
+                            'label':'event.form.coordinates.faxNumber.label',
+                            'label_attr':{'class':'sr-only'},
+                            'attr':{'placeholder':'event.form.coordinates.faxNumber.placeholder'},
+                            'widget_options':{'fgline':true, 'label_icon':'zmdi-print'}
+                        }) }}
+                        {{ form_row(eventForm.coordinates.facebookURL, {
+                            'label':'event.form.coordinates.facebookURL.label',
+                            'label_attr':{'class':'sr-only'},
+                            'attr':{'placeholder':'event.form.coordinates.facebookURL.placeholder'},
+                            'widget_options':{'fgline':true, 'label_icon':'zmdi-facebook'}
+                        }) }}
+                        {{ form_row(eventForm.coordinates.googlePlusURL, {
+                            'label':'event.form.coordinates.googlePlusURL.label',
+                            'label_attr':{'class':'sr-only'},
+                            'attr':{'placeholder':'event.form.coordinates.googlePlusURL.placeholder'},
+                            'widget_options':{'fgline':true, 'label_icon':'zmdi-google-plus'}
+                        }) }}
+                        {{ form_row(eventForm.coordinates.twitterURL, {
+                            'label':'event.form.coordinates.twitterURL.label',
+                            'label_attr':{'class':'sr-only'},
+                            'attr':{'placeholder':'event.form.coordinates.twitterURL.placeholder'},
+                            'widget_options':{'fgline':true, 'label_icon':'zmdi-twitter'}
+                        }) }}
+                        {{ form_row(eventForm.coordinates.instagramURL, {
+                            'label':'event.form.coordinates.instagramURL.label',
+                            'label_attr':{'class':'sr-only'},
+                            'attr':{'placeholder':'event.form.coordinates.instagramURL.placeholder'},
+                            'widget_options':{'fgline':true, 'label_icon':'zmdi-instagram'}
+                        }) }}
 
-            <a href="#eventCoordinatesCollpase" data-toggle="collapse" class="btn btn-link btn-icon-text c-blue collapsed" aria-expanded="false" aria-controls="eventCoordinatesCollpase"> <i
-                        class="zmdi zmdi-plus-square"></i><i class="zmdi zmdi-minus-square"></i> {{ "event.form.coordinates.link_collpase"|trans }}</a>
+                    </div>
+                </div>
 
-            <div id="eventCoordinatesCollpase" class="m-b-10 collapse">
-                {{ form_row(eventForm.coordinates.website, {
-                    'label':'event.form.coordinates.website.label',
-                    'label_attr':{'class':'sr-only'},
-                    'attr':{'placeholder':'event.form.coordinates.website.placeholder'},
-                    'widget_options':{'fgline':true, 'label_icon':'zmdi-globe'}
-                }) }}
-                {{ form_row(eventForm.coordinates.email, {
-                    'label':'event.form.coordinates.email.label',
-                    'label_attr':{'class':'sr-only'},
-                    'attr':{'placeholder':'event.form.coordinates.email.placeholder'},
-                    'widget_options':{'fgline':true, 'label_icon':'zmdi-email'}
-                }) }}
-                {{ form_row(eventForm.coordinates.phoneNumber, {
-                    'label':'event.form.coordinates.phoneNumber.label',
-                    'label_attr':{'class':'sr-only'},
-                    'attr':{'placeholder':'event.form.coordinates.phoneNumber.placeholder'},
-                    'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
-                }) }}
-                {{ form_row(eventForm.coordinates.mobileNumber, {
-                    'label':'event.form.coordinates.mobileNumber.label',
-                    'label_attr':{'class':'sr-only'},
-                    'attr':{'placeholder':'event.form.coordinates.mobileNumber.placeholder'},
-                    'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
-                }) }}
-                {{ form_row(eventForm.coordinates.faxNumber, {
-                    'label':'event.form.coordinates.faxNumber.label',
-                    'label_attr':{'class':'sr-only'},
-                    'attr':{'placeholder':'event.form.coordinates.faxNumber.placeholder'},
-                    'widget_options':{'fgline':true, 'label_icon':'zmdi-print'}
-                }) }}
-                {{ form_row(eventForm.coordinates.facebookURL, {
-                    'label':'event.form.coordinates.facebookURL.label',
-                    'label_attr':{'class':'sr-only'},
-                    'attr':{'placeholder':'event.form.coordinates.facebookURL.placeholder'},
-                    'widget_options':{'fgline':true, 'label_icon':'zmdi-facebook'}
-                }) }}
-                {{ form_row(eventForm.coordinates.googlePlusURL, {
-                    'label':'event.form.coordinates.googlePlusURL.label',
-                    'label_attr':{'class':'sr-only'},
-                    'attr':{'placeholder':'event.form.coordinates.googlePlusURL.placeholder'},
-                    'widget_options':{'fgline':true, 'label_icon':'zmdi-google-plus'}
-                }) }}
-                {{ form_row(eventForm.coordinates.twitterURL, {
-                    'label':'event.form.coordinates.twitterURL.label',
-                    'label_attr':{'class':'sr-only'},
-                    'attr':{'placeholder':'event.form.coordinates.twitterURL.placeholder'},
-                    'widget_options':{'fgline':true, 'label_icon':'zmdi-twitter'}
-                }) }}
-                {{ form_row(eventForm.coordinates.instagramURL, {
-                    'label':'event.form.coordinates.instagramURL.label',
-                    'label_attr':{'class':'sr-only'},
-                    'attr':{'placeholder':'event.form.coordinates.instagramURL.placeholder'},
-                    'widget_options':{'fgline':true, 'label_icon':'zmdi-instagram'}
-                }) }}
+                <div class="panel panel-collapse">
+                    <div class="panel-heading" role="tab" id="eventCoordinates">
+                        <h4 class="panel-title">
+                            <a href="#eventOpeningHoursCollpase" data-toggle="collapse" data-parent="#eventMoreInfo" class="collapsed" aria-expanded="false" aria-controls="eventOpeningHoursCollpase">
+                                {{ "event.form.opening_hour.link_collpase"|trans }}</a>
+                        </h4>
+                    </div>
+                    <div id="eventOpeningHoursCollpase" class="collapse" role="tabpanel" aria-labelledby="eventCoordinates" aria-expanded="false">
+                        {{ form_label(eventForm.openingHours, null, {'class':'sr-only'}) }}
+                        {{ form_errors(eventForm.openingHours) }}
 
-                {{ form_rest(eventForm) }}
+                        <ul class="list-unstyled m-t-10 m-b-10 form-inline" id="openingHours-fields-list" data-prototype="{{ form_widget(eventForm.openingHours.vars.prototype)|e }}">
+                            {% for openingHour in eventForm.openingHours %}
+                                <li class="openingHourForm">
+                                    {{ form_widget(openingHour) }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="#" class="btn btn-icon-text btn-link c-blue" id="add-opening-time"><i class="zmdi zmdi-alarm-plus"></i> {{ "event.form.opening_hour.add_link"|trans }}</a>
+                    </div>
+                </div>
             </div>
+        </div>
 
+        <div class="col-xs-12">
             {% block action_buttons %}
                 <div class="text-center">
                     <button class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
@@ -129,9 +165,6 @@
                 </div>
             {% endblock action_buttons %}
             {{ form_rest(eventForm) }}
-        </div>
-        <div class="hidden-xs col-sm-4">
-            <div id="eventEditGoogleMap" style="height: 200px;"></div>
         </div>
     </div>
     {{ form_end(eventForm) }}
@@ -228,6 +261,18 @@
                 {% endif %}
             }
         }
+
+        function addOpeningHourFormDeleteLink($openingHourFormLi){
+            var $removeFormA = $('<div class="pull-left m-l-15 m-r-15"><a href="#" class="btn btn-danger waves-effect"><i class="zmdi zmdi-close-circle"></i></a></div>');
+            $openingHourFormLi.prepend($removeFormA);
+
+            $removeFormA.on('click', function(e) {
+                e.preventDefault();
+                $openingHourFormLi.remove();
+            });
+
+        }
+
         {% endblock js_functions %}
 
         $(document).ready(function () {
@@ -272,13 +317,35 @@
             });
             {% endblock js_document_ready %}
 
+            var openingHoursCount = {{ eventForm.openingHours|length }};
+            var openingHoursFieldsList = $('#openingHours-fields-list');
+            openingHoursFieldsList.find('li.openingHourForm').each(function() {
+                addOpeningHourFormDeleteLink($(this));
+            });
+
+            $('#add-opening-time').click(function(e) {
+                e.preventDefault();
+                var newWidget = openingHoursFieldsList.attr('data-prototype');
+                newWidget = newWidget.replace(/__name__/g, openingHoursCount);
+                openingHoursCount++;
+
+                var newLi = $('<li></li>').html(newWidget);
+                newLi.appendTo(openingHoursFieldsList);
+
+                addOpeningHourFormDeleteLink(newLi);
+
+                $('.selectpicker').selectpicker();
+                $('.clockpicker').clockpicker();
+            });
+
             $('#eventCoordinatesCollpase:has(".has-error")').collapse('show');
+            $('#eventOpeningHoursCollpase:has(".has-error")').collapse('show');
 
             var summernoteOptions = {
                 dialogsInBody: $dialogsInBody,
                 placeholder: '{{ 'event.form.description.placeholder'|trans }}',
                 toolbar: [
-                    ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                    ['fontStyle', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
                     ['fontsize', ['fontsize']],
                     ['color', ['color']],
                     ['para', ['ul', 'ol', 'paragraph']],

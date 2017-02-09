@@ -17,6 +17,7 @@ use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleStatus;
 use ATUserBundle\Entity\AccountUser;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -58,6 +59,9 @@ class EventManager
 
     /** @var Event L'événement en cours de traitement */
     private $event;
+
+    /** @var ArrayCollection Les OpeninghOurs de l'évnément pour mise à jour */
+    private $eventOriginalOpeningHours;
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory,
                                 GenerateursToken $generateurToken, ModuleManager $moduleManager, PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager,
@@ -148,6 +152,11 @@ class EventManager
      */
     public function initEventForm()
     {
+        // Create an ArrayCollection of the current OpeningHour objects in the database
+        $this->eventOriginalOpeningHours = new ArrayCollection();
+        foreach ($this->event->getOpeningHours() as $openingHour) {
+            $this->eventOriginalOpeningHours->add($openingHour);
+        }
         return $this->formFactory->create(EventType::class, $this->event);
     }
 
@@ -168,6 +177,15 @@ class EventManager
         }
         if (empty($this->event->getWhereName())) {
             $this->event->setWhereGooglePlaceId(null);
+        }
+
+        // remove the relationship between the OpeningHours and the Event
+        foreach ($this->eventOriginalOpeningHours as $openingHour) {
+            if (false === $this->event->getOpeningHours()->contains($openingHour)) {
+                // remove the OpeningHours from the Event
+                $this->event->removeOpeningHour($openingHour);
+                $this->entityManager->remove($openingHour);
+            }
         }
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
