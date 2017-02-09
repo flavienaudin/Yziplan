@@ -1368,6 +1368,11 @@ select.chosen {
     content: "\f24f";
 }
 
+.note-editor .note-icon-strikethrough:before,
+.note-popover .note-icon-strikethrough:before {
+    content: "\f24c";
+}
+
 .note-editor .note-icon-font:before,
 .note-popover .note-icon-font:before {
     content: "\f242";
