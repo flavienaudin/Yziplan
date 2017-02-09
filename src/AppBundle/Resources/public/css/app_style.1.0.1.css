@@ -230,9 +230,15 @@
 .avatar-img,
 .avatar-char,
 .yzi-avatar-img {
+    height: 100%;
+    width: 100%;
     border-radius: 10%;
 }
 
+.avatar-img{
+    object-fit: cover;
+    -o-object-fit: cover;
+}
 /*-----------------------------------
     Affichage d'avatar utilisateur
 -----------------------------------*/
@@ -285,6 +291,7 @@
 .avatar-img-container-sm img,
 .avatar-img-container-md img {
     object-fit: cover;
+    -o-object-fit: cover;
     position: relative;
     width: 100%;
     height: 100%;

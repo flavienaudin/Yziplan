@@ -262,11 +262,11 @@
             }
         }
 
-        function addOpeningHourFormDeleteLink($openingHourFormLi){
+        function addOpeningHourFormDeleteLink($openingHourFormLi) {
             var $removeFormA = $('<div class="pull-left m-l-15 m-r-15"><a href="#" class="btn btn-danger waves-effect"><i class="zmdi zmdi-close-circle"></i></a></div>');
             $openingHourFormLi.prepend($removeFormA);
 
-            $removeFormA.on('click', function(e) {
+            $removeFormA.on('click', function (e) {
                 e.preventDefault();
                 $openingHourFormLi.remove();
             });
@@ -319,11 +319,11 @@
 
             var openingHoursCount = {{ eventForm.openingHours|length }};
             var openingHoursFieldsList = $('#openingHours-fields-list');
-            openingHoursFieldsList.find('li.openingHourForm').each(function() {
+            openingHoursFieldsList.find('li.openingHourForm').each(function () {
                 addOpeningHourFormDeleteLink($(this));
             });
 
-            $('#add-opening-time').click(function(e) {
+            $('#add-opening-time').click(function (e) {
                 e.preventDefault();
                 var newWidget = openingHoursFieldsList.attr('data-prototype');
                 newWidget = newWidget.replace(/__name__/g, openingHoursCount);
@@ -344,6 +344,7 @@
             var summernoteOptions = {
                 dialogsInBody: $dialogsInBody,
                 placeholder: '{{ 'event.form.description.placeholder'|trans }}',
+                height: 150,
                 toolbar: [
                     ['fontStyle', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
                     ['fontsize', ['fontsize']],
