@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Url;
 
 class EventCoordinatesType extends AbstractType
@@ -28,7 +29,8 @@ class EventCoordinatesType extends AbstractType
                 'constraints' => new Url()
             ))
             ->add("email", EmailType::class, array(
-                'required' => false,))
+                'required' => false,
+                'constraints' => new Email()))
             ->add("phoneNumber", TextType::class, array(
                 'required' => false,))
             ->add("mobileNumber", TextType::class, array(
