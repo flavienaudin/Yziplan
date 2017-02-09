@@ -17,7 +17,7 @@
             {{ form_row(eventForm.description, {
                 'label':'event.form.description.label',
                 'label_attr':{'class':'sr-only'},
-                'attr':{'placeholder':'event.form.description.placeholder','rows':3},
+                'attr':{'placeholder':'event.form.description.placeholder'},
                 'widget_options':{'fgline':true}
             }) }}
             {{ form_row(eventForm.when, {
@@ -273,7 +273,15 @@
             {% endblock js_document_ready %}
 
             var summernoteOptions = {
-                dialogsInBody: $dialogsInBody
+                dialogsInBody: $dialogsInBody,
+                placeholder : '{{ 'event.form.description.placeholder'|trans }}',
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video' ]]
+                ]
             };
             {% if app.request.locale == 'fr' %}
             summernoteOptions.lang = 'fr-FR';
