@@ -104,24 +104,19 @@ class PollProposalElementType extends AbstractType
                     )
                 ));
             } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::RICHTEXT) {
-                $form->add('valString', TextareaType::class, array(
-                    'required' => false,
-                ));
-            }
-            else {
-                $required = false;
-                if($pollProposalElement->getPollElement()->getType() == PollElementType::STRING){
-                    $required = true;
-                }
-                $form->add('valString', TextType::class, array(
-                    'required' => $required,
+                $form->add('valText', TextareaType::class, array());
+            } else {
+                $param = array(
                     'label' => $pollProposalElement->getPollElement()->getName(),
-                    'constraints' => new NotBlank()
-                ));
+                );
+                if ($pollProposalElement->getPollElement()->getType() == PollElementType::STRING) {
+                    $param["required"] = true;
+                    $param['constraints'] = new NotBlank();
+                }
+                $form->add('valString', TextType::class, $param);
             }
         });
     }
-
 
     public function configureOptions(OptionsResolver $resolver)
     {

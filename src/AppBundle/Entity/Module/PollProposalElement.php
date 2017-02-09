@@ -35,6 +35,13 @@ class PollProposalElement
     private $valString;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="val_text", type="text", nullable=true)
+     */
+    private $valText;
+
+    /**
      * Contient la valeur si le type == PollElementType::INTEGER
      *
      * @var integer
@@ -148,6 +155,23 @@ class PollProposalElement
         $this->valString = $valString;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getValText()
+    {
+        return $this->valText;
+    }
+
+    /**
+     * @param string $valText
+     */
+    public function setValText($valText)
+    {
+        $this->valText = $valText;
+    }
+
 
     /**
      * @return int
@@ -327,9 +351,11 @@ class PollProposalElement
             case PollElementType::INTEGER :
                 $val = $this->getValInteger();
                 break;
+            case PollElementType::RICHTEXT :
+                $val =$this->getValText();
+                break;
             case $type == PollElementType::GOOGLE_PLACE_ID:
             case PollElementType::STRING :
-            case PollElementType::RICHTEXT :
             case PollElementType::PICTURE :
                 $val = $this->getValString();
                 break;

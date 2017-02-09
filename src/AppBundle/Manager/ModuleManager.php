@@ -259,6 +259,7 @@ class ModuleManager
                         foreach ($originalPollProposal->getPollProposalElements() as $originialPollProposalElement) {
                             $duplicatedPollProposalElement = new PollProposalElement();
                             $duplicatedPollProposalElement->setValString($originialPollProposalElement->getValString());
+                            $duplicatedPollProposalElement->setValText($originialPollProposalElement->getValText());
                             $duplicatedPollProposalElement->setValInteger($originialPollProposalElement->getValInteger());
                             $duplicatedPollProposalElement->setValDatetime($originialPollProposalElement->getValDatetime());
                             $duplicatedPollProposalElement->setTime($originialPollProposalElement->hasTime());

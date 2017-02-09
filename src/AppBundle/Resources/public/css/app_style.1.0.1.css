@@ -677,12 +677,16 @@ label.required:after {
 /*---------------------------------
     Poll Proposal Display
 ----------------------------------*/
+.pp-elt {
+    display:inline-block;
+    vertical-align: middle;
+}
+
 .pp-elt-picture {
     display: block;
     width: 50px;
     height: 50px;
     background-size: cover;
-    background: no-repeat center center;
 }
 
 .pp-elt-picture-info {
@@ -690,9 +694,8 @@ label.required:after {
     max-width: 300px;
 }
 
-.pp-elt {
-    display: inline-block;
-    vertical-align: center;
+.pp-elt-info{
+    font-size: 11px;
 }
 
 /*---------------------------------
