@@ -117,9 +117,9 @@ class PollProposalElementType extends AbstractType
                 ));
             } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::PICTURE) {
                 $pollProposalElement = $formEvent->getData();
-                if($pollProposalElement->getPicture() != null){
+                if ($pollProposalElement->getPicture() != null) {
                     $pollProposalElement->setPicture(
-                        new File($this->fileUploader->getTargetDir().DIRECTORY_SEPARATOR.$pollProposalElement->getPicture())
+                        new File($this->fileUploader->getTargetDir() . DIRECTORY_SEPARATOR . $pollProposalElement->getPicture())
                     );
                 }
                 $form->add('picture', FileType::class, array(
@@ -129,23 +129,19 @@ class PollProposalElementType extends AbstractType
                     )
                 ));
             } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::RICHTEXT) {
-                $form->add('valString', TextareaType::class, array(
-                    'required' => false
-                ));
+                $form->add('valText', TextareaType::class, array());
             } else {
-                $required = false;
-                if ($pollProposalElement->getPollElement()->getType() == PollElementType::STRING) {
-                    $required = true;
-                }
-                $form->add('valString', TextType::class, array(
-                    'required' => $required,
+                $param = array(
                     'label' => $pollProposalElement->getPollElement()->getName(),
-                    'constraints' => ($required ? new NotBlank() : null)
-                ));
+                );
+                if ($pollProposalElement->getPollElement()->getType() == PollElementType::STRING) {
+                    $param["required"] = true;
+                    $param['constraints'] = new NotBlank();
+                }
+                $form->add('valString', TextType::class, $param);
             }
         });
     }
-
 
     public function configureOptions(OptionsResolver $resolver)
     {

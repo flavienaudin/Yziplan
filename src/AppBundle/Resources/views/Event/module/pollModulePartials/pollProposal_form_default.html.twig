@@ -17,7 +17,7 @@
     {% for pollProposalElement in pollProposalForm.pollProposalElements %}
 
         {% if pollProposalElement.vars.value.getPollElement.getType == constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT') %}
-            {{ form_row(pollProposalElement.valString, {
+            {{ form_row(pollProposalElement.valText, {
                 'label':'pollmodule.modal.pollproposal.form.description.label',
                 'label_attr':{'class':'sr-only'},
                 'attr':{'rows':5},
@@ -32,7 +32,7 @@
                     {% if app.request.locale == 'fr' %}
                     summernoteOptions.lang = 'fr-FR';
                     {% endif %}
-                    $('#{{ pollProposalElement.valString.vars.id }}').summernote(summernoteOptions);
+                    $('#{{ pollProposalElement.valText.vars.id }}').summernote(summernoteOptions);
                 });
             </script>
         {% else %}
