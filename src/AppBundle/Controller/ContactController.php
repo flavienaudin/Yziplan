@@ -9,19 +9,17 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User\Contact;
-use AppBundle\Entity\User\ContactEmail;
 use AppBundle\Form\User\ContactType;
 use AppBundle\Security\ContactVoter;
-use AppBundle\Utils\enum\ContactStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 /**
@@ -77,7 +75,7 @@ class ContactController extends Controller
                 $contacts = $contactManager->searchContactsOfUser($user, $search);
                 $data = array();
                 /** @var Contact $contact */
-                foreach($contacts as $contact){
+                foreach ($contacts as $contact) {
                     $contactAsArray = array();
                     $contactAsArray['text'] = $contact->getDisplayableName();
                     $contactAsArray['value'] = $contact->getEmailToContact();
