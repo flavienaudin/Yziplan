@@ -175,6 +175,7 @@ event:
     opening_hour:
       link_collpase: Opening hours
       add_link: Add a time slot
+      closed: Closed
       day_of_week:
         label: Day
         placeholder: Day
@@ -540,13 +541,13 @@ appuser:
     merged: Merged
 
 day_of_week:
-  monday: Monday
-  tuesday: Tuesday
-  wednesday: Wednesday
-  thursday: Thursday
-  friday: Friday
-  saturday: Saturday
-  sunday: sunday
+  1_monday: Monday
+  2_tuesday: Tuesday
+  3_wednesday: Wednesday
+  4_thursday: Thursday
+  5_friday: Friday
+  6_saturday: Saturday
+  7_sunday: sunday
 
 # Emails
 email:

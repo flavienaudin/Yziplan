@@ -24,7 +24,7 @@ class EventOpeningHours
     /**
      * @var int
      *
-     * @ORM\Column(name="dayOfWeek", type="enum_day_of_week")
+     * @ORM\Column(name="dayOfWeek", type="enum_dayofweek")
      */
     private $dayOfWeek;
 

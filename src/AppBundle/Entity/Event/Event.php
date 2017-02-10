@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Event;
 
 use AppBundle\Entity\Comment\CommentableInterface;
 use AppBundle\Entity\Comment\Thread;
+use AppBundle\Utils\enum\DayOfWeek;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -726,5 +727,29 @@ class Event implements CommentableInterface
                 ->andWhere(Criteria::expr()->eq('administrator', false));
         }
         return $this->eventInvitations->matching($criteria);
+    }
+
+    public function getOpeningHoursOrdered()
+    {
+        $criteria = Criteria::create()
+            ->orderBy(array('dayOfWeek' => Criteria::ASC, 'timeOpen' => Criteria::ASC));
+        $ordered = $this->openingHours->matching($criteria);
+        $orderedArray = array(
+            DayOfWeek::MONDAY => array(),
+            DayOfWeek::TUESDAY => array(),
+            DayOfWeek::WEDNESDAY => array(),
+            DayOfWeek::THURSDAY => array(),
+            DayOfWeek::FRIDAY => array(),
+            DayOfWeek::SATURDAY => array(),
+            DayOfWeek::SUNDAY => array()
+        );
+        /** @var EventOpeningHours $timeSlot */
+        foreach ($ordered as $timeSlot) {
+            $orderedArray[$timeSlot->getDayOfWeek()][] = array(
+                'timmeOpen' => $timeSlot->getTimeOpen(),
+                'timmeClosed' => $timeSlot->getTimeClosed()
+            );
+        }
+        return $orderedArray;
     }
 }

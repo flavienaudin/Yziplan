@@ -175,6 +175,7 @@ event:
     opening_hour:
       link_collpase: Horaires d'ouverture
       add_link: Ajouter une plage horaire
+      closed: Fermé
       day_of_week:
         label: Jour
         placeholder: Jour
@@ -540,13 +541,13 @@ appuser:
     merged: Fusionné
 
 day_of_week:
-  monday: Lundi
-  tuesday: Mardi
-  wednesday: Mercredi
-  thursday: Jeudi
-  friday: Vendredi
-  saturday: Samedi
-  sunday: Dimanche
+  1_monday: Lundi
+  2_tuesday: Mardi
+  3_wednesday: Mercredi
+  4_thursday: Jeudi
+  5_friday: Vendredi
+  6_saturday: Samedi
+  7_sunday: Dimanche
 
 # Emails
 email:
