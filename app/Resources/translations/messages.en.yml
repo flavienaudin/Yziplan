@@ -145,6 +145,7 @@ event:
       text.false: Your friends can not invite
     coordinates:
       link_collpase: Add more coordinates
+      link_popover: Coordinates
       website:
         label: Website
         placeholder: Website http://
