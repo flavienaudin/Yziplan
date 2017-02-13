@@ -52,10 +52,10 @@ Données d'entrée :
                                                     showLoaderOnConfirm: true
                                                 }).then(function () {
                                                     ajaxRequest(link, null, e, function (responseJSON, textStatus, jqXHR) {
-                                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                            $('#module-{{ module.token }}').remove();
+                                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('moduleToken')) {
+                                                            $('#module-' + responseJSON['data']['moduleToken']).remove();
                                                             $grid = $('.grid');
-                                                            if($grid[0]) {
+                                                            if ($grid[0]) {
                                                                 $grid.masonry('layout');
                                                             }
                                                         }
@@ -77,8 +77,7 @@ Données d'entrée :
                         {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, not userModuleInvitation.eventInvitation.organizer) %}
                     {% endfor %}
                     <h2>
-                        <i class="zmdi zmdi-help zmdi-hc-lg c-white m-r-10"></i>
-                        <span id="module_{{ module.token }}_name">
+                        <i class="zmdi zmdi-help zmdi-hc-lg c-white m-r-10"></i> <span id="module_{{ module.token }}_name">
                            {{ module.name is not empty?module.name }}
                         </span>
                         {% if creatorsNames is not empty %}
