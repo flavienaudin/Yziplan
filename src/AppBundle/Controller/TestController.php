@@ -10,9 +10,8 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Event\EventInvitation;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class TestController
@@ -36,9 +35,9 @@ class TestController extends Controller
             ));*/
 
             $this->get("app.mailer.twig_swift")->sendEventInvitationEmail($eventInvitation);
-            return $this->render("@App/Test/test_sendInvitationEmail.html.twig",['message' => "ok" ]);
+            return $this->render("@App/Test/test_sendInvitationEmail.html.twig", ['message' => "ok"]);
         }
-        return $this->render("@App/Test/test_sendInvitationEmail.html.twig", ['message' => "MAUVAIS ENVIRONNEMENT" ]);
+        return $this->render("@App/Test/test_sendInvitationEmail.html.twig", ['message' => "MAUVAIS ENVIRONNEMENT"]);
 
     }
 

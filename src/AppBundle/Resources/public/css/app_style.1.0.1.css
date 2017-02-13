@@ -224,6 +224,20 @@
     text-align: center;
 }
 
+.popover-link-ellipsis {
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 207px;
+}
+
+/*-----------------------------------
+    Generic width
+-----------------------------------*/
+.w-150px{
+    width: 150px !important;
+}
 /*-----------------------------------
     Avatar (Adapt Material Design Extebded Admin
 ------------------------------------*/

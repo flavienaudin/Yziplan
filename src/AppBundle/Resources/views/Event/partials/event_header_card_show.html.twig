@@ -24,24 +24,25 @@
                 </dd>
             </dl>
         </div>
-        <dl class="dl-horizontal">
+        <ul class="list-unstyled">
             {% if userEventInvitation.organizer or userEventInvitation.event.when is not empty %}
-                <dt><i class="zmdi zmdi-calendar zmdi-hc-fw"></i> {{ "event.form.when.label"|trans }}
-                    {% if userEventInvitation.organizer %}
+                <li><i class="zmdi zmdi-calendar zmdi-hc-fw"></i><b>{{ "event.form.when.label"|trans }}&nbsp;</b>
+                    {% if userEventInvitation.event.when is not empty %}
+                        {{ userEventInvitation.event.when|localizeddate('medium', 'none', app.request.locale, null,"ccc dd MMM yyyy HH:mm")|title }}
+                    {% elseif userEventInvitation.organizer %}
                         <i class="zmdi zmdi-info-outline" data-toggle="tooltip" title="{{ "event.form.when.tootlip"|trans }}"></i>
                     {% endif %}
-                </dt>
-                <dd>
-                    {% if userEventInvitation.event.when is not empty %}{{ userEventInvitation.event.when|localizeddate }}{% endif %}
-                </dd>
+                </li>
             {% endif %}
             {% if userEventInvitation.organizer or userEventInvitation.event.whereName is not empty %}
-                <dt><i class="zmdi zmdi-pin zmdi-hc-fw"></i> {{ "event.form.whereName.label"|trans }}
-                    {% if userEventInvitation.organizer %}
+                <li><i class="zmdi zmdi-pin zmdi-hc-fw"></i><b>{{ "event.form.whereName.label"|trans }}&nbsp;</b>
+                    {% if userEventInvitation.event.whereName is not empty %}
+                        {{ userEventInvitation.event.whereName }}
+                    {% elseif userEventInvitation.organizer %}
                         <i class="zmdi zmdi-info-outline" data-toggle="tooltip" title="{{ "event.form.whereName.tootlip"|trans }}"></i>
                     {% endif %}
-                </dt>
-                <dd>{% if userEventInvitation.event.whereName is not empty %}{{ userEventInvitation.event.whereName }}{% endif %}</dd>
+
+                </li>
             {% endif %}
             {# TODO Décommenter quand la date limite de réponse sera utilisée
             {% if userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.responseDeadline is not empty %}
@@ -52,17 +53,15 @@
             {# Todo: décommenter
              <dt>{{ "event.form.status.label"|trans }}</dt>
             <dd><span class="label label-info">{{ userEventInvitation.event.status|trans }}</span></dd>#}
-        </dl>
+        </ul>
 
-        {% if userEventInvitation.event.coordinates is not null %}
-            <div class="list-md-icon {{ userEventInvitation.event.openingHours|length == 0 ? 'm-b-15' }}">
-                <ul>
-                    {% if userEventInvitation.event.coordinates.website is not null %}
-                        <li><i class="zmdi zmdi-globe"></i> <a href="{{ userEventInvitation.event.coordinates.website }}"
-                                                               target="_blank">{{ userEventInvitation.event.coordinates.website|replace({'http://':''}) }}</a></li>
-                    {% endif %}
+        {% if userEventInvitation.event.coordinates is not null and userEventInvitation.event.coordinates.email|trim ~ userEventInvitation.event.coordinates.phoneNumber|trim
+        ~ userEventInvitation.event.coordinates.mobileNumber ~ userEventInvitation.event.coordinates.faxNumber|trim is not empty %}
+            {% set coordinatesBlock %}{% spaceless %}
+                <ul class="list-unstyled">
                     {% if userEventInvitation.event.coordinates.email is not null %}
-                        <li><i class="zmdi zmdi-email"></i> <a href="mailto:{{ userEventInvitation.event.coordinates.email }}">{{ userEventInvitation.event.coordinates.email }}</a></li>
+                        <li><i class="zmdi zmdi-email"></i><a href="mailto:{{ userEventInvitation.event.coordinates.email }}" class="popover-link-ellipsis"
+                                                              title="{{ userEventInvitation.event.coordinates.email }}">{{ userEventInvitation.event.coordinates.email }}</a></li>
                     {% endif %}
                     {% if userEventInvitation.event.coordinates.phoneNumber is not null %}
                         <li><i class="zmdi zmdi-phone"></i> {{ userEventInvitation.event.coordinates.phoneNumber }}</li>
@@ -73,24 +72,9 @@
                     {% if userEventInvitation.event.coordinates.faxNumber is not null %}
                         <li><i class="zmdi zmdi-print"></i> {{ userEventInvitation.event.coordinates.faxNumber }}</li>
                     {% endif %}
-                    <li>
-                        {% if userEventInvitation.event.coordinates.facebookURL is not null %}
-                            <a href="{{ userEventInvitation.event.coordinates.facebookURL }}" target="_blank"><span class="zmdi zmdi-facebook-box zmdi-hc-2x"></span></a>
-                        {% endif %}
-                        {% if userEventInvitation.event.coordinates.googlePlusURL is not null %}
-                            <a href="{{ userEventInvitation.event.coordinates.googlePlusURL }}" target="_blank"><span class="zmdi zmdi-google-plus zmdi-hc-2x"></span></a>
-                        {% endif %}
-                        {% if userEventInvitation.event.coordinates.twitterURL is not null %}
-                            <a href="{{ userEventInvitation.event.coordinates.twitterURL }}" target="_blank"><span class="zmdi zmdi-twitter zmdi-hc-2x"></span></a>
-                        {% endif %}
-                        {% if userEventInvitation.event.coordinates.instagramURL is not null %}
-                            <a href="{{ userEventInvitation.event.coordinates.instagramURL }}" target="_blank"><span class="zmdi zmdi-instagram zmdi-hc-2x"></span></a>
-                        {% endif %}
-                    </li>
                 </ul>
-            </div>
+            {% endspaceless %}{% endset %}
         {% endif %}
-
         {% if userEventInvitation.event.openingHours|length > 0 %}
             {% set openingHoursBlock %}
                 <table>
@@ -111,9 +95,42 @@
                     </tbody>
                 </table>
             {% endset %}
-            <a href="#openingHoursCollapse" class="btn btn-flat c-blue m-b-15" tabindex="0" role="button" data-toggle="popover" data-title="{{ "event.form.opening_hour.link_collpase"|trans }}"
-               data-content="{{ openingHoursBlock }}" data-html="true"> <i class="zmdi zmdi-time"></i> {{ "event.form.opening_hour.link_collpase"|trans }}</a>
         {% endif %}
+
+        {% if coordinatesBlock is defined or openingHoursBlock is defined %}
+            <div class="list-md-icon {{ userEventInvitation.event.openingHours|length == 0 ? 'm-b-15' }}">
+                <ul>
+                    {% if userEventInvitation.event.coordinates.website is not null %}
+                        <li><i class="zmdi zmdi-globe"></i> <a href="{{ userEventInvitation.event.coordinates.website }}"
+                                                               target="_blank">{{ userEventInvitation.event.coordinates.website|replace({'http://':''}) }}</a></li>
+                    {% endif %}
+                    {% if coordinatesBlock is defined and coordinatesBlock|trim is not empty %}
+                        <li><i class="zmdi zmdi-globe-alt"></i> <a href="#" tabindex="0" role="button" data-toggle="popover" data-title="{{ "event.form.coordinates.link_popover"|trans }}"
+                                                                   data-content='{{ coordinatesBlock }}' data-html="true"> {{ "event.form.coordinates.link_popover"|trans }}</a></li>
+                    {% endif %}
+                    {% if openingHoursBlock is defined %}
+                        <li><i class="zmdi zmdi-time"></i> <a href="#" tabindex="0" role="button" data-toggle="popover" data-title="{{ "event.form.opening_hour.link_collpase"|trans }}"
+                                                              data-content="{{ openingHoursBlock }}" data-html="true">{{ "event.form.opening_hour.link_collpase"|trans }}</a>
+                        </li>
+                    {% endif %}
+                    <li>
+                        {% if userEventInvitation.event.coordinates.facebookURL is not null %}
+                            <a href="{{ userEventInvitation.event.coordinates.facebookURL }}" target="_blank"><span class="zmdi zmdi-facebook-box zmdi-hc-2x"></span></a>
+                        {% endif %}
+                        {% if userEventInvitation.event.coordinates.googlePlusURL is not null %}
+                            <a href="{{ userEventInvitation.event.coordinates.googlePlusURL }}" target="_blank"><span class="zmdi zmdi-google-plus zmdi-hc-2x"></span></a>
+                        {% endif %}
+                        {% if userEventInvitation.event.coordinates.twitterURL is not null %}
+                            <a href="{{ userEventInvitation.event.coordinates.twitterURL }}" target="_blank"><span class="zmdi zmdi-twitter zmdi-hc-2x"></span></a>
+                        {% endif %}
+                        {% if userEventInvitation.event.coordinates.instagramURL is not null %}
+                            <a href="{{ userEventInvitation.event.coordinates.instagramURL }}" target="_blank"><span class="zmdi zmdi-instagram zmdi-hc-2x"></span></a>
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+
         {% if userEventInvitation.organizer %}
             {% if userEventInvitation.event.guestsCanInvite %}
                 <div class="text-success">
