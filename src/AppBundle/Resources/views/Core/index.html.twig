@@ -102,7 +102,7 @@
             </div>
         </section>
 
-        <aside id="callout1" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/drinks.jpg") }}')">
+        <aside id="callout1" class="callout parallax-window" data-parallax="scroll" data-image-src="{{ asset("bundles/app/img/index/drinks.jpg") }}">
             <div class="text-vertical-center">
                <h1 class="c-white">{{ "index.callout1"|trans }}</h1>
             </div>
@@ -197,7 +197,7 @@
             <!-- /.container -->
         </section>
 
-        <aside id="callout2" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/concert.jpg") }}')">
+        <aside id="callout2" class="callout parallax-window" data-parallax="scroll" data-image-src="{{ asset("bundles/app/img/index/concert.jpg") }}">
             <div class="text-vertical-center">
                 <h1 class="c-white">{{ "index.callout2"|trans }}</h1>
             </div>
@@ -213,8 +213,7 @@
             </div>
         </section>
 
-
-        <aside id="callout3" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/coworking.jpg") }}')">
+        <aside id="callout3" class="callout parallax-window" data-parallax="scroll" data-image-src="{{ asset("bundles/app/img/index/coworking.jpg") }}">
             <div class="text-vertical-center">
                 <h1 class="c-white">{{ "index.callout3"|trans }}</h1>
             </div>
@@ -250,7 +249,7 @@
             <!-- /.container -->
         </section>
 
-        <aside id="callout4" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/tchin.jpg") }}')">
+        <aside id="callout4" class="callout parallax-window" data-parallax="scroll" data-image-src="{{ asset("bundles/app/img/index/tchin.jpg") }}">
             <div class="text-vertical-center">
                 <h1 class="c-white">{{ "index.callout4"|trans }}</h1>
             </div>
@@ -286,15 +285,10 @@
 
 {% block javascripts %}
     {{ parent () }}
-    <script src="{{ asset("bundles/app/js/jquery.parallax-1.1.3.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/parallax.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jqcloud.js") }}"></script>
     <script>
-        $(document).ready(function(){
-            $('#callout1').parallax("center", null, 0.5, true);
-            $('#callout2').parallax("center", null, 0.5, true);
-            $('#callout3').parallax("center", null, 0.5, true);
-            $('#callout4').parallax("center", null, 0.5, true);
-        })
+        $('.parallax-window').parallax();
     </script>
     <script>
         var words = [
