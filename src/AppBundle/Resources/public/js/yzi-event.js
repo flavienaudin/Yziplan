@@ -28,42 +28,6 @@ $(document).ready(function () {
 });
 
 /** Fonctions relatives à la page d'événement */
-
-// ScreenSize represente l'état précédent le redimensionnement (screen<768, 768<=screen<1200, 1200<=screen) pour ne rien faire si pas nécessaire
-// Pour éviter le bug lors de l'affichage du clavier sous Android qui redimensionne la fenetre et recache le clavier
-/* TODO Plus utilisée : à supprimer quand le layout sera validé
- var screenSize = -1;
- function reorderCard() {
- // Changement de position des div liste d'invité et
- // invitation en fonction de la largeur de l'ecran
- var iW = $(window).innerWidth();
- var invitationCard = $('#invitationCard');
- if (iW < 768 && screenSize != 0) {
- screenSize = 0;
- if (!invitationCard.hasClass('grid-item')) {
- invitationCard.addClass('grid-item');
- $('.grid').masonry('addItems', invitationCard);
- }
- invitationCard.insertAfter('#eventModulesContainer');
- } else if (iW >= 768 && iW < 1200 && screenSize != 1) {
- screenSize = 1;
- if (invitationCard.hasClass('grid-item')) {
- invitationCard.removeClass('grid-item');
- $('.grid').masonry('destroy');
- initialiseYziplanMasonry();
- }
- invitationCard.insertAfter('#profileCard');
- } else if (iW >= 1200 && screenSize != 2) {
- screenSize = 2;
- if (invitationCard.hasClass('grid-item')) {
- invitationCard.removeClass('grid-item');
- $('.grid').masonry('destroy');
- initialiseYziplanMasonry();
- }
- invitationCard.insertAfter('#guestListCard');
- }
- }*/
-
 function initialiseYziplanMasonry() {
     $('.grid').masonry({
         // options
@@ -185,3 +149,17 @@ function submitAddPollProposalForm(params) {
 }
 
 
+/** fonction pour soumettre le formulaire d'édition d'un module */
+function submitModuleEditionForm(params) {
+    var form = params[0];
+    var e = params[1];
+    var moduleToken = params[2];
+    ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
+        $("#moduleEdit_modal_" + moduleToken).modal('hide');
+    }, null, function () {
+        $grid = $('.grid');
+        if ($grid[0]) {
+            $grid.masonry('layout');
+        }
+    });
+}

@@ -44,7 +44,7 @@
 
     <div id="modal-container-block-{{ module.token }}">
         {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), userModuleInvitation) %}
-            {{ include('@App/Event/module/displayModule_edition_modal.html.twig', {'module':module, 'moduleForm':moduleForm, 'userModuleInvitation':userModuleInvitation} ) }}
+            {{ include('@App/Event/module/displayModule_edition_modal.html.twig', {'module':module, 'moduleForm':moduleForm} ) }}
         {% endif %}
         {% block module_modal_container %}{% endblock module_modal_container %}
     </div>

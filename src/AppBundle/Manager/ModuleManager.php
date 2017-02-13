@@ -124,6 +124,29 @@ class ModuleManager
         $this->module = new Module();
         $this->module->setStatus(ModuleStatus::IN_CREATION);
         $this->module->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+
+        $this->initializePollElementModule($type, $subtype);
+
+        $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
+        $moduleInvitationCreator->setCreator(true);
+        $event->addModule($this->module);
+        return $this->module;
+    }
+
+
+    /**
+     * Create a module and set required data.
+     * @param $type
+     * @param $subtype
+     * @param EventInvitation $creatorEventInvitation The user's eventInvitation to set the module creator
+     * @return Module The module added to the event
+     */
+    public function initializePollElementModule($type, $subtype, $module = null)
+    {
+        if ($module != null) {
+            $this->module = $module;
+        }
+
         if ($type == EnumModuleType::POLL_MODULE) {
             $pollModule = new PollModule();
             $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
@@ -166,7 +189,7 @@ class ModuleManager
                 $pollElement = new PollElement();
                 $pollElement->create($subtype, PollElementType::STRING, 0);
                 $pollElements->add($pollElement);
-            }  elseif ($subtype == PollModuleType::ACTIVITY) {
+            } elseif ($subtype == PollModuleType::ACTIVITY) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.activity"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setVotingType(PollModuleVotingType::RANKING);
@@ -186,10 +209,6 @@ class ModuleManager
 
             $this->module->setPollModule($pollModule);
         }
-
-        $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
-        $moduleInvitationCreator->setCreator(true);
-        $event->addModule($this->module);
         return $this->module;
     }
 
