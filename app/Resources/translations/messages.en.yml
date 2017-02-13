@@ -370,7 +370,8 @@ module:
     name:
       label: Module name
     description:
-      label: What is the purpose of this poll?
+      label: Description
+      placeholder: Description
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline

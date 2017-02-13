@@ -370,7 +370,8 @@ module:
     name:
       label: Intitulé du sondage
     description:
-      label: A quoi va servir ce sondage ?
+      label: Description
+      placeholder: Description
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse
