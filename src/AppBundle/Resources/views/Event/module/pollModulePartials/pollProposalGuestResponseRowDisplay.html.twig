@@ -95,96 +95,10 @@
                 {% endif %}
             </div>
             <div class="media-body">
-                <div {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
-                    {# Les elements sont sous forme de tableau a 2 dimentions, mais il n'y a qu'un element dans la deuxieme
-                           c'est en prévision du futur #}
-                    {% set ppElts = pollProposal.getAllElements %}
-                    {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')] is defined %}
-                        {% set ppElt = ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')][0] %}
-                        {% set endDate =  (ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::END_DATETIME')] is defined ? ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::END_DATETIME')][0] : null) %}
-                        {% set has2Date = endDate is not null and endDate.hasEndDate and ppElt.value|localizeddate("medium", "none", null, null,'ddMMyyyy') != endDate.value|localizeddate("medium", "none", null, null,'ddMMyyyy') %}
-                        <div>
-                            {% if not has2Date %}
-                                <div class="pp-elt">
-                                    <div style="font-size:12px; font-weight: bold; text-transform: capitalize;">{{ ppElt.value|localizeddate("medium", "none", null, null,'MMM') }}</div>
-                                    <div style="font-size:10px; text-transform: uppercase;">{{ ppElt.value|localizeddate("medium", "none", null, null,"ccc") }}</div>
-                                </div>
-                                <div class="pp-elt p-l-5 p-r-5" style="font-size:22px;">
-                                    <strong>{{ ppElt.value|localizeddate("medium", "none", null, null,'dd') }}</strong>
-                                </div>
-                                {% if ppElt.hasTime %}
-                                    <div class="pp-elt">
-                                        <div style="font-size:14px">{{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
-                                        {% if not has2Date and endDate is not null and endDate.hasEndTime %}
-                                            <div style="font-size:14px">{{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
-                                        {% endif %}
-                                    </div>
-                                {% endif %}
-                            {% else %}
-                                <div>
-                                    <div style=" display:inline-block; width: 45px; font-style:italic">Début :</div>
-                                    <div style=" display:inline-block;">{{ ppElt.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if ppElt.hasTime %} {{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
-                                </div>
-                                <div>
-                                    <div style=" display:inline-block; width:45px; font-style:italic">Fin :</div>
-                                    <div style=" display:inline-block;">{{ endDate.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if endDate.hasEndTime %} {{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
-                                </div>
-                            {% endif %}
-                        </div>
-                    {% else %}
-                        <div class="media">
-                            {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')] is defined
-                            and ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')][0].value is not empty %}
-                                <div class="pp-elt">
-                                    {# TODO : Revoir la présentation des images, c'est pas ouf #}
-                                    <div class="pp-elt-picture picture-small m-r-5"
-                                         style="background-image: url('{{ asset('uploads/events/pollmodule/pollproposalelement/pictures/'~ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')][0].value) }}') "></div>
-                                </div>
-                            {% endif %}
-                            {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::STRING')] is defined %}
-                                <div class="pp-elt">
-                                    {{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::STRING')][0].getValue }}
-                                </div>
-                            {% endif %}
-                            {# Picture + string #}
-                        </div>
-                        {# Text area #}
-                        {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT')] is defined
-                        and ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT')][0].value is not empty
-                        or ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')] is defined
-                        and ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')][0].value is not empty %}
-                            <div>
-                                <a class="pp-elt-info c-blue p-l-0" id="pollModuleElementInfo_{{ pollProposal.id }}_button" href="#pollModuleElementInfo_{{ pollProposal.id }}_modal"
-                                   data-toggle="modal"> <i class="zmdi zmdi-info"></i> {{ "pollmodule.poll_element.more"|trans }}
-                                </a>
-                                <div class="modal fade" id="pollModuleElementInfo_{{ pollProposal.id }}_modal" tabindex="-1" role="dialog" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
-                                                <h4 class="modal-title">{{ "pollmodule.poll_element.more"|trans }}:</h4>
-                                            </div>
-
-                                            {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')] is defined and ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')][0].value is not empty %}
-                                                <div class="modal-body text-center m-b-10">
-                                                    {# TODO : Revoir la présentation des images, c'est pas ouf #}
-                                                    <img class="pp-elt-picture picture-large" src="{{ asset('uploads/events/pollmodule/pollproposalelement/pictures/'~ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE')][0].value) }}" alt="test">
-                                                </div>
-                                            {% endif %}
-                                            <div class="modal-body">
-                                                <p>{{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT')][0].value|raw }}</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-link" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        {% endif %}
-                    {% endif %}
-                </div>
+                {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_proposal.html.twig', {
+                    "pollProposal":pollProposal,
+                    "displayModal":"true"
+                }) }}
             </div>
         </div>
     </td>

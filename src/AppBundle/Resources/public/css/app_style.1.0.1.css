@@ -686,9 +686,18 @@ label.required:after {
 ----------------------------------*/
 
 /* TODO : Revoir la présentation des images, c'est pas ouf */
+.inline-container{
+    white-space: nowrap;
+}
+
 .pp-elt {
     display:inline-block;
     vertical-align: middle;
+    white-space: normal;
+}
+
+.pp-elt.pp-elt-with-picture{
+    width: calc(100% - 56px);
 }
 
 .pp-elt-picture {
