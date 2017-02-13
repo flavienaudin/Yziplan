@@ -585,12 +585,12 @@ index:
     subtitle: Organise soirées, activités, sorties, vacances,... avec tes amis en toute simplicité.
   section_use:
     title: Comment ça marche
-    create: Crée l'événement
-    share: Partage-le
+    create: Créez l'événement
+    share: Partagez-le
     organise: Organisez-vous
     enjoy: Profitez !
   section_event:
-    tiltle: Pour tous les événements :
+    tiltle: "Pour tous les événements :"
     party: Soirée
     after-work: After-work
     holidays: Vacances
@@ -617,7 +617,7 @@ index:
   section_social:
     title: Retrouve-nous sur les réseaux sociaux!
     subtitle: Et ne manque rien des nouveautés à venir
-  callout1: Amuse-toi
+  callout1: Amusez-vous
   callout2: Partage tes activités
   callout3: S'organiser devient un plaisir
-  callout4: Et surtout profite!
+  callout4: Et surtout profitez!

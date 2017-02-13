@@ -11275,12 +11275,12 @@ pre {
     padding: 15px;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 500px) {
     .card-body.card-padding-xs {
         padding-top: 0;
         padding-bottom: 10px;
-        padding-left: 0px;
-        padding-right: 0px;
+        padding-left: 3px;
+        padding-right: 3px;
     }
 }
 

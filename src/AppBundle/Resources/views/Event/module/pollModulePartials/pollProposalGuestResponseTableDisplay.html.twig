@@ -35,45 +35,9 @@
                             {% for pollProposal in module.pollModule.pollProposals if not pollProposal.deleted and pollProposal.id is not null %}
                                 <tr>
                                     <td class="pollproposal-column">
-                                        <span {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
-                                            {% for ppElt in pollProposal.pollProposalElements %}
-                                                {% if ppElt.pollElement.type == constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME') %}
-                                                    {% set endDate = ppElt.pollProposal.getPollProposalEndDateElement %}
-                                                    {% set has2Date = endDate is not null and endDate.hasEndDate and ppElt.value|localizeddate("medium", "none", null, null,'ddMMyyyy') != endDate.value|localizeddate("medium", "none", null, null,'ddMMyyyy') %}
-                                                    <div>
-                                                        {% if not has2Date %}
-                                                            <div style="display:inline-block; vertical-align: middle;">
-                                                                <div style="font-size:12px; font-weight: bold; text-transform: capitalize;">{{ ppElt.value|localizeddate("medium", "none", null, null,'MMM') }}</div>
-                                                                <div style="font-size:10px; text-transform: uppercase;">{{ ppElt.value|localizeddate("medium", "none", null, null,"ccc") }}</div>
-                                                            </div>
-                                                            <div class="p-l-5 p-r-5" style="display:inline-block; font-size:22px; vertical-align: middle;">
-                                                                <strong>{{ ppElt.value|localizeddate("medium", "none", null, null,'dd') }}</strong>
-                                                            </div>
-                                                            {% if ppElt.hasTime %}
-                                                            <div style="display:inline-block; vertical-align: middle;">
-                                                                    <div style="font-size:14px">{{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
-                                                                {% if not has2Date and endDate is not null and endDate.hasEndTime %}
-                                                                    <div style="font-size:14px">{{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
-                                                                {% endif %}
-                                                                </div>
-                                                        {% endif %}
-                                                        {% else %}
-                                                            <div>
-                                                                <div style=" display:inline-block; width: 45px; font-style:italic">Début : </div> <div
-                                                                        style=" display:inline-block;">{{ ppElt.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if ppElt.hasTime %} {{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
-                                                            </div>
-                                                            <div>
-                                                                <div style=" display:inline-block; width:45px; font-style:italic">Fin : </div> <div
-                                                                        style=" display:inline-block;">{{ endDate.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if endDate.hasEndTime %} {{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
-                                                            </div>
-                                                        {% endif %}
-                                                    </div>
-                                                {% elseif not (ppElt.pollElement.type == constant('AppBundle\\Utils\\enum\\PollElementType::END_DATETIME')) %}
-                                                    {{ ppElt.value }}
-                                                    {% if not loop.first %}<br>{% endif %}
-                                                {% endif %}
-                                            {% endfor %}
-                                        </span>
+                                        {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_proposal.html.twig', {
+                                            "pollProposal":pollProposal
+                                        }) }}
                                     </td>
 
                                     {% for moduleInvitation in moduleInvitations %}
