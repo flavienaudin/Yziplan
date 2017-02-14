@@ -159,9 +159,9 @@ class ModuleManager
                 $pollModule->setType(PollModuleType::WHEN);
 
                 $pollElementDate = new PollElement();
-                $pollElementDate->create($subtype, PollElementType::DATETIME, 0);
+                $pollElementDate->create($this->translator->trans($subtype), PollElementType::DATETIME, 0);
                 $pollElementEndDate = new PollElement();
-                $pollElementEndDate->create($subtype, PollElementType::END_DATETIME, 1);
+                $pollElementEndDate->create($this->translator->trans($subtype), PollElementType::END_DATETIME, 1);
                 $pollElements->add($pollElementDate);
                 $pollElements->add($pollElementEndDate);
             } elseif ($subtype == PollModuleType::WHAT) {
@@ -170,7 +170,7 @@ class ModuleManager
                 $pollModule->setType(PollModuleType::WHAT);
 
                 $pollElement = new PollElement();
-                $pollElement->create($subtype, PollElementType::STRING, 0);
+                $pollElement->create($this->translator->trans($subtype), PollElementType::STRING, 0);
                 $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::WHERE) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
@@ -178,7 +178,7 @@ class ModuleManager
                 $pollModule->setType(PollModuleType::WHERE);
 
                 $pollElement = new PollElement();
-                $pollElement->create($subtype, PollElementType::GOOGLE_PLACE_ID, 0);
+                $pollElement->create($this->translator->trans($subtype), PollElementType::GOOGLE_PLACE_ID, 0);
                 $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
@@ -187,7 +187,7 @@ class ModuleManager
                 $pollModule->setType(PollModuleType::WHO_BRINGS_WHAT);
 
                 $pollElement = new PollElement();
-                $pollElement->create($subtype, PollElementType::STRING, 0);
+                $pollElement->create($this->translator->trans($subtype), PollElementType::STRING, 0);
                 $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::ACTIVITY) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.activity"));
