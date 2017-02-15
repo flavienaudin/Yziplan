@@ -105,7 +105,7 @@
                                                                target="_blank">{{ userEventInvitation.event.coordinates.website|replace({'http://':''}) }}</a></li>
                     {% endif %}
                     {% if coordinatesBlock is defined and coordinatesBlock|trim is not empty %}
-                        <li><i class="zmdi zmdi-globe-alt"></i> <a href="#" tabindex="0" role="button" data-toggle="popover" data-title="{{ "event.form.coordinates.link_popover"|trans }}"
+                        <li><i class="zmdi zmdi-globe-alt"></i> <a tabindex="0" role="button" data-toggle="popover" data-title="{{ "event.form.coordinates.link_popover"|trans }}"
                                                                    data-content='{{ coordinatesBlock }}' data-html="true"> {{ "event.form.coordinates.link_popover"|trans }}</a></li>
                     {% endif %}
                     {% if openingHoursBlock is defined %}
