@@ -235,9 +235,10 @@
 /*-----------------------------------
     Generic width
 -----------------------------------*/
-.w-150px{
+.w-150px {
     width: 150px !important;
 }
+
 /*-----------------------------------
     Avatar (Adapt Material Design Extebded Admin
 ------------------------------------*/
@@ -249,10 +250,11 @@
     border-radius: 10%;
 }
 
-.avatar-img{
+.avatar-img {
     object-fit: cover;
     -o-object-fit: cover;
 }
+
 /*-----------------------------------
     Affichage d'avatar utilisateur
 -----------------------------------*/
@@ -690,6 +692,10 @@ label.required:after {
     background-color: white;
 }
 
+.table-result > tbody > tr > td {
+    vertical-align: middle;
+}
+
 /*.poll-container .dataTables_scroll table td:last-child {
     min-width: 0;
     max-width: none;
@@ -700,17 +706,17 @@ label.required:after {
 ----------------------------------*/
 
 /* TODO : Revoir la présentation des images, c'est pas ouf */
-.inline-container{
+.inline-container {
     white-space: nowrap;
 }
 
 .pp-elt {
-    display:inline-block;
+    display: inline-block;
     vertical-align: middle;
     white-space: normal;
 }
 
-.pp-elt.pp-elt-with-picture{
+.pp-elt.pp-elt-with-picture {
     width: calc(100% - 56px);
 }
 
@@ -733,7 +739,7 @@ label.required:after {
     max-width: 300px;
 }
 
-.pp-elt-info{
+.pp-elt-info {
     font-size: 11px;
 }
 

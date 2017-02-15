@@ -13,7 +13,7 @@
                 </div>
                 <div class="modal-body poll-response">
                     <div class="table-responsive">
-                        <table id="pollmodule-table-{{ module.token }}" class="table table-striped table-condensed">
+                        <table id="pollmodule-table-{{ module.token }}" class="table table-striped table-condensed table-result">
                             <thead>
                             <tr>
                                 <th class="pollproposal-column"></th>
@@ -45,38 +45,54 @@
                                         and moduleInvitation.eventInvitation.status is not constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
                                             {% set pollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
                                             {#{% if pollProposalResponse is not null %}#}
-                                            <td class="response-column">
-                                                {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
-                                                    {% set responseToDisplay = pollProposalResponse is null or pollProposalResponse.answer is null ? 0 : pollProposalResponse.answer %}
-                                                    {% if responseToDisplay > 0 %}
-                                                        <span class="answer-thumb palette-Light-Green-100 bg strong">{{ responseToDisplay }}</span>
-                                                    {% else %}
+                                            {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
+                                                {% set responseToDisplay = pollProposalResponse is null or pollProposalResponse.answer is null ? 0 : pollProposalResponse.answer %}
+                                                {% if responseToDisplay > 0 %}
+                                                    <td class="response-column palette-Light-Green-100 bg">
+                                                        <span class="answer-thumb strong">{{ responseToDisplay }}</span>
+                                                    </td>
+                                                {% else %}
+                                                    <td class="response-column">
                                                         {{ responseToDisplay }}
-                                                    {% endif %}
-                                                {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::RANKING') %}
-                                                    {% set responseToDisplay = pollProposalResponse is null or pollProposalResponse.answer is null ? 0 : pollProposalResponse.answer %}
-                                                    {% if responseToDisplay > 0 %}
-                                                        <span class="answer-thumb palette-Yellow-100 bg c-amber strong">{{ responseToDisplay }} <i class="zmdi zmdi-star"></i></span>
-                                                    {% else %}
+                                                    </td>
+                                                {% endif %}
+                                            {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::RANKING') %}
+                                                {% set responseToDisplay = pollProposalResponse is null or pollProposalResponse.answer is null ? 0 : pollProposalResponse.answer %}
+                                                {% if responseToDisplay > 0 %}
+                                                    <td class="response-column palette-Yellow-100 bg c-amber">
+                                                        <span class="answer-thumb strong">{{ responseToDisplay }} <i class="zmdi zmdi-star"></i></span>
+                                                    </td>
+                                                {% else %}
+                                                    <td class="response-column">
                                                         <span class="answer-thumb c-bluegray"> <i class="zmdi zmdi-star-half"></i> </span>
-                                                        {#<span class="answer-thumb text palette-White c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>#}
+                                                    </td>
+                                                    {#<span class="answer-thumb text palette-White c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>#}
+                                                {% endif %}
+                                            {% else %}
+                                                {% if pollProposalResponse is not null %}
+                                                    {% if pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
+                                                        <td class="response-column palette-Light-Green-100 bg c-lightgreen">
+                                                            <span class="answer-thumb strong"><i class="zmdi zmdi-thumb-up"></i></span>
+                                                        </td>
+                                                    {% elseif pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
+                                                        <td class="response-column palette-Amber-100 bg c-amber">
+                                                            <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
+                                                        </td>
+                                                    {% elseif pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
+                                                        <td class="response-column palette-Red-50 bg c-red">
+                                                            <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>
+                                                        </td>
+                                                    {% else %}
+                                                        <td class="response-column">
+                                                            <span class="response-column answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
+                                                        </td>
                                                     {% endif %}
                                                 {% else %}
-                                                    {% if pollProposalResponse is not null %}
-                                                        {% if pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::YES") %}
-                                                            <span class="answer-thumb palette-Light-Green-100 bg c-lightgreen strong"><i class="zmdi zmdi-thumb-up"></i></span>
-                                                        {% elseif pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::MAYBE") %}
-                                                            <span class="answer-thumb palette-Amber-100 bg c-amber strong"><i class="zmdi zmdi-thumb-up-down"></i></span>
-                                                        {% elseif pollProposalResponse.answer == constant("AppBundle\\Utils\\enum\\PollProposalResponse::NO") %}
-                                                            <span class="answer-thumb palette-Red-50 bg c-red strong"><i class="zmdi zmdi-thumb-down"></i></span>
-                                                        {% else %}
-                                                            <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
-                                                        {% endif %}
-                                                    {% else %}
-                                                        <span class="answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline"></i></span>
-                                                    {% endif %}
+                                                    <td class="response-column">
+                                                        <span class="response-column answer-thumb c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>
+                                                    </td>
                                                 {% endif %}
-                                            </td>
+                                            {% endif %}
                                         {% endif %}
                                     {% endfor %}
                                 </tr>
