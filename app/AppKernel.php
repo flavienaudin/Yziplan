@@ -29,6 +29,9 @@ class AppKernel extends Kernel
             new FOS\RestBundle\FOSRestBundle(),
             new FOS\CommentBundle\FOSCommentBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle($this),
+
+            // File Upload Bundle
+            new Vich\UploaderBundle\VichUploaderBundle()
         ];
 
         //Test and Dev Bundles

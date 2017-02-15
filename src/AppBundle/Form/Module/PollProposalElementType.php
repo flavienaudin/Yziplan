@@ -11,11 +11,9 @@ namespace AppBundle\Form\Module;
 
 use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Utils\enum\PollElementType;
-use AppBundle\Utils\File\FileUploader;
 use AppBundle\Validator\Constraints\IntValuesInArray;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -25,21 +23,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class PollProposalElementType extends AbstractType
 {
-
-    /** @var FileUploader */
-    private $fileUploader;
-
-    public function __construct(FileUploader $fileUploader)
-    {
-        $this->fileUploader = $fileUploader;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
@@ -116,13 +105,7 @@ class PollProposalElementType extends AbstractType
                     )
                 ));
             } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::PICTURE) {
-                $pollProposalElement = $formEvent->getData();
-                if ($pollProposalElement->getPicture() != null) {
-                    $pollProposalElement->setPicture(
-                        new File($this->fileUploader->getTargetDir() . DIRECTORY_SEPARATOR . $pollProposalElement->getPicture())
-                    );
-                }
-                $form->add('picture', FileType::class, array(
+                $form->add('pictureFile', VichImageType::class, array(
                     'required' => false,
                     'label_attr' => array(
                         'class' => 'sr-only'

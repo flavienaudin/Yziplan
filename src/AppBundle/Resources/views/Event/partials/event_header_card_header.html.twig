@@ -9,7 +9,7 @@
         <div id="header-picture-focuspoint" class="focuspoint" data-focus-x="{{ event.pictureFocusX is not null ? event.pictureFocusX:0 }}"
              data-focus-y="{{ event.pictureFocusY is not null ? event.pictureFocusY:0 }}" data-image-w="{{ event.pictureWidth is not null ? event.pictureWidth:1024 }}"
              data-image-h="{{ event.pictureHeight is not null ? event.pictureHeight:669 }}">
-            <img src="{{ userEventInvitation.event.picture is not null ? asset("uploads/events/pictures/"~userEventInvitation.event.picture) :
+            <img src="{{ userEventInvitation.event.pictureFilename is not null ? vich_uploader_asset(userEventInvitation.event, 'pictureFile') :
             asset("bundles/app/img/event-header/organisation.jpeg") }}" alt="{{ userEventInvitation.event.name }}" height="250px"/>
         </div>
 

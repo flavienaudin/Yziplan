@@ -12,8 +12,10 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\enum\PollElementType;
 use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -54,9 +56,28 @@ class PollModuleController extends Controller
                 } else {
                     if ($pollProposalEditionForm->isValid()) {
                         $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalEditionForm);
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                        // Mise à jour des pollProposalElement avec un Fichier pour
+                        $em = $this->get('doctrine.orm.entity_manager');
+                        $em->refresh($pollProposal);
+                        /** @var PollProposalElement $ppe */
+                        foreach ($pollProposal->getPollProposalElements() as $ppe) {
+                            if ($ppe->getPollElement()->getType() == PollElementType::PICTURE) {
+                                $em->refresh($ppe);
+                            }
+                        }
+
+                        $pollProposalEditionForm = $pollProposalManager->createPollProposalForm($pollProposal);
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#pollProposalEdition_" . $pollProposal->getId() . "_form_id"] =
+                            $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
+                                    'userModuleInvitation' => $moduleInvitation,
+                                    'pollProposalForm' => $pollProposalEditionForm->createView(),
+                                    'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
+                                    'edition' => true
+                                )
+                            );
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pp_display_row_' . $pollProposal->getId()] =
                             $pollProposalManager->displayPollProposalRowPartial($pollProposal, $moduleInvitation->getEventInvitation());
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollProposalEdition_' . $pollProposal->getId() . '_formContainer'] =
@@ -84,7 +105,6 @@ class PollModuleController extends Controller
             return $this->redirectToRoute("home");
         }
     }
-
 
     /**
      * @Route("/pollproposal/remove/{pollProposalId}/{moduleInvitationToken}", name="removePollProposal")

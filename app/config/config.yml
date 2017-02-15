@@ -10,8 +10,6 @@ imports:
 parameters:
     locale: fr
     avatar_directory: '%kernel.root_dir%/../web/uploads/user/avatar'
-    event_picture_directory: '%kernel.root_dir%/../web/uploads/events/pictures'
-    pollproposalelement_picture_directory: '%kernel.root_dir%/../web/uploads/events/pollmodule/pollproposalelement/pictures'
 
 framework:
     #esi:             ~
@@ -106,6 +104,26 @@ stof_doctrine_extensions:
     orm:
         default:
             timestampable: true
+
+vich_uploader:
+    db_driver: orm
+    mappings:
+        event_picture:
+            uri_prefix: /uploads/events/pictures
+            upload_destination: '%kernel.root_dir%/../web/uploads/events/pictures'
+            namer: vich_uploader.namer_uniqid
+            directory_namer: at.namer.directory.picture
+            inject_on_load:     true
+            delete_on_update:   true
+            delete_on_remove:   true
+        pollproposalelement_picture:
+            uri_prefix: /uploads/events/pollmodule/pollproposalelement/pictures
+            upload_destination: '%kernel.root_dir%/../web/uploads/events/pollmodule/pollproposalelement/pictures'
+            namer: vich_uploader.namer_uniqid
+            directory_namer: at.namer.directory.picture
+            inject_on_load:     true
+            delete_on_update:   true
+            delete_on_remove:   true
 
 # Swiftmailer Configuration
 swiftmailer:

@@ -296,7 +296,7 @@ class PollProposal
     /**
      * @return $result
      */
-    public function getAllElements()
+    public function getPollProposalElementsByType()
     {
         $result = array();
         /** @var PollProposalElement $elt */

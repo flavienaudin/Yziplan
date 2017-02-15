@@ -550,10 +550,7 @@ class EventController extends Controller
             /** @var EventManager $eventManager */
             $eventManager = $this->get("at.manager.event");
             $eventManager->setEvent($event);
-            if ($event->getPicture() != null) {
-                $this->get('at.uploader.event_picture')->delete($event->getPicture());
-            }
-            $event->setPicture($imageFile);
+            $event->setPictureFile($imageFile);
             if ($imageFile != null) {
                 $imageSizes = getimagesize($imageFile);
                 $event->setPictureWidth($imageSizes[0]);
@@ -568,9 +565,9 @@ class EventController extends Controller
             }
             $eventManager->persistEvent();
             $data = array();
-            if ($event->getPicture() != null) {
-                $avatarDirURL = $request->getScheme() . '://' . $request->getHttpHost() . $request->getBasePath() . '/' . $this->get('at.uploader.event_picture')->getWebRelativeTargetDir();
-                $data[AppJsonResponse::DATA]['picture_url'] = $avatarDirURL . '/' . $event->getPicture();
+            if ($event->getPictureFilename() != null) {
+                $helper = $this->container->get('vich_uploader.templating.helper.uploader_helper');
+                $data[AppJsonResponse::DATA]['picture_url'] = $helper->asset($event, 'pictureFile');
                 $data[AppJsonResponse::DATA]['picture_focus_x'] = $event->getPictureFocusX();
                 $data[AppJsonResponse::DATA]['picture_focus_y'] = $event->getPictureFocusY();
                 $data[AppJsonResponse::DATA]['picture_width'] = $event->getPictureWidth();

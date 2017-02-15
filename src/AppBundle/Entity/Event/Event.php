@@ -13,12 +13,15 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\CommentBundle\Model\ThreadInterface;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * Event
  *
  * @ORM\Table(name="event_event")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Event\EventRepository")
+ * @Vich\Uploadable
  */
 class Event implements CommentableInterface
 {
@@ -53,7 +56,14 @@ class Event implements CommentableInterface
      * @var string
      * @ORM\Column(name="picture_filename", type="string", length=255, nullable=true)
      */
-    private $picture;
+    private $pictureFilename;
+
+    /**
+     * This is not a mapped field of entity metadata, just a simple property.
+     * @Vich\UploadableField(mapping="event_picture", fileNameProperty="pictureFilename")
+     * @var File
+     */
+    private $pictureFile;
 
     /**
      * @var float
@@ -262,18 +272,46 @@ class Event implements CommentableInterface
     /**
      * @return string
      */
-    public function getPicture()
+    public function getPictureFilename()
     {
-        return $this->picture;
+        return $this->pictureFilename;
     }
 
     /**
-     * @param string $picture
+     * @param string $pictureFilename
      * @return Event
      */
-    public function setPicture($picture)
+    public function setPictureFilename($pictureFilename)
     {
-        $this->picture = $picture;
+        $this->pictureFilename = $pictureFilename;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPictureFile()
+    {
+        return $this->pictureFile;
+    }
+
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $pictureFile
+     * @return Event
+     */
+    public function setPictureFile(File $pictureFile = null)
+    {
+        $this->pictureFile = $pictureFile;
+        if ($pictureFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
         return $this;
     }
 
