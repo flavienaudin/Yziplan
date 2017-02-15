@@ -742,9 +742,9 @@ class Event implements CommentableInterface
      */
     public function getEventInvitationByAnswer($answer = null)
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->in("status", [EventInvitationStatus::AWAITING_ANSWER, "status", EventInvitationStatus::VALID]));
+        $criteria = Criteria::create()->where(Criteria::expr()->in("status", [EventInvitationStatus::AWAITING_ANSWER, EventInvitationStatus::VALID]));
         if ($answer != null) {
-            $criteria->andWhere(Criteria::expr()->eq("answer", $answer));
+            $criteria->andWhere(Criteria::expr()->in("answer", $answer));
         }
         return $this->eventInvitations->matching($criteria);
     }

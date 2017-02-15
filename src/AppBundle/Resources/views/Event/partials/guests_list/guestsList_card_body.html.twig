@@ -4,9 +4,9 @@
 #}
 
 <div id="guests_list">
-    {% set eventInvitation_answer_yes = event.eventInvitationByAnswer(constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES')) %}
-    {% set eventInvitation_answer_dont_know = event.eventInvitationByAnswer(constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')) %}
-    {% set eventInvitation_answer_no = event.eventInvitationByAnswer(constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO')) %}
+    {% set eventInvitation_answer_yes = event.eventInvitationByAnswer([constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES')]) %}
+    {% set eventInvitation_answer_dont_know = event.eventInvitationByAnswer([constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')]) %}
+    {% set eventInvitation_answer_no = event.eventInvitationByAnswer([constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO')]) %}
 
     {{ include('@App/Event/partials/guests_list/guestsList_modal.html.twig', {
         "userEventInvitation":userEventInvitation,

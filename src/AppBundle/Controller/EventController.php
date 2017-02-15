@@ -288,6 +288,7 @@ class EventController extends Controller
         // Edition management //
         ////////////////////////
         $eventForm = null;
+        $sendMessageForm = null;
         if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
             /** @var Form $eventForm */
             $eventForm = $eventManager->initEventForm();
@@ -332,6 +333,80 @@ class EventController extends Controller
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     } elseif ($eventForm->isValid()) {
                         $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+                    }
+                }
+            }
+
+            $sendMessageForm = $eventManager->createSendReminderForm();
+            $sendMessageForm->handleRequest($request);
+            if ($sendMessageForm->isSubmitted()) {
+                if ($request->isXmlHttpRequest()) {
+                    if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        // Vérification serveur de la validité de l'invitation
+                        $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    } elseif ($sendMessageForm->isValid()) {
+                        $failedRecipients = $eventManager->treatSendMessageFormSubmission($sendMessageForm, $userEventInvitation);
+                        if ($failedRecipients === false) {
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.internal_server_error");
+                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                        } else {
+                            if (count($failedRecipients) == 0) {
+                                $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("send_message.message.success");
+                            } else {
+                                $faildeGuests = "";
+                                /** @var EventInvitation $eventInvitation */
+                                foreach ($failedRecipients as $eventInvitation) {
+                                    if (!empty($faildeGuests)) {
+                                        $faildeGuests .= ', ';
+                                    }
+                                    $faildeGuests .= $eventInvitation->getDisplayableName();
+                                }
+                                $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("send_message.message.warning", array('%failedRecipients%' => $faildeGuests));
+                            }
+
+                            $sendMessageForm = $eventManager->createSendReminderForm();
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#sendMessageForm_container'] =
+                                $this->renderView("@App/Event/partials/invitations/invitations_send_message_form.html.twig", array(
+                                    'userEventInvitation' => $userEventInvitation,
+                                    'sendMessageForm' => $sendMessageForm->createView()
+                                ));
+                            return new AppJsonResponse($data, Response::HTTP_OK);
+                        }
+                    } else {
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#sendMessageForm_container'] =
+                            $this->renderView("@App/Event/partials/invitations/invitations_send_message_form.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'sendMessageForm' => $sendMessageForm->createView()
+                            ));
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    }
+                } else {
+                    if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        // Vérification serveur de la validité de l'invitation
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+                    } elseif ($sendMessageForm->isValid()) {
+                        $failedRecipients = $eventManager->treatSendMessageFormSubmission($sendMessageForm, $userEventInvitation);
+                        if ($failedRecipients === false) {
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.internal_server_error");
+                        } else {
+                            if (count($failedRecipients) == 0) {
+                                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("send_message.message.success"));
+                            } else {
+                                $faildeGuests = "";
+                                /** @var EventInvitation $eventInvitation */
+                                foreach ($failedRecipients as $eventInvitation) {
+                                    if (!empty($faildeGuests)) {
+                                        $faildeGuests .= ', ';
+                                    }
+                                    $faildeGuests .= $eventInvitation->getDisplayableName();
+                                }
+                                $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans("send_message.message.warning", array('%failedRecipients%' => $faildeGuests)));
+                            }
+                        }
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     }
                 }
@@ -504,6 +579,7 @@ class EventController extends Controller
             'event' => $currentEvent,
             'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
             'thread' => $thread, 'comments' => $comments,
+            'sendMessageForm' => ($sendMessageForm != null ? $sendMessageForm->createView() : null),
             'invitationsForm' => ($eventInvitationsForm != null ? $eventInvitationsForm->createView() : null),
             'modules' => $modules,
             'userEventInvitation' => $userEventInvitation,
@@ -511,7 +587,6 @@ class EventController extends Controller
             'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView()
         ));
     }
-
 
     /**
      * @Route("/picture/update/{token}", name="updateEventPicture")

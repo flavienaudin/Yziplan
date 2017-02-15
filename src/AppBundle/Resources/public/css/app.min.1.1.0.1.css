@@ -9872,7 +9872,6 @@ a.waves-effect .waves-ripple {
     height: 100% !important;
 }
 
-
 /*
  * Border Radius
  */
@@ -11263,7 +11262,7 @@ pre {
     position: absolute;
     right: 20px;
     z-index: 2;
-    top: 15px;
+    top: 25px;
 }
 
 .card-body.card-padding {

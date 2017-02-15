@@ -290,7 +290,7 @@ eventInvitation:
       unauthorized_access: Tu n'es pas invité à cet événement.
   email:
     invitation:
-      subject: "[Yziplan] Tu as reçu une invitation"
+      subject: "Yziplan : Tu as reçu une invitation"
       body:
         hello: "Bonjour %username%!"
         paragraph:
@@ -299,7 +299,7 @@ eventInvitation:
             single_orga: "Je t'invite "
           second_part: "à \"%event_name%\". Suis le lien ci-dessous pour y répondre:"
     recap:
-      subject: "[Yziplan] Lien personnel de ton invitation"
+      subject: "Yziplan : Lien personnel de ton invitation"
       body:
         hello: "Bonjour %username%!"
         paragraph: "Tu participes à l'organisation de l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier ta participation, utilise le lien ci-dessous :"
@@ -348,6 +348,26 @@ invitations:
     via_facebook: Via Facebook
     via_gmail_contact:
       show: Mes contacts Gmail
+
+send_message:
+  modal:
+    title: Envoyer un message aux invités
+    instructions: Ecrivez un message à destination de vos invités. Vous pouvez filtrer selon leur réponse.
+  form:
+    selection:
+      label: Destinataires (selon leur réponse)
+      placeholer: Destintataires
+    message:
+      label: Message
+      placeholder: Ecrivez le message ici...
+  message:
+    success: Le message a bien été envoyé aux invités
+    warning: "Le message n'a pas pu être envoyé aux  suivants : %failedRecipients%"
+  email:
+    subject: "Yziplan : Vous avez reçu un message à propos de l'événement \"%event_name%\""
+    body:
+      hello: "Bonjour %username%!"
+      paragraph: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
 
 contactsgmail:
   title: Contacts Gmail

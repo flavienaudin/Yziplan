@@ -13,6 +13,7 @@ use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
+use AppBundle\Form\Event\SendMessageType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleStatus;
@@ -255,6 +256,42 @@ class EventManager
             return $this->event;
         }
         return null;
+    }
+
+    /**
+     * Génère le formulaire pour envoyer un rappel aux invités
+     *
+     * @return FormInterface
+     */
+    public function createSendReminderForm()
+    {
+        return $this->formFactory->create(SendMessageType::class);
+    }
+
+    /**
+     * Traite la soumission du formulaire d'envoie d'un message aux invités
+     * @param Form $sendMessageForm
+     * @param EventInvitation $userEventInvitation L'invitation de l'utilisateur connecté qui envoye le message
+     * @return false|array : false if error, array of failed recipients
+     */
+    public function treatSendMessageFormSubmission(FormInterface $sendMessageForm, EventInvitation $userEventInvitation)
+    {
+        if ($this->event != null) {
+            $message = $sendMessageForm->get("message")->getData();
+            $selection = $sendMessageForm->get("selection")->getData();
+            if ($selection == null || !is_array($selection)) {
+                $selection = array();
+            }
+            $recipients = $this->event->getEventInvitationByAnswer($selection);
+            if ($recipients->contains($userEventInvitation)) {
+                $recipients->removeElement($userEventInvitation);
+            }
+            $failedRecipients = array();
+            $this->eventInvitationManager->sendMessage($recipients, $message, $failedRecipients);
+            return $failedRecipients;
+        } else {
+            return false;
+        }
     }
 
     /**

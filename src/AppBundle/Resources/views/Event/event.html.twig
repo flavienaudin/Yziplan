@@ -9,6 +9,7 @@
 - modules (array) Tableau des modules de l'événement. Chaque module est décrit un tableau de données (Cf. EventManager:getModulesToDisplay(...) )
 - userEventInvitation (EventInvitation) L'invitation à afficher
 - userEventInvitationForm (Form) Formulaire de réponse à l'invitation : données de profil
+- sendMessageForm (Form|null) Formulaire permettant d'envoyer un rappel aux invités
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
@@ -33,6 +34,7 @@
                     {{ include('@App/Event/partials/event_guests_card.html.twig', {
                         'userEventInvitation':userEventInvitation,
                         'event':event,
+                        'sendMessageForm ': (sendMessageForm is defined ? sendMessageForm:null),
                         'userEventInvitationAnswerForm':userEventInvitationAnswerForm
                     }) }}
                 </div>

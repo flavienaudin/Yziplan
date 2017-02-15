@@ -283,6 +283,20 @@ class EventInvitationManager
     }
 
     /**
+     * @param Collection $eventInvitations
+     */
+    public function sendMessage($eventInvitations, $message = null, &$failedRecipients = array())
+    {
+        /** @var EventInvitation $eventInvitation */
+        foreach ($eventInvitations as $eventInvitation) {
+            $this->eventInvitation = $eventInvitation;
+            if (!$this->appTwigSiwftMailer->sendMessageEmail($this->eventInvitation, $message)) {
+                $failedRecipients[] = $this->eventInvitation;
+            }
+        }
+    }
+
+    /**
      * Create an EventInvitation and set it as creator of the event
      * @param Event $event
      * @param ApplicationUser|null $applicationUser

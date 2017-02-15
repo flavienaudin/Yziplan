@@ -156,6 +156,10 @@
     .card-header {
         padding: 10px 15px;
     }
+
+    .card-header .actions {
+        top: 5px;
+    }
 }
 
 @media (max-width: 767px) {
