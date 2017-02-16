@@ -1488,6 +1488,11 @@ select.chosen {
     content: "\f136";
 }
 
+.note-editor .note-icon-trash:before,
+.note-popover .note-icon-trash:before {
+    content: "\f154";
+}
+
 .note-editor .note-air-popover .arrow,
 .note-popover .note-air-popover .arrow {
     left: 20px;
