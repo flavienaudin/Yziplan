@@ -17,7 +17,10 @@
             {{ form_row(eventForm.description, {
                 'label':'event.form.description.label',
                 'label_attr':{'class':'sr-only'},
-                'attr':{'placeholder':'event.form.description.placeholder'},
+                'attr':{
+                    'placeholder':'event.form.description.placeholder',
+                    'data-summernote':'',
+                },
                 'widget_options':{'fgline':true}
             }) }}
             {{ form_row(eventForm.when, {
@@ -341,7 +344,7 @@
             $('#eventCoordinatesCollpase:has(".has-error")').collapse('show');
             $('#eventOpeningHoursCollpase:has(".has-error")').collapse('show');
 
-            var summernoteOptions = {
+            {#var summernoteOptions = {
                 dialogsInBody: $dialogsInBody,
                 placeholder: '{{ 'event.form.description.placeholder'|trans }}',
                 height: 150,
@@ -356,7 +359,7 @@
             {% if app.request.locale == 'fr' %}
             summernoteOptions.lang = 'fr-FR';
             {% endif %}
-            $('#{{ eventForm.description.vars.id }}').summernote(summernoteOptions);
+            $('#{{ eventForm.description.vars.id }}').summernote(summernoteOptions);#}
         });
     </script>
 </div>

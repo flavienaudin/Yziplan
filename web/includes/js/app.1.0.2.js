@@ -222,6 +222,22 @@ function jsPlugginActivation() {
             vertical: 'bottom'
         }
     });
+
+    var summernoteOptions = {
+        dialogsInBody: true,
+        lang: navigator.language || navigator.userLanguage,
+        height: 150,
+        toolbar: [
+            ['fontStyle', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['link', 'picture', 'video']]
+        ]
+    };
+
+    $('[data-summernote]').summernote(summernoteOptions);
+
     $('.selectpicker').selectpicker();
     $('.toggle-tooltip, [data-toggle="tooltip"]').tooltip();
 

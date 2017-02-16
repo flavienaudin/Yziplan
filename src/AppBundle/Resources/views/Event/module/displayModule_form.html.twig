@@ -11,7 +11,7 @@
         <div class="col-sm-12">
             {{ form_row(moduleForm.name, {
                 'label': 'module.form.name.label',
-                'attr':{},
+                'attr':{'data-summernote':'',},
                 'widget_options':{'fgfloat':true, 'fgline':true}
             }) }}
             {{ form_row(moduleForm.description, {
@@ -34,7 +34,7 @@
 
     <script>
         $(document).ready(function () {
-            var summernoteOptions = {
+            {#var summernoteOptions = {
                 dialogsInBody: true,
                 placeholder: '{{ 'module.form.description.placeholder'|trans }}',
                 height: 150,
@@ -49,7 +49,7 @@
             {% if app.request.locale == 'fr' %}
             summernoteOptions.lang = 'fr-FR';
             {% endif %}
-            $('#{{ moduleForm.description.vars.id }}').summernote(summernoteOptions);
+            $('#{{ moduleForm.description.vars.id }}').summernote(summernoteOptions);#}
 
 
             {% block js_document_ready %}

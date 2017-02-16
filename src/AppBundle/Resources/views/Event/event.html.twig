@@ -115,6 +115,10 @@
         var eventInvitationValid = true;
         var profileFormAsynchronousAjaxSubmission = true;
     </script>
+    <script src="{{ asset('bundles/app/js/summernote-0.8.2/summernote-updated.min.js') }}"></script>
+    {% if app.request.locale == 'fr' %}
+        <script src="{{ asset('bundles/app/js/summernote-0.8.2/lang/summernote-fr-FR.js') }}"></script>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
@@ -142,13 +146,7 @@
     {# Plugin for cliplboard field (copy into clipboard by clicking) #}
     <script src="{{ asset('bundles/app/js/clipboard.min.js') }}"></script>
     <script src="{{ asset('bundles/app/js/jquery.rateyo.js') }}"></script>
-
-    <!-- Summernote : richText editor -->
-    <script src="{{ asset('bundles/app/js/summernote-0.8.2/summernote-updated.min.js') }}"></script>
-    {% if app.request.locale == 'fr' %}
-        <script src="{{ asset('bundles/app/js/summernote-0.8.2/lang/summernote-fr-FR.js') }}"></script>
-    {% endif %}
-
+    
     <script>
         var fos_comment_thread_container = $('.commentable_thread ');
         var fos_comment_thread_api_base_url = '{{ path('fos_comment_get_threads') }}';
