@@ -137,8 +137,8 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/duplicate/{token}", name="duplicateEvent")
-     * @ParamConverter("event", class="AppBundle:Event\Event")
+     * @Route("/duplicate/{tokenDuplication}", name="duplicateEvent")
+     * @ParamConverter("event", class="AppBundle:Event\Event", options={"mapping": {"tokenDuplication": "tokenDuplication"}})
      */
     public function duplicateEvent(Event $event, Request $request)
     {

@@ -30,6 +30,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -227,7 +228,6 @@ class ModuleManager
 
     /**
      * @param Module $originalModule Module à dupliquer
-     * @param boolean $duplicateInvitations
      * @return Module Le module résultant de la dupliquation
      */
     public function duplicateModule(Module $originalModule)
@@ -249,7 +249,6 @@ class ModuleManager
             if ($originalModule->getPaymentModule() != null) {
                 // TODO implementer la duplication du PaymentModule
             }
-
 
             if (($originalPollModule = $originalModule->getPollModule()) != null) {
                 $duplicatedPollModule = new PollModule();
@@ -286,6 +285,16 @@ class ModuleManager
                             $duplicatedPollProposalElement->setEndDate($originialPollProposalElement->hasEndDate());
                             $duplicatedPollProposalElement->setEndTime($originialPollProposalElement->hasEndTime());
                             $duplicatedPollProposalElement->setValGooglePlaceId($originialPollProposalElement->getValGooglePlaceId());
+
+                            if ($originialPollProposalElement->getPictureFile() != null) {
+                                $originalFile = $originialPollProposalElement->getPictureFile();
+                                $tempFileCopyName = str_replace($originalFile->getExtension(), 'dup.' . $originalFile->getExtension(), $originalFile->getFilename());
+                                $tempFileCopyPathname = $originialPollProposalElement->getPictureFile()->getPath() . '/' . $tempFileCopyName;
+                                if (copy($originialPollProposalElement->getPictureFile()->getPathname(), $tempFileCopyPathname)) {
+                                    $newFile = new UploadedFile($tempFileCopyPathname, $tempFileCopyName, $originalFile->getMimeType(), $originalFile->getSize(), null, true);
+                                    $duplicatedPollProposalElement->setPictureFile($newFile);
+                                }
+                            }
                             $mapOrigPPEltIdToDuplPPel[$originialPollProposalElement->getPollElement()->getId()]->addPollProposalElement($duplicatedPollProposalElement);
                             $duplicatedPollProposal->addPollProposalElement($duplicatedPollProposalElement);
                         }

@@ -23,9 +23,17 @@ class PictureDirectoryNamer implements DirectoryNamerInterface
     {
         $subdir = 'unkownobject';
         if ($object instanceof Event) {
-            $subdir = date("Y/m/", $object->getCreatedAt()->getTimestamp()).$object->getToken();
+            if($object->getCreatedAt() != null) {
+                $subdir = date("Y/m/", $object->getCreatedAt()->getTimestamp()) . $object->getToken();
+            }else{
+                $subdir = date("Y/m/") . $object->getToken();
+            }
         }elseif ($object instanceof PollProposalElement) {
-            $subdir = date("Y/m/", $object->getCreatedAt()->getTimestamp());
+            if($object->getCreatedAt() != null) {
+                $subdir = date("Y/m/", $object->getCreatedAt()->getTimestamp());
+            }else{
+                $subdir = date("Y/m/");
+            }
         }
         return $subdir;
     }

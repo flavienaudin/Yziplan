@@ -123,6 +123,13 @@ class Event implements CommentableInterface
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="token_duplication", type="string", length=128, unique=true, nullable=true)
+     */
+    private $tokenDuplication;
+
+    /**
+     * @var string
      * @ORM\Column(name="status", type="enum_event_status")
      */
     private $status;
@@ -460,6 +467,24 @@ class Event implements CommentableInterface
     }
 
     /**
+     * @return string
+     */
+    public function getTokenDuplication()
+    {
+        return $this->tokenDuplication;
+    }
+
+    /**
+     * @param string $tokenDuplication
+     * @return Event
+     */
+    public function setTokenDuplication($tokenDuplication)
+    {
+        $this->tokenDuplication = $tokenDuplication;
+        return $this;
+    }
+
+    /**
      * Get status
      *
      * @return string
@@ -670,6 +695,9 @@ class Event implements CommentableInterface
     public function setCoordinates($coordinates)
     {
         $this->coordinates = $coordinates;
+        if($coordinates != null){
+            $coordinates->setEvent($this);
+        }
         return $this;
     }
 

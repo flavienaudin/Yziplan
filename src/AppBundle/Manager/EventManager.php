@@ -23,6 +23,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -195,12 +196,11 @@ class EventManager
     }
 
     /**
-     * Duplique l'événement passé en paramètre (ou celui en cours) en fonction des paramètres : dupliquer les mdules et/ou les invitations
+     * Duplique l'événement passé en paramètre (ou celui en cours). LEs modules sont dupliqués ou non selon le paramètre $duplicateModules
      * L'événement n'est pas persisté en base de données
      *
-     * @param boolean $duplicateModules Les modules sont également dupliqué et associés au nouvel événement
-     * @param boolean $duplicateInvitations Les invitations existantes sont utilisées pour les invitations du nouvel événement
-     * @param Event|null $event L'événement à duppliquer (si non donné,  l'attribut de la classe est utilisé)
+     * @param boolean $duplicateModules Les modules sont également dupliqués et associés au nouvel événement
+     * @param Event|null $event L'événement à dupliquer (si non donné,  l'attribut "event" de la classe est utilisé)
      * @return Event Résultat de la duplication de l'événement
      */
     public function duplicateEvent($duplicateModules, Event $event = null)
@@ -214,10 +214,31 @@ class EventManager
             $duplicatedEvent->setStatus(EventStatus::IN_ORGANIZATION);
             $duplicatedEvent->setName($this->event->getName());
             $duplicatedEvent->setDescription($this->event->getDescription());
+            $duplicatedEvent->setResponseDeadline($this->event->getResponseDeadline());
+
+            if ($this->event->getPictureFile() != null) {
+                $originalFile = $this->event->getPictureFile();
+                $tempFileCopyName = str_replace($originalFile->getExtension(), 'bak.' . $originalFile->getExtension(), $originalFile->getFilename());
+                $tempFileCopyPathname = $this->event->getPictureFile()->getPath() . '/' . $tempFileCopyName;
+                if (copy($this->event->getPictureFile()->getPathname(), $tempFileCopyPathname)) {
+                    $newFile = new UploadedFile($tempFileCopyPathname, $tempFileCopyName, $originalFile->getMimeType(), $originalFile->getSize(), null, true);
+                    $duplicatedEvent->setPictureFile($newFile);
+
+                    $duplicatedEvent->setPictureFocusX($this->event->getPictureFocusX());
+                    $duplicatedEvent->setPictureFocusY($this->event->getPictureFocusY());
+                    $duplicatedEvent->setPictureWidth($this->event->getPictureWidth());
+                    $duplicatedEvent->setPictureHeight($this->event->getPictureHeight());
+                }
+            }
 
             $duplicatedEvent->setWhereName($this->event->getWhereName());
             $duplicatedEvent->setWhereGooglePlaceId($this->event->getWhereGooglePlaceId());
             $duplicatedEvent->setWhen($this->event->getWhen());
+
+            $this->event->getCoordinates()->duplicate($duplicatedEvent);
+            foreach ($this->event->getOpeningHours() as $openingHour) {
+                $openingHour->duplicate($duplicatedEvent);
+            }
 
             $duplicatedEvent->setInvitationOnly($this->event->isInvitationOnly());
             $duplicatedEvent->setGuestsCanInvite($this->event->isGuestsCanInvite());
@@ -233,7 +254,6 @@ class EventManager
                     }
                 }
             }
-            // TODO : duplicate EventInvitation ?
             return $duplicatedEvent;
         } else {
             return null;

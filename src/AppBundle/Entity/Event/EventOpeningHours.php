@@ -150,5 +150,24 @@ class EventOpeningHours
         $this->event = $event;
         return $this;
     }
+
+    /***********************************************************************
+     *                      Helpers
+     ***********************************************************************/
+
+    /**
+     * Copie la plage horaire et la rattache à l'événement donné
+     * @param Event $newEvent
+     * @return EventOpeningHours
+     */
+    public function duplicate(Event $newEvent)
+    {
+        $newEventOpeningHours = new EventOpeningHours();
+        $newEventOpeningHours->setDayOfWeek($this->getDayOfWeek());
+        $newEventOpeningHours->setTimeOpen($this->getTimeOpen());
+        $newEventOpeningHours->setTimeClosed($this->getTimeClosed());
+        $newEvent->addopeningHour($newEventOpeningHours);
+        return $newEventOpeningHours;
+    }
 }
 

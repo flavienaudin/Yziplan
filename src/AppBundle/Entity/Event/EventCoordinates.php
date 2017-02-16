@@ -92,7 +92,7 @@ class EventCoordinates
     /**
      * @var Event
      *
-s     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Event\Event", mappedBy="coordinates")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Event\Event", mappedBy="coordinates")
      */
     private $event;
 
@@ -342,6 +342,32 @@ s     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Event\Event", mappedBy="coo
     {
         $this->event = $event;
         return $this;
+    }
+
+    /***********************************************************************
+     *                      Helpers
+     ***********************************************************************/
+
+    /**
+     * Copie les coordonnées et les rattache à l'événement donné
+     * @param Event $newEvent
+     * @return EventCoordinates
+     */
+    public function duplicate(Event $newEvent)
+    {
+        $newCoordinates = new EventCoordinates();
+        $newCoordinates->setWebsite($this->getWebsite());
+        $newCoordinates->setEmail($this->getEmail());
+        $newCoordinates->setWebsite($this->getWebsite());
+        $newCoordinates->setPhoneNumber($this->getPhoneNumber());
+        $newCoordinates->setMobileNumber($this->getMobileNumber());
+        $newCoordinates->setFaxNumber($this->getFaxNumber());
+        $newCoordinates->setFacebookURL($this->getFacebookURL());
+        $newCoordinates->setGooglePlusURL($this->getGooglePlusURL());
+        $newCoordinates->setTwitterURL($this->getTwitterURL());
+        $newCoordinates->setInstagramURL($this->getInstagramURL());
+        $newEvent->setCoordinates($newCoordinates);
+        return $newCoordinates;
     }
 }
 
