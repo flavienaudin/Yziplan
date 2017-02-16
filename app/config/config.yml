@@ -55,7 +55,16 @@ twig:
 assetic:
     debug:          '%kernel.debug%'
     use_controller: '%kernel.debug%'
+    use_controller: false
     bundles: [ 'AppBundle', 'ATUserBundle','FOSCommentBundle' ]
+    node: "%node.path%"
+    filters:
+        cssrewrite: ~
+        uglifyjs2:
+            bin: "%uglifyjs.path%"
+        uglifycss:
+            bin: "%uglifycss.path%"
+
 
 # Doctrine Configuration
 doctrine:
