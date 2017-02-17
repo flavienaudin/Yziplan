@@ -65,7 +65,6 @@ assetic:
         uglifycss:
             bin: "%uglifycss.path%"
 
-
 # Doctrine Configuration
 doctrine:
     dbal:

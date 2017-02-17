@@ -10,7 +10,7 @@
     <title>{% block title %}{{ "global.project_name"|trans }}{% endblock %}</title>
 
     {% block stylesheets %}
-        {% stylesheets filter='cssrewrite' filter='uglifycss'
+        {% stylesheets filter='cssrewrite' filter='?uglifycss'
         "bundles/app/css/jquery-ui.min.css"
         "bundles/app/css/bootstrap.min.css"
         "bundles/app/css/animate.css"
@@ -259,7 +259,7 @@
 </div><![endif]-->
 
 {% block javascripts %}
-    {% javascripts filter='uglifyjs2'
+    {% javascripts filter='?uglifyjs2'
     'bundles/app/js/moment-with-locales.js'
     'bundles/app/js/waves.min.js'
     'bundles/app/js/jquery.bootgrid-updated.js'
@@ -281,7 +281,6 @@
     output='js/main.1.0.1.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
 
     <script>
         var locale_js = "{{ app.request.locale }}";
