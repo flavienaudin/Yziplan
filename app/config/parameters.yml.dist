@@ -50,5 +50,5 @@ parameters:
 
     # Assetic
     node.path: "/usr/bin/nodejs"
-    uglifyjs.path: '%kernel.root_dir%/Resources/node_modules/.bin/uglifyjs'
-    uglifycss.path: '%kernel.root_dir%/Resources/node_modules/.bin/uglifycss'
+    uglifyjs.path: '/usr/bin/uglifyjs'
+    uglifycss.path: '/usr/bin/uglifycss'

@@ -91,28 +91,8 @@
     {% endif %}
 {% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {# Necessaire ? <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.css") }}">#}
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/fileinput.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/datatables.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootstrap-touchspin.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/focuspoint.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/summernote-0.8.2/summernote.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.rateyo.css") }}">
-{% endblock stylesheets %}
-
 {% block top_javascripts %}
     {{ parent() }}
-    {#<script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>#}
-    <script src="{{ asset("bundles/app/js/datatables.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery.bootstrap-touchspin.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
-    {# Plugin to maange focuspoint on event image#}
-    <script src="{{ asset('bundles/app/js/jquery.focuspoint.min.js') }}"></script>
-    <script src="{{ asset("bundles/app/js/yzi-selectize.js") }}"></script>
     <script>
         var eventInvitationValid = true;
         var profileFormAsynchronousAjaxSubmission = true;
@@ -121,35 +101,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset("bundles/app/js/masonry.pkgd.min.js") }}"></script>
-
-    <!-- canvas-to-blob.min.js is only needed if you wish to resize images before upload.
-     This must be loaded before fileinput.min.js -->
-    <script src="{{ asset("bundles/app/js/fileinput_dep/canvas-to-blob.min.js") }}" type="text/javascript"></script>
-    <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
-         This must be loaded before fileinput.min.js -->
-    <script src="{{ asset("bundles/app/js/fileinput_dep/sortable.min.js") }}" type="text/javascript"></script>
-    <!-- purify.min.js is only needed if you wish to purify HTML content in your preview for HTML files.
-         This must be loaded before fileinput.min.js -->
-    <script src="{{ asset("bundles/app/js/fileinput_dep/purify.min.js") }}" type="text/javascript"></script>
-    <!-- the main fileinput plugin file -->
-    <script src="{{ asset('bundles/app/js/fileinput.js') }}"></script>
-    <!-- optionally if you need a theme like "Material Design" theme  -->
-    <script src="{{ asset('bundles/app/js/fileinput_dep/theme_zmdi.js') }}"></script>
-    {% if app.request.attributes.get('_locale') == 'fr' %}
-        <!-- optionally if you need translation for your language -->
-        <script src="{{ asset('bundles/app/js/fileinput_dep/fr.js') }}"></script>
-    {% endif %}
-
-    {# Plugin for cliplboard field (copy into clipboard by clicking) #}
-    <script src="{{ asset('bundles/app/js/clipboard.min.js') }}"></script>
-    <script src="{{ asset('bundles/app/js/jquery.rateyo.js') }}"></script>
-
-    <!-- Summernote : richText editor -->
-    <script src="{{ asset('bundles/app/js/summernote-0.8.2/summernote-updated.min.js') }}"></script>
-    {% if app.request.locale == 'fr' %}
-        <script src="{{ asset('bundles/app/js/summernote-0.8.2/lang/summernote-fr-FR.js') }}"></script>
-    {% endif %}
 
     <script>
         var fos_comment_thread_container = $('.commentable_thread ');
@@ -171,8 +122,6 @@
             });
         });
     </script>
-
-    <script src="{{ asset("bundles/app/js/yzi-event.js") }}"></script>
 
     <script>
         if (typeof google === 'object' && typeof google.maps === 'object') {
