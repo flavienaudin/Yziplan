@@ -297,7 +297,9 @@ eventInvitation:
           first_part:
             several_orga: "We are "
             single_orga: "I am  "
-          second_part: "inviting you to \"%event_name%\". Follow the link bellow to answer:"
+          second_part: "inviting you to \"%event_name%\""
+          text_link: "Follow this link to answer:"
+          warning_secret: "Keep it secret, this is your personal invitation"
     recap:
       subject: "Yziplan : Personal link to your invitation"
       body:
@@ -340,9 +342,14 @@ invitations:
       placeholder: Emails of your guests
       invalid_message: Valid email address required
       help: Hit "Return" after each email to validate it
+    message:
+      button: Add a message
+      label: Message
+      placeholder: Write to your guests... (optional)
   message:
     success: Invitations have been sent successfully
-    error: "The following invitations could not be sent : %email_list%"
+    mail_not_sent: "The following invitations could not be sent by email: %email_list%"
+    invitation_not_created: "The following invitations could not be created: %email_list%"
   button:
     send_invitation: Send invitations
     via_facebook: Via Facebook

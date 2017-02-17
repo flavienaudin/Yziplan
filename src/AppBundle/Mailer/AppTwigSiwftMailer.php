@@ -16,7 +16,7 @@ use FOS\UserBundle\Mailer\TwigSwiftMailer;
 class AppTwigSiwftMailer extends TwigSwiftMailer
 {
 
-    public function sendEventInvitationEmail(EventInvitation $eventInvitation)
+    public function sendEventInvitationEmail(EventInvitation $eventInvitation, $message = null)
     {
         if ($eventInvitation->getApplicationUser()->getAccountUser() != null) {
             $emailTo = $eventInvitation->getApplicationUser()->getAccountUser()->getEmail();
@@ -24,10 +24,9 @@ class AppTwigSiwftMailer extends TwigSwiftMailer
             $emailTo = $eventInvitation->getApplicationUser()->getAppUserEmails()->first()->getEmail();
         }
         if (!empty($emailTo)) {
-            $context = array("eventInvitation" => $eventInvitation);
+            $context = array("eventInvitation" => $eventInvitation, 'message' => $message);
             $this->sendMessage("@App/EventInvitation/emails/invitation.html.twig", $context, $this->parameters['from_email']['confirmation'], $emailTo);
             return true;
-
         }
         return false;
     }

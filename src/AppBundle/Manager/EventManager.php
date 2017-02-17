@@ -265,11 +265,16 @@ class EventManager
         return $this->formFactory->create(InvitationsType::class);
     }
 
-    public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm, $sendInvitations = true)
+    public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm, $sendInvitations = true, &$resultCreation = array())
     {
         if ($this->event != null) {
             $emailsData = $eventInvitationsForm->get("invitations")->getData();
-            $this->eventInvitationManager->createInvitations($this->event, $emailsData, $sendInvitations);
+            if($eventInvitationsForm->has('message')) {
+                $message = $eventInvitationsForm->get('message')->getData();
+            }else{
+                $message  = null;
+            }
+            $resultCreation = $this->eventInvitationManager->createInvitations($this->event, $emailsData, $sendInvitations, $message);
 
             $this->entityManager->persist($this->event);
             $this->entityManager->flush();

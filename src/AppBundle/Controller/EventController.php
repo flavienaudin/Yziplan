@@ -118,7 +118,18 @@ class EventController extends Controller
                 $eventInvitationsForm->handleRequest($request);
                 if ($eventInvitationsForm->isSubmitted()) {
                     if ($eventInvitationsForm->isValid()) {
-                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $request->get('sendInvitations'));
+                        $resultInvitations = array();
+                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $request->get('sendInvitations'), $resultInvitations);
+                        if ((($nbFailed = count($resultInvitations['failed'])) + ($nbNotFound = count($resultInvitations['notFound']))) > 0) {
+                            if ($nbFailed > 0) {
+                                $emails = implode(", ", array_keys($resultInvitations['failed']));
+                                $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get("translator")->trans("invitations.message.mail_not_sent", ['%email_list%' => $emails]));
+                            }
+                            if ($nbNotFound > 0) {
+                                $emails = implode(", ", array_values($resultInvitations['notFound']));
+                                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("invitations.message.invitation_not_created", ['%email_list%' => $emails]));
+                            }
+                        }
                         return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_ADD_MODULE));
                     }
                 }
@@ -356,15 +367,15 @@ class EventController extends Controller
                             if (count($failedRecipients) == 0) {
                                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("send_message.message.success");
                             } else {
-                                $faildeGuests = "";
+                                $failedGuests = "";
                                 /** @var EventInvitation $eventInvitation */
                                 foreach ($failedRecipients as $eventInvitation) {
-                                    if (!empty($faildeGuests)) {
-                                        $faildeGuests .= ', ';
+                                    if (!empty($failedGuests)) {
+                                        $failedGuests .= ', ';
                                     }
-                                    $faildeGuests .= $eventInvitation->getDisplayableName();
+                                    $failedGuests .= $eventInvitation->getDisplayableName();
                                 }
-                                $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("send_message.message.warning", array('%failedRecipients%' => $faildeGuests));
+                                $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("send_message.message.warning", array('%failedRecipients%' => $failedGuests));
                             }
 
                             $sendMessageForm = $eventManager->createSendReminderForm();
@@ -396,15 +407,15 @@ class EventController extends Controller
                             if (count($failedRecipients) == 0) {
                                 $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("send_message.message.success"));
                             } else {
-                                $faildeGuests = "";
+                                $failedGuests = "";
                                 /** @var EventInvitation $eventInvitation */
                                 foreach ($failedRecipients as $eventInvitation) {
-                                    if (!empty($faildeGuests)) {
-                                        $faildeGuests .= ', ';
+                                    if (!empty($failedGuests)) {
+                                        $failedGuests .= ', ';
                                     }
-                                    $faildeGuests .= $eventInvitation->getDisplayableName();
+                                    $failedGuests .= $eventInvitation->getDisplayableName();
                                 }
-                                $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans("send_message.message.warning", array('%failedRecipients%' => $faildeGuests)));
+                                $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans("send_message.message.warning", array('%failedRecipients%' => $failedGuests)));
                             }
                         }
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
@@ -431,9 +442,24 @@ class EventController extends Controller
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     } else if ($eventInvitationsForm->isValid()) {
-                        $currentEvent = $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm);
+                        $resultInvitations = array();
+                        $currentEvent = $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, true, $resultInvitations);
+
+                        if ((($nbFailed = count($resultInvitations['failed'])) + ($nbNotFound = count($resultInvitations['notFound']))) > 0) {
+                            if ($nbFailed > 0) {
+                                $emails = implode(", ", array_keys($resultInvitations['failed']));
+                                $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get("translator")->trans("invitations.message.mail_not_sent", ['%email_list%' => $emails]);
+                            }
+                            if ($nbNotFound > 0) {
+                                $emails = implode(", ", array_values($resultInvitations['notFound']));
+                                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] =
+                                    $this->get("translator")->trans("invitations.message.invitation_not_created", ['%email_list%' => $emails]);
+                            }
+                        } else {
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("invitations.message.success");
+                        }
+
                         $eventInvitationsForm = $eventManager->createEventInvitationsForm();
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("invitations.message.success");
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_forms_container'] =
                             $this->renderView("@App/Event/partials/invitations/invitations_new_forms.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,
@@ -459,8 +485,21 @@ class EventController extends Controller
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     } elseif ($eventInvitationsForm->isValid()) {
-                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm);
-                        $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("global.success.data_saved"));
+                        $resultInvitations = array();
+                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, true, $resultInvitations);
+
+                        if ((($nbFailed = count($resultInvitations['failed'])) + ($nbNotFound = count($resultInvitations['notFound']))) > 0) {
+                            if ($nbFailed > 0) {
+                                $emails = implode(", ", array_keys($resultInvitations['failed']));
+                                $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get("translator")->trans("invitations.message.mail_not_sent", ['%email_list%' => $emails]));
+                            }
+                            if ($nbNotFound > 0) {
+                                $emails = implode(", ", array_values($resultInvitations['notFound']));
+                                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("invitations.message.invitation_not_created", ['%email_list%' => $emails]));
+                            }
+                        } else {
+                            $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("invitations.message.success"));
+                        }
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     }
                 }

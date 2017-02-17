@@ -1,6 +1,9 @@
 <html>
-    <head></head>
-    <body>
-        {{ message }}
-    </body>
+<head></head>
+<body>
+
+{% for message in messages %}
+    {{ include('@App/EventInvitation/emails/invitation.html.twig', {'eventInvitation':message.eventInvitation, 'message':message.message}) }}
+{% endfor %}
+</body>
 </html>

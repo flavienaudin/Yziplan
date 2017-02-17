@@ -290,19 +290,21 @@ eventInvitation:
       unauthorized_access: Tu n'es pas invité à cet événement.
   email:
     invitation:
-      subject: "Yziplan : Tu as reçu une invitation"
+      subject: "Yziplan : Vous avez reçu une invitation"
       body:
         hello: "Bonjour %username%!"
         paragraph:
           first_part:
-            several_orga: "Nous t'invitons "
-            single_orga: "Je t'invite "
-          second_part: "à \"%event_name%\". Suis le lien ci-dessous pour y répondre:"
+            several_orga: "Nous vous invitons "
+            single_orga: "Je vous invite "
+          second_part: "à \"%event_name%\""
+          text_link: "Suivez le lien suivant pour y répondre:"
+          warning_secret: "Gardez-le secrètement, ceci votre invitation personnelle"
     recap:
-      subject: "Yziplan : Lien personnel de ton invitation"
+      subject: "Yziplan : Lien personnel de votre invitation"
       body:
         hello: "Bonjour %username%!"
-        paragraph: "Tu participes à l'organisation de l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier ta participation, utilise le lien ci-dessous :"
+        paragraph: "Vous participez à l'organisation de l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier votre participation, utilisez le lien ci-dessous :"
 
 invitations_list:
   display:
@@ -340,9 +342,14 @@ invitations:
       placeholder: E-mails de tes invités
       invalid_message: Les e-mails ne sont pas correctes
       help: Appuyez sur "entrée" après chaque e-mail pour le valider
+    message:
+      button: Ajouter un message
+      label: Message
+      placeholder: Ecrivez à vos invités... (facultatif)
   message:
-    success: Les invitations ont bien été envoyées.
-    error:  "Les invitations suivantes n'ont pu être envoyées : %email_list%"
+    success: Les invitations ont bien été envoyées
+    mail_not_sent: "Les invitations suivantes n'ont pu être envoyées par email : %email_list%"
+    invitation_not_created: "Les invitations suivantes n'ont pu être créées : %email_list%"
   button:
     send_invitation: Envoyer les invitations
     via_facebook: Via Facebook

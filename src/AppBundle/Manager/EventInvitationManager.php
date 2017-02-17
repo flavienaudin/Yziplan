@@ -243,26 +243,41 @@ class EventInvitationManager
      * @param Event $event
      * @param array $emailsData
      * @param boolean $sendEmail
-     * @param array $failedRecipients Array of emails address which the email could not be sent to
+     * @param string $message
+     * @return array with results by success/failed/notFound
      */
-    public function createInvitations(Event $event, $emailsData, $sendEmail, &$failedRecipients = array())
+    public function createInvitations(Event $event, $emailsData, $sendEmail, $message = null)
     {
-        $failedRecipients = (array)$failedRecipients;
+        $results = array(
+            'success' => array(),
+            'failed' => array(),
+            'notFound' => array()
+        );
         foreach ($emailsData as $email) {
             $this->eventInvitation = $this->getGuestEventInvitation($event, $email);
-            if ($this->eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
-                // Envoie d'une invitation => AWAITNG_ANSWER
-                $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
-            }
-            if ($sendEmail) {
-                if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation)) {
-                    $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
-                } else {
-                    $failedRecipients[] = $email;
+
+            if($this->eventInvitation != null) {
+                if ($this->eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
+                    // Envoi d'une invitation => AWAITNG_ANSWER
+                    $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
                 }
+                if ($sendEmail) {
+                    if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
+                        $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
+                        $results['success'][$email] = $this->eventInvitation;
+                    } else {
+                        $results['failed'][$email] = $this->eventInvitation;
+                    }
+                }else{
+                    $results['success'][$email] = $this->eventInvitation;
+                }
+                $this->persistEventInvitation();
+            }else{
+                // error while creating the invitation
+                $results['notFound'][] = $email;
             }
-            $this->persistEventInvitation();
         }
+        return $results;
     }
 
     /**

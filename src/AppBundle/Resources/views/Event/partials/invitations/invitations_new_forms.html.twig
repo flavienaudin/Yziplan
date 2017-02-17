@@ -28,6 +28,14 @@
                     'help':'invitations.form.invitations.help'|trans
                 }) }}
 
+                <a role="button" class="btn btn-link c-blue" data-toggle="collapse" href="#invitationsMessageCollapase">{{ "invitations.form.message.button"|trans }}</a>
+                <div class="collapse" id="invitationsMessageCollapase">
+                    {{ form_row(invitationsForm.message, {
+                        'label':'invitations.form.message.label',
+                        'label_attr':{'class':'sr-only'},
+                        'attr':{'placeholder':'invitations.form.message.placeholder', 'rows':3},
+                    }) }}
+                </div>
                 {% block action_buttons %}
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "invitations.button.send_invitation"|trans }}">
@@ -97,7 +105,9 @@
                             var $form = $(this);
                             if (!eventInvitationValid && askGuestName !== undefined) {
                                 $('#invitations_new_modal').modal('hide');
-                                askGuestName(e, submitNewInvitationsForm,[$form, e], function(){$('#invitations_new_modal').modal('show');});
+                                askGuestName(e, submitNewInvitationsForm, [$form, e], function () {
+                                    $('#invitations_new_modal').modal('show');
+                                });
                             } else {
                                 submitNewInvitationsForm([$form, e]);
                             }
@@ -109,7 +119,7 @@
                             ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
                                 $hideContactsButton.click();
                                 $('#invitations_new_modal').modal('hide');
-                            }, function(dataOrJqXHR, textStatus, jqXHROrErrorThrown){
+                            }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
                                 $('#invitations_new_modal').modal('show');
                             }, null);
                         }
