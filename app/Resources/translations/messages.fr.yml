@@ -585,7 +585,7 @@ email:
 
 # Modale suggestion :
 suggestion:
-  button: On t'écoute
+  button: Vos remarques
   modal:
     text: Envoyer une suggestion, un bogue, ...
     form:

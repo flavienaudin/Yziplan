@@ -585,7 +585,7 @@ email:
 
 # Modale suggestion :
 suggestion:
-  button: We are listening
+  button: Your feedback
   modal:
     text: Send a suggestion, bugs, ...
     form:
