@@ -55,9 +55,15 @@ $(document).ready(function () {
 /**
  * Detect mobile browser
  */
-function isMobile() {
+/*function isMobile() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}*/
+function isMobile() {
+    if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent)) {
+        return true;
+    }
 }
+
 
 /**
  * Active the plugin mCustomScrollBar
@@ -197,6 +203,11 @@ function jsPlugginActivation() {
         autosize($autosizeElt[0]);
     }
 
+    //passage en readonly sur mobile et tablette pour eviter l'apparition du clavier.
+    if (isMobile()){
+        $('[data-readonly-onmobile]').attr('readonly', true);
+    }
+
     $('.clockpicker').clockpicker();
     var locale_format = "DD/MM/YYYY";
     if (locale_js == 'en') {
@@ -206,6 +217,7 @@ function jsPlugginActivation() {
         format: locale_format,
         locale: locale_js,
         showClear: true,
+        ignoreReadonly : true,
         icons: {
             time: 'zmdi zmdi-time',
             date: 'zmdi zmdi-calendar',
