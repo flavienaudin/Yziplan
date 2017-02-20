@@ -422,7 +422,7 @@ class PollProposalElement
                     'file' => $this->getPictureFile()
                 );
                 break;
-            case $type == PollElementType::GOOGLE_PLACE_ID:
+            case PollElementType::GOOGLE_PLACE_ID:
             case PollElementType::STRING :
                 $val = $this->getValString();
                 break;

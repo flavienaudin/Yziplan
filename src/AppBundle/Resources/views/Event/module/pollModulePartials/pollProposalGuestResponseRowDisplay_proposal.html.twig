@@ -50,7 +50,12 @@
             {% endif %}
             {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::STRING')] is defined %}
                 <div class="pp-elt {% if hasPicture %} pp-elt-with-picture {% endif %}">
-                    {{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::STRING')][0].getValue }}
+                    {{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::STRING')][0].value }}
+                </div>
+            {% endif %}
+            {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::GOOGLE_PLACE_ID')] is defined %}
+                <div class="pp-elt {% if hasPicture %} pp-elt-with-picture {% endif %}">
+                    {{ ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::GOOGLE_PLACE_ID')][0].value }}
                 </div>
             {% endif %}
             {# Picture + string #}
