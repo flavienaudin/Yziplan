@@ -161,10 +161,7 @@ class ModuleManager
 
                 $pollElementDate = new PollElement();
                 $pollElementDate->create($this->translator->trans($subtype), PollElementType::DATETIME, 0);
-                $pollElementEndDate = new PollElement();
-                $pollElementEndDate->create($this->translator->trans($subtype), PollElementType::END_DATETIME, 1);
                 $pollElements->add($pollElementDate);
-                $pollElements->add($pollElementEndDate);
             } elseif ($subtype == PollModuleType::WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.what"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
