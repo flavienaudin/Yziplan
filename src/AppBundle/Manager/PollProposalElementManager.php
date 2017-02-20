@@ -83,26 +83,27 @@ class PollProposalElementManager
                 $this->pollProposalElement->setTime(false);
             }
             $this->pollProposalElement->setValDatetime($datetimeValue);
-        }else if ($this->pollProposalElement->getPollElement()->getType() == PollElementType::END_DATETIME) {
-            $datetimeValue = new DateTime();
-            /** @var array $valDate (e.g. array('year' => 2011, 'month' => 06, 'day' => 05)) */
-            $valDate = $pollProposalElementForm->get('endDate')->getData();
-            /** @var array $valTime (e.g. array('hour' => 12, 'minute' => 17, 'second' => 26)) */
-            $valTime = $pollProposalElementForm->get('endTime')->getData();
 
-            if ($this->castArrayValuesToInt($valDate)) {
-                $datetimeValue->setDate($valDate['year'], $valDate['month'], $valDate['day']);
+            //EndDate Case
+            $endDatetimeValue = new DateTime();
+            /** @var array $valEndDate (e.g. array('year' => 2011, 'month' => 06, 'day' => 05)) */
+            $valEndDate = $pollProposalElementForm->get('endDate')->getData();
+            /** @var array $valEndTime (e.g. array('hour' => 12, 'minute' => 17, 'second' => 26)) */
+            $valEndTime = $pollProposalElementForm->get('endTime')->getData();
+
+            if ($this->castArrayValuesToInt($valEndDate)) {
+                $endDatetimeValue->setDate($valEndDate['year'], $valEndDate['month'], $valEndDate['day']);
                 $this->pollProposalElement->setEndDate(true);
             } else {
                 $this->pollProposalElement->setEndDate(false);
             }
-            if ($this->castArrayValuesToInt($valTime)) {
-                $datetimeValue->setTime($valTime['hour'], $valTime['minute']);
+            if ($this->castArrayValuesToInt($valEndTime)) {
+                $endDatetimeValue->setTime($valEndTime['hour'], $valEndTime['minute']);
                 $this->pollProposalElement->setEndTime(true);
             } else {
                 $this->pollProposalElement->setEndTime(false);
             }
-            $this->pollProposalElement->setValEndDatetime($datetimeValue);
+            $this->pollProposalElement->setValEndDatetime($endDatetimeValue);
         }
         return $this->pollProposalElement;
     }

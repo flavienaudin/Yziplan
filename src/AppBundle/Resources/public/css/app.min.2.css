@@ -1510,6 +1510,7 @@ select.chosen {
 .bootstrap-datetimepicker-widget {
     padding: 0 !important;
     margin: 0 !important;
+    margin-left: -60px !important;
     width: auto !important;
 }
 
@@ -1597,6 +1598,7 @@ select.chosen {
     -ms-transform-origin: 0 100% !important;
     transform-origin: 0 100% !important;
 }
+
 
 .datepicker table thead tr th {
     border-radius: 0;
