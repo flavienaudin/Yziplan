@@ -1,0 +1,19 @@
+1) Requête SQL pour récupérer les events avec pictures et le nouveau répertoire de l'image :
+SELECT
+    CONCAT(  "mkdir ", DATE_FORMAT( e.created_at,  "%Y/%m/" ) , e.token,  ';' ) AS cdm1,
+    CONCAT(  "mv ", e.picture_filename,  " ", DATE_FORMAT( e.created_at,  "%Y/%m/" ) , e.token,  '/', e.picture_filename,  ';' ) AS cdm2
+FROM  `event_event` e
+WHERE e.picture_filename IS NOT NULL;
+
+2) Créer les répertoires et configurer les droits :
+mkdir 2016 2016/11 2016/12 2017 2017/01 2017/02;
+chown -R "www-data" 2016/ 2017/;
+chgrp -R "www-data" 2016/ 2017/;
+chmod -R 0777 2016/ 2017/;
+
+3) Vérifier :
+ll . 2016/ 2017/;
+
+4) Déplacer les fichiers :
+Copier coller les commandes générées par la requêtes SQL 1)
+
