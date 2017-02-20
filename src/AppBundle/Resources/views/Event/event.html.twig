@@ -3,6 +3,8 @@
 {# Données d'entrée :
 - event (Event) L'évenement à afficher
 - eventForm (Form|null) Formulaire d'édition des information général de l'événement (si les droits le permettent)
+- eventTemplateSettingsForm (Form|null) Formulaire de configuration des options de duplication de type "Template"
+- eventRecurrenceSettingsForm (Form) Formulaire de configuration des options de duplication de type "Recurrence"
 - thread (Thread) Le fil de discussion de l'événement
 - comments(Comment[]) Les commentaires appartenant au fil de discussion de l'événement
 - invitationsForm (Form|null) Formulaire permettant d'inviter (renseignement des e-mails des invités)
@@ -88,6 +90,13 @@
     {{ parent() }}
     {% if eventForm is not null %}
         {{ include("@App/Event/partials/event_edit_modal.html.twig", {'userEventInvitation':userEventInvitation, 'eventForm':eventForm}) }}
+    {% endif %}
+    {% if eventTemplateSettingsForm is not null or eventRecurrenceSettingsForm is not null %}
+        {{ include("@App/Event/partials/event_duplication_settings_modal.html.twig", {
+            'event':event,
+            'eventTemplateSettingsForm':eventTemplateSettingsForm,
+            'eventRecurrenceSettingsForm':eventRecurrenceSettingsForm
+        }) }}
     {% endif %}
 {% endblock %}
 

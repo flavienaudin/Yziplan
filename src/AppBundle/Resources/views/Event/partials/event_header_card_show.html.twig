@@ -97,7 +97,8 @@
             {% endset %}
         {% endif %}
 
-        {% if coordinatesBlock is defined or openingHoursBlock is defined %}
+        {% if (userEventInvitation.event.coordinates is not null and userEventInvitation.event.coordinates.website|trim is not empty) or coordinatesBlock is defined
+        or openingHoursBlock is defined %}
             <div class="list-md-icon {{ userEventInvitation.event.openingHours|length == 0 ? 'm-b-15' }}">
                 <ul>
                     {% if userEventInvitation.event.coordinates.website is not null %}

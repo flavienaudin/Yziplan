@@ -148,10 +148,12 @@ class EventController extends Controller
     }
 
     /**
+     * Action de duplication d'un événement "Template" : à partir du tokenDuplication, un nouvel événement est créé avec les mêmes informations de l'événement,
+     * les mêmes modules. Seule l'invitation de l'organisateur est crée.
      * @Route("/duplicate/{tokenDuplication}", name="duplicateEvent")
      * @ParamConverter("event", class="AppBundle:Event\Event", options={"mapping": {"tokenDuplication": "tokenDuplication"}})
      */
-    public function duplicateEvent(Event $event, Request $request)
+    public function duplicateEventAction(Event $event, Request $request)
     {
         $eventManager = $this->get("at.manager.event");
         $duplicatedEvent = $eventManager->duplicateEvent(true, $event);
@@ -298,10 +300,54 @@ class EventController extends Controller
         ////////////////////////
         // Edition management //
         ////////////////////////
+        /** @var FormInterface $eventForm */
         $eventForm = null;
+        /** @var FormInterface $templateSettingsForm */
+        $templateSettingsForm = null;
+        /** @var FormInterface $recurrenceSettingsForm */
+        $recurrenceSettingsForm = null;
         $sendMessageForm = null;
         if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
-            /** @var Form $eventForm */
+
+            $templateSettingsForm = $eventManager->createTemplateSettingsForm();
+            $templateSettingsForm->handleRequest($request);
+            if ($templateSettingsForm->isSubmitted()) {
+                if ($request->isXmlHttpRequest()) {
+                    if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        // Vérification serveur de la validité de l'invitation
+                        $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    } elseif ($templateSettingsForm->isValid()) {
+                        $currentEvent = $eventManager->treatTemplateSettingsForm($templateSettingsForm);
+                        $templateSettingsForm = $eventManager->createTemplateSettingsForm();
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventTemplateSettings_formContainer'] =
+                            $this->renderView("@App/Event/partials/event_duplication_template_settings_form.html.twig", array(
+                                'event' => $currentEvent,
+                                'eventTemplateSettingsForm' => $templateSettingsForm->createView()
+                            ));
+                        return new AppJsonResponse($data, Response::HTTP_OK);
+                    } else {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventEdit_form_container'] =
+                            $this->renderView("@App/Event/partials/event_duplication_template_settings_form.html.twig", array(
+                                'event' => $currentEvent,
+                                'eventTemplateSettingsForm' => $templateSettingsForm->createView()
+                            ));
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    }
+                } else {
+                    if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        // Vérification serveur de la validité de l'invitation
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+                    } elseif ($eventForm->isValid()) {
+                        $currentEvent = $eventManager->treatTemplateSettingsForm($templateSettingsForm);
+                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+                    }
+                }
+            }
+
             $eventForm = $eventManager->initEventForm();
             $eventForm->handleRequest($request);
             if ($eventForm->isSubmitted()) {
@@ -318,6 +364,8 @@ class EventController extends Controller
                             $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
                                     'userEventInvitation' => $userEventInvitation,
                                     'eventForm' => $eventForm->createView(),
+                                    'eventTemplateSettingsForm' => ($templateSettingsForm != null ? $templateSettingsForm->createView() : null),
+                                    'eventRecurrenceSettingsForm' => ($recurrenceSettingsForm != null ? $recurrenceSettingsForm->createView() : null),
                                     'thread' => $thread, 'comments' => $comments,
                                 )
                             );
@@ -349,6 +397,8 @@ class EventController extends Controller
                 }
             }
 
+
+            /** @var FormInterface $sendMessageForm */
             $sendMessageForm = $eventManager->createSendReminderForm();
             $sendMessageForm->handleRequest($request);
             if ($sendMessageForm->isSubmitted()) {
@@ -617,6 +667,8 @@ class EventController extends Controller
         return $this->render('AppBundle:Event:event.html.twig', array(
             'event' => $currentEvent,
             'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
+            'eventTemplateSettingsForm' => ($templateSettingsForm != null ? $templateSettingsForm->createView() : null),
+            'eventRecurrenceSettingsForm' => ($recurrenceSettingsForm != null ? $recurrenceSettingsForm->createView() : null),
             'thread' => $thread, 'comments' => $comments,
             'sendMessageForm' => ($sendMessageForm != null ? $sendMessageForm->createView() : null),
             'invitationsForm' => ($eventInvitationsForm != null ? $eventInvitationsForm->createView() : null),

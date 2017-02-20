@@ -1,6 +1,8 @@
 {# Données d'entrée :
 - userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
 - eventForm (Form|null) Formulaire d'édition des information général de l'événement (si les droits le permettent)
+- eventTemplateSettingsForm (Form|null) Formulaire de configuration des options de duplication de type "Template"
+- eventRecurrenceSettingsForm (Form) Formulaire de configuration des options de duplication de type "Recurrence"
 - thread (Thread) Le fil de discussion de l'événement
 - comments(Comment[]) Les commentaires appartenant au fil de discussion de l'événement
 #}
@@ -17,8 +19,12 @@
                             <a href="" data-toggle="dropdown" aria-expanded="false"> <i class="zmdi zmdi-settings"></i> </a>
                             <ul class="dropdown-menu dropdown-menu-right dm-icon">
                                 <li>
-                                    <a id="event_header_edit_information" href="#eventEditModal" data-toggle="modal"><i class="zmdi zmdi-edit"></i> {{ "global.button.edit"|trans }}</a>
+                                    <a id="event_header_edit_information" href="#eventEditModal" data-toggle="modal"><i class="zmdi zmdi-edit"></i> {{ "event.menu.edit"|trans }}</a>
                                 </li>
+                                {% if eventTemplateSettingsForm is not null or eventTemplateSettingsForm is not null %}
+                                    <li><a id="event_header_edit_information" href="#eventDuplicationSettingsModal" data-toggle="modal"><i
+                                                    class="zmdi zmdi-plus-circle-o-duplicate"></i> {{ "event.menu.duplication"|trans }}</a></li>
+                                {% endif %}
                             </ul>
                         </li>
                     </ul>

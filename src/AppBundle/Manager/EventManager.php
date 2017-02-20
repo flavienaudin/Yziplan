@@ -11,6 +11,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
+use AppBundle\Form\Event\EventTemplateSettingsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
 use AppBundle\Form\Event\SendMessageType;
@@ -162,13 +163,12 @@ class EventManager
         return $this->formFactory->create(EventType::class, $this->event);
     }
 
-
     /**
      * Renseigne l'événement à partir des données soumises dans le formulaire lors d'une création ou édition
-     * @param Form $evtForm
+     * @param FormInterface $evtForm
      * @return Event|mixed
      */
-    public function treatEventFormSubmission(Form $evtForm)
+    public function treatEventFormSubmission(FormInterface $evtForm)
     {
         $this->event = $evtForm->getData();
         if (empty($this->event->getToken())) {
@@ -235,7 +235,9 @@ class EventManager
             $duplicatedEvent->setWhereGooglePlaceId($this->event->getWhereGooglePlaceId());
             $duplicatedEvent->setWhen($this->event->getWhen());
 
-            $this->event->getCoordinates()->duplicate($duplicatedEvent);
+            if ($this->event->getCoordinates() != null) {
+                $this->event->getCoordinates()->duplicate($duplicatedEvent);
+            }
             foreach ($this->event->getOpeningHours() as $openingHour) {
                 $openingHour->duplicate($duplicatedEvent);
             }
@@ -269,10 +271,10 @@ class EventManager
     {
         if ($this->event != null) {
             $emailsData = $eventInvitationsForm->get("invitations")->getData();
-            if($eventInvitationsForm->has('message')) {
+            if ($eventInvitationsForm->has('message')) {
                 $message = $eventInvitationsForm->get('message')->getData();
-            }else{
-                $message  = null;
+            } else {
+                $message = null;
             }
             $resultCreation = $this->eventInvitationManager->createInvitations($this->event, $emailsData, $sendInvitations, $message);
 
@@ -318,6 +320,35 @@ class EventManager
             return false;
         }
     }
+
+    /**
+     * Génère le formulaire de configuration de la duplication de type Template
+     * @return FormInterface
+     */
+    public function createTemplateSettingsForm()
+    {
+        return $this->formFactory->create(EventTemplateSettingsType::class);
+    }
+
+    /**
+     * Traite la soumission du formulaire de configuration de la duplication de type Template
+     * @param FormInterface $templateSettingsForm
+     * @return Event
+     */
+    public function treatTemplateSettingsForm(FormInterface $templateSettingsForm)
+    {
+        if ($templateSettingsForm->get("activateTemplate")->getData()) {
+            if (empty($this->event->getTokenDuplication())) {
+                $this->event->setTokenDuplication($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+                $this->persistEvent();
+            }
+        } else {
+            $this->event->setTokenDuplication(null);
+            $this->persistEvent();
+        }
+        return $this->event;
+    }
+
 
     /**
      * Crée et ajoute un module à l'événement

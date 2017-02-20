@@ -100,8 +100,24 @@ event:
       subtitle: Une fois l'image sélectionnée, vous pourrez indiquer la zone importante en cliquant, l'image sera alors centrée automatiquement.
       button:
         submit_title: Transférer l'image et l'utiliser pour l'événement
-  modal.edit:
-    title: Modifier l'événement
+  menu:
+    edit: Editer l'événement
+    duplication: Options de duplication
+  modal:
+    edit:
+      title: Modifier l'événement
+    duplicate:
+      title: Configurer les options de duplication
+      template:
+        title: Evénement duplicable par tout le monde
+        instructions: Générer un lien à partager pour permettre à des personnes d'organiser un événement identique.
+        form:
+          activateTemplate:
+            label: Activer la possiblité d'organiser des événements à partir de cet événement
+        url_input_label: Partager le lien suivant à tous vos potentiels clients
+      recurrence:
+        title: Planifier le même événement à nouveau
+        instructions: Organiser à nouveau l'événement à une autre date. Un nouvel événement va être créé
   form:
     name:
       label: Titre
@@ -510,8 +526,8 @@ global:
     javascrip_disabled: Ton navigateur a désactivé le javascript. Le site risque de mal s'afficher. Ré-active-le afin de profiter pleinement des fonctionnalités que nous te proposons
     invalid_form: Des données du formulaire sont invalides
   exception:
-    access_denied_http: Tu n'as pas accès à ces données. Connecte-toi avec l'utilisateur adéquate.
-    method_not_allowed_http: Cette requête n'est pas autorisée.
+    access_denied_http: Tu n'as pas accès à ces données. Connecte-toi avec l'utilisateur adéquate
+    method_not_allowed_http: Cette requête n'est pas autorisée
   validator.constraint:
     as_array: Le format n'est pas valide (%format%)
     values_not_null: Cette valeur ne doit pas être vide

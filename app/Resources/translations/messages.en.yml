@@ -100,8 +100,24 @@ event:
       subtitle: Once the picture loaded, you can click to select the image focus point, it will be centered automatically
       button:
         submit_title: Upload the picture and use it for the event
-  modal.edit:
+  menu:
+    edit: Edit event
+    duplication: Duplication settings
+  modal:
+    edit:
       title: Edit the event
+    duplicate:
+      title: Set duplication options
+      template:
+        title: Event duplicable for everyone
+        instructions: Generate a link to share to allow people to organize an identical event
+        form:
+          activateTemplate:
+            label: Activate the possibility to organize events from this event
+        url_input_label: Share the following link to your customers
+      recurrence:
+        title: Plan the same event again
+        instructions: Organize again the event later. A new event will be created
   form:
     name:
       label: Title
@@ -510,8 +526,8 @@ global:
     javascrip_disabled: Javascript is disabled by your web browser. The web site may react badly. Enable it to take full advantage of the features we offer.
     invalid_form: Submitted data are not valid.
   exception:
-    access_denied_http: You do not have access to these information. Please, connect with the appropriate user.
-    method_not_allowed_http: This request is not allowed. Take care.
+    access_denied_http: You do not have access to these information. Please, connect with the appropriate user
+    method_not_allowed_http: This request is not allowed. Take care
   validator.constraint:
     as_array: The format is not valid (%format%)
     values_not_null: This value should not be blank

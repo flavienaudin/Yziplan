@@ -1,0 +1,47 @@
+{# Données d'entrée :
+- event (Event) l'événement en cours
+- eventTemplateSettingsForm (Form) Formulaire de configuration des options de duplication de type Template
+#}
+<div id="eventTemplateSettings_formContainer">
+    <h4>{{ "event.modal.duplicate.template.title"|trans }}</h4>
+    <p>{{ "event.modal.duplicate.template.instructions"|trans }}</p>
+
+    {{ form_start(eventTemplateSettingsForm, {'action':path('displayEvent',{'token':event.token}), 'attr':{'id':eventTemplateSettingsForm.vars.id}}) }}
+
+    {% set attr = {'class':'md-toogle-switch'} %}
+    {% if event.tokenDuplication is not empty %}
+        {% set attr = attr|merge({'checked':'checked'})  %}
+    {% endif %}
+    {{ form_row(eventTemplateSettingsForm.activateTemplate, {
+        'label' : 'event.modal.duplicate.template.form.activateTemplate.label',
+        'label_attr':{'class' : "sr-only"},
+        'attr': attr
+    }) }}
+    <button type="submit" class="btn btn-primary">{{ "global.button.valid"|trans }}</button>
+
+    {% if event.tokenDuplication is not empty %}
+        <div id="eventDuplicationTemplateLink" class="m-t-15">
+            <label class="control-label text-info" for="url_event_template_duplication">{{ "event.modal.duplicate.template.url_input_label"|trans }}&nbsp;:</label>
+            <div class="input-group">
+                <input id="url_event_template_duplication" type="text" class="form-control" readonly="readonly" value="{{ url("duplicateEvent", {"tokenDuplication":event.tokenDuplication}) }}"> <span
+                        class="input-group-btn">
+                <button type="button" id="btn_copy_invitation_url" class="btn btn-primary" data-clipboard-target="#url_event_template_duplication">
+                <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
+            </div>
+        </div>
+    {% endif %}
+
+    {{ form_rest(eventTemplateSettingsForm) }}
+    {{ form_end(eventTemplateSettingsForm) }}
+    <script>
+        $(document).ready(function () {
+            $('form#{{ eventTemplateSettingsForm.vars.id }}').on('submit', function (e) {
+                ajaxFormSubmission($(this), e, null, null, null);
+            });
+
+            $('#{{ eventTemplateSettingsForm.activateTemplate.vars.id }}').on('change', function(e){
+                $('#eventDuplicationTemplateLink').fadeToggle();
+            });
+        });
+    </script>
+</div>
