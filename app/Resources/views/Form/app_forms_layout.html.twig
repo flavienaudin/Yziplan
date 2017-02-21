@@ -127,7 +127,7 @@
                 <span class="input-group-addon">
                     <i class="zmdi zmdi-calendar"></i>
                 </span>
-                {% set attr = attr|merge({class: (attr.class|default('') ~ ' ag-date-picker')|trim}) -%}
+                {% set attr = attr|merge({class: (attr.class|default('') ~ ' ag-date-picker readonly-onmobile')|trim}) -%}
                 {{- block('form_widget_simple') -}}
             </div>
         </div>
@@ -155,6 +155,7 @@
             <span class="input-group-addon">
                 <span class="zmdi zmdi-time"></span>
             </span>
+            {% set attr = attr|merge({class: (attr.class|default('') ~ ' readonly-onmobile')|trim}) -%}
             {{- block('form_widget_simple') -}}
         </div>
     {% else -%}

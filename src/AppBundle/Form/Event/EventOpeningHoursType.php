@@ -29,14 +29,12 @@ class EventOpeningHoursType extends AbstractType
             ->add('timeOpen', TimeType::class, array(
                 'required' => true,
                 'widget' => 'single_text',
-                'constraints' => new NotBlank(),
-                'attr' => array('data-readonly-onmobile' => 'true')
+                'constraints' => new NotBlank()
             ))
             ->add('timeClosed', TimeType::class, array(
                 'required' => true,
                 'widget' => 'single_text',
-                'constraints' => new NotBlank(),
-                'attr' => array('data-readonly-onmobile' => 'true')
+                'constraints' => new NotBlank()
             ));
     }
 

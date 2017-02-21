@@ -47,8 +47,7 @@ class EventType extends AbstractType
                 'html5' => false,
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
-                'date_format' => 'dd/MM/yyyy',
-                'attr' => array('data-readonly-onmobile' => 'true')
+                'date_format' => 'dd/MM/yyyy'
             ))
             /* TODO décommenter quand la date limite de réponse sera utilisée
             ->add("responseDeadline", DateTimeType::class, array(
