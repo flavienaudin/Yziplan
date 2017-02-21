@@ -1510,7 +1510,7 @@ select.chosen {
 .bootstrap-datetimepicker-widget {
     padding: 0 !important;
     margin: 0 !important;
-    margin-left: -60px !important;
+    margin-left: -50px !important;
     width: auto !important;
 }
 

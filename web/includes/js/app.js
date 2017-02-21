@@ -205,7 +205,7 @@ function jsPlugginActivation() {
 
     //passage en readonly sur mobile et tablette pour eviter l'apparition du clavier.
     if (isMobile()){
-        $('[data-readonly-onmobile]').attr('readonly', true);
+        $('.readonly-onmobile').attr('readonly', true);
     }
 
     $('.clockpicker').clockpicker();

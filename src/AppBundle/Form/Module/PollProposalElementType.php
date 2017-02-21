@@ -47,8 +47,7 @@ class PollProposalElementType extends AbstractType
                     'format' => 'dd/MM/yyyy',
                     'mapped' => false,
                     'data' => $pollProposalElement->getArrayFromDate(),
-                    'constraints' => new IntValuesInArray('dd/MM/yyyy', ["year", "month", "day"], false),
-                    'attr' => array('data-readonly-onmobile' => 'true')
+                    'constraints' => new IntValuesInArray('dd/MM/yyyy', ["year", "month", "day"], false)
                 ))
                     ->add('startTime', TimeType::class, array(
                         'required' => false,
@@ -58,8 +57,7 @@ class PollProposalElementType extends AbstractType
                         'widget' => 'single_text',
                         'mapped' => false,
                         'data' => $pollProposalElement->getArrayFromTime(),
-                        'constraints' => new IntValuesInArray('hh:mm', ["hour", "minute"], true),
-                        'attr' => array('data-readonly-onmobile' => 'true')
+                        'constraints' => new IntValuesInArray('hh:mm', ["hour", "minute"], true)
                     ))
                     ->add('endDate', DateType::class, array(
                         'required' => false,
@@ -70,8 +68,7 @@ class PollProposalElementType extends AbstractType
                         'format' => 'dd/MM/yyyy',
                         'mapped' => false,
                         'data' => $pollProposalElement->getArrayFromEndDate(),
-                        'constraints' => new IntValuesInArray('dd/MM/yyyy', ["year", "month", "day"], true),
-                        'attr' => array('data-readonly-onmobile' => 'true')
+                        'constraints' => new IntValuesInArray('dd/MM/yyyy', ["year", "month", "day"], true)
                     ))
                     ->add('endTime', TimeType::class, array(
                         'required' => false,
@@ -81,8 +78,7 @@ class PollProposalElementType extends AbstractType
                         'widget' => 'single_text',
                         'mapped' => false,
                         'data' => $pollProposalElement->getArrayFromEndTime(),
-                        'constraints' => new IntValuesInArray('hh:mm', ["hour", "minute"], true),
-                        'attr' => array('data-readonly-onmobile' => 'true')
+                        'constraints' => new IntValuesInArray('hh:mm', ["hour", "minute"], true)
                     ));
             } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::INTEGER) {
                 $form->add('valInteger', IntegerType::class, array(
