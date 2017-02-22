@@ -32,8 +32,7 @@
             </div>
             <div class="col-xs-3 col-sm-2 text-center">
                 <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
-                    'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::ACTIVITY')}) }}" id="addActivityPollModule"> <i
-                            class="waves-effect zmdi zmdi-ticket-star zmdi-hc-3x"></i>
+                    'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::ACTIVITY')}) }}" id="addActivityPollModule"> <i class="waves-effect zmdi zmdi-ticket-star zmdi-hc-3x"></i>
                     <p>{{ "pollmodule.add_link.activity"|trans }}</p></a>
             </div>
         </div>
@@ -44,12 +43,12 @@
                 var target = $(this);
                 if (!eventInvitationValid && askGuestName !== undefined) {
                     e.preventDefault();
-                    askGuestName(e, addModuleAction, [target,e]);
+                    askGuestName(e, addModuleAction, [target, e]);
                 } else {
-                    addModuleAction([target,e]);
+                    addModuleAction([target, e]);
                 }
 
-                function addModuleAction(params){
+                function addModuleAction(params) {
                     var target = params[0];
                     var e = params[1];
                     ajaxRequest(target, null, e, function (responseJSON, textStatus, jqXHR) {

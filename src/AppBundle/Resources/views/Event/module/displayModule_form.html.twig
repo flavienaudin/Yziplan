@@ -51,7 +51,6 @@
             {% endif %}
             $('#{{ moduleForm.description.vars.id }}').summernote(summernoteOptions);
 
-
             {% block js_document_ready %}
             // Update the Event name while editing the form field
             $('#module_form_{{ module.token }}_name').on('input', function () {

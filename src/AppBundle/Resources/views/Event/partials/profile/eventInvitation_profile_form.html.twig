@@ -61,6 +61,7 @@
                 $('form#userEventInvitationProfile').on("submit", preSubmitEventInvitationProfileForm);
             });
 
+            /** L'utilisateur soumet le formulaire "Profil" de lui-même (non via une autre action dans la page) */
             function preSubmitEventInvitationProfileForm(e) {
                 if (e != null) {
                     e.preventDefault();
@@ -68,6 +69,8 @@
                 var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
                 var $form = $(this);
                 if (profileEmail.trim() == "") {
+                    // On indique le lien de l'invitation de l'utilisateur et on lui demande son email pour lui envoyer
+                    // Il peut refuser, dans les 2 cas (confirm/dismiss==cancel), le formulaire est envoyé
                     swal({
                         titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
                         html: '{{ htmlInputBlock|raw }}<br>{{ "eventInvitation.profile.card.guestemail_empty_alert.html"|trans }}',
@@ -85,7 +88,7 @@
                         submitEventInvitationProfileForm($form, e);
                     }, function (dismiss) {
                         if (dismiss === 'cancel') {
-                            // L'utilsiateur a cliqué sur le bouton "J'ai bien noté le lien" => pas d'email volontairement
+                            // L'utilisateur a cliqué sur le bouton "J'ai bien noté le lien" => pas d'email volontairement
                             submitEventInvitationProfileForm($form, e);
                         }
                     });
@@ -95,14 +98,26 @@
             }
 
             /** Submit the profile form with ajax request */
-            function submitEventInvitationProfileForm($form, e) {
+            function submitEventInvitationProfileForm($form, e, thenConfirmCallback, thenConfirmCallbackParams, thenCancelCallback, thenCancelCallbackParams) {
                 ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
                     if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
                         LetterAvatar.setConnectedUserName(responseJSON['data']['userDisplayableName']);
                         LetterAvatar.transform();
                     }
-                }, null, null, profileFormAsynchronousAjaxSubmission);
-                profileFormAsynchronousAjaxSubmission = true;
+                    if (typeof thenConfirmCallback === 'function') {
+                        if (thenConfirmCallbackParams == undefined) {
+                            thenConfirmCallbackParams = null;
+                        }
+                        thenConfirmCallback(thenConfirmCallbackParams);
+                    }
+                }, function(jqXHR, textStatus, errorThrown){
+                    if (typeof thenCancelCallback === 'function') {
+                        if (thenCancelCallbackParams == undefined) {
+                            thenCancelCallbackParams = null;
+                        }
+                        thenCancelCallback(thenCancelCallbackParams)
+                    }
+                }, null);
             }
 
             {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') or
@@ -114,8 +129,7 @@
             function askGuestName(e, thenConfirmCallback, thenConfirmCallbackParams, thenCancelCallback, thenCancelCallbackParams) {
                 if (!eventInvitationValid) {
                     e.preventDefault();
-                    var currentStep = 0;
-                    var guestNameInput = 0;
+                    var currentStep = 1;
                     var form = $('form#userEventInvitationProfile');
                     var steps = [
                         {
@@ -132,7 +146,7 @@
                                     if (input === false || input.trim() === '') {
                                         reject("{{ "eventInvitation.profile.card.guestname_required_alert.inputError"|trans|raw }}");
                                     } else {
-                                        currentStep = 1;
+                                        currentStep = 2;
                                         $('#{{ userEventInvitationForm.guestName.vars.id }}').val(input);
                                         resolve();
                                     }
@@ -140,7 +154,6 @@
                             }
                         }
                     ];
-
 
                     var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
                     if (profileEmail.trim() == "") {
@@ -158,45 +171,41 @@
                             inputPlaceholder: "{{ "eventInvitation.form.email.placeholder"|trans|raw }}"
                         });
                     }
+
                     swal.queue(steps).then(function (result) {
-                        console.log("result=" + result);
-                        console.log("currentStep =" + currentStep);
                         $('#{{ userEventInvitationForm.guestName.vars.id }}').val(result[0]);
 
                         if (result.length > 1) {
                             $('#{{ userEventInvitationForm.email.vars.id }}').val(result[1]);
                         }
-                        profileFormAsynchronousAjaxSubmission = false;
-                        submitEventInvitationProfileForm(form, e);
 
-                        if (typeof thenConfirmCallback === 'function') {
-                            if (thenConfirmCallbackParams == undefined) {
-                                thenConfirmCallbackParams = null;
-                            }
-                            thenConfirmCallback(thenConfirmCallbackParams)
-                        }
+                        submitEventInvitationProfileForm(form, e, thenConfirmCallback, thenConfirmCallbackParams);
+
                     }, function (dismiss) {
-                        console.log("dismiss : " + dismiss);
-                        console.log("currentStep : " + currentStep);
-                        if (currentStep == 0) {
+                        if (currentStep == 1) {
                             swal({
                                 title: "{{ "global.swal.title.warning"|trans }}",
                                 html: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans }}",
                                 type: "error"
                             });
-                        } else if (currentStep == 1) {
+                            if (typeof thenCancelCallback === 'function') {
+                                if (thenCancelCallbackParams == undefined) {
+                                    thenCancelCallbackParams = null;
+                                }
+                                thenCancelCallback(thenCancelCallbackParams)
+                            }
+                        } else if (currentStep == 2) {
                             if (dismiss === 'cancel') {
                                 // L'utilsiateur a cliqué sur le bouton "J'ai bien noté le lien" => pas d'email volontairement
-                                console.log(form);
-                                submitEventInvitationProfileForm(form, e);
+                                submitEventInvitationProfileForm(form, e, thenConfirmCallback, thenConfirmCallbackParams, thenCancelCallback, thenConfirmCallbackParams);
                             }
-                        }
-
-                        if (typeof thenCancelCallback === 'function') {
-                            if (thenCancelCallbackParams == undefined) {
-                                thenCancelCallbackParams = null;
+                        }else {
+                            if (typeof thenCancelCallback === 'function') {
+                                if (thenCancelCallbackParams == undefined) {
+                                    thenCancelCallbackParams = null;
+                                }
+                                thenCancelCallback(thenCancelCallbackParams)
                             }
-                            thenCancelCallback(thenCancelCallbackParams)
                         }
                     });
                 }
