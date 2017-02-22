@@ -82,7 +82,7 @@ class EventInvitationController extends Controller
      * @ Route("/send/{token}", name="sendEventInvitations" )
      * @ ParamConverter("event", class="AppBundle:Event\Event")
      */
-    public function sendEventInvitationAction(Event $event, Request $request)
+    /*public function sendEventInvitationAction(Event $event, Request $request)
     {
         $eventInvitationManager = $this->get("at.manager.event_invitation");
         $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($event, false, false, $this->getUser());
@@ -137,7 +137,7 @@ class EventInvitationController extends Controller
                 }
             }
         }
-    }
+    }*/
 
     /**
      * @Route("/cancel/{eventInvitationTokenToCancel}", name="cancelEventInvitation" )

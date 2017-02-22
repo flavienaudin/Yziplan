@@ -28,7 +28,8 @@
                     'help':'invitations.form.invitations.help'|trans
                 }) }}
 
-                <a role="button" class="btn btn-link c-blue" data-toggle="collapse" href="#invitationsMessageCollapase">{{ "invitations.form.message.button"|trans }}</a>
+                <a role="button" class="btn btn-link c-blue" data-toggle="collapse" href="#invitationsMessageCollapase">
+                    <i class="zmdi zmdi-edit"></i> {{ "invitations.form.message.button"|trans }}</a>
                 <div class="collapse" id="invitationsMessageCollapase">
                     {{ form_row(invitationsForm.message, {
                         'label':'invitations.form.message.label',

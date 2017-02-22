@@ -78,7 +78,14 @@
         {# Carte permettant l'ajout de modules supplémentaires, n'est affiché que si l'utilisateur a le droit #}
         {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
             <div class="grid-item col-xs-12 col-xs-p-lr-0 col-lg-8" id="addModule">
-                {{ include('@App/Event/module/displayAddModule_card.html.twig',{'event': event}) }}
+                <div class="card c-dark z-depth-1" id="addModule-main-div">
+                    <div class="card-header palette-Teal bg m-b-10">
+                        <h2><i class="zmdi zmdi-collection-plus zmdi-hc-lg c-white m-r-15"></i>{{ "addModule.display.title"|trans }}</h2>
+                    </div>
+                    <div class="card-body card-padding-xs" id="addModule-body-card">
+                        {{ include('@App/Event/module/displayAddModule_card.html.twig',{'event': event}) }}
+                    </div>
+                </div>
             </div>
         {% endif %}
         <!-- .grid-sizer empty element, only used for element sizing -->
@@ -132,6 +139,30 @@
     </script>
 
     <script>
+        $(document).ready(function () {
+            initialiseYziplanMasonry();
+            $grid = $('.grid');
+            if ($grid[0]) {
+                $grid.masonry('layout');
+            }
+
+            window.onresize = function (event) {
+                $grid = $('.grid');
+                if ($grid[0]) {
+                    $grid.masonry('layout');
+                }
+            };
+
+            new Clipboard("#btn_url_event_public_invitation");
+
+            $('textarea, .auto-size').on('autosize:resized', function () {
+                $grid = $('.grid');
+                if ($grid[0]) {
+                    $grid.masonry('layout');
+                }
+            });
+        });
+
         if (typeof google === 'object' && typeof google.maps === 'object') {
             initEventShowMap();
         } else {
@@ -151,6 +182,7 @@
             // Active l'autocomplétion des champs "Où" lors de l'ajout de proposition "Where"
             initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');
         }
+        
         {% if (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.name is empty %}
         $(document).ready(function () {
             $('#event_header_edit_information').click();

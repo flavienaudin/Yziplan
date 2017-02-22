@@ -68,7 +68,7 @@
                 </table>
             </div>
 
-            <div class="text-center m-t-10 m-b-10">
+            <div class="pollModuleDisplayAllResult text-center m-t-10 m-b-10">
                 <a class="btn btn-link b-1 waves-effect" id="pollModuleDisplayAllResult_{{ module.token }}_button" href="{{ path('pollModuleDisplayResultTable', {"moduleToken": module.token }) }}"
                    role="button" {% if proposalList is empty %}style="display: none;"{% endif %}>{{ "pollmodule.display.result.allresult"|trans }}</a>
                 <script>
@@ -81,10 +81,9 @@
                     });
                 </script>
             </div>
+
             {# Conteneur pour la modale ajouté via ajax #}
             <div id="pollModuleDisplayAllResult_{{ module.token }}_container"></div>
-
-
         </div>
     {% endif %}
 {% endblock moduleBody %}

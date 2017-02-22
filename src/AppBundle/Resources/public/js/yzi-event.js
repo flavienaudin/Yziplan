@@ -124,6 +124,23 @@ function voteRankingAction(params) {
     });
 }
 
+function addModuleAction(params) {
+    var target = params[0];
+    var e = params[1];
+    ajaxRequest(target, null, e, function (responseJSON, textStatus, jqXHR) {
+        var eventModulesContainer = $('#eventModulesContainer');
+        $(document).scrollTop($(eventModulesContainer).children().last().offset().top - 100);
+        $grid = $('.grid');
+        if ($grid[0]) {
+            $grid.masonry('layout');
+        }
+        LetterAvatar.transform();
+        /*TODO : désactiver le temps d'avoir une seule modal pour l'ajout multiple de propositions et édition du nom/description
+        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('moduleToken')) {
+            $('#moduleEdit_modal_' + responseJSON['data']['moduleToken']).modal('show');
+        }*/
+    }, null, null);
+}
 
 function submitAddPollProposalForm(params) {
     var form = params[0];

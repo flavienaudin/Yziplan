@@ -5,7 +5,7 @@
 
 <div id="eventInvitationProfile_formContainer">
     {% block form_start %}
-        {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationProfile'}}) }}
+        {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':userEventInvitationForm.vars.id}}) }}
     {% endblock form_start %}
 
 
@@ -58,7 +58,7 @@
             $(document).ready(function () {
                 new Clipboard('#btn_copy_invitation_url');
 
-                $('form#userEventInvitationProfile').on("submit", preSubmitEventInvitationProfileForm);
+                $('form#{{ userEventInvitationForm.vars.id }}').on("submit", preSubmitEventInvitationProfileForm);
             });
 
             /** L'utilisateur soumet le formulaire "Profil" de lui-même (non via une autre action dans la page) */
@@ -112,7 +112,7 @@
                         }
                         thenConfirmCallback(thenConfirmCallbackParams);
                     }
-                }, function(jqXHR, textStatus, errorThrown){
+                }, function (jqXHR, textStatus, errorThrown) {
                     if (typeof thenCancelCallback === 'function') {
                         if (thenCancelCallbackParams == undefined) {
                             thenCancelCallbackParams = null;
@@ -132,7 +132,7 @@
                 if (!eventInvitationValid) {
                     e.preventDefault();
                     var currentStep = 1;
-                    var form = $('form#userEventInvitationProfile');
+                    var form = $('form#{{ userEventInvitationForm.vars.id }}');
                     var steps = [
                         {
                             titleText: "{{ "eventInvitation.profile.card.guestname_required_alert.title"|trans }}",
@@ -204,7 +204,7 @@
                                 // L'utilsiateur a cliqué sur le bouton "J'ai bien noté le lien" => pas d'email volontairement
                                 submitEventInvitationProfileForm(form, e, thenConfirmCallback, thenConfirmCallbackParams, thenCancelCallback, thenConfirmCallbackParams);
                             }
-                        }else {
+                        } else {
                             if (typeof thenCancelCallback === 'function') {
                                 if (thenCancelCallbackParams == undefined) {
                                     thenCancelCallbackParams = null;

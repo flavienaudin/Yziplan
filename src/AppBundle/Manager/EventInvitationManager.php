@@ -24,6 +24,7 @@ use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -251,30 +252,39 @@ class EventInvitationManager
         $results = array(
             'success' => array(),
             'failed' => array(),
-            'notFound' => array()
+            'creationError' => array()
         );
         foreach ($emailsData as $email) {
             $this->eventInvitation = $this->getGuestEventInvitation($event, $email);
 
-            if($this->eventInvitation != null) {
+            if ($this->eventInvitation != null) {
                 if ($this->eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                     // Envoi d'une invitation => AWAITNG_ANSWER
                     $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
                 }
-                if ($sendEmail) {
-                    if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
-                        $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
-                        $results['success'][$email] = $this->eventInvitation;
+                try {
+                    if ($this->persistEventInvitation()) {
+                        if ($sendEmail) {
+                            if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
+                                $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
+                                $this->persistEventInvitation();
+                                $results['success'][$email] = $this->eventInvitation;
+                            } else {
+                                $results['failed'][$email] = $this->eventInvitation;
+                            }
+                        } else {
+                            $results['success'][$email] = $this->eventInvitation;
+                        }
                     } else {
-                        $results['failed'][$email] = $this->eventInvitation;
+                        $results['creationError'][$email] = $this->eventInvitation;
                     }
-                }else{
-                    $results['success'][$email] = $this->eventInvitation;
+                } catch (DBALException $e) {
+                    // TODO Si c'est un problème de token déjà utilisé (eventInvitation ou ModuleInvitation) => en mettre de nouveau et retenter le persist()
+                    $results['creationError'][$email] = $this->eventInvitation;
                 }
-                $this->persistEventInvitation();
-            }else{
+            } else {
                 // error while creating the invitation
-                $results['notFound'][] = $email;
+                $results['creationError'][] = $email;
             }
         }
         return $results;

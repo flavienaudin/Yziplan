@@ -390,4 +390,13 @@ class ModuleInvitation
     {
         return $displayableName = $this->eventInvitation->getDisplayableName($useEmail, $obfuscateEmail);
     }
+
+    /**
+     * Indique si l'invité est un organisateur : Créateur ou administrateur
+     * @return bool
+     */
+    public function isOrganizer()
+    {
+        return $this->isCreator() || $this->isAdministrator();
+    }
 }

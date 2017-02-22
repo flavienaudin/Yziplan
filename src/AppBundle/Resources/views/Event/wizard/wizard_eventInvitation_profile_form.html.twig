@@ -5,7 +5,7 @@
 #}
 
 {% block form_start %}
-    {{ form_start(userEventInvitationForm, {'attr':{'id':'profileForm'},
+    {{ form_start(userEventInvitationForm, {'attr':{'id':userEventInvitationForm.vars.id},
         'action': path('wizardNewEvent', {'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")})}) }}
 {% endblock form_start %}
 
@@ -26,6 +26,7 @@
 
             $('button#profile_form_submit').on("click", function (e) {
                 var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
+                console.log(profileEmail);
                 if (profileEmail.trim() == "") {
                     e.preventDefault();
                     swal({
@@ -38,15 +39,14 @@
                         cancelButtonClass: "btn btn-default btn-link btn-lg c-blue m-b-10 m-l-5 m-r-5",
                         confirmButtonText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.button.confirm"|trans }}",
                         confirmButtonClass: "btn btn-primary btn-lg m-b-10  m-l-5 m-r-5",
-                        reverseButtons: true,
                         animation: "slide-from-top",
                         inputPlaceholder: "{{ "eventInvitation.form.email.placeholder"|trans|raw }}"
                     }).then(function (inputValue) {
                         $('#{{ userEventInvitationForm.email.vars.id }}').val(inputValue);
-                        $('form#profileForm').submit();
+                        $('form#{{ userEventInvitationForm.vars.id }}').submit();
                     }, function (dismiss) {
                         if (dismiss == 'cancel') {
-                            $('form#profileForm').submit();
+                            $('form#{{ userEventInvitationForm.vars.id }}').submit();
                         }
                     });
                 }

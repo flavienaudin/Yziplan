@@ -700,10 +700,13 @@ label.required:after {
     vertical-align: middle;
 }
 
-/*.poll-container .dataTables_scroll table td:last-child {
-    min-width: 0;
-    max-width: none;
-}*/
+#eventWizard .poll-container table td.response-column,
+#eventWizard .poll-container table td.voting-column,
+#eventWizard .pollModuleDisplayAllResult,
+#eventWizard .wall-comment-list {
+    display: none;
+}
+
 
 /*---------------------------------
     Poll Proposal Display
