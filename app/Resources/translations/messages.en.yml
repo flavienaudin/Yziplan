@@ -632,6 +632,12 @@ index:
     share: Share it
     organise: Get organised
     enjoy: Enjoy!
+  section_why:
+    title: Why Yziplan ?
+    why1: "You want to meet your friends?<br>You want to know : Who? When? Where? and What to do?"
+    why2: Yziplan is made for you!
+    vote: Let everyone make proposals and vote for the ones you prefer.
+    result: All you have to do is check results and see your friends.
   section_event:
     tiltle: For all kind of event:
     party: Party
