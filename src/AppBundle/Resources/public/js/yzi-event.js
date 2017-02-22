@@ -71,7 +71,7 @@ function voteYesNoAction(params) {
             $('#pollProposalReponse_' + pollProposalId + '_yes').removeClass('active');
             $('#pollProposalReponse_' + pollProposalId + '_maybe').removeClass('active');
         } else {
-            newContent = '<span class="answer-thumb text palette-White"><i class="zmdi zmdi-thumb-up-down"></i></span>';
+            newContent = '<span class="answer-thumb c-gray"><i class="zmdi zmdi-thumb-up-down"></i></span>';
         }
         document.getElementById("pollmodule_button_" + pollProposalId).innerHTML = newContent;
         LetterAvatar.transform();
@@ -91,7 +91,7 @@ function voteAmountAction(params) {
             if (data['value'] > 0) {
                 newContent = '<span class="answer-thumb palette-Light-Green-100 bg strong"><span class="palette-Black text">' + data['value'] + '</span></span>';
             } else {
-                newContent = '<span class="answer-thumb text palette-White"><i class="zmdi zmdi-plus zmdi-hc-2x"></i></span>';
+                newContent = '<span class="answer-thumb c-gray"><i class="zmdi zmdi-plus zmdi-hc-2x"></i></span>';
             }
             document.getElementById("pollmodule_button_" + pollProposalId).innerHTML = newContent;
             LetterAvatar.transform();
