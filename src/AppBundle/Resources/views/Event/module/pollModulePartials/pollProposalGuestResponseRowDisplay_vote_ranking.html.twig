@@ -13,16 +13,16 @@
     <div id="pollProposalReponse_{{ pollProposal.id }}" class="rateYo m-t-15" style="width: 190px; height: 36px;">
     </div>
 </div>
-<button id="pollmodule_button_{{ pollProposal.id }}" class="btn c-bluegray waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title="" data-original-title="">
+<a id="pollmodule_button_{{ pollProposal.id }}" class="btn palette-Grey-100 bg waves-effect p-0" data-toggle="popover" data-placement="left" data-html="true" title="" data-original-title="" role="button" tabindex="-1">
     {% if responseValue > 0 %}
         <span class="answer-thumb palette-Yellow-100 bg c-amber strong">
                 {{ responseValue }}<i class="zmdi zmdi-star"></i>
         </span>
     {% else %}
-        <span class="answer-thumb text palette-White"> <i class="zmdi zmdi-star-half"></i> </span>
+        <span class="answer-thumb c-gray"> <i class="zmdi zmdi-star-half"></i> </span>
         {#<span class="answer-thumb text palette-White c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>#}
     {% endif %}
-</button>
+</a>
 
 <script>
     $('#pollmodule_button_{{ pollProposal.id }}').popover({
