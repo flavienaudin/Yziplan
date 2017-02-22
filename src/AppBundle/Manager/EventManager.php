@@ -177,6 +177,9 @@ class EventManager
         if ($this->event->getStatus() == EventStatus::IN_CREATION) {
             $this->event->setStatus(EventStatus::IN_ORGANIZATION);
         }
+        /* TODO : desactivés pour simplifier l'interface */
+        $this->event->setInvitationOnly(false);
+        $this->event->setGuestsCanInvite(true);
         if (empty($this->event->getWhereName())) {
             $this->event->setWhereGooglePlaceId(null);
         }

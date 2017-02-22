@@ -49,14 +49,14 @@
         {% block module_modal_container %}{% endblock module_modal_container %}
     </div>
 
+    {# TODO : désactiver le temps d'avoir une seule modal pour l'ajout multiple de propositions et édition du nom/description
     {% if app.request.get('addmodule') %}
-        {# Open the module settings modal if module just added #}
+        #}{# Open the module settings modal if module just added #}{#
         <script>
             $(document).ready(function () {
                 $('#moduleEdit_modal_{{ app.request.get('addmodule') }}').modal('show');
             });
         </script>
-    {% endif %}
+    {% endif %}#}
     {% block JSmodule %}{% endblock %}
-
 </div>

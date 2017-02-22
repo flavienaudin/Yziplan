@@ -40,6 +40,7 @@
                 'widget_options':{'fgline':true, 'displayInRow' : true}
             }) }}#}
 
+            {# TODO : desactivés pour simplifier l'interface
             <div class="row">
                 <div class="col-xs-12 col-md-6">
                     {{ form_row(eventForm.invitationOnly, {
@@ -55,7 +56,7 @@
                         'help': 'event.form.guestsCanInvite.help' |trans
                     }) }}
                 </div>
-            </div>
+            </div>#}
         </div>
         <div class="hidden-xs col-sm-4">
             <div id="eventEditGoogleMap" style="height: 200px;"></div>
@@ -312,9 +313,11 @@
             $('#event_name').on('input', function () {
                 $('#event-name').html($(this).val());
             });
-            $('#event_invitationOnly').on('change', function (e) {
+            {# TODO : desactivé pour simplifier l'interface
+            $('#event_invitationOnlyevent_invitationOnly').on('change', function (e) {
                 $('#event_public_invitation_display').fadeToggle();
             });
+            #}
             {% endblock js_document_ready %}
 
             var openingHoursCount = {{ eventForm.openingHours|length }};
