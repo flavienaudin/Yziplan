@@ -101,6 +101,42 @@
                 </div>
             </div>
         </section>
+        <section id="section_why" class="index-section bgm-white">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <h2>{{ "index.section_why.title"|trans }}</h2>
+                        <hr class="small black">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p>{{ "index.section_why.why1"|trans|raw }}</p>
+                                <p><strong>{{ "index.section_why.why2"|trans|raw }}</strong></p>
+                                <hr class="small black">
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="col-xs-12">
+                                    <img src="{{ asset("bundles/app/img/index/use/vote.png") }}" class="img-max100 p-b-10">
+                                </div>
+                                <div class="col-xs-12">
+                                     <p>{{ "index.section_why.vote"|trans|raw }}</p>
+                                </div>
+                                <div class="col-xs-12 visible-xs">
+                                    <hr class="small black">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="col-xs-12">
+                                    <img src="{{ asset("bundles/app/img/index/use/result.png") }}" class="img-max100 p-b-10">
+                                </div>
+                                <div class="col-xs-12">
+                                     <p>{{ "index.section_why.result"|trans|raw }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <aside id="callout1" class="callout parallax-window" data-parallax="scroll" data-image-src="{{ asset("bundles/app/img/index/drinks.jpg") }}">
             <div class="text-vertical-center">
@@ -114,7 +150,7 @@
                 <div class="row">
                     <div class="col-lg-10 col-lg-offset-1 text-center">
                         <h2>{{ "index.section_event.tiltle"|trans }}</h2>
-                        <hr class="small">
+                        <hr class="small black">
                         <div class="row">
                             <div class="col-xs-6 col-sm-4 col-md-3">
                                 <div class="event-item" style="background-image:url('{{ asset("bundles/app/img/index/eventtype/event-party.jpg") }}')">
@@ -224,7 +260,7 @@
                 <div class="row text-center">
                     <div class="col-lg-10 col-lg-offset-1">
                         <h2>{{ "index.section_quote.title"|trans }}</h2>
-                        <hr class="small">
+                        <hr class="small black">
                          <blockquote>
                             <div class="quote-img quote-td pull-left m-r-15" style="background-image: url({{ asset('bundles/app/img/index/quotes/quote-mi.jpg') }})"></div>
                             {{ "index.section_quote.quote1.sentense1"|trans }}<br>{{ "index.section_quote.quote1.sentense2"|trans }}

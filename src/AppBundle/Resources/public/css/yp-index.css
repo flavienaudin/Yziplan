@@ -27,6 +27,10 @@ hr.small {
     max-width: 100px;
 }
 
+hr.small.black {
+    border-top: 1px solid black;
+}
+
 /* Header */
 
 .header {
@@ -56,6 +60,10 @@ hr.small {
 
 .service-item {
     margin-bottom: 30px;
+}
+
+.img-max100 {
+    max-width: 100%;
 }
 
 /* Callout */
@@ -153,7 +161,7 @@ blockquote {
     font-family: Georgia, serif;
     font-size: 18px;
     font-style: italic;
-/*    width: 500px;*/
+    /*    width: 500px;*/
     text-align: left;
     margin: 0.25em 0;
     padding: 0.25em 40px;
