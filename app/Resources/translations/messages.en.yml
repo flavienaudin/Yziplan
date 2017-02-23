@@ -323,7 +323,7 @@ invitations_list:
   display:
     title: Guests list
     all_answers: See all the invitations
-    new_invitations: "Invite friends"
+    new_invitations: Invite
     send_email: Send invitations
     list:
       yes: "Presents (%number%)"
@@ -370,6 +370,7 @@ invitations:
       show: My  Gmail Contacts
 
 send_message:
+  link: Write
   modal:
     title: Send a message to your guest
     instructions: Write a message to your guest. You can filter by their answer.
@@ -514,6 +515,7 @@ global:
     finish: Finish
     later: Not now
     decline: No thanks
+    send: Send
   success:
     data_saved: Information saved
   error:

@@ -169,9 +169,9 @@ function submitMessageForm(params) {
     var form = params[0];
     var e = params[1];
     ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
-            $('#invitations_sendReminder_modal').modal('hide');
+            $('#invitations_sendMessage_modal').modal('hide');
         }, function (jqXHR, textStatus, errorThrown) {
-            $('#invitations_sendReminder_modal').modal('show');
+            $('#invitations_sendMessage_modal').modal('show');
         }, null
     );
 }

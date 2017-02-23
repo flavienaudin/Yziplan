@@ -323,7 +323,7 @@ invitations_list:
   display:
     title: Liste des invités
     all_answers: Voir l'ensemble des invitations
-    new_invitations: "Inviter des amis"
+    new_invitations: Inviter
     send_email: Envoyer les invitations
     list:
       yes: "Présents (%number%)"
@@ -370,6 +370,7 @@ invitations:
       show: Mes contacts Gmail
 
 send_message:
+  link: Ecrire
   modal:
     title: Envoyer un message aux invités
     instructions: Ecrivez un message à destination de vos invités. Vous pouvez filtrer selon leur réponse.
@@ -514,6 +515,7 @@ global:
     finish: Terminer
     later: Plus tard
     decline: Non merci
+    send: Envoyer
   success:
     data_saved: Données sauvegardées
   error:

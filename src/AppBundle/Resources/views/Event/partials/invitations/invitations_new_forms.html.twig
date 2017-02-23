@@ -5,13 +5,17 @@
 
 <div id="invitations_forms_container">
     <div class="m-t-10 w-100 text-center">
-        <button type="button" class="btn btn-facebook" id="shareEventFB" name="provider" style="display: none;">
-            <i class="zmdi zmdi-facebook zmdi-hc-lg"></i> {{ "invitations.button.via_facebook"|trans }}
-        </button>
-        <button type="button" class="btn btn-danger" id="loadContacts">
-            <i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "invitations.button.via_gmail_contact.show"|trans }}</button>
-        <button type="button" class="btn btn-danger" id="hideContacts" style="display: none;">{{ "global.button.close"|trans }}</button>
-        {{ include('@App/Event/partials/invitations/gmail_contacts_selection.html.twig', {'event' : userEventInvitation.event}) }}
+        {% if userEventInvitation.organizer or not userEventInvitation.event.invitationOnly %}
+            <button type="button" class="btn btn-facebook" id="shareEventFB" name="provider" style="display: none;">
+                <i class="zmdi zmdi-facebook zmdi-hc-lg"></i> {{ "invitations.button.via_facebook"|trans }}
+            </button>
+        {% endif %}
+        {% if invitationsForm is not null %}
+            <button type="button" class="btn btn-danger" id="loadContacts">
+                <i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "invitations.button.via_gmail_contact.show"|trans }}</button>
+            <button type="button" class="btn btn-danger" id="hideContacts" style="display: none;">{{ "global.button.close"|trans }}</button>
+            {{ include('@App/Event/partials/invitations/gmail_contacts_selection.html.twig', {'event' : userEventInvitation.event}) }}
+        {% endif %}
     </div>
 
     {% if invitationsForm is not null %}
@@ -28,8 +32,8 @@
                     'help':'invitations.form.invitations.help'|trans
                 }) }}
 
-                <a role="button" class="btn btn-link c-blue" data-toggle="collapse" href="#invitationsMessageCollapase">
-                    <i class="zmdi zmdi-edit"></i> {{ "invitations.form.message.button"|trans }}</a>
+                <a role="button" class="btn btn-link c-blue" data-toggle="collapse" href="#invitationsMessageCollapase"> <i class="zmdi zmdi-edit"></i> {{ "invitations.form.message.button"|trans }}
+                </a>
                 <div class="collapse" id="invitationsMessageCollapase">
                     {{ form_row(invitationsForm.message, {
                         'label':'invitations.form.message.label',
@@ -80,22 +84,6 @@
                             },
                             createFilter: createFilterEmail,
                             create: createUser
-                            {#{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                            , preload: 'focus',
-                            load: function (query, callback) {
-                                $.ajax({
-                                    url: '{{ path('searchContacts') }}',
-                                    data: {'search': query},
-                                    type: 'POST',
-                                    error: function () {
-                                        callback();
-                                    },
-                                    success: function (res) {
-                                        callback(res.slice(0, 15));
-                                    }
-                                });
-                            }
-                            {% endif %}#}
                         });
                         // fetch the instance
                         $newEmailsSelectize = $select[0].selectize;
@@ -133,17 +121,15 @@
         </div>
     {% endif %}
 
-    {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly %}
-        <div id="event_public_invitation_display" class="m-t-10 palette-Teal-50 bg p-15 {{ (userEventInvitation.creator or userEventInvitation.administrator) and
-        userEventInvitation.event.invitationOnly?'hidden' }}">
+    {% if userEventInvitation.organizer or not userEventInvitation.event.invitationOnly %}
+        <div id="event_public_invitation_display"
+             class="m-t-10 palette-Teal-50 bg p-15 {{ (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.invitationOnly?'hidden' }}">
             <div class="form-group animated">
                 <label class="control-label text-info" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
                 <div class="input-group">
-                    <input id="url_event_public_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}"> <span
-                            class="input-group-btn">
-                                <button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation">
-                                    <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button>
-                            </span>
+                    <input type="text" id="url_event_public_invitation" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}" class="form-control" readonly="readonly"> <span
+                            class="input-group-btn"><button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation"><i
+                                    class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
                 </div>
             </div>
         </div>
@@ -151,10 +137,11 @@
 
     <script>
         $(document).ready(function () {
+            $facebookShareLink = $('#shareEventFB');
             if (isMobile()) {
-                $('#shareEventFB').remove();
+                $facebookShareLink.remove();
             } else {
-                $('#shareEventFB').show();
+                $facebookShareLink.show();
                 // Initialize invitation via facebook
                 $.ajaxSetup({cache: true});
                 $.getScript('//connect.facebook.net/fr_FR/all.js', function () {
@@ -166,7 +153,7 @@
                 });
 
                 // React to the invite via facebook button
-                $('#shareEventFB').click(function () {
+                $facebookShareLink.click(function () {
                     var pageLink = $("#url_event_public_invitation").val();
                     FB.ui({
                         method: 'send',

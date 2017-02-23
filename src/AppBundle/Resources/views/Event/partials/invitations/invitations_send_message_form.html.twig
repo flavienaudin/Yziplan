@@ -22,7 +22,7 @@
     <div class="pull-right">
         <button class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
         <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
-            {{ "global.button.save"|trans }}
+            <i class="zmdi zmdi-mail-send"></i> {{ "global.button.send"|trans }}
         </button>
     </div>
     {{ form_end(sendMessageForm ) }}
@@ -33,7 +33,7 @@
                 var $form = $(this);
                 if (!eventInvitationValid && askGuestName !== undefined) {
                     e.preventDefault();
-                    $("#invitations_sendReminder_modal").modal('hide');
+                    $("#invitations_sendMessage_modal").modal('hide');
                     askGuestName(e, submitMessageForm, [$form, e]);
                 } else {
                     submitMessageForm([$form, e]);

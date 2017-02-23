@@ -9,18 +9,7 @@
 <div class="card c-dark z-depth-1">
     <div class="card-header palette-Teal bg">
         <h2><i class="zmdi zmdi-accounts-add zmdi-hc-lg c-white m-r-15"></i>{{ "invitations_list.display.title"|trans }}</h2>
-
-        {% if sendMessageForm is not null %}
-            <ul class="actions a-alt">
-                <li><a href="#invitations_sendReminder_modal" data-toggle="modal" aria-expanded="false"> <i class="zmdi zmdi-email"></i> </a></li>
-            </ul>
-        {% endif %}
     </div>
-    {% if sendMessageForm is not null %}
-        {{ include('@App/Event/partials/invitations/invitations_send_message_modal.html.twig', {
-            'userEventInvitation' : userEventInvitation, 'sendMessageForm ': sendMessageForm
-        }) }}
-    {% endif %}
 
     <div class="card-body border-bottom">
         {{ include('@App/Event/partials/profile/eventInvitation_profile_answer_form.html.twig',{
@@ -29,19 +18,27 @@
         }) }}
     </div>
 
-    <div class="card-body">
+    <div class="card-body border-bottom">
         {{ include("@App/Event/partials/guests_list/guestsList_card_body.html.twig", {
             'userEventInvitation' : userEventInvitation,
             'event':event}) }}
     </div>
 
-
-    {% if (userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.guestsCanInvite) and (invitationsForm is not null
-    or not userEventInvitation.event.invitationOnly) %}
-        <div class="card-footer text-center">
-            <a href="#invitations_new_modal" class="btn btn-primary m-b-10" data-toggle="modal">{{ "invitations_list.display.new_invitations"|trans }}</a>
+    {% if (userEventInvitation.organizer or userEventInvitation.event.guestsCanInvite)
+    and (invitationsForm is not null or not userEventInvitation.event.invitationOnly or sendMessageForm is not null) %}
+        <div class="card-footer text-center m-t-10">
+            {% if sendMessageForm is not null %}
+                <a href="#invitations_sendMessage_modal" data-toggle="modal" class="btn btn-flat m-b-10" aria-expanded="false"> <i class="zmdi zmdi-edit"></i> {{ 'send_message.link'|trans }} </a>
+            {% endif %}
+            {% if invitationsForm is not null or not userEventInvitation.event.invitationOnly %}
+                <a href="#invitations_new_modal" class="btn btn-primary m-b-10" data-toggle="modal">{{ "invitations_list.display.new_invitations"|trans }}</a>
+            {% endif %}
         </div>
-        {{ include('@App/Event/partials/invitations/invitations_new_modal.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
+        {% if invitationsForm is not null or not userEventInvitation.event.invitationOnly %}
+            {{ include('@App/Event/partials/invitations/invitations_new_modal.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
+        {% endif %}
+        {% if sendMessageForm is not null %}
+            {{ include('@App/Event/partials/invitations/invitations_send_message_modal.html.twig', {'userEventInvitation' : userEventInvitation, 'sendMessageForm ': sendMessageForm}) }}
+        {% endif %}
     {% endif %}
-
 </div>
