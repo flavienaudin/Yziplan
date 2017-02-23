@@ -150,12 +150,12 @@
 {# Surchage total du widget, copiant directement le code du parent #}
 {% block time_widget -%}
     {% if widget == 'single_text' %}
-        {%- set type = 'text' -%}
-        <div class="input-group ag-time-picker clockpicker" data-autoclose="true">
+        {% set widget_options = widget_options|default({}) %}
+        <div class="input-group ag-time-picker clockpicker{{ widget_options.input_sm is defined and widget_options.input_sm?' input-group-sm' }}" data-autoclose="true">
             <span class="input-group-addon">
                 <span class="zmdi zmdi-time"></span>
             </span>
-            {% set attr = attr|merge({class: (attr.class|default('') ~ ' readonly-onmobile')|trim}) -%}
+            {% set attr = attr|merge({class: (attr.class|default('') ~ ' readonly-onmobile' ~ (widget_options.input_sm is defined and widget_options.input_sm?' input-sm'))|trim    }) -%}
             {{- block('form_widget_simple') -}}
         </div>
     {% else -%}
@@ -278,33 +278,44 @@
 {%- endblock md_toggle_switch_widget %}
 
 
-
 {% block event_openinghours_widget %}
-    {{ form_row(form.dayOfWeek, {
-        'label':'event.form.opening_hour.day_of_week.label',
-        'label_attr':{'class':'sr-only'},
-        'attr':{
-            'placeholder':'event.form.opening_hour.day_of_week.placeholder',
-            'class':'selectpicker w-150px'
-        },
-        'widget_options':{'fgline':true}
-    }) }}
-    {{ form_row(form.timeOpen, {
-        'label':'event.form.opening_hour.time_open.label',
-        'label_attr':{'class':'sr-only'},
-        'attr':{
-            'placeholder':'event.form.opening_hour.time_open.placeholder'
-        },
-        'widget_options':{'fgline':true}
-    }) }}
-    {{ form_row(form.timeClosed, {
-        'label':'event.form.opening_hour.time_closed.label',
-        'label_attr':{'class':'sr-only'},
-        'attr':{
-            'placeholder':'event.form.opening_hour.time_closed.placeholder'
-        },
-        'widget_options':{'fgline':true}
-    }) }}
+    <div class="di-block va-top">
+        <div class="pull-left">
+            <a href="#" class="btn btn-flat btn-cancel-oh"><i class="zmdi zmdi-close-circle"></i></a>
+        </div>
+        <div class="di-block va-top w-100px">
+            {{ form_row(form.dayOfWeek, {
+                'label':'event.form.opening_hour.day_of_week.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{
+                    'placeholder':'event.form.opening_hour.day_of_week.placeholder',
+                    'class':'selectpicker w-100'
+                },
+                'widget_options':{'input_sm':true}
+            }) }}
+        </div>
+    </div>
+
+    <div class="di-block">
+        <div class="di-block w-90px">
+            {{ form_row(form.timeOpen, {
+                'label':'event.form.opening_hour.time_open.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'placeholder':'event.form.opening_hour.time_open.placeholder'},
+                'widget_options':{'input_sm':true}
+            }) }}
+        </div>
+        <div class="di-block w-90px">
+            {{ form_row(form.timeClosed, {
+                'label':'event.form.opening_hour.time_closed.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{
+                    'placeholder':'event.form.opening_hour.time_closed.placeholder'
+                },
+                'widget_options':{'input_sm':true}
+            }) }}
+        </div>
+    </div>
 {% endblock event_openinghours_widget %}
 
 {# Support #}

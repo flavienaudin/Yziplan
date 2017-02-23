@@ -141,13 +141,14 @@
                         {{ form_label(eventForm.openingHours, null, {'class':'sr-only'}) }}
                         {{ form_errors(eventForm.openingHours) }}
 
-                        <ul class="list-unstyled m-t-10 m-b-10 form-inline" id="openingHours-fields-list" data-prototype="{{ form_widget(eventForm.openingHours.vars.prototype)|e }}">
+                        <ul class="list-unstyled m-t-10 m-b-10" id="openingHours-fields-list" data-prototype="{{ form_widget(eventForm.openingHours.vars.prototype)|e }}">
                             {% for openingHour in eventForm.openingHours %}
                                 <li class="openingHourForm">
                                     {{ form_widget(openingHour) }}
                                 </li>
                             {% endfor %}
                         </ul>
+                        <div class="clearfix"></div>
                         <a href="#" class="btn btn-icon-text btn-link c-blue" id="add-opening-time"><i class="zmdi zmdi-alarm-plus"></i> {{ "event.form.opening_hour.add_link"|trans }}</a>
                     </div>
                 </div>
@@ -263,14 +264,10 @@
         }
 
         function addOpeningHourFormDeleteLink($openingHourFormLi) {
-            var $removeFormA = $('<div class="pull-left m-l-15 m-r-15"><a href="#" class="btn btn-danger waves-effect"><i class="zmdi zmdi-close-circle"></i></a></div>');
-            $openingHourFormLi.prepend($removeFormA);
-
-            $removeFormA.on('click', function (e) {
+            $openingHourFormLi.find("a.btn-cancel-oh").on('click', function (e) {
                 e.preventDefault();
                 $openingHourFormLi.remove();
             });
-
         }
 
         {% endblock js_functions %}
@@ -331,7 +328,7 @@
                 newWidget = newWidget.replace(/__name__/g, openingHoursCount);
                 openingHoursCount++;
 
-                var newLi = $('<li></li>').html(newWidget);
+                var newLi = $('<li class="openingHourForm"></li>').html(newWidget);
                 newLi.appendTo(openingHoursFieldsList);
 
                 addOpeningHourFormDeleteLink(newLi);

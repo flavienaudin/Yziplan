@@ -239,8 +239,30 @@
 /*-----------------------------------
     Generic width
 -----------------------------------*/
+
+.w-90px {
+    width: 90px !important;
+}
+
+.w-100px {
+    width: 100px !important;
+}
+
 .w-150px {
     width: 150px !important;
+}
+
+/*-----------------------------------
+    Generic align
+-----------------------------------*/
+.va-top {
+    vertical-align: top;
+}
+.va-bottom {
+    vertical-align: bottom;
+}
+.va-middle {
+    vertical-align: middle;
 }
 
 /*-----------------------------------
