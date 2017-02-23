@@ -402,7 +402,7 @@ class EventController extends Controller
 
 
             /** @var FormInterface $sendMessageForm */
-            $sendMessageForm = $eventManager->createSendReminderForm();
+            $sendMessageForm = $eventManager->createSendMessageForm();
             $sendMessageForm->handleRequest($request);
             if ($sendMessageForm->isSubmitted()) {
                 if ($request->isXmlHttpRequest()) {
@@ -431,7 +431,7 @@ class EventController extends Controller
                                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("send_message.message.warning", array('%failedRecipients%' => $failedGuests));
                             }
 
-                            $sendMessageForm = $eventManager->createSendReminderForm();
+                            $sendMessageForm = $eventManager->createSendMessageForm();
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#sendMessageForm_container'] =
                                 $this->renderView("@App/Event/partials/invitations/invitations_send_message_form.html.twig", array(
                                     'userEventInvitation' => $userEventInvitation,

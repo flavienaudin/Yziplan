@@ -19,7 +19,7 @@
     </div>
 
     {% if invitationsForm is not null %}
-        <div class="m-t-10 p-15">
+        <div class="p-15 border-bottom">
             <div id="event_invitations_form_container">
                 {% block form_start %}
                     {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),'attr':{'id':'eventInvitations'}}) }}
@@ -123,9 +123,9 @@
 
     {% if userEventInvitation.organizer or not userEventInvitation.event.invitationOnly %}
         <div id="event_public_invitation_display"
-             class="m-t-10 palette-Teal-50 bg p-15 {{ (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.invitationOnly?'hidden' }}">
+             class="p-15 border-bottom {{ (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.invitationOnly?'hidden' }}">
             <div class="form-group animated">
-                <label class="control-label text-info" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
+                <label class="control-label" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
                 <div class="input-group">
                     <input type="text" id="url_event_public_invitation" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}" class="form-control" readonly="readonly"> <span
                             class="input-group-btn"><button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation"><i

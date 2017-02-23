@@ -383,7 +383,7 @@ send_message:
       placeholder: Ecrivez le message ici...
   message:
     success: Le message a bien été envoyé aux invités
-    warning: "Le message n'a pas pu être envoyé aux invités suivants : %failedRecipients%"
+    warning: "Le message n'a pas pu être envoyé aux invités suivants (adresses e-mail inconnues) : %failedRecipients%"
   email:
     subject: "Yziplan : Vous avez reçu un message à propos de l'événement \"%event_name%\""
     body:

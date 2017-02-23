@@ -5,7 +5,7 @@
 
 
 <div id="sendMessageForm_container">
-    {{ form_start(sendMessageForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id': "sendReminder_form_id"}} ) }}
+    {{ form_start(sendMessageForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id': sendMessageForm.vars.id}}) }}
 
     {{ form_row(sendMessageForm.message, {
         "label":"send_message.form.message.label",
@@ -21,7 +21,7 @@
     {{ form_rest(sendMessageForm ) }}
     <div class="pull-right">
         <button class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
-        <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+        <button type="submit" class="btn btn-primary btn-icon-text" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
             <i class="zmdi zmdi-mail-send"></i> {{ "global.button.send"|trans }}
         </button>
     </div>
@@ -29,7 +29,7 @@
     <div class="clearfix"></div>
     <script>
         $(document).ready(function () {
-            $('form#sendReminder_form_id').on('submit', function (e) {
+            $('form#{{ sendMessageForm.vars.id }}').on('submit', function (e) {
                 var $form = $(this);
                 if (!eventInvitationValid && askGuestName !== undefined) {
                     e.preventDefault();

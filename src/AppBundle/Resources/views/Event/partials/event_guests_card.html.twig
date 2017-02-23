@@ -28,10 +28,13 @@
     and (invitationsForm is not null or not userEventInvitation.event.invitationOnly or sendMessageForm is not null) %}
         <div class="card-footer text-center m-t-10">
             {% if sendMessageForm is not null %}
-                <a href="#invitations_sendMessage_modal" data-toggle="modal" class="btn btn-flat m-b-10" aria-expanded="false"> <i class="zmdi zmdi-edit"></i> {{ 'send_message.link'|trans }} </a>
+                <a href="#invitations_sendMessage_modal" data-toggle="modal" class="btn btn-flat btn-icon-text m-b-10" aria-expanded="false"> <i
+                            class="zmdi zmdi-email"></i> {{ 'send_message.link'|trans }}
+                </a>
             {% endif %}
             {% if invitationsForm is not null or not userEventInvitation.event.invitationOnly %}
-                <a href="#invitations_new_modal" class="btn btn-primary m-b-10" data-toggle="modal">{{ "invitations_list.display.new_invitations"|trans }}</a>
+                <a href="#invitations_new_modal" class="btn btn-primary btn-icon-text m-b-10" data-toggle="modal"><i
+                            class="zmdi zmdi-accounts-add"></i>{{ "invitations_list.display.new_invitations"|trans }}</a>
             {% endif %}
         </div>
         {% if invitationsForm is not null or not userEventInvitation.event.invitationOnly %}

@@ -293,7 +293,7 @@ class EventManager
      *
      * @return FormInterface
      */
-    public function createSendReminderForm()
+    public function createSendMessageForm()
     {
         return $this->formFactory->create(SendMessageType::class);
     }
@@ -314,6 +314,7 @@ class EventManager
             }
             $recipients = $this->event->getEventInvitationByAnswer($selection);
             if ($recipients->contains($userEventInvitation)) {
+                // On n'envoit pas le message à l'expéditeur
                 $recipients->removeElement($userEventInvitation);
             }
             $failedRecipients = array();
