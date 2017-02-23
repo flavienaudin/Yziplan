@@ -14,20 +14,26 @@
     {% if widget_options.dlhorizontal is defined and widget_options.dlhorizontal %}
         <dl class="dl-horizontal form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             <dt class="p-t-10">{{- form_label(form) -}}</dt>
-            <dd>
-                {% if widget_options.fgline is defined and widget_options.fgline %}<div class="fg-line">{% endif %}
-                    {{- form_widget(form,{'widget_options':widget_options}) -}}
-                {% if widget_options.fgline is defined and widget_options.fgline %}</div>{% endif %}
+            <dd {{ widget_options.label_icon is defined?'class=input-group' }}>
+                {% if widget_options.label_icon is defined %}
+                    <span class="input-group-addon"><i class="zmdi {{ widget_options.label_icon }}"></i></span>
+                {% endif %}
+                {{ widget_options.fgline is defined and widget_options.fgline?'<div class="fg-line">':'' }}
+                {{- form_widget(form,{'widget_options':widget_options}) -}}
+                {{ widget_options.fgline is defined and widget_options.fgline?'</div>':'' }}
                 {{- form_errors(form) -}}
             </dd>
         </dl>
     {% elseif widget_options.formHorizontal is defined and widget_options.formHorizontal %}
         <div class="form-group{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             {{- form_label(form, label, {'label_attr':{'class' : 'col-sm-2'}} ) -}}
-            <div class="col-sm-10">
-                {% if widget_options.fgline is defined and widget_options.fgline %}<div class="fg-line">{% endif %}
-                    {{- form_widget(form,{'widget_options':widget_options}) -}}
-                {% if widget_options.fgline is defined and widget_options.fgline %}</div>{% endif %}
+            <div class="col-sm-10 {{ widget_options.label_icon is defined?"input-group" }}">
+                {% if widget_options.label_icon is defined and widget_options.label_icon is not empty %}
+                    <span class="input-group-addon"><i class="zmdi {{ widget_options.label_icon }}"></i></span>
+                {% endif %}
+                {{ widget_options.fgline is defined and widget_options.fgline?'<div class="fg-line">':'' }}
+                {{- form_widget(form,{'widget_options':widget_options}) -}}
+                {{ widget_options.fgline is defined and widget_options.fgline?'</div>':'' }}
                 {{- form_errors(form) -}}
             </div>
         </div>
@@ -35,11 +41,14 @@
         {% set fgfloat = widget_options.fgfloat is defined and widget_options.fgfloat %}
         {% set label_attr = label_attr|default({})|merge({'class':label_attr.class|default('')~(fgfloat?' fg-label':'')}) %}
         {% set attr = attr|default({})|merge({'class':attr.class|default('')~(fgfloat?' fg-input':'')}) %}
-        <div class="form-group {{ fgfloat?'fg-float' }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
-            {% if widget_options.fgline is defined and widget_options.fgline %}<div class="fg-line">{% endif %}
-                {{- form_label(form, null, {'label_attr':label_attr}) -}}
-                {{- form_widget(form,{'attr':attr}) -}}
-            {% if widget_options.fgline is defined and widget_options.fgline %}</div>{% endif %}
+        <div class="{{ widget_options.label_icon is defined?"input-group":"form-group" }} {{ fgfloat?'fg-float' }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
+            {% if widget_options.label_icon is defined %}
+                <span class="input-group-addon"><i class="zmdi {{ widget_options.label_icon }}"></i></span>
+            {% endif %}
+            {{ widget_options.fgline is defined and widget_options.fgline?'<div class="fg-line">':'' }}
+            {{- form_label(form, null, {'label_attr':label_attr}) -}}
+            {{- form_widget(form,{'attr':attr}) -}}
+            {{ widget_options.fgline is defined and widget_options.fgline?'</div>':'' }}
             {{- form_errors(form) -}}
         </div>
     {% endif %}
@@ -118,7 +127,7 @@
                 <span class="input-group-addon">
                     <i class="zmdi zmdi-calendar"></i>
                 </span>
-                {% set attr = attr|merge({class: (attr.class|default('') ~ ' ag-date-picker')|trim}) -%}
+                {% set attr = attr|merge({class: (attr.class|default('') ~ ' ag-date-picker readonly-onmobile')|trim}) -%}
                 {{- block('form_widget_simple') -}}
             </div>
         </div>
@@ -141,11 +150,12 @@
 {# Surchage total du widget, copiant directement le code du parent #}
 {% block time_widget -%}
     {% if widget == 'single_text' %}
-        {%- set type = 'text' -%}
-        <div class="input-group ag-time-picker clockpicker" data-autoclose="true">
+        {% set widget_options = widget_options|default({}) %}
+        <div class="input-group ag-time-picker clockpicker{{ widget_options.input_sm is defined and widget_options.input_sm?' input-group-sm' }}" data-autoclose="true">
             <span class="input-group-addon">
                 <span class="zmdi zmdi-time"></span>
             </span>
+            {% set attr = attr|merge({class: (attr.class|default('') ~ ' readonly-onmobile' ~ (widget_options.input_sm is defined and widget_options.input_sm?' input-sm'))|trim    }) -%}
             {{- block('form_widget_simple') -}}
         </div>
     {% else -%}
@@ -267,6 +277,46 @@
     </div>
 {%- endblock md_toggle_switch_widget %}
 
+
+{% block event_openinghours_widget %}
+    <div class="di-block va-top">
+        <div class="pull-left">
+            <a href="#" class="btn btn-flat btn-cancel-oh"><i class="zmdi zmdi-close-circle"></i></a>
+        </div>
+        <div class="di-block va-top w-100px">
+            {{ form_row(form.dayOfWeek, {
+                'label':'event.form.opening_hour.day_of_week.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{
+                    'placeholder':'event.form.opening_hour.day_of_week.placeholder',
+                    'class':'selectpicker w-100'
+                },
+                'widget_options':{'input_sm':true}
+            }) }}
+        </div>
+    </div>
+
+    <div class="di-block">
+        <div class="di-block w-90px">
+            {{ form_row(form.timeOpen, {
+                'label':'event.form.opening_hour.time_open.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'placeholder':'event.form.opening_hour.time_open.placeholder'},
+                'widget_options':{'input_sm':true}
+            }) }}
+        </div>
+        <div class="di-block w-90px">
+            {{ form_row(form.timeClosed, {
+                'label':'event.form.opening_hour.time_closed.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{
+                    'placeholder':'event.form.opening_hour.time_closed.placeholder'
+                },
+                'widget_options':{'input_sm':true}
+            }) }}
+        </div>
+    </div>
+{% endblock event_openinghours_widget %}
 
 {# Support #}
 

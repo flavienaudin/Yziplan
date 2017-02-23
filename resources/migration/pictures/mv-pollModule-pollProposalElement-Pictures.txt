@@ -1,0 +1,21 @@
+1) Requête SQL pour récupérer les events avec pictures et le nouveau répertoire de l'image :
+SELECT CONCAT("mv ", ppe.picture_filename, " ",  DATE_FORMAT(ppe.created_at, "%Y/%m/") , ';') as cdm
+FROM  `module_poll_proposal_element` ppe
+WHERE ppe.picture_filename IS NOT NULL;
+
+2) Créer les répertoires et configurer les droits :
+mkdir 2017 2017/01 2017/02;
+chown -R "www-data" 2017/;
+chgrp -R "www-data" 2017/;
+chmod -R 0777 2017/;
+
+3) Vérifier :
+ll . 2017/;
+
+4) Déplacer les fichiers :
+Copier coller les commandes générées par la requêtes SQL 1)
+
+5) Donner les droits sur les nouveaux répertoires :
+chown -R "www-data" 2016/ 2017/;
+chgrp -R "www-data" 2016/ 2017/;
+chmod -R 0777 2016/ 2017/;

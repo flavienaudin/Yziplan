@@ -10,28 +10,39 @@
     <title>{% block title %}{{ "global.project_name"|trans }}{% endblock %}</title>
 
     {% block stylesheets %}
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery-ui.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/animate.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/waves.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/material-design-iconic-font.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootgrid.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.mCustomScrollbar.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-clockpicker.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-datetimepicker.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/palette.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/sweetalert2.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/toastr.min.css") }}">
-        <link rel="stylesheet" href="{{ asset("bundles/app/css/bootstrap-select.min.css") }}">
-        <link rel='stylesheet' href="{{ asset("bundles/app/css/fullcalendar-3.0.1.min.css") }}"/>
+        {% stylesheets filter='cssrewrite' filter='?uglifycss'
+        "bundles/app/css/jquery-ui.min.css"
+        "bundles/app/css/bootstrap.min.css"
+        "bundles/app/css/animate.css"
+        "bundles/app/css/waves.min.css"
+        "bundles/app/css/material-design-iconic-font.min.css"
+        "bundles/app/css/jquery.bootgrid.min.css"
+        "bundles/app/css/jquery.mCustomScrollbar.min.css"
+        "bundles/app/css/bootstrap-clockpicker.min.css"
+        "bundles/app/css/bootstrap-datetimepicker.min.css"
+        "bundles/app/css/palette.css"
+        "bundles/app/css/sweetalert2.min.css"
+        "bundles/app/css/toastr.min.css"
+        "bundles/app/css/bootstrap-select.min.css"
+        "bundles/app/css/fullcalendar-3.0.1.min.css"
+        "bundles/app/css/selectize.bootstrap3.css"
+        "bundles/app/css/selectize.at.css"
+        "bundles/app/css/fileinput.min.css"
+        "bundles/app/css/datatables.min.css"
+        "bundles/app/css/jquery.bootstrap-touchspin.min.css"
+        "bundles/app/css/focuspoint.css"
+        "bundles/app/css/summernote-0.8.2/summernote.css"
+        "bundles/app/css/jquery.rateyo.css"
+        "bundles/app/css/app.min.1.css"
+        "bundles/app/css/app.min.2.css"
+        "bundles/app/css/app_style.css"
+        output="css/main.2.0.1.css" %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css"/>
+        {% endstylesheets %}
     {% endblock %}
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/app.min.1.1.0.1.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/app.min.2.1.0.1css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/app_style.1.0.1.css") }}">
 
-    {#Only for pint purpose #}
+
     <link rel="stylesheet" href="{{ asset("bundles/app/css/print_style.css") }}" media="print">
-
     <link rel="icon" type="image/x-icon" href="{{ asset('bundles/app/img/favicon_yziplan.png') }}"/>
 </head>
 <body data-ma-header="teal" class="{% if display_beta %} beta {% endif %}">
@@ -42,11 +53,20 @@
 </noscript>
 
 {% block top_javascripts %}
-    <script src="{{ asset("bundles/app/js/jquery-3.1.1.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery-ui.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap.min.js") }}"></script>
+    {# jquery.focuspoint.min.js Plugin to maange focuspoint on event image#}
+    {% javascripts filter='?uglifyjs2'
+    "bundles/app/js/jquery-3.1.1.min.js"
+    "bundles/app/js/jquery-ui.min.js"
+    "bundles/app/js/bootstrap.min.js"
+    'bundles/app/js/datatables.min.js'
+    'bundles/app/js/jquery.bootstrap-touchspin.min.js'
+    'bundles/app/js/selectize-standalone.min.js'
+    'bundles/app/js/jquery.focuspoint.min.js'
+    'bundles/app/js/yzi-selectize.js'
+    output='js/main-pre.2.0.1.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock top_javascripts %}
-
 
 {% block header_body %}
     <header id="header" class="media header-fixed-top palette-Teal bg z-depth-2-bottom">
@@ -257,41 +277,55 @@
 </div><![endif]-->
 
 {% block javascripts %}
-    <script src="{{ asset("bundles/app/js/moment-with-locales.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/waves.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery.bootgrid-updated.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-clockpicker.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-datetimepicker.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/bootstrap-select.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery.mCustomScrollbar.concat.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/palette.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/toastr.min.js") }}"></script>
-
-    <!-- for IE support : SweetAlert2 -->
-    <script src="{{ asset("bundles/app/js/es6-promise.auto.min.js") }}"></script>
-
-    <script src="{{ asset("bundles/app/js/sweetalert2.min.js") }}"></script>
-
-    <script src="{{ asset("bundles/app/js/letter-avatar.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/fullcalendar-3.0.1.min.js") }}"></script>
-
-    <script src="{{ asset("bundles/app/js/hinclude.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/autosize.min.js") }}"></script>
-
-    <!-- Placeholder for IE9 -->
-    <!--[if IE 9 ]>
-    <script src="{{ asset(" bundles/app/js/jquery.placeholder.min.js") }}"></script><![endif]-->
-
-
-    {# /!\ en cas d'ajout de nouveaux widgets venant du Template AdminExtended, vérifier dans le fichier ci-dessus
-    les functions appelées et les ajouter au fichier "app.1.0.1.js" au cas par cas
-    <script src="{{ asset("bundles/app/js/functions.js") }}"></script>#}
-    <script src="{{ asset("bundles/app/js/actions.js") }}"></script>
-    <script src="{{ asset("includes/js/app.1.0.1.js") }}"></script>
-
     <script>
         var locale_js = "{{ app.request.locale }}";
     </script>
+    <!-- canvas-to-blob.min.js is only needed if you wish to resize images before upload.
+     This must be loaded before fileinput.min.js -->
+    <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
+         This must be loaded before fileinput.min.js -->
+    <!-- purify.min.js is only needed if you wish to purify HTML content in your preview for HTML files.
+         This must be loaded before fileinput.min.js -->
+    <!-- fileinput.js the main fileinput plugin file -->
+    <!-- theme_zmdi.js optionally if you need a theme like "Material Design" theme  -->
+    <!-- fileinput_dep/fr.js optionally if you need translation for your language -->
+    {# clipboard.min.js Plugin for cliplboard field (copy into clipboard by clicking) #}
+    <!-- summernote-updated.min.js Summernote : richText editor -->
+    {% javascripts filter='?uglifyjs2'
+    'bundles/app/js/moment-with-locales.js'
+    'bundles/app/js/waves.min.js'
+    'bundles/app/js/jquery.bootgrid-updated.js'
+    'bundles/app/js/bootstrap-clockpicker.min.js'
+    'bundles/app/js/bootstrap-datetimepicker.min.js'
+    'bundles/app/js/bootstrap-select.min.js'
+    'bundles/app/js/jquery.mCustomScrollbar.concat.min.js'
+    'bundles/app/js/palette.js'
+    'bundles/app/js/toastr.min.js'
+    'bundles/app/js/es6-promise.auto.min.js'
+    'bundles/app/js/sweetalert2.min.js'
+    'bundles/app/js/letter-avatar.js'
+    'bundles/app/js/fullcalendar-3.0.1.min.js'
+    'bundles/app/js/jquery.placeholder.min.js'
+    'bundles/app/js/hinclude.js'
+    'bundles/app/js/autosize.min.js'
+    'bundles/app/js/masonry.pkgd.min.js'
+    'bundles/app/js/fileinput_dep/canvas-to-blob.min.js'
+    'bundles/app/js/fileinput_dep/sortable.min.js'
+    'bundles/app/js/fileinput_dep/purify.min.js'
+    'bundles/app/js/fileinput.js'
+    'bundles/app/js/fileinput_dep/theme_zmdi.js'
+    'bundles/app/js/fileinput_dep/fr.js'
+    'bundles/app/js/clipboard.min.js'
+    'bundles/app/js/jquery.rateyo.js'
+    'bundles/app/js/summernote-0.8.2/summernote-updated.min.js'
+    'bundles/app/js/actions.js'
+    'includes/js/app.js'
+    "bundles/app/js/yzi-event.js"
+    output='js/main.2.0.1.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    <script src="{{ asset("bundles/app/js/yzi-event.js") }}"></script>
 
     <!-- Base : Config pluggin Toastr -->
     <script>

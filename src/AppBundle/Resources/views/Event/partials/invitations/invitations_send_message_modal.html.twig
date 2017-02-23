@@ -1,0 +1,19 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
+- sendMessageForm (Form) Formulaire permettant d'envoyer un rappel aux invités
+#}
+
+<div class="modal fade" id="invitations_sendMessage_modal" tabindex="-1" role="dialog" aria-labelledby="invitations_sendMessage_modal_title" data-backdrop="static">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                <h3 class="modal-title" id="invitations_sendMessage_modal_title">{{ "send_message.modal.title"|trans }}</h3>
+                <small>{{ "send_message.modal.instructions"|trans }}</small>
+            </div>
+            <div class="modal-body">
+                {{ include("@App/Event/partials/invitations/invitations_send_message_form.html.twig", {'userEventInvitation' : userEventInvitation, 'sendMessageForm ': sendMessageForm}) }}
+            </div>
+        </div>
+    </div>
+</div>

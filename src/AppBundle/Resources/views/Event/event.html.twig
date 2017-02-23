@@ -3,12 +3,15 @@
 {# Données d'entrée :
 - event (Event) L'évenement à afficher
 - eventForm (Form|null) Formulaire d'édition des information général de l'événement (si les droits le permettent)
+- eventTemplateSettingsForm (Form|null) Formulaire de configuration des options de duplication de type "Template"
+- eventRecurrenceSettingsForm (Form) Formulaire de configuration des options de duplication de type "Recurrence"
 - thread (Thread) Le fil de discussion de l'événement
 - comments(Comment[]) Les commentaires appartenant au fil de discussion de l'événement
 - invitationsForm (Form|null) Formulaire permettant d'inviter (renseignement des e-mails des invités)
 - modules (array) Tableau des modules de l'événement. Chaque module est décrit un tableau de données (Cf. EventManager:getModulesToDisplay(...) )
 - userEventInvitation (EventInvitation) L'invitation à afficher
 - userEventInvitationForm (Form) Formulaire de réponse à l'invitation : données de profil
+- sendMessageForm (Form|null) Formulaire permettant d'envoyer un rappel aux invités
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
@@ -33,6 +36,7 @@
                     {{ include('@App/Event/partials/event_guests_card.html.twig', {
                         'userEventInvitation':userEventInvitation,
                         'event':event,
+                        'sendMessageForm ': (sendMessageForm is defined ? sendMessageForm:null),
                         'userEventInvitationAnswerForm':userEventInvitationAnswerForm
                     }) }}
                 </div>
@@ -74,7 +78,14 @@
         {# Carte permettant l'ajout de modules supplémentaires, n'est affiché que si l'utilisateur a le droit #}
         {% if is_granted(constant('AppBundle\\Security\\EventVoter::ADD_EVENT_MODULE'), userEventInvitation) %}
             <div class="grid-item col-xs-12 col-xs-p-lr-0 col-lg-8" id="addModule">
-                {{ include('@App/Event/module/displayAddModule_card.html.twig',{'event': event}) }}
+                <div class="card c-dark z-depth-1" id="addModule-main-div">
+                    <div class="card-header palette-Teal bg m-b-10">
+                        <h2><i class="zmdi zmdi-collection-plus zmdi-hc-lg c-white m-r-15"></i>{{ "addModule.display.title"|trans }}</h2>
+                    </div>
+                    <div class="card-body card-padding-xs" id="addModule-body-card">
+                        {{ include('@App/Event/module/displayAddModule_card.html.twig',{'event': event}) }}
+                    </div>
+                </div>
             </div>
         {% endif %}
         <!-- .grid-sizer empty element, only used for element sizing -->
@@ -87,26 +98,17 @@
     {% if eventForm is not null %}
         {{ include("@App/Event/partials/event_edit_modal.html.twig", {'userEventInvitation':userEventInvitation, 'eventForm':eventForm}) }}
     {% endif %}
+    {% if eventTemplateSettingsForm is not null or eventRecurrenceSettingsForm is not null %}
+        {{ include("@App/Event/partials/event_duplication_settings_modal.html.twig", {
+            'event':event,
+            'eventTemplateSettingsForm':eventTemplateSettingsForm,
+            'eventRecurrenceSettingsForm':eventRecurrenceSettingsForm
+        }) }}
+    {% endif %}
 {% endblock %}
-
-{% block stylesheets %}
-    {{ parent() }}
-    {# Necessaire ? <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.css") }}">#}
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/fileinput.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/datatables.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/jquery.bootstrap-touchspin.min.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/focuspoint.css") }}">
-{% endblock stylesheets %}
 
 {% block top_javascripts %}
     {{ parent() }}
-    {#<script src="{{ asset("bundles/app/js/jquery.collection.js") }}"></script>#}
-    <script src="{{ asset("bundles/app/js/datatables.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jquery.bootstrap-touchspin.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/yzi-selectize.js") }}"></script>
     <script>
         var eventInvitationValid = true;
     </script>
@@ -114,30 +116,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset("bundles/app/js/masonry.pkgd.min.js") }}"></script>
-
-    <!-- canvas-to-blob.min.js is only needed if you wish to resize images before upload.
-     This must be loaded before fileinput.min.js -->
-    <script src="{{ asset("bundles/app/js/fileinput_dep/canvas-to-blob.min.js") }}" type="text/javascript"></script>
-    <!-- sortable.min.js is only needed if you wish to sort / rearrange files in initial preview.
-         This must be loaded before fileinput.min.js -->
-    <script src="{{ asset("bundles/app/js/fileinput_dep/sortable.min.js") }}" type="text/javascript"></script>
-    <!-- purify.min.js is only needed if you wish to purify HTML content in your preview for HTML files.
-         This must be loaded before fileinput.min.js -->
-    <script src="{{ asset("bundles/app/js/fileinput_dep/purify.min.js") }}" type="text/javascript"></script>
-    <!-- the main fileinput plugin file -->
-    <script src="{{ asset('bundles/app/js/fileinput.js') }}"></script>
-    <!-- optionally if you need a theme like "Material Design" theme  -->
-    <script src="{{ asset('bundles/app/js/fileinput_dep/theme_zmdi.js') }}"></script>
-    {% if app.request.attributes.get('_locale') == 'fr' %}
-        <!-- optionally if you need translation for your language -->
-        <script src="{{ asset('bundles/app/js/fileinput_dep/fr.js') }}"></script>
-    {% endif %}
-
-    {# Plugin for cliplboard field (copy into clipboard by clicking) #}
-    <script src="{{ asset('bundles/app/js/clipboard.min.js') }}"></script>
-    {# Plugin to maange focuspoint on event image#}
-    <script src="{{ asset('bundles/app/js/jquery.focuspoint.min.js') }}"></script>
 
     <script>
         var fos_comment_thread_container = $('.commentable_thread ');
@@ -160,9 +138,31 @@
         });
     </script>
 
-    <script src="{{ asset("bundles/app/js/yzi-event.js") }}"></script>
-
     <script>
+        $(document).ready(function () {
+            initialiseYziplanMasonry();
+            $grid = $('.grid');
+            if ($grid[0]) {
+                $grid.masonry('layout');
+            }
+
+            window.onresize = function (event) {
+                $grid = $('.grid');
+                if ($grid[0]) {
+                    $grid.masonry('layout');
+                }
+            };
+
+            new Clipboard("#btn_url_event_public_invitation");
+
+            $('textarea, .auto-size').on('autosize:resized', function () {
+                $grid = $('.grid');
+                if ($grid[0]) {
+                    $grid.masonry('layout');
+                }
+            });
+        });
+
         if (typeof google === 'object' && typeof google.maps === 'object') {
             initEventShowMap();
         } else {
@@ -182,6 +182,7 @@
             // Active l'autocomplétion des champs "Où" lors de l'ajout de proposition "Where"
             initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');
         }
+        
         {% if (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.name is empty %}
         $(document).ready(function () {
             $('#event_header_edit_information').click();

@@ -101,8 +101,44 @@
                 </div>
             </div>
         </section>
+        <section id="section_why" class="index-section bgm-white">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <h2>{{ "index.section_why.title"|trans }}</h2>
+                        <hr class="small black">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p>{{ "index.section_why.why1"|trans|raw }}</p>
+                                <p><strong>{{ "index.section_why.why2"|trans|raw }}</strong></p>
+                                <hr class="small black">
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="col-xs-12">
+                                    <img src="{{ asset("bundles/app/img/index/use/vote.png") }}" class="img-max100 p-b-10">
+                                </div>
+                                <div class="col-xs-12">
+                                     <p>{{ "index.section_why.vote"|trans|raw }}</p>
+                                </div>
+                                <div class="col-xs-12 visible-xs">
+                                    <hr class="small black">
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="col-xs-12">
+                                    <img src="{{ asset("bundles/app/img/index/use/result.png") }}" class="img-max100 p-b-10">
+                                </div>
+                                <div class="col-xs-12">
+                                     <p>{{ "index.section_why.result"|trans|raw }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <aside id="callout1" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/drinks.jpg") }}')">
+        <aside id="callout1" class="callout parallax-window" data-parallax="scroll" data-image-src="{{ asset("bundles/app/img/index/drinks.jpg") }}">
             <div class="text-vertical-center">
                <h1 class="c-white">{{ "index.callout1"|trans }}</h1>
             </div>
@@ -114,7 +150,7 @@
                 <div class="row">
                     <div class="col-lg-10 col-lg-offset-1 text-center">
                         <h2>{{ "index.section_event.tiltle"|trans }}</h2>
-                        <hr class="small">
+                        <hr class="small black">
                         <div class="row">
                             <div class="col-xs-6 col-sm-4 col-md-3">
                                 <div class="event-item" style="background-image:url('{{ asset("bundles/app/img/index/eventtype/event-party.jpg") }}')">
@@ -197,7 +233,7 @@
             <!-- /.container -->
         </section>
 
-        <aside id="callout2" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/concert.jpg") }}')">
+        <aside id="callout2" class="callout parallax-window" data-parallax="scroll" data-image-src="{{ asset("bundles/app/img/index/concert.jpg") }}">
             <div class="text-vertical-center">
                 <h1 class="c-white">{{ "index.callout2"|trans }}</h1>
             </div>
@@ -213,8 +249,7 @@
             </div>
         </section>
 
-
-        <aside id="callout3" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/coworking.jpg") }}')">
+        <aside id="callout3" class="callout parallax-window" data-parallax="scroll" data-image-src="{{ asset("bundles/app/img/index/coworking.jpg") }}">
             <div class="text-vertical-center">
                 <h1 class="c-white">{{ "index.callout3"|trans }}</h1>
             </div>
@@ -225,7 +260,7 @@
                 <div class="row text-center">
                     <div class="col-lg-10 col-lg-offset-1">
                         <h2>{{ "index.section_quote.title"|trans }}</h2>
-                        <hr class="small">
+                        <hr class="small black">
                          <blockquote>
                             <div class="quote-img quote-td pull-left m-r-15" style="background-image: url({{ asset('bundles/app/img/index/quotes/quote-mi.jpg') }})"></div>
                             {{ "index.section_quote.quote1.sentense1"|trans }}<br>{{ "index.section_quote.quote1.sentense2"|trans }}
@@ -250,7 +285,7 @@
             <!-- /.container -->
         </section>
 
-        <aside id="callout4" class="callout" style="background-image:url('{{ asset("bundles/app/img/index/tchin.jpg") }}')">
+        <aside id="callout4" class="callout parallax-window" data-parallax="scroll" data-image-src="{{ asset("bundles/app/img/index/tchin.jpg") }}">
             <div class="text-vertical-center">
                 <h1 class="c-white">{{ "index.callout4"|trans }}</h1>
             </div>
@@ -286,15 +321,10 @@
 
 {% block javascripts %}
     {{ parent () }}
-    <script src="{{ asset("bundles/app/js/jquery.parallax-1.1.3.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/parallax.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jqcloud.js") }}"></script>
     <script>
-        $(document).ready(function(){
-            $('#callout1').parallax("center", null, 0.5, true);
-            $('#callout2').parallax("center", null, 0.5, true);
-            $('#callout3').parallax("center", null, 0.5, true);
-            $('#callout4').parallax("center", null, 0.5, true);
-        })
+        $('.parallax-window').parallax();
     </script>
     <script>
         var words = [

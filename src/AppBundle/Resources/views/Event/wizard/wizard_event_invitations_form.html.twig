@@ -12,32 +12,35 @@
 {% block action_buttons %}
     <div class="text-center">
         <div>
-            <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token, 'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_ADD_MODULE")}) }}"
-               id="invitations_later" class="btn btn-flat f-700 c-blue m-b-10" role="button">{{ "global.button.later"|trans }}</a>
+            <a href="{{ path('displayEvent',{'token':userEventInvitation.event.token}) }}" id="invitations_later" class="btn btn-flat f-700 c-blue m-b-10"
+               role="button">{{ "global.button.later"|trans }}</a>
             <button type="submit" class="btn btn-primary m-b-10" id="invitations_sendInvitations" name="sendInvitations" value="1">{{ "event.wizard.button.send_invitations"|trans }}</button>
         </div>
-        <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")}) }}"
+        <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_ADD_MODULE")}) }}"
            class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
     </div>
 {% endblock action_buttons %}
 
 {#<script>#}
 {% block js_document_ready %}
-    $('#shareEventFB_container').remove();
-    $('#event_public_invitation_display').remove();
-    $('form#guestEmails').on('submit', function (e) {
-        if ($('#eventInvitations_newEmails').val().length == 0) {
-            e.preventDefault();
-            swal({
-                title: "{{ "invitations_list.swal.no_email_selected.title"|trans }}",
-                html: "{{ "invitations_list.swal.no_email_selected.text"|trans }}",
-                type: "warning",
-                showCancelButton: true,
-                showLoaderOnConfirm: true
-            }).then(function () {
-                window.location = $('#invitations_later').attr('href');
-            });
-        }
-    });
+$('#shareEventFB_container').remove();
+$('#event_public_invitation_display').remove();
+$('form#guestEmails').on('submit', function (e) {
+    if ($('#eventInvitations_newEmails').val().length == 0) {
+        e.preventDefault();
+        swal({
+            title: "{{ "invitations_list.swal.no_email_selected.title"|trans }}",
+            html: "{{ "invitations_list.swal.no_email_selected.text"|trans }}",
+            type: "warning",
+            showCancelButton: true,
+            showLoaderOnConfirm: true,
+            cancelButtonText: "{{ "global.button.cancel"|trans }}",
+            confirmButtonText: "{{ "global.button.skip"|trans }}"
+        }).then(function () {
+            window.location = $('#invitations_later').attr('href');
+        });
+    }
+});
 {% endblock js_document_ready %}
+{% block js_function %}{% endblock js_function %}
 {#</script>#}

@@ -11,12 +11,11 @@
     {% else %}
         {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
     {% endif %}
-
     {{ form_label(pollProposalForm.pollProposalElements, null, {'label_attr':{'class':'sr-only'}}) }}
     {{ form_errors(pollProposalForm.pollProposalElements) }}
 
     {# Le but de la manoeuvre ci-dessous est d'afficher la startDate avant la EndDate à coup sur #}
-    {% for pollProposalElement in pollProposalForm.pollProposalElements if pollProposalElement.startDate is defined %}
+    {% for pollProposalElement in pollProposalForm.pollProposalElements %}
         {{ form_errors(pollProposalElement) }}
         {{ "pollmodule.modal.when.startDate"|trans }}
         <div class="row">
@@ -39,34 +38,32 @@
                 }) }}
             </div>
         </div>
+        {{ form_errors(pollProposalElement) }}
+        {{ "pollmodule.modal.when.endDate"|trans }} <i class="zmdi zmdi-info" data-toggle="tooltip" title="{{ "pollmodule.modal.when.tooltip"|trans }}"></i>
+        <div class="row">
+            <div class="col-xs-12 col-md-6">
+                {{ form_row(pollProposalElement.endDate, {
+                    'label_attr':{'class':'sr-only'},
+                    'attr': {
+                        'placeholder': "global.form.optional"|trans},
+                    'widget_options':{
+                        'fgfloat':false,
+                        'fgline':true}
+                }) }}
+            </div>
+            <div class="col-xs-12 col-md-6">
+                {{ form_row(pollProposalElement.endTime, {
+                    'label_attr':{'class':'sr-only'},
+                    'attr': {
+                        'placeholder': "global.form.optional"|trans},
+                    'widget_options':{
+                        'fgfloat':false,
+                        'fgline':true}
+                }) }}
+            </div>
+        </div>
     {% endfor %}
-    {% for pollProposalElement in pollProposalForm.pollProposalElements if pollProposalElement.endDate is defined %}
-    {{ form_errors(pollProposalElement) }}
-    {{ "pollmodule.modal.when.endDate"|trans }} <i class="zmdi zmdi-info" data-toggle="tooltip" title="{{ "pollmodule.modal.when.tooltip"|trans }}"></i>
-    <div class="row">
-        <div class="col-xs-12 col-md-6">
-            {{ form_row(pollProposalElement.endDate, {
-                'label_attr':{'class':'sr-only'},
-                'attr': {
-                    'placeholder': "global.form.optional"|trans},
-                'widget_options':{
-                    'fgfloat':false,
-                    'fgline':true}
-            }) }}
-        </div>
-        <div class="col-xs-12 col-md-6">
-            {{ form_row(pollProposalElement.endTime, {
-                'label_attr':{'class':'sr-only'},
-                'attr': {
-                    'placeholder': "global.form.optional"|trans},
-                'widget_options':{
-                    'fgfloat':false,
-                    'fgline':true}
-            }) }}
-        </div>
-        {% endfor %}
-        {{ form_rest(pollProposalForm) }}
-    </div>
+    {{ form_rest(pollProposalForm) }}
 
     <div class="pull-right">
         <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>

@@ -280,16 +280,15 @@ class PollProposal
     }
 
     /**
-     * @return PollProposalElement
+     * @return $result
      */
-    public function getPollProposalEndDateElement()
+    public function getPollProposalElementsByType()
     {
+        $result = array();
+        /** @var PollProposalElement $elt */
         foreach ($this->pollProposalElements as $elt){
-            /** @var PollProposalElement $elt */
-            if ($elt->getPollElement()->getType() == PollElementType::END_DATETIME){
-                return $elt;
-            }
+            $result[$elt->getPollElement()->getType()][] = $elt;
         }
-        return null;
+        return $result;
     }
 }

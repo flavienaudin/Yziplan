@@ -1,10 +1,16 @@
 {# Données d'entrée :
 - module (Module) Le module à afficher
+- userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
 #}
 
-<div id="module-information-{{ module.token }}" class="card-body {% block moduleInformationClass %}{{ module.description is empty?"hidden" }} card-padding-sm{% endblock %}"
-        {% block moduleInformationAttributs %}{% endblock %}>
+<div id="module-information-{{ module.token }}" {% block moduleInformationAttributs %}{% endblock %}
+     class="card-body {% block moduleInformationClass %}{{ not userModuleInvitation.organizer and (module.description is empty or module.description =='<p><br></p>') ?"hidden" }} card-padding-sm{% endblock %}">
     {% block moduleInformation %}
-        <div>{{ module.description|nl2br }}</div>
+        {% if userModuleInvitation.organizer and (module.description is empty or module.description == "<p><br></p>") %}
+            <div><a class="btn btn-flat c-blue" role="button" data-toggle="modal" href="#moduleEdit_modal_{{ module.token }}">
+                    <i class="zmdi zmdi-edit"></i> {{ "module.main_information.no_description"|trans }}</a></div>
+        {% else %}
+            <div>{{ module.description|raw }}</div>
+        {% endif %}
     {% endblock moduleInformation %}
 </div>

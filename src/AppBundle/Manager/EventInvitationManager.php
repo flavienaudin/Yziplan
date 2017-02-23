@@ -24,6 +24,7 @@ use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -243,26 +244,50 @@ class EventInvitationManager
      * @param Event $event
      * @param array $emailsData
      * @param boolean $sendEmail
-     * @param array $failedRecipients Array of emails address which the email could not be sent to
+     * @param string $message
+     * @return array with results by success/failed/notFound
      */
-    public function createInvitations(Event $event, $emailsData, $sendEmail, &$failedRecipients = array())
+    public function createInvitations(Event $event, $emailsData, $sendEmail, $message = null)
     {
-        $failedRecipients = (array)$failedRecipients;
+        $results = array(
+            'success' => array(),
+            'failed' => array(),
+            'creationError' => array()
+        );
         foreach ($emailsData as $email) {
             $this->eventInvitation = $this->getGuestEventInvitation($event, $email);
-            if ($this->eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
-                // Envoie d'une invitation => AWAITNG_ANSWER
-                $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
-            }
-            if ($sendEmail) {
-                if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation)) {
-                    $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
-                } else {
-                    $failedRecipients[] = $email;
+
+            if ($this->eventInvitation != null) {
+                if ($this->eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
+                    // Envoi d'une invitation => AWAITNG_ANSWER
+                    $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
                 }
+                try {
+                    if ($this->persistEventInvitation()) {
+                        if ($sendEmail) {
+                            if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
+                                $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
+                                $this->persistEventInvitation();
+                                $results['success'][$email] = $this->eventInvitation;
+                            } else {
+                                $results['failed'][$email] = $this->eventInvitation;
+                            }
+                        } else {
+                            $results['success'][$email] = $this->eventInvitation;
+                        }
+                    } else {
+                        $results['creationError'][$email] = $this->eventInvitation;
+                    }
+                } catch (DBALException $e) {
+                    // TODO Si c'est un problème de token déjà utilisé (eventInvitation ou ModuleInvitation) => en mettre de nouveau et retenter le persist()
+                    $results['creationError'][$email] = $this->eventInvitation;
+                }
+            } else {
+                // error while creating the invitation
+                $results['creationError'][] = $email;
             }
-            $this->persistEventInvitation();
         }
+        return $results;
     }
 
     /**
@@ -279,6 +304,20 @@ class EventInvitationManager
                 $failedRecipients[] = $this->eventInvitation->getDisplayableEmail();
             }
             $this->persistEventInvitation();
+        }
+    }
+
+    /**
+     * @param Collection $eventInvitations
+     */
+    public function sendMessage($eventInvitations, $message = null, &$failedRecipients = array())
+    {
+        /** @var EventInvitation $eventInvitation */
+        foreach ($eventInvitations as $eventInvitation) {
+            $this->eventInvitation = $eventInvitation;
+            if (!$this->appTwigSiwftMailer->sendMessageEmail($this->eventInvitation, $message)) {
+                $failedRecipients[] = $this->eventInvitation;
+            }
         }
     }
 

@@ -56,16 +56,23 @@ class AppUserEmailController extends Controller
                         // AppUserEmail directement retourné => tentative de rattachement à l'utilisateur connecté si validation par email OK
                         $appUserEmail = $formTreatmentReturn;
                     } elseif ($formTreatmentReturn instanceof FormInterface) {
-                        if(count($appUserEmailForm->getErrors(true)) === 0) {
+                        if (count($appUserEmailForm->getErrors(true)) === 0) {
                             // L'email n'est pas existante pas d'ereur
                             /** @var AppUserEmail $appUserEmail */
                             $appUserEmail = $appUserEmailForm->getData();
-                        }else{
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#addAppUserEmail_formcontainer"] =
-                                $this->renderView("@App/AppUserEmail/partials/appuseremail_form.html.twig", [
-                                    'modalIdPrefix' => 'addAppUserEmail', 'appuseremail' => null, 'form_appuseremail' => $appUserEmailForm->createView()
-                                ]);
-                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                        } else {
+                            if ($request->isXmlHttpRequest()) {
+                                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#addAppUserEmail_formcontainer"] =
+                                    $this->renderView("@App/AppUserEmail/partials/appuseremail_form.html.twig", [
+                                        'modalIdPrefix' => 'addAppUserEmail', 'appuseremail' => null, 'form_appuseremail' => $appUserEmailForm->createView()
+                                    ]);
+                                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                            } else {
+                                foreach ($appUserEmailForm->getErrors(true) as $formError) {
+                                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $formError->getMessage());
+                                }
+                                return $this->redirectToRoute("fos_user_profile_show");
+                            }
                         }
                     }
                     if ($appUserEmail != null) {

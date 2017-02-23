@@ -31,40 +31,38 @@ Données d'entrée :
                                         <script>
                                             $('#menu_removeModule_{{ module.token }}').on('click', function (e) {
                                                 e.preventDefault();
+                                                var removeModuleLink = $(this);
                                                 if (!eventInvitationValid && askGuestName !== undefined) {
-                                                    askGuestName();
+                                                    askGuestName(e, removeModuleAction, [removeModuleLink, e]);
                                                 } else {
-                                                    var removeModuleLink = $(this);
-                                                    swal({
-                                                        title: '{{ "module.alert.confirm_deletion.title"|trans }}',
-                                                        text: '{{ "module.alert.confirm_deletion.message"|trans }}',
-                                                        type: "warning",
-                                                        showCancelButton: true,
-                                                        confirmButtonColor: "#DD6B55",
-                                                        confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                                        showLoaderOnConfirm: true
-                                                    }).then(function () {
-                                                        ajaxRequest(removeModuleLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                                $('#module-{{ module.token }}').remove();
-                                                                $grid = $('.grid');
-                                                                if($grid[0]) {
-                                                                    $grid.masonry('layout');
-                                                                }
-                                                            }
-                                                        }, function (jqXHR, textStatus, errorThrown) {
-                                                            if (jqXHR.hasOwnProperty('responseJSON')) {
-                                                                var responseJSON = jqXHR['responseJSON'];
-                                                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                                                    if (!eventInvitationValid && askGuestName !== undefined) {
-                                                                        askGuestName();
-                                                                    }
-                                                                }
-                                                            }
-                                                        }, null);
-                                                    });
+                                                    removeModuleAction([removeModuleLink, e]);
                                                 }
                                             });
+
+                                            function removeModuleAction(params) {
+                                                var link = params[0];
+                                                var e = params[1];
+                                                swal({
+                                                    title: '{{ "module.alert.confirm_deletion.title"|trans }}',
+                                                    text: '{{ "module.alert.confirm_deletion.message"|trans }}',
+                                                    type: "warning",
+                                                    showCancelButton: true,
+                                                    cancelButtonText: '{{ "global.button.cancel"|trans }}',
+                                                    confirmButtonColor: "#DD6B55",
+                                                    confirmButtonText: '{{ "global.button.delete"|trans }}',
+                                                    showLoaderOnConfirm: true
+                                                }).then(function () {
+                                                    ajaxRequest(link, null, e, function (responseJSON, textStatus, jqXHR) {
+                                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('moduleToken')) {
+                                                            $('#module-' + responseJSON['data']['moduleToken']).remove();
+                                                            $grid = $('.grid');
+                                                            if ($grid[0]) {
+                                                                $grid.masonry('layout');
+                                                            }
+                                                        }
+                                                    }, null, null);
+                                                });
+                                            }
                                         </script>
                                     {% endif %}
                                 </ul>
@@ -80,8 +78,7 @@ Données d'entrée :
                         {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, not userModuleInvitation.eventInvitation.organizer) %}
                     {% endfor %}
                     <h2>
-                        <i class="zmdi zmdi-help zmdi-hc-lg c-white m-r-10"></i>
-                        <span id="module_{{ module.token }}_name">
+                        <i class="zmdi zmdi-help zmdi-hc-lg c-white m-r-10"></i> <span id="module_{{ module.token }}_name">
                            {{ module.name is not empty?module.name }}
                         </span>
                         {% if creatorsNames is not empty %}

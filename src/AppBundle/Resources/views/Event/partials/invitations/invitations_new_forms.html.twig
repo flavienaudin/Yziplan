@@ -5,17 +5,21 @@
 
 <div id="invitations_forms_container">
     <div class="m-t-10 w-100 text-center">
-        <button type="button" class="btn btn-facebook" id="shareEventFB" name="provider" style="display: none;">
-            <i class="zmdi zmdi-facebook zmdi-hc-lg"></i> {{ "invitations.button.via_facebook"|trans }}
-        </button>
-        <button type="button" class="btn btn-danger" id="loadContacts" >
-            <i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "invitations.button.via_gmail_contact.show"|trans }}</button>
-        <button type="button" class="btn btn-danger" id="hideContacts"  style="display: none;">{{ "global.button.close"|trans }}</button>
-        {{ include('@App/Event/partials/invitations/gmail_contacts_selection.html.twig', {'event' : userEventInvitation.event}) }}
+        {% if userEventInvitation.organizer or not userEventInvitation.event.invitationOnly %}
+            <button type="button" class="btn btn-facebook" id="shareEventFB" name="provider" style="display: none;">
+                <i class="zmdi zmdi-facebook zmdi-hc-lg"></i> {{ "invitations.button.via_facebook"|trans }}
+            </button>
+        {% endif %}
+        {% if invitationsForm is not null %}
+            <button type="button" class="btn btn-danger" id="loadContacts">
+                <i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "invitations.button.via_gmail_contact.show"|trans }}</button>
+            <button type="button" class="btn btn-danger" id="hideContacts" style="display: none;">{{ "global.button.close"|trans }}</button>
+            {{ include('@App/Event/partials/invitations/gmail_contacts_selection.html.twig', {'event' : userEventInvitation.event}) }}
+        {% endif %}
     </div>
 
     {% if invitationsForm is not null %}
-        <div class="m-t-10 p-15">
+        <div class="p-15 border-bottom">
             <div id="event_invitations_form_container">
                 {% block form_start %}
                     {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),'attr':{'id':'eventInvitations'}}) }}
@@ -28,6 +32,15 @@
                     'help':'invitations.form.invitations.help'|trans
                 }) }}
 
+                <a role="button" class="btn btn-link c-blue" data-toggle="collapse" href="#invitationsMessageCollapase"> <i class="zmdi zmdi-edit"></i> {{ "invitations.form.message.button"|trans }}
+                </a>
+                <div class="collapse" id="invitationsMessageCollapase">
+                    {{ form_row(invitationsForm.message, {
+                        'label':'invitations.form.message.label',
+                        'label_attr':{'class':'sr-only'},
+                        'attr':{'placeholder':'invitations.form.message.placeholder', 'rows':3},
+                    }) }}
+                </div>
                 {% block action_buttons %}
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "invitations.button.send_invitation"|trans }}">
@@ -71,65 +84,52 @@
                             },
                             createFilter: createFilterEmail,
                             create: createUser
-                            {#{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                            , preload: 'focus',
-                            load: function (query, callback) {
-                                $.ajax({
-                                    url: '{{ path('searchContacts') }}',
-                                    data: {'search': query},
-                                    type: 'POST',
-                                    error: function () {
-                                        callback();
-                                    },
-                                    success: function (res) {
-                                        callback(res.slice(0, 15));
-                                    }
-                                });
-                            }
-                            {% endif %}#}
                         });
                         // fetch the instance
                         $newEmailsSelectize = $select[0].selectize;
 
                         {% block js_document_ready %}
                         $('form#eventInvitations').on('submit', function (e) {
+                            e.preventDefault();
+                            var $form = $(this);
                             if (!eventInvitationValid && askGuestName !== undefined) {
-                                e.preventDefault();
-                                askGuestName();
+                                $('#invitations_new_modal').modal('hide');
+                                askGuestName(e, submitNewInvitationsForm, [$form, e], function () {
+                                    $('#invitations_new_modal').modal('show');
+                                });
                             } else {
-                                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                                    $hideContactsButton.click();
-                                    $('#invitations_new_modal').modal('hide');
-                                }, function (jqXHR, textStatus, errorThrown) {
-                                    if (jqXHR.hasOwnProperty('responseJSON')) {
-                                        var responseJSON = jqXHR['responseJSON'];
-                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                            if (!eventInvitationValid && askGuestName !== undefined) {
-                                                askGuestName();
-                                            }
-                                        }
-                                    }
-                                }, null);
+                                submitNewInvitationsForm([$form, e]);
                             }
                         });
+
+                        function submitNewInvitationsForm(params) {
+                            var $form = params[0];
+                            var e = params[1];
+                            ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
+                                $hideContactsButton.click();
+                                $('#invitations_new_modal').modal('hide');
+                            }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                                $('#invitations_new_modal').modal('show');
+                            }, null);
+                        }
                         {% endblock %}
                     });
+
+                    {% block js_function %}{% endblock js_function %}
                 </script>
             </div>
         </div>
     {% endif %}
 
-    {% if userEventInvitation.creator or userEventInvitation.administrator or not userEventInvitation.event.invitationOnly %}
-        <div id="event_public_invitation_display" class="m-t-10 palette-Teal-50 bg p-15 {{ (userEventInvitation.creator or userEventInvitation.administrator) and
-        userEventInvitation.event.invitationOnly?'hidden' }}">
+    {% if userEventInvitation.organizer or not userEventInvitation.event.invitationOnly %}
+        <div id="event_public_invitation_display"
+             class="p-15 border-bottom {{ (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.invitationOnly?'hidden' }}">
             <div class="form-group animated">
-                <label class="control-label text-info" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
+                <label class="control-label" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
                 <div class="input-group">
-                    <input id="url_event_public_invitation" type="text" class="form-control" readonly="readonly"
-                           value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}"> <span class="input-group-btn">
-                                <button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation">
-                                    <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button>
-                            </span>
+                    <input type="text" id="url_event_public_invitation" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}" class="form-control" readonly="readonly"> <span
+                            class="input-group-btn"><button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation"><i
+                                    class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
                 </div>
             </div>
         </div>
@@ -137,10 +137,11 @@
 
     <script>
         $(document).ready(function () {
+            $facebookShareLink = $('#shareEventFB');
             if (isMobile()) {
-                $('#shareEventFB').remove();
+                $facebookShareLink.remove();
             } else {
-                $('#shareEventFB').show();
+                $facebookShareLink.show();
                 // Initialize invitation via facebook
                 $.ajaxSetup({cache: true});
                 $.getScript('//connect.facebook.net/fr_FR/all.js', function () {
@@ -152,7 +153,7 @@
                 });
 
                 // React to the invite via facebook button
-                $('#shareEventFB').click(function () {
+                $facebookShareLink.click(function () {
                     var pageLink = $("#url_event_public_invitation").val();
                     FB.ui({
                         method: 'send',

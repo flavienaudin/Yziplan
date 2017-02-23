@@ -11,16 +11,20 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
+use AppBundle\Form\Event\EventTemplateSettingsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
+use AppBundle\Form\Event\SendMessageType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleStatus;
 use ATUserBundle\Entity\AccountUser;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -58,6 +62,9 @@ class EventManager
 
     /** @var Event L'événement en cours de traitement */
     private $event;
+
+    /** @var ArrayCollection Les OpeninghOurs de l'évnément pour mise à jour */
+    private $eventOriginalOpeningHours;
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory,
                                 GenerateursToken $generateurToken, ModuleManager $moduleManager, PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager,
@@ -148,16 +155,20 @@ class EventManager
      */
     public function initEventForm()
     {
+        // Create an ArrayCollection of the current OpeningHour objects in the database
+        $this->eventOriginalOpeningHours = new ArrayCollection();
+        foreach ($this->event->getOpeningHours() as $openingHour) {
+            $this->eventOriginalOpeningHours->add($openingHour);
+        }
         return $this->formFactory->create(EventType::class, $this->event);
     }
 
-
     /**
      * Renseigne l'événement à partir des données soumises dans le formulaire lors d'une création ou édition
-     * @param Form $evtForm
+     * @param FormInterface $evtForm
      * @return Event|mixed
      */
-    public function treatEventFormSubmission(Form $evtForm)
+    public function treatEventFormSubmission(FormInterface $evtForm)
     {
         $this->event = $evtForm->getData();
         if (empty($this->event->getToken())) {
@@ -166,8 +177,20 @@ class EventManager
         if ($this->event->getStatus() == EventStatus::IN_CREATION) {
             $this->event->setStatus(EventStatus::IN_ORGANIZATION);
         }
+        /* TODO : desactivés pour simplifier l'interface */
+        $this->event->setInvitationOnly(false);
+        $this->event->setGuestsCanInvite(true);
         if (empty($this->event->getWhereName())) {
             $this->event->setWhereGooglePlaceId(null);
+        }
+
+        // remove the relationship between the OpeningHours and the Event
+        foreach ($this->eventOriginalOpeningHours as $openingHour) {
+            if (false === $this->event->getOpeningHours()->contains($openingHour)) {
+                // remove the OpeningHours from the Event
+                $this->event->removeOpeningHour($openingHour);
+                $this->entityManager->remove($openingHour);
+            }
         }
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
@@ -176,12 +199,11 @@ class EventManager
     }
 
     /**
-     * Duplique l'événement passé en paramètre (ou celui en cours) en fonction des paramètres : dupliquer les mdules et/ou les invitations
+     * Duplique l'événement passé en paramètre (ou celui en cours). LEs modules sont dupliqués ou non selon le paramètre $duplicateModules
      * L'événement n'est pas persisté en base de données
      *
-     * @param boolean $duplicateModules Les modules sont également dupliqué et associés au nouvel événement
-     * @param boolean $duplicateInvitations Les invitations existantes sont utilisées pour les invitations du nouvel événement
-     * @param Event|null $event L'événement à duppliquer (si non donné,  l'attribut de la classe est utilisé)
+     * @param boolean $duplicateModules Les modules sont également dupliqués et associés au nouvel événement
+     * @param Event|null $event L'événement à dupliquer (si non donné,  l'attribut "event" de la classe est utilisé)
      * @return Event Résultat de la duplication de l'événement
      */
     public function duplicateEvent($duplicateModules, Event $event = null)
@@ -195,10 +217,33 @@ class EventManager
             $duplicatedEvent->setStatus(EventStatus::IN_ORGANIZATION);
             $duplicatedEvent->setName($this->event->getName());
             $duplicatedEvent->setDescription($this->event->getDescription());
+            $duplicatedEvent->setResponseDeadline($this->event->getResponseDeadline());
+
+            if ($this->event->getPictureFile() != null) {
+                $originalFile = $this->event->getPictureFile();
+                $tempFileCopyName = str_replace($originalFile->getExtension(), 'bak.' . $originalFile->getExtension(), $originalFile->getFilename());
+                $tempFileCopyPathname = $this->event->getPictureFile()->getPath() . '/' . $tempFileCopyName;
+                if (copy($this->event->getPictureFile()->getPathname(), $tempFileCopyPathname)) {
+                    $newFile = new UploadedFile($tempFileCopyPathname, $tempFileCopyName, $originalFile->getMimeType(), $originalFile->getSize(), null, true);
+                    $duplicatedEvent->setPictureFile($newFile);
+
+                    $duplicatedEvent->setPictureFocusX($this->event->getPictureFocusX());
+                    $duplicatedEvent->setPictureFocusY($this->event->getPictureFocusY());
+                    $duplicatedEvent->setPictureWidth($this->event->getPictureWidth());
+                    $duplicatedEvent->setPictureHeight($this->event->getPictureHeight());
+                }
+            }
 
             $duplicatedEvent->setWhereName($this->event->getWhereName());
             $duplicatedEvent->setWhereGooglePlaceId($this->event->getWhereGooglePlaceId());
             $duplicatedEvent->setWhen($this->event->getWhen());
+
+            if ($this->event->getCoordinates() != null) {
+                $this->event->getCoordinates()->duplicate($duplicatedEvent);
+            }
+            foreach ($this->event->getOpeningHours() as $openingHour) {
+                $openingHour->duplicate($duplicatedEvent);
+            }
 
             $duplicatedEvent->setInvitationOnly($this->event->isInvitationOnly());
             $duplicatedEvent->setGuestsCanInvite($this->event->isGuestsCanInvite());
@@ -214,7 +259,6 @@ class EventManager
                     }
                 }
             }
-            // TODO : duplicate EventInvitation ?
             return $duplicatedEvent;
         } else {
             return null;
@@ -226,11 +270,16 @@ class EventManager
         return $this->formFactory->create(InvitationsType::class);
     }
 
-    public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm, $sendInvitations = true)
+    public function treatEventInvitationsFormSubmission(FormInterface $eventInvitationsForm, $sendInvitations = true, &$resultCreation = array())
     {
         if ($this->event != null) {
             $emailsData = $eventInvitationsForm->get("invitations")->getData();
-            $this->eventInvitationManager->createInvitations($this->event, $emailsData, $sendInvitations);
+            if ($eventInvitationsForm->has('message')) {
+                $message = $eventInvitationsForm->get('message')->getData();
+            } else {
+                $message = null;
+            }
+            $resultCreation = $this->eventInvitationManager->createInvitations($this->event, $emailsData, $sendInvitations, $message);
 
             $this->entityManager->persist($this->event);
             $this->entityManager->flush();
@@ -238,6 +287,72 @@ class EventManager
         }
         return null;
     }
+
+    /**
+     * Génère le formulaire pour envoyer un rappel aux invités
+     *
+     * @return FormInterface
+     */
+    public function createSendMessageForm()
+    {
+        return $this->formFactory->create(SendMessageType::class);
+    }
+
+    /**
+     * Traite la soumission du formulaire d'envoie d'un message aux invités
+     * @param Form $sendMessageForm
+     * @param EventInvitation $userEventInvitation L'invitation de l'utilisateur connecté qui envoye le message
+     * @return false|array : false if error, array of failed recipients
+     */
+    public function treatSendMessageFormSubmission(FormInterface $sendMessageForm, EventInvitation $userEventInvitation)
+    {
+        if ($this->event != null) {
+            $message = $sendMessageForm->get("message")->getData();
+            $selection = $sendMessageForm->get("selection")->getData();
+            if ($selection == null || !is_array($selection)) {
+                $selection = array();
+            }
+            $recipients = $this->event->getEventInvitationByAnswer($selection);
+            if ($recipients->contains($userEventInvitation)) {
+                // On n'envoit pas le message à l'expéditeur
+                $recipients->removeElement($userEventInvitation);
+            }
+            $failedRecipients = array();
+            $this->eventInvitationManager->sendMessage($recipients, $message, $failedRecipients);
+            return $failedRecipients;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Génère le formulaire de configuration de la duplication de type Template
+     * @return FormInterface
+     */
+    public function createTemplateSettingsForm()
+    {
+        return $this->formFactory->create(EventTemplateSettingsType::class);
+    }
+
+    /**
+     * Traite la soumission du formulaire de configuration de la duplication de type Template
+     * @param FormInterface $templateSettingsForm
+     * @return Event
+     */
+    public function treatTemplateSettingsForm(FormInterface $templateSettingsForm)
+    {
+        if ($templateSettingsForm->get("activateTemplate")->getData()) {
+            if (empty($this->event->getTokenDuplication())) {
+                $this->event->setTokenDuplication($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+                $this->persistEvent();
+            }
+        } else {
+            $this->event->setTokenDuplication(null);
+            $this->persistEvent();
+        }
+        return $this->event;
+    }
+
 
     /**
      * Crée et ajoute un module à l'événement

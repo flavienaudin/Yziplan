@@ -10,7 +10,6 @@ imports:
 parameters:
     locale: fr
     avatar_directory: '%kernel.root_dir%/../web/uploads/user/avatar'
-    event_picture_directory: '%kernel.root_dir%/../web/uploads/events/pictures'
 
 framework:
     #esi:             ~
@@ -56,7 +55,15 @@ twig:
 assetic:
     debug:          '%kernel.debug%'
     use_controller: '%kernel.debug%'
+    use_controller: false
     bundles: [ 'AppBundle', 'ATUserBundle','FOSCommentBundle' ]
+    node: "%node.path%"
+    filters:
+        cssrewrite: ~
+        uglifyjs2:
+            bin: "%uglifyjs.path%"
+        uglifycss:
+            bin: "%uglifycss.path%"
 
 # Doctrine Configuration
 doctrine:
@@ -82,6 +89,7 @@ doctrine:
             enum_pollmodule_type: AppBundle\Utils\enum\PollModuleType
             enum_transaction_status: AppBundle\Utils\enum\TransactionStatus
             enum_payment_transactiontrigger: AppBundle\Utils\enum\TransactionTrigger
+            enum_dayofweek: AppBundle\Utils\enum\DayOfWeek
         connections:
             default:
                 driver:   pdo_mysql
@@ -104,6 +112,26 @@ stof_doctrine_extensions:
     orm:
         default:
             timestampable: true
+
+vich_uploader:
+    db_driver: orm
+    mappings:
+        event_picture:
+            uri_prefix: /uploads/events/pictures
+            upload_destination: '%kernel.root_dir%/../web/uploads/events/pictures'
+            namer: vich_uploader.namer_uniqid
+            directory_namer: at.namer.directory.picture
+            inject_on_load:     true
+            delete_on_update:   true
+            delete_on_remove:   true
+        pollproposalelement_picture:
+            uri_prefix: /uploads/events/pollmodule/pollproposalelement/pictures
+            upload_destination: '%kernel.root_dir%/../web/uploads/events/pollmodule/pollproposalelement/pictures'
+            namer: vich_uploader.namer_uniqid
+            directory_namer: at.namer.directory.picture
+            inject_on_load:     true
+            delete_on_update:   true
+            delete_on_remove:   true
 
 # Swiftmailer Configuration
 swiftmailer:

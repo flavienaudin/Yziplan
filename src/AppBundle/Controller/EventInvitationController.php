@@ -18,10 +18,10 @@ use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 
 /**
@@ -82,7 +82,7 @@ class EventInvitationController extends Controller
      * @ Route("/send/{token}", name="sendEventInvitations" )
      * @ ParamConverter("event", class="AppBundle:Event\Event")
      */
-    public function sendEventInvitationAction(Event $event, Request $request)
+    /*public function sendEventInvitationAction(Event $event, Request $request)
     {
         $eventInvitationManager = $this->get("at.manager.event_invitation");
         $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($event, false, false, $this->getUser());
@@ -90,14 +90,14 @@ class EventInvitationController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         } else {
-            if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+            if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
                 // Vérification serveur de la validité de l'invitation
                 if ($request->isXmlHttpRequest()) {
                     $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else {
-                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] =
-                        $this->get('translator')->trans("eventInvitation.profile.card.guestname_required_alert.error_message.unauthorized_action");;
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("eventInvitation.profile.card.guestname_required_alert.error_message.unauthorized_action"));
                     return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
                 }
             } else {
@@ -137,7 +137,7 @@ class EventInvitationController extends Controller
                 }
             }
         }
-    }
+    }*/
 
     /**
      * @Route("/cancel/{eventInvitationTokenToCancel}", name="cancelEventInvitation" )
@@ -154,7 +154,17 @@ class EventInvitationController extends Controller
 
         // Only creator/admnsitrators can cancel an EventInvitation
         if ($this->isGranted(EventInvitationVoter::CANCEL, [$userEventInvitation, $eventInvitationToCancel])) {
-            if ($eventInvitationManager->cancelEventInvitation($eventInvitationToCancel)) {
+            if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                // Vérification serveur de la validité de l'invitation
+                if ($request->isXmlHttpRequest()) {
+                    $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                } else {
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.valide_guestname_required"));
+                    return $this->redirectToRoute('displayEvent', array('token' => $userEventInvitation->getEvent()->getToken()));
+                }
+            } elseif ($eventInvitationManager->cancelEventInvitation($eventInvitationToCancel)) {
                 if ($request->isXmlHttpRequest()) {
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("invitations.display.cancel.message.success");
                     return new AppJsonResponse($data, Response::HTTP_OK);

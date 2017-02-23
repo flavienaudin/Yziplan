@@ -7,7 +7,7 @@
 {% block title %}{{ parent() }} - {{ event.name is empty?"event.page.meta_title.new_event"|trans:event.name }}{% endblock %}
 
 {% block event_content %}
-    <div class="row">
+    <div id="eventWizard" class="row">
         <div class="col-xs-12 col-xs-p-lr-0">
             <div class="card z-depth-1">
                 <div class="card-header">
@@ -20,6 +20,8 @@
                     </div>
                 </div>
             </div>
+
+            {% block wizard_step_after_card %}{% endblock %}
         </div>
     </div>
 {% endblock event_content %}

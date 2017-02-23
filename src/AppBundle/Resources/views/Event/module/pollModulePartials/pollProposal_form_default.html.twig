@@ -15,13 +15,99 @@
     {{ form_errors(pollProposalForm.pollProposalElements) }}
 
     {% for pollProposalElement in pollProposalForm.pollProposalElements %}
-        {{ form_errors(pollProposalElement) }}
-        {{ form_widget(pollProposalElement, {
-            'widget_options':{
-                'fgfloat':(pollProposalElement.valDatetime is not defined and pollProposalElement.valEndDatetime is not defined),
-                'fgline':true,
-                'displayInRow':(pollProposalElement.valDatetime is defined or pollProposalElement.valEndDatetime is defined)}
-        }) }}
+        {% if pollProposalElement.vars.value.getPollElement.getType == constant('AppBundle\\Utils\\enum\\PollElementType::RICHTEXT') %}
+            {{ form_row(pollProposalElement.valText, {
+                'label':'pollmodule.modal.pollproposal.form.description.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'rows':5},
+                'widget_options':{'fgline':false}
+            }) }}
+            <script>
+                $(document).ready(function () {
+                    var summernoteOptions = {
+                        dialogsInBody: true,
+                        placeholder: '{{ 'pollmodule.modal.pollproposal.form.description.placeholder'|trans }}',
+                        height: 150,
+                        toolbar: [
+                            ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                            ['fontsize', ['fontsize']],
+                            ['color', ['color']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['insert', ['link', 'picture', 'video']]
+                        ]
+                    };
+                    {% if app.request.locale == 'fr' %}
+                    summernoteOptions.lang = 'fr-FR';
+                    {% endif %}
+                    $('#{{ pollProposalElement.valText.vars.id }}').summernote(summernoteOptions);
+                });
+            </script>
+            {% elseif pollProposalElement.vars.data.pollElement.type == constant('AppBundle\\Utils\\enum\\PollElementType::PICTURE') %}
+            <div class="kv-avatar center-block w-100">
+                {{ form_errors(pollProposalElement) }}
+                {{ form_widget(pollProposalElement) }}
+            </div>
+            <script>
+                $(document).ready(function () {
+                    var fileInputOptions = {
+                        browseOnZoneClick: false,
+                        overwriteInitial: true,
+                        maxFileSize: 2000,
+                        showClose: false,
+                        fileActionSettings: {
+                            showUpload: false,
+                            showZoom: false,
+                            showDrag: false
+                        },
+                        showCaption: false,
+                        browseLabel: '',
+                        removeLabel: '',
+                        uploadTitle: "{{ 'event.picture.update_modal.button.submit_title'|trans }}",
+                        uploadLabel: "{{ 'global.button.save'|trans }}",
+                        //browseIcon: '<i class="zmdi zmdi-folder"></i>',
+                        //removeIcon: '<i class="zmdi zmdi-delete"></i>',
+                        //removeTitle: 'Cancel or reset changes',
+                        elErrorContainer: '#kv-avatar-errors-1',
+                        msgErrorClass: 'alert alert-block alert-danger',
+                        defaultPreviewContent: '<i class="zmdi zmdi-image-o zmdi-hc-5x"></i>',
+                        layoutTemplates: {
+                            main2: '<div class="text-center">{preview} {browse}</div>',
+                            footer: ''
+                        },
+                        previewTemplates: {
+                            image: '<div class="file-preview-frame" id="{previewId}" data-fileindex="{fileindex}" data-template="{template}">\n' +
+                            '   <div class="kv-file-content">' +
+                            '       <img src="{data}" class="kv-preview-data file-preview-image img-responsive" title="{caption}" alt="{caption}">\n' +
+                            '   </div>\n' +
+                            '   {footer}\n' +
+                            '</div>\n'
+                        },
+                        allowedFileExtensions: ["jpg", "jpeg", "png", "gif"]
+                    };
+
+                    {% if app.request.attributes.has('_locale') %}
+                    fileInputOptions['language'] = '{{ app.request.attributes.get('_locale') }}';
+                    {% endif %}
+
+
+                    {% if pollProposalElement.pictureFile.file.vars.data is not null %}
+                    fileInputOptions['initialPreviewFileType'] = 'image';
+                    fileInputOptions['initialPreview'] = [
+                        '<img src="{{ vich_uploader_asset(pollProposalElement.vars.data, 'pictureFile') }}" class="file-preview-image img-responsive" alt="{{ pollProposalElement.vars.data.pictureFilename }}">'
+                    ];
+                    {% endif %}
+                    $('#{{ pollProposalElement.pictureFile.file.vars.id }}').fileinput(fileInputOptions);
+                });
+            </script>
+        {% else %}
+            {{ form_errors(pollProposalElement) }}
+            {{ form_widget(pollProposalElement, {
+                'widget_options':{
+                    'fgfloat':(pollProposalElement.valDatetime is not defined and pollProposalElement.valEndDatetime is not defined),
+                    'fgline':true,
+                    'displayInRow':(pollProposalElement.valDatetime is defined or pollProposalElement.valEndDatetime is defined)}
+            }) }}
+        {% endif %}
     {% endfor %}
     {{ form_rest(pollProposalForm) }}
 </div>

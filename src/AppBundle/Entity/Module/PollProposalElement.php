@@ -5,12 +5,15 @@ namespace AppBundle\Entity\Module;
 use AppBundle\Utils\enum\PollElementType;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * PollProposalElement
  *
  * @ORM\Table(name="module_poll_proposal_element")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Module\PollProposalElementRepository")
+ * @Vich\Uploadable
  */
 class PollProposalElement
 {
@@ -33,6 +36,13 @@ class PollProposalElement
      * @ORM\Column(name="val_string", type="string", length=511, nullable=true)
      */
     private $valString;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="val_text", type="text", nullable=true)
+     */
+    private $valText;
 
     /**
      * Contient la valeur si le type == PollElementType::INTEGER
@@ -96,6 +106,19 @@ class PollProposalElement
      */
     private $valGooglePlaceId;
 
+    /**
+     * This attributes stores the filename of the file for the database
+     * @var string
+     * @ORM\Column(name="picture_filename", type="string", length=255, nullable=true)
+     */
+    private $pictureFilename;
+
+    /**
+     * This is not a mapped field of entity metadata, just a simple property.
+     * @Vich\UploadableField(mapping="pollproposalelement_picture", fileNameProperty="pictureFilename")
+     * @var File
+     */
+    private $pictureFile;
 
     /***********************************************************************
      *                      Jointures
@@ -148,6 +171,23 @@ class PollProposalElement
         $this->valString = $valString;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getValText()
+    {
+        return $this->valText;
+    }
+
+    /**
+     * @param string $valText
+     */
+    public function setValText($valText)
+    {
+        $this->valText = $valText;
+    }
+
 
     /**
      * @return int
@@ -270,6 +310,52 @@ class PollProposalElement
     }
 
     /**
+     * @return string
+     */
+    public function getPictureFilename()
+    {
+        return $this->pictureFilename;
+    }
+
+    /**
+     * @param string $pictureFilename
+     * @return PollProposalElement
+     */
+    public function setPictureFilename($pictureFilename)
+    {
+        $this->pictureFilename = $pictureFilename;
+        return $this;
+    }
+
+    /**
+     * @return File
+     */
+    public function getPictureFile()
+    {
+        return $this->pictureFile;
+    }
+
+    /**
+     * If manually uploading a file (i.e. not using Symfony Form) ensure an instance
+     * of 'UploadedFile' is injected into this setter to trigger the update. If this
+     * bundle's configuration parameter 'inject_on_load' is set to 'true' this setter
+     * must be able to accept an instance of 'File' as the bundle will inject one here
+     * during Doctrine hydration.
+     * @param File|\Symfony\Component\HttpFoundation\File\UploadedFile $pictureFile
+     * @return PollProposalElement
+     */
+    public function setPictureFile($pictureFile)
+    {
+        $this->pictureFile = $pictureFile;
+        if ($pictureFile) {
+            // It is required that at least one field changes if you are using doctrine
+            // otherwise the event listeners won't be called and the file is lost
+            $this->updatedAt = new \DateTimeImmutable();
+        }
+        return $this;
+    }
+
+    /**
      * @return PollProposal
      */
     public function getPollProposal()
@@ -321,13 +407,19 @@ class PollProposalElement
             case PollElementType::DATETIME:
                 $val = $this->getValDatetime();
                 break;
-            case PollElementType::END_DATETIME:
-                $val = $this->getValEndDatetime();
-                break;
             case PollElementType::INTEGER :
                 $val = $this->getValInteger();
                 break;
-            case $type == PollElementType::GOOGLE_PLACE_ID:
+            case PollElementType::RICHTEXT :
+                $val = $this->getValText();
+                break;
+            case PollElementType::PICTURE :
+                $val = array(
+                    'filename' => $this->getPictureFilename(),
+                    'file' => $this->getPictureFile()
+                );
+                break;
+            case PollElementType::GOOGLE_PLACE_ID:
             case PollElementType::STRING :
                 $val = $this->getValString();
                 break;

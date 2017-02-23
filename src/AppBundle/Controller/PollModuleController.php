@@ -12,14 +12,16 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\enum\PollElementType;
 use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * Class PollModuleController
@@ -44,16 +46,38 @@ class PollModuleController extends Controller
             $pollProposalEditionForm = $pollProposalManager->createPollProposalForm($pollProposal);
             $pollProposalEditionForm->handleRequest($request);
             if ($pollProposalEditionForm->isSubmitted()) {
-                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
+                    || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER
+                ) {
                     // Vérification serveur de la validité de l'invitation
                     $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else {
                     if ($pollProposalEditionForm->isValid()) {
                         $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalEditionForm);
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+                        // Mise à jour des pollProposalElement avec un Fichier pour
+                        $em = $this->get('doctrine.orm.entity_manager');
+                        $em->refresh($pollProposal);
+                        /** @var PollProposalElement $ppe */
+                        foreach ($pollProposal->getPollProposalElements() as $ppe) {
+                            if ($ppe->getPollElement()->getType() == PollElementType::PICTURE) {
+                                $em->refresh($ppe);
+                            }
+                        }
+
+                        $pollProposalEditionForm = $pollProposalManager->createPollProposalForm($pollProposal);
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#pollProposalEdition_" . $pollProposal->getId() . "_form_id"] =
+                            $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
+                                    'userModuleInvitation' => $moduleInvitation,
+                                    'pollProposalForm' => $pollProposalEditionForm->createView(),
+                                    'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
+                                    'edition' => true
+                                )
+                            );
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pp_display_row_' . $pollProposal->getId()] =
                             $pollProposalManager->displayPollProposalRowPartial($pollProposal, $moduleInvitation->getEventInvitation());
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollProposalEdition_' . $pollProposal->getId() . '_formContainer'] =
@@ -82,7 +106,6 @@ class PollModuleController extends Controller
         }
     }
 
-
     /**
      * @Route("/pollproposal/remove/{pollProposalId}/{moduleInvitationToken}", name="removePollProposal")
      * @ParamConverter("pollProposal", class="AppBundle:Module\PollProposal", options={"id" = "pollProposalId"})
@@ -92,14 +115,17 @@ class PollModuleController extends Controller
     {
         if ($moduleInvitation == $pollProposal->getCreator()) {
             if ($request->isXmlHttpRequest()) {
-                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION) {
+                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
+                    || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER
+                ) {
                     // Vérification serveur de la validité de l'invitation
                     $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else {
                     $pollProposalManager = $this->get("at.manager.pollproposal");
                     $pollProposalManager->removePollProposal($pollProposal);
-                    $data[AppJsonResponse::DATA]['actionResult'] = true;
+                    $data[AppJsonResponse::DATA]['pollProposalId'] = $pollProposal->getId();
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 }
             } else {
@@ -118,15 +144,15 @@ class PollModuleController extends Controller
      */
     public function displayResultTableAction(Module $module, Request $request)
     {
-            if ($request->isXmlHttpRequest()) {
-                $moduleManager = $this->get("at.manager.module");
-                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollModuleDisplayAllResult_'.$module->getToken().'_container'] =
-                    $moduleManager->displayPollModuleResultTable($module);
-                return new AppJsonResponse($data, Response::HTTP_OK);
-            } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
-                return $this->redirectToRoute("home");
-            }
+        if ($request->isXmlHttpRequest()) {
+            $moduleManager = $this->get("at.manager.module");
+            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollModuleDisplayAllResult_' . $module->getToken() . '_container'] =
+                $moduleManager->displayPollModuleResultTable($module);
+            return new AppJsonResponse($data, Response::HTTP_OK);
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
+            return $this->redirectToRoute("home");
+        }
 
 
     }

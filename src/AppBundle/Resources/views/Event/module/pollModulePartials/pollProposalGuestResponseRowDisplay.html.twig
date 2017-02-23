@@ -12,125 +12,93 @@
                 {% if pollProposal.creator == userModuleInvitation %}
                     <div class="media-object">
                         <div class="btn-group-vertical btn-group-xs" role="group" aria-label="...">
-                            <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}"
-                               role="button"
+                            <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="button"
                                id="getPPEditionForm_{{ pollProposal.id }}" class="btn btn-default"> <i class="zmdi zmdi-edit"></i></a> <a
-                                    href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}"
-                                    role="button"
+                                    href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="button"
                                     id="removePP_{{ pollProposal.id }}" class="btn btn-default c-red"> <i class="zmdi zmdi-delete"></i></a>
                         </div>
                         <script>
                             $('#getPPEditionForm_{{ pollProposal.id }}').on('click', function (e) {
                                 e.preventDefault();
+                                var $form = $(this);
                                 if (!eventInvitationValid && askGuestName !== undefined) {
-                                    askGuestName();
+                                    askGuestName(e, submitGetPollProposalEditionForm, [$form, e, '{{ pollProposal.pollmodule.module.token }}', '{{ pollProposal.id }}']);
                                 } else {
-                                    var moduleModalsContainer = $('#modal-container-block-{{ pollProposal.pollmodule.module.token }}');
-                                    var modals = $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id');
-                                    if ($(modals).length > 0) {
-                                        $(modals).first().modal('toggle');
-                                    } else {
-                                        ajaxRequest($(this), null, e, function (responseJSON, textStatus, jqXHR) {
-                                            $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').first().modal('show');
-                                        }, function (jqXHR, textStatus, errorThrown) {
-                                            if (jqXHR.hasOwnProperty('responseJSON')) {
-                                                var responseJSON = jqXHR['responseJSON'];
-                                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                                    if (!eventInvitationValid && askGuestName !== undefined) {
-                                                        askGuestName();
-                                                    }
-                                                }
-                                            }
-                                        }, null);
-                                    }
+                                    submitGetPollProposalEditionForm([$form, e, '{{ pollProposal.pollmodule.module.token }}', '{{ pollProposal.id }}']);
                                 }
                             });
+
+                            function submitGetPollProposalEditionForm(params) {
+                                var form = params[0];
+                                var e = params[1];
+                                var moduleToken = params[2];
+                                var pollProposalId = params[3];
+
+                                var moduleModalsContainer = $('#modal-container-block-' + moduleToken);
+
+
+                                var modals = $(moduleModalsContainer).children('#pollProposalEdition_' + pollProposalId + '_modal_id');
+                                if ($(modals).length > 0) {
+                                    $(modals).first().modal('toggle');
+                                } else {
+                                    ajaxRequest(form, null, e, function (responseJSON, textStatus, jqXHR) {
+                                        $(moduleModalsContainer).children('#pollProposalEdition_' + pollProposalId + '_modal_id').first().modal('show');
+                                    }, null, null);
+                                }
+                            }
+
                             $('#removePP_{{ pollProposal.id }}').on('click', function (e) {
                                 e.preventDefault();
+                                var removePPLink = $(this);
                                 if (!eventInvitationValid && askGuestName !== undefined) {
-                                    askGuestName();
+                                    askGuestName(e, deletePollProposalAction([removePPLink, e]));
                                 } else {
-                                    var removePPLink = $(this);
-                                    swal({
-                                        title: '{{ "pollmodule.alert.confirm_proposal_deletion.title"|trans }}',
-                                        text: '{{ "pollmodule.alert.confirm_proposal_deletion.message"|trans }}',
-                                        type: "warning",
-                                        showCancelButton: true,
-                                        confirmButtonColor: "#DD6B55",
-                                        confirmButtonText: '{{ "global.button.delete"|trans }}',
-                                        showLoaderOnConfirm: true
-                                    }).then(function () {
-                                        ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
-                                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].actionResult === true) {
-                                                $('#pp_display_row_{{ pollProposal.id }}').remove();
-                                                var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
-                                                $(moduleModalsContainer).children('#pollProposalEdition_{{ pollProposal.id }}_modal_id').each(function () {
-                                                    $(this).remove();
-                                                });
-                                                if ($('#pp-row-group-{{ userModuleInvitation.module.token }} > tr').length == 1) {
-                                                    $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').hide();
-                                                }
-                                            }
-                                        }, function (jqXHR, textStatus, errorThrown) {
-                                            if (jqXHR.hasOwnProperty('responseJSON')) {
-                                                var responseJSON = jqXHR['responseJSON'];
-                                                if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                                    if (!eventInvitationValid && askGuestName !== undefined) {
-                                                        askGuestName();
-                                                    }
-                                                }
-                                            }
-                                        }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-                                            $grid = $('.grid');
-                                            if ($grid[0]) {
-                                                $grid.masonry('layout');
-                                            }
-                                        });
-                                    });
+                                    deletePollProposalAction([removePPLink, e]);
                                 }
                             });
+                            function deletePollProposalAction(params) {
+                                var removePPLink = params[0];
+                                var e = params[1];
+                                swal({
+                                    title: '{{ "pollmodule.alert.confirm_proposal_deletion.title"|trans }}',
+                                    text: '{{ "pollmodule.alert.confirm_proposal_deletion.message"|trans }}',
+                                    type: "warning",
+                                    showCancelButton: true,
+                                    confirmButtonColor: "#DD6B55",
+                                    confirmButtonText: '{{ "global.button.delete"|trans }}',
+                                    showLoaderOnConfirm: true
+                                }).then(function () {
+                                    ajaxRequest(removePPLink, null, e, function (responseJSON, textStatus, jqXHR) {
+                                        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('pollProposalId')) {
+                                            var pollProposalId = responseJSON['data']['pollProposalId'];
+                                            $('#pp_display_row_' + pollProposalId).remove();
+                                            var moduleModalsContainer = $('#modal-container-block-{{ userModuleInvitation.module.token }}');
+                                            $(moduleModalsContainer).children('#pollProposalEdition_' + pollProposalId + '_modal_id').each(function () {
+                                                $(this).remove();
+                                            });
+                                            if ($('#pp-row-group-{{ userModuleInvitation.module.token }} > tr').length == 1) {
+                                                $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').hide();
+                                            }
+                                        }
+                                    }, function (jqXHR, textStatus, errorThrown) {
+
+                                    }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                                        $grid = $('.grid');
+                                        if ($grid[0]) {
+                                            $grid.masonry('layout');
+                                        }
+                                    });
+                                });
+                            }
                         </script>
                     </div>
                 {% endif %}
             </div>
             <div class="media-body">
-                <div {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
-                    {% for ppElt in pollProposal.pollProposalElements %}
-                        {% if ppElt.pollElement.type == constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME') %}
-                            {% set endDate = ppElt.pollProposal.getPollProposalEndDateElement %}
-                            {% set has2Date = endDate is not null and endDate.hasEndDate and ppElt.value|localizeddate("medium", "none", null, null,'ddMMyyyy') != endDate.value|localizeddate("medium", "none", null, null,'ddMMyyyy') %}
-                            <div>
-                                {% if not has2Date %}
-                                    <div style="display:inline-block; vertical-align: middle;">
-                                        <div style="font-size:12px; font-weight: bold; text-transform: capitalize;">{{ ppElt.value|localizeddate("medium", "none", null, null,'MMM') }}</div>
-                                        <div style="font-size:10px; text-transform: uppercase;">{{ ppElt.value|localizeddate("medium", "none", null, null,"ccc") }}</div>
-                                    </div>
-                                    <div class="p-l-5 p-r-5" style="display:inline-block; font-size:22px; vertical-align: middle;">
-                                        <strong>{{ ppElt.value|localizeddate("medium", "none", null, null,'dd') }}</strong>
-                                    </div>
-                                    {% if ppElt.hasTime %}
-                                        <div style="display:inline-block; vertical-align: middle;">
-                                            <div style="font-size:14px">{{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
-                                            {% if not has2Date and endDate is not null and endDate.hasEndTime %}
-                                                <div style="font-size:14px">{{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}</div>
-                                            {% endif %}
-                                        </div>
-                                    {% endif %}
-                                {% else %}
-                                    <div>
-                                        <div style=" display:inline-block; width: 45px; font-style:italic">Début : </div> <div style=" display:inline-block;">{{ ppElt.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if ppElt.hasTime %} {{ ppElt.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
-                                    </div>
-                                    <div>
-                                        <div style=" display:inline-block; width:45px; font-style:italic">Fin : </div> <div style=" display:inline-block;">{{ endDate.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if endDate.hasEndTime %} {{ endDate.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        {% elseif not (ppElt.pollElement.type == constant('AppBundle\\Utils\\enum\\PollElementType::END_DATETIME')) %}
-                            {{ ppElt.value }}
-                            {% if not loop.first %}<br>{% endif %}
-                        {% endif %}
-                    {% endfor %}
-                </div>
+                {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_proposal.html.twig', {
+                    "pollProposal":pollProposal,
+                    "displayModal":"true"
+                }) }}
             </div>
         </div>
     </td>
@@ -147,6 +115,12 @@
     <td class="voting-column">
         {% if pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::AMOUNT') %}
             {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_vote_amount.html.twig', {
+                "pollProposal":pollProposal,
+                "userModuleInvitation":userModuleInvitation,
+                "moduleInvitations":moduleInvitations
+            }) }}
+        {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::RANKING') %}
+            {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_vote_ranking.html.twig', {
                 "pollProposal":pollProposal,
                 "userModuleInvitation":userModuleInvitation,
                 "moduleInvitations":moduleInvitations

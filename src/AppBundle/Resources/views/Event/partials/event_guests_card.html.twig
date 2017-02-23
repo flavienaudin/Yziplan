@@ -1,6 +1,7 @@
 {# Données d'entrée :
 - userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
 - event (Event) L'événement courant pour afficher les invitations
+- sendMessageForm (Form) Formulaire permettant d'envoyer un rappel aux invités
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 #}
 
@@ -17,19 +18,30 @@
         }) }}
     </div>
 
-    <div class="card-body">
+    <div class="card-body border-bottom">
         {{ include("@App/Event/partials/guests_list/guestsList_card_body.html.twig", {
             'userEventInvitation' : userEventInvitation,
             'event':event}) }}
     </div>
 
-
-    {% if (userEventInvitation.creator or userEventInvitation.administrator or userEventInvitation.event.guestsCanInvite) and (invitationsForm is not null
-    or not userEventInvitation.event.invitationOnly) %}
-        <div class="card-footer text-center">
-            <a href="#invitations_new_modal" class="btn btn-primary m-b-10" data-toggle="modal">{{ "invitations_list.display.new_invitations"|trans }}</a>
+    {% if (userEventInvitation.organizer or userEventInvitation.event.guestsCanInvite)
+    and (invitationsForm is not null or not userEventInvitation.event.invitationOnly or sendMessageForm is not null) %}
+        <div class="card-footer text-center m-t-10">
+            {% if sendMessageForm is not null %}
+                <a href="#invitations_sendMessage_modal" data-toggle="modal" class="btn btn-flat btn-icon-text m-b-10" aria-expanded="false"> <i
+                            class="zmdi zmdi-email"></i> {{ 'send_message.link'|trans }}
+                </a>
+            {% endif %}
+            {% if invitationsForm is not null or not userEventInvitation.event.invitationOnly %}
+                <a href="#invitations_new_modal" class="btn btn-primary btn-icon-text m-b-10" data-toggle="modal"><i
+                            class="zmdi zmdi-accounts-add"></i>{{ "invitations_list.display.new_invitations"|trans }}</a>
+            {% endif %}
         </div>
-        {{ include('@App/Event/partials/invitations/invitations_new_modal.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
+        {% if invitationsForm is not null or not userEventInvitation.event.invitationOnly %}
+            {{ include('@App/Event/partials/invitations/invitations_new_modal.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
+        {% endif %}
+        {% if sendMessageForm is not null %}
+            {{ include('@App/Event/partials/invitations/invitations_send_message_modal.html.twig', {'userEventInvitation' : userEventInvitation, 'sendMessageForm ': sendMessageForm}) }}
+        {% endif %}
     {% endif %}
-
 </div>

@@ -20,8 +20,9 @@
 
 {# {# Todo: Décommenter et supprimer la ligne du dessous (penser à tester data-container="body" et l'utilisation de title a la place de data-original-title, en le remettant)
 <a data-toggle="dropdown" href="#">#}
-<a class="d-block" data-toggle="tooltip" data-placement="top" title="{{ eventInvitationDisplayableName }}" data-container="body">
+<a class="d-block w-100 h-100" data-toggle="tooltip" data-placement="top" title="{{ eventInvitationDisplayableName }}" data-container="body">
     {% if avatar is not null %}
+        {#<div class="yzi-avatar-img" style="background-image: url({{ asset('uploads/user/avatar/'~avatar) }})"></div>#}
         <img class="yzi-avatar-img" src="{{ asset('uploads/user/avatar/'~avatar) }}">
     {% else %}
         <img class="yzi-avatar-img" avatar="{{ eventInvitationDisplayableName }}" {% if userEventInvitation == eventInvitation %}userAvatar{% endif %}>

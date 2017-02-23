@@ -36,35 +36,9 @@
                 if (modalContainer[0]) {
                     modalContainer.modal('hide');
                 }
-                askGuestName();
+                askGuestName(e, submitAddPollProposalForm, [$form, e, '{{ userModuleInvitation.module.token }}', '{{ pp_form_modal_prefix }}', '{{ edition }}']);
             } else {
-                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                            {% if not edition %}
-                        $('#pollmodule-table-{{ userModuleInvitation.module.token }} > tbody > tr:nth-last-child(1)').before(responseJSON['data']);
-                        $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').show();
-                            {% endif %}
-                        $('#{{ pp_form_modal_prefix }}_modal_id').modal('hide');
-                    }, function (jqXHR, textStatus, errorThrown) {
-                        if (jqXHR.hasOwnProperty('responseJSON')) {
-                            var responseJSON = jqXHR['responseJSON'];
-                            if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
-                                if (!eventInvitationValid && askGuestName !== undefined) {
-                                    var modalContainer = $("#{{ pp_form_modal_prefix }}_modal_id");
-                                    if (modalContainer[0]) {
-                                        modalContainer.modal('hide');
-                                    }
-                                    askGuestName();
-                                }
-                            }
-                        }
-                    },
-                    function () {
-                        $grid = $('.grid');
-                        if ($grid[0]) {
-                            $grid.masonry('layout');
-                        }
-                    }
-                );
+                submitAddPollProposalForm([$form, e, '{{ userModuleInvitation.module.token }}', '{{ pp_form_modal_prefix }}', '{{ edition }}']);
             }
         });
     </script>

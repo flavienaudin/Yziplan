@@ -12,11 +12,12 @@ namespace AppBundle\Utils\enum;
 class PollModuleType extends AbstractEnumType
 {
     /* Values */
+    const ACTIVITY = "pollmoduletype.activity";
     const WHAT= "pollmoduletype.what";
     const WHEN = "pollmoduletype.when";
     const WHERE = "pollmoduletype.where";
     const WHO_BRINGS_WHAT = "pollmoduletype.whobringswhat";
 
     protected $name = 'enum_pollmodule_type';
-    protected $values = array(self::WHAT, self::WHEN, self::WHERE, self::WHO_BRINGS_WHAT);
+    protected $values = array(self::ACTIVITY, self::WHAT, self::WHEN, self::WHERE, self::WHO_BRINGS_WHAT);
 }

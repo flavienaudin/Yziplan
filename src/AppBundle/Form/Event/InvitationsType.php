@@ -11,6 +11,7 @@ namespace AppBundle\Form\Event;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -47,6 +48,10 @@ class InvitationsType extends AbstractType
                 'mapped' => false,
                 'required' => false,
                 'multiple' => true
+            ))
+            ->add('message', TextareaType::class, array(
+                'mapped' => false,
+                'required' => false
             ))
             ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $formEvent) {
                 $data = $formEvent->getData();

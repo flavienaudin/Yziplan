@@ -19,7 +19,7 @@
 
 {% block moduleBody %}
     {% if module.pollModule is not null %}
-        <div class="card-body card-padding-sm">
+        <div class="card-body card-padding-xs">
             {% set proposalList = module.pollModule.getValidPollProposal %}
             <div class="w-100 poll-container">
                 <table id="pollmodule-table-{{ module.token }}" class="table-striped w-100">
@@ -44,11 +44,14 @@
                                             class="zmdi zmdi-plus-square"></i>{{ "pollmodule.modal.addPollProposal.title"|trans }}</a>
                                 <script>
                                     $('#{{ add_pp_form_modal_prefix }}_modal_open_link').on('click', function (e) {
+                                        var modalId = $(this).attr('href');
                                         if (!eventInvitationValid && askGuestName !== undefined) {
                                             e.preventDefault();
-                                            askGuestName();
+                                            askGuestName(e, function () {
+                                                $(modalId).modal('show');
+                                            });
                                         } else {
-                                            $($(this).attr('href')).modal('show');
+                                            $(modalId).modal('show');
                                         }
                                     });
                                 </script>
@@ -65,7 +68,7 @@
                 </table>
             </div>
 
-            <div class="text-center m-t-10 m-b-10">
+            <div class="pollModuleDisplayAllResult text-center m-t-10 m-b-10">
                 <a class="btn btn-link b-1 waves-effect" id="pollModuleDisplayAllResult_{{ module.token }}_button" href="{{ path('pollModuleDisplayResultTable', {"moduleToken": module.token }) }}"
                    role="button" {% if proposalList is empty %}style="display: none;"{% endif %}>{{ "pollmodule.display.result.allresult"|trans }}</a>
                 <script>
@@ -78,10 +81,9 @@
                     });
                 </script>
             </div>
+
             {# Conteneur pour la modale ajouté via ajax #}
             <div id="pollModuleDisplayAllResult_{{ module.token }}_container"></div>
-
-
         </div>
     {% endif %}
 {% endblock moduleBody %}

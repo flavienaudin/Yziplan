@@ -8,14 +8,26 @@
 
 
 {% block wizard_step_title %}
-    {{ "event.wizard.main.title"|trans }}<small>{{ "event.wizard.main.subtitle"|trans }}</small>{% endblock %}
+    {{ "event.wizard.main.title"|trans }}
+    <small>{{ "event.wizard.main.subtitle"|trans|raw }}</small>{% endblock %}
 
 {% block wizard_step %}
     {{ include('@App/Event/wizard/wizard_event_edit_form.html.twig', {"userEventInvitation":userEventInvitation, "eventForm":eventForm }) }}
 {% endblock wizard_step %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/summernote-0.8.2/summernote.css") }}">
+{% endblock stylesheets %}
+
 {% block javascripts %}
     {{ parent() }}
+    <!-- Summernote : richText editor -->
+    <script src="{{ asset('bundles/app/js/summernote-0.8.2/summernote-updated.min.js') }}"></script>
+    {% if app.request.locale == 'fr' %}
+        <script src="{{ asset('bundles/app/js/summernote-0.8.2/lang/summernote-fr-FR.js') }}"></script>
+    {% endif %}
+
     <script>
         if (typeof google === 'object' && typeof google.maps === 'object') {
             initEventEditMap();

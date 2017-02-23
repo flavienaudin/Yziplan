@@ -30,6 +30,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Templating\EngineInterface;
@@ -124,6 +125,29 @@ class ModuleManager
         $this->module = new Module();
         $this->module->setStatus(ModuleStatus::IN_CREATION);
         $this->module->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+
+        $this->initializePollElementModule($type, $subtype);
+
+        $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
+        $moduleInvitationCreator->setCreator(true);
+        $event->addModule($this->module);
+        return $this->module;
+    }
+
+
+    /**
+     * Create a module and set required data.
+     * @param $type
+     * @param $subtype
+     * @param EventInvitation $creatorEventInvitation The user's eventInvitation to set the module creator
+     * @return Module The module added to the event
+     */
+    public function initializePollElementModule($type, $subtype, $module = null)
+    {
+        if ($module != null) {
+            $this->module = $module;
+        }
+
         if ($type == EnumModuleType::POLL_MODULE) {
             $pollModule = new PollModule();
             $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
@@ -136,18 +160,15 @@ class ModuleManager
                 $pollModule->setType(PollModuleType::WHEN);
 
                 $pollElementDate = new PollElement();
-                $pollElementDate->create($subtype, PollElementType::DATETIME, 0);
-                $pollElementEndDate = new PollElement();
-                $pollElementEndDate->create($subtype, PollElementType::END_DATETIME, 1);
+                $pollElementDate->create($this->translator->trans($subtype), PollElementType::DATETIME, 0);
                 $pollElements->add($pollElementDate);
-                $pollElements->add($pollElementEndDate);
             } elseif ($subtype == PollModuleType::WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.what"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setType(PollModuleType::WHAT);
 
                 $pollElement = new PollElement();
-                $pollElement->create($subtype, PollElementType::STRING, 0);
+                $pollElement->create($this->translator->trans($subtype), PollElementType::STRING, 0);
                 $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::WHERE) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
@@ -155,7 +176,7 @@ class ModuleManager
                 $pollModule->setType(PollModuleType::WHERE);
 
                 $pollElement = new PollElement();
-                $pollElement->create($subtype, PollElementType::GOOGLE_PLACE_ID, 0);
+                $pollElement->create($this->translator->trans($subtype), PollElementType::GOOGLE_PLACE_ID, 0);
                 $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
@@ -164,17 +185,28 @@ class ModuleManager
                 $pollModule->setType(PollModuleType::WHO_BRINGS_WHAT);
 
                 $pollElement = new PollElement();
-                $pollElement->create($subtype, PollElementType::STRING, 0);
+                $pollElement->create($this->translator->trans($subtype), PollElementType::STRING, 0);
                 $pollElements->add($pollElement);
+            } elseif ($subtype == PollModuleType::ACTIVITY) {
+                $this->module->setName($this->translator->trans("pollmodule.add_link.activity"));
+                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+                $pollModule->setVotingType(PollModuleVotingType::RANKING);
+                $pollModule->setType(PollModuleType::ACTIVITY);
+
+                $pollElementName = new PollElement();
+                $pollElementName->create($this->translator->trans("pollmodule.poll_element.name"), PollElementType::STRING, 0);
+                $pollElements->add($pollElementName);
+                $pollElementPicture = new PollElement();
+                $pollElementPicture->create($this->translator->trans("pollmodule.poll_element.description"), PollElementType::RICHTEXT, 1);
+                $pollElements->add($pollElementPicture);
+                $pollElementPicture = new PollElement();
+                $pollElementPicture->create($this->translator->trans("pollmodule.poll_element.picture"), PollElementType::PICTURE, 2);
+                $pollElements->add($pollElementPicture);
             }
             $pollModule->addPollElements($pollElements);
 
             $this->module->setPollModule($pollModule);
         }
-
-        $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
-        $moduleInvitationCreator->setCreator(true);
-        $event->addModule($this->module);
         return $this->module;
     }
 
@@ -193,7 +225,6 @@ class ModuleManager
 
     /**
      * @param Module $originalModule Module à dupliquer
-     * @param boolean $duplicateInvitations
      * @return Module Le module résultant de la dupliquation
      */
     public function duplicateModule(Module $originalModule)
@@ -215,7 +246,6 @@ class ModuleManager
             if ($originalModule->getPaymentModule() != null) {
                 // TODO implementer la duplication du PaymentModule
             }
-
 
             if (($originalPollModule = $originalModule->getPollModule()) != null) {
                 $duplicatedPollModule = new PollModule();
@@ -244,6 +274,7 @@ class ModuleManager
                         foreach ($originalPollProposal->getPollProposalElements() as $originialPollProposalElement) {
                             $duplicatedPollProposalElement = new PollProposalElement();
                             $duplicatedPollProposalElement->setValString($originialPollProposalElement->getValString());
+                            $duplicatedPollProposalElement->setValText($originialPollProposalElement->getValText());
                             $duplicatedPollProposalElement->setValInteger($originialPollProposalElement->getValInteger());
                             $duplicatedPollProposalElement->setValDatetime($originialPollProposalElement->getValDatetime());
                             $duplicatedPollProposalElement->setTime($originialPollProposalElement->hasTime());
@@ -251,6 +282,16 @@ class ModuleManager
                             $duplicatedPollProposalElement->setEndDate($originialPollProposalElement->hasEndDate());
                             $duplicatedPollProposalElement->setEndTime($originialPollProposalElement->hasEndTime());
                             $duplicatedPollProposalElement->setValGooglePlaceId($originialPollProposalElement->getValGooglePlaceId());
+
+                            if ($originialPollProposalElement->getPictureFile() != null) {
+                                $originalFile = $originialPollProposalElement->getPictureFile();
+                                $tempFileCopyName = str_replace($originalFile->getExtension(), 'dup.' . $originalFile->getExtension(), $originalFile->getFilename());
+                                $tempFileCopyPathname = $originialPollProposalElement->getPictureFile()->getPath() . '/' . $tempFileCopyName;
+                                if (copy($originialPollProposalElement->getPictureFile()->getPathname(), $tempFileCopyPathname)) {
+                                    $newFile = new UploadedFile($tempFileCopyPathname, $tempFileCopyName, $originalFile->getMimeType(), $originalFile->getSize(), null, true);
+                                    $duplicatedPollProposalElement->setPictureFile($newFile);
+                                }
+                            }
                             $mapOrigPPEltIdToDuplPPel[$originialPollProposalElement->getPollElement()->getId()]->addPollProposalElement($duplicatedPollProposalElement);
                             $duplicatedPollProposal->addPollProposalElement($duplicatedPollProposalElement);
                         }

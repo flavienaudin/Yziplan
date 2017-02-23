@@ -16,6 +16,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,6 +25,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class PollProposalElementType extends AbstractType
 {
@@ -56,19 +58,18 @@ class PollProposalElementType extends AbstractType
                         'mapped' => false,
                         'data' => $pollProposalElement->getArrayFromTime(),
                         'constraints' => new IntValuesInArray('hh:mm', ["hour", "minute"], true)
-                    ));
-            } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::END_DATETIME) {
-                $form->add('endDate', DateType::class, array(
-                    'required' => false,
-                    'input' => 'array',
-                    'label' => $pollProposalElement->getPollElement()->getName(),
-                    'html5' => false,
-                    'widget' => 'single_text',
-                    'format' => 'dd/MM/yyyy',
-                    'mapped' => false,
-                    'data' => $pollProposalElement->getArrayFromEndDate(),
-                    'constraints' => new IntValuesInArray('dd/MM/yyyy', ["year", "month", "day"], true)
-                ))
+                    ))
+                    ->add('endDate', DateType::class, array(
+                        'required' => false,
+                        'input' => 'array',
+                        'label' => $pollProposalElement->getPollElement()->getName(),
+                        'html5' => false,
+                        'widget' => 'single_text',
+                        'format' => 'dd/MM/yyyy',
+                        'mapped' => false,
+                        'data' => $pollProposalElement->getArrayFromEndDate(),
+                        'constraints' => new IntValuesInArray('dd/MM/yyyy', ["year", "month", "day"], true)
+                    ))
                     ->add('endTime', TimeType::class, array(
                         'required' => false,
                         'input' => 'array',
@@ -102,16 +103,27 @@ class PollProposalElementType extends AbstractType
                         'class' => 'googlePlaceId_value'
                     )
                 ));
-            } else {
-                $form->add('valString', TextType::class, array(
-                    'required' => true,
-                    'label' => $pollProposalElement->getPollElement()->getName(),
-                    'constraints' => new NotBlank()
+            } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::PICTURE) {
+                $form->add('pictureFile', VichImageType::class, array(
+                    'required' => false,
+                    'label_attr' => array(
+                        'class' => 'sr-only'
+                    )
                 ));
+            } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::RICHTEXT) {
+                $form->add('valText', TextareaType::class, array());
+            } else {
+                $param = array(
+                    'label' => $pollProposalElement->getPollElement()->getName(),
+                );
+                if ($pollProposalElement->getPollElement()->getType() == PollElementType::STRING) {
+                    $param["required"] = true;
+                    $param['constraints'] = new NotBlank();
+                }
+                $form->add('valString', TextType::class, $param);
             }
         });
     }
-
 
     public function configureOptions(OptionsResolver $resolver)
     {

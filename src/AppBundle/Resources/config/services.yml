@@ -11,9 +11,8 @@ services:
     class: AppBundle\Utils\File\FileUploader
     arguments: ['%avatar_directory%', 'avatar']
 
-  at.uploader.event_picture:
-    class: AppBundle\Utils\File\FileUploader
-    arguments: ['%event_picture_directory%', 'event_picture']
+  at.namer.directory.picture:
+    class: AppBundle\Utils\Naming\PictureDirectoryNamer
 
   at.manager.mangopay:
     class: AppBundle\Manager\MangoPayManager
@@ -103,10 +102,16 @@ services:
     tags:
     - { name: form.type }
 
+
+  at.form_type.poll_proposal_element:
+    class: AppBundle\Form\Module\PollProposalElementType
+    tags:
+    - { name: form.type }
+
 # Event Subscribers
   at.event_subscriber.kernel_events.:
     class: AppBundle\EventListener\KernelEventsSubscriber
-    arguments: ['@translator.default','@session.flash_bag','@router']
+    arguments: ['@translator','@session.flash_bag','@router']
     tags:
       - { name: kernel.event_subscriber }
 
@@ -125,13 +130,6 @@ services:
   at.event_listener.avatar_upload:
     class: AppBundle\EventListener\User\AvatarUploadListener
     arguments: ['@at.uploader.avatar']
-    tags:
-      - { name: doctrine.event_listener, event: prePersist }
-      - { name: doctrine.event_listener, event: preUpdate }
-
-  at.event_listener.event_picture_upload:
-    class: AppBundle\EventListener\Event\EventUploadListener
-    arguments: ['@at.uploader.event_picture']
     tags:
       - { name: doctrine.event_listener, event: prePersist }
       - { name: doctrine.event_listener, event: preUpdate }

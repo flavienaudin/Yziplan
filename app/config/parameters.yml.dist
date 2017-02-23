@@ -47,3 +47,8 @@ parameters:
     # Trello authentification
     trello.token_or_login: 9963c393f717f1c909f722c29f79435e
     trello.pass: 4354e0823c4d2cde3b058cf58e3674271ed78cb8a360fad3153d01f632dee052
+
+    # Assetic
+    node.path: "/usr/bin/nodejs"
+    uglifyjs.path: '/usr/bin/uglifyjs'
+    uglifycss.path: '/usr/bin/uglifycss'

@@ -51,7 +51,7 @@ class KernelEventsSubscriber implements EventSubscriberInterface
         );
     }
 
-    public function onKernelREsponse(FilterResponseEvent $event)
+    public function onKernelResponse(FilterResponseEvent $event)
     {
         if ($event->getResponse()->getStatusCode() == Response::HTTP_INTERNAL_SERVER_ERROR) {
             $request = $event->getRequest();

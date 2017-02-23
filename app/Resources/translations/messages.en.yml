@@ -97,16 +97,33 @@ event:
     link: Change the picture
     update_modal:
       title: Upload a picture
+      subtitle: Once the picture loaded, you can click to select the image focus point, it will be centered automatically
       button:
         submit_title: Upload the picture and use it for the event
-  modal.edit:
+  menu:
+    edit: Edit event
+    duplication: Duplication settings
+  modal:
+    edit:
       title: Edit the event
+    duplicate:
+      title: Set duplication options
+      template:
+        title: Event duplicable for everyone
+        instructions: Generate a link to share to allow people to organize an identical event
+        form:
+          activateTemplate:
+            label: Activate the possibility to organize events from this event
+        url_input_label: Share the following link to your customers
+      recurrence:
+        title: Plan the same event again
+        instructions: Organize again the event later. A new event will be created
   form:
     name:
-      label: Title
-      placeholder: Event title
+      label: Event title
+      placeholder: My birthday, Party, Week-end Mon anniversaire, Soirée, Week-end with friends...
     description:
-      label: "Description:"
+      label: "Details"
       placeholder: Say more about your event
       empty: Orgnizers didn't give more detail
     responseDeadline:
@@ -142,45 +159,76 @@ event:
       help:  "All guest will be able to sent new email invitations"
       text.true: Your friends can invite
       text.false: Your friends can not invite
-#    guestsCanAddModule:
-#      label: Guests can add module
-#      placeholder: Guests can add module
-#      text.true: Guests can add module to the event
-#      text.false: Guests can not add module to the event
+    coordinates:
+      link_collpase: Add more coordinates
+      link_popover: Coordinates
+      website:
+        label: Website
+        placeholder: Website http://
+      email:
+        label: Email
+        placeholder: Email
+      phoneNumber:
+        label: Phone number
+        placeholder: Phone number
+      mobileNumber:
+        label: Mobile number
+        placeholder: Mobile number
+      faxNumber:
+        label: Fax number
+        placeholder: Fax number
+      facebookURL:
+        label: Facebook link
+        placeholder: Facebook link
+      googlePlusURL:
+        label: Google plus link
+        placeholder: Google plus link
+      twitterURL:
+        label: Twitter link
+        placeholder: Twitter link
+      instagramURL:
+        label: Instagram link
+        placeholder: Instagram link
+    opening_hour:
+      link_collpase: Opening hours
+      add_link: Add a time slot
+      closed: Closed
+      day_of_week:
+        label: Day
+        placeholder: Day
+      time_open:
+        label: Opening time
+        placeholder: Opening time
+      time_closed:
+        label: Closing time
+        placeholder: Closing time
   wizard:
     button:
-      skip_wizard: Skip the wizard
-      preview: Event preview
       send_invitations: Send invitations
     main:
-      title: Event description
+      title: Event organization
       subtitle: |
-        Describe the event to your guests.
-        You already know the date and the place ? Set them definitively right now or start a poll later!
+        Describe the event to your guests.<br>
+        You already know the date and the place ? Set them definitively right now or add a survey in a next step
     profile:
       title: About you
       subtitle:
-        text: Identify yourself to your guest.
-        not_connected: If you already have an account, login to automatically fill the following information.
+        text: Identify yourself to your guest
+        not_connected: If you already have an account, login to fill this information automatically
+    add_module:
+      title: Consult your guests
+      subtitle: Add survey using links below then click "Next"
     invitations:
       title: The guests
-      subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link..
-    add_module:
-      title: The event is almost ready!
-      subtitle: Add a module using links below or do it later
+      subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link.
     error.message:
-      wrong_step: An error in the event creation process occrured. Pleaze, try again the operation.
+      wrong_step: An error during the event creation process occrured. Pleaze, try again the operation
   error.message:
     creation: An error occured while creating an event.
-    unauthorized_access: You have not the authorization to access this event.
+    unauthorized_access: You haven't the authorization to access this event
+    valide_guestname_required: This action requires that you validate your invitation with your name. No change was made
   success.message:
     creation: Event created successfully
-  help:
-    popover:
-      header: Fill in information about your event.
-      name: Don't stay anonymous, enter your name!
-      response: Think about confirming your presence (you can do it later).
-      pollmodule: Your friends are waiting for your mind.
 
 eventInvitations:
   user_menu:
@@ -200,7 +248,6 @@ eventInvitations:
     month_view: Month view
     week_view: Week view
     day_view: Day view
-
 
 eventInvitation:
   form:
@@ -231,11 +278,10 @@ eventInvitation:
       creator: Creator
       administrator: Administrator
     text:
-      connexion: You already have an account? Login and this information will already be filled
       disconnect: You are not %user%?
     guestname_required_alert:
       title: Please enter your name
-      message: This participation requires that you validated your invitation with your name.<br> Watch out! You will have to try again your action after the validation
+      message: This action requires that you are identified with the other guests
       inputError: It's better with non-empty name.
       dismiss: Your participation wasn't taken into account
       error_message:
@@ -249,24 +295,26 @@ eventInvitation:
         cancel: I saved the link
   message:
     warning:
-      email_owned_by_accountuser: Warning! This email address is associated to a user account. Please, login before participating to enjoy all the features.
-      another_invitation_already_exists_for_user: You already have an invitation to this event, you were redirected.
-      invitation_cancelled: Your invitation is cancelled, you cannot participate in the organization anymore.
+      email_owned_by_accountuser: Warning! This email address belongs to an user account. Please, login to enjoy all the features
+      another_invitation_already_exists_for_user: You already have an invitation to this event, you were redirected
+      invitation_cancelled: Your invitation is cancelled, you cannot participate in the organization anymore
     error:
-      unauthorized_cancel: You are not allowed to cancel this invitation.
-      unauthorized_access: You are ot invited to this event.
+      unauthorized_cancel: You are not allowed to cancel this invitation
+      unauthorized_access: You are ot invited to this event
   email:
     invitation:
-      subject: "[Yziplan] You received an invitation"
+      subject: "Yziplan : You received an invitation"
       body:
         hello: "Hi %username%!"
         paragraph:
           first_part:
             several_orga: "We are "
             single_orga: "I am  "
-          second_part: "inviting you to \"%event_name%\". Follow the link bellow to answer:"
+          second_part: "inviting you to \"%event_name%\""
+          text_link: "Follow this link to answer:"
+          warning_secret: "Keep it secret, this is your personal invitation"
     recap:
-      subject: "[Yziplan] Personal link to your invitation"
+      subject: "Yziplan : Personal link to your invitation"
       body:
         hello: "Hi %username%!"
         paragraph: "You participate to the organization of event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
@@ -275,7 +323,7 @@ invitations_list:
   display:
     title: Guests list
     all_answers: See all the invitations
-    new_invitations: "Invite friends"
+    new_invitations: Invite
     send_email: Send invitations
     list:
       yes: "Presents (%number%)"
@@ -307,14 +355,40 @@ invitations:
       placeholder: Emails of your guests
       invalid_message: Valid email address required
       help: Hit "Return" after each email to validate it
+    message:
+      button: Add a message
+      label: Message
+      placeholder: Write to your guests... (optional)
   message:
     success: Invitations have been sent successfully
-    error: "The following invitations could not be sent : %email_list%"
+    mail_not_sent: "The following invitations could not be sent: %email_list%"
+    invitation_not_created: "The following invitations could not be created: %email_list%"
   button:
     send_invitation: Send invitations
     via_facebook: Via Facebook
     via_gmail_contact:
       show: My  Gmail Contacts
+
+send_message:
+  link: Write
+  modal:
+    title: Send a message to your guest
+    instructions: Write a message to your guest. You can filter by their answer.
+  form:
+    selection:
+      label: Recipientss (by answer)
+      placeholer: Recipients
+    message:
+      label: Message
+      placeholder: Write a message
+  message:
+    success: Your message was sent to your guests
+    warning: "The message was not sent to the following guests (unknown email addresses): %failedRecipients%"
+  email:
+    subject: "Yziplan : You have a message about the event \"%event_name%\""
+    body:
+      hello: "Hello %username%!"
+      paragraph: "Follow the link bellow to go to the event page:"
 
 contactsgmail:
   title: Gmail contacts
@@ -329,7 +403,7 @@ contactsgmail:
 
 module:
   main_information:
-    title: General Information
+    no_description: Add element description
   modal:
     settings:
       title: Element settings
@@ -337,7 +411,8 @@ module:
     name:
       label: Module name
     description:
-      label: What is the purpose of this poll?
+      label: Description
+      placeholder: Description
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline
@@ -360,7 +435,7 @@ module:
       title: Are you sure you want to delete this module?
       message: This action is irreversible
   error.message:
-    add: You must set your name on your invitation.
+    add: An error during the module creation process occrured. Pleaze, try again the operation
 
 pollmodule:
   add_link:
@@ -368,12 +443,19 @@ pollmodule:
     when: When?
     where: Where?
     whobringswhat: Who brings what?
+    activity: Activity
+  poll_element:
+    name: Name
+    picture: Picture
+    description: Description
+    more: More information
   display:
     no_proposal: No proposal yet
     result:
       vote: vote(s)
       contribution: contribution(s)
       total: "Total:"
+      moyenne: "Average:"
       allresult: Show all answers
       modal:
         title: Answers
@@ -382,14 +464,11 @@ pollmodule:
       title: Add a proposal
     editPollProposal:
       title: Edit proposal
-    all:
+    pollproposal:
       form:
-        string_collection:
-          label: Add a text
-        integer_collection:
-          label: Add an integer
-        datetime_collection:
-          label: Add a datetime
+        description:
+          label: Description
+          placeholder: Description
     when:
       startDate: "Start Date/Hour:"
       endDate: "End Date/Hour:"
@@ -436,6 +515,7 @@ global:
     finish: Finish
     later: Not now
     decline: No thanks
+    send: Send
   success:
     data_saved: Information saved
   error:
@@ -445,8 +525,8 @@ global:
     javascrip_disabled: Javascript is disabled by your web browser. The web site may react badly. Enable it to take full advantage of the features we offer.
     invalid_form: Submitted data are not valid.
   exception:
-    access_denied_http: You do not have access to these information. Please, connect with the appropriate user.
-    method_not_allowed_http: This request is not allowed. Take care.
+    access_denied_http: You do not have access to these information. Please, connect with the appropriate user
+    method_not_allowed_http: This request is not allowed. Take care
   validator.constraint:
     as_array: The format is not valid (%format%)
     values_not_null: This value should not be blank
@@ -504,6 +584,15 @@ appuser:
     main: Main
     merged: Merged
 
+day_of_week:
+  1_monday: Monday
+  2_tuesday: Tuesday
+  3_wednesday: Wednesday
+  4_thursday: Thursday
+  5_friday: Friday
+  6_saturday: Saturday
+  7_sunday: sunday
+
 # Emails
 email:
   salutation: Cordially
@@ -511,7 +600,7 @@ email:
 
 # Modale suggestion :
 suggestion:
-  button: We are listening
+  button: Your feedback
   modal:
     text: Send a suggestion, bugs, ...
     form:
@@ -542,6 +631,12 @@ index:
     share: Share it
     organise: Get organised
     enjoy: Enjoy!
+  section_why:
+    title: Why Yziplan ?
+    why1: "You want to meet your friends?<br>You want to know : Who? When? Where? and What to do?"
+    why2: Yziplan is made for you!
+    vote: Let everyone make proposals and vote for the ones you prefer.
+    result: All you have to do is check results and see your friends.
   section_event:
     tiltle: For all kind of event:
     party: Party

@@ -1,7 +1,6 @@
 {# Données d'entrée :
 - module (Module) Le module à afficher
 - moduleForm (Form|null) Le formulaire d'édition du module
-- userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
 #}
 
 <div id="moduleEdit_form_{{ module.token }}">
@@ -17,8 +16,7 @@
             }) }}
             {{ form_row(moduleForm.description, {
                 'label':'module.form.description.label',
-                'attr':{'rows':3},
-                'widget_options':{'fgfloat':true, 'fgline':true}
+                'attr':{'rows':3}
             }) }}
         </div>
     </div>
@@ -36,6 +34,24 @@
 
     <script>
         $(document).ready(function () {
+            var summernoteOptions = {
+                dialogsInBody: true,
+                placeholder: '{{ 'module.form.description.placeholder'|trans }}',
+                height: 150,
+                toolbar: [
+                    ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+                    ['fontsize', ['fontsize']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link', 'picture', 'video']]
+                ]
+            };
+            {% if app.request.locale == 'fr' %}
+            summernoteOptions.lang = 'fr-FR';
+            {% endif %}
+            $('#{{ moduleForm.description.vars.id }}').summernote(summernoteOptions);
+
+            {% block js_document_ready %}
             // Update the Event name while editing the form field
             $('#module_form_{{ module.token }}_name').on('input', function () {
                 var moduleName = $(this).val();
@@ -45,16 +61,16 @@
                 $('#module_{{ module.token }}_name').html(moduleName);
             });
 
-            {% block js_document_ready %}
+
             $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
-                ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {
-                    $("#moduleEdit_modal_{{ module.token }}").modal('hide');
-                }, null, function () {
-                    $grid = $('.grid');
-                    if($grid[0]) {
-                        $grid.masonry('layout');
-                    }
-                });
+                e.preventDefault();
+                var form = $(this);
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    $('#moduleEdit_modal_{{ module.token }}').modal('hide');
+                    askGuestName(e, submitModuleEditionForm, [form, e, "{{ module.token }}"]);
+                } else {
+                    submitModuleEditionForm([form, e, "{{ module.token }}"]);
+                }
             });
             {% endblock js_document_ready %}
         });
