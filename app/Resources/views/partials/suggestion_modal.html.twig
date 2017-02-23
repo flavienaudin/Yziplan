@@ -1,0 +1,11 @@
+{# Données d'entrée :
+- suggestionForm (Form) Le formulaire de suggestion
+#}
+
+<div class="modal fade" id="addSuggestion" tabindex="-1" role="dialog" aria-labelledby="addSuggestionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content ">
+            {{ include(':partials:suggestion_form.html.twig', {'suggestionForm ': suggestionForm }) }}
+        </div>
+    </div>
+</div>

@@ -10,6 +10,7 @@ namespace AppBundle\Manager;
 
 
 use AppBundle\Mailer\AppTwigSiwftMailer;
+use Symfony\Component\Form\FormInterface;
 use Trello\Api\Card;
 use Trello\Client;
 use Trello\Manager;
@@ -41,18 +42,19 @@ class RetourUtilisateurManager
 
 
     /**
-     * @param $datas array
+     * @param FormInterface $suggestionForm
      */
-    public function posterSuggestion($datas)
+    public function posterSuggestion(FormInterface $suggestionForm)
     {
-        $descriptionSuggestion = $datas['description'] . " \r\n";
-        $descriptionSuggestion .= "Nom du rapporteur: " . $datas['nom'] . "\r\n";
-        $descriptionSuggestion .= "Email: " . $datas['mail'] . "\r\n";
-        $descriptionSuggestion .= "Résolution: " . $datas['resolution'] . " \r\n";
-        $descriptionSuggestion .= "OS: " . $datas['os'] . " \r\n";
-        $descriptionSuggestion .= "Navigateur: " . $datas['navigateur'] . " \r\n";
-        $descriptionSuggestion .= "UserAgent: " . $datas['userAgent'] . " \r\n";
-        $descriptionSuggestion .= "PageURL: " . $datas['pageURL'];
+
+        $descriptionSuggestion = $suggestionForm->get('description')->getData() . " \r\n";
+        $descriptionSuggestion .= "Nom du rapporteur: " . $suggestionForm->get('name')->getData() . "\r\n";
+        $descriptionSuggestion .= "Email: " . $suggestionForm->get('mail')->getData() . "\r\n";
+        $descriptionSuggestion .= "Résolution: " . $suggestionForm->get('resolution')->getData() . " \r\n";
+        $descriptionSuggestion .= "OS: " . $suggestionForm->get('os')->getData() . " \r\n";
+        $descriptionSuggestion .= "Navigateur: " . $suggestionForm->get('navigateur')->getData() . " \r\n";
+        $descriptionSuggestion .= "UserAgent: " . $suggestionForm->get('userAgent')->getData() . " \r\n";
+        $descriptionSuggestion .= "PageURL: " . $suggestionForm->get('pageURL')->getData();
 
         // Ajout d'une carte sur le tableau Trello
         $client = new Client();
@@ -72,7 +74,7 @@ class RetourUtilisateurManager
                 // Ajout de la demande à Trello
                 $trelloData = array(
                     "idList" => $cardsListToLink->getId(),
-                    "name" => $datas['titre'] . " (" . $datas['nom'] . ")",
+                    "name" => $suggestionForm->get('titre')->getData() . " (" . $suggestionForm->get('name')->getData() . ")",
                     "desc" => $descriptionSuggestion
                 );
                 $cardApi = new Card($client);

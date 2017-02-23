@@ -54,3 +54,7 @@ fos_comment_api:
     resource: "@FOSCommentBundle/Resources/config/routing.yml"
     prefix: /api
     defaults: { _format: html }
+
+# BotDetect CAPTCHA
+captcha_routing:
+  resource: "@CaptchaBundle/Resources/config/routing.yml"
