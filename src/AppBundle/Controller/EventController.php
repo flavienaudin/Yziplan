@@ -311,6 +311,7 @@ class EventController extends Controller
         $recurrenceSettingsForm = null;
         $sendMessageForm = null;
         if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
+            /* TODO : desactivé en attendant de finaliser l'interface
             $templateSettingsForm = $eventManager->createTemplateSettingsForm();
             $templateSettingsForm->handleRequest($request);
             if ($templateSettingsForm->isSubmitted()) {
@@ -348,7 +349,7 @@ class EventController extends Controller
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     }
                 }
-            }
+            }*/
 
             $eventForm = $eventManager->initEventForm();
             $eventForm->handleRequest($request);
