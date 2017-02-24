@@ -74,7 +74,7 @@
         function loadContacts(pageToken) {
             pageToken = typeof pageToken !== 'undefined' ? pageToken : null;
             var options = {
-                //'resource': 'people/me',
+                'resourceName': 'people/me',
                 'pageSize': 100,
                 'sortOrder': 'FIRST_NAME_ASCENDING',
                 'requestMask.includeField': 'person.photos,person.email_addresses,person.names'
@@ -83,7 +83,7 @@
                 options['pageToken'] = pageToken;
 
             }
-            var request = gapi.client.people.people.me.connections.list(options);
+            var request = gapi.client.people.people.connections.list(options);
             request.execute(function (resp) {
                 var connections = resp.connections;
 
