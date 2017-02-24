@@ -31,7 +31,10 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle($this),
 
             // File Upload Bundle
-            new Vich\UploaderBundle\VichUploaderBundle()
+            new Vich\UploaderBundle\VichUploaderBundle(),
+
+            // BotDetect CAPTCHA
+            new Captcha\Bundle\CaptchaBundle\CaptchaBundle(),
         ];
 
         //Test and Dev Bundles

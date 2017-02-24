@@ -1,0 +1,87 @@
+{# Données d'entrée :
+- suggestionForm (Form) Le formulaire de suggestion
+#}
+
+<div id="suggestion_formContainer">
+    {{ form_start(suggestionForm, {'action' : path("addSuggestion"), attr:{'id':suggestionForm.vars.id,'class':''}}) }}
+
+    {{ form_row(suggestionForm.titre, {
+        'label' : "suggestion.modal.form.title.label",
+        'widget_options':{'dlhorizontal':true,'fgline':true}
+    }) }}
+
+    {{ form_row(suggestionForm.description, {
+        'label' : "suggestion.modal.form.description.label",
+        'attr':{'rows': 10, 'class':'resize-vertical', 'placehoder':'suggestion.modal.form.description.placeholder'},
+        'widget_options':{'dlhorizontal':true,'fgline':true}
+    }) }}
+    {{ form_row(suggestionForm.name, {
+        'label' : "suggestion.modal.form.name.label",
+        'value': (is_granted("IS_AUTHENTICATED_REMEMBERED")?app.user.applicationUser.displayableName:''),
+        'widget_options':{'dlhorizontal':true,'fgline':true}
+    }) }}
+    {{ form_row(suggestionForm.mail, {
+        'label' : "suggestion.modal.form.email.label",
+        'value': (is_granted("IS_AUTHENTICATED_REMEMBERED")?app.user.email:''),
+        'widget_options':{'dlhorizontal':true,'fgline':true}
+    }) }}
+    {{ form_row(suggestionForm.suggestionCaptcha, {
+        'label' : "suggestion.modal.form.captcha.label",
+        'value': (is_granted("IS_AUTHENTICATED_REMEMBERED")?app.user.email:''),
+        'widget_options':{'dlhorizontal':true,'fgline':true}
+    }) }}
+    <div class="hidden">
+        {{ form_row(suggestionForm.resolution) }}
+        {{ form_row(suggestionForm.os) }}
+        {{ form_row(suggestionForm.navigateur) }}
+        {{ form_row(suggestionForm.userAgent) }}
+        {{ form_row(suggestionForm.pageURL) }}
+        {{ form_rest(suggestionForm) }}
+    </div>
+    <div class="pull-right m-r-20">
+        <button type="button" class="btn btn-flat waves-effect" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
+        <button id="envoyerSuggestionOuBug" type="submit" class="btn waves-effect btn-primary" data-loading-text="{{ "global.button.loading"|trans }}"
+                data-original-text="{{ "global.button.add"|trans }}">{{ "global.button.add"|trans }}</button>
+    </div>
+    {{ form_end(suggestionForm) }}
+    <div class="clearfix"></div>
+
+    <!-- Base : Suggestion/Bugs-->
+    <script>
+        $(document).ready(function () {
+            // Formulaire de soumission de suggestions/bugs
+            var formSuggestion = $('form#{{ suggestionForm.vars.id }}');
+
+            formSuggestion.on("submit", function (e) {
+                ajaxFormSubmission($(this), e,
+                    function () {
+                        $('#addSuggestion').modal('hide');
+                    }, function () {
+                        $('#addSuggestion').modal('show');
+                    }, null);
+            });
+
+            $('#addSuggestion').on('show.bs.modal', function () {
+                // Resolution de l'écran
+                formSuggestion.find('#{{ suggestionForm.resolution.vars.id }}').val("Height: " + $(window).height() + ' ; Width: ' + $(window).width());
+
+                // OS
+                var OSName = "Unknown OS";
+                if (navigator.appVersion.indexOf("Win") != -1) OSName = "Windows";
+                if (navigator.appVersion.indexOf("Mac") != -1) OSName = "MacOS";
+                if (navigator.appVersion.indexOf("X11") != -1) OSName = "UNIX";
+                if (navigator.appVersion.indexOf("Linux") != -1) OSName = "Linux";
+                formSuggestion.find('#{{ suggestionForm.os.vars.id }}').val(OSName);
+
+                // Navigateur
+                formSuggestion.find('#{{ suggestionForm.navigateur.vars.id }}').val(navigator.appName + " " + navigator.appVersion);
+
+                // User Agent
+                formSuggestion.find('#{{ suggestionForm.userAgent.vars.id }}').val(navigator.userAgent);
+
+                // Page ocurante
+                formSuggestion.find('#{{ suggestionForm.pageURL.vars.id }}').val(window.location.href);
+            });
+        });
+    </script>
+</div>

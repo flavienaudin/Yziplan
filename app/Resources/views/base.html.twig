@@ -236,7 +236,7 @@
         {{ render(controller('ATUserBundle:Registration:register', {"parentRequest":app.request, "display":"modal"})) }}
     {% endif %}
     {% block page_modal_container %}
-        {{ include(':partials:suggestion.html.twig') }}
+        {{ render(controller("AppBundle:Core:addSuggestion")) }}
     {% endblock %}
 </div>
 
