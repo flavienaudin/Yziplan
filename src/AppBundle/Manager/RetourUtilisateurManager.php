@@ -21,7 +21,7 @@ class RetourUtilisateurManager
     const CARDS_LIST_NAME = "Suggestions/Bugs";
     const CARDS_BOARD_ID = "MY1WgL9v";
 
-    /** @var EmailManager */
+    /** @var AppTwigSiwftMailer */
     private $emailManager;
 
     /** @var string */
@@ -83,11 +83,6 @@ class RetourUtilisateurManager
         }
 
         // Envoie d'un email
-        /*$message = \Swift_Message::newInstance()
-            ->setSubject("[AT][SuggestionArdGanisateur] " . $datas["titre"])
-            ->setFrom('contact@ardteam.fr')
-            ->setTo(array('contact@ardteam.fr'))
-            ->setBody(nl2br($descriptionSuggestion), 'text/html');
-        $this->emailManager->send($message);*/
+        $this->emailManager->sendSuggestionEmail($suggestionForm->get('titre')->getData(), $descriptionSuggestion);
     }
 }

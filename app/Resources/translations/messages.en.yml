@@ -613,6 +613,8 @@ suggestion:
         label: Your name
       email:
         label: Your email
+      captcha:
+        label: Captcha
   success:
     titre: Thank you!
     message: Your suggestion has been sent. We will read it carefully.

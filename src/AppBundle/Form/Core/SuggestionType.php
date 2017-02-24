@@ -9,6 +9,8 @@
 namespace AppBundle\Form\Core;
 
 
+use Captcha\Bundle\CaptchaBundle\Form\Type\CaptchaType;
+use Captcha\Bundle\CaptchaBundle\Validator\Constraints\ValidCaptcha;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -59,6 +61,13 @@ class SuggestionType extends AbstractType
             ->add("pageURL", HiddenType::class, array(
                 'mapped' => false
             ))
-        ;
+            ->add('suggestionCaptcha', CaptchaType::class, array(
+                'captchaConfig' => 'SuggestionCaptcha',
+                'required' => true,
+                'constraints' => array(
+                    new ValidCaptcha(),
+                    new NotBlank())
+
+            ));
     }
 }

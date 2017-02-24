@@ -63,4 +63,11 @@ class AppTwigSiwftMailer extends TwigSwiftMailer
         }
         return false;
     }
+
+    public function sendSuggestionEmail($titre = "sans titre", $message = "sans message")
+    {
+        $context = array('titre' => $titre, 'message' => $message);
+        $this->sendMessage(":Email:suggestion_email.html.twig", $context, $this->parameters['from_email']['confirmation'], 'contact@yziplan.fr');
+        return true;
+    }
 }
