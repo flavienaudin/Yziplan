@@ -2,10 +2,13 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Form\Core\SuggestionType;
+use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class CoreController
@@ -51,17 +54,37 @@ class CoreController extends Controller
      */
     public function addSuggestionAction(Request $request)
     {
-        if ($request->isXmlHttpRequest()) {
-            $datas = $request->request->all();
-            $this->get("at.manager.retour_utilisateur")->posterSuggestion($datas);
-            return new JsonResponse(array(
-                "type" => "success",
-                "titre" => $this->get('translator')->trans("suggestion.success.titre"),
-                "message" => $this->get('translator')->trans("suggestion.success.message")
-            ));
-        } else {
-            $this->addFlash("error", $this->get("translator")->trans("flashMessage.erreur_requete"));
-            return $this->redirectToRoute("home");
+        $suggestionForm = $this->get('form.factory')->create(SuggestionType::class);
+        $suggestionForm->handleRequest($request);
+        if ($suggestionForm->isSubmitted()) {
+            if ($request->isXmlHttpRequest()) {
+                if ($suggestionForm->isValid()) {
+                    $this->get("at.manager.retour_utilisateur")->posterSuggestion($suggestionForm);
+
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("suggestion.success.message");
+
+                    // Reset form
+                    $suggestionForm = $this->get('form.factory')->create(SuggestionType::class);
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#suggestion_formContainer'] =
+                        $this->renderView("partials/suggestion_form.html.twig", array(
+                            'suggestionForm' => $suggestionForm->createView()
+                        ));
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#suggestion_formContainer'] =
+                        $this->renderView("partials/suggestion_form.html.twig", array(
+                            'suggestionForm' => $suggestionForm->createView()
+                        ));
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                }
+            } else {
+                $this->addFlash("error", $this->get("translator")->trans("global.error.not_ajax_request"));
+                return $this->redirectToRoute("home");
+            }
         }
+
+        return $this->render('partials/suggestion_modal.html.twig', array(
+            'suggestionForm' => $suggestionForm->createView()
+        ));
     }
 }

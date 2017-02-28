@@ -1,0 +1,16 @@
+{# Données d'entrée :
+- titre : Titre de la suggestion
+- message : le message à envoyer
+#}
+
+{% block subject %}{% autoescape false %}Yziplan Suggestion : {{ titre }}{% endautoescape %}{% endblock %}
+{% block body_text %}
+    {% autoescape false %}
+        {{ message|nl2br }}
+    {% endautoescape %}
+{% endblock %}
+{% block body_html %}
+    {% autoescape false %}
+        {{ message|nl2br }}
+    {% endautoescape %}
+{% endblock %}
