@@ -261,6 +261,12 @@ class EventInvitationManager
                 if ($this->eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                     // Envoi d'une invitation => AWAITNG_ANSWER
                     $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+                    /** @var ModuleInvitation $moduleInvitation */
+                    foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
+                        if ($moduleInvitation->getStatus() == ModuleInvitationStatus::CANCELLED) {
+                            $moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
+                        }
+                    }
                 }
                 try {
                     if ($this->persistEventInvitation()) {
@@ -404,7 +410,7 @@ class EventInvitationManager
 
             /** @var ModuleInvitation $moduleInvitation */
             foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
-                if ($moduleInvitation->getStatus() == ModuleInvitationStatus::AWAITING_ANSWER) {
+                if ($moduleInvitation->getStatus() == ModuleInvitationStatus::VALID) {
                     $moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
                 }
             }
