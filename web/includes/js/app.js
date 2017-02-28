@@ -209,11 +209,19 @@ function jsPlugginActivation() {
     }
 
     $('.clockpicker').clockpicker();
-    var locale_format = "DD/MM/YYYY";
+    var locale_format = "dd/mm/yyyy";
     if (locale_js == 'en') {
-        locale_format = "MM/DD/YYYY";
+        locale_format = "mm/dd/yyyy";
     }
-    $('.ag-date-picker').datetimepicker({
+    $('.ag-date-picker').datepicker({
+        format: locale_format,
+        language: locale_js,
+        maxViewMode: 2,
+        todayHighlight: true,
+        autoclose: true,
+        todayBtn: true,
+    });
+    /*$('.ag-date-picker').datetimepicker({
         format: locale_format,
         locale: locale_js,
         showClear: true,
@@ -233,7 +241,7 @@ function jsPlugginActivation() {
             horizontal: 'auto',
             vertical: 'bottom'
         }
-    });
+    });*/
     $('.selectpicker').selectpicker();
     $('.toggle-tooltip, [data-toggle="tooltip"]').tooltip();
 
