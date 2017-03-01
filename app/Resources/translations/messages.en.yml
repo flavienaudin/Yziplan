@@ -107,10 +107,12 @@ event:
     edit:
       title: Edit the event
     duplicate:
-      title: Set duplication options
+      title: Duplication Settings
       template:
         title: Event duplicable for everyone
-        instructions: Generate a link to share to allow people to organize an identical event
+        instructions: |
+          Enabling this option gives you a link to automatically create an identical event to this one, you have to publish to your audience.<br>
+          By following the link, a user will become an organizor of a new pre-filled event. He will only have to invite his friends to organize themselves all together.
         form:
           activateTemplate:
             label: Activate the possibility to organize events from this event

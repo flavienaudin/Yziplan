@@ -107,10 +107,12 @@ event:
     edit:
       title: Modifier l'événement
     duplicate:
-      title: Configurer les options de duplication
+      title: Options de duplication
       template:
-        title: Evénement duplicable par tout le monde
-        instructions: Générer un lien à partager pour permettre à des personnes d'organiser un événement identique.
+        title: Faire de cet événement un modèle
+        instructions: |
+          En activant cette option, vous obtiendrez un lien de création automatique d'événement identique à celui-ci que vous pourrez transmetrte à votre public.<br>
+          En le suivant, un utilisateur deviendra l'organisateurs d'un nouvel événement pré-rempli. Il n'aura plus qu'à inviter ses amis pour qu'ils s'organisent tous ensemble.
         form:
           activateTemplate:
             label: Activer la possiblité d'organiser des événements à partir de cet événement
