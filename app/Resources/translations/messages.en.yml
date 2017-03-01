@@ -112,7 +112,7 @@ event:
         title: Event duplicable for everyone
         instructions: |
           Enabling this option gives you a link to automatically create an identical event to this one, you have to publish to your audience.<br>
-          By following the link, a user will become an organizor of a new pre-filled event. He will only have to invite his friends to organize themselves all together.
+          By following the link, a user will become an organizer of a new pre-filled event. He will only have to invite his friends to organize themselves all together.
         form:
           activateTemplate:
             label: Activate the possibility to organize events from this event
@@ -490,6 +490,10 @@ moduleInvitation:
     unauthorized_access: You are not allowed to edit this answer.
 
 duplication:
+  notice:
+    swal:
+      title: Success
+      message: You are now the organizer of this new event.<br>It is pre-filled for you
   message:
     error: You are not allow to duplicate this event
 

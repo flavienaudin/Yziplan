@@ -490,6 +490,10 @@ moduleInvitation:
     unauthorized_access: Vous n'êtes pas autoriser à modifier cette réponse
 
 duplication:
+  notice:
+    swal:
+      title: Félicitations
+      message: Vous êtes maintenant l'organisateur de ce nouvel événement.<br>Celui-ci a été pré-rempli pour vous
   message:
     error: Vous n'êtes pas autorisé à dupliquer cet événement
 

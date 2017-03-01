@@ -186,7 +186,6 @@ class EventController extends Controller
                 }
                 $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $duplicatedEvent->getToken(), $userEventInvitation->getToken());
             }
-
             $entityManager = $this->get('doctrine.orm.entity_manager');
             $entityManager->persist($duplicatedEvent);
             $entityManager->flush();

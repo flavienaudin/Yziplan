@@ -161,6 +161,15 @@
                     $grid.masonry('layout');
                 }
             });
+
+            {% if app.session.has('sf_redirect') and app.session.get('sf_redirect')['route'] == "duplicateEvent" %}
+                {# Affichage de l'événement après une duplication => information à l'utilisateur#}
+                swal({
+                    type: "success",
+                    titleText: "{{ 'duplication.notice.swal.title'|trans }}",
+                    html: "{{ 'duplication.notice.swal.message'|trans|raw }}"
+                });
+            {% endif %}
         });
 
         if (typeof google === 'object' && typeof google.maps === 'object') {
