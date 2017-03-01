@@ -768,9 +768,12 @@ class EventController extends Controller
             //////////////////////
             // poll module case //
             //////////////////////
-            if (array_key_exists('pollProposalAddForm', $moduleDescription) && $moduleDescription['pollProposalAddForm'] instanceof Form) {
+            if (array_key_exists('pollModuleOptions', $moduleDescription)
+                && array_key_exists('pollProposalAddForm', $moduleDescription['pollModuleOptions'])
+                && $moduleDescription['pollModuleOptions']['pollProposalAddForm'] instanceof Form
+            ) {
                 /** @var FormInterface $pollProposalAddForm */
-                $pollProposalAddForm = $moduleDescription['pollProposalAddForm'];
+                $pollProposalAddForm = $moduleDescription['pollModuleOptions']['pollProposalAddForm'];
                 $pollProposalAddForm->handleRequest($request);
                 if ($pollProposalAddForm->isSubmitted()) {
                     if ($request->isXmlHttpRequest()) {
@@ -789,7 +792,7 @@ class EventController extends Controller
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
                                 $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
                                     'userModuleInvitation' => $userModuleEventInvitation,
-                                    'pollProposalForm' => $pollProposalAddForm->createView(),
+                                    'pollModuleOptions' => array('pollProposalAddForm' => $pollProposalAddForm->createView()),
                                     'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
                                     'edition' => false
                                 ));
@@ -798,7 +801,7 @@ class EventController extends Controller
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
                                 $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
                                     'userModuleInvitation' => $userModuleEventInvitation,
-                                    'pollProposalForm' => $pollProposalAddForm->createView(),
+                                    'pollModuleOptions' => array('pollProposaAddlForm' => $pollProposalAddForm->createView()),
                                     'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
                                     'edition' => false
                                 ));
@@ -815,7 +818,7 @@ class EventController extends Controller
                         }
                     }
                 }
-                $modules[$moduleId]['pollProposalAddForm'] = $pollProposalAddForm->createView();
+                $modules[$moduleId]['pollModuleOptions']['pollProposalAddForm'] = $pollProposalAddForm->createView();
             }
         }
         // nothing to return continue the action

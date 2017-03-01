@@ -98,6 +98,7 @@ class PollProposalManager
         return $this->formFactory->createNamed("add_poll_proposal_form_" . $pollModule->getModule()->getToken(), PollProposalType::class, $this->pollProposal);
     }
 
+
     /**
      * @param PollProposal $pollProposal
      * @return FormInterface

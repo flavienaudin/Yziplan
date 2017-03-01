@@ -1,75 +1,156 @@
 {# Données d'entrée :
 - userModuleInvitation (ModueInvitation) Le ModuleInvitation de l'utilisateur connecté
-- pollProposalForm (FormInterface) Le formulaire d'ajout/édition d'un PollProposal
+- pollModuleOptions (Array), contains:
+        - pollProposalAddForm (Form|null) Le formulaire d'ajout d'une proposition
 - pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
 - edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
 #}
+{% set pollProposalForm = pollModuleOptions.pollProposalAddForm %}
 <div>
-    {% if edition %}
-        {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
-            'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
-    {% else %}
-        {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
-    {% endif %}
-    {{ form_label(pollProposalForm.pollProposalElements, null, {'label_attr':{'class':'sr-only'}}) }}
-    {{ form_errors(pollProposalForm.pollProposalElements) }}
+    <div role="tabpanel">
+        <ul class="tab-nav" role="tablist">
+            <li class="active"><a href="#{{ pp_form_modal_prefix }}OneDate" aria-controls="{{ pp_form_modal_prefix }}OneDate" role="tab" data-toggle="tab">Une</a></li>
+            <li><a href="#{{ pp_form_modal_prefix }}SeveralDate" aria-controls="{{ pp_form_modal_prefix }}SeveralDate" role="tab" data-toggle="tab">Plusieurs</a></li>
+        </ul>
 
-    {# Le but de la manoeuvre ci-dessous est d'afficher la startDate avant la EndDate à coup sur #}
-    {% for pollProposalElement in pollProposalForm.pollProposalElements %}
-        {{ form_errors(pollProposalElement) }}
-        {{ "pollmodule.modal.when.startDate"|trans }}
-        <div class="row">
-            <div class="col-xs-12 col-md-6">
-                {{ form_row(pollProposalElement.startDate, {
-                    'label_attr':{'class':'sr-only'},
-                    'widget_options':{
-                        'fgfloat':false,
-                        'fgline':true}
-                }) }}
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="{{ pp_form_modal_prefix }}OneDate">
+                {% if edition %}
+                    {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
+                        'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
+                {% else %}
+                    {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
+                {% endif %}
+                {{ form_label(pollProposalForm.pollProposalElements, null, {'label_attr':{'class':'sr-only'}}) }}
+                {{ form_errors(pollProposalForm.pollProposalElements) }}
+
+                {# Le but de la manoeuvre ci-dessous est d'afficher la startDate avant la EndDate à coup sur #}
+                {% for pollProposalElement in pollProposalForm.pollProposalElements %}
+                    {{ form_errors(pollProposalElement) }}
+                    {{ "pollmodule.modal.when.startDate"|trans }}
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            {{ form_row(pollProposalElement.startDate, {
+                                'label_attr':{'class':'sr-only'},
+                                'widget_options':{
+                                    'fgfloat':false,
+                                    'fgline':true}
+                            }) }}
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            {{ form_row(pollProposalElement.startTime, {
+                                'label_attr':{'class':'sr-only'},
+                                'attr': {
+                                    'placeholder': "global.form.optional"|trans},
+                                'widget_options':{
+                                    'fgfloat':false,
+                                    'fgline':true}
+                            }) }}
+                        </div>
+                    </div>
+                    {{ form_errors(pollProposalElement) }}
+                    {{ "pollmodule.modal.when.endDate"|trans }} <i class="zmdi zmdi-info" data-toggle="tooltip" title="{{ "pollmodule.modal.when.tooltip"|trans }}"></i>
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6">
+                            {{ form_row(pollProposalElement.endDate, {
+                                'label_attr':{'class':'sr-only'},
+                                'attr': {
+                                    'placeholder': "global.form.optional"|trans},
+                                'widget_options':{
+                                    'fgfloat':false,
+                                    'fgline':true}
+                            }) }}
+                        </div>
+                        <div class="col-xs-12 col-md-6">
+                            {{ form_row(pollProposalElement.endTime, {
+                                'label_attr':{'class':'sr-only'},
+                                'attr': {
+                                    'placeholder': "global.form.optional"|trans},
+                                'widget_options':{
+                                    'fgfloat':false,
+                                    'fgline':true}
+                            }) }}
+                        </div>
+                    </div>
+                {% endfor %}
+                {{ form_rest(pollProposalForm) }}
+                <div class="pull-right">
+                    <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                    <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
+                </div>
+                {{ form_end(pollProposalForm) }}
             </div>
-            <div class="col-xs-12 col-md-6">
-                {{ form_row(pollProposalElement.startTime, {
-                    'label_attr':{'class':'sr-only'},
-                    'attr': {
-                        'placeholder': "global.form.optional"|trans},
-                    'widget_options':{
-                        'fgfloat':false,
-                        'fgline':true}
-                }) }}
+            <div role="tabpanel" class="tab-pane" id="{{ pp_form_modal_prefix }}SeveralDate">
+                <div class="row m-t-15">
+                    <div class="center-block col-xs-12 col-sm-7">
+                        <div id="datepicker_exemple" data-date=""></div>
+                        <input type="hidden" id="my_hidden_input">
+                    </div>
+                    <div class="center-block col-xs-12 col-sm-5">
+                        <div class="row">
+                            <div class="center-block col-xs-12">
+                                <div class="form-group ">
+                                    <div class="fg-line"><label class="sr-only control-label">Quand</label>
+                                        <div class="input-group ag-time-picker clockpicker" data-autoclose="true">
+                            <span class="input-group-addon">
+                                <span class="zmdi zmdi-time"></span>
+                            </span>
+                                            <input type="text" placeholder="Heure de début" class="readonly-onmobile form-control" onkeypress="refuserToucheEntree(event);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="center-block col-xs-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Durée">
+                                </div>
+                            </div>
+                            <div class="center-block col-xs-6">
+                                <select class="selectpicker bs-select-hidden">
+                                    <option>Min</option>
+                                    <option>Heure</option>
+                                    <option>Jour</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="center-block col-xs-6">
+                            <a class="btn btn-link btn-icon-text c-blue p-l-0" href="#"> <i class="zmdi zmdi-plus-square"></i>Ajouter un horaire</a>
+                        </div>
+                    </div>
+                    <div class="center-block col-xs-12 m-t-10">
+                        <a class="btn btn-link btn-icon-text c-blue p-l-0" href="#"> <i class="zmdi zmdi-plus-square"></i>Ajouter une série de date</a>
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                    <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
+                </div>
             </div>
         </div>
-        {{ form_errors(pollProposalElement) }}
-        {{ "pollmodule.modal.when.endDate"|trans }} <i class="zmdi zmdi-info" data-toggle="tooltip" title="{{ "pollmodule.modal.when.tooltip"|trans }}"></i>
-        <div class="row">
-            <div class="col-xs-12 col-md-6">
-                {{ form_row(pollProposalElement.endDate, {
-                    'label_attr':{'class':'sr-only'},
-                    'attr': {
-                        'placeholder': "global.form.optional"|trans},
-                    'widget_options':{
-                        'fgfloat':false,
-                        'fgline':true}
-                }) }}
-            </div>
-            <div class="col-xs-12 col-md-6">
-                {{ form_row(pollProposalElement.endTime, {
-                    'label_attr':{'class':'sr-only'},
-                    'attr': {
-                        'placeholder': "global.form.optional"|trans},
-                    'widget_options':{
-                        'fgfloat':false,
-                        'fgline':true}
-                }) }}
-            </div>
-        </div>
-    {% endfor %}
-    {{ form_rest(pollProposalForm) }}
-
-    <div class="pull-right">
-        <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
-        <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
     </div>
-    {{ form_end(pollProposalForm) }}
+
+    <script>
+        $(document).ready(function () {
+            var locale_format = "dd/mm/yyyy";
+            if (locale_js == 'en') {
+                locale_format = "mm/dd/yyyy";
+            }
+            $('#datepicker_exemple').datepicker({
+                format: locale_format,
+                language: locale_js,
+                maxViewMode: 2,
+                multidate: true,
+                todayHighlight: true,
+                autoclose: false,
+                todayBtn: true
+            });
+            $('#datepicker_exemple').on('changeDate', function () {
+                $('#my_hidden_input').val(
+                    $('#datepicker_exemple').datepicker('getFormattedDate')
+                );
+            });
+        })
+    </script>
+
 </div>
 
 

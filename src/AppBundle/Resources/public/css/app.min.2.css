@@ -1599,7 +1599,8 @@ select.chosen {
     transform-origin: 0 100% !important;
 }
 
-
+.table-striped .datepicker table tr td,
+.table-striped .datepicker table tr th,
 .datepicker table thead tr th {
     border-radius: 0;
     color: #fff;

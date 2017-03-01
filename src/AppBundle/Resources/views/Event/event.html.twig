@@ -54,7 +54,7 @@
                             'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
                             'userModuleInvitation':userModuleInvitation,
                             'thread':moduleDescription.thread,'comments':moduleDescription.comments,
-                            'pollProposalAddForm':(moduleDescription.pollProposalAddForm is defined?moduleDescription.pollProposalAddForm:null )
+                            'pollModuleOptions':(moduleDescription.pollModuleOptions is defined?moduleDescription.pollModuleOptions:null )
                         }) }}
                     {% elseif moduleDescription.module.expenseModule is not null %}
                         {{ include('@App/Event/module/displayExpenseModule.html.twig', {

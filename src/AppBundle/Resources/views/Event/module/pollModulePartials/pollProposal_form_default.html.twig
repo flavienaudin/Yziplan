@@ -1,9 +1,11 @@
 {# Données d'entrée :
 - userModuleInvitation (ModueInvitation) Le ModuleInvitation de l'utilisateur connecté
-- pollProposalForm (FormInterface) Le formulaire d'ajout/édition d'un PollProposal
+- pollModuleOptions (Array), contains:
+        - pollProposalAddForm (Form|null) Le formulaire d'ajout d'une proposition
 - pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
 - edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
 #}
+{% set pollProposalForm = pollModuleOptions.pollProposalAddForm %}
 {% if edition %}
     {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
         'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
