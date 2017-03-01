@@ -115,9 +115,9 @@ event:
           activateTemplate:
             label: Activer la possiblité d'organiser des événements à partir de cet événement
         url_input_label: Partager le lien suivant à tous vos potentiels clients
-      recurrence:
-        title: Planifier le même événement à nouveau
-        instructions: Organiser à nouveau l'événement à une autre date. Un nouvel événement va être créé
+    recurrence:
+      title: Planifier le même événement à nouveau
+      instructions: Organiser à nouveau l'événement à une autre date. Un nouvel événement va être créé
   form:
     name:
       label: Titre de l'événement
@@ -486,6 +486,10 @@ moduleInvitation:
   error.message:
     missing_data: Des informations sont manquantes pour traiter la requête.
     unauthorized_access: Vous n'êtes pas autoriser à modifier cette réponse
+
+duplication:
+  message:
+    error: Vous n'êtes pas autorisé à dupliquer cet événement
 
 # Globals
 global:

@@ -9,7 +9,7 @@
     {{ form_start(eventTemplateSettingsForm, {'action':path('displayEvent',{'token':event.token}), 'attr':{'id':eventTemplateSettingsForm.vars.id}}) }}
 
     {% set attr = {'class':'md-toogle-switch'} %}
-    {% if event.tokenDuplication is not empty %}
+    {% if event.duplicationEnabled %}
         {% set attr = attr|merge({'checked':'checked'})  %}
     {% endif %}
     {{ form_row(eventTemplateSettingsForm.activateTemplate, {
@@ -19,7 +19,7 @@
     }) }}
     <button type="submit" class="btn btn-primary">{{ "global.button.valid"|trans }}</button>
 
-    {% if event.tokenDuplication is not empty %}
+    {% if event.duplicationEnabled is not empty %}
         <div id="eventDuplicationTemplateLink" class="m-t-15">
             <label class="control-label text-info" for="url_event_template_duplication">{{ "event.modal.duplicate.template.url_input_label"|trans }}&nbsp;:</label>
             <div class="input-group">

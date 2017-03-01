@@ -19,6 +19,9 @@
                     {{ include("@App/Event/partials/event_duplication_recurrence_settings_form.html.twig", {'event':event,'eventRecurrenceSettingsForm':eventRecurrenceSettingsForm}) }}
                 {% endif %}
             </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
+            </div>
         </div>
     </div>
 </div>
