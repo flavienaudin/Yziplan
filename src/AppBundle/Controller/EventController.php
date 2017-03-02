@@ -44,6 +44,8 @@ class EventController extends Controller
     const WIZARD_NEW_EVENT_STEP_ADD_MODULE = "addmodule";
     const WIZARD_NEW_EVENT_STEP_INVITATIONS = "invitations";
 
+    const REDIRECTED_AFTER_EVENT_DUPLICATION = "redirected/eventDuplication";
+
     /**
      * @Route("/new", name="createEvent")
      */
@@ -186,6 +188,8 @@ class EventController extends Controller
                 }
                 $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $duplicatedEvent->getToken(), $userEventInvitation->getToken());
             }
+            // TODO : ce n'est pas l'implémentation idéale mais en attendant de réfléchir à une meilleure solution (get redirection in PROD env ?)
+            $request->getSession()->set(self::REDIRECTED_AFTER_EVENT_DUPLICATION, $event->getTokenDuplication());
             $entityManager = $this->get('doctrine.orm.entity_manager');
             $entityManager->persist($duplicatedEvent);
             $entityManager->flush();
@@ -570,6 +574,12 @@ class EventController extends Controller
             return $response;
         }
 
+        // Cas de duplication
+        $redirectedAfterEventDuplication = false;
+        if($request->getSession()->has(self::REDIRECTED_AFTER_EVENT_DUPLICATION)){
+            $redirectedAfterEventDuplication = true;
+            $request->getSession()->remove(self::REDIRECTED_AFTER_EVENT_DUPLICATION);
+        }
         return $this->render('AppBundle:Event:event.html.twig', array(
             'event' => $currentEvent,
             'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
@@ -581,7 +591,8 @@ class EventController extends Controller
             'modules' => $modules,
             'userEventInvitation' => $userEventInvitation,
             'userEventInvitationForm' => $eventInvitationForm->createView(),
-            'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView()
+            'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView(),
+            'redirectedAfterEventDuplication' => $redirectedAfterEventDuplication
         ));
     }
 
