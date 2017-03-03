@@ -15,6 +15,7 @@ use AppBundle\Form\Event\EventTemplateSettingsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
 use AppBundle\Form\Event\SendMessageType;
+use AppBundle\Form\Module\PollProposalCollectionType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleStatus;
@@ -421,6 +422,7 @@ class EventManager
                     if ($module->getPollModule() != null) {
                         // TODO Vérifier les autorisations d'ajouter des propositions au module
                         $moduleDescription['pollModuleOptions']['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation);
+                        $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule(), $userModuleInvitation);
                     }
                     $modules[$module->getId()] = $moduleDescription;
                 }
@@ -428,6 +430,4 @@ class EventManager
         }
         return $modules;
     }
-
-
 }

@@ -6,6 +6,7 @@
 - edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
 #}
 {% set pollProposalForm = pollModuleOptions.pollProposalAddForm %}
+{% set pollProposalListForm = pollModuleOptions.pollProposalListAddForm %}
 <div>
     <div role="tabpanel">
         <ul class="tab-nav" role="tablist">
@@ -16,7 +17,8 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="{{ pp_form_modal_prefix }}OneDate">
                 {% if edition %}
-                    {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
+                    {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm',
+                        {'pollProposalId':pollProposalForm.id.vars.value, 'moduleInvitationToken': userModuleInvitation.token}),
                         'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
                 {% else %}
                     {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
@@ -81,49 +83,71 @@
                 {{ form_end(pollProposalForm) }}
             </div>
             <div role="tabpanel" class="tab-pane" id="{{ pp_form_modal_prefix }}SeveralDate">
-                <div class="row m-t-15">
-                    <div class="center-block col-xs-12 col-sm-7">
-                        <div id="datepicker_exemple" data-date=""></div>
-                        <input type="hidden" id="my_hidden_input">
-                    </div>
-                    <div class="center-block col-xs-12 col-sm-5">
-                        <div class="row">
-                            <div class="center-block col-xs-12">
-                                <div class="form-group ">
-                                    <div class="fg-line"><label class="sr-only control-label">Quand</label>
-                                        <div class="input-group ag-time-picker clockpicker" data-autoclose="true">
-                            <span class="input-group-addon">
-                                <span class="zmdi zmdi-time"></span>
-                            </span>
-                                            <input type="text" placeholder="Heure de début" class="readonly-onmobile form-control" onkeypress="refuserToucheEntree(event);"></div>
+                <div id="{{ pp_form_modal_prefix }}SeveralDate1">
+                    <div class="row m-t-15">
+                        <div class="center-block col-xs-12 col-sm-7">
+                            <div id="{{ pp_form_modal_prefix }}Datepicker" data-date=""></div>
+                            <input type="hidden" id="{{ pp_form_modal_prefix }}DateList">
+                        </div>
+                        <div class="center-block col-xs-12 col-sm-5">
+                            <div class="row">
+                                <div class="center-block col-xs-12">
+                                    <div class="form-group ">
+                                        <div class="fg-line"><label class="sr-only control-label">Quand</label>
+                                            <div class="input-group ag-time-picker clockpicker" data-autoclose="true">
+                                                <span class="input-group-addon">
+                                                    <span class="zmdi zmdi-time"></span>
+                                                </span>
+                                                <input type="text" placeholder="Heure de début" class="readonly-onmobile form-control" onkeypress="refuserToucheEntree(event);"></div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="center-block col-xs-6">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="Durée">
+                                <div class="center-block col-xs-6">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Durée">
+                                    </div>
+                                </div>
+                                <div class="center-block col-xs-6">
+                                    <select class="selectpicker bs-select-hidden">
+                                        <option>Min</option>
+                                        <option>Heure</option>
+                                        <option>Jour</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="center-block col-xs-6">
-                                <select class="selectpicker bs-select-hidden">
-                                    <option>Min</option>
-                                    <option>Heure</option>
-                                    <option>Jour</option>
-                                </select>
+                                <a class="btn btn-link btn-icon-text c-blue p-l-0" href="#"> <i class="zmdi zmdi-plus-square"></i>Ajouter un horaire</a>
                             </div>
                         </div>
-                        <div class="center-block col-xs-6">
-                            <a class="btn btn-link btn-icon-text c-blue p-l-0" href="#"> <i class="zmdi zmdi-plus-square"></i>Ajouter un horaire</a>
+                        <div class="center-block col-xs-12 m-t-10">
+                            <a class="btn btn-link btn-icon-text c-blue p-l-0" href="#"> <i class="zmdi zmdi-plus-square"></i>Ajouter une série de date</a>
                         </div>
                     </div>
-                    <div class="center-block col-xs-12 m-t-10">
-                        <a class="btn btn-link btn-icon-text c-blue p-l-0" href="#"> <i class="zmdi zmdi-plus-square"></i>Ajouter une série de date</a>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                        <button id="{{ pp_form_modal_prefix }}-add-date-button" type="submit" class="btn btn-primary">{{ "global.button.nextStep"|trans }}</button>
                     </div>
                 </div>
-                <div class="pull-right">
-                    <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
-                    <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
+                <div id="{{ pp_form_modal_prefix }}SeveralDate2" class="hidden">
+                    {{ form_start(pollProposalListForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_list_form_id"}}) }}
+                    <div id="{{ pp_form_modal_prefix }}-add-date-container"
+                         data-prototype="{{ form_widget(pollProposalListForm.pollProposals.vars.prototype)|e }}"
+                         data_index="0">
+                    </div>
+                    {{ form_rest(pollProposalListForm) }}
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                        <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
+                    </div>
+                    {{ form_end(pollProposalListForm) }}
                 </div>
+                {#{{ form_start(pollProposalListForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalListForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
+                    'attr' : {'id': pp_form_modal_prefix~"_list_form_id"}}) }}
+                {{ form_rest(pollProposalListForm) }}
+                {{ form_end(pollProposalListForm) }}#}
+                {#{{ dump(pollProposalListForm) }}
+                {{ form_widget(pollProposalListForm.pollProposals.vars.prototype) }}#}
+
             </div>
         </div>
     </div>
@@ -134,7 +158,7 @@
             if (locale_js == 'en') {
                 locale_format = "mm/dd/yyyy";
             }
-            $('#datepicker_exemple').datepicker({
+            $('#{{ pp_form_modal_prefix }}Datepicker').datepicker({
                 format: locale_format,
                 language: locale_js,
                 maxViewMode: 2,
@@ -143,14 +167,60 @@
                 autoclose: false,
                 todayBtn: true
             });
-            $('#datepicker_exemple').on('changeDate', function () {
+            $('#{{ pp_form_modal_prefix }}Datepicker').on('changeDate', function () {
                 $('#my_hidden_input').val(
-                    $('#datepicker_exemple').datepicker('getFormattedDate')
+                    $('#{{ pp_form_modal_prefix }}Datepicker').datepicker('getFormattedDate')
                 );
             });
         })
     </script>
-
+{#    <script>
+        $(document).ready(function () {
+            var container = $('#{{ pp_form_modal_prefix }}-add-date-container');
+            $('#{{ pp_form_modal_prefix }}-add-date-button').click(function () {
+                $('#{{ pp_form_modal_prefix }}SeveralDate1').addClass('hidden');
+                                var dateList = $('#{{ pp_form_modal_prefix }}Datepicker').datepicker('getFormattedDate').split(',');
+                dateList.forEach(function(element) {
+                    // Get the data-prototype explained earlier
+                    var prototype = container.data('prototype');
+                    var index = container.data('index');
+                    // Replace '__name__' in the prototype's HTML to
+                    // instead be a number based on how many items we have
+                    var newForm = prototype.replace(/__name__/g, index);
+                    // increase the index with one for the next item
+                    container.data('index', index + 1);
+                    // Display the new form
+                    var newFormDiv = $('<div class="row"></div>').append(newForm);
+                    newFormDiv.find('input:first').val(element);
+                    container.append(newFormDiv);
+                });
+                $('#{{ pp_form_modal_prefix }}SeveralDate2').removeClass('hidden');
+            });
+        })
+    </script>#}
+    <script>
+        $(document).ready(function () {
+            var container = $('#{{ pp_form_modal_prefix }}-add-date-container');
+            $('form#{{ pp_form_modal_prefix}}_list_form_id').on("submit", function (e) {
+                var dateList = $('#{{ pp_form_modal_prefix }}Datepicker').datepicker('getFormattedDate').split(',');
+                dateList.forEach(function(element) {
+                    // Get the data-prototype explained earlier
+                    var prototype = container.data('prototype');
+                    var index = container.data('index');
+                    // Replace '__name__' in the prototype's HTML to
+                    // instead be a number based on how many items we have
+                    var newForm = prototype.replace(/__name__/g, index);
+                    // increase the index with one for the next item
+                    container.data('index', index + 1);
+                    // Display the new form
+                    var newFormDiv = $('<div class="row"></div>').append(newForm);
+                    newFormDiv.find('input:first').val(element);
+                    container.append(newFormDiv);
+                });
+                ajaxFormSubmission(this, e);
+            });
+        })
+    </script>
 </div>
 
 

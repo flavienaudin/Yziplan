@@ -14,7 +14,7 @@ use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
-use AppBundle\Form\Module\PollProposalElementType;
+use AppBundle\Form\Module\PollProposalCollectionType;
 use AppBundle\Form\Module\PollProposalType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
@@ -98,6 +98,19 @@ class PollProposalManager
         return $this->formFactory->createNamed("add_poll_proposal_form_" . $pollModule->getModule()->getToken(), PollProposalType::class, $this->pollProposal);
     }
 
+    /**
+     * @param PollModule $pollModule
+     * @param ModuleInvitation $userModuleInvitation
+     * @return FormInterface
+     */
+    public function createPollProposalListAddForm(PollModule $pollModule, ModuleInvitation $userModuleInvitation)
+    {
+        return $this->formFactory->createNamed("add_poll_proposal_list_form_" . $pollModule->getModule()->getToken(),
+            PollProposalCollectionType::class,
+            array('pollModule' => $pollModule,
+                'moduleInvitation' => $userModuleInvitation
+            ));
+    }
 
     /**
      * @param PollProposal $pollProposal
