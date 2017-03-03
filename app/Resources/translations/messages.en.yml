@@ -14,6 +14,7 @@ base:
     text2: Sorry for the inconvenience!
   footer:
     home: Home
+    pro: Pro
 
 navbar:
   subtitle: To organise you, it's IZI !
