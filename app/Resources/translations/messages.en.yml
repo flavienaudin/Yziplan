@@ -239,17 +239,37 @@ eventInvitations:
     meta_title: My events
     title: My events
     subtitle: List of events I organize and events I am invited to
+  tabs:
+    title:
+      upcomingEvents: Upcoming Events
+      archivedEvents: Passed/Archived Events
   table:
+    no_event:
+      upcomingEvents: You have no upcoming events
+      passedArchivedEvents: You have no passed or achived events
     event_name: Event name
     organiser: Organiser
     date: Date
     place: Place
     response: Response
+    status: Status
     no_name: No name for this event
   calendar:
     month_view: Month view
     week_view: Week view
     day_view: Day view
+  status:
+    passed: Passed
+    archived: Archived
+    upcoming: Upcoming
+  action:
+    message:
+      archive:
+        success: Your invitation has been archived
+        error: Your invitation has not been archived
+      unarchive:
+        success: Your invitation has been unarchived
+        error: Your invitation has not been unarchived
 
 eventInvitation:
   form:
@@ -526,6 +546,8 @@ global:
     later: Not now
     decline: No thanks
     send: Send
+    archive: Archive
+    unarchive: Unarchive
   success:
     data_saved: Information saved
   error:

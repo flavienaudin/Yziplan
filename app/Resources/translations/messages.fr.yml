@@ -239,17 +239,37 @@ eventInvitations:
     meta_title: Mes événements
     title: Mes événements
     subtitle: Liste des événements que j'organise et des invitations que j'ai reçues
+  tabs:
+    title:
+      upcomingEvents: Événements à venir
+      archivedEvents: Événements passés/archivés
   table:
+    no_event:
+      upcomingEvents: Vous n'avez pas d'événement à venir
+      passedArchivedEvents: Vous n'avez pas d'événement passé ou archivé
     event_name: Nom de l'événement
     organiser: Organisateur
     date: Date
     place: Lieu
     response: Réponse
+    status: Etat
     no_name: Pas de nom pour cet événement
   calendar:
     month_view: Vue mois
     week_view: Vue semaine
     day_view: Vue jour
+  status:
+    passed: Déjà passé
+    archived: Archivé
+    upcoming: A venir
+  action:
+    message:
+      archive:
+        success: Votre invitation a bien été archivée
+        error: Votre invitation n'a pas pu être archivée
+      unarchive:
+        success: Votre invitation a bien été désarchivée
+        error: Votre invitation n'a pas pu être désarchivée
 
 eventInvitation:
   form:
@@ -526,6 +546,8 @@ global:
     later: Plus tard
     decline: Non merci
     send: Envoyer
+    archive: Archiver
+    unarchive: Désarchiver
   success:
     data_saved: Données sauvegardées
   error:

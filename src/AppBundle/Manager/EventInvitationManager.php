@@ -370,6 +370,26 @@ class EventInvitationManager
         return false;
     }
 
+
+    /**
+     * Change EventInvitation.archive value
+     *
+     * @param EventInvitation|null $eventInvitation If null, $this->eventInvitation is used
+     * @param boolean $archived The new value of archived attribute
+     * @return bool true if the update is successful
+     */
+    public function archiveEventInvitation(EventInvitation $eventInvitation = null, $archived)
+    {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        if ($this->eventInvitation != null) {
+            $this->eventInvitation->setArchived($archived);
+            return $this->persistEventInvitation();
+        }
+        return false;
+    }
+
     /**
      * Génère le formulaire d'édition des informations principales d'une EventInvitation (Réponse à un événement)
      *

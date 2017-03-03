@@ -11,10 +11,11 @@ Données d'entrée :
 <th>Date</th>
 <th>Lieu</th>
 <th>Réponse</th>
+<th>Etat</th>
 #}
 <tr>
     <td><a href="{{ path('displayEventInvitation', {'token': eventInvitation.token}) }}">
-            {{ eventInvitation.event.name is not empty ? eventInvitation.event.name: ('eventInvitations.table.no_name'|trans)}}</a>
+            {{ eventInvitation.event.name is not empty ? eventInvitation.event.name: ('eventInvitations.table.no_name'|trans) }}</a>
     </td>
     <td>{{ eventInvitation.event.getCreators[0].getDisplayableName(true, true) }}</td>
     <td>{{ eventInvitation.event.when is not null ? eventInvitation.event.when|localizeddate:'-' }}</td>
@@ -26,4 +27,30 @@ Données d'entrée :
     {% elseif eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
         <td class="palette-Deep-Orange-50 bg ">{{ "eventInvitation.answer.no"|trans }}</td>
     {% endif %}
+    <td class="text-center">
+        {% if eventInvitation.archived %}
+            {% if eventInvitation.event.when is empty or eventInvitation.event.when > date("now") %}
+                <div class="dropdown">
+                    <a class="btn btn-flat" data-toggle="dropdown" aria-expanded="false" role="button"><i class="zmdi zmdi-settings"></i></a>
+                    <ul class="dropdown-menu dm-icon pull-right">
+                        <li><a href="{{ path('archiveUserEventInvitation', {'userEventInvitationToken':eventInvitation.token,'archived':"0"}) }}" class="eventInvitationAction"> <i
+                                        class="zmdi zmdi-undo"></i> {{ "global.button.unarchive"|trans }}</a></li>
+                    </ul>
+                </div>
+            {% else %}
+                <i class="zmdi zmdi-archive" data-toggle="tooltip" title="{{ "eventInvitations.status.archived"|trans }}" data-placement="left"></i>
+            {% endif %}
+        {% elseif eventInvitation.event.when is not empty and eventInvitation.event.when < date("now") %}
+            <i class="zmdi zmdi-calendar-close" data-toggle="tooltip" title="{{ "eventInvitations.status.passed"|trans }}" data-placement="left"></i>
+        {% else %}
+            <div class="dropdown">
+                <a class="btn btn-flat" data-toggle="dropdown" aria-expanded="false" role="button"><i class="zmdi zmdi-settings"></i></a>
+                <ul class="dropdown-menu dm-icon pull-right">
+                    <li><a href="{{ path('archiveUserEventInvitation',{'userEventInvitationToken':eventInvitation.token,'archived':"1"}) }}" class="eventInvitationAction"> <i
+                                    class="zmdi zmdi-archive"></i> {{ "global.button.archive"|trans }}</a>
+                    </li>
+                </ul>
+            </div>
+        {% endif %}
+    </td>
 </tr>
