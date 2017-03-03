@@ -4,6 +4,10 @@
 {% block main_section_class %}index-main{% endblock %}
 {% block main_content_class %}container-fluid{% endblock %}
 
+{% block meta_data %}
+    {{ parent() }}
+{% endblock %}
+
 {# Vidage du menu latéral #}
 {% block sidebar_collapse_cmd %}{% endblock %}
 {% block s_main_menu %}{% endblock s_main_menu %}
