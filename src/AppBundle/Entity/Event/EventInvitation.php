@@ -43,6 +43,14 @@ class EventInvitation
     private $status;
 
     /**
+     * L'état "archived=true" permet entre autre à l'utilisateur de trier ses événements dans la liste de ses invitations
+     *
+     * @var boolean
+     * @ORM\Column(name="archived", type="boolean")
+     */
+    private $archived = false;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="guest_name", type="string", length=255, nullable=true)
@@ -163,6 +171,24 @@ class EventInvitation
     public function setStatus($status)
     {
         $this->status = $status;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isArchived()
+    {
+        return $this->archived;
+    }
+
+    /**
+     * @param bool $archived
+     * @return EventInvitation
+     */
+    public function setArchived($archived)
+    {
+        $this->archived = $archived;
         return $this;
     }
 

@@ -9,7 +9,6 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Security\EventInvitationVoter;
@@ -188,13 +187,98 @@ class EventInvitationController extends Controller
     }
 
     /**
+     * @Route("/archive/{userEventInvitationToken}/{archived}", name="archiveUserEventInvitation" )
+     * @ParamConverter("userEventInvitation", class="AppBundle:Event\EventInvitation", options={"mapping": {"userEventInvitationToken":"token"}})
+     */
+    public function archiveEventInvitationAction(EventInvitation $userEventInvitation, $archived, Request $request)
+    {
+        $this->denyAccessUnlessGranted(EventInvitationVoter::ARCHIVE, $userEventInvitation);
+        $eventInvitationManager = $this->get("at.manager.event_invitation");
+        if ($eventInvitationManager->archiveEventInvitation($userEventInvitation, $archived)) {
+            if ($request->isXmlHttpRequest()) {
+                if ($archived) {
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("eventInvitations.action.message.archive.success");
+                } else {
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("eventInvitations.action.message.unarchive.success");
+                }
+
+                $userEventInvitationsUpcomings = $this->get('at.manager.application_user')->getUserEventInvitations($this->getUser(), "#upcomingEvents");
+                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]["#upcomingEvents"] =
+                    $this->renderView("@App/EventInvitation/partials/event_invitations_table.html.twig", array(
+                        "eventInvitations" => $userEventInvitationsUpcomings,
+                        "userEventTabId" => "#upcomingEvents"
+                    ));
+
+                $userEventInvitationsPassedArchived = $this->get('at.manager.application_user')->getUserEventInvitations($this->getUser(), "#passedArchivedEvents");
+                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]["#passedArchivedEvents"] =
+                    $this->renderView("@App/EventInvitation/partials/event_invitations_table.html.twig", array(
+                        "eventInvitations" => $userEventInvitationsPassedArchived,
+                        "userEventTabId" => "#passedArchivedEvents"
+                    ));
+
+                return new AppJsonResponse($data, Response::HTTP_OK);
+            } else {
+                if ($archived) {
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("eventInvitations.action.message.archive.success"));
+                } else {
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("eventInvitations.action.message.unarchive.success"));
+                }
+                return $this->redirectToRoute("displayUserEvents");
+            }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+                if ($archived) {
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitations.action.message.archive.error");
+                } else {
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitations.action.message.unarchive.error");
+                }
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+            } else {
+                if ($archived) {
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitations.action.message.archive.error"));
+                } else {
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitations.action.message.unarchive.error"));
+                }
+                return $this->redirectToRoute("displayUserEvents");
+            }
+        }
+    }
+
+    /**
      * @Route("/show-all", name="displayUserEvents")
      */
     public function displayUserEventsAction(Request $request)
     {
         $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
-        $userEventInvitations = $this->get('at.manager.application_user')->getUserEventInvitations($this->getUser());
-        return $this->render("@App/EventInvitation/user_event_invitations.html.twig", array("eventInvitations" => $userEventInvitations));
+        $userEventInvitations = $this->get('at.manager.application_user')->getUserEventInvitations($this->getUser(), "#upcomingEvents");
+        return $this->render("@App/EventInvitation/user_event_invitations.html.twig", array(
+            "eventInvitations" => $userEventInvitations
+        ));
     }
 
+    /**
+     * @Route("/show-tab", name="displayUserEventsTab")
+     */
+    public function displayUserEventsTabActionPartial(Request $request)
+    {
+        if ($request->isXmlHttpRequest()) {
+            $this->denyAccessUnlessGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED);
+
+            $userEventTabId = $request->get('userEventTabId');
+            if (empty($userEventTabId)) {
+                $userEventTabId = '#upcomingEvents';
+            }
+            $userEventInvitationsFiltered = $this->get('at.manager.application_user')->getUserEventInvitations($this->getUser(), $userEventTabId);
+
+            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO][$userEventTabId] =
+                $this->renderView("@App/EventInvitation/partials/event_invitations_table.html.twig", array(
+                    "eventInvitations" => $userEventInvitationsFiltered,
+                    "userEventTabId" => $userEventTabId
+                ));
+            return new AppJsonResponse($data, Response::HTTP_OK);
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("global.error.not_ajax_request"));
+            return $this->redirectToRoute('displayUserEvents');
+        }
+    }
 }

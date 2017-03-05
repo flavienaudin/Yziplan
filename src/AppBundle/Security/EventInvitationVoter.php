@@ -26,19 +26,21 @@ class EventInvitationVoter extends Voter
     const EDIT = 'event_invitation.edit';
     /* To cancel en event invitation : the user's EventInvitation and the EventInvitation to cancel are required */
     const CANCEL = 'event_invitation.cancel';
+    /* To cancel en event invitation : the user's EventInvitation and the EventInvitation to cancel are required */
+    const ARCHIVE = 'event_invitation.archive';
 
     /**
      * @inheritdoc
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, array(self::CREATE, self::INVITE, self::EDIT, self::CANCEL))) {
+        if (!in_array($attribute, array(self::CREATE, self::INVITE, self::EDIT, self::CANCEL, self::ARCHIVE))) {
             return false;
         }
         if (($attribute == self::CREATE || $attribute == self::INVITE) && !$subject instanceof Event) {
             return false;
         }
-        if ($attribute == self::EDIT && !$subject instanceof EventInvitation) {
+        if (($attribute == self::EDIT || self::ARCHIVE) && !$subject instanceof EventInvitation) {
             return false;
         }
         if ($attribute == self::CANCEL && (!is_array($subject) || count($subject) != 2 || !($subject[0] instanceof EventInvitation) || !($subject[1] instanceof EventInvitation))) {
@@ -93,6 +95,13 @@ class EventInvitationVoter extends Voter
                 }
                 if($userEventInvitation->isCreator() || $userEventInvitation->isAdministrator()){
                     return true;
+                }
+                return false;
+            case self::ARCHIVE:
+                if($user instanceof AccountUser) {
+                    /** @var EventInvitation $eventInvitation */
+                    $eventInvitation = $subject; // $subject must be a Invitation instance, thanks to the supports method
+                    return $eventInvitation->getApplicationUser() == $user->getApplicationUser();
                 }
                 return false;
         }

@@ -13,6 +13,7 @@
 - userEventInvitationForm (Form) Formulaire de réponse à l'invitation : données de profil
 - sendMessageForm (Form|null) Formulaire permettant d'envoyer un rappel aux invités
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
+- redirectedAfterEventDuplication (boolean|undefined) si true alors on affiche une alerte pour informer l'utilisateur qu'il a dupliqué un événement
 #}
 
 
@@ -161,6 +162,15 @@
                     $grid.masonry('layout');
                 }
             });
+
+            {% if redirectedAfterEventDuplication is defined and redirectedAfterEventDuplication %}
+            {# Affichage de l'événement après une duplication => information à l'utilisateur#}
+            swal({
+                type: "success",
+                titleText: "{{ 'duplication.notice.swal.title'|trans }}",
+                html: "{{ 'duplication.notice.swal.message'|trans|raw }}"
+            });
+            {% endif %}
         });
 
         if (typeof google === 'object' && typeof google.maps === 'object') {

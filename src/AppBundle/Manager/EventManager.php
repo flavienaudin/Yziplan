@@ -199,7 +199,7 @@ class EventManager
     }
 
     /**
-     * Duplique l'événement passé en paramètre (ou celui en cours). LEs modules sont dupliqués ou non selon le paramètre $duplicateModules
+     * Duplique l'événement passé en paramètre (ou celui en cours). Les modules sont dupliqués ou non selon le paramètre $duplicateModules
      * L'événement n'est pas persisté en base de données
      *
      * @param boolean $duplicateModules Les modules sont également dupliqués et associés au nouvel événement
@@ -211,7 +211,7 @@ class EventManager
         if ($event != null) {
             $this->event = $event;
         }
-        if ($this->event != null) {
+        if ($this->event != null && $this->event->isDuplicationEnabled()) {
             $duplicatedEvent = new Event();
             $duplicatedEvent->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
             $duplicatedEvent->setStatus(EventStatus::IN_ORGANIZATION);
@@ -344,10 +344,11 @@ class EventManager
         if ($templateSettingsForm->get("activateTemplate")->getData()) {
             if (empty($this->event->getTokenDuplication())) {
                 $this->event->setTokenDuplication($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-                $this->persistEvent();
             }
+            $this->event->setDuplicationEnabled(true);
+            $this->persistEvent();
         } else {
-            $this->event->setTokenDuplication(null);
+            $this->event->setDuplicationEnabled(false);
             $this->persistEvent();
         }
         return $this->event;

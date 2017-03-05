@@ -1,8 +1,6 @@
 {% extends "@App/EventInvitation/layout_cboxed.html.twig" %}
 
-{#
-TODO Commentaires dev : - Choix du layout modifiable. Définir le menu de gauche si besoin, les alerts et autres paneau de notifications
-    Liste des invitations d'un utilisateur
+{# Liste des invitations d'un utilisateur
 
 Données d'entrée :
 - eventInvitations : tableau d'EventInvitation qui sont à afficher
@@ -19,24 +17,19 @@ Données d'entrée :
                         <small>{{ "eventInvitations.page.subtitle"|trans }}</small>
                     </h2>
                 </div>
-                <div class="card-body card-padding">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>{{ "eventInvitations.table.event_name"|trans }}</th>
-                                <th>{{ "eventInvitations.table.organiser"|trans }}</th>
-                                <th>{{ "eventInvitations.table.date"|trans }}</th>
-                                <th>{{ "eventInvitations.table.place"|trans }}</th>
-                                <th>{{ "eventInvitations.table.response"|trans }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for eventInvitation in eventInvitations %}
-                                {{ include('@App/EventInvitation/partials/event_invitation.html.twig', {'eventInvitation':eventInvitation}) }}
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                <div class="card-body card-padding-sm">
+                    <div role="tabpanel">
+                        <ul class="tab-nav" role="tablist" id="userEventsTabs">
+                            <li class="active"><a href="#upcomingEvents" data-toggle="tab" aria-controls="upcomingEvents" role="tab">{{ "eventInvitations.tabs.title.upcomingEvents"|trans }}</a></li>
+                            <li><a href="#passedArchivedEvents" id="passedArchivedEventsLink" data-toggle="tab" aria-controls="archivedEvents" role="tab">
+                                    {{ "eventInvitations.tabs.title.archivedEvents"|trans }}</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div id="upcomingEvents" class="tab-pane active" role="tabpanel">
+                                {{ include('@App/EventInvitation/partials/event_invitations_table.html.twig', {'eventInvitations':eventInvitations,'userEventTabId':'#upcomingEvents'}) }}
+                            </div>
+                            <div id="passedArchivedEvents" class="tab-pane" role="tabpanel"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -48,6 +41,24 @@ Données d'entrée :
 
     <script>
         $(document).ready(function () {
+            $('#userEventsTabs').on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {
+                var now_tab = e.target; // newly activated tab
+                var targetLinkHref = $(now_tab).attr('href');
+                if ($(targetLinkHref).children().length == 0) {
+                    {# On ajoute le loader  #}
+                    var loader = '<div class="userEvents-preloader text-center">' +
+                        '<div class="preloader pl-sm"><svg class="pl-circular" viewBox="25 25 50 50"><circle class="plc-path" cx="50" cy="50" r="20"></circle></svg></div></div>';
+                    $(targetLinkHref).append(loader);
+                    var data = {
+                        'userEventTabId': targetLinkHref
+                    };
+                    ajaxRequest("{{ path('displayUserEventsTab') }}", data, e, null, null, function () {
+                        $('.userEvents-preloader').remove();
+                    });
+                }
+            });
+
+
             var cId = $('#calendar'); //Change the name if you want. I'm also using thsi add button for more actions
 
             //Generate the Calendar
@@ -72,7 +83,7 @@ Données d'entrée :
                         {% set day = eventInvitation.event.when|date("d") %}
                         {% set month = eventInvitation.event.when|date("m") -1 %}
                         {% set year = eventInvitation.event.when|date("Y") %}
-                        title: ' {{ eventInvitation.event.name is not empty ? eventInvitation.event.name: ('eventInvitations.table.no_name'|trans)}}',
+                        title: ' {{ eventInvitation.event.name is not empty ? eventInvitation.event.name: ('eventInvitations.table.no_name'|trans) }}',
                         start: new Date({{ year }},{{ month }}, {{ day }}),
                         allDay: true,
                         {% if eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
@@ -82,7 +93,7 @@ Données d'entrée :
                         {% elseif eventInvitation.answer is constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
                         className: 'palette-Deep-Orange bg',
                         {% endif %}
-                        url:'{{ path('displayEventInvitation', {'token': eventInvitation.token}) }}',
+                        url: '{{ path('displayEventInvitation', {'token': eventInvitation.token}) }}',
 
                     },
                     {% endfor %}
@@ -134,29 +145,29 @@ Données d'entrée :
             })();
 
             //Add new Event
-            $('body').on('click', '#addEvent', function () {
-                var eventName = $('#eventName').val();
-                var tagColor = $('.event-tag > span.selected').attr('data-tag');
+            /*$('body').on('click', '#addEvent', function () {
+             var eventName = $('#eventName').val();
+             var tagColor = $('.event-tag > span.selected').attr('data-tag');
 
-                if (eventName != '') {
-                    //Render Event
-                    $('#calendar').fullCalendar('renderEvent', {
-                        title: eventName,
-                        start: $('#getStart').val(),
-                        end: $('#getEnd').val(),
-                        allDay: true,
-                        className: tagColor
+             if (eventName != '') {
+             //Render Event
+             $('#calendar').fullCalendar('renderEvent', {
+             title: eventName,
+             start: $('#getStart').val(),
+             end: $('#getEnd').val(),
+             allDay: true,
+             className: tagColor
 
-                    }, true); //Stick the event
+             }, true); //Stick the event
 
-                    $('#addNew-event form')[0].reset()
-                    $('#addNew-event').modal('hide');
-                }
+             $('#addNew-event form')[0].reset()
+             $('#addNew-event').modal('hide');
+             }
 
-                else {
-                    $('#eventName').closest('.form-group').addClass('has-error');
-                }
-            });
+             else {
+             $('#eventName').closest('.form-group').addClass('has-error');
+             }
+             });*/
 
             //Calendar views
             $('body').on('click', '#fc-actions [data-view]', function (e) {

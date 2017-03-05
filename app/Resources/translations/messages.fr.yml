@@ -14,6 +14,7 @@ base:
     text2: Désolé pour le dérangement!
   footer:
     home: Accueil
+    pro: Pro
 
 navbar:
   subtitle: Pour s'organiser, c'est Yzi !
@@ -107,17 +108,19 @@ event:
     edit:
       title: Modifier l'événement
     duplicate:
-      title: Configurer les options de duplication
+      title: Options de duplication
       template:
-        title: Evénement duplicable par tout le monde
-        instructions: Générer un lien à partager pour permettre à des personnes d'organiser un événement identique.
+        title: Faire de cet événement un modèle
+        instructions: |
+          En activant cette option, vous obtiendrez un lien de création automatique d'événement identique à celui-ci que vous pourrez transmetrte à votre public.<br>
+          En le suivant, un utilisateur deviendra l'organisateurs d'un nouvel événement pré-rempli. Il n'aura plus qu'à inviter ses amis pour qu'ils s'organisent tous ensemble.
         form:
           activateTemplate:
             label: Activer la possiblité d'organiser des événements à partir de cet événement
         url_input_label: Partager le lien suivant à tous vos potentiels clients
-      recurrence:
-        title: Planifier le même événement à nouveau
-        instructions: Organiser à nouveau l'événement à une autre date. Un nouvel événement va être créé
+    recurrence:
+      title: Planifier le même événement à nouveau
+      instructions: Organiser à nouveau l'événement à une autre date. Un nouvel événement va être créé
   form:
     name:
       label: Titre de l'événement
@@ -237,17 +240,37 @@ eventInvitations:
     meta_title: Mes événements
     title: Mes événements
     subtitle: Liste des événements que j'organise et des invitations que j'ai reçues
+  tabs:
+    title:
+      upcomingEvents: Événements à venir
+      archivedEvents: Événements passés/archivés
   table:
+    no_event:
+      upcomingEvents: Vous n'avez pas d'événement à venir
+      passedArchivedEvents: Vous n'avez pas d'événement passé ou archivé
     event_name: Nom de l'événement
     organiser: Organisateur
     date: Date
     place: Lieu
     response: Réponse
+    status: Etat
     no_name: Pas de nom pour cet événement
   calendar:
     month_view: Vue mois
     week_view: Vue semaine
     day_view: Vue jour
+  status:
+    passed: Déjà passé
+    archived: Archivé
+    upcoming: A venir
+  action:
+    message:
+      archive:
+        success: Votre invitation a bien été archivée
+        error: Votre invitation n'a pas pu être archivée
+      unarchive:
+        success: Votre invitation a bien été désarchivée
+        error: Votre invitation n'a pas pu être désarchivée
 
 eventInvitation:
   form:
@@ -487,6 +510,14 @@ moduleInvitation:
     missing_data: Des informations sont manquantes pour traiter la requête.
     unauthorized_access: Vous n'êtes pas autoriser à modifier cette réponse
 
+duplication:
+  notice:
+    swal:
+      title: Félicitations
+      message: Vous êtes maintenant l'organisateur de ce nouvel événement.<br>Celui-ci a été pré-rempli pour vous
+  message:
+    error: Vous n'êtes pas autorisé à dupliquer cet événement
+
 # Globals
 global:
   project_name: Yziplan
@@ -516,6 +547,8 @@ global:
     later: Plus tard
     decline: Non merci
     send: Envoyer
+    archive: Archiver
+    unarchive: Désarchiver
   success:
     data_saved: Données sauvegardées
   error:

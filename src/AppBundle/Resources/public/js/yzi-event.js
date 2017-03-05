@@ -135,11 +135,9 @@ function addModuleAction(params) {
             $grid.masonry('layout');
         }
         LetterAvatar.transform();
-        /*TODO : désactiver le temps d'avoir une seule modal pour l'ajout multiple de propositions et édition du nom/description
-        if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('moduleToken')) {
-            $('#moduleEdit_modal_' + responseJSON['data']['moduleToken']).modal('show');
-        }*/
-    }, null, null);
+    }, null, function () {
+        $('.add-pollmodule-link').removeClass("disabled");
+    });
 }
 
 function submitAddPollProposalForm(params) {

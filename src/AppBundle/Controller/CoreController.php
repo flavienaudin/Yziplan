@@ -26,6 +26,14 @@ class CoreController extends Controller
     }
 
     /**
+     * @Route("/helppro", name="helpPro")
+     */
+    public function helpProAction(Request $request)
+    {
+        return $this->render('AppBundle:Core:footer/help_pro.html.twig');
+    }
+
+    /**
      * @Route("/testindex", name="testhome")
      */
     public function testIndexAction(Request $request)

@@ -14,6 +14,7 @@ use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Utils\enum\AppUserStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Util\CanonicalizerInterface;
 use FOS\UserBundle\Util\TokenGeneratorInterface;
@@ -82,11 +83,16 @@ class ApplicationUserManager
 
     /**
      * @param AccountUser $user
-     * @return Collection|null
+     * @return array
      */
-    public function getUserEventInvitations(AccountUser $user)
+    public function getUserEventInvitations(AccountUser $user, $eventFilter)
     {
-        return $user->getApplicationUser()->getEventInvitations();
+        $eventInvitationRepo = $this->entityManager->getRepository(EventInvitation::class);
+        if($eventFilter == '#upcomingEvents') {
+            return $eventInvitationRepo->getUpcomingEventInvitationsByApplicationUser($user->getApplicationUser());
+        }else{
+            return $eventInvitationRepo->getPassedArchivedEventInvitationsByApplicationUser($user->getApplicationUser());
+        }
     }
 
     /**

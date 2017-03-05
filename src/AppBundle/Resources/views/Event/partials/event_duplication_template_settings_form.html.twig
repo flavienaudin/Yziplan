@@ -4,12 +4,12 @@
 #}
 <div id="eventTemplateSettings_formContainer">
     <h4>{{ "event.modal.duplicate.template.title"|trans }}</h4>
-    <p>{{ "event.modal.duplicate.template.instructions"|trans }}</p>
+    <p class="text-justify">{{ "event.modal.duplicate.template.instructions"|trans|raw }}</p>
 
     {{ form_start(eventTemplateSettingsForm, {'action':path('displayEvent',{'token':event.token}), 'attr':{'id':eventTemplateSettingsForm.vars.id}}) }}
 
     {% set attr = {'class':'md-toogle-switch'} %}
-    {% if event.tokenDuplication is not empty %}
+    {% if event.duplicationEnabled %}
         {% set attr = attr|merge({'checked':'checked'})  %}
     {% endif %}
     {{ form_row(eventTemplateSettingsForm.activateTemplate, {
@@ -17,10 +17,9 @@
         'label_attr':{'class' : "sr-only"},
         'attr': attr
     }) }}
-    <button type="submit" class="btn btn-primary">{{ "global.button.valid"|trans }}</button>
 
-    {% if event.tokenDuplication is not empty %}
-        <div id="eventDuplicationTemplateLink" class="m-t-15">
+    {% if event.duplicationEnabled is not empty %}
+        <div id="eventDuplicationTemplateLink" class="m-t-15 m-b-15">
             <label class="control-label text-info" for="url_event_template_duplication">{{ "event.modal.duplicate.template.url_input_label"|trans }}&nbsp;:</label>
             <div class="input-group">
                 <input id="url_event_template_duplication" type="text" class="form-control" readonly="readonly" value="{{ url("duplicateEvent", {"tokenDuplication":event.tokenDuplication}) }}"> <span
@@ -30,6 +29,8 @@
             </div>
         </div>
     {% endif %}
+
+    <div class="text-center"><button type="submit" class="btn btn-primary">{{ "global.button.valid"|trans }}</button></div>
 
     {{ form_rest(eventTemplateSettingsForm) }}
     {{ form_end(eventTemplateSettingsForm) }}
