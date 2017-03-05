@@ -30,7 +30,8 @@ class EventInvitationRepository extends EntityRepository
                 $qb->expr()->gt('e.when', ':datelimit')
             )
             )
-            ->orderBy('e.when', 'desc')
+            ->addOrderBy('e.when', 'DESC')
+            ->addOrderBy('e.id', 'ASC')
             ->setParameter(':deprogrammededStatus', EventStatus::DEPROGRAMMED)
             ->setParameter(':application_user', $applicationUser)
             ->setParameter(':datelimit', new  \DateTime());
@@ -52,7 +53,8 @@ class EventInvitationRepository extends EntityRepository
                 $qb->expr()->eq('ei.archived',true),
                 $qb->expr()->lt('e.when', ':datelimit')
             ))
-            ->orderBy('e.when', 'desc')
+            ->addOrderBy('e.when', 'DESC')
+            ->addOrderBy('e.id', 'ASC')
             ->setParameter(':deprogrammededStatus', EventStatus::DEPROGRAMMED)
             ->setParameter(':application_user', $applicationUser)
             ->setParameter(':datelimit', new  \DateTime());
