@@ -129,6 +129,13 @@ class Event implements CommentableInterface
     private $tokenDuplication;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="duplication_enabled", type="boolean")
+     */
+    private $duplicationEnabled = false;
+
+    /**
      * @var string
      * @ORM\Column(name="status", type="enum_event_status")
      */
@@ -485,6 +492,24 @@ class Event implements CommentableInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isDuplicationEnabled()
+    {
+        return $this->duplicationEnabled;
+    }
+
+    /**
+     * @param bool $duplicationEnabled
+     * @return Event
+     */
+    public function setDuplicationEnabled($duplicationEnabled)
+    {
+        $this->duplicationEnabled = $duplicationEnabled;
+        return $this;
+    }
+
+    /**
      * Get status
      *
      * @return string
@@ -695,7 +720,7 @@ class Event implements CommentableInterface
     public function setCoordinates($coordinates)
     {
         $this->coordinates = $coordinates;
-        if($coordinates != null){
+        if ($coordinates != null) {
             $coordinates->setEvent($this);
         }
         return $this;

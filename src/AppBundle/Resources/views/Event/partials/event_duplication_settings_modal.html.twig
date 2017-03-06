@@ -8,7 +8,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
-                <h4 id="eventDuplicationSettingsModal_title" class="modal-title">{{ "event.modal.duplicate.title"|trans }}</h4>
+                <h3 id="eventDuplicationSettingsModal_title" class="modal-title">{{ "event.modal.duplicate.title"|trans }}</h3>
             </div>
             <div class="modal-body">
                 {% if eventTemplateSettingsForm is not null %}
@@ -18,6 +18,9 @@
                 {% if eventRecurrenceSettingsForm is not null %}
                     {{ include("@App/Event/partials/event_duplication_recurrence_settings_form.html.twig", {'event':event,'eventRecurrenceSettingsForm':eventRecurrenceSettingsForm}) }}
                 {% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
             </div>
         </div>
     </div>

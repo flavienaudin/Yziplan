@@ -261,6 +261,12 @@ class EventInvitationManager
                 if ($this->eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                     // Envoi d'une invitation => AWAITNG_ANSWER
                     $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+                    /** @var ModuleInvitation $moduleInvitation */
+                    foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
+                        if ($moduleInvitation->getStatus() == ModuleInvitationStatus::CANCELLED) {
+                            $moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
+                        }
+                    }
                 }
                 try {
                     if ($this->persistEventInvitation()) {
@@ -364,6 +370,26 @@ class EventInvitationManager
         return false;
     }
 
+
+    /**
+     * Change EventInvitation.archive value
+     *
+     * @param EventInvitation|null $eventInvitation If null, $this->eventInvitation is used
+     * @param boolean $archived The new value of archived attribute
+     * @return bool true if the update is successful
+     */
+    public function archiveEventInvitation(EventInvitation $eventInvitation = null, $archived)
+    {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        if ($this->eventInvitation != null) {
+            $this->eventInvitation->setArchived($archived);
+            return $this->persistEventInvitation();
+        }
+        return false;
+    }
+
     /**
      * Génère le formulaire d'édition des informations principales d'une EventInvitation (Réponse à un événement)
      *
@@ -404,7 +430,7 @@ class EventInvitationManager
 
             /** @var ModuleInvitation $moduleInvitation */
             foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
-                if ($moduleInvitation->getStatus() == ModuleInvitationStatus::AWAITING_ANSWER) {
+                if ($moduleInvitation->getStatus() == ModuleInvitationStatus::VALID) {
                     $moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
                 }
             }

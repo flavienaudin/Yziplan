@@ -1,0 +1,364 @@
+{% extends "::base.html.twig" %}
+
+{# LAYOUT : une colonne centrale #}
+{% block main_section_class %}index-main{% endblock %}
+{% block main_content_class %}container-fluid{% endblock %}
+
+{# Vidage du menu latéral #}
+{% block sidebar_collapse_cmd %}{% endblock %}
+{% block s_main_menu %}{% endblock s_main_menu %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/yp-index.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/jqcloud.min.css") }}">
+{% endblock %}
+
+{% block content_body %}
+    <!-- Header -->
+    <div class="row">
+        <section class="index-section">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                        <img src="{{ asset('includes/img/logo/logo_prop3_inv_header.png') }}" class="img-responsive center-block" alt="{{ "global.project_name"|trans }}">
+                        <h2>Bienvenue sur Yziplan</h2>
+                        <hr class="small black">
+                        <div class="text-left">
+                            <p><strong>Yziplan est un site d'aide à l'organisation d'activités, soirées, sorties, ... entre amis.</strong><br>Ce site va vous permettre de créer des pages permettant aux visiteurs de votre site web / vos clients de s'organiser autour de votre activité en toute simplicité. </p>
+                            <p>Cette page a pour but de vous guidez dans la réalisation de ces pages, elles pourront ensuite être partagées en toute simplicité.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </section>
+
+        <section class="index-section bgm-teal">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-10 col-lg-offset-1">
+                        <h2 class="c-white">Pourquoi une page Yziplan ?</h2>
+                        <hr class="small">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="row">
+                                    <div class="col-xs-12"></div>
+                                    <div class="col-xs-12 col-md-6">
+                                        <div class="service-item">
+                                            <span class="zmdi-hc-stack zmdi-hc-4x">
+                                                <i class="zmdi zmdi-circle zmdi-hc-stack-2x c-white"></i>
+                                                <i class="zmdi zmdi-share zmdi-hc-stack-1x c-teal"></i>
+                                            </span>
+                                            <h4 class="c-white">
+                                                <strong>Meilleure acquisition</strong>
+                                            </h4>
+                                            <p class="c-white">Les visiteurs de votre site sont interessés par les activités que vous leur proposez, ils comptent en parler à leur amis? ... mais plus tard.</p>
+                                             <p class="c-white">Ne laissez pas la procrastination s'installer, avec une page Yziplan faites-leur proposer l'activité à leur amis avant qu'ils ne quittent votre site!</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-6">
+                                        <div class="service-item">
+                                            <span class="zmdi-hc-stack zmdi-hc-4x">
+                                                <i class="zmdi zmdi-circle zmdi-hc-stack-2x c-white"></i>
+                                                <i class="zmdi zmdi-calendar-check zmdi-hc-stack-1x c-teal"></i>
+                                            </span>
+                                            <h4 class="c-white">
+                                                <strong>Le choix de la date</strong>
+                                            </h4>
+                                            <p class="c-white">Yziplan met en place un système de sondage simple, permettant de trouver la date et l'heure qui convient le mieux pour organiser votre activité entre amis.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <div class="row">
+                                    <div class="col-xs-12 col-md-6">
+                                        <div class="service-item">
+                                            <span class="zmdi-hc-stack zmdi-hc-4x">
+                                                <i class="zmdi zmdi-circle zmdi-hc-stack-2x c-white"></i>
+                                                <i class="zmdi zmdi-thumb-up-down zmdi-hc-stack-1x c-teal"></i>
+                                            </span>
+                                            <h4 class="c-white">
+                                                <strong>Le choix de l'activité</strong>
+                                            </h4>
+                                             <p class="c-white">Vous proposez plusieurs activités, pas de soucis! Yziplan à des sondages pour cela aussi!</p>
+                                              <p class="c-white">Listez vos activités et les clients utilisants votre page pourront choisir une (ou des) activité(s) en se concertant avec leurs amis </p>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 col-md-6">
+                                        <div class="service-item">
+                                            <span class="zmdi-hc-stack zmdi-hc-4x">
+                                                <i class="zmdi zmdi-circle zmdi-hc-stack-2x c-white"></i>
+                                                <i class="zmdi zmdi-edit zmdi-hc-stack-1x c-teal"></i>
+                                            </span>
+                                            <h4 class="c-white">
+                                                <strong>Tout est gratuit</strong>
+                                            </h4>
+                                             <p class="c-white">Biensur Yziplan est gratuit aussi bien pour vous que pour vos clients.</p>
+                                              <p class="c-white"><strong>Qu'attendez vous pour essayer?</strong></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Inscription #}
+        <section class="index-section">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h2>1. Inscription</h2>
+                        <hr class="small black">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 p-t-10">
+                                <p>Cette étape est optionelle, mais nous vous conseillons toutefois de vous inscrire.</p>
+                                <p>Vous inscrire vous permettra de retrouver et gérer simplement vos pages.</p>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <img src="{{ asset("bundles/app/img/help-pro/inscription-fr.jpg") }}" class="img-max100 p-b-10">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </section>
+
+
+        {# Creation evenement #}
+        <section class="index-section bgm-teal">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <h2 class="c-white">2. Créer votre page</h2>
+                        <hr class="small">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <img src="{{ asset("bundles/app/img/help-pro/creation-fr.png") }}" class="img-max100 p-b-10">
+                            </div>
+                            <div class="col-xs-12 col-sm-6 p-t-10">
+                                <div class="m-t-30 hidden-xs"></div>
+                                 <p class="c-white">Cette étape est la plus importante, c'est celle qui vous permettra de créer votre page.</p>
+                                 <p class="c-white">Elle se déroule en 3 sous-étapes:<br>
+                                 <br>
+                                 1. Renseignez les informations sur vos activités<br>
+                                 2. Ajouter les fonctionnalités necessaires<br>
+                                 3. Activer la duplication d'événements</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </section>
+
+          <section class="index-section bgm-white">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h2>2.a Vos informations</h2>
+                        <hr class="small black">
+                        <div class="row text-left">
+                            <div class="col-xs-12 col-sm-6 p-t-10">
+                                <p>A cette étape (= parties 1 et 2 de l'assistant de création) vous allez pouvoir renseigner les informations relative à votre activité:<br>
+                                <ul>
+                                    <li>Un nom et une description</li>
+                                    <li>Votre adresse</li>
+                                    <li>Vos horaires</li>
+                                    <li>Vos moyens de contact</li>
+                                    <li>Votre site web et vos réseaux sociaux</li>
+                                    <li>...</li>
+                                </ul>
+                                La partie "à propos de vous" ne sera pas visible par l'utilisateur final.</p>
+                            </div>
+                            <div class="col-xs-12 col-sm-6">
+                                <img src="{{ asset("bundles/app/img/help-pro/creation2-fr.png") }}" class="img-max100 p-b-10">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </section>
+
+        <section class="index-section">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h2>2.b Vos activités</h2>
+                        <hr class="small black">
+                        <div class="row text-left">
+                            <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3 text-center">
+                                <img src="{{ asset("bundles/app/img/help-pro/creation3-fr.png") }}" class="img-max100 img-maxh500px p-b-10">
+                            </div>
+                            <div class="col-xs-12 col-sm-7 col-md-8 col-lg-9 p-t-10">
+                                <p>C'est ici que vous allez ajouter des éléments pour aider vos clients, les aider à choisir une date, une de vos activités,... vous disposez pour cela des options suivantes: <br>
+                                <ul>
+                                    <li>Activité : l'élément le plus complet, il permet de présenter une activité à l'aide d'un nom d'une description est d'une photo</li>
+                                    <li>Quand : permet de choisir une date, <strong>nous vous conseillons de mettre ce sondage dans chacune de vos pages</strong></li>
+                                    <li>Où : Permet de choisir un lieu, utile si vous possédez plusieurs implantations géographiques</li>
+                                    <li>Qui apporte quoi : Permet des réponses sous forme numérique</li>
+                                    <li>Quoi : Pour tout le reste!</li>
+                                </ul>
+                                Pour chaque fonctionnalité vous pouvez changer le nom et ajouter une description, par exemple pour renommer "Activité" en "Choix d'une salle" ou "Choix d'un parcours".<br>
+                                <br>
+                                Pour chaque fonctinnalité il vous faut ensuite ajouter des "Propositions".</p>
+                                <p>Après avoir validé cette étape, l'étape suivante vous permettra d'inviter des amis, passez cette étape.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </section>
+
+        {# Creation evenement #}
+        <section class="index-section bgm-white">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <h2>Résultat</h2>
+                        <hr class="small black">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                 <p>Vous devriez arriver sur une page comme celle ci-dessous.</p>
+                                 <p>La dernière étape est de faire profiter vos clients de cette page!</p>
+                            </div>
+                            <div class="col-xs-12">
+                                <img src="{{ asset("bundles/app/img/help-pro/page-event-fr.jpg") }}" class="img-max100 p-b-10">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </section>
+
+        {# Creation evenement #}
+        <section class="index-section bgm-teal">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-lg-8 col-lg-offset-2">
+                        <h2 class="c-white">3. Partagez votre événement</h2>
+                        <hr class="small">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6">
+                                <img src="{{ asset("bundles/app/img/help-pro/partage1-fr.png") }}" class="img-max100 img-maxh500px p-b-10">
+                            </div>
+                            <div class="col-xs-12 col-sm-6 p-t-10 text-left">
+                                <div class="m-t-30 hidden-xs"></div>
+                                 <p class="c-white">C'est la dernière étape !</p>
+                                 <p class="c-white">Pour activer le partage :
+                                     <ul class="c-white">
+                                        <li>Cliquer sur la roue crantée de la description de votre page</li>
+                                        <li>Selectionner "Options de duplication"</li>
+                                        <li>Une fenêtre s'ouvre il faut alors, activer la duplication et valider</li>
+                                        <li>Votre lien apparait</li>
+                                     </ul>
+                                 </p>
+                                 <p class="c-white">Ce lien permet a quiconque clic dessus de dupliquer votre page pour l'utiliser, vos clients pourront donc l'utiliser pour s'organiser et venir profiter de vos activités.<br>
+                                 Quelques suggestions d'utilisation:
+                                     <ul class="c-white">
+                                        <li>Sur votre site : ne laissez pas vos visteurs partir sans qu'ils invitent leurs amis</li>
+                                        <li>Sur votre page facebook, lorsque vous proposez des activités</li>
+                                        <li>Sur vos flyeurs</li>
+                                        <li>Vous pouvez également le transformer en Qrcode pour tous vos imprimables : <a class="c-white" href="http://fr.qr-code-generator.com/" target="_blank">http://fr.qr-code-generator.com/</a></li>
+                                     </ul>
+                                 </p>
+                                 <p class="c-white">Pour tout besoin d'aide n'hésitez pas à nous contacter, nous serons ravis de vous aider. </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </section>
+
+         <section class="index-section  bgm-white">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 col-lg-offset-1 text-center">
+                    <h2><strong>{{ "index.section_social.title"|trans }}</strong></h2>
+                        <hr class="small">
+                        <p>{{ "index.section_social.subtitle"|trans }}</p>
+                        <br>
+                        <ul class="list-inline">
+                            <li>
+                                <a href="https://www.facebook.com/Yziplan" target="_blank" class="link-facebook m-r-15" title="{{ "text.social_network.facebook"|trans }}">
+                                <i class="zmdi zmdi-facebook-box zmdi-hc-4x"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://twitter.com/Yziplan" target="_blank" class="link-twitter m-l-15" title="{{ "text.social_network.twitter"|trans }}">
+                                <i class="zmdi zmdi-twitter zmdi-hc-4x"></i></a>
+                            </li>
+                            <li>
+                                <a href="https://www.instagram.com/yziplan/n" target="_blank" class="link-instagram m-l-15" title="{{ "text.social_network.instagram"|trans }}">
+                                <i class="zmdi zmdi-instagram zmdi-hc-4x"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+         </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent () }}
+    <script src="{{ asset("bundles/app/js/parallax.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/jqcloud.js") }}"></script>
+    <script>
+        $('.parallax-window').parallax();
+    </script>
+    <script>
+        var words = [
+            {# Fonctionnalité #}
+            {text: "Organiser", weight: 20},
+            {text: "Quoi ?", weight: 16},
+            {text: "Quand ?", weight: 16},
+            {text: "Ou ?", weight: 15},
+            {text: "Qui ?", weight: 15},
+            {text: "Qui apporte quoi ?", weight: 12},
+            {text: "Inviter", weight: 17},
+            {text: "Checklist", weight: 9},
+            {text: "Collaboratif", weight: 8},
+            {text: "Sondage", weight: 7},
+            {text: "Planifier", weight: 14},
+            {text: "Decider", weight: 8},
+            {text: "Discuter", weight: 11},
+
+            {# Activités #}
+            {text: "Activités", weight: 5},
+            {text: "Soirées", weight: 5},
+            {text: "Week-ends", weight: 8},
+            {text: "Vacances", weight: 5},
+            {text: "Sorties", weight: 4},
+            {text: "Fêtes", weight: 4},
+            {text: "Anniversaires", weight: 4},
+            {text: "After-works", weight: 4},
+            {# Ambiancage #}
+            {text: "Amis", weight: 5},
+            {text: "Contacts", weight: 2},
+            {text: "Loisir", weight: 4},
+            {text: "Fun", weight: 2},
+            {text: "Simple", weight: 3},
+            {text: "Utile", weight: 3},
+        ];
+
+        $('#index-feature').jQCloud(words,{
+            autoResize : true,
+            colors: ["#FFFFFF", "#F5F5F5", "#DFF2FF", "#BBD2E1", "#EFEFEF", "#DCDCDC", "#D3D3D3", "#CECECE", "#C0C0C0", "#A9A9A9"],
+        });
+    </script>
+{% endblock %}

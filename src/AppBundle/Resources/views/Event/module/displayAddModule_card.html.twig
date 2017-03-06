@@ -36,10 +36,13 @@
             {% block link_action_js %}
             var target = $(this);
             e.preventDefault();
-            if (!eventInvitationValid && askGuestName !== undefined) {
-                askGuestName(e, addModuleAction, [target, e]);
-            } else {
-                addModuleAction([target, e]);
+            if( !target.hasClass('disabled')) {
+                $('.add-pollmodule-link').addClass("disabled");
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    askGuestName(e, addModuleAction, [target, e]);
+                } else {
+                    addModuleAction([target, e]);
+                }
             }
             {% endblock link_action_js %}
         });

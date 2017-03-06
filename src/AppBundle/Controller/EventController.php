@@ -44,6 +44,8 @@ class EventController extends Controller
     const WIZARD_NEW_EVENT_STEP_ADD_MODULE = "addmodule";
     const WIZARD_NEW_EVENT_STEP_INVITATIONS = "invitations";
 
+    const REDIRECTED_AFTER_EVENT_DUPLICATION = "redirected/eventDuplication";
+
     /**
      * @Route("/new", name="createEvent")
      */
@@ -153,42 +155,47 @@ class EventController extends Controller
     /**
      * Action de duplication d'un événement "Template" : à partir du tokenDuplication, un nouvel événement est créé avec les mêmes informations de l'événement,
      * les mêmes modules. Seule l'invitation de l'organisateur est crée.
-     * @Route("/duplicate/{tokenDuplication}", name="duplicateEvent")
+     * @Route("/d/{tokenDuplication}", name="duplicateEvent")
      * @ParamConverter("event", class="AppBundle:Event\Event", options={"mapping": {"tokenDuplication": "tokenDuplication"}})
      */
     public function duplicateEventAction(Event $event, Request $request)
     {
         $eventManager = $this->get("at.manager.event");
         $duplicatedEvent = $eventManager->duplicateEvent(true, $event);
+        if ($duplicatedEvent == null) {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("duplication.message.error"));
+            return $this->redirectToRoute('home');
+        } else {
+            $user = $this->getUser();
+            $userApplicationUser = null;
+            if ($this->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED) && $user instanceof AccountUser) {
+                $userApplicationUser = $user->getApplicationUser();
+            }
 
-        $user = $this->getUser();
-        $userApplicationUser = null;
-        if ($this->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_REMEMBERED) && $user instanceof AccountUser) {
-            $userApplicationUser = $user->getApplicationUser();
-        }
-
-        $eventInvitationManager = $this->get("at.manager.event_invitation");
-        $userEventInvitation = $eventInvitationManager->createCreatorEventInvitation($duplicatedEvent, $userApplicationUser);
-        if ($userEventInvitation != null) {
-            // The creator is designated as creator of all modules and all pollProposals
-            /** @var ModuleInvitation $userModuleInvitation */
-            foreach ($userEventInvitation->getModuleInvitations() as $userModuleInvitation) {
-                $userModuleInvitation->setCreator(true);
-                if (($pollModule = $userModuleInvitation->getModule()->getPollModule()) != null) {
-                    /** @var PollProposal $pollProposal */
-                    foreach ($pollModule->getPollProposals() as $pollProposal) {
-                        $pollProposal->setCreator($userModuleInvitation);
+            $eventInvitationManager = $this->get("at.manager.event_invitation");
+            $userEventInvitation = $eventInvitationManager->createCreatorEventInvitation($duplicatedEvent, $userApplicationUser);
+            if ($userEventInvitation != null) {
+                // The creator is designated as creator of all modules and all pollProposals
+                /** @var ModuleInvitation $userModuleInvitation */
+                foreach ($userEventInvitation->getModuleInvitations() as $userModuleInvitation) {
+                    $userModuleInvitation->setCreator(true);
+                    if (($pollModule = $userModuleInvitation->getModule()->getPollModule()) != null) {
+                        /** @var PollProposal $pollProposal */
+                        foreach ($pollModule->getPollProposals() as $pollProposal) {
+                            $pollProposal->setCreator($userModuleInvitation);
+                        }
                     }
                 }
+                $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $duplicatedEvent->getToken(), $userEventInvitation->getToken());
             }
-            $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $duplicatedEvent->getToken(), $userEventInvitation->getToken());
+            // TODO : ce n'est pas l'implémentation idéale mais en attendant de réfléchir à une meilleure solution (get redirection in PROD env ?)
+            $request->getSession()->set(self::REDIRECTED_AFTER_EVENT_DUPLICATION, $event->getTokenDuplication());
+            $entityManager = $this->get('doctrine.orm.entity_manager');
+            $entityManager->persist($duplicatedEvent);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('displayEvent', array('token' => $duplicatedEvent->getToken()));
         }
-
-        $entityManager = $this->get('doctrine.orm.entity_manager');
-        $entityManager->persist($duplicatedEvent);
-        $entityManager->flush();
-
-        return $this->redirectToRoute('displayEvent', array('token' => $duplicatedEvent->getToken()));
     }
 
     /**
@@ -311,7 +318,6 @@ class EventController extends Controller
         $recurrenceSettingsForm = null;
         $sendMessageForm = null;
         if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
-            /* TODO : desactivé en attendant de finaliser l'interface
             $templateSettingsForm = $eventManager->createTemplateSettingsForm();
             $templateSettingsForm->handleRequest($request);
             if ($templateSettingsForm->isSubmitted()) {
@@ -349,7 +355,7 @@ class EventController extends Controller
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     }
                 }
-            }*/
+            }
 
             $eventForm = $eventManager->initEventForm();
             $eventForm->handleRequest($request);
@@ -568,6 +574,12 @@ class EventController extends Controller
             return $response;
         }
 
+        // Cas de duplication
+        $redirectedAfterEventDuplication = false;
+        if($request->getSession()->has(self::REDIRECTED_AFTER_EVENT_DUPLICATION)){
+            $redirectedAfterEventDuplication = true;
+            $request->getSession()->remove(self::REDIRECTED_AFTER_EVENT_DUPLICATION);
+        }
         return $this->render('AppBundle:Event:event.html.twig', array(
             'event' => $currentEvent,
             'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
@@ -579,7 +591,8 @@ class EventController extends Controller
             'modules' => $modules,
             'userEventInvitation' => $userEventInvitation,
             'userEventInvitationForm' => $eventInvitationForm->createView(),
-            'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView()
+            'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView(),
+            'redirectedAfterEventDuplication' => $redirectedAfterEventDuplication
         ));
     }
 

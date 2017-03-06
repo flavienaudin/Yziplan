@@ -14,6 +14,7 @@ base:
     text2: Sorry for the inconvenience!
   footer:
     home: Home
+    pro: Pro
 
 navbar:
   subtitle: To organise you, it's IZI !
@@ -107,17 +108,19 @@ event:
     edit:
       title: Edit the event
     duplicate:
-      title: Set duplication options
+      title: Duplication Settings
       template:
         title: Event duplicable for everyone
-        instructions: Generate a link to share to allow people to organize an identical event
+        instructions: |
+          Enabling this option gives you a link to automatically create an identical event to this one, you have to publish to your audience.<br>
+          By following the link, a user will become an organizer of a new pre-filled event. He will only have to invite his friends to organize themselves all together.
         form:
           activateTemplate:
             label: Activate the possibility to organize events from this event
         url_input_label: Share the following link to your customers
-      recurrence:
-        title: Plan the same event again
-        instructions: Organize again the event later. A new event will be created
+    recurrence:
+      title: Plan the same event again
+      instructions: Organize again the event later. A new event will be created
   form:
     name:
       label: Event title
@@ -237,17 +240,37 @@ eventInvitations:
     meta_title: My events
     title: My events
     subtitle: List of events I organize and events I am invited to
+  tabs:
+    title:
+      upcomingEvents: Upcoming Events
+      archivedEvents: Passed/Archived Events
   table:
+    no_event:
+      upcomingEvents: You have no upcoming events
+      passedArchivedEvents: You have no passed or achived events
     event_name: Event name
     organiser: Organiser
     date: Date
     place: Place
     response: Response
+    status: Status
     no_name: No name for this event
   calendar:
     month_view: Month view
     week_view: Week view
     day_view: Day view
+  status:
+    passed: Passed
+    archived: Archived
+    upcoming: Upcoming
+  action:
+    message:
+      archive:
+        success: Your invitation has been archived
+        error: Your invitation has not been archived
+      unarchive:
+        success: Your invitation has been unarchived
+        error: Your invitation has not been unarchived
 
 eventInvitation:
   form:
@@ -487,6 +510,14 @@ moduleInvitation:
     missing_data: Data are missing to treat the request.
     unauthorized_access: You are not allowed to edit this answer.
 
+duplication:
+  notice:
+    swal:
+      title: Success
+      message: You are now the organizer of this new event.<br>It is pre-filled for you
+  message:
+    error: You are not allow to duplicate this event
+
 # Globals
 global:
   project_name: Yziplan
@@ -516,6 +547,8 @@ global:
     later: Not now
     decline: No thanks
     send: Send
+    archive: Archive
+    unarchive: Unarchive
   success:
     data_saved: Information saved
   error:
@@ -613,6 +646,8 @@ suggestion:
         label: Your name
       email:
         label: Your email
+      captcha:
+        label: Captcha
   success:
     titre: Thank you!
     message: Your suggestion has been sent. We will read it carefully.

@@ -34,6 +34,9 @@ parameters:
     # API configuration
     maps_api.google.id: ~
 
+    # Smartsupp Key (contact@yziplan.fr)
+    smartsupp.key: 86c05f8371dc436b026d7ba89410c7ae6c04007a
+
     # DEV
     dev_delivery_address: ~
 

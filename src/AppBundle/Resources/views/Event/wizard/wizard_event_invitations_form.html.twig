@@ -24,7 +24,7 @@
 {#<script>#}
 {% block js_document_ready %}
 $('#shareEventFB_container').remove();
-$('#event_public_invitation_display').remove();
+
 $('form#guestEmails').on('submit', function (e) {
     if ($('#eventInvitations_newEmails').val().length == 0) {
         e.preventDefault();

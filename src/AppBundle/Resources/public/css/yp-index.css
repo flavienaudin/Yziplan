@@ -66,6 +66,10 @@ hr.small.black {
     max-width: 100%;
 }
 
+.img-maxh500px {
+    max-height: 500px;
+}
+
 /* Callout */
 
 .callout {

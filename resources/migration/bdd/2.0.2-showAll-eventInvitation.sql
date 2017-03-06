@@ -1,0 +1,1 @@
+ALTER TABLE event_event_invitation ADD archived TINYINT(1) NOT NULL;

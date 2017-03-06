@@ -30,7 +30,7 @@
                         {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
                             "pollProposal":pollProposal,
                             "userModuleInvitation":userModuleInvitation,
-                            "moduleInvitations":module.moduleInvitations
+                            "moduleInvitations":module.filteredModuleInvitations
                         }) }}
                     {% endfor %}
                     <tr class="tr-no-proposal">
