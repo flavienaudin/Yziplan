@@ -10,7 +10,7 @@
 <div>
     <div role="tabpanel">
         <ul class="tab-nav" role="tablist">
-            <li class="active"><a href="#{{ pp_form_modal_prefix }}OneDate" aria-controls="{{ pp_form_modal_prefix }}OneDate" role="tab" data-toggle="tab">Une</a></li>
+            <li class="active"><a href="#{{ pp_form_modal_prefix }}OneDate" aria-controls="{{ pp_form_modal_prefix }}OneDate" role="tab" data-toggle="tab">Une seule</a></li>
             <li><a href="#{{ pp_form_modal_prefix }}SeveralDate" aria-controls="{{ pp_form_modal_prefix }}SeveralDate" role="tab" data-toggle="tab">Plusieurs</a></li>
         </ul>
 
@@ -125,7 +125,7 @@
                     </div>
                     <div class="pull-right">
                         <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
-                        <button id="{{ pp_form_modal_prefix }}-add-date-button" type="submit" class="btn btn-primary">{{ "global.button.nextStep"|trans }}</button>
+                        <button id="{{ pp_form_modal_prefix }}-next-date-button" type="submit" class="btn btn-primary">{{ "global.button.nextStep"|trans }}</button>
                     </div>
                 </div>
                 <div id="{{ pp_form_modal_prefix }}SeveralDate2" class="hidden">
@@ -136,7 +136,7 @@
                     </div>
                     {{ form_rest(pollProposalListForm) }}
                     <div class="pull-right">
-                        <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                        <button id="{{ pp_form_modal_prefix }}-back-date-button" type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
                         <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
                     </div>
                     {{ form_end(pollProposalListForm) }}
@@ -174,12 +174,12 @@
             });
         })
     </script>
-{#    <script>
+   <script>
         $(document).ready(function () {
             var container = $('#{{ pp_form_modal_prefix }}-add-date-container');
-            $('#{{ pp_form_modal_prefix }}-add-date-button').click(function () {
+            $('#{{ pp_form_modal_prefix }}-next-date-button').click(function () {
                 $('#{{ pp_form_modal_prefix }}SeveralDate1').addClass('hidden');
-                                var dateList = $('#{{ pp_form_modal_prefix }}Datepicker').datepicker('getFormattedDate').split(',');
+                var dateList = $('#{{ pp_form_modal_prefix }}Datepicker').datepicker('getFormattedDate').split(',');
                 dateList.forEach(function(element) {
                     // Get the data-prototype explained earlier
                     var prototype = container.data('prototype');
@@ -196,9 +196,16 @@
                 });
                 $('#{{ pp_form_modal_prefix }}SeveralDate2').removeClass('hidden');
             });
+
+            {# Bouton retour #}
+            $('#{{ pp_form_modal_prefix }}-back-date-button').click(function () {
+                $('#{{ pp_form_modal_prefix }}SeveralDate1').removeClass('hidden');
+                $('#{{ pp_form_modal_prefix }}SeveralDate2').addClass('hidden');
+            });
+
         })
-    </script>#}
-    <script>
+    </script>
+ {#   <script>
         $(document).ready(function () {
             var container = $('#{{ pp_form_modal_prefix }}-add-date-container');
             $('form#{{ pp_form_modal_prefix}}_list_form_id').on("submit", function (e) {
@@ -217,10 +224,10 @@
                     newFormDiv.find('input:first').val(element);
                     container.append(newFormDiv);
                 });
-                ajaxFormSubmission(this, e);
+                //ajaxFormSubmission(this, e);
             });
         })
-    </script>
+    </script>#}
 </div>
 
 
