@@ -40,7 +40,7 @@ class EventInvitationVoter extends Voter
         if (($attribute == self::CREATE || $attribute == self::INVITE) && !$subject instanceof Event) {
             return false;
         }
-        if (($attribute == self::EDIT || self::ARCHIVE) && !$subject instanceof EventInvitation) {
+        if (($attribute == self::EDIT || $attribute == self::ARCHIVE) && !$subject instanceof EventInvitation) {
             return false;
         }
         if ($attribute == self::CANCEL && (!is_array($subject) || count($subject) != 2 || !($subject[0] instanceof EventInvitation) || !($subject[1] instanceof EventInvitation))) {
