@@ -26,11 +26,21 @@ class CoreController extends Controller
     }
 
     /**
-     * @Route("/helppro", name="helpPro")
+     * @Route("/pro", name="indexPro")
      */
-    public function helpProAction(Request $request)
+    public function indexProAction(Request $request)
     {
-        return $this->render('AppBundle:Core:footer/help_pro.html.twig');
+        return $this->render('AppBundle:Core:footer/index_pro.html.twig');
+
+    }
+
+    /**
+     * @Route("/help/page", name="helpPageCreation")
+     */
+    public function helpPageCreationAction(Request $request)
+    {
+        return $this->render('AppBundle:Core:footer/help_page.html.twig');
+
     }
 
     /**
