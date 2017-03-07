@@ -115,7 +115,7 @@ function voteRankingAction(params) {
             icon.removeClass(animation);
         }, 1000);
         // On met a jour le bouton de reponse et les boutons radio
-        var newContent = '<span class="answer-thumb palette-Yellow-100 bg c-amber strong">' + data.value + '<i class="zmdi zmdi-star"></i></span>'
+        var newContent = '<span class="answer-thumb palette-Red-100 bg c-red strong">' + data.value + '<i class="zmdi zmdi-favorite"></i></span>'
 
         document.getElementById("pollmodule_button_" + pollProposalId).innerHTML = newContent;
         LetterAvatar.transform();

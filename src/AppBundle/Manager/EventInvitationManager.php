@@ -430,7 +430,7 @@ class EventInvitationManager
 
             /** @var ModuleInvitation $moduleInvitation */
             foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
-                if ($moduleInvitation->getStatus() == ModuleInvitationStatus::VALID) {
+                if ($moduleInvitation->getStatus() != ModuleInvitationStatus::VALID) {
                     $moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
                 }
             }

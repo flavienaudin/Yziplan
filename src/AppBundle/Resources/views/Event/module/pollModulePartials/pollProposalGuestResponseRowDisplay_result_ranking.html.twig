@@ -36,9 +36,9 @@
                                     <td>
                                         {{ moduleInvitation.displayableName(true, true) }}
                                     </td>
-                                    <td class="{{ (response > 0) ? "palette-Yellow-100 bg c-amber" }}">
+                                    <td class="{{ (response > 0) ? "palette-Red-100 bg c-red" }}">
                                         <span class="answer-thumb strong">
-                                                {{ response }} <i class="zmdi zmdi-star"></i>
+                                                {{ response }} <i class="zmdi zmdi-favorite"></i>
                                         </span>
                                     </td>
                                 </tr>
@@ -60,11 +60,11 @@
         <span>
         {% for i in 1..5 %}
             {% if average - i >= 0 %}
-                <i class="zmdi zmdi-star c-amber"></i>
+                <i class="zmdi zmdi-favorite c-red"></i>
             {% elseif average - i >= -0.5 %}
-                <i class="zmdi zmdi-star-half c-amber"></i>
+                <i class="zmdi zmdi-favorite-outline c-red"></i>
             {% else %}
-                <i class="zmdi zmdi-star c-bluegray"></i>
+                <i class="zmdi zmdi-favorite c-bluegray"></i>
             {% endif %}
         {% endfor %}
         </span>
@@ -76,11 +76,11 @@
     <span>
         {% for i in 1..5 %}
             {% if average - i >= 0 %}
-                <i class="zmdi zmdi-star c-amber"></i>
+                <i class="zmdi zmdi-favorite c-red"></i>
             {% elseif average - i >= -0.5 %}
-                <i class="zmdi zmdi-star-half c-amber"></i>
+                <i class="zmdi zmdi-favorite-outline c-red"></i>
             {% else %}
-                <i class="zmdi zmdi-star c-bluegray"></i>
+                <i class="zmdi zmdi-favorite c-bluegray"></i>
             {% endif %}
         {% endfor %}
         </span>
