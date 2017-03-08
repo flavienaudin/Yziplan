@@ -11,7 +11,6 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/yp-index.css") }}">
-    <link rel="stylesheet" href="{{ asset("bundles/app/css/jqcloud.min.css") }}">
 {% endblock %}
 
 {% block content_body %}
@@ -24,7 +23,7 @@
                         <img src="{{ asset('includes/img/logo/logo_prop3_inv_header.png') }}" class="img-responsive center-block" alt="{{ "global.project_name"|trans }}">
                         <h2>Bienvenue sur Yziplan</h2>
                         <hr class="small black">
-                        <div class="text-left">
+                        <div class="text-left text-justify">
                             <p><strong>Yziplan est un site d'aide à l'organisation d'activités entre amis.</strong><br>Ce site va vous permettre de créer des pages permettant aux visiteurs
                             de votre site web de s'organiser autour de votre activité en toute simplicité.</p>
                             <p>Les visiteurs de votre site sont intéressés par les activités que vous leur proposez, mais votre taux de réservation en ligne reste faible? Augmenter votre taux de
@@ -85,7 +84,7 @@
                                             <h4 class="c-white">
                                                 <strong>Le choix de l'activité</strong>
                                             </h4>
-                                             <p class="c-white">Vous proposez plusieurs activités, pas de soucis! Yziplan à des sondages pour cela aussi!</p>
+                                             <p class="c-white">Vous proposez plusieurs activités, pas de soucis! Yziplan a des sondages pour cela aussi!</p>
                                               <p class="c-white">Listez vos activités et les clients utilisant votre page pourront choisir une (ou des) activité(s) en se concertant avec leurs amis.</p>
                                         </div>
                                     </div>
@@ -154,49 +153,4 @@
 
 {% block javascripts %}
     {{ parent () }}
-    <script src="{{ asset("bundles/app/js/parallax.js") }}"></script>
-    <script src="{{ asset("bundles/app/js/jqcloud.js") }}"></script>
-    <script>
-        $('.parallax-window').parallax();
-    </script>
-    <script>
-        var words = [
-            {# Fonctionnalité #}
-            {text: "Organiser", weight: 20},
-            {text: "Quoi ?", weight: 16},
-            {text: "Quand ?", weight: 16},
-            {text: "Ou ?", weight: 15},
-            {text: "Qui ?", weight: 15},
-            {text: "Qui apporte quoi ?", weight: 12},
-            {text: "Inviter", weight: 17},
-            {text: "Checklist", weight: 9},
-            {text: "Collaboratif", weight: 8},
-            {text: "Sondage", weight: 7},
-            {text: "Planifier", weight: 14},
-            {text: "Decider", weight: 8},
-            {text: "Discuter", weight: 11},
-
-            {# Activités #}
-            {text: "Activités", weight: 5},
-            {text: "Soirées", weight: 5},
-            {text: "Week-ends", weight: 8},
-            {text: "Vacances", weight: 5},
-            {text: "Sorties", weight: 4},
-            {text: "Fêtes", weight: 4},
-            {text: "Anniversaires", weight: 4},
-            {text: "After-works", weight: 4},
-            {# Ambiancage #}
-            {text: "Amis", weight: 5},
-            {text: "Contacts", weight: 2},
-            {text: "Loisir", weight: 4},
-            {text: "Fun", weight: 2},
-            {text: "Simple", weight: 3},
-            {text: "Utile", weight: 3},
-        ];
-
-        $('#index-feature').jQCloud(words,{
-            autoResize : true,
-            colors: ["#FFFFFF", "#F5F5F5", "#DFF2FF", "#BBD2E1", "#EFEFEF", "#DCDCDC", "#D3D3D3", "#CECECE", "#C0C0C0", "#A9A9A9"],
-        });
-    </script>
 {% endblock %}
