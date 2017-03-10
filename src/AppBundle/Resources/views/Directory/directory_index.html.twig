@@ -1,0 +1,51 @@
+{% extends "@App/Directory/layout_cboxed.html.twig" %}
+
+{# Liste des activités publiques
+
+Données d'entrée :
+- activities : liste des activités
+#}
+
+{% block title %}{{ parent() }} - {{ 'eventInvitations.page.meta_title'|trans }}{% endblock %}
+
+{% block activities_content %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="card z-depth-1">
+                <div class="card-header">
+                    <h2>{{ "eventInvitations.page.title"|trans }}
+                        <small>{{ "eventInvitations.page.subtitle"|trans }}</small>
+                    </h2>
+                </div>
+                <div class="card-body card-padding-sm">
+                    <div class="table-responsive" id="table_directory">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>{{ "directoryIndex.table.Type"|trans }}</th>
+                                <th>{{ "directoryIndex.table.Nom"|trans }}</th>
+                                <th>{{ "directoryIndex.table.Ville"|trans }}</th>
+                                <th>{{ "directoryIndex.table.Département"|trans }}</th>
+                                <th>{{ "directoryIndex.table.Région"|trans }}</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for activity in activities %}
+                                <tr>
+                                    <td>{{ activity.activityTypes[0].keyName }}</td>
+                                    <td><a href="{{ path('duplicateEvent', {'tokenDuplication': activity.event.tokenDuplication}) }}">
+                                            {{ activity.event.name }}</a>
+                                    </td>
+                                    <td>{{ activity.city.name }}</td>
+                                    <td>{{ activity.city.department.name }}</td>
+                                    <td>{{ activity.city.department.region.name }}</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

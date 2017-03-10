@@ -1,0 +1,12 @@
+{% extends "AppBundle:Directory:layout.html.twig" %}
+
+{# LAYOUT : une colonne centrale #}
+{% block main_section_class %}{% endblock %}
+{% block main_content_class %}{{ parent() }} c-boxed{% endblock %}
+{# Header is also c-boxed #}
+{% block header_class %}c-boxed{% endblock %}
+
+{# Vidage du menu latéral #}
+{% block sidebar_collapse_cmd %}{% endblock %}
+{% block s_main_menu %}{% endblock s_main_menu %}
+

@@ -56,6 +56,10 @@ services:
     class: AppBundle\Manager\ApplicationUserManager
     arguments: ['@doctrine.orm.entity_manager','@fos_user.util.email_canonicalizer','@translator','@fos_user.util.token_generator']
 
+  at.manager.directory:
+    class: AppBundle\Manager\DirectoryManager
+    arguments: ['@doctrine.orm.entity_manager']
+
   at.manager.app_user_information:
     class: AppBundle\Manager\AppUserInformationManager
     arguments: ['@doctrine.orm.entity_manager','@form.factory','@at.uploader.avatar']

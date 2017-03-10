@@ -12,13 +12,10 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * Date: 10/03/2017
  * Time: 11:05
  *
- *
- * Region
- *
- * @ORM\Table(name="utils_geo_region")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\Utils\Geo\RegionRepository")
+ * @ORM\Table(name="utils_geo_department")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\Utils\Geo\DepartmentRepository")
  */
-class Region
+class Department
 {
     /** Active les timestamps automatiques pour la creation et la mise a jour */
     use TimestampableEntity;
@@ -35,6 +32,13 @@ class Region
     /**
      * @var string
      *
+     * @ORM\Column(name="number", type="string", length=3, nullable=false)
+     */
+    private $number;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
@@ -44,11 +48,18 @@ class Region
      ***********************************************************************/
 
     /**
+     * @var Region
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Utils\Geo\Region", inversedBy="departments")
+     * @ORM\JoinColumn(name="region_id", referencedColumnName="id")
+     */
+    private $region;
+
+    /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Utils\Geo\Department", mappedBy="region", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Utils\Geo\City", mappedBy="department", cascade={"persist"})
      */
-    private $departments;
+    private $cities;
 
 
     /***********************************************************************
@@ -72,6 +83,22 @@ class Region
     }
 
     /**
+     * @return int
+     */
+    public function getNumber()
+    {
+        return $this->number;
+    }
+
+    /**
+     * @param int $number
+     */
+    public function setNumber($number)
+    {
+        $this->number = $number;
+    }
+
+    /**
      * @return string
      */
     public function getName()
@@ -88,19 +115,35 @@ class Region
     }
 
     /**
-     * @return ArrayCollection
+     * @return Region
      */
-    public function getDepartments()
+    public function getRegion()
     {
-        return $this->departments;
+        return $this->region;
     }
 
     /**
-     * @param ArrayCollection $departments
+     * @param Region $region
      */
-    public function setDepartments($departments)
+    public function setRegion($region)
     {
-        $this->departments = $departments;
+        $this->region = $region;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCities()
+    {
+        return $this->cities;
+    }
+
+    /**
+     * @param ArrayCollection $cities
+     */
+    public function setCities($cities)
+    {
+        $this->cities = $cities;
     }
 
 }
