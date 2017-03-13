@@ -122,6 +122,12 @@ event:
       title: Planifier le même événement à nouveau
       instructions: Organiser à nouveau l'événement à une autre date. Un nouvel événement va être créé
   form:
+    tab:
+      general: Général
+      advanced: Avancées
+    text:
+      when_where: Vous connaissez déjà la date et le lieu ? Fixez-les maintenant sinon vous pourrez ajouter un sondage dans une prochaine étape
+      see_map: Voir sur la carte
     name:
       label: Titre de l'événement
       placeholder: Mon anniversaire, Soirée, Week-end entre amis,...
@@ -135,13 +141,11 @@ event:
     whereName:
       label: "Où :"
       placeholder: Chez moi, bar du coin, adresse,...
-      help: "Tu sais déjà où ça va se passer ? Indique l'adresse ici."
-      tootlip: Fixez le lieu où se déroule votre événement ou ajoutez un sondage pour consulter les invités
+      tooltip: Fixez le lieu où se déroule votre événement ou ajoutez un sondage pour consulter les invités
     when:
       label: "Quand :"
       placeholder: Quand
-      help: "Vous connaissez déjà la date de l'événement ? Indiquez-le"
-      tootlip: Fixez la date de l'événement ou ajoutez un sondage pour consulter les invités
+      tooltip: Fixez la date de l'événement ou ajoutez un sondage pour consulter les invités
     status:
       label: "Etat :"
       placeholder: Etat de l'événement
@@ -210,9 +214,7 @@ event:
       send_invitations: Envoyer les invitations
     main:
       title: Organiser un événement
-      subtitle: |
-        Décrivez l'événement à vos invités.<br>
-        Vous connaissez déjà la date et le lieu ? Fixez-les maintenant sinon vous pourrez ajouter un sondage dans une prochaine étape
+      subtitle: Décrivez l'événement à vos invités.
     profile:
       title: A propos de vous
       subtitle:

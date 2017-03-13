@@ -122,9 +122,15 @@ event:
       title: Plan the same event again
       instructions: Organize again the event later. A new event will be created
   form:
+    tab:
+      general: Generals
+      advanced: Advanced
+    text:
+      when_where: You already know the date and the place ? Set them right now or add a survey in next step
+      see_map: See on map
     name:
       label: Event title
-      placeholder: My birthday, Party, Week-end Mon anniversaire, Soirée, Week-end with friends...
+      placeholder: My birthday, Party, Week-end with friends...
     description:
       label: "Details"
       placeholder: Say more about your event
@@ -135,13 +141,11 @@ event:
     whereName:
       label: "Where:"
       placeholder: At home, bar on the corner, address...
-      help: "You already know where the event will take place? Say it here"
-      tootlip: Set where your event will take place or add a poll to consult your guest
+      tooltip: Set where your event will take place or add a poll to consult your guest
     when:
       label: "When:"
       placeholder: When
-      help: "You already know the event date? Fill the following input"
-      tootlip: Set the date of your event or add a poll to consult your guest
+      tooltip: Set the date of your event or add a poll to consult your guest
     status:
       label: "Status:"
       placeholder: Event status
@@ -210,9 +214,7 @@ event:
       send_invitations: Send invitations
     main:
       title: Event organization
-      subtitle: |
-        Describe the event to your guests.<br>
-        You already know the date and the place ? Set them definitively right now or add a survey in a next step
+      subtitle: Describe the event to your guests
     profile:
       title: About you
       subtitle:
