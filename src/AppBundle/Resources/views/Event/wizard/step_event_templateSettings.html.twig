@@ -1,0 +1,38 @@
+{% extends "@App/Event/wizard/new_event_wizard_page.html.twig" %}
+
+{# Données d'entrée :
+- event (Event) L'événement en cours de création
+- eventTemplateSettingsForm (Form) Formulaire permettant d'ajouter des emails
+#}
+
+
+{% block wizard_step_title %}{{ "event.wizard.template_settings.title"|trans }}
+    <small>{{ "event.wizard.template_settings.subtitle"|trans }}</small>
+{% endblock %}
+
+{% block wizard_step %}
+    {{ include('@App/Event/wizard/wizard_event_templateSettings_form.html.twig', {"event":event, "eventTemplateSettingsForm":eventTemplateSettingsForm }) }}
+
+    <div class="text-center">
+        <div>
+            <a href="{{ path('wizardNewEvent', {'token':event.token,
+                'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_ADD_MODULE")}) }}"
+               class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
+            <a href="{{ path('displayEvent', {'token':event.token}) }}"
+               class="btn btn-primary m-b-10" role="button">{{ "global.button.finish"|trans }}</a>
+        </div>
+    </div>
+
+{% endblock wizard_step %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
+{% endblock stylesheets %}
+
+{% block top_javascripts %}
+    {{ parent() }}
+    <script src="{{ asset("bundles/app/js/selectize-standalone.min.js") }}"></script>
+    <script src="{{ asset("bundles/app/js/yzi-selectize.js") }}"></script>
+{% endblock %}

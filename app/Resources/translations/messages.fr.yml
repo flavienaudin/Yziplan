@@ -113,11 +113,11 @@ event:
         title: Faire de cet événement un modèle
         instructions: |
           En activant cette option, vous obtiendrez un lien de création automatique d'événement identique à celui-ci que vous pourrez transmetrte à votre public.<br>
-          En le suivant, un utilisateur deviendra l'organisateurs d'un nouvel événement pré-rempli. Il n'aura plus qu'à inviter ses amis pour qu'ils s'organisent tous ensemble.
+          En le suivant, le visiteur deviendra l'organisateur d'un nouvel événement pré-rempli. Il n'aura plus qu'à convier ses invités pour qu'ils s'organisent tous ensemble.
         form:
           activateTemplate:
-            label: Activer la possiblité d'organiser des événements à partir de cet événement
-        url_input_label: Partager le lien suivant à tous vos potentiels clients
+            label: Autoriser l'organisation d'événements identiques
+        url_input_label: Partager le lien suivant à tous vos potentiels visiteurs
     recurrence:
       title: Planifier le même événement à nouveau
       instructions: Organiser à nouveau l'événement à une autre date. Un nouvel événement va être créé
@@ -166,6 +166,11 @@ event:
       help:  "Tous les invités pourront envoyer de nouvelles invitations par e-mail"
       text.true: Vos amis peuvent inviter
       text.false: Vos amis ne peuvent pas inviter
+    template:
+      label: Faire de cet événement un modèle.
+      instructions: |
+        En faisant de cet événement un modèle, les personnes en possession du lien de duplication pourront créer des événements déjà renseignés et convier leurs invités afin de s'organiser autour
+        de votre activé.
     coordinates:
       link_collpase: Ajouter des coordonnées
       link_popover: Coordonnées
@@ -226,6 +231,9 @@ event:
     invitations:
       title: Les invités
       subtitle: Renseignez les adresses e-mail des invités. Ils recevront un message avec le lien de leur invitation personnelle.
+    template_settings:
+      title: Options de duplication
+      subtitle: Cet événement est un modèle, vous pouvez activer maintenant la possibilité de créer des événements à partir de ce modèle.
     error.message:
       wrong_step: Une erreur dans le processus de création de l'événement s'est produite. Merci de re-essayer l'opération
   error.message:

@@ -113,11 +113,11 @@ event:
         title: Event duplicable for everyone
         instructions: |
           Enabling this option gives you a link to automatically create an identical event to this one, you have to publish to your audience.<br>
-          By following the link, a user will become an organizer of a new pre-filled event. He will only have to invite his friends to organize themselves all together.
+          By following the link, the visitor will become an organizer of a new pre-filled event. He will only have to invite his guests to organize themselves all together.
         form:
           activateTemplate:
-            label: Activate the possibility to organize events from this event
-        url_input_label: Share the following link to your customers
+            label: Allow the organization of identical events
+        url_input_label: Share the following link to your visitors
     recurrence:
       title: Plan the same event again
       instructions: Organize again the event later. A new event will be created
@@ -166,6 +166,10 @@ event:
       help:  "All guest will be able to sent new email invitations"
       text.true: Your friends can invite
       text.false: Your friends can not invite
+    template:
+      label: Set this event as template
+      instructions: |
+        By setting this event as template, people in possession of the duplication link can create prefilled events and invite their guests to get organized around your activity
     coordinates:
       link_collpase: Add more coordinates
       link_popover: Coordinates
@@ -226,6 +230,9 @@ event:
     invitations:
       title: The guests
       subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link.
+    template_settings:
+      title: Duplication settings
+      subtitle: This event is a template, you can activate the possibility to create events from this template.
     error.message:
       wrong_step: An error during the event creation process occrured. Pleaze, try again the operation
   error.message:

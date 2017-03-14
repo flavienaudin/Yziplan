@@ -10,12 +10,15 @@ namespace AppBundle\Form\Event;
 
 use AppBundle\Entity\Event\Event;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -77,7 +80,17 @@ class EventType extends AbstractType
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false
-            ));
+            ))
+            ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
+                /** @var Event $event */
+                $event = $formEvent->getData();
+                if (count($event->getGuests()) == 0) {
+                    $form = $formEvent->getForm();
+                    $form->add("template", CheckboxType::class, array(
+                        'required' => false
+                    ));
+                }
+            });
     }
 
     public function configureOptions(OptionsResolver $resolver)

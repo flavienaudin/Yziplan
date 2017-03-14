@@ -69,7 +69,16 @@
                     </div>
                 </div>#}
             </div>
+
             <div class="tab-pane" id="advanced" role="tabpanel">
+                {% if eventForm.template is defined %}
+                    <p>{{ "event.form.template.instructions"|trans }}</p>
+                    {{ form_row(eventForm.template, {
+                        'label' : 'event.form.template.label',
+                        'label_attr':{'class' : "sr-only"},
+                        'attr': {'class':'md-toogle-switch'}
+                    }) }}
+                {% endif %}
                 <div id="eventMoreInfo" class="panel-group" role="tablist" aria-multiselectable="false">
                     <div class="panel panel-collapse">
                         <div class="panel-heading" role="tab" id="eventCoordinates">
