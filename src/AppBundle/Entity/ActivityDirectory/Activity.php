@@ -45,10 +45,10 @@ class Activity
 
     /**
      * @var \AppBundle\Entity\Utils\Geo\City
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Utils\Geo\City", inversedBy="activities")
-     * @ORM\JoinColumn(name="city_id", referencedColumnName="id")
+     * @ManyToMany(targetEntity="AppBundle\Entity\Utils\Geo\City", inversedBy="activities")
+     * @JoinTable(name="activity_city")
      */
-    private $city;
+    private $cities;
 
     /**
      * @var ActivityType
@@ -63,6 +63,7 @@ class Activity
 
     public function __construct()
     {
+        $this->cities = new \Doctrine\Common\Collections\ArrayCollection();
         $this->activityTypes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -89,18 +90,19 @@ class Activity
     /**
      * @return \AppBundle\Entity\Utils\Geo\City
      */
-    public function getCity()
+    public function getCities()
     {
-        return $this->city;
+        return $this->cities;
     }
 
     /**
-     * @param \AppBundle\Entity\Utils\Geo\City $city
+     * @param \AppBundle\Entity\Utils\Geo\City $cities
      */
-    public function setCity($city)
+    public function setCities($cities)
     {
-        $this->city = $city;
+        $this->cities = $cities;
     }
+
 
     /**
      * @return ActivityType

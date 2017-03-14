@@ -23,7 +23,7 @@ class DirectoryManager{
     }
 
     public function getActivities(){
-        return $this->entityManager->getRepository(Activity::class)->findAll();
+        return $this->entityManager->getRepository(Activity::class)->getLastAddedActivities(15);
     }
 
 }

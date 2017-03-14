@@ -2,7 +2,10 @@
 
 namespace AppBundle\Entity\Utils\Geo;
 
+use AppBundle\Entity\ActivityDirectory\Activity;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\ManyToMany;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -70,11 +73,26 @@ class City
      ***********************************************************************/
 
     /**
+     * @var ArrayCollection
+     * @ManyToMany(targetEntity="AppBundle\Entity\ActivityDirectory\Activity", mappedBy="cities")
+     */
+    private $activities;
+
+    /**
      * @var Department
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Utils\Geo\Department", inversedBy="cities")
      * @ORM\JoinColumn(name="department_id", referencedColumnName="id")
      */
     private $department;
+
+    /***********************************************************************
+     *                      Constructor
+     ***********************************************************************/
+
+    public function __construct()
+    {
+        $this->activities = new ArrayCollection();
+    }
 
     /***********************************************************************
      *                      Getters and Setters
@@ -191,5 +209,23 @@ class City
     {
         $this->department = $department;
     }
+
+    /**
+     * @return Activity
+     */
+    public function getActivities()
+    {
+        return $this->activities;
+    }
+
+    /**
+     * @param Activity $activities
+     */
+    public function setActivities($activities)
+    {
+        $this->activities = $activities;
+    }
+
+
 
 }

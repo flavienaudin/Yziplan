@@ -68,6 +68,10 @@ services:
     class: AppBundle\Manager\ContactManager
     arguments: ['@doctrine.orm.entity_manager','@at.manager.user']
 
+  at.manager.utils:
+    class: AppBundle\Manager\UtilsManager
+    arguments: ['@doctrine.orm.entity_manager']
+
 # Voters
   at.voter.event:
     class: AppBundle\Security\EventVoter

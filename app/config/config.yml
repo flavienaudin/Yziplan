@@ -11,6 +11,10 @@ parameters:
     locale: fr
     avatar_directory: '%kernel.root_dir%/../web/uploads/user/avatar'
 
+
+jms_serializer:
+    enable_short_alias: false
+
 framework:
     #esi:             ~
     translator:      { fallbacks: ["%locale%"] }

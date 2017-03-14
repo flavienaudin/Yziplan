@@ -380,6 +380,18 @@ a.collapsed[data-toggle=collapse] [class*=zmdi-minus] {
     height: 250px;
 }
 
+.mini-picture {
+    width: 100%;
+    height: 150px;
+}
+
+.mini-picture-focuspoint {
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    height: 150px;
+}
+
 #event_picture_update_modal .kv-avatar .file-preview-frame,
 #event_picture_update_modal .kv-avatar .file-preview-frame:hover {
     margin: 0;

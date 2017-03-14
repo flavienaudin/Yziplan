@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\ActivityDirectory;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -45,8 +46,8 @@ class ActivityType
      ***********************************************************************/
 
     /**
-     * @var Activity
-     * @ManyToMany(targetEntity="Activity", mappedBy="ActivityTypes")
+     * @var ArrayCollection
+     * @ManyToMany(targetEntity="Activity", mappedBy="activityTypes")
      */
     private $activities;
 
@@ -56,7 +57,7 @@ class ActivityType
 
     public function __construct()
     {
-        $this->activities = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->activities = new ArrayCollection();
     }
 
     /***********************************************************************

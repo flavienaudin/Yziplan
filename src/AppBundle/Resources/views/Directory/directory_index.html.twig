@@ -13,39 +13,135 @@ Données d'entrée :
         <div class="col-xs-12">
             <div class="card z-depth-1">
                 <div class="card-header">
-                    <h2>{{ "eventInvitations.page.title"|trans }}
-                        <small>{{ "eventInvitations.page.subtitle"|trans }}</small>
+                    <h2>{{ "Annuaire"|trans }}
+                        <small>{{ "Trouvez des activités près de chez vous!"|trans }}</small>
                     </h2>
                 </div>
                 <div class="card-body card-padding-sm">
-                    <div class="table-responsive" id="table_directory">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>{{ "directoryIndex.table.Type"|trans }}</th>
-                                <th>{{ "directoryIndex.table.Nom"|trans }}</th>
-                                <th>{{ "directoryIndex.table.Ville"|trans }}</th>
-                                <th>{{ "directoryIndex.table.Département"|trans }}</th>
-                                <th>{{ "directoryIndex.table.Région"|trans }}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for activity in activities %}
-                                <tr>
-                                    <td>{{ activity.activityTypes[0].keyName }}</td>
-                                    <td><a href="{{ path('duplicateEvent', {'tokenDuplication': activity.event.tokenDuplication}) }}">
-                                            {{ activity.event.name }}</a>
-                                    </td>
-                                    <td>{{ activity.city.name }}</td>
-                                    <td>{{ activity.city.department.name }}</td>
-                                    <td>{{ activity.city.department.region.name }}</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                    <div class="col-sm-6 m-b-25">
+                        <div class="input-group">
+                            <span class="input-group-addon" style="width: 25px;"><i class="zmdi zmdi-ticket-star"></i></span>
+                            <select class="selectpicker" data-live-search="true">
+                                <option class="hidden">Activités</option>
+                                <option>Ketchup</option>
+                                <option>Relish</option>
+                                <option>Tent</option>
+                                <option>Flashlight</option>
+                                <option>Toilet Paper</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="zmdi zmdi-pin"></i></span>
+                        <div class="fg-line">
+                            <input id="directory_place_input" type="text" class="form-control" placeholder="Lieu">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        {% for activity in activities %}
+            <div class="col-xs-12 col-sm-6 col-md-4">
+                <div class="card z-depth-1">
+                    <div class="card-header mini-picture p-0 m-0">
+                        <div class="focuspoint mini-picture-focuspoint" data-focus-x="{{ activity.event.pictureFocusX is not null ? activity.event.pictureFocusX:0 }}"
+                             data-focus-y="{{ activity.event.pictureFocusY is not null ? activity.event.pictureFocusY:0 }}"
+                             data-image-w="{{ activity.event.pictureWidth is not null ? activity.event.pictureWidth:1024 }}"
+                             data-image-h="{{ activity.event.pictureHeight is not null ? activity.event.pictureHeight:669 }}">
+                            <img src="{{ activity.event.pictureFilename is not null ? vich_uploader_asset(activity.event, 'pictureFile') :
+                            asset("bundles/app/img/event-header/organisation.jpeg") }}" alt="{{ activity.event.name }}" class="mini-picture"
+                            />
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <h2 class="m-b-20">
+                            {{ activity.event.name }}
+                        </h2>
+                        <div class="m-b-15">
+                            <small><i class="zmdi zmdi-ticket-star"></i>
+                                {% for activityType in activity.activityTypes %}
+                                    {% if not loop.first %}
+                                        ,
+                                    {% endif %}
+                                    {{ activityType.keyName }}
+                                {% endfor %}
+                            </small>
+                        </div>
+                        <div>
+                            {% for city in  activity.cities %}
+                                <div>
+                                    <small><i class="zmdi zmdi-pin"></i> {{ city.name }}, {{ city.department.name }}, {{ city.department.region.name }}</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="#modal_information_{{ activity.event.tokenDuplication }}" data-toggle="modal" class="btn btn-flat btn-icon-text m-b-10" aria-expanded="false">
+                            <i class="zmdi zmdi-info-outline"></i> {{ "Informations"|trans }}
+                        </a>
+                        <a href="{{ path('duplicateEvent', {'tokenDuplication': activity.event.tokenDuplication}) }}" class="btn btn-primary btn-icon-text m-b-10">
+                            <i class="zmdi zmdi-plus-circle-o-duplicate"></i>{{ "S'organiser!"|trans }}
+                        </a>
+                        <div class="modal fade" id="modal_information_{{ activity.event.tokenDuplication }}" tabindex="-1" role="dialog" data-backdrop="static"
+                             aria-labelledby="modal_information_{{ activity.event.tokenDuplication }}_title">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                                        <h3 class="modal-title" id="modal_information_{{ activity.event.tokenDuplication }}_title">{{ activity.event.name }}</h3>
+                                        <div class="m-b-15">
+                                            <small><i class="zmdi zmdi-ticket-star"></i>
+                                                {% for activityType in activity.activityTypes %}
+                                                    {% if not loop.first %}
+                                                        ,
+                                                    {% endif %}
+                                                    {{ activityType.keyName }}
+                                                {% endfor %}
+                                            </small>
+                                        </div>
+                                        <div>
+                                            {% for city in  activity.cities %}
+                                                <div>
+                                                    <small><i class="zmdi zmdi-pin"></i> {{ city.name }}, {{ city.department.name }}, {{ city.department.region.name }}</small>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-body text-center m-b-10">
+                                        <img class="pp-elt-picture picture-large"
+                                             src="{{ vich_uploader_asset(activity.event, 'pictureFile') }}"
+                                             alt="{{ activity.event.pictureFile is defined ? '':activity.event.pictureFile.filename }}">
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>{{ activity.event.description|raw }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
+    <script>
+        $('.focuspoint').focusPoint();
+    </script>
+    <script>
+        {# La réponse doit être sous la forme : "suggestions": [
+            { "value": "United Arab Emirates", "data": "AE" },
+            { "value": "United Kingdom",       "data": "UK" },
+            { "value": "United States",        "data": "US" }
+        ]
+
+        Documenttation : https://www.devbridge.com/sourcery/components/jquery-autocomplete/#}
+        $(document).ready(function () {
+            $('#directory_place_input').autocomplete({
+                serviceUrl: '{{ path("placeAutocompletion") }}',
+                minChars: 3
+            });
+        })
+    </script>
 {% endblock %}

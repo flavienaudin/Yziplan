@@ -11,20 +11,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class DirectoryController
+ * Class UtilsController
  * @package AppBundle\Controller
- * @Route("/{_locale}/directory", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
+ * @Route("/{_locale}/utils", defaults={"_locale": "fr"}, requirements={"_locale": "en|fr"})
  */
-class DirectoryController extends Controller
+class UtilsController extends Controller
 {
     /**
-     * @Route("/", name="directoryIndex")
+     * @Route("/autocomplete/place", name="placeAutocompletion")
      */
     public function indexAction(Request $request)
     {
-        $activities = $this->get('at.manager.directory')->getActivities();
-        return $this->render('AppBundle:Directory:directory_index.html.twig', array(
-            "activities" => $activities
-        ));
+        $pattern = $request->query->get('query');
+        $activities = $this->get('at.manager.utils')->getPlaceAutocompleteResult($pattern);
+        $result = array("suggestions" => $activities);
+        return $this->json($result);
     }
 }
