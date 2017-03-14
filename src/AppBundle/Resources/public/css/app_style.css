@@ -154,11 +154,11 @@
 
 @media (max-width: 767px) {
     .card-header {
-        padding: 10px 15px;
+        padding: 15px 15px;
     }
 
     .card-header .actions {
-        top: 5px;
+        top: 10px;
     }
 }
 
