@@ -161,7 +161,7 @@
                     </div>
                 </div>
                 {% if eventForm.template is defined %}
-                    <div>
+                    <div class="{% block eventFormTemplateClass %}hidden{% endblock %}">
                         <p>{{ "event.form.template.instructions"|trans }}</p>
                         {{ form_row(eventForm.template, {
                             'label' : 'event.form.template.label',
