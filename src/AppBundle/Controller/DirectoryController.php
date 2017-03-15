@@ -2,13 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\Core\SuggestionType;
-use AppBundle\Utils\enum\FlashBagTypes;
-use AppBundle\Utils\Response\AppJsonResponse;
+use AppBundle\Form\ActivityDirectory\SearchActivityType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+
 
 /**
  * Class DirectoryController
@@ -22,9 +21,42 @@ class DirectoryController extends Controller
      */
     public function indexAction(Request $request)
     {
+        /** @var FormInterface $searchForm */
+        $searchForm = $this->get('form.factory')->create(SearchActivityType::class);
         $activities = $this->get('at.manager.directory')->getActivities();
         return $this->render('AppBundle:Directory:directory_index.html.twig', array(
-            "activities" => $activities
+            "activities" => $activities,
+            "searchForm" => $searchForm->createView()
+        ));
+    }
+
+    /**
+     * @Route("/activity/search", name="searchActivity")
+     */
+    public function searchActivityAction(Request $request)
+    {
+        $activities = null;
+        $searchFormResult = $this->get('form.factory')->create(SearchActivityType::class);
+        $searchFormResult->handleRequest($request);
+        if ($searchFormResult->isSubmitted()) {
+            if ($searchFormResult->isValid()) {
+                /**
+                 * Array d'id d'activityType
+                 */
+                $types = $searchFormResult->get('type')->getData();
+                /**
+                 * Début de nom de ville, departement ou region ou null
+                 */
+                $place = $searchFormResult->get('place')->getData();
+                $activities = $this->get('at.manager.directory')->searchActivities($types, $place);
+            }
+        }
+        /** @var FormInterface $searchForm */
+        $searchForm = $this->get('form.factory')->create(SearchActivityType::class);
+
+        return $this->render('AppBundle:Directory:directory_index.html.twig', array(
+            "activities" => $activities,
+            "searchForm" => $searchForm->createView()
         ));
     }
 }

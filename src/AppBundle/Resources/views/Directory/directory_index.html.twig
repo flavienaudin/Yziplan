@@ -4,6 +4,7 @@
 
 Données d'entrée :
 - activities : liste des activités
+- searchForm (SearchActivityForm) : formulaire de recherche
 #}
 
 {% block title %}{{ parent() }} - {{ 'eventInvitations.page.meta_title'|trans }}{% endblock %}
@@ -18,26 +19,37 @@ Données d'entrée :
                     </h2>
                 </div>
                 <div class="card-body card-padding-sm">
-                    <div class="col-sm-6 m-b-25">
-                        <div class="input-group">
-                            <span class="input-group-addon" style="width: 25px;"><i class="zmdi zmdi-ticket-star"></i></span>
-                            <select class="selectpicker" data-live-search="true">
-                                <option class="hidden">Activités</option>
-                                <option>Ketchup</option>
-                                <option>Relish</option>
-                                <option>Tent</option>
-                                <option>Flashlight</option>
-                                <option>Toilet Paper</option>
-                            </select>
+                    {{ form_start(searchForm, {'action':path('searchActivity')}) }}
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 col-md-offset-1">
+                            {{ form_row(searchForm.type, {
+                                'label':'event.form.whereName.label',
+                                'attr':{'placeholder':'event.form.whereName.placeholder', 'class':'selectpicker'},
+                                'widget_options':{'fgline':true, 'displayInRow' : true}
+                            }) }}
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            {{ form_row(searchForm.place, {
+                                'label':'event.form.whereName.label',
+                                'attr':{'placeholder':'event.form.whereName.placeholder'},
+                                'widget_options':{'fgline':true, 'displayInRow' : true}
+                            }) }}
+                        </div>
+                        <div class="col-sm-12 col-md-2">
+                            <div class="pull-right">
+                                <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                                    {{ "global.button.save"|trans }}
+                                </button>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="input-group">
+                    {{ form_end(searchForm) }}
+                    {#<div class="input-group">
                         <span class="input-group-addon"><i class="zmdi zmdi-pin"></i></span>
                         <div class="fg-line">
                             <input id="directory_place_input" type="text" class="form-control" placeholder="Lieu">
                         </div>
-                    </div>
+                    </div>#}
                 </div>
             </div>
         </div>
@@ -138,7 +150,7 @@ Données d'entrée :
 
         Documenttation : https://www.devbridge.com/sourcery/components/jquery-autocomplete/#}
         $(document).ready(function () {
-            $('#directory_place_input').autocomplete({
+            $('#{{ searchForm.place.vars.id }}').autocomplete({
                 serviceUrl: '{{ path("placeAutocompletion") }}',
                 minChars: 3
             });

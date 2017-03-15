@@ -11,7 +11,8 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\ActivityDirectory\Activity;
 use Doctrine\ORM\EntityManager;
 
-class DirectoryManager{
+class DirectoryManager
+{
 
     /** @var EntityManager */
     private $entityManager;
@@ -22,8 +23,15 @@ class DirectoryManager{
         $this->entityManager = $doctrine;
     }
 
-    public function getActivities(){
+    public function getActivities()
+    {
         return $this->entityManager->getRepository(Activity::class)->getLastAddedActivities(15);
+    }
+
+    public function searchActivities($types, $place)
+    {
+        $place = explode(' (', $place)[0];
+        return $this->entityManager->getRepository(Activity::class)->getActivityByTypeAndPlace($types, $place );
     }
 
 }

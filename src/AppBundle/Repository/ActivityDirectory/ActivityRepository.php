@@ -27,35 +27,31 @@ class ActivityRepository extends EntityRepository
     /**
      * Retourne la liste des activités en fonction d'une liste de lieu et de type d'activité
      *
-     * @param array $whats liste d'id d'ActivityType
-     * @param array $whereCities liste d'id de City
-     * @param array $whereDepartments liste d'id de Department
-     * @param array $whereRegions liste d'id de Region
+     * @param array $types liste d'id d'ActivityType
+     * @param array $place liste de nom de lieu
      *
      * @return array de Activity
      */
-    public function getActivityByTypeAndPlace($whats, $whereCities, $whereDepartments, $whereRegions)
+    public function getActivityByTypeAndPlace($types, $place)
     {
         $qb = $this->createQueryBuilder('a');
         $qb->leftJoin('a.event', 'e')
             ->where('e.duplicationEnabled = 1');
-        if (!empty($whats)) {
+        if (!empty($types)) {
             $qb->leftJoin('a.activityTypes', 'at')
-                ->andWhere('at.activities in :whats')
-                ->setParameter(':whats', $whats);
+                ->andWhere('at.id in (:types)')
+                ->setParameter(':types', $types);
         }
-        if (!empty($whereCities) || !empty($whereDepartments) || !empty($whereRegions)) {
+        if (!empty($place)) {
             $qb->leftJoin('a.cities', 'c')
                 ->leftJoin('c.department', 'd')
                 ->leftJoin('d.region', 'r')
                 ->andWhere($qb->expr()->orX(
-                    $qb->expr()->in('c.id', ':whereCities'),
-                    $qb->expr()->in('d.id', ':whereDepartments'),
-                    $qb->expr()->in('r.id', ':whereRegions')
+                    $qb->expr()->like('c.name', ':place'),
+                    $qb->expr()->like('d.name', ':place'),
+                    $qb->expr()->like('r.name', ':place')
                 ))
-                ->setParameter(':whereCities', $whereCities)
-                ->setParameter(':whereDepartments', $whereDepartments)
-                ->setParameter(':whereRegions', $whereRegions);
+                ->setParameter(':place', $place.'%');
         }
         return $qb
             ->getQuery()
