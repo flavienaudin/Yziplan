@@ -37,7 +37,7 @@ class ActivityRepository extends EntityRepository
         $qb = $this->createQueryBuilder('a');
         $qb->leftJoin('a.event', 'e')
             ->where('e.duplicationEnabled = 1');
-        if (!empty($types)) {
+        if (!empty($types) && !empty($types[0]) ) {
             $qb->leftJoin('a.activityTypes', 'at')
                 ->andWhere('at.id in (:types)')
                 ->setParameter(':types', $types);

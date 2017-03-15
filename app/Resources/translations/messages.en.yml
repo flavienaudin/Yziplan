@@ -14,10 +14,11 @@ base:
     text2: Sorry for the inconvenience!
   footer:
     home: Home
+    directory: Activities' directory
     pro: Pro
 
 navbar:
-  subtitle: To organise you, it's IZI !
+  subtitle: To organise you, it's YZI !
   new_event: New event
 
 main_menu:
@@ -704,3 +705,14 @@ index:
   callout2: Share your activities
   callout3: Plan is fun
   callout4: And specially, enjoy!
+directory:
+  title: Activities' directory
+  subtitle: Find activites around you!
+  form:
+    type: Activity types...
+    place: City, Region
+    button: Search
+  card:
+    details: Information
+    organize: Organize
+    no_result: No result

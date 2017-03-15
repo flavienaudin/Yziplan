@@ -14,6 +14,7 @@ base:
     text2: Désolé pour le dérangement!
   footer:
     home: Accueil
+    directory: Annuaire d'activités
     pro: Pro
 
 navbar:
@@ -704,3 +705,14 @@ index:
   callout2: Partage tes activités
   callout3: S'organiser devient un plaisir
   callout4: Et surtout profitez!
+directory:
+  title: Annuaire d'activités
+  subtitle: Trouvez des activités près de chez vous!
+  form:
+    type: Type d'activités...
+    place: Ville, Département, Région
+    button: Chercher
+  card:
+    details: Informations
+    organize: S'organiser
+    no_result: Pas de résultat pour votre recherche

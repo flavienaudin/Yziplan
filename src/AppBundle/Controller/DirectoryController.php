@@ -21,20 +21,6 @@ class DirectoryController extends Controller
      */
     public function indexAction(Request $request)
     {
-        /** @var FormInterface $searchForm */
-        $searchForm = $this->get('form.factory')->create(SearchActivityType::class);
-        $activities = $this->get('at.manager.directory')->getActivities();
-        return $this->render('AppBundle:Directory:directory_index.html.twig', array(
-            "activities" => $activities,
-            "searchForm" => $searchForm->createView()
-        ));
-    }
-
-    /**
-     * @Route("/activity/search", name="searchActivity")
-     */
-    public function searchActivityAction(Request $request)
-    {
         $activities = null;
         $searchFormResult = $this->get('form.factory')->create(SearchActivityType::class);
         $searchFormResult->handleRequest($request);
@@ -50,6 +36,8 @@ class DirectoryController extends Controller
                 $place = $searchFormResult->get('place')->getData();
                 $activities = $this->get('at.manager.directory')->searchActivities($types, $place);
             }
+        } else {
+            $activities = $this->get('at.manager.directory')->getActivities();
         }
         /** @var FormInterface $searchForm */
         $searchForm = $this->get('form.factory')->create(SearchActivityType::class);
