@@ -130,24 +130,26 @@
              */
             function askGuestName(e, thenConfirmCallback, thenConfirmCallbackParams, thenCancelCallback, thenCancelCallbackParams) {
                 if (!eventInvitationValid) {
-                    e.preventDefault();
+                    if (typeof e != 'undefined' && e != null) {
+                        e.preventDefault();
+                    }
                     var currentStep = 1;
                     var form = $('form#{{ userEventInvitationForm.vars.id }}');
                     var steps = [
                         {
                             titleText: "{{ "eventInvitation.profile.card.guestname_required_alert.title"|trans }}",
-                            html: "{{ "eventInvitation.profile.card.guestname_required_alert.message"|trans|raw }}",
                             input: "text",
+                            type: 'question',
                             allowOutsideClick: false,
                             allowEscapeKey: false,
                             showCancelButton: true,
                             cancelButtonText: "{{ "global.button.cancel"|trans }}",
                             animation: "slide-from-top",
                             inputPlaceholder: "{{ "eventInvitation.form.guestname.placeholder"|trans|raw }}",
-                            preConfirm: function (input) {
+                            inputValidator: function (input) {
                                 return new Promise(function (resolve, reject) {
                                     if (input === false || input.trim() === '') {
-                                        reject("{{ "eventInvitation.profile.card.guestname_required_alert.inputError"|trans|raw }}");
+                                        reject("{{ "eventInvitation.profile.card.guestname_required_alert.inputError"|trans }}");
                                     } else {
                                         currentStep = 2;
                                         $('#{{ userEventInvitationForm.guestName.vars.id }}').val(input);
@@ -163,6 +165,7 @@
                         steps.push({
                             titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
                             html: '{{ htmlInputBlock|raw }}<br>{{ "eventInvitation.profile.card.guestemail_empty_alert.html"|trans }}',
+                            type: 'question',
                             input: "email",
                             allowOutsideClick: false,
                             allowEscapeKey: false,
@@ -179,19 +182,16 @@
 
                     swal.queue(steps).then(function (result) {
                         $('#{{ userEventInvitationForm.guestName.vars.id }}').val(result[0]);
-
                         if (result.length > 1) {
                             $('#{{ userEventInvitationForm.email.vars.id }}').val(result[1]);
                         }
-
                         submitEventInvitationProfileForm(form, e, thenConfirmCallback, thenConfirmCallbackParams);
-
                     }, function (dismiss) {
                         if (currentStep == 1) {
                             swal({
                                 title: "{{ "global.swal.title.warning"|trans }}",
                                 html: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans }}",
-                                type: "error"
+                                type: "warning"
                             });
                             if (typeof thenCancelCallback === 'function') {
                                 if (thenCancelCallbackParams == undefined) {

@@ -93,7 +93,6 @@ class EventController extends Controller
                         return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_PROFILE));
                     }
                 }
-
                 return $this->render("@App/Event/wizard/step_event_main.html.twig", array(
                     'event' => $currentEvent,
                     'userEventInvitation' => $userEventInvitation,
@@ -365,6 +364,59 @@ class EventController extends Controller
         $recurrenceSettingsForm = null;
         $sendMessageForm = null;
         if ($this->isGranted(EventVoter::EDIT, $userEventInvitation)) {
+            $eventForm = $eventManager->initEventForm();
+            $eventForm->handleRequest($request);
+            if ($eventForm->isSubmitted()) {
+                if ($request->isXmlHttpRequest()) {
+                    if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        // Vérification serveur de la validité de l'invitation
+                        $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    } elseif ($eventForm->isValid()) {
+                        $eventManager->treatEventFormSubmission($eventForm);
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
+
+                        // Creation du templateSettingsForm nécessaire à l'affichage du template
+                        $templateSettingsForm = $eventManager->createTemplateSettingsForm();
+
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#event-header-card'] =
+                            $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
+                                    'userEventInvitation' => $userEventInvitation,
+                                    'eventForm' => $eventForm->createView(),
+                                    'eventTemplateSettingsForm' => ($templateSettingsForm != null ? $templateSettingsForm->createView() : null),
+                                    'eventRecurrenceSettingsForm' => ($recurrenceSettingsForm != null ? $recurrenceSettingsForm->createView() : null),
+                                    'thread' => $thread, 'comments' => $comments,
+                                )
+                            );
+                        $eventForm = $eventManager->initEventForm();
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventEdit_form_container'] =
+                            $this->renderView("@App/Event/partials/event_edit_form.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'eventForm' => $eventForm->createView()
+                            ));
+                        return new AppJsonResponse($data, Response::HTTP_OK);
+                    } else {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventEdit_form_container'] =
+                            $this->renderView("@App/Event/partials/event_edit_form.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'eventForm' => $eventForm->createView()
+                            ));
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    }
+                } else {
+                    if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        // Vérification serveur de la validité de l'invitation
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+                    } elseif ($eventForm->isValid()) {
+                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+                    }
+                }
+            }
+
             $templateSettingsForm = $eventManager->createTemplateSettingsForm();
             $templateSettingsForm->handleRequest($request);
             if ($templateSettingsForm->isSubmitted()) {
@@ -403,56 +455,6 @@ class EventController extends Controller
                     }
                 }
             }
-
-            $eventForm = $eventManager->initEventForm();
-            $eventForm->handleRequest($request);
-            if ($eventForm->isSubmitted()) {
-                if ($request->isXmlHttpRequest()) {
-                    if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
-                        // Vérification serveur de la validité de l'invitation
-                        $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
-                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                    } elseif ($eventForm->isValid()) {
-                        $eventManager->treatEventFormSubmission($eventForm);
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#event-header-card'] =
-                            $this->renderView("@App/Event/partials/event_header_card.html.twig", array(
-                                    'userEventInvitation' => $userEventInvitation,
-                                    'eventForm' => $eventForm->createView(),
-                                    'eventTemplateSettingsForm' => ($templateSettingsForm != null ? $templateSettingsForm->createView() : null),
-                                    'eventRecurrenceSettingsForm' => ($recurrenceSettingsForm != null ? $recurrenceSettingsForm->createView() : null),
-                                    'thread' => $thread, 'comments' => $comments,
-                                )
-                            );
-                        $eventForm = $eventManager->initEventForm();
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventEdit_form_container'] =
-                            $this->renderView("@App/Event/partials/event_edit_form.html.twig", array(
-                                'userEventInvitation' => $userEventInvitation,
-                                'eventForm' => $eventForm->createView()
-                            ));
-                        return new AppJsonResponse($data, Response::HTTP_OK);
-                    } else {
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventEdit_form_container'] =
-                            $this->renderView("@App/Event/partials/event_edit_form.html.twig", array(
-                                'userEventInvitation' => $userEventInvitation,
-                                'eventForm' => $eventForm->createView()
-                            ));
-                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                    }
-                } else {
-                    if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
-                        // Vérification serveur de la validité de l'invitation
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
-                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
-                    } elseif ($eventForm->isValid()) {
-                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
-                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
-                    }
-                }
-            }
-
 
             /** @var FormInterface $sendMessageForm */
             $sendMessageForm = $eventManager->createSendMessageForm();

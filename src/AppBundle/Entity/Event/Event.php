@@ -182,6 +182,22 @@ class Event implements CommentableInterface
      ***********************************************************************/
 
     /**
+     * A template's subevents
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Event\Event", mappedBy="eventParent")
+     */
+    private $subevents;
+
+    /**
+     * The parent event that has been duplicated
+     * @var Event
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Event\Event", inversedBy="subevents")
+     * @ORM\JoinColumn(name="event_parent_id", referencedColumnName="id")
+     */
+    private $eventParent;
+
+    /**
      * @var Thread
      * @ORM\OneToOne(targetEntity="AppBundle\Entity\Comment\Thread")
      * @ORM\JoinColumn(name="comment_thread_id", referencedColumnName="id", nullable=true)
@@ -190,7 +206,6 @@ class Event implements CommentableInterface
 
     /**
      * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Event\Module", mappedBy="event", cascade={"persist"})
      * @ORM\OrderBy({"orderIndex" = "ASC"})
      */
@@ -198,7 +213,6 @@ class Event implements CommentableInterface
 
     /**
      * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Event\EventInvitation", mappedBy="event", cascade={"persist"})
      */
     private $eventInvitations;
@@ -635,6 +649,38 @@ class Event implements CommentableInterface
     }
 
     /**
+     * @return ArrayCollection of Event
+     */
+    public function getSubevents()
+    {
+        return $this->subevents;
+    }
+
+    /**
+     * @return Event
+     */
+    public function getEventParent()
+    {
+        return $this->eventParent;
+    }
+
+    /**
+     * @param Event|null $eventParent
+     * @return Event
+     */
+    public function setEventParent($eventParent)
+    {
+        if($this->getEventParent() != null && $eventParent == null){
+            $this->eventParent->getSubevents()->removeElement($this);
+            $this->eventParent = null;
+        }else {
+            $this->eventParent = $eventParent;
+            $eventParent->getSubevents()->add($this);
+        }
+        return $this;
+    }
+
+    /**
      * @return ThreadInterface
      */
     public function getCommentThread()
@@ -833,7 +879,8 @@ class Event implements CommentableInterface
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("creator", false))
-            ->andWhere(Criteria::expr()->eq("administrator", false));
+            ->andWhere(Criteria::expr()->eq("administrator", false))
+            ->andWhere(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED));
         return $this->eventInvitations->matching($criteria);
     }
 

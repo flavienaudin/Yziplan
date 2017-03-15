@@ -10,7 +10,7 @@
     <div role="tabpanel">
         <ul class="tab-nav" role="tablist">
             <li class="active"><a href="#generals" data-toggle="tab" aria-controls="generals" role="tab">{{ "event.form.tab.general"|trans }}</a></li>
-            <li><a href="#advanced" data-toggle="tab" aria-controls="advanced" role="tab">{{ "event.form.tab.advanced"|trans }}</a></li>
+            <li><a href="#aboutInfo" data-toggle="tab" aria-controls="aboutInfo" role="tab">{{ "event.form.tab.about_info"|trans }}</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="generals" role="tabpanel">
@@ -69,16 +69,7 @@
                     </div>
                 </div>#}
             </div>
-
-            <div class="tab-pane" id="advanced" role="tabpanel">
-                {% if eventForm.template is defined %}
-                    <p>{{ "event.form.template.instructions"|trans }}</p>
-                    {{ form_row(eventForm.template, {
-                        'label' : 'event.form.template.label',
-                        'label_attr':{'class' : "sr-only"},
-                        'attr': {'class':'md-toogle-switch'}
-                    }) }}
-                {% endif %}
+            <div class="tab-pane" id="aboutInfo" role="tabpanel">
                 <div id="eventMoreInfo" class="panel-group" role="tablist" aria-multiselectable="false">
                     <div class="panel panel-collapse">
                         <div class="panel-heading" role="tab" id="eventCoordinates">
@@ -143,18 +134,17 @@
                                 'attr':{'placeholder':'event.form.coordinates.instagramURL.placeholder'},
                                 'widget_options':{'fgline':true, 'label_icon':'zmdi-instagram'}
                             }) }}
-
                         </div>
                     </div>
                     <div class="panel panel-collapse">
-                        <div class="panel-heading" role="tab" id="eventCoordinates">
+                        <div class="panel-heading" role="tab" id="eventOpeningHours">
                             <h4 class="panel-title">
                                 <a href="#eventOpeningHoursCollpase" data-toggle="collapse" data-parent="#eventMoreInfo" class="collapsed" aria-expanded="false"
                                    aria-controls="eventOpeningHoursCollpase">
                                     {{ "event.form.opening_hour.link_collpase"|trans }}</a>
                             </h4>
                         </div>
-                        <div id="eventOpeningHoursCollpase" class="collapse" role="tabpanel" aria-labelledby="eventCoordinates" aria-expanded="false">
+                        <div id="eventOpeningHoursCollpase" class="collapse" role="tabpanel" aria-labelledby="eventOpeningHours" aria-expanded="false">
                             {{ form_label(eventForm.openingHours, null, {'class':'sr-only'}) }}
                             {{ form_errors(eventForm.openingHours) }}
 
@@ -170,6 +160,16 @@
                         </div>
                     </div>
                 </div>
+                {% if eventForm.template is defined %}
+                    <div>
+                        <p>{{ "event.form.template.instructions"|trans }}</p>
+                        {{ form_row(eventForm.template, {
+                            'label' : 'event.form.template.label',
+                            'label_attr':{'class' : "sr-only"},
+                            'attr': {'class':'md-toogle-switch'}
+                        }) }}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>

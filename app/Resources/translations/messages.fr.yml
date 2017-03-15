@@ -124,7 +124,7 @@ event:
   form:
     tab:
       general: Général
-      advanced: Avancées
+      about_info: Plus d'info
     text:
       when_where: Vous connaissez déjà la date et le lieu ? Fixez-les maintenant sinon vous pourrez ajouter un sondage dans une prochaine étape
       see_map: Voir sur la carte
@@ -167,6 +167,7 @@ event:
       text.true: Vos amis peuvent inviter
       text.false: Vos amis ne peuvent pas inviter
     template:
+      link_collpase: Option de modèle
       label: Faire de cet événement un modèle.
       instructions: |
         En faisant de cet événement un modèle, les personnes en possession du lien de duplication pourront créer des événements déjà renseignés et convier leurs invités afin de s'organiser autour
@@ -313,8 +314,7 @@ eventInvitation:
     text:
       disconnect: Vous n'êtes pas %user% ?
     guestname_required_alert:
-      title: Merci de saisir votre nom
-      message: Cette action nécessite que vous soyez identifiés auprès des invités
+      title: Merci de saisir votre nom avant continuer
       inputError: Ce serait bien mieux avec quelques lettres
       dismiss: Votre participation n'a pas été prise en compte
       error_message:

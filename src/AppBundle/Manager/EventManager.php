@@ -176,6 +176,7 @@ class EventManager
         }
         if($this->event->isTemplate() && empty($this->event->getTokenDuplication())){
             $this->event->setTokenDuplication($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+            $this->event->setDuplicationEnabled(true);
         }
         if ($this->event->getStatus() == EventStatus::IN_CREATION) {
             $this->event->setStatus(EventStatus::IN_ORGANIZATION);
@@ -221,6 +222,9 @@ class EventManager
             $duplicatedEvent->setName($this->event->getName());
             $duplicatedEvent->setDescription($this->event->getDescription());
             $duplicatedEvent->setResponseDeadline($this->event->getResponseDeadline());
+            $duplicatedEvent->setEventParent($this->event);
+            $duplicatedEvent->setTemplate(false);
+            $duplicatedEvent->setDuplicationEnabled(false);
 
             if ($this->event->getPictureFile() != null) {
                 $originalFile = $this->event->getPictureFile();

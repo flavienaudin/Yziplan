@@ -124,7 +124,7 @@ event:
   form:
     tab:
       general: Generals
-      advanced: Advanced
+      about_info: More info
     text:
       when_where: You already know the date and the place ? Set them right now or add a survey in next step
       see_map: See on map
@@ -167,6 +167,7 @@ event:
       text.true: Your friends can invite
       text.false: Your friends can not invite
     template:
+      link_collpase: Template settings
       label: Set this event as template
       instructions: |
         By setting this event as template, people in possession of the duplication link can create prefilled events and invite their guests to get organized around your activity
@@ -312,8 +313,7 @@ eventInvitation:
     text:
       disconnect: You are not %user%?
     guestname_required_alert:
-      title: Please enter your name
-      message: This action requires that you are identified with the other guests
+      title: Please enter your name before continuing
       inputError: It's better with non-empty name.
       dismiss: Your participation wasn't taken into account
       error_message:

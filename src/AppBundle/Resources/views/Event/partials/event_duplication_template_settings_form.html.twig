@@ -47,8 +47,8 @@
             });
 
             $('#{{ eventTemplateSettingsForm.activateTemplate.vars.id }}').on('change', function (e) {
-                $('form#{{ eventTemplateSettingsForm.vars.id }}').submit();
                 $('#eventDuplicationTemplateLink').fadeToggle();
+                $('form#{{ eventTemplateSettingsForm.vars.id }}').submit();
             });
         });
     </script>
