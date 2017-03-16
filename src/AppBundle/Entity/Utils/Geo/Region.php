@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Utils\Geo;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -15,7 +16,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  *
  * Region
  *
- * @ORM\Table(name="utils_geo_region")
+ * @ORM\Table(name="utils_geo_region",indexes={@Index(name="region_name_idx", columns={"name"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Utils\Geo\RegionRepository")
  */
 class Region

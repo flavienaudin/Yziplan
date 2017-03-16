@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Utils\Geo;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
@@ -12,7 +13,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  * Date: 10/03/2017
  * Time: 11:05
  *
- * @ORM\Table(name="utils_geo_department")
+ * @ORM\Table(name="utils_geo_department",indexes={@Index(name="department_name_idx", columns={"name"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Utils\Geo\DepartmentRepository")
  */
 class Department

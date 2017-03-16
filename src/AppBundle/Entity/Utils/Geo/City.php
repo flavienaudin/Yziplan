@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Utils\Geo;
 use AppBundle\Entity\ActivityDirectory\Activity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
 
@@ -16,7 +17,7 @@ use Gedmo\Timestampable\Traits\TimestampableEntity;
  *
  * City
  *
- * @ORM\Table(name="utils_geo_city")
+ * @ORM\Table(name="utils_geo_city",indexes={@Index(name="city_name_idx", columns={"name"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Utils\Geo\CityRepository")
  */
 class City
