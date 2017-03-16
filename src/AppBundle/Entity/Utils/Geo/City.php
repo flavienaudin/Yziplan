@@ -35,9 +35,9 @@ class City
     private $id;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="postal_code", type="integer", nullable=false)
+     * @ORM\Column(name="postal_code", type="string", length=5, nullable=false)
      */
     private $postal_code;
 
