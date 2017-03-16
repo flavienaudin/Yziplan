@@ -17,34 +17,36 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <table class="table table-striped table-condensed table-result">
-                    <tbody>
-                    {# Pour chaque réponse d'une proposition #}
-                    {% for moduleInvitation in moduleInvitations %}
-                        {% set guestPollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
-                        {% if guestPollProposalResponse is not null %}
-                            {% set quantity = guestPollProposalResponse is null or guestPollProposalResponse.answer is null?0:guestPollProposalResponse.answer %}
-                            {% if quantity > 0 %}
-                                {% set totalOfResponse = totalOfResponse + quantity %}
-                                {% set numberOfResponse = numberOfResponse + 1 %}
-                                <tr>
-                                    <td>
-                                        <div class="avatar-img-container-sm center-block m-b-5">
-                                            {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {{ moduleInvitation.displayableName(true, true) }}
-                                    </td>
-                                    <td class="{{ (quantity > 0) ? 'palette-Light-Green-100 bg c-lightgreen' }}">
-                                        {{ quantity }}
-                                    </td>
-                                </tr>
+                <div class="table-responsive">
+                    <table class="table table-striped table-condensed table-result">
+                        <tbody>
+                        {# Pour chaque réponse d'une proposition #}
+                        {% for moduleInvitation in moduleInvitations %}
+                            {% set guestPollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
+                            {% if guestPollProposalResponse is not null %}
+                                {% set quantity = guestPollProposalResponse is null or guestPollProposalResponse.answer is null?0:guestPollProposalResponse.answer %}
+                                {% if quantity > 0 %}
+                                    {% set totalOfResponse = totalOfResponse + quantity %}
+                                    {% set numberOfResponse = numberOfResponse + 1 %}
+                                    <tr>
+                                        <td>
+                                            <div class="avatar-img-container-sm center-block m-b-5">
+                                                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{ moduleInvitation.displayableName(true, true) }}
+                                        </td>
+                                        <td class="{{ (quantity > 0) ? 'palette-Light-Green-100 bg c-lightgreen' }}">
+                                            {{ quantity }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 <div class=" w-100">
                     <h3>{{ "pollmodule.display.result.total"|trans }}&#8239;{{ totalOfResponse }}</h3>
                 </div>

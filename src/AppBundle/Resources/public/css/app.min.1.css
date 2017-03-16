@@ -15415,7 +15415,7 @@ body.o-hidden {
     list-style: none;
     margin-left: -5px;
     margin-top: 8px;
-    margin-bottom: 0;
+    margin-bottom: 8px;
 }
 
 #footer .f-menu > li {
@@ -15430,6 +15430,11 @@ body.o-hidden {
 
 #footer .f-menu > li > a:hover {
     color: #777;
+}
+
+#footer > p {
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 .pricing-table {

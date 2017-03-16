@@ -1,12 +1,10 @@
-Copyright &copy; 2017 Yziplan
-
 <ul class="f-menu">
     <li><a href="{{ path('home') }}">{{ "base.footer.home"|trans }}</a></li>
     <li><a href="{{ path('directoryIndex') }}">{{ "base.footer.directory"|trans }}</a></li>
     <li><a href="{{ path('indexPro') }}">{{ "base.footer.pro"|trans }}</a></li>
-    {#<li><a href="#">Mentions Légales</a></li>#}
-    <li><a href="mailto:contact@yziplan.fr">Contact</a></li>
-    <li><a href="#" data-toggle="modal" data-target="#addSuggestion" id="lienOuvreSuggestion" class="btn btn-primary btn-icon-text c-white"><i
-                    class="zmdi zmdi-comment-outline"></i> {{ "suggestion.button"|trans }}</a>
-    </li>
+    <li><a href="{{ path('legalNotices') }}">{{ "legal_notices.title"|trans }}</a></li>
 </ul>
+
+<p><a href="#" data-toggle="modal" data-target="#addSuggestion" id="lienOuvreSuggestion" class="btn btn-primary btn-icon-text c-white"><i
+                class="zmdi zmdi-comment-outline"></i> {{ "suggestion.button"|trans }}</a></p><p><a href="mailto:pbagnpg@lmvcyna.se" class="hidden-email">pbagnpg@lmvcyna.se</a>&nbsp;-&nbsp;Copyright&nbsp;&copy;&nbsp;2017&nbsp;Yziplan
+</p>

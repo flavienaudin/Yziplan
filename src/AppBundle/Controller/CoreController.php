@@ -31,16 +31,22 @@ class CoreController extends Controller
     public function indexProAction(Request $request)
     {
         return $this->render('AppBundle:Core:footer/index_pro.html.twig');
-
     }
 
     /**
-     * @Route("/help/page", name="helpPageCreation")
+     * @Route("/help", name="helpPageCreation")
      */
     public function helpPageCreationAction(Request $request)
     {
         return $this->render('AppBundle:Core:footer/help_page.html.twig');
+    }
 
+    /**
+     * @Route("/legal-notices", name="legalNotices")
+     */
+    public function legalNoticesAction(Request $request)
+    {
+        return $this->render('@App/Core/legal_notices.html.twig');
     }
 
     /**

@@ -50,20 +50,29 @@ $(document).ready(function () {
             customClass: 'ie9-placeholder'
         });
     }
+
+    /* --------------------------------------------------------
+     Decode hidden email
+     ----------------------------------------------------------*/
+    $("a.hidden-email").each(function () {
+        var hrefEmail = $(this).attr("href");
+        if (hrefEmail.indexOf("mailto:") === 0) {
+            hrefEmail = hrefEmail.substr(7);
+        }
+        var decodedEmail = $.rot13(hrefEmail);
+        $(this).attr("href", "mailto:" + decodedEmail);
+        $(this).rot13();
+    });
 });
 
 /**
  * Detect mobile browser
  */
-/*function isMobile() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}*/
 function isMobile() {
     if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent)) {
         return true;
     }
 }
-
 
 /**
  * Active the plugin mCustomScrollBar
@@ -204,7 +213,7 @@ function jsPlugginActivation() {
     }
 
     //passage en readonly sur mobile et tablette pour eviter l'apparition du clavier.
-    if (isMobile()){
+    if (isMobile()) {
         $('.readonly-onmobile').attr('readonly', true);
     }
 
@@ -217,7 +226,7 @@ function jsPlugginActivation() {
         format: locale_format,
         locale: locale_js,
         showClear: true,
-        ignoreReadonly : true,
+        ignoreReadonly: true,
         icons: {
             time: 'zmdi zmdi-time',
             date: 'zmdi zmdi-calendar',

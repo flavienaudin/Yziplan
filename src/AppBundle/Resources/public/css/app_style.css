@@ -205,6 +205,13 @@
 }
 
 /*-----------------------------------
+    SET Smartsupp under modal
+-----------------------------------*/
+#chat-application {
+    z-index: 1049 !important;
+}
+
+/*-----------------------------------
     List
 -----------------------------------*/
 .list-md-icon ul {
@@ -674,6 +681,8 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
+
+.poll-response tbody,
 .poll-container tbody {
     border-top: 1px solid #bdbdbd;
     border-bottom: 1px solid #bdbdbd;
