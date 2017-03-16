@@ -163,6 +163,23 @@
                 }
             });
 
+            {# Check if invitation is valid before opeing the modal #}
+            $('#eventEditModal').on('show.bs.modal', function (e) {
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    askGuestName(e, function () {
+                        $('#eventEditModal').modal('show');
+                    }, null);
+                }
+            });
+            {# Check if invitation is valid before opeing the modal #}
+            $('#eventDuplicationSettingsModal').on('show.bs.modal', function (e) {
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    askGuestName(e, function () {
+                        $('#eventDuplicationSettingsModal').modal('show');
+                    }, null);
+                }
+            });
+
             {% if redirectedAfterEventDuplication is defined and redirectedAfterEventDuplication %}
             {# Affichage de l'événement après une duplication => information à l'utilisateur #}
             swal({
