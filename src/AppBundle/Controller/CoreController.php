@@ -42,11 +42,11 @@ class CoreController extends Controller
     }
 
     /**
-     * @Route("/privacy-policy", name="privacyPolicy")
+     * @Route("/legal-notices", name="legalNotices")
      */
-    public function privacyPolicyAction(Request $request)
+    public function legalNoticesAction(Request $request)
     {
-        return $this->render('@App/Core/privacy_policy.html.twig');
+        return $this->render('@App/Core/legal_notices.html.twig');
     }
 
     /**

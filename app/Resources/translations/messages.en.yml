@@ -64,12 +64,14 @@ landing_page:
       title: Candlemas
       text: Meet up with friends to share pancakes for the Candlemas!
 
-privacy_policy:
+legal_notices:
   meta:
-    description: Yziplan privacy policy
-    title: Privacy policy
-  title: Privacy policy
-  text: Our privacy policy...
+    description: Yziplan legal notices
+    title: Legal notices
+  title: Legal notices
+  banner:
+    message: We have placed cookies on your computer to help make this website better
+    do_not_show_message_again: Do not show this message again
 
 appuseremail:
   associate:
@@ -566,6 +568,7 @@ global:
     send: Send
     archive: Archive
     unarchive: Unarchive
+    continue: Continue
   success:
     data_saved: Information saved
   error:
