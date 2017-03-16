@@ -63,6 +63,13 @@ landing_page:
       title: Candlemas
       text: Meet up with friends to share pancakes for the Candlemas!
 
+privacy_policy:
+  meta:
+    description: Yziplan privacy policy
+    title: Privacy policy
+  title: Privacy policy
+  text: Our privacy policy...
+
 appuseremail:
   associate:
     message:

@@ -1,0 +1,23 @@
+{% extends "@App/Core/layout_cboxed.html.twig" %}
+
+{% block meta_data %}
+    <meta name="description" content="{{ "privacy_policy.meta.description"|trans }}"/>
+{% endblock %}
+
+{% block title %}{{ parent() }} - {{ "privacy_policy.meta.title"|trans }}{% endblock %}
+
+{% block content_body %}
+    <div class="row">
+        <div class="col-xs-12 col-xs-p-lr-0">
+            <div class="card z-depth-1">
+                <div class="card-header">
+                    <h1>{{ "privacy_policy.title"|trans }}</h1>
+                </div>
+
+                <div class="card-body card-padding">
+                    <p>{{ "privacy_policy.text"|trans }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

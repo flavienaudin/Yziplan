@@ -63,6 +63,13 @@ landing_page:
       title: Chandeleur
       text: Retrouvez-vous entre amis pour partager des crêpes pour la chandeleur !
 
+privacy_policy:
+  meta:
+    description: Politique de confidentialité d'Yziplan
+    title: Politique de confidentialité
+  title: Politique de confidentialité
+  text: Notre politique de confidentialité...
+
 appuseremail:
   associate:
     message:
