@@ -85,6 +85,12 @@ services:
     tags:
       - { name: security.voter }
 
+  at.voter.pollproposal:
+    class: AppBundle\Security\PollProposalVoter
+    public: false
+    tags:
+      - { name: security.voter }
+
   at.voter.event_invitation:
     class: AppBundle\Security\EventInvitationVoter
     public: false

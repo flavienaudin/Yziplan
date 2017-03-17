@@ -9,13 +9,18 @@
     <td>
         <div class="media">
             <div class="pull-right">
-                {% if pollProposal.creator == userModuleInvitation %}
+                {% if is_granted(constant('AppBundle\\Security\\PollProposalVoter::EDIT'), [pollProposal, userModuleInvitation])
+                or is_granted(constant('AppBundle\\Security\\PollProposalVoter::DELETE'), [pollProposal, userModuleInvitation]) %}
                     <div class="media-object">
                         <div class="btn-group-vertical btn-group-xs" role="group" aria-label="...">
-                            <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="button"
-                               id="getPPEditionForm_{{ pollProposal.id }}" class="btn btn-default"> <i class="zmdi zmdi-edit"></i></a> <a
-                                    href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="button"
-                                    id="removePP_{{ pollProposal.id }}" class="btn btn-default c-red"> <i class="zmdi zmdi-delete"></i></a>
+                            {% if is_granted(constant('AppBundle\\Security\\PollProposalVoter::EDIT'), [pollProposal, userModuleInvitation]) %}
+                                <a href="{{ path('pollProposalEditionForm', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="button"
+                                   id="getPPEditionForm_{{ pollProposal.id }}" class="btn btn-default"> <i class="zmdi zmdi-edit"></i></a>
+                            {% endif %}
+                            {% if is_granted(constant('AppBundle\\Security\\PollProposalVoter::DELETE'), [pollProposal, userModuleInvitation]) %}
+                                <a href="{{ path('removePollProposal', {"pollProposalId":pollProposal.id, "moduleInvitationToken" : userModuleInvitation.token}) }}" role="button"
+                                   id="removePP_{{ pollProposal.id }}" class="btn btn-default c-red"> <i class="zmdi zmdi-delete"></i></a>
+                            {% endif %}
                         </div>
                         <script>
                             $('#getPPEditionForm_{{ pollProposal.id }}').on('click', function (e) {

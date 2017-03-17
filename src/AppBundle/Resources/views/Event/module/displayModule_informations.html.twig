@@ -4,11 +4,12 @@
 #}
 
 <div id="module-information-{{ module.token }}" {% block moduleInformationAttributs %}{% endblock %}
-     class="card-body {% block moduleInformationClass %}{{ not userModuleInvitation.organizer and (module.description is empty or module.description =='<p><br></p>') ?"hidden" }} card-padding-sm{% endblock %}">
+     class="card-body {% block moduleInformationClass %}{{ not is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) and
+     (module.description is empty or module.description =='<p><br></p>') ?"hidden" }} card-padding-sm{% endblock %}">
     {% block moduleInformation %}
-        {% if userModuleInvitation.organizer and (module.description is empty or module.description == "<p><br></p>") %}
-            <div><a class="btn btn-flat c-blue" role="button" data-toggle="modal" href="#moduleEdit_modal_{{ module.token }}">
-                    <i class="zmdi zmdi-edit"></i> {{ "module.main_information.no_description"|trans }}</a></div>
+        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) and (module.description is empty or module.description == "<p><br></p>") %}
+            <div><a class="btn btn-flat c-blue" role="button" data-toggle="modal" href="#moduleEdit_modal_{{ module.token }}"> <i
+                            class="zmdi zmdi-edit"></i> {{ "module.main_information.no_description"|trans }}</a></div>
         {% else %}
             <div>{{ module.description|raw }}</div>
         {% endif %}
