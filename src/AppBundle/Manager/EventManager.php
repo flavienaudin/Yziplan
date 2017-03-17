@@ -174,7 +174,7 @@ class EventManager
         if (empty($this->event->getToken())) {
             $this->event->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
-        if($this->event->isTemplate() && empty($this->event->getTokenDuplication())){
+        if ($this->event->isTemplate() && empty($this->event->getTokenDuplication())) {
             $this->event->setTokenDuplication($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
             $this->event->setDuplicationEnabled(true);
         }
@@ -361,6 +361,26 @@ class EventManager
         return $this->event;
     }
 
+    /**
+     * Annule un événement en modifiant le status et en envoyant un email à tous les invités
+     * @param Event|null $event
+     * @return bool*
+     */
+    public function cancelEvent(Event $event = null){
+        if($event != null){
+            $this->event = $event;
+        }
+        if($this->event != null){
+            $this->event->setStatus(EventStatus::DEPROGRAMMED);
+
+            // TODO send email
+
+            $this->persistEvent();
+            return true;
+        }else{
+            return false;
+        }
+    }
 
     /**
      * Crée et ajoute un module à l'événement

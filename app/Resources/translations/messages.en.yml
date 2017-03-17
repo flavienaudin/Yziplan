@@ -114,6 +114,7 @@ event:
   menu:
     edit: Edit event
     duplication: Duplication settings
+    cancel: Cancel event
   modal:
     edit:
       title: Edit the event
@@ -224,6 +225,10 @@ event:
       time_closed:
         label: Closing time
         placeholder: Closing time
+  alert:
+    confirm_deletion:
+      title: Are you sure you want to delete this module?
+      message: Your guests will be noticed and will not be able to participate anymore
   wizard:
     button:
       send_invitations: Send invitations

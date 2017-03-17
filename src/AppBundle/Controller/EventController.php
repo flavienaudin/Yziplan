@@ -715,17 +715,60 @@ class EventController extends Controller
 
 
     /**
-     * @Route("/status/validated/{token}", name="validateEvent")
+     * @Route("/cancel/{token}", name="cancelEvent")
      * @ParamConverter("event" , class="AppBundle:Event\Event")
      * @param Event $event The current event
      * @return AppJsonResponse|FileInputJsonResponse|RedirectResponse
      */
-    public function validateEventAction(Event $event, Request $request)
+    public function cancelEventAction(Event $event, Request $request)
     {
         $eventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
+        if (!$this->isGranted(EventVoter::CANCEL, $eventInvitation)) {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
+                return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("global.error.unauthorized_access"));
+                return $this->redirectToRoute("displayEvent", array("tolen" => $event->getToken()));
+            }
+        }
+
+        $eventManager = $this->get("at.manager.event");
+        if ($eventManager->cancelEvent($event)) {
+            if ($request->isXmlHttpRequest()) {
+
+            } else {
+                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("global.success.data_saved"));
+                return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+            }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+
+            } else {
+                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("global.success.data_saved"));
+                return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+            }
+        }
+    }
+
+    /**
+     * @Route("/status/validated/{token}", name="validateEvent")
+     * @ParamConverter("event" , class="AppBundle:Event\Event")
+     * @param Event $event The current event
+     * @return AppJsonResponse|RedirectResponse
+     */
+    public function validateEventAction(Event $event, Request $request)
+    {
+        // TODO : vérifier le fonctionnement de la méthode avec l'activation de la fonctionnalité
+        $eventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
         if (!$this->isGranted(EventVoter::EDIT, $eventInvitation)) {
-            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
-            return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
+                return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("global.error.unauthorized_access"));
+                return $this->redirectToRoute("displayEvent", array("tolen" => $event->getToken()));
+            }
         }
 
         $eventManager = $this->get("at.manager.event");

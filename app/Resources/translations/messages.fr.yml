@@ -114,6 +114,7 @@ event:
   menu:
     edit: Editer l'événement
     duplication: Options de duplication
+    cancel: Annuler l'événement
   modal:
     edit:
       title: Modifier l'événement
@@ -225,6 +226,10 @@ event:
       time_closed:
         label: Heure de fermeture
         placeholder: Heure de fermeture
+  alert:
+    confirm_deletion:
+      title: Etes-vous sûr de vouloir annuler cet événement ?
+      message: Vos invités seront avertis et ne pourront plus participer
   wizard:
     button:
       send_invitations: Envoyer les invitations
