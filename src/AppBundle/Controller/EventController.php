@@ -263,6 +263,10 @@ class EventController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         } else {
+            if ($currentEvent->getStatus() == EventStatus::DEPROGRAMMED) {
+                return $this->render("@App/Event/event_cancelled.html.twig", array("event" => $currentEvent, "userEventInvitation" => $userEventInvitation));
+            }
+
             /* TODO : invitation annulée : désactiver les formulaires */
             if ($userEventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                 $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans('eventInvitation.message.warning.invitation_cancelled'));
@@ -734,18 +738,21 @@ class EventController extends Controller
         }
 
         $eventManager = $this->get("at.manager.event");
-        if ($eventManager->cancelEvent($event)) {
+        $requestData = $request->request->all();
+        if ($eventManager->cancelEvent($requestData, $event)) {
             if ($request->isXmlHttpRequest()) {
-
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.success.message.cancellation');
+                $data[AppJsonResponse::REDIRECT] = $this->generateUrl("displayEvent", array("token" => $event->getToken()));
+                return new AppJsonResponse($data, Response::HTTP_OK);
             } else {
-                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("global.success.data_saved"));
                 return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
             }
         } else {
             if ($request->isXmlHttpRequest()) {
-
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.deletion");
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
-                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("global.success.data_saved"));
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.deletion"));
                 return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
             }
         }

@@ -1,0 +1,26 @@
+{% extends "@App/Event/layout_cboxed.html.twig" %}
+
+{# Données d'entrée :
+- event (Event) L'évenement à afficher
+- userEventInvitation (EventInvitation) L'invitation à afficher
+#}
+
+
+{% block title %}{{ parent() }} - {{ event.name is empty?"event.page.meta_title.new_event"|trans:event.name }}{% endblock %}
+
+{% block event_content %}
+    <div class="col-xs-12 col-xs-p-lr-0">
+        <div class="card">
+            <div class="card-body card-padding">
+                <h1>{{ "event.cancelled.title"|trans }}</h1>
+                <p>{{ "event.cancelled.hello"|trans({'%guestname%':userEventInvitation.displayableName(true, false)}) }}<br>
+                    {{ "event.cancelled.text"|transchoice(event.organizers|length) }}</p>
+                {% if event.cancellationReason is not empty %}
+                    <div class="well well-sm">
+                        <p>{{ event.cancellationReason|escape|nl2br }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock event_content %}

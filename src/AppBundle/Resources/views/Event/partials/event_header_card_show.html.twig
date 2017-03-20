@@ -5,13 +5,13 @@
 <div class="row">
     <div class="col-xs-12{{ userEventInvitation.event.whereGooglePlaceId is not null?' col-sm-8' }}">
         <div class="well well-sm m-b-10">
-            {% set creatorsNames = "" %}
-            {% for creatorInvitation in userEventInvitation.event.creators %}
-                {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, not userEventInvitation.organizer) %}
+            {% set organizerNames = "" %}
+            {% for organizerInvitation in userEventInvitation.event.organizers %}
+                {% set organizerNames = organizerNames~(loop.index > 1?', ')~ organizerInvitation.displayableName(true, not userEventInvitation.organizer) %}
             {% endfor %}
-            {% if creatorsNames is not empty %}
+            {% if organizerNames is not empty %}
                 <div class="pull-right"><i>
-                        <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}</small>
+                        <small>{{ "event.header.organised_by"|trans({"%organizer%":organizerNames}) }}</small>
                     </i></div>
             {% endif %}
             <dl>

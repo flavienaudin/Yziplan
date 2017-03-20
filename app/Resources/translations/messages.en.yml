@@ -103,7 +103,7 @@ event:
     meta_title:
       new_event: New event
   header:
-    organised_by: "Organised by %creator%"
+    organised_by: "Organised by %organizer%"
   picture:
     link: Change the picture
     update_modal:
@@ -226,9 +226,12 @@ event:
         label: Closing time
         placeholder: Closing time
   alert:
-    confirm_deletion:
-      title: Are you sure you want to delete this module?
-      message: Your guests will be noticed and will not be able to participate anymore
+    confirm_cancellation:
+      title: Are you sure you want to delete this event?
+      message: <p><strong>This action is irreversible</strong></p><p>You can not access it anymore, your guests will be noticed and will not be able to participate anymore</p>
+      input:
+        label: Tell to your guests in the field below why you cancel the event
+        placeholder: Optional
   wizard:
     button:
       send_invitations: Send invitations
@@ -251,12 +254,18 @@ event:
       subtitle: This event is a template, you can activate the possibility to create events from this template.
     error.message:
       wrong_step: An error during the event creation process occrured. Pleaze, try again the operation
+  cancelled:
+    title: Cancelled event
+    hello: Hello %guestname%
+    text: This event has been cancelled by the organizer, you should have received an email|This event has been cancelled by organizers, you should have received an email
   error.message:
-    creation: An error occured while creating an event.
+    creation: An error occured while creating an event
+    deletion: An error occured while cancelling an event
     unauthorized_access: You haven't the authorization to access this event
     valide_guestname_required: This action requires that you validate your invitation with your name. No change was made
   success.message:
     creation: Event created successfully
+    cancellation: Event cancelled successfully. You will be redirected in a second
 
 eventInvitations:
   user_menu:
@@ -354,10 +363,7 @@ eventInvitation:
       body:
         hello: "Hi %username%!"
         paragraph:
-          first_part:
-            several_orga: "We are "
-            single_orga: "I am  "
-          second_part: "inviting you to \"%event_name%\""
+          first_part: "I am inviting you to \"%event_name%\"|We are inviting you to \"%event_name%\""
           text_link: "Follow this link to answer:"
           warning_secret: "Keep it secret, this is your personal invitation"
     recap:
@@ -550,6 +556,8 @@ global:
   link:
     top: Top
   button:
+    yes: Yes
+    no: No
     ok: OK
     valid: Validate
     cancel: Cancel

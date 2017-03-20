@@ -142,6 +142,12 @@ class Event implements CommentableInterface
     private $status;
 
     /**
+     * @var string
+     * @ORM\Column(name="cancellation_reason", type="text", nullable=true)
+     */
+    private $cancellationReason;
+
+    /**
      * @var DateTime
      * @ORM\Column(name="response_deadline", type="datetime", unique=false, nullable=true)
      */
@@ -554,6 +560,24 @@ class Event implements CommentableInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getCancellationReason()
+    {
+        return $this->cancellationReason;
+    }
+
+    /**
+     * @param mixed $cancellationReason
+     * @return Event
+     */
+    public function setCancellationReason($cancellationReason)
+    {
+        $this->cancellationReason = $cancellationReason;
+        return $this;
+    }
+
+    /**
      * Get responseDeadline
      *
      * @return DateTime
@@ -670,10 +694,10 @@ class Event implements CommentableInterface
      */
     public function setEventParent($eventParent)
     {
-        if($this->getEventParent() != null && $eventParent == null){
+        if ($this->getEventParent() != null && $eventParent == null) {
             $this->eventParent->getSubevents()->removeElement($this);
             $this->eventParent = null;
-        }else {
+        } else {
             $this->eventParent = $eventParent;
             $eventParent->getSubevents()->add($this);
         }
@@ -742,7 +766,7 @@ class Event implements CommentableInterface
     }
 
     /**
-     * Get eventInvitations
+     * Get eventInvitations. Attention : toutes les invitations mêmes celles annulées sont présentes
      *
      * @return ArrayCollection
      */
@@ -845,7 +869,9 @@ class Event implements CommentableInterface
      */
     public function getCreators()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq("creator", true));
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED))
+            ->andWhere(Criteria::expr()->eq("creator", true));
         return $this->eventInvitations->matching($criteria);
     }
 
@@ -855,7 +881,9 @@ class Event implements CommentableInterface
      */
     public function getAdministrators()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq("administrator", true));
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED))
+            ->andWhere(Criteria::expr()->eq("administrator", true));
         return $this->eventInvitations->matching($criteria);
     }
 
@@ -866,8 +894,11 @@ class Event implements CommentableInterface
     public function getOrganizers()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("creator", true))
-            ->orWhere(Criteria::expr()->eq("administrator", true));
+            ->where(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED))
+            ->andWhere(Criteria::expr()->orX(
+                Criteria::expr()->eq("creator", true),
+                Criteria::expr()->eq("administrator", true)
+            ));
         return $this->eventInvitations->matching($criteria);
     }
 
@@ -878,9 +909,9 @@ class Event implements CommentableInterface
     public function getGuests()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("creator", false))
-            ->andWhere(Criteria::expr()->eq("administrator", false))
-            ->andWhere(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED));
+            ->where(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED))
+            ->andWhere(Criteria::expr()->eq("creator", false))
+            ->andWhere(Criteria::expr()->eq("administrator", false));
         return $this->eventInvitations->matching($criteria);
     }
 

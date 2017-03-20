@@ -64,17 +64,27 @@
             $('#event_header_cancel_event').on('click', function (e) {
                 e.preventDefault();
                 var $link = $(this);
-                swal({
-                    title: '{{ "event.alert.confirm_deletion.title"|trans }}',
-                    text: '{{ "event.alert.confirm_deletion.message"|trans }}',
+                var swalOptions = {
+                    title: '{{ "event.alert.confirm_cancellation.title"|trans }}',
+                    html: '{{ "event.alert.confirm_cancellation.message"|trans|raw }}',
                     type: "warning",
                     showCancelButton: true,
                     cancelButtonText: '{{ "global.button.cancel"|trans }}',
                     confirmButtonColor: "#DD6B55",
-                    confirmButtonText: '{{ "global.button.delete"|trans }}',
+                    confirmButtonText: '{{ "global.button.yes"|trans }}',
                     showLoaderOnConfirm: true
-                }).then(function () {
-                    ajaxRequest($link, null, e, null, null, null);
+                };
+                {% if event.guests|length > 0 %}
+                swalOptions.html = swalOptions.html + "<p><small>{{ "event.alert.confirm_cancellation.input.label"|trans|e }}</small></p>";
+                swalOptions.input = "textarea";
+                swalOptions.inputPlaceholder = '{{ "event.alert.confirm_cancellation.input.placeholder"|trans }}';
+                {% endif %}
+                swal(swalOptions).then(function (input) {
+                    var data = null;
+                    if(input !== true && input !== ''){
+                        data = {"reason": input}
+                    }
+                    ajaxRequest($link, data, e, null, null, null);
                 });
             });
 

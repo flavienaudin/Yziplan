@@ -3,6 +3,7 @@
 namespace AppBundle\Repository\Event;
 
 use AppBundle\Entity\User\ApplicationUser;
+use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr;
@@ -24,7 +25,8 @@ class EventInvitationRepository extends EntityRepository
             ->join('ei.event', 'e', Expr\Join::ON)
             ->where('ei.applicationUser = :application_user')
             ->andWhere('ei.archived = 0')
-            ->andWhere('e.status != :deprogrammededStatus')
+            ->andWhere('ei.status != :cancelledEventInvitationStatus')
+            ->andWhere('e.status != :deprogrammededEventStatus')
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->isNull('e.when'),
                 $qb->expr()->gt('e.when', ':datelimit')
@@ -32,7 +34,8 @@ class EventInvitationRepository extends EntityRepository
             )
             ->addOrderBy('e.when', 'DESC')
             ->addOrderBy('e.id', 'ASC')
-            ->setParameter(':deprogrammededStatus', EventStatus::DEPROGRAMMED)
+            ->setParameter(':deprogrammededEventStatus', EventStatus::DEPROGRAMMED)
+            ->setParameter(':cancelledEventInvitationStatus', EventInvitationStatus::CANCELLED)
             ->setParameter(':application_user', $applicationUser)
             ->setParameter(':datelimit', ((new \DateTime())->sub(new \DateInterval("P14D"))));
         return $qb
@@ -48,14 +51,16 @@ class EventInvitationRepository extends EntityRepository
         $qb
             ->join('ei.event', 'e', Expr\Join::ON)
             ->where('ei.applicationUser = :application_user')
-            ->andWhere('e.status != :deprogrammededStatus')
+            ->andWhere('ei.status != :cancelledEventInvitationStatus')
+            ->andWhere('e.status != :deprogrammededEventStatus')
             ->andWhere($qb->expr()->orX(
                 $qb->expr()->eq('ei.archived',true),
                 $qb->expr()->lt('e.when', ':datelimit')
             ))
             ->addOrderBy('e.when', 'DESC')
             ->addOrderBy('e.id', 'ASC')
-            ->setParameter(':deprogrammededStatus', EventStatus::DEPROGRAMMED)
+            ->setParameter(':deprogrammededEventStatus', EventStatus::DEPROGRAMMED)
+            ->setParameter(':cancelledEventInvitationStatus', EventInvitationStatus::CANCELLED)
             ->setParameter(':application_user', $applicationUser)
             ->setParameter(':datelimit', ((new \DateTime())->sub(new \DateInterval("P14D"))));
         return $qb

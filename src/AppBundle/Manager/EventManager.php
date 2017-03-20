@@ -365,20 +365,25 @@ class EventManager
     /**
      * Annule un événement en modifiant le status et en envoyant un email à tous les invités
      * @param Event|null $event
-     * @return bool*
+     * @return bool
      */
-    public function cancelEvent(Event $event = null){
-        if($event != null){
+    public function cancelEvent($requestData, Event $event = null)
+    {
+        if ($event != null) {
             $this->event = $event;
         }
-        if($this->event != null){
+        if ($this->event != null) {
             $this->event->setStatus(EventStatus::DEPROGRAMMED);
 
+            if (key_exists("reason", $requestData) && !empty($requestData['reason'])) {
+                $this->event->setCancellationReason($requestData['reason']);
+            }
+            
             // TODO send email
 
             $this->persistEvent();
             return true;
-        }else{
+        } else {
             return false;
         }
     }

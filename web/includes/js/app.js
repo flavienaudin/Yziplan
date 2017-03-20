@@ -339,6 +339,9 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
             failCallback(jqXHR, textStatus, errorThrown);
         }
     }).always(function (responseDataOrJSON) {
+        if (responseDataOrJSON.hasOwnProperty('redirect')) {
+            window.location.href = responseDataOrJSON['redirect'];
+        }
         if (alwaysCallback) {
             alwaysCallback(responseDataOrJSON);
         }
