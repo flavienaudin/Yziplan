@@ -2,7 +2,7 @@
 - pollProposal (PollProposal) La proposition à afficher
 - displayModal (boolean) génération de la modale ou non.
 #}
-<div {% if pollProposal.description is not empty %}data-toggle="tooltip" data-container="body" title="{{ pollProposal.description }}"{% endif %}>
+<div>
     {# Les elements sont sous forme de tableau a 2 dimentions, mais il n'y a qu'un element dans la deuxieme
            c'est en prévision du futur #}
     {% set ppElts = pollProposal.pollProposalElementsByType %}
