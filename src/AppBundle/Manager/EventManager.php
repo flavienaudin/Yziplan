@@ -15,6 +15,7 @@ use AppBundle\Form\Event\EventTemplateSettingsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
 use AppBundle\Form\Event\SendMessageType;
+use AppBundle\Mailer\AppTwigSiwftMailer;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
@@ -61,6 +62,9 @@ class EventManager
     /** @var DiscussionManager $discussionManager */
     private $discussionManager;
 
+    /** @var AppTwigSiwftMailer */
+    private $appTwigSiwftMailer;
+
     /** @var Event L'événement en cours de traitement */
     private $event;
 
@@ -69,7 +73,7 @@ class EventManager
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory,
                                 GenerateursToken $generateurToken, ModuleManager $moduleManager, PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager,
-                                ModuleInvitationManager $moduleInvitationManager, DiscussionManager $discussionManager)
+                                ModuleInvitationManager $moduleInvitationManager, DiscussionManager $discussionManager, AppTwigSiwftMailer $appTwigSiwftMailer)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -81,6 +85,7 @@ class EventManager
         $this->eventInvitationManager = $eventInvitationManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
         $this->discussionManager = $discussionManager;
+        $this->appTwigSiwftMailer = $appTwigSiwftMailer;
     }
 
     /**
@@ -364,22 +369,34 @@ class EventManager
 
     /**
      * Annule un événement en modifiant le status et en envoyant un email à tous les invités
-     * @param Event|null $event
+     * @param $requestData array Les données de la requête contenant le message
+     * @param $userEventInvitation EventInvitation l'invitation de l'utilisateur en cours
+     * @param $event Event|null L'événement à traiter
      * @return bool
      */
-    public function cancelEvent($requestData, Event $event = null)
+    public function cancelEvent($requestData, EventInvitation $userEventInvitation, Event $event = null)
     {
         if ($event != null) {
             $this->event = $event;
         }
         if ($this->event != null) {
             $this->event->setStatus(EventStatus::DEPROGRAMMED);
-
+            $message = null;
             if (key_exists("reason", $requestData) && !empty($requestData['reason'])) {
                 $this->event->setCancellationReason($requestData['reason']);
+                $message = $this->event->getCancellationReason();
             }
-            
-            // TODO send email
+
+            $guests = $this->event->getGuests();
+            foreach ($guests as $guest) {
+                $this->appTwigSiwftMailer->sendCancellationEmail($guest, $message);
+            }
+            $organizers = $this->event->getOrganizers();
+            foreach ($organizers as $organizer) {
+                if ($organizer != $userEventInvitation) {
+                    $this->appTwigSiwftMailer->sendCancellationEmail($organizer, $message);
+                }
+            }
 
             $this->persistEvent();
             return true;

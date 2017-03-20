@@ -259,6 +259,11 @@ event:
     title: Evénement annulé
     hello: Bonjour %guestname%
     text: Cet événémenet a été annnulé par l'organisateur, vous avez dû recevoir un e-mail|Cet événémenet a été annnulé par les organisateurs, vous avez dû recevoir un e-mail
+    email:
+      subject: "Yziplan : \"%event_name%\" est annulé"
+      body:
+        hello: Bonjour %guestname%
+        text: "Désolé, nous avons annulé l'événement \"%event_name%\"."
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement
     deletion: Une erreur est survenue lors de l'annulation de l'événement

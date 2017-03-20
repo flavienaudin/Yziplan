@@ -739,7 +739,7 @@ class EventController extends Controller
 
         $eventManager = $this->get("at.manager.event");
         $requestData = $request->request->all();
-        if ($eventManager->cancelEvent($requestData, $event)) {
+        if ($eventManager->cancelEvent($requestData, $eventInvitation, $event)) {
             if ($request->isXmlHttpRequest()) {
                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.success.message.cancellation');
                 $data[AppJsonResponse::REDIRECT] = $this->generateUrl("displayEvent", array("token" => $event->getToken()));

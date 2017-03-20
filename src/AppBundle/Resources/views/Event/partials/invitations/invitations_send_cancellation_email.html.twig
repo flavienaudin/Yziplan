@@ -5,7 +5,7 @@
 
 {% block subject %}
     {% autoescape false %}
-        {{ 'send_message.email.subject'|trans({"%event_name%":eventInvitation.event.name}) }}
+        {{ 'event.cancelled.email.subject'|trans({"%event_name%":eventInvitation.event.name}) }}
     {% endautoescape %}
 {% endblock %}
 {% block body_text %}
@@ -15,15 +15,11 @@
         {% set organizerNames = organizerNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
     {% endfor %}
     {% autoescape false %}
-        {{ 'send_message.email.body.hello'|trans({'%username%': eventInvitation.displayableName(true, false)}) }}
-
+        {{ 'event.cancelled.email.body.hello'|trans({'%guestname%': eventInvitation.displayableName(true, false)}) }}
+        {{ "event.cancelled.email.body.text"|trans({"%event_name%":eventInvitation.event.name}) }}
         {% if message is defined and message is not empty %}
             {{ message|escape }}
         {% endif %}
-
-        {{ "send_message.email.body.paragraph"|trans({"%event_name%":eventInvitation.event.name}) }}
-        {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
-
         {{ "email.salutation"|trans }},
         {% if organizerNames is not empty %}{{ organizerNames }}{% endif %}
     {% endautoescape %}
@@ -53,18 +49,17 @@ line-height: 1.6; background-color: #f6f6f6;">
                                     <tr>
                                         <td style="padding: 0 0 20px;">
                                             <h3 style="font-size: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; margin: 40px 0 0; line-height: 1.2;
-                                        font-weight: 400;">{{ "eventInvitation.email.recap.body.hello"|trans({"%username%":eventInvitation.displayableName(true, false)}) }}</h3>
+                                        font-weight: 400;">{{ "event.cancelled.email.body.hello"|trans({"%guestname%":eventInvitation.displayableName(true, false)}) }}</h3>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 0 0 20px;">
+                                            <p>{{ "event.cancelled.email.body.text"|trans({"%event_name%":eventInvitation.event.name}) }}</p>
                                             {% if message is defined and message is not empty %}
-                                                <div>{{ message|escape|nl2br }}</div>
+                                                <div style="background: #f5f5f5; border: 1px solid #e3e3e3; border-radius: 2px; padding: 0 9px">
+                                                    {{ message|nl2br }}
+                                                </div>
                                             {% endif %}
-                                            <br>
-                                            {{ "send_message.email.body.paragraph"|trans({"%event_name%":eventInvitation.event.name}) }}<br> <a
-                                                    href="{{ url('displayEventInvitation', {'token':eventInvitation.token}) }}">
-                                                {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}</a>
                                         </td>
                                     </tr>
                                     <tr>
@@ -85,7 +80,7 @@ line-height: 1.6; background-color: #f6f6f6;">
                         <table width="100%">
                             <tr>
                                 <td style="padding: 0 0 20px; text-align: center;"><a style="color: #999; font-size: 12px;" href="{{ url("home") }}">{{ "global.project_name"|trans }}
-                                        - {{ url("home") }}</a></td>
+                                        &nbsp;-&nbsp;{{ url("home") }}</a></td>
                             </tr>
                         </table>
                     </div>

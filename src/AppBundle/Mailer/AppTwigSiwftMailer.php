@@ -31,6 +31,24 @@ class AppTwigSiwftMailer extends TwigSwiftMailer
         return false;
     }
 
+    public function sendCancellationEmail(EventInvitation $eventInvitation, $message = null)
+    {
+        if ($eventInvitation->getApplicationUser() != null) {
+            if ($eventInvitation->getApplicationUser()->getAccountUser() != null) {
+                $emailTo = $eventInvitation->getApplicationUser()->getAccountUser()->getEmail();
+            } elseif (count($eventInvitation->getApplicationUser()->getAppUserEmails()) > 0) {
+                $emailTo = $eventInvitation->getApplicationUser()->getAppUserEmails()->first()->getEmail();
+            }
+        }
+        if (!empty($emailTo)) {
+            $context = array("eventInvitation" => $eventInvitation, 'message' => $message);
+            $this->sendMessage("@App/Event/partials/invitations/invitations_send_cancellation_email.html.twig", $context, $this->parameters['from_email']['confirmation'], $emailTo);
+            return true;
+        }
+        return false;
+    }
+
+
     public function sendRecapEventInvitationEmail(EventInvitation $eventInvitation)
     {
         if ($eventInvitation->getApplicationUser()->getAccountUser() != null) {
