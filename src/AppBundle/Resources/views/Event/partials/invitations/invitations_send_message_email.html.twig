@@ -9,28 +9,25 @@
     {% endautoescape %}
 {% endblock %}
 {% block body_text %}
-    {% set creatorsNames = "" %}
-    {% for creatorInvitation in eventInvitation.event.creators|merge(eventInvitation.event.administrators) %}
-        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
+    {% set organizerNames = "" %}
+    {% set organizersInvitations = eventInvitation.event.organizers %}
+    {% for creatorInvitation in organizersInvitations %}
+        {% set organizerNames = organizerNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
     {% endfor %}
     {% autoescape false %}
         {{ 'send_message.email.body.hello'|trans({'%username%': eventInvitation.displayableName(true, false)}) }}
-        {% if creatorsNames|split(",")|length > 1 %}
-            {{ "eventInvitation.email.invitation.body.paragraph.first_part.several_orga"|trans }}
-        {% else %}
-            {{ "eventInvitation.email.invitation.body.paragraph.first_part.single_orga"|trans }}
-        {% endif %} {{ "eventInvitation.email.invitation.body.paragraph.second_part"|trans({"%event_name%":eventInvitation.event.name}) }}
+        {{ "eventInvitation.email.invitation.body.paragraph.first_part"|transchoice(organizersInvitations|length, {"%event_name%":eventInvitation.event.name}) }}
 
         {{ url('displayEventInvitation',{'token':eventInvitation.token}) }}
 
         {{ "email.salutation"|trans }},
-        {% if creatorsNames is not empty %}{{ creatorsNames }}{% endif %}
+        {% if organizerNames is not empty %}{{ organizerNames }}{% endif %}
     {% endautoescape %}
 {% endblock %}
 {% block body_html %}{% spaceless %}
-    {% set creatorsNames = "" %}
+    {% set organizerNames = "" %}
     {% for creatorInvitation in eventInvitation.event.creators|merge(eventInvitation.event.administrators) %}
-        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
+        {% set organizerNames = organizerNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
     {% endfor %}
 
     <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100% !important; height: 100%;
@@ -73,7 +70,7 @@ line-height: 1.6; background-color: #f6f6f6;">
                                     </tr>
                                     <tr>
                                         <td style="padding: 0 0 20px;">
-                                            <h4>{% if creatorsNames is not empty %}{{ creatorsNames }}{% else %}{{ "email.organisers"|trans }}{% endif %}</h4>
+                                            <h4>{% if organizerNames is not empty %}{{ organizerNames }}{% else %}{{ "email.organisers"|trans }}{% endif %}</h4>
                                         </td>
                                     </tr>
                                 </table>
