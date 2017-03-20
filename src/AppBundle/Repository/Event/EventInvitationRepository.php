@@ -34,7 +34,7 @@ class EventInvitationRepository extends EntityRepository
             ->addOrderBy('e.id', 'ASC')
             ->setParameter(':deprogrammededStatus', EventStatus::DEPROGRAMMED)
             ->setParameter(':application_user', $applicationUser)
-            ->setParameter(':datelimit', new  \DateTime());
+            ->setParameter(':datelimit', ((new \DateTime())->sub(new \DateInterval("P14D"))));
         return $qb
             ->getQuery()
             ->getResult();
@@ -57,7 +57,7 @@ class EventInvitationRepository extends EntityRepository
             ->addOrderBy('e.id', 'ASC')
             ->setParameter(':deprogrammededStatus', EventStatus::DEPROGRAMMED)
             ->setParameter(':application_user', $applicationUser)
-            ->setParameter(':datelimit', new  \DateTime());
+            ->setParameter(':datelimit', ((new \DateTime())->sub(new \DateInterval("P14D"))));
         return $qb
             ->getQuery()
             ->getResult();

@@ -3,14 +3,18 @@
 - eventTemplateSettingsForm (Form) Formulaire de configuration des options de duplication de type Template
 #}
 <div id="eventTemplateSettings_formContainer">
-    <h4>{{ "event.modal.duplicate.template.title"|trans }}</h4>
-    <p class="text-justify">{{ "event.modal.duplicate.template.instructions"|trans|raw }}</p>
+    {% block titleInstructionsBlock %}
+        <h4>{{ "event.modal.duplicate.template.title"|trans }}</h4>
+        <p class="text-justify">{{ "event.modal.duplicate.template.instructions"|trans|raw }}</p>
+    {% endblock titleInstructionsBlock %}
 
-    {{ form_start(eventTemplateSettingsForm, {'action':path('displayEvent',{'token':event.token}), 'attr':{'id':eventTemplateSettingsForm.vars.id}}) }}
+    {% block form_start %}
+        {{ form_start(eventTemplateSettingsForm, {'action':path('displayEvent',{'token':event.token}), 'attr':{'id':eventTemplateSettingsForm.vars.id}}) }}
+    {% endblock form_start %}
 
     {% set attr = {'class':'md-toogle-switch'} %}
     {% if event.duplicationEnabled %}
-        {% set attr = attr|merge({'checked':'checked'})  %}
+        {% set attr = attr|merge({'checked':'checked'}) %}
     {% endif %}
     {{ form_row(eventTemplateSettingsForm.activateTemplate, {
         'label' : 'event.modal.duplicate.template.form.activateTemplate.label',
@@ -18,30 +22,33 @@
         'attr': attr
     }) }}
 
-    {% if event.duplicationEnabled is not empty %}
-        <div id="eventDuplicationTemplateLink" class="m-t-15 m-b-15">
+    {{ form_rest(eventTemplateSettingsForm) }}
+    {{ form_end(eventTemplateSettingsForm) }}
+
+    {% if event.tokenDuplication is not empty %}
+        <div id="eventDuplicationTemplateLink" class="m-t-15 m-b-15" {{ not event.duplicationEnabled?'style="display:none"' }}>
             <label class="control-label text-info" for="url_event_template_duplication">{{ "event.modal.duplicate.template.url_input_label"|trans }}&nbsp;:</label>
             <div class="input-group">
-                <input id="url_event_template_duplication" type="text" class="form-control" readonly="readonly" value="{{ url("duplicateEvent", {"tokenDuplication":event.tokenDuplication}) }}"> <span
-                        class="input-group-btn">
-                <button type="button" id="btn_copy_invitation_url" class="btn btn-primary" data-clipboard-target="#url_event_template_duplication">
-                <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
+                <div class="fg-line">
+                    <input id="url_event_template_duplication" type="text" class="form-control" readonly="readonly" value="{{ url("duplicateEvent", {"tokenDuplication":event.tokenDuplication}) }}">
+                </div>
+                <span class="input-group-btn"><button type="button" id="btn_copy_duplication_url" class="btn btn-primary" data-clipboard-target="#url_event_template_duplication">
+                    <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
             </div>
         </div>
     {% endif %}
 
-    <div class="text-center"><button type="submit" class="btn btn-primary">{{ "global.button.valid"|trans }}</button></div>
-
-    {{ form_rest(eventTemplateSettingsForm) }}
-    {{ form_end(eventTemplateSettingsForm) }}
     <script>
         $(document).ready(function () {
+            new Clipboard('#btn_copy_duplication_url');
+
             $('form#{{ eventTemplateSettingsForm.vars.id }}').on('submit', function (e) {
                 ajaxFormSubmission($(this), e, null, null, null);
             });
 
-            $('#{{ eventTemplateSettingsForm.activateTemplate.vars.id }}').on('change', function(e){
+            $('#{{ eventTemplateSettingsForm.activateTemplate.vars.id }}').on('change', function (e) {
                 $('#eventDuplicationTemplateLink').fadeToggle();
+                $('form#{{ eventTemplateSettingsForm.vars.id }}').submit();
             });
         });
     </script>

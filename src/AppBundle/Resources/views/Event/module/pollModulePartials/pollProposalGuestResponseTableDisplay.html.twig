@@ -59,12 +59,12 @@
                                             {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::RANKING') %}
                                                 {% set responseToDisplay = pollProposalResponse is null or pollProposalResponse.answer is null ? 0 : pollProposalResponse.answer %}
                                                 {% if responseToDisplay > 0 %}
-                                                    <td class="response-column palette-Yellow-100 bg c-amber">
-                                                        <span class="answer-thumb strong">{{ responseToDisplay }} <i class="zmdi zmdi-star"></i></span>
+                                                    <td class="response-column palette-Red-100 bg c-red">
+                                                        <span class="answer-thumb strong">{{ responseToDisplay }} <i class="zmdi zmdi-favorite"></i></span>
                                                     </td>
                                                 {% else %}
                                                     <td class="response-column">
-                                                        <span class="answer-thumb c-bluegray"> <i class="zmdi zmdi-star-half"></i> </span>
+                                                        <span class="answer-thumb c-bluegray"> <i class="zmdi zmdi-favorite"></i> </span>
                                                     </td>
                                                     {#<span class="answer-thumb text palette-White c-bluegray"><i class="zmdi zmdi-help-outline zmdi-hc-fw"></i></span>#}
                                                 {% endif %}

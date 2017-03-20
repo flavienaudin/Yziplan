@@ -1,0 +1,8 @@
+{% extends "::base.html.twig" %}
+
+{# LAYOUT : Menu latéral (s-main-menu) + une colonne pour le contenu #}
+{% block content_body %}
+    {% block activities_content %}{% endblock %}
+{% endblock content_body %}
+
+{% block javascripts %}{{ parent() }}{% endblock %}

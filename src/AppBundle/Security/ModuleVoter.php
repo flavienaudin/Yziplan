@@ -8,7 +8,10 @@
 
 namespace AppBundle\Security;
 
+use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Utils\enum\EventInvitationStatus;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use ATUserBundle\Entity\AccountUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -25,17 +28,23 @@ class ModuleVoter extends Voter
         if (!in_array($attribute, array(self::DISPLAY, self::EDIT, self::DELETE))) {
             return false;
         }
-        return $subject instanceof ModuleInvitation;
+
+        return is_array($subject) && count($subject) == 2 && ($subject[0] instanceof Module) && ($subject[1] instanceof ModuleInvitation);
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token)
     {
         /** @var AccountUser $user */
         $user = $token->getUser();
+        /** @var Module $module */
+        $module = $subject[0]; // $subject must be a Module instance, thanks to the supports method
         /** @var ModuleInvitation $userModuleInvitation */
-        $userModuleInvitation = $subject; // $subject must be a EventInvitation instance, thanks to the supports method
+        $userModuleInvitation = $subject[1]; // $subject must be a EventInvitation instance, thanks to the supports method
 
         if ($user != null && $user != 'anon.' && !$user instanceof UserInterface) {
+            return false;
+        }
+        if ($module != $userModuleInvitation->getModule()) {
             return false;
         }
         switch ($attribute) {
@@ -45,7 +54,8 @@ class ModuleVoter extends Voter
                 break;
             case self::EDIT:
             case self::DELETE:
-                return $userModuleInvitation->isCreator() || $userModuleInvitation->isAdministrator();
+                return ($userModuleInvitation->getEventInvitation()->getStatus() != EventInvitationStatus::CANCELLED && $userModuleInvitation->getEventInvitation()->isOrganizer())
+                    || ($userModuleInvitation->getStatus() != ModuleInvitationStatus::CANCELLED && $userModuleInvitation->isOrganizer());
                 break;
         }
         return false;

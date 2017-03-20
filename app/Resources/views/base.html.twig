@@ -6,7 +6,7 @@
     <meta name="viewport" content="{% block meta_viewport %}width=device-width, initial-scale=1{% endblock %}">
     <meta name="author" content="ArdTeam">
     {% block meta_data %}
-        <meta name="description" content="Site d'aide à l'organisation d'activité, soirées, sorties,... entre amis" />
+        <meta name="description" content="Site d'aide à l'organisation d'activité, soirées, sorties,... entre amis"/>
     {% endblock %}
 
     <title>{% block title %}{{ "global.project_name"|trans }}{% endblock %}</title>
@@ -38,7 +38,7 @@
         "bundles/app/css/app.min.1.css"
         "bundles/app/css/app.min.2.css"
         "bundles/app/css/app_style.css"
-        output="css/main.2.0.2.css" %}
+        output="css/main.2.0.3.css" %}
         <link rel="stylesheet" href="{{ asset_url }}" type="text/css"/>
         {% endstylesheets %}
     {% endblock %}
@@ -65,7 +65,7 @@
     'bundles/app/js/selectize-standalone.min.js'
     'bundles/app/js/jquery.focuspoint.min.js'
     'bundles/app/js/yzi-selectize.js'
-    output='js/main-pre.2.0.2.js' %}
+    output='js/main-pre.2.0.3.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock top_javascripts %}
@@ -320,11 +320,14 @@
     'bundles/app/js/fileinput_dep/fr.js'
     'bundles/app/js/clipboard.min.js'
     'bundles/app/js/jquery.rateyo.js'
+    'bundles/app/js/jquery.autocomplete.js'
     'bundles/app/js/summernote-0.8.2/summernote-updated.min.js'
+    'bundles/app/js/jquery.cookiesdirective-updated-fr.js'
+    'bundles/app/js/jquery.rot13.min.js'
     'bundles/app/js/actions.js'
     'includes/js/app.js'
     "bundles/app/js/yzi-event.js"
-    output='js/main.2.0.2.js' %}
+    output='js/main.2.0.3.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
@@ -376,30 +379,31 @@
             closeModalOnReturn('div.modal');
         });
 
-        {% if google_analytics_ua is defined and google_analytics_ua is not empty %}
-        (function (i, s, o, g, r, a, m) {
-            i['GoogleAnalyticsObject'] = r;
-            i[r] = i[r] || function () {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-            a = s.createElement(o),
-                m = s.getElementsByTagName(o)[0];
-            a.async = 1;
-            a.src = g;
-            m.parentNode.insertBefore(a, m)
-        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
-
-        ga('create', '{{ google_analytics_ua }}', 'auto');
-        ga('send', 'pageview');
+        {% if smartsupp_key is defined and smartsupp_key is not empty %}
+        var _smartsupp = _smartsupp || {};
         {% endif %}
-    </script>
-{% endblock javascripts %}
 
-{% block smartsupp %}
-    {% if smartsupp_key is defined and smartsupp_key is not empty %}
-        <!-- Smartsupp Live Chat script -->
-        <script type="text/javascript">
-            var _smartsupp = _smartsupp || {};
+        /* Cookie advertissement */
+        function cookieController() {
+            {% if google_analytics_ua is defined and google_analytics_ua is not empty %}
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                        (i[r].q = i[r].q || []).push(arguments)
+                    }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                    m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', '{{ google_analytics_ua }}', 'auto');
+            ga('send', 'pageview');
+            {% endif %}
+
+            {% if smartsupp_key is defined and smartsupp_key is not empty %}
+            <!-- Smartsupp Live Chat script -->
             _smartsupp.key = '{{ smartsupp_key }}';
             window.smartsupp || (function (d) {
                 var s, c, o = smartsupp = function () {
@@ -411,11 +415,28 @@
                 c.type = 'text/javascript';
                 c.charset = 'utf-8';
                 c.async = true;
-                c.src = '//www.smartsuppchat.com/loader.js?';
+                c.src = '//www.smartsuppchat.com/loader.js';
                 s.parentNode.insertBefore(c, s);
             })(document);
-        </script>
-    {% endif %}
-{% endblock smartsupp %}
+            {% endif %}
+        }
+
+        $.cookiesDirective({
+            explicitConsent: false,
+            privacyPolicyUri: '{{ path('legalNotices') }}',
+            privacyPolicyPageName: '{{ "legal_notices.title"|trans }}',
+            cookieScripts: 'Google Analytics, Smartsupp',
+            scriptWrapper: cookieController,
+            position: 'bottom',
+            duration: 20,
+            message: "{{ "legal_notices.banner.message"|trans }}",
+            explicitsubmitClass: 'btn btn-primary',
+            explicitsubmitText: '{{ "global.button.continue"|trans }}',
+            impliedsubmitClass: 'btn btn-primary',
+            impliedsubmitText: '{{ "legal_notices.banner.do_not_show_message_again"|trans }}',
+        });
+    </script>
+{% endblock javascripts %}
+
 </body>
 </html>

@@ -14,6 +14,7 @@ base:
     text2: Désolé pour le dérangement!
   footer:
     home: Accueil
+    directory: Annuaire d'activités
     pro: Pro
 
 navbar:
@@ -62,6 +63,15 @@ landing_page:
       alt: Chandeleur
       title: Chandeleur
       text: Retrouvez-vous entre amis pour partager des crêpes pour la chandeleur !
+
+legal_notices:
+  meta:
+    description: Mentions légales du site Yziplan
+    title: Mentions légales
+  title: Mentions légales
+  banner:
+    message: Nous enregistrons des cookies sur votre ordinateur afin d'améliorer l'expérience de navigation.
+    do_not_show_message_again: Ne plus afficher ce message
 
 appuseremail:
   associate:
@@ -113,15 +123,21 @@ event:
         title: Faire de cet événement un modèle
         instructions: |
           En activant cette option, vous obtiendrez un lien de création automatique d'événement identique à celui-ci que vous pourrez transmetrte à votre public.<br>
-          En le suivant, un utilisateur deviendra l'organisateurs d'un nouvel événement pré-rempli. Il n'aura plus qu'à inviter ses amis pour qu'ils s'organisent tous ensemble.
+          En le suivant, le visiteur deviendra l'organisateur d'un nouvel événement pré-rempli. Il n'aura plus qu'à convier ses invités pour qu'ils s'organisent tous ensemble.
         form:
           activateTemplate:
-            label: Activer la possiblité d'organiser des événements à partir de cet événement
-        url_input_label: Partager le lien suivant à tous vos potentiels clients
+            label: Autoriser l'organisation d'événements identiques
+        url_input_label: Partager le lien suivant à tous vos potentiels visiteurs
     recurrence:
       title: Planifier le même événement à nouveau
       instructions: Organiser à nouveau l'événement à une autre date. Un nouvel événement va être créé
   form:
+    tab:
+      general: Général
+      about_info: Plus d'info
+    text:
+      when_where: Vous connaissez déjà la date et le lieu ? Fixez-les maintenant sinon vous pourrez ajouter un sondage dans une prochaine étape
+      see_map: Voir sur la carte
     name:
       label: Titre de l'événement
       placeholder: Mon anniversaire, Soirée, Week-end entre amis,...
@@ -135,13 +151,11 @@ event:
     whereName:
       label: "Où :"
       placeholder: Chez moi, bar du coin, adresse,...
-      help: "Tu sais déjà où ça va se passer ? Indique l'adresse ici."
-      tootlip: Fixez le lieu où se déroule votre événement ou ajoutez un sondage pour consulter les invités
+      tooltip: Fixez le lieu où se déroule votre événement ou ajoutez un sondage pour consulter les invités
     when:
       label: "Quand :"
       placeholder: Quand
-      help: "Vous connaissez déjà la date de l'événement ? Indiquez-le"
-      tootlip: Fixez la date de l'événement ou ajoutez un sondage pour consulter les invités
+      tooltip: Fixez la date de l'événement ou ajoutez un sondage pour consulter les invités
     status:
       label: "Etat :"
       placeholder: Etat de l'événement
@@ -162,6 +176,12 @@ event:
       help:  "Tous les invités pourront envoyer de nouvelles invitations par e-mail"
       text.true: Vos amis peuvent inviter
       text.false: Vos amis ne peuvent pas inviter
+    template:
+      link_collpase: Option de modèle
+      label: Faire de cet événement un modèle.
+      instructions: |
+        En faisant de cet événement un modèle, les personnes en possession du lien de duplication pourront créer des événements déjà renseignés et convier leurs invités afin de s'organiser autour
+        de votre activé.
     coordinates:
       link_collpase: Ajouter des coordonnées
       link_popover: Coordonnées
@@ -210,9 +230,7 @@ event:
       send_invitations: Envoyer les invitations
     main:
       title: Organiser un événement
-      subtitle: |
-        Décrivez l'événement à vos invités.<br>
-        Vous connaissez déjà la date et le lieu ? Fixez-les maintenant sinon vous pourrez ajouter un sondage dans une prochaine étape
+      subtitle: Décrivez l'événement à vos invités.
     profile:
       title: A propos de vous
       subtitle:
@@ -224,6 +242,9 @@ event:
     invitations:
       title: Les invités
       subtitle: Renseignez les adresses e-mail des invités. Ils recevront un message avec le lien de leur invitation personnelle.
+    template_settings:
+      title: Options de duplication
+      subtitle: Cet événement est un modèle, vous pouvez activer maintenant la possibilité de créer des événements à partir de ce modèle.
     error.message:
       wrong_step: Une erreur dans le processus de création de l'événement s'est produite. Merci de re-essayer l'opération
   error.message:
@@ -303,8 +324,7 @@ eventInvitation:
     text:
       disconnect: Vous n'êtes pas %user% ?
     guestname_required_alert:
-      title: Merci de saisir votre nom
-      message: Cette action nécessite que vous soyez identifiés auprès des invités
+      title: Merci de saisir votre nom avant continuer
       inputError: Ce serait bien mieux avec quelques lettres
       dismiss: Votre participation n'a pas été prise en compte
       error_message:
@@ -549,6 +569,7 @@ global:
     send: Envoyer
     archive: Archiver
     unarchive: Désarchiver
+    continue: Continuer
   success:
     data_saved: Données sauvegardées
   error:
@@ -704,3 +725,14 @@ index:
   callout2: Partage tes activités
   callout3: S'organiser devient un plaisir
   callout4: Et surtout profitez!
+directory:
+  title: Annuaire d'activités
+  subtitle: Trouvez des activités près de chez vous!
+  form:
+    type: Type d'activités...
+    place: Ville, Département, Région
+    button: Chercher
+  card:
+    details: Informations
+    organize: S'organiser
+    no_result: Pas de résultat pour votre recherche

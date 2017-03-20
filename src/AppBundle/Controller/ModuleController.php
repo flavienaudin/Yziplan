@@ -93,7 +93,7 @@ class ModuleController extends Controller
             }
         } else {
             if ($request->isXmlHttpRequest()) {
-                if ($this->isGranted(ModuleVoter::DELETE, $userModuleInvitation)) {
+                if ($this->isGranted(ModuleVoter::DELETE, array($module, $userModuleInvitation))) {
                     $moduleManager = $this->get("at.manager.module");
                     $moduleManager->setModule($module);
                     $moduleManager->removeModule();
@@ -104,7 +104,7 @@ class ModuleController extends Controller
                     return new AppJsonResponse($responseData, Response::HTTP_UNAUTHORIZED);
                 }
             } else {
-                $this->denyAccessUnlessGranted(ModuleVoter::DELETE, $userModuleInvitation);
+                $this->denyAccessUnlessGranted(ModuleVoter::DELETE, array($module, $userModuleInvitation));
                 $moduleManager = $this->get("at.manager.module");
                 $moduleManager->setModule($module);
                 $moduleManager->removeModule();

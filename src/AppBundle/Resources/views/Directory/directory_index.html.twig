@@ -1,0 +1,163 @@
+{% extends "@App/Directory/layout_cboxed.html.twig" %}
+
+{# Liste des activités publiques
+
+Données d'entrée :
+- activities : liste des activités
+- searchForm (SearchActivityForm) : formulaire de recherche
+#}
+
+{% block title %}{{ parent() }} - {{ 'eventInvitations.page.meta_title'|trans }}{% endblock %}
+
+{% block activities_content %}
+    <div class="row">
+        <div class="col-xs-12 col-xs-p-lr-0">
+            <div class="card z-depth-1">
+                <div class="card-header">
+                    <h2>{{ "directory.title"|trans }}
+                        <small>{{ "directory.subtitle"|trans }}</small>
+                    </h2>
+                </div>
+                <div class="card-body card-padding-sm">
+                    {{ form_start(searchForm, {'action':path('directoryIndex')}) }}
+                    <div class="row">
+                        <div class="col-sm-6 col-md-3 col-md-offset-2">
+                            {{ form_row(searchForm.type, {
+                                'label_attr': {'class': 'hidden'},
+                                'attr':{'title':'directory.form.type', 'class':'selectpicker', 'data-live-search':'true'},
+                                'widget_options':{'fgline':true, 'displayInRow' : true}
+                            }) }}
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            {{ form_row(searchForm.place, {
+                                'label_attr': {'class': 'hidden'},
+                                'attr':{'placeholder':'directory.form.place'},
+                                'widget_options':{'fgline':true, 'displayInRow' : true}
+                            }) }}
+                        </div>
+                        <div class="col-sm-12 col-md-2">
+                            <div class="pull-right">
+                                <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                                    <i class="zmdi zmdi-search zmdi-hc-lg"></i> {{ "directory.form.button"|trans }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(searchForm) }}
+                </div>
+            </div>
+        </div>
+
+        {% for activity in activities %}
+            <div class="col-xs-12 col-sm-6 col-md-4 col-xs-p-lr-0">
+                <div class="card z-depth-1">
+                    <div class="card-header mini-picture p-0 m-0">
+                        <div class="focuspoint mini-picture-focuspoint" data-focus-x="{{ activity.event.pictureFocusX is not null ? activity.event.pictureFocusX:0 }}"
+                             data-focus-y="{{ activity.event.pictureFocusY is not null ? activity.event.pictureFocusY:0 }}"
+                             data-image-w="{{ activity.event.pictureWidth is not null ? activity.event.pictureWidth:1024 }}"
+                             data-image-h="{{ activity.event.pictureHeight is not null ? activity.event.pictureHeight:669 }}">
+                            <img src="{{ activity.event.pictureFilename is not null ? vich_uploader_asset(activity.event, 'pictureFile') :
+                            asset("bundles/app/img/event-header/organisation.jpeg") }}" alt="{{ activity.event.name }}" class="mini-picture"
+                            />
+                        </div>
+                    </div>
+                    <div class="card-header">
+                        <h2 class="m-b-20">
+                            {{ activity.event.name }}
+                        </h2>
+                        <div class="m-b-15">
+                            <small><i class="zmdi zmdi-ticket-star"></i>
+                                {% for activityType in activity.activityTypes %}
+                                    {% if not loop.first %}
+                                        ,
+                                    {% endif %}
+                                    {{ activityType.keyName }}
+                                {% endfor %}
+                            </small>
+                        </div>
+                        <div>
+                            {% for city in  activity.cities %}
+                                <div>
+                                    <small><i class="zmdi zmdi-pin"></i> {{ city.name }}, {{ city.department.name }}, {{ city.department.region.name }}</small>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="#modal_information_{{ activity.event.tokenDuplication }}" data-toggle="modal" class="btn btn-flat btn-icon-text m-b-10" aria-expanded="false">
+                            <i class="zmdi zmdi-info-outline"></i> {{ "directory.card.details"|trans }}
+                        </a>
+                        <a href="{{ path('duplicateEvent', {'tokenDuplication': activity.event.tokenDuplication}) }}" class="btn btn-primary btn-icon-text m-b-10">
+                            <i class="zmdi zmdi-plus-circle-o-duplicate"></i>{{ "directory.card.organize"|trans }}
+                        </a>
+                        <div class="modal fade" id="modal_information_{{ activity.event.tokenDuplication }}" tabindex="-1" role="dialog" data-backdrop="static"
+                             aria-labelledby="modal_information_{{ activity.event.tokenDuplication }}_title">
+                            <div class="modal-dialog modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                                        <h3 class="modal-title" id="modal_information_{{ activity.event.tokenDuplication }}_title">{{ activity.event.name }}</h3>
+                                        <div class="m-b-15">
+                                            <small><i class="zmdi zmdi-ticket-star"></i>
+                                                {% for activityType in activity.activityTypes %}
+                                                    {% if not loop.first %}
+                                                        ,
+                                                    {% endif %}
+                                                    {{ activityType.keyName }}
+                                                {% endfor %}
+                                            </small>
+                                        </div>
+                                        <div>
+                                            {% for city in  activity.cities %}
+                                                <div>
+                                                    <small><i class="zmdi zmdi-pin"></i> {{ city.name }}, {{ city.department.name }}, {{ city.department.region.name }}</small>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-body text-center m-b-10">
+                                        <img class="pp-elt-picture picture-large"
+                                             src="{{ activity.event.pictureFilename is not null ? vich_uploader_asset(activity.event, 'pictureFile') : asset("bundles/app/img/event-header/organisation.jpeg") }}"
+                                             alt="{{ activity.event.pictureFile is defined ? '':activity.event.pictureFile.filename }}">
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>{{ activity.event.description|raw }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="col-xs-12">
+                <div class="card z-depth-1">
+                    <div class="card-header text-center">
+                        <h2 class="m-b-20">
+                            {{ "directory.card.no_result"|trans }}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+        $('.focuspoint').focusPoint();
+    </script>
+    <script>
+        {# La réponse doit être sous la forme : "suggestions": [
+            { "value": "United Arab Emirates", "data": "AE" },
+            { "value": "United Kingdom",       "data": "UK" },
+            { "value": "United States",        "data": "US" }
+        ]
+
+        Documenttation : https://www.devbridge.com/sourcery/components/jquery-autocomplete/#}
+        $(document).ready(function () {
+            $('#{{ searchForm.place.vars.id }}').autocomplete({
+                serviceUrl: '{{ path("placeAutocompletion") }}',
+                minChars: 3
+            });
+        })
+    </script>
+{% endblock %}

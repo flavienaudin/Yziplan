@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class EventInvitationVoter extends Voter
 {
-    /* When displaying event without a personal invitation (public event)*/
+    /* When displaying event without a personal invitation (public event) */
     const CREATE = 'event_invitation.create';
     /* When guest want to invite */
     const INVITE = 'event_invitation.invite';
@@ -40,7 +40,7 @@ class EventInvitationVoter extends Voter
         if (($attribute == self::CREATE || $attribute == self::INVITE) && !$subject instanceof Event) {
             return false;
         }
-        if (($attribute == self::EDIT || self::ARCHIVE) && !$subject instanceof EventInvitation) {
+        if (($attribute == self::EDIT || $attribute == self::ARCHIVE) && !$subject instanceof EventInvitation) {
             return false;
         }
         if ($attribute == self::CANCEL && (!is_array($subject) || count($subject) != 2 || !($subject[0] instanceof EventInvitation) || !($subject[1] instanceof EventInvitation))) {
@@ -65,7 +65,7 @@ class EventInvitationVoter extends Voter
             case self::CREATE:
                 /** @var Event $event */
                 $event = $subject; // $subject must be a Event instance, thanks to the supports method
-                return !$event->isInvitationOnly();
+                return !$event->isInvitationOnly() && !$event->isTemplate();
             case self::INVITE:
                 /** @var Event $event */
                 $event = $subject; // $subject must be a Event instance, thanks to the supports method

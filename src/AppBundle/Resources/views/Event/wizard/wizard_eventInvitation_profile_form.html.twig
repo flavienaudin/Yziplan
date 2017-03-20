@@ -26,7 +26,6 @@
 
             $('button#profile_form_submit').on("click", function (e) {
                 var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
-                console.log(profileEmail);
                 if (profileEmail.trim() == "") {
                     e.preventDefault();
                     swal({

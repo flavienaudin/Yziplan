@@ -127,8 +127,10 @@
             <div class="form-group animated">
                 <label class="control-label" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
                 <div class="input-group">
-                    <input type="text" id="url_event_public_invitation" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}" class="form-control" readonly="readonly"> <span
-                            class="input-group-btn"><button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation"><i
+                    <div class="fg-line">
+                        <input type="text" id="url_event_public_invitation" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}" class="form-control" readonly="readonly">
+                    </div>
+                    <span class="input-group-btn"><button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation"><i
                                     class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
                 </div>
             </div>

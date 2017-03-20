@@ -10,6 +10,7 @@ namespace AppBundle\Form\Event;
 
 use AppBundle\Entity\Event\Event;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -77,6 +78,9 @@ class EventType extends AbstractType
                 'allow_delete' => true,
                 'prototype' => true,
                 'by_reference' => false
+            ))
+            ->add("template", CheckboxType::class, array(
+                'required' => false
             ));
     }
 

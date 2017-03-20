@@ -6,167 +6,185 @@
     {% block form_start %}
         {{ form_start(eventForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':'eventHeader'}}) }}
     {% endblock form_start %}
-    <div class="row">
-        <div class="col-xs-12 col-sm-8">
-            {{ form_row(eventForm.name, {
-                'label':'event.form.name.label',
-                'attr':{'placeholder':'event.form.name.placeholder'|trans},
-                'widget_options':{'fgline':true}
-            }) }}
-            {{ form_row(eventForm.description, {
-                'label':'event.form.description.label',
-                'label_attr':{'class':'sr-only'},
-                'attr':{'placeholder':'event.form.description.placeholder'},
-                'widget_options':{'fgline':true}
-            }) }}
-            {{ form_row(eventForm.when, {
-                'label':'event.form.when.label',
-                'attr':{'placeholder':'event.form.when.placeholder'},
-                'widget_options':{'fgline':true, 'displayInRow' : true},
-                'help': 'event.form.when.help' |trans
-            }) }}
-            {{ form_row(eventForm.whereName, {
-                'label':'event.form.whereName.label',
-                'attr':{'placeholder':'event.form.whereName.placeholder'},
-                'widget_options':{'fgline':true, 'displayInRow' : true},
-                'help': 'event.form.whereName.help' |trans
-            }) }}
-            {{ form_row(eventForm.whereGooglePlaceId) }}
-            {# TODO Décommenter quand la date limite de réponse sera utilisée : Décommenter aussi dans "EventType.php:47"
-            {{ form_row(eventForm.responseDeadline, {
-                'label':'event.form.responseDeadline.label',
-                'attr':{'placeholder':'event.form.responseDeadline.placeholder'},
-                'widget_options':{'fgline':true, 'displayInRow' : true}
-            }) }}#}
 
-            {# TODO : desactivés pour simplifier l'interface
-            <div class="row">
-                <div class="col-xs-12 col-md-6">
-                    {{ form_row(eventForm.invitationOnly, {
-                        'label':'event.form.invitationOnly.label',
-                        'attr':{'class':'md-toogle-switch'},
-                        'help': 'event.form.invitationOnly.help' |trans
-                    }) }}
-                </div>
-                <div class="col-xs-12 col-md-6">
-                    {{ form_row(eventForm.guestsCanInvite, {
-                        'label':'event.form.guestsCanInvite.label',
-                        'attr':{'class':'md-toogle-switch'},
-                        'help': 'event.form.guestsCanInvite.help' |trans
-                    }) }}
-                </div>
-            </div>#}
-        </div>
-        <div class="hidden-xs col-sm-4">
-            <div id="eventEditGoogleMap" style="height: 200px;"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div id="eventMoreInfo" class="panel-group" role="tablist" aria-multiselectable="false">
-                <div class="panel panel-collapse">
-                    <div class="panel-heading" role="tab" id="eventCoordinates">
-                        <h4 class="panel-title">
-                            <a href="#eventCoordinatesCollpase" data-toggle="collapse" data-parent="#eventMoreInfo" class="collapsed" aria-expanded="false" aria-controls="eventCoordinatesCollpase">
-                                {{ "event.form.coordinates.link_collpase"|trans }}</a>
-                        </h4>
-                    </div>
-                    <div id="eventCoordinatesCollpase" class="collapse" role="tabpanel" aria-labelledby="eventCoordinates" aria-expanded="false">
-                        {{ form_row(eventForm.coordinates.website, {
-                            'label':'event.form.coordinates.website.label',
-                            'label_attr':{'class':'sr-only'},
-                            'attr':{'placeholder':'event.form.coordinates.website.placeholder'},
-                            'widget_options':{'fgline':true, 'label_icon':'zmdi-globe'}
-                        }) }}
-                        {{ form_row(eventForm.coordinates.email, {
-                            'label':'event.form.coordinates.email.label',
-                            'label_attr':{'class':'sr-only'},
-                            'attr':{'placeholder':'event.form.coordinates.email.placeholder'},
-                            'widget_options':{'fgline':true, 'label_icon':'zmdi-email'}
-                        }) }}
-                        {{ form_row(eventForm.coordinates.phoneNumber, {
-                            'label':'event.form.coordinates.phoneNumber.label',
-                            'label_attr':{'class':'sr-only'},
-                            'attr':{'placeholder':'event.form.coordinates.phoneNumber.placeholder'},
-                            'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
-                        }) }}
-                        {{ form_row(eventForm.coordinates.mobileNumber, {
-                            'label':'event.form.coordinates.mobileNumber.label',
-                            'label_attr':{'class':'sr-only'},
-                            'attr':{'placeholder':'event.form.coordinates.mobileNumber.placeholder'},
-                            'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
-                        }) }}
-                        {{ form_row(eventForm.coordinates.faxNumber, {
-                            'label':'event.form.coordinates.faxNumber.label',
-                            'label_attr':{'class':'sr-only'},
-                            'attr':{'placeholder':'event.form.coordinates.faxNumber.placeholder'},
-                            'widget_options':{'fgline':true, 'label_icon':'zmdi-print'}
-                        }) }}
-                        {{ form_row(eventForm.coordinates.facebookURL, {
-                            'label':'event.form.coordinates.facebookURL.label',
-                            'label_attr':{'class':'sr-only'},
-                            'attr':{'placeholder':'event.form.coordinates.facebookURL.placeholder'},
-                            'widget_options':{'fgline':true, 'label_icon':'zmdi-facebook'}
-                        }) }}
-                        {{ form_row(eventForm.coordinates.googlePlusURL, {
-                            'label':'event.form.coordinates.googlePlusURL.label',
-                            'label_attr':{'class':'sr-only'},
-                            'attr':{'placeholder':'event.form.coordinates.googlePlusURL.placeholder'},
-                            'widget_options':{'fgline':true, 'label_icon':'zmdi-google-plus'}
-                        }) }}
-                        {{ form_row(eventForm.coordinates.twitterURL, {
-                            'label':'event.form.coordinates.twitterURL.label',
-                            'label_attr':{'class':'sr-only'},
-                            'attr':{'placeholder':'event.form.coordinates.twitterURL.placeholder'},
-                            'widget_options':{'fgline':true, 'label_icon':'zmdi-twitter'}
-                        }) }}
-                        {{ form_row(eventForm.coordinates.instagramURL, {
-                            'label':'event.form.coordinates.instagramURL.label',
-                            'label_attr':{'class':'sr-only'},
-                            'attr':{'placeholder':'event.form.coordinates.instagramURL.placeholder'},
-                            'widget_options':{'fgline':true, 'label_icon':'zmdi-instagram'}
-                        }) }}
+    <div role="tabpanel">
+        <ul class="tab-nav" role="tablist">
+            <li class="active"><a href="#generals" data-toggle="tab" aria-controls="generals" role="tab">{{ "event.form.tab.general"|trans }}</a></li>
+            <li><a href="#aboutInfo" data-toggle="tab" aria-controls="aboutInfo" role="tab">{{ "event.form.tab.about_info"|trans }}</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="generals" role="tabpanel">
+                {{ form_row(eventForm.name, {
+                    'label':'event.form.name.label',
+                    'attr':{'placeholder':'event.form.name.placeholder'|trans},
+                    'widget_options':{'fgline':true}
+                }) }}
+                {{ form_row(eventForm.description, {
+                    'label':'event.form.description.label',
+                    'label_attr':{'class':'sr-only'},
+                    'attr':{'placeholder':'event.form.description.placeholder'},
+                    'widget_options':{'fgline':true}
+                }) }}
 
-                    </div>
+                {% block where_when_text %}{% endblock where_when_text %}
+                {{ form_row(eventForm.when, {
+                    'label':'event.form.when.label',
+                    'attr':{'placeholder':'event.form.when.placeholder'},
+                    'widget_options':{'fgline':true, 'displayInRow' : true}
+                }) }}
+                {{ form_row(eventForm.whereName, {
+                    'label':'event.form.whereName.label',
+                    'attr':{'placeholder':'event.form.whereName.placeholder'},
+                    'widget_options':{'fgline':true, 'displayInRow' : true}
+                }) }}
+                {{ form_row(eventForm.whereGooglePlaceId) }}
+
+                <a href="#showMapContainer" data-toggle="collapse" aria-expanded="false" aria-controls="showMapContainer">{{ "event.form.text.see_map"|trans }}</a>
+                <div id="showMapContainer" class="collapse">
+                    <div id="eventEditGoogleMap" style="height: 200px;"></div>
                 </div>
 
-                <div class="panel panel-collapse">
-                    <div class="panel-heading" role="tab" id="eventCoordinates">
-                        <h4 class="panel-title">
-                            <a href="#eventOpeningHoursCollpase" data-toggle="collapse" data-parent="#eventMoreInfo" class="collapsed" aria-expanded="false" aria-controls="eventOpeningHoursCollpase">
-                                {{ "event.form.opening_hour.link_collpase"|trans }}</a>
-                        </h4>
-                    </div>
-                    <div id="eventOpeningHoursCollpase" class="collapse" role="tabpanel" aria-labelledby="eventCoordinates" aria-expanded="false">
-                        {{ form_label(eventForm.openingHours, null, {'class':'sr-only'}) }}
-                        {{ form_errors(eventForm.openingHours) }}
+                {# TODO Décommenter quand la date limite de réponse sera utilisée : Décommenter aussi dans "EventType.php:47"
+                {{ form_row(eventForm.responseDeadline, {
+                    'label':'event.form.responseDeadline.label',
+                    'attr':{'placeholder':'event.form.responseDeadline.placeholder'},
+                    'widget_options':{'fgline':true, 'displayInRow' : true}
+                }) }}#}
 
-                        <ul class="list-unstyled m-t-10 m-b-10" id="openingHours-fields-list" data-prototype="{{ form_widget(eventForm.openingHours.vars.prototype)|e }}">
-                            {% for openingHour in eventForm.openingHours %}
-                                <li class="openingHourForm">
-                                    {{ form_widget(openingHour) }}
-                                </li>
-                            {% endfor %}
-                        </ul>
-                        <div class="clearfix"></div>
-                        <a href="#" class="btn btn-icon-text btn-link c-blue" id="add-opening-time"><i class="zmdi zmdi-alarm-plus"></i> {{ "event.form.opening_hour.add_link"|trans }}</a>
+                {# TODO : desactivés pour simplifier l'interface
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        {{ form_row(eventForm.invitationOnly, {
+                            'label':'event.form.invitationOnly.label',
+                            'attr':{'class':'md-toogle-switch'},
+                            'help': 'event.form.invitationOnly.help' |trans
+                        }) }}
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        {{ form_row(eventForm.guestsCanInvite, {
+                            'label':'event.form.guestsCanInvite.label',
+                            'attr':{'class':'md-toogle-switch'},
+                            'help': 'event.form.guestsCanInvite.help' |trans
+                        }) }}
+                    </div>
+                </div>#}
+            </div>
+            <div class="tab-pane" id="aboutInfo" role="tabpanel">
+                <div id="eventMoreInfo" class="panel-group" role="tablist" aria-multiselectable="false">
+                    <div class="panel panel-collapse">
+                        <div class="panel-heading" role="tab" id="eventCoordinates">
+                            <h4 class="panel-title">
+                                <a href="#eventCoordinatesCollpase" data-toggle="collapse" data-parent="#eventMoreInfo" class="collapsed" aria-expanded="false"
+                                   aria-controls="eventCoordinatesCollpase">
+                                    {{ "event.form.coordinates.link_collpase"|trans }}</a>
+                            </h4>
+                        </div>
+                        <div id="eventCoordinatesCollpase" class="collapse" role="tabpanel" aria-labelledby="eventCoordinates" aria-expanded="false">
+                            {{ form_row(eventForm.coordinates.website, {
+                                'label':'event.form.coordinates.website.label',
+                                'label_attr':{'class':'sr-only'},
+                                'attr':{'placeholder':'event.form.coordinates.website.placeholder'},
+                                'widget_options':{'fgline':true, 'label_icon':'zmdi-globe'}
+                            }) }}
+                            {{ form_row(eventForm.coordinates.email, {
+                                'label':'event.form.coordinates.email.label',
+                                'label_attr':{'class':'sr-only'},
+                                'attr':{'placeholder':'event.form.coordinates.email.placeholder'},
+                                'widget_options':{'fgline':true, 'label_icon':'zmdi-email'}
+                            }) }}
+                            {{ form_row(eventForm.coordinates.phoneNumber, {
+                                'label':'event.form.coordinates.phoneNumber.label',
+                                'label_attr':{'class':'sr-only'},
+                                'attr':{'placeholder':'event.form.coordinates.phoneNumber.placeholder'},
+                                'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
+                            }) }}
+                            {{ form_row(eventForm.coordinates.mobileNumber, {
+                                'label':'event.form.coordinates.mobileNumber.label',
+                                'label_attr':{'class':'sr-only'},
+                                'attr':{'placeholder':'event.form.coordinates.mobileNumber.placeholder'},
+                                'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
+                            }) }}
+                            {{ form_row(eventForm.coordinates.faxNumber, {
+                                'label':'event.form.coordinates.faxNumber.label',
+                                'label_attr':{'class':'sr-only'},
+                                'attr':{'placeholder':'event.form.coordinates.faxNumber.placeholder'},
+                                'widget_options':{'fgline':true, 'label_icon':'zmdi-print'}
+                            }) }}
+                            {{ form_row(eventForm.coordinates.facebookURL, {
+                                'label':'event.form.coordinates.facebookURL.label',
+                                'label_attr':{'class':'sr-only'},
+                                'attr':{'placeholder':'event.form.coordinates.facebookURL.placeholder'},
+                                'widget_options':{'fgline':true, 'label_icon':'zmdi-facebook'}
+                            }) }}
+                            {{ form_row(eventForm.coordinates.googlePlusURL, {
+                                'label':'event.form.coordinates.googlePlusURL.label',
+                                'label_attr':{'class':'sr-only'},
+                                'attr':{'placeholder':'event.form.coordinates.googlePlusURL.placeholder'},
+                                'widget_options':{'fgline':true, 'label_icon':'zmdi-google-plus'}
+                            }) }}
+                            {{ form_row(eventForm.coordinates.twitterURL, {
+                                'label':'event.form.coordinates.twitterURL.label',
+                                'label_attr':{'class':'sr-only'},
+                                'attr':{'placeholder':'event.form.coordinates.twitterURL.placeholder'},
+                                'widget_options':{'fgline':true, 'label_icon':'zmdi-twitter'}
+                            }) }}
+                            {{ form_row(eventForm.coordinates.instagramURL, {
+                                'label':'event.form.coordinates.instagramURL.label',
+                                'label_attr':{'class':'sr-only'},
+                                'attr':{'placeholder':'event.form.coordinates.instagramURL.placeholder'},
+                                'widget_options':{'fgline':true, 'label_icon':'zmdi-instagram'}
+                            }) }}
+                        </div>
+                    </div>
+                    <div class="panel panel-collapse">
+                        <div class="panel-heading" role="tab" id="eventOpeningHours">
+                            <h4 class="panel-title">
+                                <a href="#eventOpeningHoursCollpase" data-toggle="collapse" data-parent="#eventMoreInfo" class="collapsed" aria-expanded="false"
+                                   aria-controls="eventOpeningHoursCollpase">
+                                    {{ "event.form.opening_hour.link_collpase"|trans }}</a>
+                            </h4>
+                        </div>
+                        <div id="eventOpeningHoursCollpase" class="collapse" role="tabpanel" aria-labelledby="eventOpeningHours" aria-expanded="false">
+                            {{ form_label(eventForm.openingHours, null, {'class':'sr-only'}) }}
+                            {{ form_errors(eventForm.openingHours) }}
+
+                            <ul class="list-unstyled m-t-10 m-b-10" id="openingHours-fields-list" data-prototype="{{ form_widget(eventForm.openingHours.vars.prototype)|e }}">
+                                {% for openingHour in eventForm.openingHours %}
+                                    <li class="openingHourForm">
+                                        {{ form_widget(openingHour) }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="clearfix"></div>
+                            <a href="#" class="btn btn-icon-text btn-link c-blue" id="add-opening-time"><i class="zmdi zmdi-alarm-plus"></i> {{ "event.form.opening_hour.add_link"|trans }}</a>
+                        </div>
                     </div>
                 </div>
+                {% if eventForm.template is defined %}
+                    <div class="{% block eventFormTemplateClass %}hidden{% endblock %}">
+                        <p>{{ "event.form.template.instructions"|trans }}</p>
+                        {{ form_row(eventForm.template, {
+                            'label' : 'event.form.template.label',
+                            'label_attr':{'class' : "sr-only"},
+                            'attr': {'class':'md-toogle-switch'}
+                        }) }}
+                    </div>
+                {% endif %}
             </div>
         </div>
+    </div>
 
-        <div class="col-xs-12">
-            {% block action_buttons %}
-                <div class="text-center">
-                    <button class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
-                    <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
-                        {{ "global.button.save"|trans }}
-                    </button>
-                    <div class="visible-xs visible-sm m-b-10"></div>
-                </div>
-            {% endblock action_buttons %}
-            {{ form_rest(eventForm) }}
-        </div>
+    <div class="w-100">
+        {% block action_buttons %}
+            <div class="text-center">
+                <button class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                    {{ "global.button.save"|trans }}
+                </button>
+                <div class="visible-xs visible-sm m-b-10"></div>
+            </div>
+        {% endblock action_buttons %}
+        {{ form_rest(eventForm) }}
     </div>
     {{ form_end(eventForm) }}
 
@@ -275,23 +293,22 @@
         $(document).ready(function () {
             var $dialogsInBody = false;
 
-            {% block js_document_ready %}
-            $dialogsInBody = true;
-            var $eventEditModal = $('#eventEditModal');
-            $eventEditModal.on('shown.bs.modal', function (e) {
-                if (typeof initEventEditMap === "function") {
+            $('#showMapContainer').on('shown.bs.collapse', function (e) {
+                {# Clique sur "Voir sur une carte" #}
+                if (mapEventEdit == null) {
                     initEventEditMap();
                 } else {
-                    console.error('initEventEditMap() is undefined')
+                    google.maps.event.trigger(mapEventEdit, 'resize');
                 }
             });
-            if ($eventEditModal.hasClass('in')) {
-                if (typeof initEventEditMap === "function") {
-                    initEventEditMap();
-                } else {
-                    console.error('initEventEditMap() is undefined')
-                }
-            }
+
+            {% block js_document_ready %}
+            $dialogsInBody = true;
+
+            var $eventEditModal = $('#eventEditModal');
+            $eventEditModal.on('shown.bs.modal', function (e) {
+                initEventEditMap();
+            });
 
             $('form#eventHeader').on("submit", function (e) {
                 ajaxFormSubmission(this, e, function (responseJSON, textStatus, jqXHR) {

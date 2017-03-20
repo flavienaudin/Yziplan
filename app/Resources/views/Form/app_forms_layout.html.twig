@@ -269,14 +269,13 @@
 {%- endblock radio_btn_widget -%}
 
 {% block md_toggle_switch_widget -%}
-    {%- set attr = attr|merge({class: (attr.class|default('') ~ ' form-control')|trim}) -%}
+    {%- set attr = attr|merge({class: (attr.class|default(''))|replace({"md-toogle-switch":""})|trim}) -%}
     {%- set label_attr = label_attr|merge({class: (' ts-label')|trim}) -%}
-    <div class="toggle-switch">
+    <div class="toggle-switch {{ 'disabled' in attr?' disabled' }}">
         <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} hidden="hidden"/> <label
                 for="{{ id }}" class="ts-helper"></label>&nbsp; {{ block('form_label') }}
     </div>
 {%- endblock md_toggle_switch_widget %}
-
 
 {% block event_openinghours_widget %}
     <div class="di-block va-top">
