@@ -42,12 +42,10 @@ class PollProposalVoter extends Voter
             return false;
         }
 
-        dump($userModuleInvitation->getStatus());
-        dump(ModuleInvitationStatus::CANCELLED);
         if($userModuleInvitation->getStatus() == ModuleInvitationStatus::CANCELLED){
             return false;
         }
-dump("passé ...");
+
         if ($userModuleInvitation->getModule()->getPollModule() != $pollProposal->getPollModule()) {
             return false;
         }
