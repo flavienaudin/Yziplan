@@ -161,13 +161,11 @@
                     </div>
                 </div>
                 {% if eventForm.template is defined %}
-                    <div class="{% block eventFormTemplateClass %}hidden{% endblock %}">
-                        <p>{{ "event.form.template.instructions"|trans }}</p>
+                    <div class="m-t-30 {% block eventFormTemplateClass %}hidden{% endblock %}">
                         {{ form_row(eventForm.template, {
-                            'label' : 'event.form.template.label',
-                            'label_attr':{'class' : "sr-only"},
-                            'attr': {'class':'md-toogle-switch'}
+                            'label' : 'event.form.template.label'
                         }) }}
+                        <p>{{ "event.form.template.instructions"|trans }}</p>
                     </div>
                 {% endif %}
             </div>

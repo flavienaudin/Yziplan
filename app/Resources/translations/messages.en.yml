@@ -139,7 +139,7 @@ event:
       when_where: You already know the date and the place ? Set them right now or add a survey in next step
       see_map: See on map
     name:
-      label: Event title
+      label: Event / activity title
       placeholder: My birthday, Party, Week-end with friends...
     description:
       label: "Details"
