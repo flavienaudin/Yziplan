@@ -60,7 +60,7 @@ class Comment extends BaseFosComment
             $name = $this->getAuthor()->getDisplayableName(true, true);
         }
         if(empty($name)){
-            $name = 'Yziplan-Onymous';
+            $name = 'Invité anonyme';
         }
 
         return $name;

@@ -17,6 +17,7 @@ use AppBundle\Form\Event\InvitationsType;
 use AppBundle\Form\Event\SendMessageType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventStatus;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Utils\enum\ModuleStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -174,6 +175,10 @@ class EventManager
         if (empty($this->event->getToken())) {
             $this->event->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
+        if ($this->event->isTemplate() && empty($this->event->getTokenDuplication())) {
+            $this->event->setTokenDuplication($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
+            $this->event->setDuplicationEnabled(true);
+        }
         if ($this->event->getStatus() == EventStatus::IN_CREATION) {
             $this->event->setStatus(EventStatus::IN_ORGANIZATION);
         }
@@ -218,6 +223,9 @@ class EventManager
             $duplicatedEvent->setName($this->event->getName());
             $duplicatedEvent->setDescription($this->event->getDescription());
             $duplicatedEvent->setResponseDeadline($this->event->getResponseDeadline());
+            $duplicatedEvent->setEventParent($this->event);
+            $duplicatedEvent->setTemplate(false);
+            $duplicatedEvent->setDuplicationEnabled(false);
 
             if ($this->event->getPictureFile() != null) {
                 $originalFile = $this->event->getPictureFile();
@@ -405,25 +413,26 @@ class EventManager
             foreach ($eventModules as $module) {
                 if ($module->getStatus() != ModuleStatus::DELETED && $module->getStatus() != ModuleStatus::ARCHIVED) {
                     $moduleDescription = array();
-                    $moduleDescription['module'] = $module;
                     $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
+                    if ($userModuleInvitation != null && $userModuleInvitation->getStatus() != ModuleInvitationStatus::CANCELLED) {
+                        $moduleDescription['module'] = $module;
+                        $thread = $module->getCommentThread();
+                        if (null == $thread) {
+                            $thread = $this->discussionManager->createCommentableThread($module);
+                        }
+                        $comments = $this->discussionManager->getCommentsThread($thread);
+                        $moduleDescription['thread'] = $thread;
+                        $moduleDescription['comments'] = $comments;
 
-                    $thread = $module->getCommentThread();
-                    if (null == $thread) {
-                        $thread = $this->discussionManager->createCommentableThread($module);
+                        if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
+                            $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
+                        }
+                        if ($module->getPollModule() != null) {
+                            // TODO Vérifier les autorisations d'ajouter des propositions au module
+                            $moduleDescription['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation);
+                        }
+                        $modules[$module->getId()] = $moduleDescription;
                     }
-                    $comments = $this->discussionManager->getCommentsThread($thread);
-                    $moduleDescription['thread'] = $thread;
-                    $moduleDescription['comments'] = $comments;
-
-                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
-                        $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
-                    }
-                    if ($module->getPollModule() != null) {
-                        // TODO Vérifier les autorisations d'ajouter des propositions au module
-                        $moduleDescription['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation);
-                    }
-                    $modules[$module->getId()] = $moduleDescription;
                 }
             }
         }

@@ -11269,6 +11269,12 @@ pre {
     padding: 30px 33px;
 }
 
+@media (max-width: 767px) {
+    .card-body.card-padding {
+        padding: 30px 15px;
+    }
+}
+
 .card-body.card-padding-xs,
 .card-body.card-padding-sm {
     padding: 15px;
@@ -15409,7 +15415,7 @@ body.o-hidden {
     list-style: none;
     margin-left: -5px;
     margin-top: 8px;
-    margin-bottom: 0;
+    margin-bottom: 8px;
 }
 
 #footer .f-menu > li {
@@ -15424,6 +15430,11 @@ body.o-hidden {
 
 #footer .f-menu > li > a:hover {
     color: #777;
+}
+
+#footer > p {
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 .pricing-table {

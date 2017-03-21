@@ -17,36 +17,38 @@
                 </h4>
             </div>
             <div class="modal-body">
-                <table class="table table-striped table-condensed table-result">
-                    <tbody>
-                    {# Pour chaque réponse d'une proposition #}
-                    {% for moduleInvitation in moduleInvitations %}
-                        {% set guestPollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
-                        {% if guestPollProposalResponse is not null %}
-                            {% set response = guestPollProposalResponse is null or guestPollProposalResponse.answer is null?0:guestPollProposalResponse.answer %}
-                            {% if response > 0 %}
-                                {% set totalOfResponse = totalOfResponse + response %}
-                                {% set numberOfResponse = numberOfResponse + 1 %}
-                                <tr>
-                                    <td>
-                                        <div class="avatar-img-container-sm center-block m-b-5">
-                                            {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {{ moduleInvitation.displayableName(true, true) }}
-                                    </td>
-                                    <td class="{{ (response > 0) ? "palette-Red-100 bg c-red" }}">
+                <div class="table-responsive">
+                    <table class="table table-striped table-condensed table-result">
+                        <tbody>
+                        {# Pour chaque réponse d'une proposition #}
+                        {% for moduleInvitation in moduleInvitations %}
+                            {% set guestPollProposalResponse = pollProposal.pollProposalResponsesOfModuleInvitation(moduleInvitation) %}
+                            {% if guestPollProposalResponse is not null %}
+                                {% set response = guestPollProposalResponse is null or guestPollProposalResponse.answer is null?0:guestPollProposalResponse.answer %}
+                                {% if response > 0 %}
+                                    {% set totalOfResponse = totalOfResponse + response %}
+                                    {% set numberOfResponse = numberOfResponse + 1 %}
+                                    <tr>
+                                        <td>
+                                            <div class="avatar-img-container-sm center-block m-b-5">
+                                                {{ include("@App/Avatar/partials/avatar_display.html.twig",{invitation : moduleInvitation}) }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {{ moduleInvitation.displayableName(true, true) }}
+                                        </td>
+                                        <td class="{{ (response > 0) ? "palette-Red-100 bg c-red" }}">
                                         <span class="answer-thumb strong">
                                                 {{ response }} <i class="zmdi zmdi-favorite"></i>
                                         </span>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
+                                {% endif %}
                             {% endif %}
-                        {% endif %}
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
                 <div class=" w-100">
                     <h3>{{ "pollmodule.display.result.moyenne"|trans }}&#8239;{{ totalOfResponse }}</h3>
                 </div>

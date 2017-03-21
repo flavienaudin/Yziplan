@@ -347,7 +347,7 @@ class ModuleManager
     public function displayModulePartial(Module $module, ModuleInvitation $userModuleInvitation = null)
     {
         $moduleForm = null;
-        if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, $userModuleInvitation)) {
+        if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
             /** @var FormInterface $moduleForm */
             $moduleForm = $this->createModuleForm($module);
         }

@@ -163,12 +163,35 @@
                 }
             });
 
+            {# Check if invitation is valid before opeing the modal #}
+            $('#eventEditModal').on('show.bs.modal', function (e) {
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    askGuestName(e, function () {
+                        $('#eventEditModal').modal('show');
+                    }, null);
+                }
+            });
+            {# Check if invitation is valid before opeing the modal #}
+            $('#eventDuplicationSettingsModal').on('show.bs.modal', function (e) {
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    askGuestName(e, function () {
+                        $('#eventDuplicationSettingsModal').modal('show');
+                    }, null);
+                }
+            });
+
             {% if redirectedAfterEventDuplication is defined and redirectedAfterEventDuplication %}
-            {# Affichage de l'événement après une duplication => information à l'utilisateur#}
+            {# Affichage de l'événement après une duplication => information à l'utilisateur #}
             swal({
                 type: "success",
                 titleText: "{{ 'duplication.notice.swal.title'|trans }}",
-                html: "{{ 'duplication.notice.swal.message'|trans|raw }}"
+                html: "{{ 'duplication.notice.swal.message'|trans|raw }}",
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(function () {
+                if (typeof askGuestName === "function") {
+                    askGuestName();
+                }
             });
             {% endif %}
         });
@@ -192,7 +215,7 @@
             // Active l'autocomplétion des champs "Où" lors de l'ajout de proposition "Where"
             initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');
         }
-        
+
         {% if (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.name is empty %}
         $(document).ready(function () {
             $('#event_header_edit_information').click();

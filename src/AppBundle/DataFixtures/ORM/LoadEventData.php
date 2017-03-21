@@ -161,7 +161,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $pollModule = $modulePoll->getPollModule();
 
         $pollProposal1 = new PollProposal();
-        $pollProposal1->setDescription("Ca va être sportif!!!");
+        $pollProposal1->setCreator($eventInvitationCreator->getModuleInvitationForModule($modulePoll));
         $pollProposal1Act1 = new PollProposalElement();
         $pollProposal1Act1->setValString("Match de rugby");
         $pollModule->getPollElements()->first()->addPollProposalElement($pollProposal1Act1);
@@ -169,7 +169,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $pollModule->addPollProposal($pollProposal1);
 
         $pollProposal2 = new PollProposal();
-        $pollProposal2->setDescription("Ca va être ludique");
+        $pollProposal2->setCreator($eventInvitationCreator->getModuleInvitationForModule($modulePoll));
         $pollProposal2Act1 = new PollProposalElement();
         $pollProposal2Act1->setValString("Carcassonne");
         $pollModule->getPollElements()->first()->addPollProposalElement($pollProposal2Act1);

@@ -156,23 +156,46 @@ class Event implements CommentableInterface
     private $invitationOnly = false;
 
     /**
-     * * If "true" then guests can send invitations to others.
+     * If "true" then guests can send invitations to others.
      * @var boolean
      * @ORM\Column(name="guests_can_invite", type="boolean")
      */
     private $guestsCanInvite = true;
 
     /**
-     * * If "true" then guests can add module
+     * If "true" then guests can add module
      * @var boolean
      * @ORM\Column(name="guests_can_add_module", type="boolean")
      */
     private $guestsCanAddModule = true;
 
+    /**
+     * If "true" the event is consider as template and can be duplicated to organized other events (for professionals)
+     * @var bool
+     * @ORM\Column(name="template", type="boolean")
+     */
+    private $template = false;
+
 
     /***********************************************************************
      *                      Jointures
      ***********************************************************************/
+
+    /**
+     * A template's subevents
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Event\Event", mappedBy="eventParent")
+     */
+    private $subevents;
+
+    /**
+     * The parent event that has been duplicated
+     * @var Event
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Event\Event", inversedBy="subevents")
+     * @ORM\JoinColumn(name="event_parent_id", referencedColumnName="id")
+     */
+    private $eventParent;
 
     /**
      * @var Thread
@@ -183,7 +206,6 @@ class Event implements CommentableInterface
 
     /**
      * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Event\Module", mappedBy="event", cascade={"persist"})
      * @ORM\OrderBy({"orderIndex" = "ASC"})
      */
@@ -191,7 +213,6 @@ class Event implements CommentableInterface
 
     /**
      * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Event\EventInvitation", mappedBy="event", cascade={"persist"})
      */
     private $eventInvitations;
@@ -610,6 +631,56 @@ class Event implements CommentableInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isTemplate()
+    {
+        return $this->template;
+    }
+
+    /**
+     * @param bool $template
+     * @return Event
+     */
+    public function setTemplate($template)
+    {
+        $this->template = $template;
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection of Event
+     */
+    public function getSubevents()
+    {
+        return $this->subevents;
+    }
+
+    /**
+     * @return Event
+     */
+    public function getEventParent()
+    {
+        return $this->eventParent;
+    }
+
+    /**
+     * @param Event|null $eventParent
+     * @return Event
+     */
+    public function setEventParent($eventParent)
+    {
+        if($this->getEventParent() != null && $eventParent == null){
+            $this->eventParent->getSubevents()->removeElement($this);
+            $this->eventParent = null;
+        }else {
+            $this->eventParent = $eventParent;
+            $eventParent->getSubevents()->add($this);
+        }
+        return $this;
+    }
+
+    /**
      * @return ThreadInterface
      */
     public function getCommentThread()
@@ -785,6 +856,31 @@ class Event implements CommentableInterface
     public function getAdministrators()
     {
         $criteria = Criteria::create()->where(Criteria::expr()->eq("administrator", true));
+        return $this->eventInvitations->matching($criteria);
+    }
+
+    /**
+     * Retrieve EventInvitation with creator = true OR administrator = true
+     * @return Collection
+     */
+    public function getOrganizers()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("creator", true))
+            ->orWhere(Criteria::expr()->eq("administrator", true));
+        return $this->eventInvitations->matching($criteria);
+    }
+
+    /**
+     * Retrieve EventInvitation with creator = false and administrator = false
+     * @return Collection
+     */
+    public function getGuests()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("creator", false))
+            ->andWhere(Criteria::expr()->eq("administrator", false))
+            ->andWhere(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED));
         return $this->eventInvitations->matching($criteria);
     }
 

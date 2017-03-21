@@ -154,11 +154,11 @@
 
 @media (max-width: 767px) {
     .card-header {
-        padding: 10px 15px;
+        padding: 15px 15px;
     }
 
     .card-header .actions {
-        top: 5px;
+        top: 10px;
     }
 }
 
@@ -202,6 +202,13 @@
 -----------------------------------*/
 .pac-container {
     z-index: 1050;
+}
+
+/*-----------------------------------
+    SET Smartsupp under modal
+-----------------------------------*/
+#chat-application {
+    z-index: 1049 !important;
 }
 
 /*-----------------------------------
@@ -258,9 +265,11 @@
 .va-top {
     vertical-align: top;
 }
+
 .va-bottom {
     vertical-align: bottom;
 }
+
 .va-middle {
     vertical-align: middle;
 }
@@ -378,6 +387,18 @@ a.collapsed[data-toggle=collapse] [class*=zmdi-minus] {
     overflow: hidden;
     width: 100%;
     height: 250px;
+}
+
+.mini-picture {
+    width: 100%;
+    height: 150px;
+}
+
+.mini-picture-focuspoint {
+    position: absolute;
+    overflow: hidden;
+    width: 100%;
+    height: 150px;
 }
 
 #event_picture_update_modal .kv-avatar .file-preview-frame,
@@ -660,6 +681,8 @@ label.required:after {
 /*---------------------------------
     PollModule
 ---------------------------------*/
+
+.poll-response tbody,
 .poll-container tbody {
     border-top: 1px solid #bdbdbd;
     border-bottom: 1px solid #bdbdbd;
@@ -728,7 +751,6 @@ label.required:after {
 #eventWizard .wall-comment-list {
     display: none;
 }
-
 
 /*---------------------------------
     Poll Proposal Display
@@ -1220,6 +1242,41 @@ label.required:after {
     width: 100px;
     display: block;;
 }
+
 .readonly-onmobile {
     background-color: white !important;
+}
+
+/*---------------------------------
+    Annuaire : Autocomplete
+---------------------------------*/
+
+.autocomplete-suggestions {
+    *border: 1px solid #999;
+    background: #FFF;
+    overflow: auto;
+}
+
+.autocomplete-suggestion {
+    padding: 2px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.autocomplete-selected {
+    background: #F0F0F0;
+}
+
+.autocomplete-suggestions strong {
+    font-weight: normal;
+    color: #3399FF;
+}
+
+.autocomplete-group {
+    padding: 2px 5px;
+}
+
+.autocomplete-group strong {
+    display: block;
+    border-bottom: 1px solid #000;
 }

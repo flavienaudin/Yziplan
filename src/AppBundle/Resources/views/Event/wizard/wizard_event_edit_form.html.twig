@@ -4,10 +4,12 @@
 - eventForm (Form) Formulaire d'édition des information général de l'événement
 #}
 
-
 {% block form_start %}
     {{ form_start(eventForm, {'action':path('wizardNewEvent',{'token':userEventInvitation.event.token})}) }}
 {% endblock form_start %}
+
+{% block where_when_text %}<p>{{ "event.form.text.when_where"|trans }}</p>{% endblock where_when_text %}
+{% block eventFormTemplateClass %}{% endblock %}
 
 {% block action_buttons %}
     <div class="text-center">
@@ -17,4 +19,14 @@
     </div>
 {% endblock action_buttons %}
 
-{% block js_document_ready %}{% endblock js_document_ready %}
+{#<script>#}
+{% block js_document_ready %}
+    $('#showMapContainer').on('shown.bs.collapse', function (e) {
+        if (mapEventEdit == null) {
+            initEventEditMap();
+        } else {
+            google.maps.event.trigger(mapEventEdit, 'resize');
+        }
+    });
+{% endblock js_document_ready %}
+{#</script>#}
