@@ -4,6 +4,24 @@
 #}
 
 <div id="invitations_forms_container">
+    {% if userEventInvitation.organizer or not userEventInvitation.event.invitationOnly %}
+        {% set event_public_invitation_display_block %}
+            <div id="event_public_invitation_display" class="{{ (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.invitationOnly?'hidden' }}">
+                <div class="form-group animated">
+                    <label class="control-label" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
+                    <div class="input-group">
+                        <div class="fg-line">
+                            <input type="text" id="url_event_public_invitation" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}" class="form-control" readonly="readonly">
+                        </div>
+                        <span class="input-group-btn"><button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation"><i
+                                        class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
+                    </div>
+                </div>
+            </div>
+        {% endset %}
+    {% endif %}
+
+
     <div class="m-t-10 w-100 text-center">
         {% if userEventInvitation.organizer or not userEventInvitation.event.invitationOnly %}
             <button type="button" class="btn btn-facebook" id="shareEventFB" name="provider" style="display: none;">
@@ -19,7 +37,7 @@
     </div>
 
     {% if invitationsForm is not null %}
-        <div class="p-15 border-bottom">
+        <div class="p-15">
             <div id="event_invitations_form_container">
                 {% block form_start %}
                     {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':userEventInvitation.event.token}),'attr':{'id':'eventInvitations'}}) }}
@@ -39,6 +57,7 @@
                         'label':'invitations.form.message.label',
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'invitations.form.message.placeholder', 'rows':3},
+                        'widget_options': {'fgline':true}
                     }) }}
                 </div>
                 {% block action_buttons %}
@@ -121,21 +140,11 @@
         </div>
     {% endif %}
 
-    {% if userEventInvitation.organizer or not userEventInvitation.event.invitationOnly %}
-        <div id="event_public_invitation_display"
-             class="p-15 border-bottom {{ (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.invitationOnly?'hidden' }}">
-            <div class="form-group animated">
-                <label class="control-label" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
-                <div class="input-group">
-                    <div class="fg-line">
-                        <input type="text" id="url_event_public_invitation" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}" class="form-control" readonly="readonly">
-                    </div>
-                    <span class="input-group-btn"><button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation"><i
-                                    class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
-                </div>
-            </div>
-        </div>
-    {% endif %}
+    {% block belowInvitationForm %}
+        {% if event_public_invitation_display_block is defined %}
+            {{ event_public_invitation_display_block }}
+        {% endif %}
+    {% endblock %}
 
     <script>
         $(document).ready(function () {

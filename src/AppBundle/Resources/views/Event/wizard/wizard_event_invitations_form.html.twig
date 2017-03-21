@@ -11,15 +11,21 @@
 
 {% block action_buttons %}
     <div class="text-center">
-        <div>
-            <a href="{{ path('displayEvent',{'token':userEventInvitation.event.token}) }}" id="invitations_later" class="btn btn-flat f-700 c-blue m-b-10"
-               role="button">{{ "global.button.later"|trans }}</a>
-            <button type="submit" class="btn btn-primary m-b-10" id="invitations_sendInvitations" name="sendInvitations" value="1">{{ "event.wizard.button.send_invitations"|trans }}</button>
-        </div>
+        <button type="submit" class="btn btn-primary m-b-10" id="invitations_sendInvitations" name="sendInvitations" value="1">{{ "event.wizard.button.send_invitations"|trans }}</button>
+    </div>
+    {% if event_public_invitation_display_block is defined %}
+        {{ event_public_invitation_display_block }}
+    {% endif %}
+    <div class="text-center">
         <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_ADD_MODULE")}) }}"
            class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
+
+        <a href="{{ path('displayEvent',{'token':userEventInvitation.event.token}) }}" id="invitations_later" class="btn btn-flat f-700 c-blue m-b-10"
+           role="button">{{ "global.button.later"|trans }}</a>
     </div>
 {% endblock action_buttons %}
+
+{% block belowInvitationForm %}{% endblock %}
 
 {#<script>#}
 {% block js_document_ready %}
