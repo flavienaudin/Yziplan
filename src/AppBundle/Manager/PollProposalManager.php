@@ -40,7 +40,7 @@ class PollProposalManager
     /** @var PollProposal */
     private $pollProposal;
 
-    public function __construct(EntityManager $doctrine, FormFactoryInterface $formFactory, EngineInterface $templating, PollProposalElementManager $pollProposalElementManager )
+    public function __construct(EntityManager $doctrine, FormFactoryInterface $formFactory, EngineInterface $templating, PollProposalElementManager $pollProposalElementManager)
     {
         $this->entityManager = $doctrine;
         $this->pollProposalElementManager = $pollProposalElementManager;
@@ -125,20 +125,39 @@ class PollProposalManager
     /**
      * @param FormInterface $pollProposalForm
      * @param Module $module
+     * @param ModuleInvitation $moduleInvitation
      * @return PollProposal|mixed
      */
-    public function treatPollProposalForm(FormInterface $pollProposalForm, Module $module = null)
+    public function treatPollProposalForm(FormInterface $pollProposalForm, Module $module = null, ModuleInvitation $moduleInvitation = null)
     {
         $this->pollProposal = $pollProposalForm->getData();
-        foreach ($pollProposalForm->get('pollProposalElements') as $pollProposalElementForm){
+        foreach ($pollProposalForm->get('pollProposalElements') as $pollProposalElementForm) {
             $this->pollProposalElementManager->treatPollProposalElementForm($pollProposalElementForm);
         }
         if ($module != null && $this->pollProposal->getPollModule() == null) {
             $module->getPollModule()->addPollProposal($this->pollProposal);
         }
+        if ($moduleInvitation != null && $this->pollProposal->getCreator() == null) {
+            $this->pollProposal->setCreator($moduleInvitation);
+        }
         $this->entityManager->persist($this->pollProposal);
         $this->entityManager->flush();
         return $this->pollProposal;
+    }
+
+    /**
+     * @param FormInterface $pollProposalListForm
+     * @param Module $module
+     * @param ModuleInvitation $moduleInvitation
+     * @return Array(PollProposal)|mixed
+     */
+    public function treatPollProposalListForm(FormInterface $pollProposalListForm, Module $module = null, ModuleInvitation $moduleInvitation = null)
+    {
+        $result = array();
+        foreach ($pollProposalListForm->get('pollProposals') as $pollProposalForm) {
+            $result[] = $this->treatPollProposalForm($pollProposalForm, $module, $moduleInvitation);
+        }
+        return $result;
     }
 
     /**

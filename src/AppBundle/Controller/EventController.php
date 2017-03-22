@@ -897,10 +897,12 @@ class EventController extends Controller
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         } else if ($pollProposalListAddForm->isValid()) {
-                            $data=null;
-                            /*$pollProposalManager = $this->get('at.manager.pollproposal');
-                            $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
-                            $data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
+                            $pollProposalManager = $this->get('at.manager.pollproposal');
+                            $pollProposals = $pollProposalManager->treatPollProposalListForm($pollProposalListAddForm, $moduleDescription['module'], $userModuleEventInvitation);
+                            /**
+                             * TODO :
+                             */
+                            /*$data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
 
                             // Form reset
                             $pollProposalAddForm = $pollProposalManager->createPollProposalAddForm($moduleDescription['module']->getPollModule(), $userModuleEventInvitation);
@@ -911,6 +913,7 @@ class EventController extends Controller
                                     'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
                                     'edition' => false
                                 ));*/
+                            $data = null;
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
                             $data=null;

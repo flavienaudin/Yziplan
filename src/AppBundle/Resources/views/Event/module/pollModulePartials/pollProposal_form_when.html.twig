@@ -119,9 +119,6 @@
                                 <a class="btn btn-link btn-icon-text c-blue p-l-0" href="#"> <i class="zmdi zmdi-plus-square"></i>Ajouter un horaire</a>
                             </div>
                         </div>
-                        <div class="center-block col-xs-12 m-t-10">
-                            <a class="btn btn-link btn-icon-text c-blue p-l-0" href="#"> <i class="zmdi zmdi-plus-square"></i>Ajouter une série de date</a>
-                        </div>
                     </div>
                     <div class="pull-right">
                         <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
@@ -132,7 +129,7 @@
                     {{ form_start(pollProposalListForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_list_form_id"}}) }}
                     <div id="{{ pp_form_modal_prefix }}-add-date-container"
                          data-prototype="{{ form_widget(pollProposalListForm.pollProposals.vars.prototype)|e }}"
-                         data_index="0">
+                         data-index="0">
                     </div>
                     {{ form_rest(pollProposalListForm) }}
                     <div class="pull-right">

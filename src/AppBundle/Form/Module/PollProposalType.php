@@ -20,25 +20,28 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PollProposalType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add("pollProposalElements", CollectionType::class, array(
-                'entry_type' => PollProposalElementType::class,
-                'required' => false,
-                'mapped' => true,
-                'by_reference' => false
-            ))
             ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
                 /** @var PollProposal $pollProposal */
                 $pollProposal = $formEvent->getData();
-                if (!empty($pollProposal->getId())) {
-                    /** @var FormInterface $form */
-                    $form = $formEvent->getForm();
+
+                /** @var FormInterface $form */
+                $form = $formEvent->getForm();
+                $form->add("pollProposalElements", CollectionType::class, array(
+                    'entry_type' => PollProposalElementType::class,
+                    'required' => false,
+                    'mapped' => true,
+                    'by_reference' => false,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'prototype' => true
+                ));
+                if (($pollProposal != null) && !empty($pollProposal->getId())) {
                     $form->add('id', HiddenType::class, array(
-                        'disabled' => true
-                    ));
+                            'disabled' => true
+                        ));
                 }
             });
     }
@@ -49,4 +52,5 @@ class PollProposalType extends AbstractType
             'data_class' => PollProposal::class
         ));
     }
+
 }
