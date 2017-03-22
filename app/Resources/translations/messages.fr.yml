@@ -536,6 +536,13 @@ duplication:
   message:
     error: Vous n'êtes pas autorisé à dupliquer cet événement
 
+notifications:
+  side_panel:
+    title: Notifications
+    none: Pas de notitication en attente
+  comment: "%number_new_comments% nouveau commentaire sur \"%subject_name%\"|%number_new_comments% nouveaux commentaires sur \"subject_name\""
+
+
 # Globals
 global:
   project_name: Yziplan

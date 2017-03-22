@@ -19,6 +19,7 @@ use AppBundle\Security\EventVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\Notifications\Notification;
 use AppBundle\Utils\Response\AppJsonResponse;
 use AppBundle\Utils\Response\FileInputJsonResponse;
 use ATUserBundle\Entity\AccountUser;
@@ -254,6 +255,9 @@ class EventController extends Controller
         $eventManager = $this->get('at.manager.event');
         $eventManager->setEvent($currentEvent);
 
+        /** @var $notifications array Tableau de notifications {idx => Notification} */
+        $notifications = array();
+
         /////////////////////////////////////
         // User EventInvitation management //
         /////////////////////////////////////
@@ -352,6 +356,10 @@ class EventController extends Controller
             $thread = $discussionManager->createCommentableThread($currentEvent);
         }
         $comments = $discussionManager->getCommentsThread($thread);
+        $eventThreadNotif = $discussionManager->getNotification($userEventInvitation, $comments);
+        if ($eventThreadNotif != null) {
+            array_push($notifications, $eventThreadNotif);
+        }
 
         ////////////////////////
         // Edition management //
@@ -619,7 +627,7 @@ class EventController extends Controller
         ////////////////////////
         $modules = $eventManager->getModulesToDisplay($userEventInvitation);
         $response = $this->treatModulesToDisplay($currentEvent, $modules, $userEventInvitation, $request);
-        if ($response != null) {
+        if ($response instanceof Response) {
             return $response;
         }
 
@@ -629,6 +637,12 @@ class EventController extends Controller
             $redirectedAfterEventDuplication = true;
             $request->getSession()->remove(self::REDIRECTED_AFTER_EVENT_DUPLICATION);
         }
+
+        uasort($notifications, array(Notification::class, 'compare'));
+
+        // Set last visit
+        $eventInvitationManager->updateLastVisit($userEventInvitation);
+
         return $this->render('AppBundle:Event:event.html.twig', array(
             'event' => $currentEvent,
             'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
@@ -641,7 +655,8 @@ class EventController extends Controller
             'userEventInvitation' => $userEventInvitation,
             'userEventInvitationForm' => $eventInvitationForm->createView(),
             'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView(),
-            'redirectedAfterEventDuplication' => $redirectedAfterEventDuplication
+            'redirectedAfterEventDuplication' => $redirectedAfterEventDuplication,
+            'notifications' => $notifications
         ));
     }
 

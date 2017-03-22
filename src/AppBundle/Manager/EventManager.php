@@ -438,6 +438,4 @@ class EventManager
         }
         return $modules;
     }
-
-
 }

@@ -1,0 +1,17 @@
+{# Données d'entrée :
+- notification (Notification) La notification à afficher
+#}
+
+<div class="">
+    {% if notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::COMMENT') %}
+        {{ "notifications.comment"|transchoice(notification.datas.new_comments_number, {
+            '%subject_name%':notification.datas.subject_name,
+            '%number_new_comments%':notification.datas.new_comments_number
+        }) }}
+
+    {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::MODULE') %}
+
+    {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::POLL_PROPOSAL') %}
+
+    {% endif %}
+</div>

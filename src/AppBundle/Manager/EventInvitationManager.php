@@ -170,6 +170,23 @@ class EventInvitationManager
     }
 
     /**
+     * Update the EventInvitation lastVisitAt and persist it
+     * @param EventInvitation|null $eventInvitation
+     * @return bool
+     */
+    public function updateLastVisit(EventInvitation $eventInvitation = null)
+    {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        if ($this->eventInvitation != null) {
+            $this->eventInvitation->setLastVisitAt(new \DateTime());
+            return $this->persistEventInvitation();
+        }
+        return false;
+    }
+
+    /**
      * Initialise une EventInvitation pour un événement et un ApplicationUser (connecté ou non).
      * L'EventInvitation n'est pas persistée en base de données.
      * @param Event $event
