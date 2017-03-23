@@ -165,7 +165,11 @@
                         {{ form_row(eventForm.template, {
                             'label' : 'event.form.template.label'
                         }) }}
-                        <p>{{ "event.form.template.instructions"|trans }}</p>
+                        <p class="m-l-20"><i>{{ "event.form.template.instructions"|trans }}</i></p>
+                        {{ form_row(eventForm.askDirectory, {
+                            'label' : 'event.form.ask_directory.label'
+                        }) }}
+                        <p class="m-l-20"><i>{{ "event.form.ask_directory.instructions"|trans }}</i> <a href="{{ path('directoryIndex') }}" target="_blank">{{ "event.form.ask_directory.link"|trans }}</a></p>
                     </div>
                 {% endif %}
             </div>
