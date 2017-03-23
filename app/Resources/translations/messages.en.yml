@@ -544,8 +544,10 @@ duplication:
 notifications:
   side_panel:
     title: Notifications
+    action:
+      mark_all: Mark all
     none: No unread notitication
-  comment: "%number_new_comments% new comment on \"%subject_name%\"|%number_new_comments% new comments on \"subject_name\""
+  comment: "%number_new_comments% new comment|%number_new_comments% new comments"
 
 
 # Globals

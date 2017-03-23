@@ -33,13 +33,17 @@
 
             {#Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
             <div class="hmp-alert" data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
-                <a href="#"><i class="hm-icon zmdi {{ notifications|length>0?'zmdi-notifications':'zmdi-notifications-none' }}"></i></a>
+                <a><i class="hm-icon zmdi {{ notifications|length>0?'zmdi-notifications':'zmdi-notifications-none' }}"></i></a>
             </div>
         </li>
     {% endif %}
 {% endblock %}
 
 {% if notifications is defined %}
+    {% block notifications_side_panel_top_links %}
+        <li><a href="{{ path('markAll', {'token':event.token}) }}" id="mark_all_notifications"><i class="zmdi zmdi-check-all"></i>{{ "notifications.side_panel.action.mark_all"|trans }}</a></li>
+    {% endblock %}
+
     {% block notifications_side_panel_content %}
         {{ include('@App/Notifications/notifications_side_panel.html.twig', {'notifications':notifications}) }}
     {% endblock notifications_side_panel_content %}
@@ -162,6 +166,18 @@
                 }
                 LetterAvatar.transform();
             });
+
+            {% if notifications is defined %}
+            $('#mark_all_notifications').on('click', function (e) {
+                ajaxRequest($(this), null, e, function () {
+                    $('.lgi-notification').remove();
+                    $('[data-user-alert="sua-notifications"]').find('i').each(function () {
+                        $(this).removeClass('zmdi-notifications');
+                        $(this).addClass('zmdi-notifications-none');
+                    });
+                })
+            });
+            {% endif %}
         });
     </script>
 

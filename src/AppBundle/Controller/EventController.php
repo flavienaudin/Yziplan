@@ -641,7 +641,7 @@ class EventController extends Controller
         uasort($notifications, array(Notification::class, 'compare'));
 
         // Set last visit
-        $eventInvitationManager->updateLastVisit($userEventInvitation);
+        //$eventInvitationManager->updateLastVisit($userEventInvitation);
 
         return $this->render('AppBundle:Event:event.html.twig', array(
             'event' => $currentEvent,

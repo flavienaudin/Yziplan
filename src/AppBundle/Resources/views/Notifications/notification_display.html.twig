@@ -2,16 +2,27 @@
 - notification (Notification) La notification à afficher
 #}
 
-<div class="">
+<li class="list-group-item media lgi-notification">
     {% if notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::COMMENT') %}
-        {{ "notifications.comment"|transchoice(notification.datas.new_comments_number, {
-            '%subject_name%':notification.datas.subject_name,
-            '%number_new_comments%':notification.datas.new_comments_number
-        }) }}
-
+        <div class="media">
+            <div class="pull-left">
+            <span class="zmdi-hc-stack zmdi-hc-lg">
+                <i class="zmdi zmdi-square-o zmdi-hc-stack-2x"></i>
+                <i class="zmdi zmdi-comment-text zmdi-hc-stack-1x"></i>
+            </span>
+            </div>
+            <div class="media-body">
+                <div class="lgi-heading">{{ notification.datas.subject_name }}</div>
+                <small class="lgi-text">
+                    {{ "notifications.comment"|transchoice(notification.datas.new_comments_number, {
+                        '%subject_name%':notification.datas.subject_name,
+                        '%number_new_comments%':notification.datas.new_comments_number
+                    }) }}</small>
+            </div>
+        </div>
     {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::MODULE') %}
 
     {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::POLL_PROPOSAL') %}
 
     {% endif %}
-</div>
+</li>

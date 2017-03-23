@@ -543,8 +543,10 @@ duplication:
 notifications:
   side_panel:
     title: Notifications
+    action:
+      mark_all: Toutes lues
     none: Pas de notitication en attente
-  comment: "%number_new_comments% nouveau commentaire sur \"%subject_name%\"|%number_new_comments% nouveaux commentaires sur \"subject_name\""
+  comment: "%number_new_comments% nouveau commentaire|%number_new_comments% nouveaux commentaires"
 
 
 # Globals

@@ -374,6 +374,14 @@ a.collapsed[data-toggle=collapse] [class*=zmdi-minus] {
     display: none;
 }
 
+
+/*----------------------------------
+    Event Notifications
+-----------------------------------*/
+#notificationsSidePanel > li#notification-none:not(:first-child){
+    display: none;
+}
+
 /*----------------------------------
     Event Picture
 -----------------------------------*/
@@ -473,7 +481,7 @@ h1.event-title {
 }
 
 /*----------------------------------
-    Event Invitation Aswer
+    Event Invitation Answer
 -----------------------------------*/
 
 .answer-form [class*=btn-answer] {
