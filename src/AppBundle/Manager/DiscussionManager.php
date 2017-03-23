@@ -12,6 +12,7 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Comment\Comment;
 use AppBundle\Entity\Comment\CommentableInterface;
 use AppBundle\Entity\Comment\Thread;
+use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Utils\Notifications\Notification;
 use Doctrine\ORM\EntityManager;
@@ -123,7 +124,7 @@ class DiscussionManager
      * @param $comments array Les commentaires concernés
      * @return Notification
      */
-    public function getNotification(EventInvitation $eventInvitation, $comments)
+    public function getNotification(EventInvitation $eventInvitation, $comments, $subject)
     {
         $new_comments_cpt = 0;
         $first_new_comments_date = new \DateTime();
@@ -143,7 +144,7 @@ class DiscussionManager
             $notif->setType(\AppBundle\Utils\enum\NotificationTypeEnum::COMMENT);
             $notif->setDatas(array(
                 "new_comments_number" => $new_comments_cpt,
-                "subject_name" => $eventInvitation->getEvent()->getName()
+                "subject" => $subject
             ));
             return $notif;
         }

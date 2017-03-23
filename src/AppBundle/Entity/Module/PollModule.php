@@ -193,7 +193,7 @@ class PollModule
      */
     public function addPollElements(ArrayCollection $pollElements)
     {
-        foreach ($pollElements as $pollElement){
+        foreach ($pollElements as $pollElement) {
             $this->addPollElement($pollElement);
         }
         return $this;
@@ -236,13 +236,10 @@ class PollModule
      */
     public function getPollProposalById($pollProposalId)
     {
-        /** @var PollProposal $pollProposal */
-        foreach ($this->pollProposals as $pollProposal) {
-            if ($pollProposal->getId() == $pollProposalId) {
-                return $pollProposal;
-            }
-        }
-        return null;
+        $criteria = Criteria::create()->where(
+            Criteria::expr()->eq('id', $pollProposalId)
+        );
+        return $this->pollProposals->matching($criteria)->get(0);
     }
 
     public function getValidPollProposal()
@@ -256,7 +253,6 @@ class PollModule
         );
         return $this->pollProposals->matching($criteria);
     }
-
 
     /**
      * @return ArrayCollection

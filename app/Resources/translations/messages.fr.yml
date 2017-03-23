@@ -547,6 +547,8 @@ notifications:
       mark_all: Toutes lues
     none: Pas de notitication en attente
   comment: "%number_new_comments% nouveau commentaire|%number_new_comments% nouveaux commentaires"
+  new_module: "%organizers% a ajouté un nouveau sondage|%organizers% ont ajouté un nouveau sondage"
+  new_pollproposal: "%organizer% a ajouté une nouvel proposition"
 
 
 # Globals

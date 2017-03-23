@@ -360,7 +360,7 @@ class EventController extends Controller
             $thread = $discussionManager->createCommentableThread($currentEvent);
         }
         $comments = $discussionManager->getCommentsThread($thread);
-        $eventThreadNotif = $discussionManager->getNotification($userEventInvitation, $comments);
+        $eventThreadNotif = $discussionManager->getNotification($userEventInvitation, $comments, $currentEvent);
         if ($eventThreadNotif != null) {
             array_push($notifications, $eventThreadNotif);
         }
@@ -629,7 +629,7 @@ class EventController extends Controller
         ////////////////////////
         // modules management //
         ////////////////////////
-        $modules = $eventManager->getModulesToDisplay($userEventInvitation);
+        $modules = $eventManager->getModulesToDisplay($userEventInvitation, $notifications);
         $response = $this->treatModulesToDisplay($currentEvent, $modules, $userEventInvitation, $request);
         if ($response instanceof Response) {
             return $response;

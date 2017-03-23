@@ -11,7 +11,7 @@ namespace AppBundle\Twig;
 
 use Symfony\Component\Intl\Intl;
 
-class CountryExtension extends \Twig_Extension
+class CountryTwigExtension extends \Twig_Extension
 {
     public function getFilters()
     {
