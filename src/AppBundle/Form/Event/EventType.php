@@ -81,6 +81,9 @@ class EventType extends AbstractType
             ))
             ->add("template", CheckboxType::class, array(
                 'required' => false
+            ))
+            ->add("askDirectory", CheckboxType::class, array(
+                'required' => false
             ));
     }
 
