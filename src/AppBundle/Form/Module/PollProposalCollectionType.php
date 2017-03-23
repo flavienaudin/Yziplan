@@ -28,23 +28,26 @@ class PollProposalCollectionType extends AbstractType
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
             /** @var FormInterface $form */
             $form = $formEvent->getForm();
-            $data = $formEvent->getData();
-            if (key_exists('pollModule', $data)) {
-                $this->setPollModule($data['pollModule']);
-            }
-            if (key_exists('moduleInvitation', $data)) {
-                $this->setPollModuleInvitation($data['moduleInvitation']);
-            }
+
+            /** @var PollModule $pollModule */
+            $pollModule = $formEvent->getData();
+            $newPollProposal = new PollProposal();
+            $newPollProposal ->initializeWithPollModule($pollModule);
+//            if (key_exists('pollModule', $data)) {
+//                $this->setPollModule($data['pollModule']);
+//            }
+//            if (key_exists('moduleInvitation', $data)) {
+//                $this->setPollModuleInvitation($data['moduleInvitation']);
+//            }
 
             $form->add("pollProposals", CollectionType::class, array(
                 'entry_type' => PollProposalType::class,
                 'required' => false,
                 'mapped' => false,
-                'by_reference' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
-                'prototype_data' => $this->getPollProposalElementForPrototype()
+                'prototype_data' => $newPollProposal
             ));
         });
     }

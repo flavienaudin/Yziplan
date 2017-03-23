@@ -913,10 +913,11 @@ class EventController extends Controller
                                     'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
                                     'edition' => false
                                 ));*/
-                            $data = null;
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] =  "form valid";
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
                             $data=null;
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = 'error form invald';
                            /* $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
                                 $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
                                     'userModuleInvitation' => $userModuleEventInvitation,
@@ -932,7 +933,7 @@ class EventController extends Controller
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                             return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . '#module-' . $moduleDescription['module']->getToken());
                         } else if ($pollProposalListAddForm->isValid()) {
-                            $this->get('at.manager.pollproposal')->treatPollProposalForm($pollProposalListAddForm, $moduleDescription['module']);
+                            $this->get('at.manager.pollproposal')->treatPollProposalListForm($pollProposalListAddForm, $moduleDescription['module']);
                             return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . '#module-' . $moduleDescription['module']->getToken());
                         }
                     }

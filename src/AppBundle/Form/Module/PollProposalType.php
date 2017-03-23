@@ -9,6 +9,7 @@
 namespace AppBundle\Form\Module;
 
 use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Entity\Module\PollProposalElement;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -29,19 +30,18 @@ class PollProposalType extends AbstractType
 
                 /** @var FormInterface $form */
                 $form = $formEvent->getForm();
+
                 $form->add("pollProposalElements", CollectionType::class, array(
                     'entry_type' => PollProposalElementType::class,
                     'required' => false,
                     'mapped' => true,
-                    'by_reference' => false,
-                    'allow_add' => true,
-                    'allow_delete' => true,
-                    'prototype' => true
+                    'by_reference' => false
                 ));
+
                 if (($pollProposal != null) && !empty($pollProposal->getId())) {
                     $form->add('id', HiddenType::class, array(
-                            'disabled' => true
-                        ));
+                        'disabled' => true
+                    ));
                 }
             });
     }

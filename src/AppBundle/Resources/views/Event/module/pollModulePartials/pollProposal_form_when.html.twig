@@ -125,13 +125,25 @@
                         <button id="{{ pp_form_modal_prefix }}-next-date-button" type="submit" class="btn btn-primary">{{ "global.button.nextStep"|trans }}</button>
                     </div>
                 </div>
-                <div id="{{ pp_form_modal_prefix }}SeveralDate2" class="hidden">
+                <div id="{{ pp_form_modal_prefix }}SeveralDate2" class="">
                     {{ form_start(pollProposalListForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_list_form_id"}}) }}
+
+                    {{ form_label(pollProposalListForm.pollProposals, null, {'class':'sr-only'}) }}
+                    {{ form_errors(pollProposalListForm.pollProposals) }}
+
                     <div id="{{ pp_form_modal_prefix }}-add-date-container"
                          data-prototype="{{ form_widget(pollProposalListForm.pollProposals.vars.prototype)|e }}"
-                         data-index="0">
+                         data-index="{{ pollProposalListForm.pollProposals|length }}">
+                        {% for pollProposal in pollProposalListForm.pollProposals %}
+                            {{ form_widget(pollProposal) }}
+                        {% endfor %}
                     </div>
-                    {{ form_rest(pollProposalListForm) }}
+
+                    <div>
+                        <p>Form rest</p>
+                        {{ form_rest(pollProposalListForm) }}
+                    </div>
+
                     <div class="pull-right">
                         <button id="{{ pp_form_modal_prefix }}-back-date-button" type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
                         <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
@@ -169,29 +181,40 @@
                     $('#{{ pp_form_modal_prefix }}Datepicker').datepicker('getFormattedDate')
                 );
             });
+
+            $("#{{ pp_form_modal_prefix }}_list_form_id").on ("submit", function(e){
+
+               ajaxFormSubmission($(this), e, null, null, null);
+            });
         })
     </script>
    <script>
         $(document).ready(function () {
             var container = $('#{{ pp_form_modal_prefix }}-add-date-container');
+            var index = container.data('index');
+            console.log('container data-index = ' + index);
             $('#{{ pp_form_modal_prefix }}-next-date-button').click(function () {
-                $('#{{ pp_form_modal_prefix }}SeveralDate1').addClass('hidden');
+                {#$('#{{ pp_form_modal_prefix }}SeveralDate1').addClass('hidden');#}
                 var dateList = $('#{{ pp_form_modal_prefix }}Datepicker').datepicker('getFormattedDate').split(',');
+
                 dateList.forEach(function(element) {
+                    console.log("addprototype index : " + index);
                     // Get the data-prototype explained earlier
                     var prototype = container.data('prototype');
-                    var index = container.data('index');
+
                     // Replace '__name__' in the prototype's HTML to
                     // instead be a number based on how many items we have
                     var newForm = prototype.replace(/__name__/g, index);
                     // increase the index with one for the next item
-                    container.data('index', index + 1);
+                    //container.data('index', index + 1);
+                    index++;
+
                     // Display the new form
-                    var newFormDiv = $('<div class="row"></div>').append(newForm);
-                    newFormDiv.find('input:first').val(element);
-                    container.append(newFormDiv);
+                    //var newFormDiv = $('<div class="row"></div>').append(newForm);
+                    $(newForm).find('input:first').val(element);
+                    container.append($(newForm));
                 });
-                $('#{{ pp_form_modal_prefix }}SeveralDate2').removeClass('hidden');
+                {#$('#{{ pp_form_modal_prefix }}SeveralDate2').removeClass('hidden');#}
             });
 
             {# Bouton retour #}

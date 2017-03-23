@@ -106,10 +106,11 @@ class PollProposalManager
     public function createPollProposalListAddForm(PollModule $pollModule, ModuleInvitation $userModuleInvitation)
     {
         return $this->formFactory->createNamed("add_poll_proposal_list_form_" . $pollModule->getModule()->getToken(),
-            PollProposalCollectionType::class,
-            array('pollModule' => $pollModule,
+            PollProposalCollectionType::class, $pollModule
+            /*array('pollModule' => $pollModule,
                 'moduleInvitation' => $userModuleInvitation
-            ));
+            )*/
+            );
     }
 
     /**
