@@ -18,7 +18,8 @@ Données d'entrée :
 {% set userEventInvitation = userEventInvitation is defined?userEventInvitation:null %}
 
 {% block fos_comment_comment %}
-    <div id="fos_comment_{{ comment.id }}" class="fos_comment_comment_show fos_comment_comment_depth_{{ depth }} media"
+    <div id="fos_comment_{{ comment.id }}" class="fos_comment_comment_show fos_comment_comment_depth_{{ depth }} media
+        {{ userEventInvitation is not null and userEventInvitation.lastVisitAt < commentinfo.comment.createdAt ? " notif_new_comment" }}"
          {% if parent is defined and parent is not null %}data-parent="{{ parent.id }}"{% endif %}>
         {% if comment.author is defined %}
             {% set isConnected = (comment.author is not null and userEventInvitation is not null and comment.author == userEventInvitation) %}

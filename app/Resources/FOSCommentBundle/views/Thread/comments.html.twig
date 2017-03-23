@@ -18,11 +18,13 @@ Données d'entrée :
 {% set depth = depth|default(0) %}
 {% set view = view|default('flat') %}
 {% set nb_comments = 0 %}
+{% set new_comment = false %}
 
 {% set commentsListBlock %}
     <div class="wcl-list {{ depth == 0? "collapse" }}" {% if depth == 0 %}id="eventCommentListCollapse_{{ thread.id }}"{% endif %} }}>
         {% for commentinfo in comments if commentinfo.comment is not fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
             {% set nb_comments = nb_comments + 1 %}
+            {% set new_comment = new_comment or userEventInvitation.lastVisitAt < commentinfo.comment.createdAt %}
             {% include "FOSCommentBundle:Thread:comment.html.twig" with { "children": commentinfo.children, "comment": commentinfo.comment, "depth": depth, "view": view, 'userEventInvitation':userEventInvitation } %}
         {% endfor %}
     </div>
@@ -67,6 +69,10 @@ Données d'entrée :
                     $('.grid').masonry('layout');
                 }
             });
+
+            {% if new_comment %}
+            $('#eventCommentListCollapse_{{ thread.id }}').collapse('show');
+            {% endif %}
         });
     </script>
 {% endif %}

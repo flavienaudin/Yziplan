@@ -15646,6 +15646,10 @@ body.o-hidden {
     margin-bottom: 15px;
 }
 
+.wcl-list{
+    max-height: 150px;
+    overflow-y: auto;
+}
 .wcl-list + .wcl-form {
     margin-top: 25px;
 }

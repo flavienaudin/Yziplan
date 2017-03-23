@@ -374,12 +374,15 @@ a.collapsed[data-toggle=collapse] [class*=zmdi-minus] {
     display: none;
 }
 
-
 /*----------------------------------
     Event Notifications
 -----------------------------------*/
-#notificationsSidePanel > li#notification-none:not(:first-child){
+#notificationsSidePanel > li#notification-none:not(:first-child) {
     display: none;
+}
+
+.notif_new_comment {
+    background-color: #E0F2F1 !important;
 }
 
 /*----------------------------------
