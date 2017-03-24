@@ -373,24 +373,25 @@ class EventManager
      * @param $type string Le sous-type du module en fonction du type (Cf. PollModuleType et autre)
      * @return Module le module créé
      */
-    public function addModule($type, $subtype)
+    public function addModule($type, $subtype, EventInvitation $creatorEventInvitation)
     {
         $user = $this->tokenStorage->getToken()->getUser();
         if (!$user instanceof AccountUser) {
             $user = null;
         }
-        $userEventInvitation = $this->eventInvitationManager->retrieveUserEventInvitation($this->event, false, false, $user);
-        if ($userEventInvitation == null) {
+
+        if ($creatorEventInvitation == null) {
             return null;
         }
 
-        $module = $this->moduleManager->createModule($this->event, $type, $subtype, $userEventInvitation);
+        $module = $this->moduleManager->createModule($this->event, $type, $subtype, $creatorEventInvitation);
 
         // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator).
         $this->moduleInvitationManager->initializeModuleInvitationsForEvent($this->event, $module);
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
 
+        $this->eventInvitationManager->updateLastVisit($creatorEventInvitation);
 
         // Create the thread after the module affectation to its event because of the thread ID is generate with the event token
         $this->discussionManager->createCommentableThread($module);

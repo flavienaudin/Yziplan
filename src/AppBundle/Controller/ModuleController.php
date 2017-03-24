@@ -52,7 +52,7 @@ class ModuleController extends Controller
         } else {
             $eventManager = $this->get("at.manager.event");
             $eventManager->setEvent($event);
-            $module = $eventManager->addModule($type, $subtype);
+            $module = $eventManager->addModule($type, $subtype, $userEventInvitation);
             if ($request->isXmlHttpRequest()) {
                 if ($module != null) {
                     $moduleManager = $this->get('at.manager.module');
