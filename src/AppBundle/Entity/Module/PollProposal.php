@@ -253,6 +253,20 @@ class PollProposal
     }
 
     /**
+     * Affecte un pollProposalElment a ce pollProposal.
+     * A n'utiliser que pour les PollProposals ne contenant qu'un seul element (WHEN, WHAT, WHERE,...)
+     * @param PollModule $pollModule
+     */
+    public function initializeWithPollModuleAndPPElt(PollModule $pollModule, PollProposalElement $pollProposalElement)
+    {
+        $this->setPollModule($pollModule);
+        foreach ($pollModule->getOrderedPollElements() as $pollElement) {
+            $pollProposalElement->setPollElement($pollElement);
+            $this->addPollProposalElement($pollProposalElement);
+        }
+    }
+
+    /**
      * Return PollProposalReponses concerning the PollProposal, of the ModuleInvitation
      * @param $moduleInvitation
      */

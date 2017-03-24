@@ -12,9 +12,11 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Entity\Module\PollElement;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
-use AppBundle\Form\Module\PollProposalCollectionType;
+use AppBundle\Entity\Module\PollProposalElement;
+use AppBundle\Form\Module\PollProposalWhenCollectionType;
 use AppBundle\Form\Module\PollProposalType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
@@ -103,14 +105,10 @@ class PollProposalManager
      * @param ModuleInvitation $userModuleInvitation
      * @return FormInterface
      */
-    public function createPollProposalListAddForm(PollModule $pollModule, ModuleInvitation $userModuleInvitation)
+    public function createPollProposalWhenListAddForm(PollModule $pollModule)
     {
-        return $this->formFactory->createNamed("add_poll_proposal_list_form_" . $pollModule->getModule()->getToken(),
-            PollProposalCollectionType::class, $pollModule
-            /*array('pollModule' => $pollModule,
-                'moduleInvitation' => $userModuleInvitation
-            )*/
-            );
+        return $this->formFactory->createNamed("add_poll_proposal_when_list_form_" . $pollModule->getModule()->getToken(),
+            PollProposalWhenCollectionType::class);
     }
 
     /**
@@ -152,13 +150,25 @@ class PollProposalManager
      * @param ModuleInvitation $moduleInvitation
      * @return Array(PollProposal)|mixed
      */
-    public function treatPollProposalListForm(FormInterface $pollProposalListForm, Module $module = null, ModuleInvitation $moduleInvitation = null)
+    public function treatPollProposalListForm(FormInterface $pollProposalListForm, Module $module , ModuleInvitation $moduleInvitation)
     {
         $result = array();
-        foreach ($pollProposalListForm->get('pollProposals') as $pollProposalForm) {
-            $result[] = $this->treatPollProposalForm($pollProposalForm, $module, $moduleInvitation);
+        foreach ($pollProposalListForm->get('pollProposalWhenElements') as $pollProposalElementForm) {
+            /**
+             * @var $pollProposalElement PollProposalElement
+             */
+            $pollProposalElement = $pollProposalElementForm->getData();
+            $pollProposal = new PollProposal();
+            $pollProposal->initializeWithPollModuleAndPPElt($module->getPollModule(),$pollProposalElement);
+
+            $pollProposalElement = $this->pollProposalElementManager->treatPollProposalElementForm($pollProposalElementForm);
         }
-        return $result;
+        if ($moduleInvitation != null && $this->pollProposal->getCreator() == null) {
+            $this->pollProposal->setCreator($moduleInvitation);
+        }
+        $this->entityManager->persist($this->pollProposal);
+        $this->entityManager->flush();
+        return $this->pollProposal;
     }
 
     /**

@@ -128,13 +128,13 @@
                 <div id="{{ pp_form_modal_prefix }}SeveralDate2" class="">
                     {{ form_start(pollProposalListForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_list_form_id"}}) }}
 
-                    {{ form_label(pollProposalListForm.pollProposals, null, {'class':'sr-only'}) }}
-                    {{ form_errors(pollProposalListForm.pollProposals) }}
+                    {{ form_label(pollProposalListForm.pollProposalWhenElements, null, {'class':'sr-only'}) }}
+                    {{ form_errors(pollProposalListForm.pollProposalWhenElements) }}
 
                     <div id="{{ pp_form_modal_prefix }}-add-date-container"
-                         data-prototype="{{ form_widget(pollProposalListForm.pollProposals.vars.prototype)|e }}"
-                         data-index="{{ pollProposalListForm.pollProposals|length }}">
-                        {% for pollProposal in pollProposalListForm.pollProposals %}
+                         data-prototype="{{ form_widget(pollProposalListForm.pollProposalWhenElements.vars.prototype)|e }}"
+                         data-index="{{ pollProposalListForm.pollProposalWhenElements|length }}">
+                        {% for pollProposal in pollProposalListForm.pollProposalWhenElements %}
                             <div id="pollProposal_{{ pollProposal.vars.id }}_{{ loop.index }}">
                                 {{ form_label(pollProposal) }}
                                 {{ form_errors(pollProposal) }}
