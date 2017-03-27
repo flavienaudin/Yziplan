@@ -148,6 +148,11 @@ services:
       - { name: doctrine.event_listener, event: prePersist }
       - { name: doctrine.event_listener, event: preUpdate }
 
+  at.event_listener.image_resizer:
+    class: AppBundle\Utils\Listener\ImageResizerListener
+    tags:
+        - { name: kernel.event_listener, event: vich_uploader.post_upload, method: onPostUpload }
+
 # Validator Constraints
   at.validator.email_not_belong_to_useraccount:
     class: AppBundle\Validator\Constraints\EmailNotBelongToAccountUserValidator
@@ -178,3 +183,4 @@ services:
   at.manager.retour_utilisateur:
           class: AppBundle\Manager\RetourUtilisateurManager
           arguments: ['@app.mailer.twig_swift', '%trello.token_or_login%', '%trello.pass%']
+
