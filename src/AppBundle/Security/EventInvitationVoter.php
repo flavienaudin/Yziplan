@@ -65,7 +65,7 @@ class EventInvitationVoter extends Voter
             case self::CREATE:
                 /** @var Event $event */
                 $event = $subject; // $subject must be a Event instance, thanks to the supports method
-                return !$event->isInvitationOnly() && !$event->isTemplate();
+                return !$event->isInvitationOnly() /*&& !$event->isTemplate()*/;
             case self::INVITE:
                 /** @var Event $event */
                 $event = $subject; // $subject must be a Event instance, thanks to the supports method

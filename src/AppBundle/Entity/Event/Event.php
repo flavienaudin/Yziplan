@@ -182,6 +182,13 @@ class Event implements CommentableInterface
      */
     private $template = false;
 
+    /**
+     * If template is "true" and askDirectory is "true", a demand is sent to appear in yziplan directory.
+     * @var bool
+     * @ORM\Column(name="ask_directory", type="boolean")
+     */
+    private $askDirectory = false;
+
 
     /***********************************************************************
      *                      Jointures
@@ -671,6 +678,23 @@ class Event implements CommentableInterface
         $this->template = $template;
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isAskDirectory()
+    {
+        return $this->askDirectory;
+    }
+
+    /**
+     * @param bool $askDirectory
+     */
+    public function setAskDirectory($askDirectory)
+    {
+        $this->askDirectory = $askDirectory;
+    }
+
 
     /**
      * @return ArrayCollection of Event

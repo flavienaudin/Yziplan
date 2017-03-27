@@ -140,7 +140,7 @@ event:
       when_where: You already know the date and the place ? Set them right now or add a survey in next step
       see_map: See on map
     name:
-      label: Event title
+      label: Event / activity title
       placeholder: My birthday, Party, Week-end with friends...
     description:
       label: "Details"
@@ -182,6 +182,10 @@ event:
       label: Set this event as template
       instructions: |
         By setting this event as template, people in possession of the duplication link can create prefilled events and invite their guests to get organized around your activity
+      ask_directory:
+        label: Add to directory.
+        instructions: This setting send a request to add your page in Yziplan's directory.
+        link: Activities directory
     coordinates:
       link_collpase: Add more coordinates
       link_popover: Coordinates

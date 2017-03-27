@@ -140,7 +140,7 @@ event:
       when_where: Vous connaissez déjà la date et le lieu ? Fixez-les maintenant sinon vous pourrez ajouter un sondage dans une prochaine étape
       see_map: Voir sur la carte
     name:
-      label: Titre de l'événement
+      label: Titre de l'événement / activité
       placeholder: Mon anniversaire, Soirée, Week-end entre amis,...
     description:
       label: "Détails"
@@ -180,9 +180,11 @@ event:
     template:
       link_collpase: Option de modèle
       label: Faire de cet événement un modèle.
-      instructions: |
-        En faisant de cet événement un modèle, les personnes en possession du lien de duplication pourront créer des événements déjà renseignés et convier leurs invités afin de s'organiser autour
-        de votre activé.
+      instructions: En activant cette option vos visiteurs accéderont à une copie de votre page pour s'organiser autour de votre activité (Le lien de duplication vous sera fourni à la fin de cet assistant).
+    ask_directory:
+      label: Ajouter à l'annuaire.
+      instructions: Cette option enverra une demande d'ajout dans l'annuaire d'activités Yziplan.
+      link: Annuaire d'activités
     coordinates:
       link_collpase: Ajouter des coordonnées
       link_popover: Coordonnées
