@@ -57,16 +57,10 @@ class PollModuleController extends Controller
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else {
                     if ($pollProposalEditionForm->isValid()) {
-                        $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalEditionForm);
+                        $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalEditionForm, $moduleInvitation->getModule());
                         // Mise à jour des pollProposalElement avec un Fichier pour
                         $em = $this->get('doctrine.orm.entity_manager');
                         $em->refresh($pollProposal);
-                        /** @var PollProposalElement $ppe */
-                        foreach ($pollProposal->getPollProposalElements() as $ppe) {
-                            if ($ppe->getPollElement()->getType() == PollElementType::PICTURE) {
-                                $em->refresh($ppe);
-                            }
-                        }
 
                         $pollProposalEditionForm = $pollProposalManager->createPollProposalForm($pollProposal);
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#pollProposalEdition_" . $pollProposal->getId() . "_form_id"] =

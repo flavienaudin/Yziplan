@@ -3,12 +3,10 @@
 namespace AppBundle\Entity\Module;
 
 use AppBundle\Entity\Event\ModuleInvitation;
-use AppBundle\Utils\enum\PollElementType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
@@ -17,6 +15,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *
  * @ORM\Table(name="module_poll_proposal")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\Module\PollProposalRepository")
+ * @Vich\Uploadable
  */
 class PollProposal
 {

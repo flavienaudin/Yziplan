@@ -92,10 +92,9 @@ class PollProposalManager
 
     /**
      * @param PollModule $pollModule
-     * @param ModuleInvitation $userModuleInvitation
      * @return FormInterface
      */
-    public function createPollProposalAddForm(PollModule $pollModule, ModuleInvitation $userModuleInvitation)
+    public function createPollProposalAddForm(PollModule $pollModule)
     {
         if ($pollModule->getType() === PollModuleType::WHEN) {
             return $this->formFactory->createNamed("add_poll_proposal_form_" . $pollModule->getModule()->getToken(), PollProposalWhenType::class);
@@ -112,7 +111,6 @@ class PollProposalManager
 
     /**
      * @param PollModule $pollModule
-     * @param ModuleInvitation $userModuleInvitation
      * @return FormInterface
      */
     public function createPollProposalListAddForm(PollModule $pollModule)
@@ -132,7 +130,18 @@ class PollProposalManager
     public function createPollProposalForm(PollProposal $pollProposal)
     {
         $this->pollProposal = $pollProposal;
-        return $this->formFactory->createNamed("poll_proposal_form_" . $pollProposal->getId(), PollProposalType::class, $pollProposal);
+        $pollModule = $this->pollProposal->getPollModule();
+        if ($pollModule->getType() === PollModuleType::WHEN) {
+            return $this->formFactory->createNamed("poll_proposal_form_" . $pollProposal->getId(), PollProposalWhenType::class, $pollProposal);
+        } else if ($pollModule->getType() === PollModuleType::WHAT || $pollModule->getType() === PollModuleType::WHO_BRINGS_WHAT) {
+            return $this->formFactory->createNamed("poll_proposal_form_" . $pollProposal->getId(), PollProposalWhatType::class, $pollProposal);
+        } else if ($pollModule->getType() === PollModuleType::WHERE) {
+            return $this->formFactory->createNamed("poll_proposal_form_" . $pollProposal->getId(), PollProposalWhereType::class, $pollProposal);
+        } else if ($pollModule->getType() === PollModuleType::ACTIVITY) {
+            return $this->formFactory->createNamed("poll_proposal_form_" . $pollProposal->getId(), PollProposalActivityType::class, $pollProposal);
+        } else {
+            return $this->formFactory->createNamed("poll_proposal_form_" . $pollProposal->getId(), PollProposalType::class, $pollProposal);
+        }
     }
 
     /**
