@@ -846,7 +846,7 @@ class EventController extends Controller
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         } else if ($pollProposalAddForm->isValid()) {
                             $pollProposalManager = $this->get('at.manager.pollproposal');
-                            $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
+                            $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module'],$userModuleEventInvitation);
                             $data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
 
                             // Form reset
@@ -875,7 +875,7 @@ class EventController extends Controller
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                             return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . '#module-' . $moduleDescription['module']->getToken());
                         } else if ($pollProposalAddForm->isValid()) {
-                            $this->get('at.manager.pollproposal')->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
+                            $this->get('at.manager.pollproposal')->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module'],$userModuleEventInvitation);
                             return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . '#module-' . $moduleDescription['module']->getToken());
                         }
                     }

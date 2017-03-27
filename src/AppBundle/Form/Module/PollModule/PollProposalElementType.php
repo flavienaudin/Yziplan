@@ -6,7 +6,7 @@
  * Time: 10:37
  */
 
-namespace AppBundle\Form\Module;
+namespace AppBundle\Form\Module\PollModule;
 
 
 use AppBundle\Entity\Module\PollProposalElement;

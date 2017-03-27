@@ -12,12 +12,16 @@ namespace AppBundle\Manager;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
-use AppBundle\Entity\Module\PollElement;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
-use AppBundle\Entity\Module\PollProposalElement;
-use AppBundle\Form\Module\PollProposalWhenCollectionType;
-use AppBundle\Form\Module\PollProposalType;
+use AppBundle\Form\Module\PollModule\PollProposalActivityType;
+use AppBundle\Form\Module\PollModule\PollProposalWhatType;
+use AppBundle\Form\Module\PollModule\PollProposalWhenCollectionType;
+use AppBundle\Form\Module\PollModule\PollProposalType;
+use AppBundle\Form\Module\PollModule\PollProposalWhenType;
+use AppBundle\Form\Module\PollModule\PollProposalWhereType;
+use AppBundle\Utils\enum\PollModuleType;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -93,11 +97,17 @@ class PollProposalManager
      */
     public function createPollProposalAddForm(PollModule $pollModule, ModuleInvitation $userModuleInvitation)
     {
-        $this->pollProposal = new PollProposal();
-        $this->pollProposal->setCreator($userModuleInvitation);
-        $this->pollProposal->initializeWithPollModule($pollModule);
-
-        return $this->formFactory->createNamed("add_poll_proposal_form_" . $pollModule->getModule()->getToken(), PollProposalType::class, $this->pollProposal);
+        if ($pollModule->getType() === PollModuleType::WHEN) {
+            return $this->formFactory->createNamed("add_poll_proposal_form_" . $pollModule->getModule()->getToken(), PollProposalWhenType::class);
+        } else if ($pollModule->getType() === PollModuleType::WHAT || $pollModule->getType() === PollModuleType::WHO_BRINGS_WHAT) {
+            return $this->formFactory->createNamed("add_poll_proposal_form_" . $pollModule->getModule()->getToken(), PollProposalWhatType::class);
+        } else if ($pollModule->getType() === PollModuleType::WHERE) {
+            return $this->formFactory->createNamed("add_poll_proposal_form_" . $pollModule->getModule()->getToken(), PollProposalWhereType::class);
+        } else if ($pollModule->getType() === PollModuleType::ACTIVITY) {
+            return $this->formFactory->createNamed("add_poll_proposal_form_" . $pollModule->getModule()->getToken(), PollProposalActivityType::class);
+        } else {
+            return $this->formFactory->createNamed("add_poll_proposal_form_" . $pollModule->getModule()->getToken(), PollProposalType::class);
+        }
     }
 
     /**
@@ -105,10 +115,14 @@ class PollProposalManager
      * @param ModuleInvitation $userModuleInvitation
      * @return FormInterface
      */
-    public function createPollProposalWhenListAddForm(PollModule $pollModule)
+    public function createPollProposalListAddForm(PollModule $pollModule)
     {
-        return $this->formFactory->createNamed("add_poll_proposal_when_list_form_" . $pollModule->getModule()->getToken(),
-            PollProposalWhenCollectionType::class);
+        if ($pollModule->getType() === PollModuleType::WHEN) {
+            return $this->formFactory->createNamed("add_poll_proposal_list_form_" . $pollModule->getModule()->getToken(),
+                PollProposalWhenCollectionType::class);
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -127,21 +141,21 @@ class PollProposalManager
      * @param ModuleInvitation $moduleInvitation
      * @return PollProposal|mixed
      */
-    public function treatPollProposalForm(FormInterface $pollProposalForm, Module $module = null, ModuleInvitation $moduleInvitation = null)
+    public function treatPollProposalForm(FormInterface $pollProposalForm, Module $module, ModuleInvitation $moduleInvitation = null)
     {
-        $this->pollProposal = $pollProposalForm->getData();
-        foreach ($pollProposalForm->get('pollProposalElements') as $pollProposalElementForm) {
-            $this->pollProposalElementManager->treatPollProposalElementForm($pollProposalElementForm);
+        /**
+         * @var $pollProposal PollProposal
+         */
+        $pollProposal = $this->treatPollProposalWhenForm($pollProposalForm, $module->getPollModule()->getType());
+        if ($pollProposal->getCreator() == null) {
+            $pollProposal->setCreator($moduleInvitation);
         }
-        if ($module != null && $this->pollProposal->getPollModule() == null) {
-            $module->getPollModule()->addPollProposal($this->pollProposal);
+        if ($pollProposal->getPollModule() == null) {
+            $pollProposal->setPollModule($module->getPollModule());
         }
-        if ($moduleInvitation != null && $this->pollProposal->getCreator() == null) {
-            $this->pollProposal->setCreator($moduleInvitation);
-        }
-        $this->entityManager->persist($this->pollProposal);
+        $this->entityManager->persist($pollProposal);
         $this->entityManager->flush();
-        return $this->pollProposal;
+        return $pollProposal;
     }
 
     /**
@@ -150,25 +164,13 @@ class PollProposalManager
      * @param ModuleInvitation $moduleInvitation
      * @return Array(PollProposal)|mixed
      */
-    public function treatPollProposalListForm(FormInterface $pollProposalListForm, Module $module , ModuleInvitation $moduleInvitation)
+    public function treatPollProposalListForm(FormInterface $pollProposalListForm, Module $module, ModuleInvitation $moduleInvitation)
     {
         $result = array();
-        foreach ($pollProposalListForm->get('pollProposalWhenElements') as $pollProposalElementForm) {
-            /**
-             * @var $pollProposalElement PollProposalElement
-             */
-            $pollProposalElement = $pollProposalElementForm->getData();
-            $pollProposal = new PollProposal();
-            $pollProposal->initializeWithPollModuleAndPPElt($module->getPollModule(),$pollProposalElement);
-
-            $pollProposalElement = $this->pollProposalElementManager->treatPollProposalElementForm($pollProposalElementForm);
+        foreach ($pollProposalListForm->get('pollProposalWhens') as $pollProposalForm) {
+            $result[] = $this->treatPollProposalForm($pollProposalForm, $module, $moduleInvitation);
         }
-        if ($moduleInvitation != null && $this->pollProposal->getCreator() == null) {
-            $this->pollProposal->setCreator($moduleInvitation);
-        }
-        $this->entityManager->persist($this->pollProposal);
-        $this->entityManager->flush();
-        return $this->pollProposal;
+        return $result;
     }
 
     /**
@@ -182,5 +184,82 @@ class PollProposalManager
         $this->entityManager->persist($this->pollProposal);
         $this->entityManager->flush();
         return $this->pollProposal;
+    }
+
+    /**
+     * @param FormInterface $pollProposalForm
+     * @param  $pollModuleType
+     * @return PollProposal|mixed
+     * @internal param Module $module
+     */
+    public function treatPollProposalWhenForm(FormInterface $pollProposalForm, $pollModuleType)
+    {
+        $this->pollProposal = $pollProposalForm->getData();
+        if ($pollModuleType == PollModuleType::WHEN) {
+            $datetimeValue = new DateTime();
+            /** @var array $valDate (e.g. array('year' => 2011, 'month' => 06, 'day' => 05)) */
+            $valDate = $pollProposalForm->get('startDate')->getData();
+            /** @var array $valTime (e.g. array('hour' => 12, 'minute' => 17, 'second' => 26)) */
+            $valTime = $pollProposalForm->get('startTime')->getData();
+
+            if ($this->castArrayValuesToInt($valDate)) {
+                $datetimeValue->setDate($valDate['year'], $valDate['month'], $valDate['day']);
+            }
+            if ($this->castArrayValuesToInt($valTime)) {
+                $datetimeValue->setTime((int)$valTime['hour'], (int)$valTime['minute']);
+                $this->pollProposal->setTime(true);
+            } else {
+                $this->pollProposal->setTime(false);
+            }
+            $this->pollProposal->setValDatetime($datetimeValue);
+
+            //EndDate Case
+            $endDatetimeValue = new DateTime();
+            /** @var array $valEndDate (e.g. array('year' => 2011, 'month' => 06, 'day' => 05)) */
+            $valEndDate = $pollProposalForm->get('endDate')->getData();
+            /** @var array $valEndTime (e.g. array('hour' => 12, 'minute' => 17, 'second' => 26)) */
+            $valEndTime = $pollProposalForm->get('endTime')->getData();
+
+            if ($this->castArrayValuesToInt($valEndDate)) {
+                $endDatetimeValue->setDate($valEndDate['year'], $valEndDate['month'], $valEndDate['day']);
+                $this->pollProposal->setEndDate(true);
+            } else {
+                $this->pollProposal->setEndDate(false);
+            }
+            if ($this->castArrayValuesToInt($valEndTime)) {
+                $endDatetimeValue->setTime($valEndTime['hour'], $valEndTime['minute']);
+                $this->pollProposal->setEndTime(true);
+            } else {
+                $this->pollProposal->setEndTime(false);
+            }
+            $this->pollProposal->setValEndDatetime($endDatetimeValue);
+        }
+        return $this->pollProposal;
+    }
+
+    /**
+     * Cast to int each values in the array
+     * @param $array array with all values to cast
+     * @return bool true if all values were casted Else false
+     */
+    private function castArrayValuesToInt(&$array)
+    {
+        $valid = true;
+        $newValues = array();
+        foreach (array_keys($array) as $key) {
+            if ($array[$key] != "") {
+                $newValues[$key] = (int)$array[$key];
+            } else {
+                $valid &= false;
+            }
+        }
+        if ($valid) {
+            foreach (array_keys($array) as $key) {
+                $array[$key] = $newValues[$key];
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 }

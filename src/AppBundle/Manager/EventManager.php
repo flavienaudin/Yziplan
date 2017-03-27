@@ -431,7 +431,7 @@ class EventManager
                         if ($module->getPollModule() != null) {
                             // TODO Vérifier les autorisations d'ajouter des propositions au module
                         $moduleDescription['pollModuleOptions']['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation);
-                        $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalWhenListAddForm($module->getPollModule());
+                        $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
                         }
                         $modules[$module->getId()] = $moduleDescription;
                     }
