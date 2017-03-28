@@ -170,6 +170,13 @@ class Event implements CommentableInterface
     private $guestsCanAddModule = true;
 
     /**
+     * If "true" the event is created by an activity provider
+     * @var bool
+     * @ORM\Column(name="activity_provider", type="boolean")
+     */
+    private $activityProvider = false;
+
+    /**
      * If "true" the event is consider as template and can be duplicated to organized other events (for professionals)
      * @var bool
      * @ORM\Column(name="template", type="boolean")
@@ -640,6 +647,24 @@ class Event implements CommentableInterface
     /**
      * @return bool
      */
+    public function isActivityProvider()
+    {
+        return $this->activityProvider;
+    }
+
+    /**
+     * @param bool $activityProvider
+     * @return Event
+     */
+    public function setActivityProvider($activityProvider)
+    {
+        $this->activityProvider = $activityProvider;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
     public function isTemplate()
     {
         return $this->template;
@@ -694,10 +719,10 @@ class Event implements CommentableInterface
      */
     public function setEventParent($eventParent)
     {
-        if($this->getEventParent() != null && $eventParent == null){
+        if ($this->getEventParent() != null && $eventParent == null) {
             $this->eventParent->getSubevents()->removeElement($this);
             $this->eventParent = null;
-        }else {
+        } else {
             $this->eventParent = $eventParent;
             $eventParent->getSubevents()->add($this);
         }
@@ -962,5 +987,39 @@ class Event implements CommentableInterface
             );
         }
         return $orderedArray;
+    }
+
+    public function initializeWeekOpeningHours()
+    {
+        if($this->openingHours == null){
+            $this->openingHours = new ArrayCollection();
+        }
+        $mondayOH = new EventOpeningHours();
+        $mondayOH->setDayOfWeek(DayOfWeek::MONDAY);
+        $this->addopeningHour($mondayOH);
+
+        $tuesdayOH = new EventOpeningHours();
+        $tuesdayOH->setDayOfWeek(DayOfWeek::TUESDAY);
+        $this->addopeningHour($tuesdayOH);
+
+        $wednesdayOH = new EventOpeningHours();
+        $wednesdayOH->setDayOfWeek(DayOfWeek::WEDNESDAY);
+        $this->addopeningHour($wednesdayOH);
+
+        $thursdayOH = new EventOpeningHours();
+        $thursdayOH->setDayOfWeek(DayOfWeek::THURSDAY);
+        $this->addopeningHour($thursdayOH);
+
+        $fridayOH = new EventOpeningHours();
+        $fridayOH->setDayOfWeek(DayOfWeek::FRIDAY);
+        $this->addopeningHour($fridayOH);
+
+        $saturdayOH = new EventOpeningHours();
+        $saturdayOH->setDayOfWeek(DayOfWeek::SATURDAY);
+        $this->addopeningHour($saturdayOH);
+
+        $sundayOH = new EventOpeningHours();
+        $sundayOH->setDayOfWeek(DayOfWeek::SUNDAY);
+        $this->addopeningHour($sundayOH);
     }
 }

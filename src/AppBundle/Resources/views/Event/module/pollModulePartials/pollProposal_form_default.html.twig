@@ -8,7 +8,7 @@
     {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
         'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
 {% else %}
-    {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
+    {{ form_start(pollProposalForm, {'action':path('pollProposalAddForm',{'moduleToken':userModuleInvitation.module.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
 {% endif %}
 <div>
     {{ form_label(pollProposalForm.pollProposalElements, null, {'label_attr':{'class':'sr-only'}}) }}

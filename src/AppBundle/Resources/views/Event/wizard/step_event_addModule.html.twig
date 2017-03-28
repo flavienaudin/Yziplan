@@ -7,22 +7,11 @@
 #}
 
 {% block wizard_step_title %}
-    {{ "event.wizard.add_module.title"|trans }}
-    <small>{{ "event.wizard.add_module.subtitle"|trans }}</small>
+    {#{{ "event.wizard.add_module.title"|trans }}#}
+    {#<small>{{ "event.wizard.add_module.subtitle"|trans }}</small>#}
 {% endblock %}
 
-{% block wizard_step %}
-    {{ include('@App/Event/module/displayAddModule_card.html.twig', {'event':event}) }}
-
-    <div class="text-center">
-        <a href="{{ path('wizardNewEvent',{'token':event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")}) }}" class="btn btn-flat m-b-10"
-           role="button">{{ "global.button.previousStep"|trans }}</a> <a
-                href="{{ path('wizardNewEvent',{'token':event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_INVITATIONS")}) }}"
-                class="btn btn-primary m-b-10" role="button">{{ "global.button.nextStep"|trans }}</a>
-    </div>
-{% endblock wizard_step %}
-
-{% block wizard_step_after_card %}
+{% block wizard_step_before_card %}
     {# Affiche les modules de l'événement, les modules ajoutés via Ajax sont ajoutés à la fin de la div #eventModulesContainer #}
     <div id="eventModulesContainer">
         {% for moduleDescription in modules if moduleDescription.module.status != constant("AppBundle\\Utils\\enum\\ModuleStatus::DELETED") %}
@@ -54,7 +43,18 @@
             {% endif %}
         {% endfor %}
     </div>
-{% endblock wizard_step_after_card %}
+{% endblock wizard_step_before_card %}
+
+{% block wizard_step %}
+    {{ include('@App/Event/module/displayAddModule_card.html.twig', {'event':event}) }}
+
+    <div class="text-center">
+        <a href="{{ path('wizardNewEventStep1',{'token':event.token}) }}" class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a> <a
+                href="{{ path('wizardNewEventStep3',{'token':event.token}) }}" class="btn btn-primary m-b-10" role="button">{{ "global.button.nextStep"|trans }}</a>
+    </div>
+{% endblock wizard_step %}
+
+
 
 {% block top_javascripts %}
     {{ parent() }}
@@ -74,7 +74,7 @@
             document.body.appendChild(script);
         });
 
-        function initGooglePlacePollProposalWhereElements(){
+        function initGooglePlacePollProposalWhereElements() {
             initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');
         }
     </script>

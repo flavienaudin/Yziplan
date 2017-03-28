@@ -10,15 +10,20 @@ namespace AppBundle\Manager;
 
 use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Entity\Event\EventOpeningHours;
 use AppBundle\Entity\Event\Module;
+use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Form\Event\EventTemplateSettingsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
 use AppBundle\Form\Event\SendMessageType;
 use AppBundle\Security\ModuleVoter;
+use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
+use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Utils\enum\ModuleStatus;
+use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
@@ -26,8 +31,14 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Templating\EngineInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class EventManager
 {
@@ -39,6 +50,15 @@ class EventManager
 
     /** @var AuthorizationCheckerInterface */
     private $authorizationChecker;
+
+    /** @var RouterInterface */
+    private $router;
+
+    /** @var EngineInterface */
+    private $templating;
+
+    /** @var TranslatorInterface $translator */
+    private $translator;
 
     /** @var FormFactory */
     private $formFactory;
@@ -67,13 +87,16 @@ class EventManager
     /** @var ArrayCollection Les OpeninghOurs de l'évnément pour mise à jour */
     private $eventOriginalOpeningHours;
 
-    public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactory $formFactory,
-                                GenerateursToken $generateurToken, ModuleManager $moduleManager, PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager,
-                                ModuleInvitationManager $moduleInvitationManager, DiscussionManager $discussionManager)
+    public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, RouterInterface $router, EngineInterface $templating,
+                                TranslatorInterface $translator, FormFactory $formFactory, GenerateursToken $generateurToken, ModuleManager $moduleManager, PollProposalManager $pollProposalManager,
+                                EventInvitationManager $eventInvitationManager, ModuleInvitationManager $moduleInvitationManager, DiscussionManager $discussionManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
+        $this->router = $router;
+        $this->templating = $templating;
+        $this->translator = $translator;
         $this->formFactory = $formFactory;
         $this->generateursToken = $generateurToken;
         $this->moduleManager = $moduleManager;
@@ -189,7 +212,16 @@ class EventManager
             $this->event->setWhereGooglePlaceId(null);
         }
 
+        // remove non-valid $openingHours
+        /** @var EventOpeningHours $postedOpeningHours */
+        foreach ($this->event->getOpeningHours() as $postedOpeningHours) {
+            if (!$postedOpeningHours->isValid()) {
+                $this->event->removeOpeningHour($postedOpeningHours);
+            }
+        }
+
         // remove the relationship between the OpeningHours and the Event
+        /** @var EventOpeningHours $openingHour */
         foreach ($this->eventOriginalOpeningHours as $openingHour) {
             if (false === $this->event->getOpeningHours()->contains($openingHour)) {
                 // remove the OpeningHours from the Event
@@ -429,7 +461,7 @@ class EventManager
                         }
                         if ($module->getPollModule() != null) {
                             // TODO Vérifier les autorisations d'ajouter des propositions au module
-                            $moduleDescription['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation);
+                            $moduleDescription['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation)->createView();
                         }
                         $modules[$module->getId()] = $moduleDescription;
                     }
@@ -439,5 +471,69 @@ class EventManager
         return $modules;
     }
 
-
+    /**
+     * @param Event $event
+     * @param array $modules
+     * @param EventInvitation $userEventInvitation
+     * @param Request $request
+     * @return Response|null
+     */
+    public function treatModulesToDisplay(Event $event, array &$modules, EventInvitation $userEventInvitation, Request $request)
+    {
+        foreach ($modules as $moduleId => $moduleDescription) {
+            /** @var ModuleInvitation $userModuleEventInvitation Le ModuleInvitation de l'utilisateur connecté pour le module courant */
+            $userModuleEventInvitation = $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']);
+            if (key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
+                /** @var Form $moduleForm */
+                $moduleForm = $moduleDescription['moduleForm'];
+                $moduleForm->handleRequest($request);
+                if ($moduleForm->isSubmitted()) {
+                    if ($request->isXmlHttpRequest()) {
+                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                            // Vérification serveur de la validité de l'invitation
+                            $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
+                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                        } else if ($moduleForm->isValid()) {
+                            $currentModule = $this->moduleManager->treatUpdateFormModule($moduleForm);
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->translator->trans("global.success.data_saved");
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['.module-' . $currentModule->getToken() . '-description'] = $currentModule->getDescription();
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-header-' . $currentModule->getToken()] =
+                                $this->templating->render("@App/Event/module/displayModule_header.html.twig", array(
+                                    'module' => $moduleDescription['module'],
+                                    'moduleForm' => $moduleForm->createView(),
+                                    'userModuleInvitation' => $userModuleEventInvitation
+                                ));
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-information-' . $currentModule->getToken()] =
+                                $this->templating->render("@App/Event/module/displayModule_informations.html.twig", array(
+                                    'module' => $moduleDescription['module'],
+                                    'userModuleInvitation' => $userModuleEventInvitation
+                                ));
+                            return new AppJsonResponse($data, Response::HTTP_OK);
+                        } else {
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#moduleEdit_form_' . $moduleDescription['module']->getToken()] =
+                                $this->templating->render('@App/Event/module/displayModule_form.html.twig', array(
+                                    'module' => $moduleDescription['module'],
+                                    'moduleForm' => $moduleForm->createView(),
+                                    'userModuleInvitation' => $userModuleEventInvitation
+                                ));
+                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                        }
+                    } else {
+                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                            // Vérification serveur de la validité de l'invitation
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->translator->trans("event.error.message.valide_guestname_required");
+                            return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())));
+                        } elseif ($moduleForm->isValid()) {
+                            $module = $this->moduleManager->treatUpdateFormModule($moduleForm);
+                            return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $module->getToken());
+                        }
+                    }
+                }
+                $modules[$moduleId]['moduleForm'] = $moduleForm->createView();
+            }
+        }
+        // nothing to return continue the action
+        return null;
+    }
 }

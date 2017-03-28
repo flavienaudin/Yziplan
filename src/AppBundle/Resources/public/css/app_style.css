@@ -255,6 +255,10 @@
     width: 100px !important;
 }
 
+.w-120px {
+    width: 120px !important;
+}
+
 .w-150px {
     width: 150px !important;
 }
@@ -674,6 +678,18 @@ h1.event-title {
 
 label.required:after {
     content: " *";
+}
+
+.ismobile .readonly-onmobile {
+    background-color: white !important;
+}
+
+.note-editor .note-editable {
+    background-color: rgba(245, 245, 245, 0.3);
+}
+.note-editor .note-placeholder,
+.note-editor .note-editable {
+    padding: 5px;
 }
 
 /** end Formulaires **/
@@ -1241,10 +1257,6 @@ label.required:after {
     height: 100px;
     width: 100px;
     display: block;;
-}
-
-.readonly-onmobile {
-    background-color: white !important;
 }
 
 /*---------------------------------

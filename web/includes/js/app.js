@@ -219,7 +219,7 @@ function jsPlugginActivation() {
 
     $('.clockpicker').clockpicker();
     var locale_format = "DD/MM/YYYY";
-    if (locale_js == 'en') {
+    if (locale_js === 'en') {
         locale_format = "MM/DD/YYYY";
     }
     $('.ag-date-picker').datetimepicker({

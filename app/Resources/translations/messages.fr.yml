@@ -105,7 +105,6 @@ event:
   header:
     organised_by: "Organisé par %creator%"
   picture:
-    link: Changer l'image
     update_modal:
       title: Charger une image
       subtitle: Une fois l'image sélectionnée, vous pourrez indiquer la zone importante en cliquant, l'image sera alors centrée automatiquement.
@@ -136,7 +135,6 @@ event:
       general: Général
       about_info: Plus d'info
     text:
-      when_where: Vous connaissez déjà la date et le lieu ? Fixez-les maintenant sinon vous pourrez ajouter un sondage dans une prochaine étape
       see_map: Voir sur la carte
     name:
       label: Titre de l'événement / activité
@@ -176,6 +174,8 @@ event:
       help:  "Tous les invités pourront envoyer de nouvelles invitations par e-mail"
       text.true: Vos amis peuvent inviter
       text.false: Vos amis ne peuvent pas inviter
+    activity_provider:
+      label: Je suis un prestataire d'activité
     template:
       link_collpase: Option de modèle
       label: Faire de cet événement un modèle.
