@@ -44,6 +44,13 @@ class PollProposalWhereType extends AbstractType
                         'class' => 'googlePlaceId_value'
                     )
                 ));
+
+            if (($pollProposal != null) && !empty($pollProposal->getId())) {
+                $form->add('id', HiddenType::class, array(
+                    'disabled' => true
+                ));
+            }
+
         });
     }
 

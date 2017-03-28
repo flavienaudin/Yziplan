@@ -10,6 +10,7 @@ namespace AppBundle\Form\Module\PollModule;
 
 use AppBundle\Entity\Module\PollProposal;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -39,6 +40,13 @@ class PollProposalWhatType extends AbstractType
                     'required' => true,
                     'constraints' => new NotBlank()
                 ));
+
+            if (($pollProposal != null) && !empty($pollProposal->getId())) {
+                $form->add('id', HiddenType::class, array(
+                    'disabled' => true
+                ));
+            }
+
         });
     }
 

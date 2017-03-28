@@ -10,6 +10,7 @@ namespace AppBundle\Form\Module\PollModule;
 
 use AppBundle\Entity\Module\PollProposal;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,6 +43,13 @@ class PollProposalActivityType extends AbstractType
                         'class' => 'sr-only'
                     )
                 ));
+
+            if (($pollProposal != null) && !empty($pollProposal->getId())) {
+                $form->add('id', HiddenType::class, array(
+                    'disabled' => true
+                ));
+            }
+
         });
     }
 

@@ -12,6 +12,7 @@ use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Validator\Constraints\IntValuesInArray;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -67,6 +68,13 @@ class PollProposalWhenType extends AbstractType
                     'data' => $pollProposal != null ? $pollProposal->getArrayFromEndTime() : null,
                     'constraints' => new IntValuesInArray('hh:mm', ["hour", "minute"], true)
                 ));
+
+            if (($pollProposal != null) && !empty($pollProposal->getId())) {
+                $form->add('id', HiddenType::class, array(
+                    'disabled' => true
+                ));
+            }
+
         });
     }
 

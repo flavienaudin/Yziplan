@@ -66,7 +66,7 @@ class PollModuleController extends Controller
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#pollProposalEdition_" . $pollProposal->getId() . "_form_id"] =
                             $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
                                     'userModuleInvitation' => $moduleInvitation,
-                                    'pollProposalForm' => $pollProposalEditionForm->createView(),
+                                    'pollModuleOptions'=> array('pollProposalAddForm' => $pollProposalEditionForm->createView()),
                                     'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
                                     'edition' => true
                                 )
@@ -79,7 +79,7 @@ class PollModuleController extends Controller
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollProposalEdition_' . $pollProposal->getId() . '_formContainer'] =
                             $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
                                 'userModuleInvitation' => $moduleInvitation,
-                                'pollProposalForm' => $pollProposalEditionForm->createView(),
+                                'pollModuleOptions'=> array('pollProposalAddForm' => $pollProposalEditionForm->createView()),
                                 'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
                                 'edition' => true
                             ));
@@ -90,7 +90,7 @@ class PollModuleController extends Controller
             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#modal-container-block-' . $pollProposal->getPollModule()->getModule()->getToken()] =
                 $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form_modal.html.twig', array(
                         'userModuleInvitation' => $moduleInvitation,
-                        'pollProposalForm' => $pollProposalEditionForm->createView(),
+                        'pollModuleOptions'=> array('pollProposalAddForm' => $pollProposalEditionForm->createView()),
                         'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
                         'edition' => true
                     )

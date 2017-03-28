@@ -6,7 +6,9 @@
 - edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
 #}
 {% set pollProposalForm = pollModuleOptions.pollProposalAddForm %}
-{% set pollProposalListForm = pollModuleOptions.pollProposalListAddForm %}
+{% if pollModuleOptions.pollProposalListAddForm is defined %}
+    {% set pollProposalListForm = pollModuleOptions.pollProposalListAddForm %}
+{% endif %}
 <div>
     <div role="tabpanel">
         <ul class="tab-nav" role="tablist">
@@ -80,6 +82,7 @@
                 </div>
                 {{ form_end(pollProposalForm) }}
             </div>
+            {% if pollProposalListForm is defined %}
             <div role="tabpanel" class="tab-pane" id="{{ pp_form_modal_prefix }}SeveralDate">
                 <div id="{{ pp_form_modal_prefix }}SeveralDate1">
                     <div class="row m-t-15">
@@ -162,6 +165,7 @@
                 {{ form_widget(pollProposalListForm.pollProposals.vars.prototype) }}#}
 
             </div>
+            {% endif %}
         </div>
     </div>
 

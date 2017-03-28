@@ -104,6 +104,13 @@ class PollProposalType extends AbstractType
                     'required' => true,
                     'constraints' => new NotBlank()
                 ));
+
+            if (($pollProposal != null) && !empty($pollProposal->getId())) {
+                $form->add('id', HiddenType::class, array(
+                    'disabled' => true
+                ));
+            }
+
         });
     }
 
