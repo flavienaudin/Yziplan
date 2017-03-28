@@ -1592,6 +1592,10 @@ select.chosen {
     color: #333;
 }
 
+.datepicker-inline{
+    width: 287px;
+}
+
 .datepicker.top {
     -webkit-transform-origin: 0 100% !important;
     -moz-transform-origin: 0 100% !important;

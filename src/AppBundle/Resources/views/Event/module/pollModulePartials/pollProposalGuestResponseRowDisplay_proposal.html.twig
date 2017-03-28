@@ -25,7 +25,7 @@
             {% else %}
                 <div>
                     <div style=" display:inline-block; width: 45px; font-style:italic">Début :</div>
-                    <div style=" display:inline-block;">{{ pollProposal.value|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if pollProposal.hasTime %} {{ pollProposal.value|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
+                    <div style=" display:inline-block;">{{ pollProposal.valDatetime|localizeddate("medium", "none", null, null,'ccc dd MMM') }}{% if pollProposal.hasTime %} {{ pollProposal.valDatetime|localizeddate("medium", "none", null, null,'HH:mm') }}{% endif %}</div>
                 </div>
                 <div>
                     <div style=" display:inline-block; width:45px; font-style:italic">Fin :</div>

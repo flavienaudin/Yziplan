@@ -15,6 +15,7 @@ class PollProposalWhenCollectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add("pollProposalWhens", CollectionType::class, array(
+            'label_attr' => array('class' => 'sr-only'),
             'entry_type' => PollProposalWhenType::class,
             'allow_add' => true,
             'required' => false,
