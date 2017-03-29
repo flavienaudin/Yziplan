@@ -87,7 +87,7 @@ class PollModuleController extends Controller
                     $pollProposalManager = $this->get("at.manager.pollproposal");
 
                     /** @var FormInterface $pollProposalAddForm */
-                    $pollProposalAddForm = $pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation);
+                    $pollProposalAddForm = $pollProposalManager->createPollProposalAddForm($module->getPollModule());
                     $pollProposalAddForm->handleRequest($request);
                     if ($pollProposalAddForm->isSubmitted()) {
                         if ($request->isXmlHttpRequest()) {
@@ -101,7 +101,7 @@ class PollModuleController extends Controller
                                 $data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
 
                                 // Form reset
-                                $pollProposalAddForm = $pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation);
+                                $pollProposalAddForm = $pollProposalManager->createPollProposalAddForm($module->getPollModule());
                                 $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $module->getToken() . '_formContainer'] =
                                     $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
                                         'userModuleInvitation' => $userModuleInvitation,

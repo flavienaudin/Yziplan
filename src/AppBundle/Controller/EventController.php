@@ -576,7 +576,6 @@ class EventController extends Controller
         }
     }
 
-
     /**
      * @Route("/status/validated/{token}", name="validateEvent")
      * @ParamConverter("event" , class="AppBundle:Event\Event")

@@ -20,7 +20,7 @@ services:
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
-    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@router','@templating','@translator','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation','@at.manager.discussion']
+    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@session','@security.authorization_checker','@router','@templating','@translator','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation','@at.manager.discussion']
 
   at.manager.discussion:
     class: AppBundle\Manager\DiscussionManager
