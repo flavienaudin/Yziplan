@@ -512,9 +512,13 @@ pollmodule:
       title: Edit proposal
     pollproposal:
       form:
-        description:
-          label: Description
-          placeholder: Description
+      name:
+        label: Proposal name
+      description:
+        label: Description
+        placeholder: Description
+      picture:
+        label: Picture
     when:
       startDate: "Start Date/Hour:"
       endDate: "End Date/Hour:"

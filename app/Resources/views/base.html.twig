@@ -21,7 +21,7 @@
         "bundles/app/css/jquery.bootgrid.min.css"
         "bundles/app/css/jquery.mCustomScrollbar.min.css"
         "bundles/app/css/bootstrap-clockpicker.min.css"
-        "bundles/app/css/bootstrap-datetimepicker.min.css"
+        'bundles/app/css/bootstrap-datepicker3.css'
         "bundles/app/css/palette.css"
         "bundles/app/css/sweetalert2.min.css"
         "bundles/app/css/toastr.min.css"
@@ -298,7 +298,8 @@
     'bundles/app/js/waves.min.js'
     'bundles/app/js/jquery.bootgrid-updated.js'
     'bundles/app/js/bootstrap-clockpicker.min.js'
-    'bundles/app/js/bootstrap-datetimepicker.min.js'
+    'bundles/app/js/bootstrap-datepicker.js'
+    'bundles/app/js/locales/bootstrap-datepicker.fr.min.js'
     'bundles/app/js/bootstrap-select.min.js'
     'bundles/app/js/jquery.mCustomScrollbar.concat.min.js'
     'bundles/app/js/palette.js'
@@ -329,8 +330,6 @@
     output='js/main.2.0.3.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-    {#<script src="{{ asset("bundles/app/js/yzi-event.js") }}"></script>#}
 
     <!-- Base : Config pluggin Toastr -->
     <script>

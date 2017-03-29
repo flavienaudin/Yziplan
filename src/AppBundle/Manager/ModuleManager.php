@@ -359,10 +359,15 @@ class ModuleManager
         }
         if ($module->getPollModule() != null) {
             // TODO Check authorization to "AddPollProposal"
+            $pollModuleOptions['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule())->createView();
+            $listView = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
+            if ($listView != null) {
+                $pollModuleOptions['pollProposalListAddForm'] = $listView->createView();
+            }
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
-                'pollProposalAddForm' => $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation)->createView(),
+                'pollModuleOptions' => $pollModuleOptions,
                 'userModuleInvitation' => $userModuleInvitation,
                 'thread' => $thread, 'comments' => $comments
             ));

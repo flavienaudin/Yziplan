@@ -4,7 +4,8 @@
 - module (Module) Le module à afficher
 - moduleForm (Form|null) Le formulaire d'édition du module
 - userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
-- pollProposalAddForm (Form|null) Le formulaire d'ajout d'une proposition
+- pollModuleOptions (Array), contains:
+        - pollProposalAddForm (Form|null) Le formulaire d'ajout d'une proposition
 #}
 
 
@@ -36,7 +37,7 @@
                         <td colspan="3">{{ "pollmodule.display.no_proposal"|trans }}</td>
                     </tr>
                     </tbody>
-                    {% if pollProposalAddForm is defined and pollProposalAddForm is not null %}
+                    {% if pollModuleOptions.pollProposalAddForm is defined and pollModuleOptions.pollProposalAddForm is not null %}
                         <tfoot>
                         <tr>
                             <td colspan="3">
@@ -57,7 +58,7 @@
                                 </script>
                                 {{ include('@App/Event/module/pollModulePartials/pollProposal_form_modal.html.twig', {
                                     'userModuleInvitation' : userModuleInvitation,
-                                    'pollProposalForm' : pollProposalAddForm,
+                                    'pollModuleOptions' : pollModuleOptions,
                                     'pp_form_modal_prefix' : add_pp_form_modal_prefix,
                                     'edition' : false
                                 }) }}
