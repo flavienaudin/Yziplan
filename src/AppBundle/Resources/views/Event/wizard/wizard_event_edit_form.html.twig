@@ -20,12 +20,24 @@
 
 {#<script>#}
 {% block js_document_ready %}
-    $('#showMapContainer').on('shown.bs.collapse', function (e) {
-        if (mapEventEdit == null) {
-            initEventEditMap();
-        } else {
-            google.maps.event.trigger(mapEventEdit, 'resize');
+    var $dialogsInBody = false;
+
+    {% if eventForm.openingHours|length == 0 %}
+        {# Ajout des jours de la semaine si aucun horaire n'existe #}
+        var daysOfWeek = [
+        '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::MONDAY') }}',
+        '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::TUESDAY') }}',
+        '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::WEDNESDAY') }}',
+        '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::THURSDAY') }}',
+        '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::FRIDAY') }}',
+        '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::SATURDAY') }}',
+        '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::SUNDAY') }}'
+        ];
+        for(var i = 0; i < 7; i++) {
+        $addOpeningTimeButton.click();
+        var selectpicker = openingHoursFieldsList.children('li.openingHourForm:last-child').find('.selectpicker');
+        selectpicker.selectpicker('val',daysOfWeek [i]);
         }
-    });
+    {% endif %}
 {% endblock js_document_ready %}
 {#</script>#}

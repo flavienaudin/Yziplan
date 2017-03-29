@@ -243,7 +243,11 @@ function jsPlugginActivation() {
             vertical: 'bottom'
         }
     });
-    $('.selectpicker').selectpicker();
+    if(isMobile()) {
+        $('.selectpicker').selectpicker('mobile');
+    }else{
+        $('.selectpicker').selectpicker();
+    }
     $('.toggle-tooltip, [data-toggle="tooltip"]').tooltip();
 
     var masonryGrid = $('.grid');

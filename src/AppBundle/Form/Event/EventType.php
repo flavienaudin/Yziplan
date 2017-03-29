@@ -9,9 +9,6 @@
 namespace AppBundle\Form\Event;
 
 use AppBundle\Entity\Event\Event;
-use AppBundle\Entity\Event\EventOpeningHours;
-use AppBundle\Form\Type\DayOfWeekType;
-use AppBundle\Utils\enum\DayOfWeek;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -20,8 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -73,6 +68,17 @@ class EventType extends AbstractType
                 'required' => false,
                 'label_attr' => array('class' => 'sr-only')
             ))
+            ->add('openingHours', CollectionType::class, array(
+                'required' => false,
+                'label_attr' => array(
+                    'class' => 'sr-only'
+                ),
+                'entry_type' => EventOpeningHoursType::class,
+                'allow_add' => true,
+                'allow_delete' => true,
+                'prototype' => true,
+                'by_reference' => false
+            ))
             ->add("activityProvider", CheckboxType::class, array(
                 'required' => false
             ))
@@ -81,27 +87,7 @@ class EventType extends AbstractType
             ))
             ->add("askDirectory", CheckboxType::class, array(
                 'required' => false
-            ))
-            ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
-                $form = $formEvent->getForm();
-                /** @var Event $event*/
-                $event = $formEvent->getData();
-                if(count($event->getOpeningHours()) == 0 ){
-                    $event->initializeWeekOpeningHours();
-                }
-                $form
-                    ->add('openingHours', CollectionType::class, array(
-                        'required' => false,
-                        'label_attr' => array(
-                            'class' => 'sr-only'
-                        ),
-                        'entry_type' => EventOpeningHoursType::class,
-                        'allow_add' => true,
-                        'allow_delete' => true,
-                        'prototype' => true,
-                        'by_reference' => false
-                    ));
-            });
+            ));
     }
 
     public function configureOptions(OptionsResolver $resolver)

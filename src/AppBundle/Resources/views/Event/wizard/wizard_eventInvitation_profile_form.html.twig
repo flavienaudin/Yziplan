@@ -6,7 +6,7 @@
 
 {% block form_start %}
     {{ form_start(userEventInvitationForm, {'attr':{'id':userEventInvitationForm.vars.id},
-        'action': path('wizardNewEventStep3', {'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")})}) }}
+        'action': path('wizardNewEventStep3', {'token':userEventInvitation.event.token})}) }}
 {% endblock form_start %}
 
 {% block action_buttons %}

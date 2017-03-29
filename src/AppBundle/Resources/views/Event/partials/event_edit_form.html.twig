@@ -302,11 +302,9 @@
         {% endblock js_functions %}
 
         $(document).ready(function () {
-            var $dialogsInBody = false;
-
             $('#showMapContainer').on('shown.bs.collapse', function (e) {
                 {# Clique sur "Voir sur une carte" #}
-                if (mapEventEdit == null) {
+                if (mapEventEdit === null) {
                     initEventEditMap();
                 } else {
                     google.maps.event.trigger(mapEventEdit, 'resize');
@@ -317,8 +315,42 @@
                 $('#activityProviderContainer').collapse('toggle');
             });
 
+            var openingHoursCount = {{ eventForm.openingHours|length }};
+            var openingHoursFieldsList = $('#openingHours-fields-list');
+            openingHoursFieldsList.find('li.openingHourForm').each(function () {
+                addOpeningHourFormDeleteLink($(this));
+            });
+
+            var $addOpeningTimeButton = $('#add-opening-time');
+            $addOpeningTimeButton.click(function (e) {
+                e.preventDefault();
+                var newWidget = openingHoursFieldsList.attr('data-prototype');
+                newWidget = newWidget.replace(/__name__/g, openingHoursCount);
+                openingHoursCount++;
+
+                var newLi = $('<li class="openingHourForm"></li>').html(newWidget);
+                newLi.appendTo(openingHoursFieldsList);
+
+                addOpeningHourFormDeleteLink(newLi);
+
+                if(isMobile()) {
+                    $('.selectpicker').selectpicker('mobile');
+                }else{
+                    $('.selectpicker').selectpicker();
+                }
+                $('.clockpicker').clockpicker();
+            });
+
+            $('#eventCoordinatesCollpase:has(".has-error")').collapse('show');
+            $('#eventOpeningHoursCollpase:has(".has-error")').collapse('show');
+
+            // Update the Event name while editing the form field
+            $('#event_name').on('input', function () {
+                $('#event-name').html($(this).val());
+            });
+
             {% block js_document_ready %}
-            $dialogsInBody = true;
+            var $dialogsInBody = true; {# A redefinir selon où est afficher le formulaire : dans une modal ou pas #}
 
             var $eventEditModal = $('#eventEditModal');
             $eventEditModal.on('shown.bs.modal', function (e) {
@@ -337,40 +369,7 @@
                     }
                 });
             });
-            // Update the Event name while editing the form field
-            $('#event_name').on('input', function () {
-                $('#event-name').html($(this).val());
-            });
-            {# TODO : desactivé pour simplifier l'interface
-            $('#event_invitationOnlyevent_invitationOnly').on('change', function (e) {
-                $('#event_public_invitation_display').fadeToggle();
-            });
-            #}
             {% endblock js_document_ready %}
-
-            var openingHoursCount = {{ eventForm.openingHours|length }};
-            var openingHoursFieldsList = $('#openingHours-fields-list');
-            openingHoursFieldsList.find('li.openingHourForm').each(function () {
-                addOpeningHourFormDeleteLink($(this));
-            });
-
-            $('#add-opening-time').click(function (e) {
-                e.preventDefault();
-                var newWidget = openingHoursFieldsList.attr('data-prototype');
-                newWidget = newWidget.replace(/__name__/g, openingHoursCount);
-                openingHoursCount++;
-
-                var newLi = $('<li class="openingHourForm"></li>').html(newWidget);
-                newLi.appendTo(openingHoursFieldsList);
-
-                addOpeningHourFormDeleteLink(newLi);
-
-                $('.selectpicker').selectpicker();
-                $('.clockpicker').clockpicker();
-            });
-
-            $('#eventCoordinatesCollpase:has(".has-error")').collapse('show');
-            $('#eventOpeningHoursCollpase:has(".has-error")').collapse('show');
 
             var summernoteOptions = {
                 dialogsInBody: $dialogsInBody,

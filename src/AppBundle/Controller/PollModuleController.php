@@ -39,9 +39,10 @@ class PollModuleController extends Controller
 {
 
     /**
+     * TODO en attendant de séparer les soumissions des formulaires de l'action "displayEvent"
      * Soumission du formulaire d'ajout d'une proposition à un module
-     * @Route("/pollproposal/add/{moduleToken}", name="pollProposalAddForm")
-     * @ParamConverter("module", class="AppBundle:Event\Module", options={"mapping" = {"moduleInvitationToken":"token"}})
+     * @ Route("/pollproposal/add/{moduleToken}", name="pollProposalAddForm")
+     * @ ParamConverter("module", class="AppBundle:Event\Module", options={"mapping" = {"moduleInvitationToken":"token"}})
      */
     public function pollProposalAddFormAction(Module $module, Request $request)
     {

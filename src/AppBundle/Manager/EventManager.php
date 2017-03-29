@@ -461,7 +461,7 @@ class EventManager
                         }
                         if ($module->getPollModule() != null) {
                             // TODO Vérifier les autorisations d'ajouter des propositions au module
-                            $moduleDescription['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation)->createView();
+                            $moduleDescription['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule(), $userModuleInvitation);
                         }
                         $modules[$module->getId()] = $moduleDescription;
                     }
@@ -531,6 +531,58 @@ class EventManager
                     }
                 }
                 $modules[$moduleId]['moduleForm'] = $moduleForm->createView();
+            }
+
+            //////////////////////
+            // poll module case //
+            //////////////////////
+            if (array_key_exists('pollProposalAddForm', $moduleDescription) && $moduleDescription['pollProposalAddForm'] instanceof Form) {
+                /** @var FormInterface $pollProposalAddForm */
+                $pollProposalAddForm = $moduleDescription['pollProposalAddForm'];
+                $pollProposalAddForm->handleRequest($request);
+                if ($pollProposalAddForm->isSubmitted()) {
+                    if ($request->isXmlHttpRequest()) {
+                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                            // Vérification serveur de la validité de l'invitation
+                            $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
+                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                        } else if ($pollProposalAddForm->isValid()) {
+                            $pollProposal = $this->pollProposalManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
+                            $data[AppJsonResponse::DATA] = $this->pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
+
+                            // Form reset
+                            $pollProposalAddForm = $this->pollProposalManager->createPollProposalAddForm($moduleDescription['module']->getPollModule(), $userModuleEventInvitation);
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
+                                $this->templating->render('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
+                                    'userModuleInvitation' => $userModuleEventInvitation,
+                                    'pollProposalForm' => $pollProposalAddForm->createView(),
+                                    'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
+                                    'edition' => false
+                                ));
+                            return new AppJsonResponse($data, Response::HTTP_OK);
+                        } else {
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
+                                $this->templating->render('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
+                                    'userModuleInvitation' => $userModuleEventInvitation,
+                                    'pollProposalForm' => $pollProposalAddForm->createView(),
+                                    'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
+                                    'edition' => false
+                                ));
+                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                        }
+                    } else {
+                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                            // Vérification serveur de la validité de l'invitation
+                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->translator->trans("event.error.message.valide_guestname_required");
+                            return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $moduleDescription['module']->getToken());
+                        } else if ($pollProposalAddForm->isValid()) {
+                            $this->pollProposalManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
+                            return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $moduleDescription['module']->getToken());
+                        }
+                    }
+                }
+                $modules[$moduleId]['pollProposalAddForm'] = $pollProposalAddForm->createView();
             }
         }
         // nothing to return continue the action
