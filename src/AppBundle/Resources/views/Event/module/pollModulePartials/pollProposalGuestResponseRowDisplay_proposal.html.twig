@@ -3,12 +3,9 @@
 - displayModal (boolean) génération de la modale ou non.
 #}
 <div>
-    {# Les elements sont sous forme de tableau a 2 dimentions, mais il n'y a qu'un element dans la deuxieme
-           c'est en prévision du futur #}
-    {% set ppElts = pollProposal.pollProposalElementsByType %}
-    {% if ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')] is defined %}
-        {% set ppElt = ppElts[constant('AppBundle\\Utils\\enum\\PollElementType::DATETIME')][0] %}
-        {% set has2Date = ppElt.hasEndDate and ppElt.value|localizeddate("medium", "none", null, null,'ddMMyyyy') != ppElt.getValEndDatetime|localizeddate("medium", "none", null, null,'ddMMyyyy') %}
+    {# Les elements sont sous forme de tableau a 2 dimentions, mais il n'y a qu'un element dans la deuxieme c'est en prévision du futur #}
+    {% if pollProposal.valDatetime is not empty %}
+        {% set has2Date = pollProposal.hasEndDate and pollProposal.valDatetime|localizeddate("medium", "none", null, null,'ddMMyyyy') != pollProposal.getValEndDatetime|localizeddate("medium", "none", null, null,'ddMMyyyy') %}
         <div>
             {% if not has2Date %}
                 <div class="pp-elt">
@@ -43,8 +40,7 @@
         {% if hasPicture %}
             <div class="pp-elt">
                 {# TODO : Revoir la présentation des images, c'est pas ouf #}
-                <div class="pp-elt-picture picture-small m-r-5"
-                     style="background-image: url('{{ vich_uploader_asset(pollProposal, 'pictureFile') }}') "></div>
+                <div class="pp-elt-picture picture-small m-r-5" style="background-image: url('{{ vich_uploader_asset(pollProposal, 'pictureFile') }}') "></div>
             </div>
         {% endif %}
         {% if pollProposal.valString is not empty %}
@@ -77,9 +73,7 @@
                             {% if hasPicture %}
                                 <div class="modal-body text-center m-b-10">
                                     {# TODO : Revoir la présentation des images, c'est pas ouf #}
-                                    <img class="pp-elt-picture picture-large"
-                                         src="{{ vich_uploader_asset(pollProposal, 'pictureFile') }}"
-                                         alt="{{ pollProposal.pictureFile.filename }}">
+                                    <img class="pp-elt-picture picture-large" src="{{ vich_uploader_asset(pollProposal, 'pictureFile') }}" alt="{{ pollProposal.pictureFile.filename }}">
                                 </div>
                             {% endif %}
                             <div class="modal-body">
