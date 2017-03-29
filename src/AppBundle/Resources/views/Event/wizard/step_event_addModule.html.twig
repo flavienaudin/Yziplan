@@ -51,6 +51,9 @@
     <div class="text-center">
         <a href="{{ path('wizardNewEventStep1',{'token':event.token}) }}" class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a> <a
                 href="{{ path('wizardNewEventStep3',{'token':event.token}) }}" class="btn btn-primary m-b-10" role="button">{{ "global.button.nextStep"|trans }}</a>
+        <p class="c-gray">
+            <small>2/3</small>
+        </p>
     </div>
 {% endblock wizard_step %}
 

@@ -129,14 +129,14 @@ class EventWizardController extends Controller
                         // Update the form with the updated userEventInvitation
                         $eventProfileForm = $eventInvitationManager->createEventInvitationForm();
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitationProfile_formContainer'] =
-                            $this->renderView("@App/Event/partials/profile/eventInvitation_profile_form.html.twig", array(
+                            $this->renderView("@App/Event/wizard/wizard_eventInvitation_profile_form.html.twig", array(
                                 'userEventInvitation' => $userEventInvitation,
                                 'userEventInvitationForm' => $eventProfileForm->createView()
                             ));
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitationProfile_formContainer'] =
-                            $this->renderView('@App/Event/partials/profile/eventInvitation_profile_form.html.twig', array(
+                            $this->renderView('@App/Event/wizard/wizard_eventInvitation_profile_form.html.twig', array(
                                 'userEventInvitation' => $userEventInvitation,
                                 'userEventInvitationForm' => $eventProfileForm->createView()
                             ));
@@ -158,8 +158,7 @@ class EventWizardController extends Controller
 
             $eventInvitationsForm = null;
             if (!$currentEvent->isTemplate()) {
-                // TODO : afficher les invitations si event n'est pas un template
-                // Invitations Form :
+                /** @var FormInterface $eventInvitationsForm */
                 $eventInvitationsForm = $eventManager->createEventInvitationsForm();
                 $eventInvitationsForm->handleRequest($request);
                 if ($eventInvitationsForm->isSubmitted()) {

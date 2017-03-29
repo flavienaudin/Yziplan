@@ -8,19 +8,42 @@
 #}
 
 
-{% block wizard_step_title %}{{ "event.wizard.profile.title"|trans }}
-    <small>{{ "event.wizard.profile.subtitle.text"|trans }}<br>
-    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}{{ "event.wizard.profile.subtitle.not_connected"|trans|raw }}{% endif %}</small>{% endblock %}
+{% block wizard_step_title %}{{ "event.wizard.recapitulatif.title"|trans }}
+    <small>{{ "event.wizard.recapitulatif.subtitle.text"|trans }}<br>
+    {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}{{ "event.wizard.recapitulatif.subtitle.not_connected"|trans|raw }}{% endif %}</small>{% endblock %}
 
 {% block wizard_step %}
     {{ include('@App/Event/wizard/wizard_eventInvitation_profile_form.html.twig', {"userEventInvitation":userEventInvitation, "userEventInvitationForm":userEventInvitationForm }) }}
 
-    {% if event.template and invitationsForm is defined %}
-        {{ include('@App/Event/wizard/wizard_event_invitations_form.html.twig', {"userEventInvitation":userEventInvitation, "invitationsForm":invitationsForm }) }}
-    {% else %}
-        lien de duplication car template
-    {% endif %}
+    <p class="text-center c-gray">
+        <small>3/3</small>
+    </p>
 {% endblock wizard_step %}
+
+{% block wizard_step_post_card %}
+    <div class="col-xs-12 col-xs-p-lr-0">
+        <div class="card z-depth-1">
+            {% if userEventInvitation.displayableName is empty %}
+                <div id="cover" class="animated"></div>
+            {% endif %}
+            <div class="card-header">
+                <h2></h2>
+            </div>
+            <div class="card-body card-padding">
+                <div id="newEventWizard">
+                    <div id="wizard_share_event_container">
+                        {% if not event.template and invitationsForm is defined %}
+                            {{ include('@App/Event/wizard/wizard_event_invitations_form.html.twig', {"userEventInvitation":userEventInvitation, "invitationsForm":invitationsForm }) }}
+                        {% else %}
+                            lien de duplication car template
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock wizard_step_post_card %}
+
 
 {% block top_javascripts %}
     {{ parent() }}
@@ -32,6 +55,18 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.bootstrap3.css") }}">
     <link rel="stylesheet" href="{{ asset("bundles/app/css/selectize.at.css") }}">
+
+    <style>
+        #cover {
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            z-index: 10; /* make sure logout_box has a z-index of 2 */
+            background-color: #000000;
+            opacity: 0.5;
+            display: block;
+        }
+    </style>
 {% endblock %}
 
 {% block javascripts %}

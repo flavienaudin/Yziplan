@@ -233,14 +233,14 @@ event:
     main:
       title: Organiser un événement
       subtitle: Décrivez l'événement à vos invités.
-    profile:
-      title: A propos de vous
-      subtitle:
-        text: Identifiez-vous auprès des invités
-        not_connected: Si vous possédez déjà un compte, connectez-vous pour remplir les informations automatiquement
     add_module:
       title: Consultez vos invités
       subtitle: Ajoutez des sondages en cliquant sur les liens ci-dessous puis cliquez sur "Suivant"
+    recapitulatif:
+      title: Félicitations, c'est presque terminé
+      subtitle:
+        text: Identifiez-vous puis partagez
+        not_connected: Si vous possédez déjà un compte, connectez-vous pour remplir les informations automatiquement
     invitations:
       title: Les invités
       subtitle: Renseignez les adresses e-mail des invités. Ils recevront un message avec le lien de leur invitation personnelle.
@@ -303,6 +303,8 @@ eventInvitation:
     email:
       label: E-mail
       placeholder: Votre e-mail de contact
+    personal_link:
+      label: Votre lien personnel <strong>à conserver</strong>
     answer:
       label: Serez-vous présents ?
       placeholder: Serez-vous présents ?
@@ -314,9 +316,6 @@ eventInvitation:
     interested: Intéressé
     not_interested: Non Intéressé
     dont_know: Peut-être
-  url:
-    label: Votre invitation
-    text: Conservez ce lien pour revenir sur cette page
   profile.card:
     title: Profil
     badge:
@@ -412,7 +411,7 @@ invitations:
     send_invitation: Envoyer les invitations
     via_facebook: Via Facebook
     via_gmail_contact:
-      show: Mes contacts Gmail
+      show: Google Contacts
 
 send_message:
   link: Ecrire
