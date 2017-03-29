@@ -5,28 +5,37 @@
 #}
 
 {% block form_start %}
-    {{ form_start(userEventInvitationForm, {'attr':{'id':userEventInvitationForm.vars.id},
-        'action': path('wizardNewEvent', {'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_PROFILE")})}) }}
+    {{ form_start(userEventInvitationForm, {'attr':{'id':userEventInvitationForm.vars.id}, 'action': path('wizardNewEventStep3', {'token':userEventInvitation.event.token})}) }}
 {% endblock form_start %}
 
 {% block action_buttons %}
     <div class="text-center">
-        <a href="{{ path('wizardNewEvent',{'token':userEventInvitation.event.token,'stepIndex':constant("AppBundle\\Controller\\EventController::WIZARD_NEW_EVENT_STEP_MAIN")}) }}"
-           class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
-        <button id="profile_form_submit" type="submit" class="btn btn-primary m-b-10">{{ "global.button.nextStep"|trans }}</button>
+        <a href="{{ path('wizardNewEventStep2',{'token':userEventInvitation.event.token}) }}" class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a>
+        <button id="profile_form_submit" type="submit" class="btn {{ userEventInvitation.displayableName(false) is empty?"btn-primary":"btn-link b-1" }} m-b-10">
+            {{ userEventInvitation.displayableName(false) is empty?"global.button.nextStep"|trans:"global.button.save"|trans }}</button>
     </div>
 {% endblock action_buttons %}
 
+{#<script>#}
+    {% block submitEventInvitationProfileForm_succes %}
+        $('#cover').remove();
+    {% endblock submitEventInvitationProfileForm_succes %}
+
+    {% block js_document_ready %}
+    {% endblock js_document_ready %}
+{#</script>#}
+
+{#
 {% block js_script %}
     {% use "@App/Event/partials/block/invitationUrl_copyClipboardInput.html.twig" %}
-    {% set htmlInputBlock = block('inviationUrl_copyCLipboardInput_block') %}
+    {% set htmlInputBlock = block('inviationUrl_copyClipboardInput_block') %}
     <script>
         $(document).ready(function () {
             new Clipboard('#btn_copy_invitation_url');
 
             $('button#profile_form_submit').on("click", function (e) {
                 var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
-                if (profileEmail.trim() == "") {
+                if (profileEmail.trim() === "") {
                     e.preventDefault();
                     swal({
                         titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
@@ -44,7 +53,7 @@
                         $('#{{ userEventInvitationForm.email.vars.id }}').val(inputValue);
                         $('form#{{ userEventInvitationForm.vars.id }}').submit();
                     }, function (dismiss) {
-                        if (dismiss == 'cancel') {
+                        if (dismiss === 'cancel') {
                             $('form#{{ userEventInvitationForm.vars.id }}').submit();
                         }
                     });
@@ -53,3 +62,4 @@
         });
     </script>
 {% endblock js_script %}
+#}

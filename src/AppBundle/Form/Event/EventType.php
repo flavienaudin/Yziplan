@@ -79,6 +79,9 @@ class EventType extends AbstractType
                 'prototype' => true,
                 'by_reference' => false
             ))
+            ->add("activityProvider", CheckboxType::class, array(
+                'required' => false
+            ))
             ->add("template", CheckboxType::class, array(
                 'required' => false
             ))

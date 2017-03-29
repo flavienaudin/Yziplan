@@ -9,12 +9,13 @@
             <div id="event_public_invitation_display" class="{{ (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.invitationOnly?'hidden' }}">
                 <div class="form-group animated">
                     <label class="control-label" for="url_event_public_invitation">{{ "event.form.public_invitation.label"|trans }}</label>
-                    <div class="input-group">
+                    <div class="input-group input-group-sm">
                         <div class="fg-line">
-                            <input type="text" id="url_event_public_invitation" value="{{ url("displayEvent",{'token':userEventInvitation.event.token}) }}" class="form-control" readonly="readonly">
+                            <input type="text" id="url_event_public_invitation" class="form-control input-sm" readonly="readonly"
+                                   value="{{ url("displayEvent", {'token':userEventInvitation.event.token}) }}">
                         </div>
-                        <span class="input-group-btn"><button type="button" id="btn_url_event_public_invitation" class="btn btn-primary" data-clipboard-target="#url_event_public_invitation"><i
-                                        class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
+                        <span class="input-group-btn"><button type="button" id="btn_url_event_public_invitation" class="btn btn-primary btn-icon-text"
+                                                              data-clipboard-target="#url_event_public_invitation"><i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
                     </div>
                 </div>
             </div>

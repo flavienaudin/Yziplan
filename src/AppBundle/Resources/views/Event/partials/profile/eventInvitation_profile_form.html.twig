@@ -30,6 +30,31 @@
                 'attr':{'class':'input-sm', 'placeholder':'eventInvitation.form.email.placeholder'},
                 'widget_options':{'fgline' : true}
             }) }}
+        </div>
+        <div class="col-xs-5">
+            <div class="avatar-img-container-md center-block">
+                {{ include("@App/Avatar/partials/avatar_display.html.twig",{"invitation" : userEventInvitation, "userEventInvitation": userEventInvitation}) }}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="form-group">
+                <a href="#invitation_personnal_link_container" data-toggle="collapse" aria-controls="#invitation_personnal_link_container" aria-expanded="false"> <label class="control-label"
+                                                                                                                                                                         for="invitation_personnal_link">{{ "eventInvitation.form.personal_link.label"|trans|raw }}</label></a>
+                <div class="collapse animated" id="invitation_personnal_link_container">
+                    <div class="input-group input-group-sm">
+                        <div class="fg-line">
+                            <input type="text" id="invitation_personnal_link" class="form-control input-sm" readonly="readonly"
+                                   value="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}">
+                        </div>
+                        <span class="input-group-btn">
+                                <button type="button" id="btn_invitation_personnal_link" class="btn btn-primary btn-icon-text" data-clipboard-target="#invitation_personnal_link"><i
+                                            class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
+                    </div>
+                </div>
+            </div>
+
             {% block action_buttons %}
                 <div class="text-center">
                     {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") and userEventInvitation.displayableName(false) is not empty %}
@@ -42,33 +67,35 @@
                 </div>
             {% endblock action_buttons %}
         </div>
-        <div class="col-xs-5">
-            <div class="avatar-img-container-md center-block">
-                {{ include("@App/Avatar/partials/avatar_display.html.twig",{"invitation" : userEventInvitation, "userEventInvitation": userEventInvitation}) }}
-            </div>
-        </div>
     </div>
+
     {{ form_rest(userEventInvitationForm) }}
     {{ form_end(userEventInvitationForm) }}
 
     {% block js_script %}
         {% use "@App/Event/partials/block/invitationUrl_copyClipboardInput.html.twig" %}
-        {% set htmlInputBlock = block('inviationUrl_copyCLipboardInput_block') %}
+        {% set htmlInputBlock = block('inviationUrl_copyClipboardInput_block') %}
         <script>
             $(document).ready(function () {
+                new Clipboard("#btn_invitation_personnal_link");
                 new Clipboard('#btn_copy_invitation_url');
-
                 $('form#{{ userEventInvitationForm.vars.id }}').on("submit", preSubmitEventInvitationProfileForm);
+
+                {% if userEventInvitation.displayableName(false) is empty %}
+                    $('#invitation_personnal_link_container').collapse('show');
+                {% endif %}
+
+                {% block js_document_ready %}{% endblock js_document_ready %}
             });
 
             /** L'utilisateur soumet le formulaire "Profil" de lui-même (non via une autre action dans la page) */
             function preSubmitEventInvitationProfileForm(e) {
-                if (e != null) {
+                if (e !== null) {
                     e.preventDefault();
                 }
                 var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
                 var $form = $(this);
-                if (profileEmail.trim() == "") {
+                if (profileEmail.trim() === "") {
                     // On indique le lien de l'invitation de l'utilisateur et on lui demande son email pour lui envoyer
                     // Il peut refuser, dans les 2 cas (confirm/dismiss==cancel), le formulaire est envoyé
                     swal({
@@ -104,22 +131,25 @@
                 ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
                     if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('userDisplayableName')) {
                         LetterAvatar.setConnectedUserName(responseJSON['data']['userDisplayableName']);
-                        LetterAvatar.transform();
                     }
                     if (typeof thenConfirmCallback === 'function') {
-                        if (thenConfirmCallbackParams == undefined) {
+                        if (thenConfirmCallbackParams === undefined) {
                             thenConfirmCallbackParams = null;
                         }
                         thenConfirmCallback(thenConfirmCallbackParams);
                     }
+
+                    {% block submitEventInvitationProfileForm_succes %}{% endblock submitEventInvitationProfileForm_succes %}
                 }, function (jqXHR, textStatus, errorThrown) {
                     if (typeof thenCancelCallback === 'function') {
-                        if (thenCancelCallbackParams == undefined) {
+                        if (thenCancelCallbackParams === undefined) {
                             thenCancelCallbackParams = null;
                         }
                         thenCancelCallback(thenCancelCallbackParams)
                     }
-                }, null);
+                }, function(){
+                    LetterAvatar.transform();
+                });
             }
 
             {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') or
@@ -130,7 +160,7 @@
              */
             function askGuestName(e, thenConfirmCallback, thenConfirmCallbackParams, thenCancelCallback, thenCancelCallbackParams) {
                 if (!eventInvitationValid) {
-                    if (typeof e != 'undefined' && e != null) {
+                    if (typeof e !== 'undefined' && e !== null) {
                         e.preventDefault();
                     }
                     var currentStep = 1;
@@ -161,7 +191,7 @@
                     ];
 
                     var profileEmail = $('#{{ userEventInvitationForm.email.vars.id }}').val();
-                    if (profileEmail.trim() == "") {
+                    if (profileEmail.trim() === "") {
                         steps.push({
                             titleText: "{{ "eventInvitation.profile.card.guestemail_empty_alert.title"|trans }}",
                             html: '{{ htmlInputBlock|raw }}<br>{{ "eventInvitation.profile.card.guestemail_empty_alert.html"|trans }}',
@@ -187,26 +217,26 @@
                         }
                         submitEventInvitationProfileForm(form, e, thenConfirmCallback, thenConfirmCallbackParams);
                     }, function (dismiss) {
-                        if (currentStep == 1) {
+                        if (currentStep === 1) {
                             swal({
                                 title: "{{ "global.swal.title.warning"|trans }}",
                                 html: "{{ "eventInvitation.profile.card.guestname_required_alert.dismiss"|trans }}",
                                 type: "warning"
                             });
                             if (typeof thenCancelCallback === 'function') {
-                                if (thenCancelCallbackParams == undefined) {
+                                if (thenCancelCallbackParams === undefined) {
                                     thenCancelCallbackParams = null;
                                 }
                                 thenCancelCallback(thenCancelCallbackParams)
                             }
-                        } else if (currentStep == 2) {
+                        } else if (currentStep === 2) {
                             if (dismiss === 'cancel') {
                                 // L'utilsiateur a cliqué sur le bouton "J'ai bien noté le lien" => pas d'email volontairement
                                 submitEventInvitationProfileForm(form, e, thenConfirmCallback, thenConfirmCallbackParams, thenCancelCallback, thenConfirmCallbackParams);
                             }
                         } else {
                             if (typeof thenCancelCallback === 'function') {
-                                if (thenCancelCallbackParams == undefined) {
+                                if (thenCancelCallbackParams === undefined) {
                                     thenCancelCallbackParams = null;
                                 }
                                 thenCancelCallback(thenCancelCallbackParams)

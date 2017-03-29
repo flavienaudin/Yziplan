@@ -9,10 +9,14 @@
 {% block event_content %}
     <div id="eventWizard" class="row">
         <div class="col-xs-12 col-xs-p-lr-0">
+            {% block wizard_step_before_card %}{% endblock %}
+
             <div class="card z-depth-1">
-                <div class="card-header">
-                    <h2>{% block wizard_step_title %}{% endblock %}</h2>
-                </div>
+                {% block wizard_header %}
+                    <div class="card-header">
+                        <h2>{% block wizard_step_title %}{% endblock %}</h2>
+                    </div>
+                {% endblock %}
 
                 <div class="card-body card-padding">
                     <div id="newEventWizard">
@@ -20,8 +24,8 @@
                     </div>
                 </div>
             </div>
-
-            {% block wizard_step_after_card %}{% endblock %}
         </div>
+
+        {% block wizard_step_post_card %}{% endblock wizard_step_post_card %}
     </div>
 {% endblock event_content %}
