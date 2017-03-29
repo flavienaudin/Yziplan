@@ -91,6 +91,29 @@ class PollProposalManager
     }
 
     /**
+     * @param $pollProposals array of pPllProposal
+     * @param EventInvitation $userEventInvitation
+     * @return string
+     * @internal param PollProposal $Array $pollProposal
+     */
+    public function displayPollProposalListRowPartial($pollProposals, EventInvitation $userEventInvitation)
+    {
+        if(!empty($pollProposals)) {
+            $pollModule = $pollProposals[0]->getPollModule();
+            $userModuleInvitation = null;
+            if ($userEventInvitation != null) {
+                $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($pollModule->getModule());
+            }
+            return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalGuestResponseListRowDisplay.html.twig", array(
+                'pollProposals' => $pollProposals,
+                'userModuleInvitation' => $userModuleInvitation,
+                'moduleInvitations' => $pollModule->getModule()->getFilteredModuleInvitations()
+            ));
+        }
+        return null;
+    }
+
+    /**
      * @param PollModule $pollModule
      * @return FormInterface
      */

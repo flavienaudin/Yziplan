@@ -891,11 +891,7 @@ class EventController extends Controller
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         } else if ($pollProposalListAddForm->isValid()) {
                             $pollProposals = $pollProposalManager->treatPollProposalListForm($pollProposalListAddForm, $moduleDescription['module'], $userModuleEventInvitation);
-                            /**
-                             * TODO :
-                             */
-                            //$data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
-
+                            $data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalListRowPartial($pollProposals, $userEventInvitation);
                             // Form reset
                             $pollProposalAddForm = $pollProposalManager->createPollProposalAddForm($moduleDescription['module']->getPollModule());
                             $pollProposalListAddForm = $pollProposalManager->createPollProposalListAddForm($moduleDescription['module']->getPollModule());

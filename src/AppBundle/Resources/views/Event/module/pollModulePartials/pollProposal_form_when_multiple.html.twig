@@ -83,31 +83,41 @@
             });
 
             $("#{{ pp_form_modal_prefix }}_list_form_id").on("submit", function (e) {
-                var container = $('#{{ pp_form_modal_prefix }}-add-date-container');
-                var index = container.data('index');
-                var dateList = $('#{{ pp_form_modal_prefix }}Datepicker').datepicker('getFormattedDate').split(',');
+                var $form = $(this);
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    e.preventDefault();
+                    var modalContainer = $("#{{ pp_form_modal_prefix }}_modal_id");
+                    if (modalContainer[0]) {
+                        modalContainer.modal('hide');
+                    }
+                    askGuestName(e, submitAddPollProposalForm, [$form, e, '{{ userModuleInvitation.module.token }}', '{{ pp_form_modal_prefix }}', '{{ edition }}']);
+                } else {
+                    var container = $('#{{ pp_form_modal_prefix }}-add-date-container');
+                    var index = container.data('index');
+                    var dateList = $('#{{ pp_form_modal_prefix }}Datepicker').datepicker('getFormattedDate').split(',');
 
-                dateList.forEach(function (element) {
-                    // Get the data-prototype explained earlier
-                    var prototype = container.data('prototype');
+                    dateList.forEach(function (element) {
+                        // Get the data-prototype explained earlier
+                        var prototype = container.data('prototype');
 
-                    // Replace '__name__' in the prototype's HTML to
-                    // instead be a number based on how many items we have
-                    var newForm = prototype.replace(/__name__/g, index);
-                    // increase the index with one for the next item
-                    //container.data('index', index + 1);
-                    index++;
+                        // Replace '__name__' in the prototype's HTML to
+                        // instead be a number based on how many items we have
+                        var newForm = prototype.replace(/__name__/g, index);
+                        // increase the index with one for the next item
+                        //container.data('index', index + 1);
+                        index++;
 
-                    // Display the new form
-                    var newFormDiv = $('<div class="hidden"></div>').html(newForm);
-                    newFormDiv.find('input:first').val(element);
-                    //newFormDiv.find("input[id='startTime']").addClass('hidden');
-                    //newFormDiv.find("input[id='endDate']").addClass('hidden');
-                    //newFormDiv.find("input[id='endTime']").addClass('hidden');
-                    container.append(newFormDiv);
-                });
+                        // Display the new form
+                        var newFormDiv = $('<div class="hidden"></div>').html(newForm);
+                        newFormDiv.find('input:first').val(element);
+                        //newFormDiv.find("input[id='startTime']").addClass('hidden');
+                        //newFormDiv.find("input[id='endDate']").addClass('hidden');
+                        //newFormDiv.find("input[id='endTime']").addClass('hidden');
+                        container.append(newFormDiv);
+                    });
 
-                ajaxFormSubmission($(this), e, null, null, null);
+                    submitAddPollProposalForm([$form, e, '{{ userModuleInvitation.module.token }}', '{{ pp_form_modal_prefix }}', '{{ edition }}']);
+                }
             });
         })
     </script>
