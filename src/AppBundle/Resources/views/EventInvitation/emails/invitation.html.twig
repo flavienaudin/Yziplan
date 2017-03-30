@@ -8,35 +8,36 @@
     {% endautoescape %}
 {% endblock %}
 {% block body_text %}
-    {% set creatorsNames = "" %}
-    {% for creatorInvitation in eventInvitation.event.creators|merge(eventInvitation.event.administrators) %}
-        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
+    {% set organizerNames = "" %}
+    {% set organizersInvitations = eventInvitation.event.organizers %}
+    {% for organizerInvitation in organizersInvitations %}
+        {% set organizerNames = organizerNames~(loop.index > 1?', ')~ organizerInvitation.displayableName(true, true) %}
     {% endfor %}
     {% autoescape false %}
         {{ 'eventInvitation.email.invitation.body.hello'|trans({'%username%': eventInvitation.displayableName(true, false)}) }}
         {% if message is empty %}
-            {% if creatorsNames|split(",")|length > 1 %}
-                {{ "eventInvitation.email.invitation.body.paragraph.first_part.several_orga"|trans }}
-            {% else %}
-                {{ "eventInvitation.email.invitation.body.paragraph.first_part.single_orga"|trans }}
+            {{ "eventInvitation.email.invitation.body.paragraph.first_part"|transchoice(organizersInvitations|length, {"%event_name%":eventInvitation.event.name}) }}
+            {% if eventInvitation.event.description is not empty and eventInvitation.event.description != '<p><br></p>' %}
+                {{ eventInvitation.event.description|raw }}
             {% endif %}
+        {% else %}
+            <p>{{ message|nl2br }}</p>
         {% endif %}
-        {{ "eventInvitation.email.invitation.body.paragraph.second_part"|trans({"%event_name%":eventInvitation.event.name}) }}
 
         {{ "eventInvitation.email.invitation.body.paragraph.text_link"|trans }}
         {{ url('displayEventInvitation',{'token':eventInvitation.token}) }}
         {{ "eventInvitation.email.invitation.body.paragraph.warning_secret"|trans }}
 
         {{ "email.salutation"|trans }},
-        {% if creatorsNames is not empty %}{{ creatorsNames }}{% endif %}
+        {% if organizerNames is not empty %}{{ organizerNames }}{% endif %}
     {% endautoescape %}
 {% endblock %}
 {% block body_html %}{% spaceless %}
-    {% set creatorsNames = "" %}
-    {% for creatorInvitation in eventInvitation.event.creators|merge(eventInvitation.event.administrators) %}
-        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
+    {% set organizerNames = "" %}
+    {% set organizersInvitations = eventInvitation.event.organizers %}
+    {% for organizerInvitation in organizersInvitations %}
+        {% set organizerNames = organizerNames~(loop.index > 1?', ')~ organizerInvitation.displayableName(true, true) %}
     {% endfor %}
-
     <div style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100% !important; height: 100%;
 line-height: 1.6; background-color: #f6f6f6;">
         <table style="background-color: #f6f6f6; width: 100%;">
@@ -63,17 +64,12 @@ line-height: 1.6; background-color: #f6f6f6;">
                                         <tr>
                                             <td style="padding: 0 0 20px;">
                                                 {% if message is empty %}
-                                                    <p>
-                                                        {% if creatorsNames|split(",")|length > 1 %}
-                                                            {{ "eventInvitation.email.invitation.body.paragraph.first_part.several_orga"|trans }}
-                                                        {% else %}
-                                                            {{ "eventInvitation.email.invitation.body.paragraph.first_part.single_orga"|trans }}
-                                                        {% endif %}
-                                                        {{ "eventInvitation.email.invitation.body.paragraph.second_part"|trans({"%event_name%":eventInvitation.event.name}) }}
-                                                    </p>
+                                                    <p>{{ "eventInvitation.email.invitation.body.paragraph.first_part"|transchoice(organizersInvitations|length, {
+                                                            "%event_name%":eventInvitation.event.name
+                                                        }) }}</p>
                                                     {% if eventInvitation.event.description is not empty and eventInvitation.event.description != '<p><br></p>' %}
                                                         <div style="background: #f5f5f5; border: 1px solid #e3e3e3; border-radius: 2px; padding: 0 9px">
-                                                        {{ eventInvitation.event.description|raw }}
+                                                            {{ eventInvitation.event.description|raw }}
                                                         </div>
                                                     {% endif %}
                                                 {% else %}
@@ -94,7 +90,7 @@ line-height: 1.6; background-color: #f6f6f6;">
                                         </tr>
                                         <tr>
                                             <td style="padding: 0 0 20px;">
-                                                <h4>{% if creatorsNames is not empty %}{{ creatorsNames }}{% else %}{{ "email.organisers"|trans }}{% endif %}</h4>
+                                                <h4>{% if organizerNames is not empty %}{{ organizerNames }}{% else %}{{ "email.organisers"|trans }}{% endif %}</h4>
                                             </td>
                                         </tr>
                                     </table>

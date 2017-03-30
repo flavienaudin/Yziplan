@@ -471,6 +471,18 @@ class Module implements CommentableInterface
     }
 
     /**
+     * Retrieve EventInvitation with creator = true or administrator = true
+     * @return Collection of EventInvitation
+     */
+    public function getOrganizers()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("creator", true))
+            ->orWhere(Criteria::expr()->eq("administrator", true));
+        return $this->moduleInvitations->matching($criteria);
+    }
+
+    /**
      * @param int $maxResult
      * @param array $excludedModuleInvitations
      * @return Collection

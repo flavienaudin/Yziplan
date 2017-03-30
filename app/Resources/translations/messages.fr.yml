@@ -103,7 +103,7 @@ event:
     meta_title:
       new_event: Nouvel événement
   header:
-    organised_by: "Organisé par %creator%"
+    organised_by: "Organisé par %organizer%"
   picture:
     update_modal:
       title: Charger une image
@@ -113,6 +113,7 @@ event:
   menu:
     edit: Editer l'événement
     duplication: Options de duplication
+    cancel: Annuler l'événement
   modal:
     edit:
       title: Modifier l'événement
@@ -227,6 +228,13 @@ event:
       time_closed:
         label: Heure de fermeture
         placeholder: Heure de fermeture
+  alert:
+    confirm_cancellation:
+      title: Etes-vous sûr de vouloir annuler cet événement ?
+      message: <p><strong>Cette action est irréversible</strong></p><p>Vous ne pourrez plus y accéder, vos invités seront avertis et ne pourront également plus participer</p>
+      input:
+        label: Indiquez ci-dessous à vos invités pourquoi vous annulez cet événement :
+        placeholder: Facultatif
   wizard:
     button:
       send_invitations: Envoyer les invitations
@@ -249,12 +257,23 @@ event:
       subtitle: Cet événement est un modèle, vous pouvez activer maintenant la possibilité de créer des événements à partir de ce modèle.
     error.message:
       wrong_step: Une erreur dans le processus de création de l'événement s'est produite. Merci de re-essayer l'opération
+  cancelled:
+    title: Evénement annulé
+    hello: Bonjour %guestname%
+    text: Cet événémenet a été annnulé par l'organisateur, vous avez dû recevoir un e-mail|Cet événémenet a été annnulé par les organisateurs, vous avez dû recevoir un e-mail
+    email:
+      subject: "Yziplan : \"%event_name%\" est annulé"
+      body:
+        hello: Bonjour %guestname%
+        text: "Désolé, nous avons annulé l'événement \"%event_name%\"."
   error.message:
-    creation: Une erreur est survenue lors de la création de l'événement.
+    creation: Une erreur est survenue lors de la création de l'événement
+    deletion: Une erreur est survenue lors de l'annulation de l'événement
     unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
     valide_guestname_required: Cette action nécessite que vous validiez votre invitation en renseignant votre nom. Aucune modification n'a été apportée
   success.message:
     creation: Evénement créé avec succès
+    cancellation: Evénement annulé avec succès. Vous allez être redirigé dans quelques instants
 
 eventInvitations:
   user_menu:
@@ -351,10 +370,7 @@ eventInvitation:
       body:
         hello: "Bonjour %username%!"
         paragraph:
-          first_part:
-            several_orga: "Nous vous invitons "
-            single_orga: "Je vous invite "
-          second_part: "à \"%event_name%\""
+          first_part: "Je vous invite à \"%event_name%\"|Nous vous invitons à \"%event_name%\""
           text_link: "Suivez le lien suivant pour y répondre:"
           warning_secret: "Gardez-le secrètement, ceci votre invitation personnelle"
     recap:
@@ -551,6 +567,8 @@ global:
   link:
     top: Haut
   button:
+    yes: Oui
+    no: Non
     ok: OK
     valid: Valider
     cancel: Annuler

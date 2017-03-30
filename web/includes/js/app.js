@@ -352,6 +352,15 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
             failCallback(jqXHR, textStatus, errorThrown);
         }
     }).always(function (responseDataOrJSON) {
+        if (responseDataOrJSON.hasOwnProperty('redirect')) {
+            var waitTime = 0;
+            if (responseDataOrJSON.hasOwnProperty('messages')) {
+                waitTime = 5000;
+            }
+            setTimeout(function(){
+                window.location.href = responseDataOrJSON['redirect'];
+            },waitTime);
+        }
         if (alwaysCallback) {
             alwaysCallback(responseDataOrJSON);
         }
