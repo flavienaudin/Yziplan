@@ -29,6 +29,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * Class PollModuleController
@@ -90,7 +91,9 @@ class PollModuleController extends Controller
                     $pollProposalAddForm->handleRequest($request);
                     if ($pollProposalAddForm->isSubmitted()) {
                         if ($request->isXmlHttpRequest()) {
-                            if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                            if ($request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $currentEvent->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                                ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                            ) {
                                 // Vérification serveur de la validité de l'invitation
                                 $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
                                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
@@ -120,7 +123,9 @@ class PollModuleController extends Controller
                                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                             }
                         } else {
-                            if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                            if ($request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $currentEvent->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                                ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                            ) {
                                 // Vérification serveur de la validité de l'invitation
                                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                                 return new RedirectResponse($this->generateUrl('displayEvent', array('token' => $currentEvent->getToken())) . '#module-' . $module->getToken());
@@ -160,8 +165,8 @@ class PollModuleController extends Controller
             $pollProposalEditionForm = $pollProposalManager->createPollProposalForm($pollProposal);
             $pollProposalEditionForm->handleRequest($request);
             if ($pollProposalEditionForm->isSubmitted()) {
-                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
-                    || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER
+                if ($request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $moduleInvitation->getEventInvitation()->getEvent()->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                    ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
                 ) {
                     // Vérification serveur de la validité de l'invitation
                     $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
@@ -178,7 +183,7 @@ class PollModuleController extends Controller
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#pollProposalEdition_" . $pollProposal->getId() . "_form_id"] =
                             $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
                                     'userModuleInvitation' => $moduleInvitation,
-                                    'pollModuleOptions'=> array('pollProposalAddForm' => $pollProposalEditionForm->createView()),
+                                    'pollModuleOptions' => array('pollProposalAddForm' => $pollProposalEditionForm->createView()),
                                     'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
                                     'edition' => true
                                 )
@@ -191,7 +196,7 @@ class PollModuleController extends Controller
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollProposalEdition_' . $pollProposal->getId() . '_formContainer'] =
                             $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
                                 'userModuleInvitation' => $moduleInvitation,
-                                'pollModuleOptions'=> array('pollProposalAddForm' => $pollProposalEditionForm->createView()),
+                                'pollModuleOptions' => array('pollProposalAddForm' => $pollProposalEditionForm->createView()),
                                 'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
                                 'edition' => true
                             ));
@@ -202,7 +207,7 @@ class PollModuleController extends Controller
             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#modal-container-block-' . $pollProposal->getPollModule()->getModule()->getToken()] =
                 $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form_modal.html.twig', array(
                         'userModuleInvitation' => $moduleInvitation,
-                        'pollModuleOptions'=> array('pollProposalAddForm' => $pollProposalEditionForm->createView()),
+                        'pollModuleOptions' => array('pollProposalAddForm' => $pollProposalEditionForm->createView()),
                         'pp_form_modal_prefix' => 'pollProposalEdition_' . $pollProposal->getId(),
                         'edition' => true
                     )
@@ -223,8 +228,10 @@ class PollModuleController extends Controller
     {
         if ($this->isGranted(PollProposalVoter::DELETE, array($pollProposal, $moduleInvitation))) {
             if ($request->isXmlHttpRequest()) {
-                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
-                    || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER
+                if ($request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $moduleInvitation->getEventInvitation()->getEvent()->getToken()),
+                        UrlGenerator::ABSOLUTE_URL) &&
+                    ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
+                    || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
                 ) {
                     // Vérification serveur de la validité de l'invitation
                     $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;

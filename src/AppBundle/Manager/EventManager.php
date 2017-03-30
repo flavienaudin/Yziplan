@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -587,7 +588,9 @@ class EventManager
                 $moduleForm->handleRequest($request);
                 if ($moduleForm->isSubmitted()) {
                     if ($request->isXmlHttpRequest()) {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
@@ -618,7 +621,9 @@ class EventManager
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     } else {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->translator->trans("event.error.message.valide_guestname_required");
                             return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())));
@@ -644,7 +649,9 @@ class EventManager
                 $pollProposalAddForm->handleRequest($request);
                 if ($pollProposalAddForm->isSubmitted()) {
                     if ($request->isXmlHttpRequest()) {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
@@ -664,7 +671,9 @@ class EventManager
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     } else {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $this->session->getFlashBag()->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("event.error.message.valide_guestname_required"));
                             return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
@@ -686,7 +695,9 @@ class EventManager
                 $pollProposalListAddForm->handleRequest($request);
                 if ($pollProposalListAddForm->isSubmitted()) {
                     if ($request->isXmlHttpRequest()) {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
@@ -705,7 +716,9 @@ class EventManager
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     } else {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $this->session->getFlashBag()->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("event.error.message.valide_guestname_required"));
                             return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
