@@ -260,7 +260,7 @@ event:
   cancelled:
     title: Evénement annulé
     hello: Bonjour %guestname%
-    text: Cet événémenet a été annnulé par l'organisateur, vous avez dû recevoir un e-mail|Cet événémenet a été annnulé par les organisateurs, vous avez dû recevoir un e-mail
+    text: Cet événement a été annnulé par l'organisateur, vous avez dû recevoir un e-mail|Cet événement a été annnulé par les organisateurs, vous avez dû recevoir un e-mail
     email:
       subject: "Yziplan : \"%event_name%\" est annulé"
       body:
