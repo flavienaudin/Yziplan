@@ -19,6 +19,7 @@ use AppBundle\Security\EventVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\Notifications\Notification;
 use AppBundle\Utils\Response\AppJsonResponse;
 use AppBundle\Utils\Response\FileInputJsonResponse;
 use ATUserBundle\Entity\AccountUser;
@@ -116,6 +117,9 @@ class EventController extends Controller
         $eventManager = $this->get('at.manager.event');
         $eventManager->setEvent($currentEvent);
 
+        /** @var $notifications array Tableau de notifications {idx => Notification} */
+        $notifications = array();
+
         /////////////////////////////////////
         // User EventInvitation management //
         /////////////////////////////////////
@@ -132,6 +136,10 @@ class EventController extends Controller
             /* TODO : invitation annulée : désactiver les formulaires */
             if ($userEventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                 $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans('eventInvitation.message.warning.invitation_cancelled'));
+            }
+
+            if ($userEventInvitation->getLastVisitAt() == null) {
+                $eventInvitationManager->updateLastVisit();
             }
 
             $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
@@ -219,6 +227,10 @@ class EventController extends Controller
             $thread = $discussionManager->createCommentableThread($currentEvent);
         }
         $comments = $discussionManager->getCommentsThread($thread);
+        $eventThreadNotif = $discussionManager->getNotification($userEventInvitation, $comments, $currentEvent);
+        if ($eventThreadNotif != null) {
+            array_push($notifications, $eventThreadNotif);
+        }
 
         ////////////////////////
         // Edition management //
@@ -241,7 +253,7 @@ class EventController extends Controller
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     } elseif ($eventForm->isValid()) {
-                        $eventManager->treatEventFormSubmission($eventForm);
+                        $eventManager->treatEventFormSubmission($eventForm, $userEventInvitation);
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
 
                         // Creation du templateSettingsForm nécessaire à l'affichage du template
@@ -278,7 +290,7 @@ class EventController extends Controller
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     } elseif ($eventForm->isValid()) {
-                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm, $userEventInvitation);
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     }
                 }
@@ -484,9 +496,9 @@ class EventController extends Controller
         ////////////////////////
         // modules management //
         ////////////////////////
-        $modules = $eventManager->getModulesToDisplay($userEventInvitation);
+        $modules = $eventManager->getModulesToDisplay($userEventInvitation, $notifications);
         $response = $eventManager->treatModulesToDisplay($currentEvent, $modules, $userEventInvitation, $request);
-        if ($response != null) {
+        if ($response instanceof Response) {
             return $response;
         }
 
@@ -496,6 +508,9 @@ class EventController extends Controller
             $redirectedAfterEventDuplication = true;
             $request->getSession()->remove(self::REDIRECTED_AFTER_EVENT_DUPLICATION);
         }
+
+        uasort($notifications, array(Notification::class, 'compare'));
+
         return $this->render('AppBundle:Event:event.html.twig', array(
             'event' => $currentEvent,
             'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
@@ -508,7 +523,8 @@ class EventController extends Controller
             'userEventInvitation' => $userEventInvitation,
             'userEventInvitationForm' => $eventInvitationForm->createView(),
             'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView(),
-            'redirectedAfterEventDuplication' => $redirectedAfterEventDuplication
+            'redirectedAfterEventDuplication' => $redirectedAfterEventDuplication,
+            'notifications' => $notifications
         ));
     }
 

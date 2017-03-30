@@ -90,10 +90,11 @@
 
             <div class="pull-right h-menu-wrapper">
                 <ul class="h-menu">
+                    {% block header_menu_item_before %}{% endblock %}
                     <li class="hm-new-event-link">
                         <a href="{{ path('createEvent') }}" class="btn btn-link navbar-btn c-teal"> <i class="zmdi zmdi-plus-circle-o-duplicate"></i> <span> {{ 'navbar.new_event'|trans() }}</span></a>
                     </li>
-
+                    {% block header_menu_item_between %}{% endblock %}
                     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                         {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
                         {# TODO decommenter : non necessaire pour la version beta
@@ -120,19 +121,6 @@
                                 {% set userDisplayableName = app.user.displayableName(true) %}
                                 <li role="presentation"><a class="user-public-name">{{ userDisplayableName is not empty ? userDisplayableName:"global.user_anonyme"|trans }}</a></li>
                                 <li role="separator" class="divider"></li>
-                                {#<li role="presentation" class="hmp-alerts">
-                                    #}{# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts" #}
-                                {# TODO decommenter : non necessaire pour la version beta
-                                <div class="hmp-alert" data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
-                                    <a href="#"><i class="hm-icon zmdi zmdi-email"></i></a>
-                                </div>#}
-                                {# Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
-                                {#TODO decommenter : non necessaire pour la version beta
-                                <div class="hmp-alert" data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
-                                    <a href="#"><i class="hm-icon zmdi zmdi-notifications"></i></a>
-                                </div>#}{#
-                            </li>
-                            {#<li role="separator" class="hmp-alerts divider"></li>#}
                                 <li role="presentation"><a href="{{ path('displayUserEvents') }}">{{ "eventInvitations.user_menu.entry"|trans }}</a>
                                 </li>
                                 <li role="presentation"><a href="{{ path('fos_user_profile_show') }}">{{ "profile.user_menu.entry"|trans }}</a>
@@ -150,6 +138,7 @@
                         <li class="hm-login-link">
                             <a data-toggle="modal" href="#modalLogin" class="navbar-btn"> <i class="zmdi zmdi-sign-in"></i> <span> {{ 'layout.login'|trans({}, 'FOSUserBundle') }}</span></a></li>
                     {% endif %}
+                    {% block header_menu_item_after %}{% endblock %}
                 </ul>
             </div>
 
@@ -163,33 +152,40 @@
 
 <!-- CONTENT -->
 {# Pour avoir une page AVEC un menu latéral : conserver section.with-s-main-menu et redéfinir le block "s_main_menu" ou juste "mainMenu_listItems" #}
-{# Pour avoir une page SANS menu latéral : redéfinir(vider) le block "main_section_clss" et définir les blocks "s_main_menu" et "sidebar_collapse_cmd" vides #}
+{# Pour avoir une page SANS menu latéral : redéfinir(vider) le block "main_section_class" et définir les blocks "s_main_menu" et "sidebar_collapse_cmd" vides #}
 <section id="main" class="{% block main_section_class %}with-s-main-menu{% endblock %}">
-    {# TODO non necessaire pour la version beta #}
-    {% if false and is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+    {# Set side_panel variable to true to activate the side panel and define the controls and contents blocks #}
+    {% if side_panel is defined and side_panel %}
         {# Panneaux d'affichage des "Notifications utilisateur" ouverts via les icones de la navbar #}
         <aside id="s-user-alerts" class="sidebar">
             <ul class="tab-nav tn-justified tn-icon m-t-10" data-tab-color="teal">
-                <li><a class="sua-messages" href="#sua-messages" data-toggle="tab"><i class="zmdi zmdi-email"></i></a>
-                </li>
-                <li><a class="sua-notifications" href="#sua-notifications" data-toggle="tab"><i class="zmdi zmdi-notifications"></i></a></li>
+                {% block user_messages_side_panel_control %}
+                    {#<li><a class="sua-messages" href="#sua-messages" data-toggle="tab"><i class="zmdi zmdi-email"></i></a></li>#}
+                {% endblock user_messages_side_panel_control %}
+                {% block notifications_side_panel_control %}
+                    <li><a class="sua-notifications" href="#sua-notifications" data-toggle="tab"><i class="zmdi zmdi-notifications"></i></a></li>
+                {% endblock notifications_side_panel_control %}
             </ul>
 
             <div class="tab-content">
-                <div class="tab-pane fade" id="sua-messages">
-                    <ul class="sua-menu list-inline list-unstyled palette-Light-Blue bg">
-                        <li>Messages</li>
-                        <li><a href="" data-ma-action="sidebar-close"><i class="zmdi zmdi-close"></i> Close</a></li>
-                    </ul>
-                    {# TODO Messages de l'utilisateur à afficher #}
-                </div>
-                <div class="tab-pane fade" id="sua-notifications">
-                    <ul class="sua-menu list-inline list-unstyled palette-Orange bg">
-                        <li>Utilisateur</li>
-                        <li><a href="" data-ma-action="sidebar-close"><i class="zmdi zmdi-close"></i> Close</a></li>
-                    </ul>
-                    {# TODO Notifications à afficher #}
-                </div>
+                {% block user_messages_side_panel %}
+                    {#<div class="tab-pane fade" id="sua-messages">
+                        <ul class="sua-menu list-inline list-unstyled palette-Light-Blue bg">
+                            <li>{{ "messages"|trans }}</li>
+                            <li><a href="" data-ma-action="sidebar-close"><i class="zmdi zmdi-close"></i> {{ "global.button.close"|trans }}</a></li>
+                        </ul>
+                        {% block user_messages_side_panel_content %}{% endblock %}
+                    </div>#}
+                {% endblock user_messages_side_panel %}
+                {% block notifications_side_panel %}
+                    <div class="tab-pane fade" id="sua-notifications">
+                        <ul class="sua-menu list-inline list-unstyled palette-Orange bg">
+                            {% block notifications_side_panel_top_links %}{% endblock %}
+                            <li><a data-ma-action="sidebar-close"><i class="zmdi zmdi-close"></i> {{ "global.button.close"|trans }}</a></li>
+                        </ul>
+                        {% block notifications_side_panel_content %}{% endblock %}
+                    </div>
+                {% endblock notifications_side_panel %}
             </div>
         </aside>
     {% endif %}

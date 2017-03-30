@@ -13,6 +13,7 @@ use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\EventOpeningHours;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Event\EventTemplateSettingsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
@@ -24,6 +25,8 @@ use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Utils\enum\ModuleStatus;
+use AppBundle\Utils\enum\NotificationTypeEnum;
+use AppBundle\Utils\Notifications\Notification;
 use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -36,6 +39,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -203,7 +207,7 @@ class EventManager
      * @param FormInterface $evtForm
      * @return Event|mixed
      */
-    public function treatEventFormSubmission(FormInterface $evtForm)
+    public function treatEventFormSubmission(FormInterface $evtForm, EventInvitation $userEventInvitation)
     {
         $this->event = $evtForm->getData();
         if (empty($this->event->getToken())) {
@@ -213,7 +217,10 @@ class EventManager
             $this->event->setTokenDuplication($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
             $this->event->setDuplicationEnabled(true);
         }
-        if ($this->event->getStatus() == EventStatus::IN_CREATION) {
+        // L'événement est en cours d'organisation si le créateur a une invitation valide
+        if ($this->event->getStatus() == EventStatus::IN_CREATION && $userEventInvitation->isCreator() &&
+            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER || $userEventInvitation->getStatus() == EventInvitationStatus::VALID)
+        ) {
             $this->event->setStatus(EventStatus::IN_ORGANIZATION);
         }
         /* TODO : desactivés pour simplifier l'interface */
@@ -262,7 +269,7 @@ class EventManager
         if ($this->event != null && $this->event->isDuplicationEnabled()) {
             $duplicatedEvent = new Event();
             $duplicatedEvent->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-            $duplicatedEvent->setStatus(EventStatus::IN_ORGANIZATION);
+            $duplicatedEvent->setStatus(EventStatus::IN_CREATION);
             $duplicatedEvent->setName($this->event->getName());
             $duplicatedEvent->setDescription($this->event->getDescription());
             $duplicatedEvent->setResponseDeadline($this->event->getResponseDeadline());
@@ -449,24 +456,25 @@ class EventManager
      * @param $type string Le sous-type du module en fonction du type (Cf. PollModuleType et autre)
      * @return Module le module créé
      */
-    public function addModule($type, $subtype)
+    public function addModule($type, $subtype, EventInvitation $creatorEventInvitation)
     {
         $user = $this->tokenStorage->getToken()->getUser();
         if (!$user instanceof AccountUser) {
             $user = null;
         }
-        $userEventInvitation = $this->eventInvitationManager->retrieveUserEventInvitation($this->event, false, false, $user);
-        if ($userEventInvitation == null) {
+
+        if ($creatorEventInvitation == null) {
             return null;
         }
 
-        $module = $this->moduleManager->createModule($this->event, $type, $subtype, $userEventInvitation);
+        $module = $this->moduleManager->createModule($this->event, $type, $subtype, $creatorEventInvitation);
 
         // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator).
         $this->moduleInvitationManager->initializeModuleInvitationsForEvent($this->event, $module);
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
 
+        $this->eventInvitationManager->updateLastVisit($creatorEventInvitation);
 
         // Create the thread after the module affectation to its event because of the thread ID is generate with the event token
         $this->discussionManager->createCommentableThread($module);
@@ -477,6 +485,7 @@ class EventManager
     /**
      * @param EventInvitation $userEventInvitation
      * @param string $requestUri The URI of the request to create thread for modules
+     * @param array|null $notifications par référence
      * @return array Un tableau de modules de l'événement au format :
      *  moduleId => [
      *  'module' => Module : Le module lui-meme
@@ -484,7 +493,7 @@ class EventManager
      *  'pollProposalAddForm' => Form : uniquement pour un PollModule
      * ]
      */
-    public function getModulesToDisplay(EventInvitation $userEventInvitation)
+    public function getModulesToDisplay(EventInvitation $userEventInvitation, &$notifications = null)
     {
         $modules = array();
         if ($this->event != null) {
@@ -512,6 +521,48 @@ class EventManager
                             $moduleDescription['pollModuleOptions']['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule());
                             $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
                         }
+
+                        if (is_array($notifications)) {
+                            // Création d'une notification si le module est nouveau depuis la dernière visite
+                            if ($module->getCreatedAt() > $userEventInvitation->getLastVisitAt()) {
+                                $new_module_notification = new Notification();
+                                $new_module_notification->setDate($module->getCreatedAt());
+                                $new_module_notification->setType(NotificationTypeEnum::MODULE);
+                                $creatorNames = "";
+                                /** @var ModuleInvitation $creator */
+                                foreach ($module->getCreators() as $creator) {
+                                    $creatorNames .= (!empty($creatorNames) ? ' ,' : '') . $creator->getDisplayableName(true, true);
+                                }
+                                $new_module_notification->setDatas(array(
+                                    "subject" => $module,
+                                    "creator_names" => $creatorNames
+                                ));
+                                array_push($notifications, $new_module_notification);
+                            }
+                            if ($module->getPollModule() != null) {
+                                /** @var PollProposal $pollProposal */
+                                foreach ($module->getPollModule()->getValidPollProposal() as $pollProposal) {
+                                    if ($pollProposal->getCreatedAt() > $userEventInvitation->getLastVisitAt()) {
+                                        $new_pollproposal_notification = new Notification();
+                                        $new_pollproposal_notification->setDate($pollProposal->getCreatedAt());
+                                        $new_pollproposal_notification->setType(NotificationTypeEnum::POLL_PROPOSAL);
+                                        $new_pollproposal_notification->setDatas(array(
+                                            "subject" => $module,
+                                            "creator_name" => $pollProposal->getCreator()->getDisplayableName(true, true)
+                                        ));
+                                        array_push($notifications, $new_pollproposal_notification);
+                                    }
+                                }
+                            }
+
+
+                            // Création d'une notification s'il y a de nouveaux commentaires
+                            $eventThreadNotif = $this->discussionManager->getNotification($userEventInvitation, $moduleDescription['comments'], $module);
+                            if ($eventThreadNotif != null) {
+                                array_push($notifications, $eventThreadNotif);
+                            }
+                        }
+
                         $modules[$module->getId()] = $moduleDescription;
                     }
                 }
@@ -540,7 +591,9 @@ class EventManager
                 $moduleForm->handleRequest($request);
                 if ($moduleForm->isSubmitted()) {
                     if ($request->isXmlHttpRequest()) {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
@@ -571,7 +624,9 @@ class EventManager
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     } else {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->translator->trans("event.error.message.valide_guestname_required");
                             return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())));
@@ -597,7 +652,9 @@ class EventManager
                 $pollProposalAddForm->handleRequest($request);
                 if ($pollProposalAddForm->isSubmitted()) {
                     if ($request->isXmlHttpRequest()) {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
@@ -617,7 +674,9 @@ class EventManager
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     } else {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $this->session->getFlashBag()->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("event.error.message.valide_guestname_required"));
                             return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
@@ -639,7 +698,9 @@ class EventManager
                 $pollProposalListAddForm->handleRequest($request);
                 if ($pollProposalListAddForm->isSubmitted()) {
                     if ($request->isXmlHttpRequest()) {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
@@ -658,7 +719,9 @@ class EventManager
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     } else {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        ) {
                             // Vérification serveur de la validité de l'invitation
                             $this->session->getFlashBag()->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("event.error.message.valide_guestname_required"));
                             return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
@@ -678,12 +741,12 @@ class EventManager
     /**
      * @param ModuleInvitation $userModuleEventInvitation
      * @param FormInterface $pollProposalAddForm
-     * @param FormInterface $pollProposalListAddForm
+     * @param FormInterface|null $pollProposalListAddForm
      * @param $moduleDescription
      * @param $data
      * @return mixed
      */
-    public function createPollProposalFormActionReplace(ModuleInvitation $userModuleEventInvitation, FormInterface $pollProposalAddForm, FormInterface $pollProposalListAddForm,
+    public function createPollProposalFormActionReplace(ModuleInvitation $userModuleEventInvitation, FormInterface $pollProposalAddForm, FormInterface $pollProposalListAddForm = null,
                                                         $moduleDescription, $data)
     {
         /** @var Module $currentModule */

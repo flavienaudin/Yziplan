@@ -44,10 +44,14 @@ class ModuleInvitationController extends Controller
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else if ($this->isGranted(ModuleInvitationVoter::EDIT, $moduleInvitation)) {
                     $pollroposalResponseManager = $this->get("at.manager.pollproposal_response");
-                    $pollroposalResponseManager->answerPollModuleProposal($moduleInvitation, $request->request->get('pollProposalId'), $request->request->get('value'));
-                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#resultCellPollProposal_' . $request->request->get('pollProposalId')] =
-                        $pollroposalResponseManager->displayPollProposalRowResultPartial($request->request->get('pollProposalId'));
-                    return new AppJsonResponse($data, Response::HTTP_OK);
+                    if($pollroposalResponseManager->answerPollModuleProposal($moduleInvitation, $request->request->get('pollProposalId'), $request->request->get('value'))) {
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#resultCellPollProposal_' . $request->request->get('pollProposalId')] =
+                            $pollroposalResponseManager->displayPollProposalRowResultPartial($request->request->get('pollProposalId'));
+                        return new AppJsonResponse($data, Response::HTTP_OK);
+                    }else{
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('moduleInvitation.error.message.missing_data');
+                        return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                    }
                 } else {
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('moduleInvitation.error.message.unauthorized_access');
                     return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
@@ -60,7 +64,5 @@ class ModuleInvitationController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
             return $this->redirectToRoute('home');
         }
-
     }
-
 }

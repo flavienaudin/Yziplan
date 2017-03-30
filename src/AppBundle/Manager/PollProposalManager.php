@@ -21,7 +21,6 @@ use AppBundle\Form\Module\PollModule\PollProposalType;
 use AppBundle\Form\Module\PollModule\PollProposalWhenType;
 use AppBundle\Form\Module\PollModule\PollProposalWhereType;
 use AppBundle\Utils\enum\PollModuleType;
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -175,26 +174,26 @@ class PollProposalManager
      */
     public function treatPollProposalForm(FormInterface $pollProposalForm, Module $module, ModuleInvitation $moduleInvitation = null)
     {
-        /**
-         * @var $pollProposal PollProposal
-         */
-        $pollProposal = $this->treatPollProposalWhenForm($pollProposalForm, $module->getPollModule()->getType());
-        if ($pollProposal->getCreator() == null) {
-            $pollProposal->setCreator($moduleInvitation);
+        $this->pollProposal = $this->treatPollProposalWhenForm($pollProposalForm, $module->getPollModule()->getType());
+        if ($this->pollProposal->getCreator() == null) {
+            $this->pollProposal->setCreator($moduleInvitation);
         }
-        if ($pollProposal->getPollModule() == null) {
-            $pollProposal->setPollModule($module->getPollModule());
+        $this->pollProposal->getCreator()->getEventInvitation()->setLastVisitAt(new \DateTime());
+
+        if ($this->pollProposal->getPollModule() == null) {
+            $this->pollProposal->setPollModule($module->getPollModule());
         }
-        $this->entityManager->persist($pollProposal);
+
+        $this->entityManager->persist($this->pollProposal);
         $this->entityManager->flush();
-        return $pollProposal;
+        return $this->pollProposal;
     }
 
     /**
      * @param FormInterface $pollProposalListForm
      * @param Module $module
      * @param ModuleInvitation $moduleInvitation
-     * @return Array(PollProposal)|mixed
+     * @return array(PollProposal)|mixed
      */
     public function treatPollProposalListForm(FormInterface $pollProposalListForm, Module $module, ModuleInvitation $moduleInvitation)
     {
@@ -228,7 +227,7 @@ class PollProposalManager
     {
         $this->pollProposal = $pollProposalForm->getData();
         if ($pollModuleType == PollModuleType::WHEN) {
-            $datetimeValue = new DateTime();
+            $datetimeValue = new \DateTime();
             /** @var array $valDate (e.g. array('year' => 2011, 'month' => 06, 'day' => 05)) */
             $valDate = $pollProposalForm->get('startDate')->getData();
             /** @var array $valTime (e.g. array('hour' => 12, 'minute' => 17, 'second' => 26)) */
@@ -246,7 +245,7 @@ class PollProposalManager
             $this->pollProposal->setValDatetime($datetimeValue);
 
             //EndDate Case
-            $endDatetimeValue = new DateTime();
+            $endDatetimeValue = new \DateTime();
             /** @var array $valEndDate (e.g. array('year' => 2011, 'month' => 06, 'day' => 05)) */
             $valEndDate = $pollProposalForm->get('endDate')->getData();
             /** @var array $valEndTime (e.g. array('hour' => 12, 'minute' => 17, 'second' => 26)) */

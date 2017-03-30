@@ -51,6 +51,7 @@
 
     {% if thread is defined and thread is not null %}
         <div id="event_comment_thread" data-thread="{{ thread.id }}" class="commentable_thread wall-comment-list">
+            <span class="anchor-offset" id="event_comment_thread_anchor"></span>
             {% include 'FOSCommentBundle:Thread:comments.html.twig' with {'comments':comments, 'thread':thread, 'view':'flat', 'userEventInvitation':userEventInvitation} %}
         </div>
     {% endif %}

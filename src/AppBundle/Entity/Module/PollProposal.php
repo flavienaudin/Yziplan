@@ -550,7 +550,7 @@ class PollProposal
      * Return PollProposalReponses concerning the PollProposal, of the ModuleInvitation
      * @param $moduleInvitation
      */
-    public function getPollProposalResponsesOfModuleInvitation($moduleInvitation)
+    public function getPollProposalResponsesOfModuleInvitation(ModuleInvitation $moduleInvitation)
     {
         $miPollProposalResponse = $moduleInvitation->getPollProposalResponses();
         $criteria = Criteria::create()->where(Criteria::expr()->eq("pollProposal", $this));
