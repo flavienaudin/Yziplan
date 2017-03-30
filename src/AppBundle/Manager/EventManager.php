@@ -207,7 +207,7 @@ class EventManager
      * @param FormInterface $evtForm
      * @return Event|mixed
      */
-    public function treatEventFormSubmission(FormInterface $evtForm)
+    public function treatEventFormSubmission(FormInterface $evtForm, EventInvitation $userEventInvitation)
     {
         $this->event = $evtForm->getData();
         if (empty($this->event->getToken())) {
@@ -217,7 +217,10 @@ class EventManager
             $this->event->setTokenDuplication($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
             $this->event->setDuplicationEnabled(true);
         }
-        if ($this->event->getStatus() == EventStatus::IN_CREATION) {
+        // L'événement est en cours d'organisation si le créateur a une invitation valide
+        if ($this->event->getStatus() == EventStatus::IN_CREATION && $userEventInvitation->isCreator() &&
+            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER || $userEventInvitation->getStatus() == EventInvitationStatus::VALID)
+        ) {
             $this->event->setStatus(EventStatus::IN_ORGANIZATION);
         }
         /* TODO : desactivés pour simplifier l'interface */
@@ -266,7 +269,7 @@ class EventManager
         if ($this->event != null && $this->event->isDuplicationEnabled()) {
             $duplicatedEvent = new Event();
             $duplicatedEvent->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-            $duplicatedEvent->setStatus(EventStatus::IN_ORGANIZATION);
+            $duplicatedEvent->setStatus(EventStatus::IN_CREATION);
             $duplicatedEvent->setName($this->event->getName());
             $duplicatedEvent->setDescription($this->event->getDescription());
             $duplicatedEvent->setResponseDeadline($this->event->getResponseDeadline());
@@ -738,12 +741,12 @@ class EventManager
     /**
      * @param ModuleInvitation $userModuleEventInvitation
      * @param FormInterface $pollProposalAddForm
-     * @param FormInterface $pollProposalListAddForm
+     * @param FormInterface|null $pollProposalListAddForm
      * @param $moduleDescription
      * @param $data
      * @return mixed
      */
-    public function createPollProposalFormActionReplace(ModuleInvitation $userModuleEventInvitation, FormInterface $pollProposalAddForm, FormInterface $pollProposalListAddForm,
+    public function createPollProposalFormActionReplace(ModuleInvitation $userModuleEventInvitation, FormInterface $pollProposalAddForm, FormInterface $pollProposalListAddForm = null,
                                                         $moduleDescription, $data)
     {
         /** @var Module $currentModule */

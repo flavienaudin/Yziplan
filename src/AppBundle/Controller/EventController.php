@@ -253,7 +253,7 @@ class EventController extends Controller
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     } elseif ($eventForm->isValid()) {
-                        $eventManager->treatEventFormSubmission($eventForm);
+                        $eventManager->treatEventFormSubmission($eventForm, $userEventInvitation);
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
 
                         // Creation du templateSettingsForm nécessaire à l'affichage du template
@@ -290,7 +290,7 @@ class EventController extends Controller
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     } elseif ($eventForm->isValid()) {
-                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm, $userEventInvitation);
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     }
                 }

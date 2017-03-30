@@ -59,7 +59,7 @@ class EventWizardController extends Controller
             $eventForm->handleRequest($request);
             if ($eventForm->isSubmitted()) {
                 if ($eventForm->isValid()) {
-                    $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                    $currentEvent = $eventManager->treatEventFormSubmission($eventForm, $userEventInvitation);
                     return $this->redirectToRoute('wizardNewEventStep2', array('token' => $currentEvent->getToken()));
                 }
             }
