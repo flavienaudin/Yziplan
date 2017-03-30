@@ -191,7 +191,7 @@ event:
       link_popover: Coordinates
       website:
         label: Website
-        placeholder: Website http://
+        placeholder: Website
       email:
         label: Email
         placeholder: Email
@@ -201,21 +201,21 @@ event:
       mobileNumber:
         label: Mobile number
         placeholder: Mobile number
-      faxNumber:
-        label: Fax number
-        placeholder: Fax number
       facebookURL:
-        label: Facebook link
-        placeholder: Facebook link
+        label: Facebook
+        placeholder: Facebook
       googlePlusURL:
-        label: Google plus link
-        placeholder: Google plus link
+        label: Google plus
+        placeholder: Google plus
       twitterURL:
-        label: Twitter link
-        placeholder: Twitter link
+        label: Twitter
+        placeholder: Twitter
       instagramURL:
-        label: Instagram link
-        placeholder: Instagram link
+        label: Instagram
+        placeholder: Instagram
+      youtubeURL:
+        label: Youtube
+        placeholder: Youtube
     opening_hour:
       link_collpase: Opening hours
       add_link: Add a time slot

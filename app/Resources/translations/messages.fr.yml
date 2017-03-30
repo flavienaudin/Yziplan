@@ -190,7 +190,7 @@ event:
       link_popover: Coordonnées
       website:
         label: Site internet
-        placeholder: Site internet http://
+        placeholder: Site internet
       email:
         label: E-mail
         placeholder: E-mail
@@ -200,9 +200,6 @@ event:
       mobileNumber:
         label: Portable
         placeholder: Portable
-      faxNumber:
-        label: Fax
-        placeholder: Fax
       facebookURL:
         label: Facebook
         placeholder: Facebook
@@ -215,6 +212,9 @@ event:
       instagramURL:
         label: Instagram
         placeholder: Instagram
+      youtubeURL:
+        label: Youtube
+        placeholder: Youtube
     opening_hour:
       link_collpase: Horaires d'ouverture
       add_link: Ajouter une plage horaire

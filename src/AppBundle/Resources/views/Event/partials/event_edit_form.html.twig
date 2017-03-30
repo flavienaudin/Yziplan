@@ -115,12 +115,6 @@
                         'attr':{'placeholder':'event.form.coordinates.mobileNumber.placeholder'},
                         'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
                     }) }}
-                    {{ form_row(eventForm.coordinates.faxNumber, {
-                        'label':'event.form.coordinates.faxNumber.label',
-                        'label_attr':{'class':'sr-only'},
-                        'attr':{'placeholder':'event.form.coordinates.faxNumber.placeholder'},
-                        'widget_options':{'fgline':true, 'label_icon':'zmdi-print'}
-                    }) }}
                     {{ form_row(eventForm.coordinates.facebookURL, {
                         'label':'event.form.coordinates.facebookURL.label',
                         'label_attr':{'class':'sr-only'},
@@ -144,6 +138,12 @@
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'event.form.coordinates.instagramURL.placeholder'},
                         'widget_options':{'fgline':true, 'label_icon':'zmdi-instagram'}
+                    }) }}
+                    {{ form_row(eventForm.coordinates.youtubeURL, {
+                        'label':'event.form.coordinates.youtubeURL.label',
+                        'label_attr':{'class':'sr-only'},
+                        'attr':{'placeholder':'event.form.coordinates.youtubeURL.placeholder'},
+                        'widget_options':{'fgline':true, 'label_icon':'zmdi-youtube'}
                     }) }}
                 </div>
             </div>
@@ -233,7 +233,7 @@
                     }
 
                     var zoomChangeBoundsListener = google.maps.event.addListener(mapEventEdit, 'bounds_changed', function (event) {
-                        if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom == true) {
+                        if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom === true) {
                             // Change max/min zoom here
                             mapEventEdit.setZoom(15);
                             mapEventEdit.initialZoom = false;
@@ -271,7 +271,7 @@
                                donc il faut choper un event, et ne le fait que au premier passage #}
 
                             google.maps.event.addListener(mapEventEdit, 'bounds_changed', function (event) {
-                                if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom == true) {
+                                if (mapEventEdit.getZoom() > 15 && mapEventEdit.initialZoom === true) {
                                     // Change max/min zoom here
                                     mapEventEdit.setZoom(15);
                                     mapEventEdit.initialZoom = false;
@@ -302,15 +302,6 @@
         {% endblock js_functions %}
 
         $(document).ready(function () {
-            $('#showMapContainer').on('shown.bs.collapse', function (e) {
-                {# Clique sur "Voir sur une carte" #}
-                if (mapEventEdit === null) {
-                    initEventEditMap();
-                } else {
-                    google.maps.event.trigger(mapEventEdit, 'resize');
-                }
-            });
-
             $('#{{ eventForm.activityProvider.vars.id }}').on('change', function (e) {
                 $('#activityProviderContainer').collapse('toggle');
             });
@@ -341,17 +332,6 @@
                 $('.clockpicker').clockpicker();
             });
 
-            $('#eventCoordinatesCollpase:has(".has-error")').collapse('show');
-            $('#eventOpeningHoursCollpase:has(".has-error")').collapse('show');
-
-            // Update the Event name while editing the form field
-            $('#event_name').on('input', function () {
-                $('#event-name').html($(this).val());
-            });
-
-            {% block js_document_ready %}
-            var $dialogsInBody = true; {# A redefinir selon où est afficher le formulaire : dans une modal ou pas #}
-
             {% if eventForm.openingHours|length == 0 %}
             {# Ajout des jours de la semaine si aucun horaire n'existe #}
             var daysOfWeek = [
@@ -369,6 +349,17 @@
                 selectpicker.selectpicker('val', daysOfWeek [i]);
             }
             {% endif %}
+
+            $('#eventCoordinatesCollpase:has(".has-error")').collapse('show');
+            $('#eventOpeningHoursCollpase:has(".has-error")').collapse('show');
+
+            // Update the Event name while editing the form field
+            $('#event_name').on('input', function () {
+                $('#event-name').html($(this).val());
+            });
+
+            {% block js_document_ready %}
+            var $dialogsInBody = true; {# A redefinir selon où est afficher le formulaire : dans une modal ou pas #}
 
             var $eventEditModal = $('#eventEditModal');
             $eventEditModal.on('shown.bs.modal', function (e) {
