@@ -159,7 +159,7 @@ class EventController extends Controller
                             $this->renderView('@App/Event/partials/profile/eventInvitation_profile_form.html.twig', array(
                                 'userEventInvitation' => $userEventInvitation,
                                 'userEventInvitationForm' => $eventInvitationForm->createView()
-                                ));
+                            ));
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     }
                 } else {

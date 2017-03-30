@@ -333,9 +333,9 @@
 
                 addOpeningHourFormDeleteLink(newLi);
 
-                if(isMobile()) {
+                if (isMobile()) {
                     $('.selectpicker').selectpicker('mobile');
-                }else{
+                } else {
                     $('.selectpicker').selectpicker();
                 }
                 $('.clockpicker').clockpicker();
@@ -351,6 +351,24 @@
 
             {% block js_document_ready %}
             var $dialogsInBody = true; {# A redefinir selon où est afficher le formulaire : dans une modal ou pas #}
+
+            {% if eventForm.openingHours|length == 0 %}
+            {# Ajout des jours de la semaine si aucun horaire n'existe #}
+            var daysOfWeek = [
+                '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::MONDAY') }}',
+                '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::TUESDAY') }}',
+                '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::WEDNESDAY') }}',
+                '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::THURSDAY') }}',
+                '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::FRIDAY') }}',
+                '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::SATURDAY') }}',
+                '{{ constant('AppBundle\\Utils\\enum\\DayOfWeek::SUNDAY') }}'
+            ];
+            for (var i = 0; i < 7; i++) {
+                $addOpeningTimeButton.click();
+                var selectpicker = openingHoursFieldsList.children('li.openingHourForm:last-child').find('.selectpicker');
+                selectpicker.selectpicker('val', daysOfWeek [i]);
+            }
+            {% endif %}
 
             var $eventEditModal = $('#eventEditModal');
             $eventEditModal.on('shown.bs.modal', function (e) {

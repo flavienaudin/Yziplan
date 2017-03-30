@@ -341,43 +341,55 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
         type: method,
         data: data
     }).done(function (responseJSON, textStatus, jqXHR) {
-        if (responseJSON.hasOwnProperty('htmlContents')) {
-            treatHtmlContents(responseJSON['htmlContents']);
-        }
-        if (doneCallback) {
-            doneCallback(responseJSON, textStatus, jqXHR);
+        if (typeof responseJSON !== 'undefined') {
+            if (responseJSON.hasOwnProperty('htmlContents')) {
+                treatHtmlContents(responseJSON['htmlContents']);
+            }
+            if (doneCallback) {
+                doneCallback(responseJSON, textStatus, jqXHR);
+            }
+        } else {
+            console.error('undefined response');
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        if (failCallback) {
-            failCallback(jqXHR, textStatus, errorThrown);
+        if (typeof jqXHR !== 'undefined') {
+            if (failCallback) {
+                failCallback(jqXHR, textStatus, errorThrown);
+            }
+        } else {
+            console.error('undefined response');
         }
     }).always(function (responseDataOrJSON) {
-        if (responseDataOrJSON.hasOwnProperty('redirect')) {
-            var waitTime = 0;
-            if (responseDataOrJSON.hasOwnProperty('messages')) {
-                waitTime = 5000;
+        if (typeof responseDataOrJSON !== 'undefined') {
+            if (responseDataOrJSON.hasOwnProperty('redirect')) {
+                var waitTime = 0;
+                if (responseDataOrJSON.hasOwnProperty('messages')) {
+                    waitTime = 5000;
+                }
+                setTimeout(function () {
+                    window.location.href = responseDataOrJSON['redirect'];
+                }, waitTime);
             }
-            setTimeout(function(){
-                window.location.href = responseDataOrJSON['redirect'];
-            },waitTime);
-        }
-        if (alwaysCallback) {
-            alwaysCallback(responseDataOrJSON);
-        }
-        if (responseDataOrJSON.hasOwnProperty('responseJSON')) {
-            responseDataOrJSON = responseDataOrJSON['responseJSON'];
-        }
-        if (responseDataOrJSON.hasOwnProperty('messages')) {
-            var messages = responseDataOrJSON['messages'];
-            for (var messageType in messages) {
-                if (messages.hasOwnProperty(messageType)) {
-                    messages[messageType].forEach(function (mess) {
-                        toastr[messageType](mess);
-                    });
+            if (alwaysCallback) {
+                alwaysCallback(responseDataOrJSON);
+            }
+            if (responseDataOrJSON.hasOwnProperty('responseJSON')) {
+                responseDataOrJSON = responseDataOrJSON['responseJSON'];
+            }
+            if (responseDataOrJSON.hasOwnProperty('messages')) {
+                var messages = responseDataOrJSON['messages'];
+                for (var messageType in messages) {
+                    if (messages.hasOwnProperty(messageType)) {
+                        messages[messageType].forEach(function (mess) {
+                            toastr[messageType](mess);
+                        });
+                    }
                 }
             }
+            $(preloader).hide();
+        } else {
+            console.error('undefined response');
         }
-        $(preloader).hide();
     });
     return false;
 }

@@ -16,7 +16,7 @@
     {% endfor %}
     {% autoescape false %}
         {{ 'event.cancelled.email.body.hello'|trans({'%guestname%': eventInvitation.displayableName(true, false)}) }}
-        {{ "event.cancelled.email.body.text"|trans({"%event_name%":eventInvitation.event.name}) }}
+        {{ "event.cancelled.email.body.text"|transchoice(organizersInvitations|length, {"%event_name%":eventInvitation.event.name}) }}
         {% if message is defined and message is not empty %}
             {{ message|escape }}
         {% endif %}
@@ -26,7 +26,8 @@
 {% endblock %}
 {% block body_html %}{% spaceless %}
     {% set organizerNames = "" %}
-    {% for creatorInvitation in eventInvitation.event.creators|merge(eventInvitation.event.administrators) %}
+    {% set organizersInvitations = eventInvitation.event.organizers %}
+    {% for creatorInvitation in organizersInvitations %}
         {% set organizerNames = organizerNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
     {% endfor %}
 
@@ -54,7 +55,7 @@ line-height: 1.6; background-color: #f6f6f6;">
                                     </tr>
                                     <tr>
                                         <td style="padding: 0 0 20px;">
-                                            <p>{{ "event.cancelled.email.body.text"|trans({"%event_name%":eventInvitation.event.name}) }}</p>
+                                            <p>{{ "event.cancelled.email.body.text"|transchoice(organizersInvitations|length, {"%event_name%":eventInvitation.event.name}) }}</p>
                                             {% if message is defined and message is not empty %}
                                                 <div style="background: #f5f5f5; border: 1px solid #e3e3e3; border-radius: 2px; padding: 0 9px">
                                                     {{ message|nl2br }}

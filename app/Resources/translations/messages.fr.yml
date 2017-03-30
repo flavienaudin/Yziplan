@@ -265,7 +265,7 @@ event:
       subject: "Yziplan : \"%event_name%\" est annulé"
       body:
         hello: Bonjour %guestname%
-        text: "Désolé, nous avons annulé l'événement \"%event_name%\"."
+        text: "Désolé, j'annule l'événement \"%event_name%\".|Désolé, nous annulons l'événement \"%event_name%\"."
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement
     deletion: Une erreur est survenue lors de l'annulation de l'événement
