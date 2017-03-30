@@ -14,10 +14,40 @@
 - sendMessageForm (Form|null) Formulaire permettant d'envoyer un rappel aux invités
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
 - redirectedAfterEventDuplication (boolean|undefined) si true alors on affiche une alerte pour informer l'utilisateur qu'il a dupliqué un événement
+- notifications (array of Notification) Listes des notifications à afficher dans la page de l'événement
 #}
 
 
 {% block title %}{{ parent() }} - {{ event.name is empty?"event.page.meta_title.new_event"|trans:event.name }}{% endblock %}
+
+{% set side_panel = true %}
+
+{% block header_menu_item_between %}
+    {% if notifications is defined %}
+        <li role="presentation" class="hmp-alerts">
+            {# Commande d'ouverture des panneaux d'affichage des messages de l'utilisateur connecté "aside#s-en-alerts"
+            TODO decommenter : non necessaire pour la version beta
+            <div class="hmp-alert" data-user-alert="sua-messages" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                <a href="#"><i class="hm-icon zmdi zmdi-email"></i></a>
+            </div>#}
+
+            {#Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
+            <div class="hmp-alert" data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
+                <a><i class="hm-icon zmdi {{ notifications|length>0?'zmdi-notifications':'zmdi-notifications-none' }}"></i></a>
+            </div>
+        </li>
+    {% endif %}
+{% endblock %}
+
+{% if notifications is defined %}
+    {% block notifications_side_panel_top_links %}
+        <li><a href="{{ path('markAll', {'token':event.token}) }}" id="mark_all_notifications"><i class="zmdi zmdi-check-all"></i>{{ "notifications.side_panel.action.mark_all"|trans }}</a></li>
+    {% endblock %}
+
+    {% block notifications_side_panel_content %}
+        {{ include('@App/Notifications/notifications_side_panel.html.twig', {'notifications':notifications}) }}
+    {% endblock notifications_side_panel_content %}
+{% endif %}
 
 {% block event_content %}
     <div class="grid row">
@@ -137,6 +167,19 @@
                 }
                 LetterAvatar.transform();
             });
+
+            {% if notifications is defined %}
+            $('#mark_all_notifications').on('click', function (e) {
+                ajaxRequest($(this), null, e, function () {
+                    $('.lgi-notification').remove();
+                    $('[data-user-alert="sua-notifications"]').find('i').each(function () {
+                        $(this).removeClass('zmdi-notifications');
+                        $(this).addClass('zmdi-notifications-none');
+                    });
+                    $('.notif_new_comment').removeClass('notif_new_comment');
+                })
+            });
+            {% endif %}
         });
     </script>
 

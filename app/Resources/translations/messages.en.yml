@@ -560,6 +560,17 @@ duplication:
   message:
     error: You are not allow to duplicate this event
 
+notifications:
+  side_panel:
+    title: Notifications
+    action:
+      mark_all: Mark all
+    none: No unread notitication
+  comment: "%number_new_comments% new comment|%number_new_comments% new comments"
+  new_module: "%organizers% added a new poll|%organizers% added a new poll"
+  new_pollproposal: "%organizer% added a new poll proposal"
+
+
 # Globals
 global:
   project_name: Yziplan

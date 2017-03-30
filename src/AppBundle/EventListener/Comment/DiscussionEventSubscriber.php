@@ -100,6 +100,7 @@ class DiscussionEventSubscriber implements EventSubscriberInterface
                 $user = ($this->tokenStorage->getToken() != null && $this->tokenStorage->getToken()->getUser() instanceof AccountUser ? $this->tokenStorage->getToken()->getUser() : null);
                 $userEventInvitation = $this->eventInvitationManager->retrieveUserEventInvitation($threadEvent, false, false, $user);
                 $comment->setAuthor($userEventInvitation);
+                $userEventInvitation->setLastVisitAt(new \DateTime());
             }
         }
     }

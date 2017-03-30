@@ -80,7 +80,6 @@ class PollModuleController extends Controller
             if ($module->getStatus() != ModuleStatus::DELETED && $module->getStatus() != ModuleStatus::ARCHIVED) {
                 $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
                 if ($userModuleInvitation != null && $userModuleInvitation->getStatus() != ModuleInvitationStatus::CANCELLED) {
-
                     // TODO Vérifier les autorisations d'ajouter des propositions au module
 
                     /** @var PollProposalManager $pollProposalManager */

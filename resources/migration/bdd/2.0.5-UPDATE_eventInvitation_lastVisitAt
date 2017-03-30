@@ -1,0 +1,2 @@
+-- Renseigne la date de dernière visite de chaque EventInvitation avec la date de dernière mise à jour de celle-ci
+update event_event_invitation ei set ei.last_visit_at = ei.updated_at
