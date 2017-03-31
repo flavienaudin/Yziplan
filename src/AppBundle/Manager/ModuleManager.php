@@ -13,15 +13,12 @@ use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
-use AppBundle\Entity\Module\PollElement;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
-use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Form\Module\ModuleType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\ModuleType as EnumModuleType;
-use AppBundle\Utils\enum\PollElementType;
 use AppBundle\Utils\enum\PollModuleType;
 use AppBundle\Utils\enum\PollModuleVotingType;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -126,7 +123,7 @@ class ModuleManager
         $this->module->setStatus(ModuleStatus::IN_CREATION);
         $this->module->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
 
-        $this->initializePollElementModule($type, $subtype);
+        $this->initializePollModule($type, $subtype);
 
         $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
         $moduleInvitationCreator->setCreator(true);
@@ -142,7 +139,7 @@ class ModuleManager
      * @param EventInvitation $creatorEventInvitation The user's eventInvitation to set the module creator
      * @return Module The module added to the event
      */
-    public function initializePollElementModule($type, $subtype, $module = null)
+    public function initializePollModule($type, $subtype, $module = null)
     {
         if ($module != null) {
             $this->module = $module;
@@ -158,50 +155,24 @@ class ModuleManager
                 $this->module->setName($this->translator->trans("pollmodule.add_link.when"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setType(PollModuleType::WHEN);
-
-                $pollElementDate = new PollElement();
-                $pollElementDate->create($this->translator->trans($subtype), PollElementType::DATETIME, 0);
-                $pollElements->add($pollElementDate);
             } elseif ($subtype == PollModuleType::WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.what"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setType(PollModuleType::WHAT);
-
-                $pollElement = new PollElement();
-                $pollElement->create($this->translator->trans($subtype), PollElementType::STRING, 0);
-                $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::WHERE) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setType(PollModuleType::WHERE);
-
-                $pollElement = new PollElement();
-                $pollElement->create($this->translator->trans($subtype), PollElementType::GOOGLE_PLACE_ID, 0);
-                $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
                 $pollModule->setType(PollModuleType::WHO_BRINGS_WHAT);
-
-                $pollElement = new PollElement();
-                $pollElement->create($this->translator->trans($subtype), PollElementType::STRING, 0);
-                $pollElements->add($pollElement);
             } elseif ($subtype == PollModuleType::ACTIVITY) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.activity"));
                 $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setVotingType(PollModuleVotingType::RANKING);
                 $pollModule->setType(PollModuleType::ACTIVITY);
-
-                $pollElementName = new PollElement();
-                $pollElementName->create($this->translator->trans("pollmodule.poll_element.name"), PollElementType::STRING, 0);
-                $pollElements->add($pollElementName);
-                $pollElementPicture = new PollElement();
-                $pollElementPicture->create($this->translator->trans("pollmodule.poll_element.description"), PollElementType::RICHTEXT, 1);
-                $pollElements->add($pollElementPicture);
-                $pollElementPicture = new PollElement();
-                $pollElementPicture->create($this->translator->trans("pollmodule.poll_element.picture"), PollElementType::PICTURE, 2);
-                $pollElements->add($pollElementPicture);
             }
             $pollModule->addPollElements($pollElements);
 

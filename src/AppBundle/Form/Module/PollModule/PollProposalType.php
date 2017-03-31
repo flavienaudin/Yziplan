@@ -9,10 +9,8 @@
 namespace AppBundle\Form\Module\PollModule;
 
 use AppBundle\Entity\Module\PollProposal;
-use AppBundle\Entity\Module\PollProposalElement;
 use AppBundle\Validator\Constraints\IntValuesInArray;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;

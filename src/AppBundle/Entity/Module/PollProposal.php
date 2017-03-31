@@ -532,21 +532,6 @@ class PollProposal
      ***********************************************************************/
 
     /**
-     * Create all PollProposalElement for this proposal , based on the PollModule configuration
-     * Do not add this PollProposal to the PollModule to avoid displaying non finished proposal
-     * @param PollModule $pollModule
-     */
-    public function initializeWithPollModule(PollModule $pollModule)
-    {
-        foreach ($pollModule->getOrderedPollElements() as $pollElement) {
-            $ppElt = new PollProposalElement();
-            $ppElt->setPollElement($pollElement);
-            $this->addPollProposalElement($ppElt);
-        }
-    }
-
-
-    /**
      * Return PollProposalReponses concerning the PollProposal, of the ModuleInvitation
      * @param $moduleInvitation
      */
