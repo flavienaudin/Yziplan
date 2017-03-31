@@ -831,6 +831,7 @@ label.required:after {
 
 .pp-elt-picture.picture-large {
     max-height: 200px;
+    width: 100%;
     max-width: 300px;
 }
 

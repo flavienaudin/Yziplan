@@ -28,3 +28,4 @@ web/uploads/events/pictures/*
 !web/uploads/events/pictures/.gitkeep
 web/uploads/events/pollmodule/pollproposal/pictures/*
 !web/uploads/events/pollmodule/pollproposal/pictures/.gitkeep
+web/uploads/
