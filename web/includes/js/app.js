@@ -252,7 +252,8 @@ function jsPlugginActivation() {
      });*/
 
     if (isMobile()) {
-        $('.selectpicker').selectpicker('mobile');
+        $('.selectpicker:not([multiple="multiple"])').selectpicker('mobile');
+        $('.selectpicker[multiple="multiple"]').selectpicker();
     } else {
         $('.selectpicker').selectpicker();
     }
