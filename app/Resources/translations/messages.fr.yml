@@ -259,7 +259,7 @@ event:
     error.message:
       wrong_step: Une erreur dans le processus de création de l'événement s'est produite. Merci de re-essayer l'opération
   cancelled:
-    title: Evénement annulé
+    title: Evénement déprogrammé
     hello: Bonjour %guestname%
     text: Cet événement a été annnulé par l'organisateur, vous avez dû recevoir un e-mail|Cet événement a été annnulé par les organisateurs, vous avez dû recevoir un e-mail
     email:
