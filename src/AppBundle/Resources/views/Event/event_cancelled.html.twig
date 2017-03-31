@@ -6,7 +6,7 @@
 #}
 
 
-{% block title %}{{ parent() }} - {{ event.name is empty?"event.page.meta_title.new_event"|trans:event.name }}{% endblock %}
+{% block title %}{{ parent() }} - {{ event.name is empty?"event.page.meta_title.new_event"|trans:event.name }} - {{ "eventstatus.deprogrammed"|trans }}{% endblock %}
 
 {% block event_content %}
     <div class="col-xs-12 col-xs-p-lr-0">

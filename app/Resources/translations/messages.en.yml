@@ -260,7 +260,7 @@ event:
     error.message:
       wrong_step: An error during the event creation process occrured. Pleaze, try again the operation
   cancelled:
-    title: Cancelled event
+    title: Deprogrammed event
     hello: Hello %guestname%
     text: This event has been cancelled by the organizer, you should have received an email|This event has been cancelled by organizers, you should have received an email
     email:
