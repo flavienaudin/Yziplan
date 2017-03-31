@@ -130,8 +130,8 @@ vich_uploader:
             delete_on_update:   true
             delete_on_remove:   true
         pollproposalelement_picture:
-            uri_prefix: /uploads/events/pollmodule/pollproposalelement/pictures
-            upload_destination: '%kernel.root_dir%/../web/uploads/events/pollmodule/pollproposalelement/pictures'
+            uri_prefix: /uploads/events/pollmodule/pollproposal/pictures
+            upload_destination: '%kernel.root_dir%/../web/uploads/events/pollmodule/pollproposal/pictures'
             namer: vich_uploader.namer_uniqid
             directory_namer: at.namer.directory.picture
             inject_on_load:     true
