@@ -252,17 +252,6 @@ class ModuleManager
                 $duplicatedPollModule->setVotingType($originalPollModule->getVotingType());
                 $duplicatedPollModule->setType($originalPollModule->getType());
 
-                $mapOrigPPEltIdToDuplPPel = array();
-                /** @var PollElement $originalPollElement */
-                foreach ($originalPollModule->getPollElements() as $originalPollElement) {
-                    $duplicatedPollElement = new PollElement();
-                    $duplicatedPollElement->setName($originalPollElement->getName());
-                    $duplicatedPollElement->setType($originalPollElement->getType());
-                    $duplicatedPollElement->setOrderIndex($originalPollElement->getOrderIndex());
-                    $duplicatedPollModule->addPollElement($duplicatedPollElement);
-                    $mapOrigPPEltIdToDuplPPel[$originalPollElement->getId()] = $duplicatedPollElement;
-                }
-
                 /** @var PollProposal $originalPollProposal */
                 foreach ($originalPollModule->getPollProposals() as $originalPollProposal) {
                     if (!$originalPollProposal->isDeleted()) {
@@ -270,30 +259,24 @@ class ModuleManager
                         $duplicatedPollProposal->setDeleted(false);
                         $duplicatedPollProposal->setDescription($originalPollProposal->getDescription());
                         $duplicatedPollModule->addPollProposal($duplicatedPollProposal);
-                        /** @var PollProposalElement $originialPollProposalElement */
-                        foreach ($originalPollProposal->getPollProposalElements() as $originialPollProposalElement) {
-                            $duplicatedPollProposalElement = new PollProposalElement();
-                            $duplicatedPollProposalElement->setValString($originialPollProposalElement->getValString());
-                            $duplicatedPollProposalElement->setValText($originialPollProposalElement->getValText());
-                            $duplicatedPollProposalElement->setValInteger($originialPollProposalElement->getValInteger());
-                            $duplicatedPollProposalElement->setValDatetime($originialPollProposalElement->getValDatetime());
-                            $duplicatedPollProposalElement->setTime($originialPollProposalElement->hasTime());
-                            $duplicatedPollProposalElement->setValEndDatetime($originialPollProposalElement->getValEndDatetime());
-                            $duplicatedPollProposalElement->setEndDate($originialPollProposalElement->hasEndDate());
-                            $duplicatedPollProposalElement->setEndTime($originialPollProposalElement->hasEndTime());
-                            $duplicatedPollProposalElement->setValGooglePlaceId($originialPollProposalElement->getValGooglePlaceId());
+                        $duplicatedPollProposal->setValString($originalPollProposal->getValString());
+                        $duplicatedPollProposal->setValText($originalPollProposal->getValText());
+                        $duplicatedPollProposal->setValInteger($originalPollProposal->getValInteger());
+                        $duplicatedPollProposal->setValDatetime($originalPollProposal->getValDatetime());
+                        $duplicatedPollProposal->setTime($originalPollProposal->hasTime());
+                        $duplicatedPollProposal->setValEndDatetime($originalPollProposal->getValEndDatetime());
+                        $duplicatedPollProposal->setEndDate($originalPollProposal->hasEndDate());
+                        $duplicatedPollProposal->setEndTime($originalPollProposal->hasEndTime());
+                        $duplicatedPollProposal->setValGooglePlaceId($originalPollProposal->getValGooglePlaceId());
 
-                            if ($originialPollProposalElement->getPictureFile() != null) {
-                                $originalFile = $originialPollProposalElement->getPictureFile();
-                                $tempFileCopyName = str_replace($originalFile->getExtension(), 'dup.' . $originalFile->getExtension(), $originalFile->getFilename());
-                                $tempFileCopyPathname = $originialPollProposalElement->getPictureFile()->getPath() . '/' . $tempFileCopyName;
-                                if (copy($originialPollProposalElement->getPictureFile()->getPathname(), $tempFileCopyPathname)) {
-                                    $newFile = new UploadedFile($tempFileCopyPathname, $tempFileCopyName, $originalFile->getMimeType(), $originalFile->getSize(), null, true);
-                                    $duplicatedPollProposalElement->setPictureFile($newFile);
-                                }
+                        if ($originalPollProposal->getPictureFile() != null) {
+                            $originalFile = $originalPollProposal->getPictureFile();
+                            $tempFileCopyName = str_replace($originalFile->getExtension(), 'dup.' . $originalFile->getExtension(), $originalFile->getFilename());
+                            $tempFileCopyPathname = $originalPollProposal->getPictureFile()->getPath() . '/' . $tempFileCopyName;
+                            if (copy($originalPollProposal->getPictureFile()->getPathname(), $tempFileCopyPathname)) {
+                                $newFile = new UploadedFile($tempFileCopyPathname, $tempFileCopyName, $originalFile->getMimeType(), $originalFile->getSize(), null, true);
+                                $duplicatedPollProposal->setPictureFile($newFile);
                             }
-                            $mapOrigPPEltIdToDuplPPel[$originialPollProposalElement->getPollElement()->getId()]->addPollProposalElement($duplicatedPollProposalElement);
-                            $duplicatedPollProposal->addPollProposalElement($duplicatedPollProposalElement);
                         }
                     }
                 }
