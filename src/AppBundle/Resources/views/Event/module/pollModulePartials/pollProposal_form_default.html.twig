@@ -20,11 +20,8 @@
     {% if pollProposalForm.valString is defined %}
         {{ form_row(pollProposalForm.valString, {
             'label':'pollmodule.modal.pollproposal.form.name.label',
-            'widget_options':{
-                'fgfloat':true,
-                'fgline':true,
-                'displayInRow':false}
-        }) }}
+            'widget_options':{'label_icon':'zmdi-flare', 'fgline':true, 'fgfloat':true}
+        }) }}<br>
     {% endif %}
     {% if pollProposalForm.valGooglePlaceId is defined %}
         {{ form_row(pollProposalForm.valGooglePlaceId) }}
@@ -33,14 +30,14 @@
         {{ form_row(pollProposalForm.valText, {
             'label':'pollmodule.modal.pollproposal.form.description.label',
             'label_attr':{'class':'sr-only'},
-            'attr':{'rows':5},
-            'widget_options':{'fgline':false}
+            'widget_options':{'label_icon':'zmdi-receipt','fgline':false}
         }) }}
         <script>
             $(document).ready(function () {
                 var summernoteOptions = {
                     dialogsInBody: true,
                     placeholder: '{{ 'pollmodule.modal.pollproposal.form.description.placeholder'|trans }}',
+                    airMode: true,
                     height: 150,
                     toolbar: [
                         ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
@@ -59,7 +56,12 @@
     {% endif %}
     {% if pollProposalForm.pictureFile is defined %}
         <div class="kv-avatar center-block w-100">
-            {{ form_widget(pollProposalForm.pictureFile) }}
+            {{ form_widget(pollProposalForm.pictureFile, {
+                'label':'',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'placeholder':''},
+                'widget_options':{'label_icon':'zmdi-image','fgline':false}
+            }) }}
         </div>
         <script>
             $(document).ready(function () {

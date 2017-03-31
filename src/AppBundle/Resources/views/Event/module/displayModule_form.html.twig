@@ -12,11 +12,13 @@
             {{ form_row(moduleForm.name, {
                 'label': 'module.form.name.label',
                 'attr':{},
-                'widget_options':{'fgfloat':true, 'fgline':true}
-            }) }}
+                'widget_options':{'label_icon':'zmdi-flare','fgfloat':true, 'fgline':true}
+            }) }}<br/>
             {{ form_row(moduleForm.description, {
                 'label':'module.form.description.label',
-                'attr':{'rows':3}
+                'label_attr':{'class':'sr-only'},
+                'attr':{'rows':3},
+                'widget_options':{'label_icon':'zmdi-receipt','fgline':false}
             }) }}
         </div>
     </div>
@@ -37,6 +39,7 @@
             var summernoteOptions = {
                 dialogsInBody: true,
                 placeholder: '{{ 'module.form.description.placeholder'|trans }}',
+                airMode: true,
                 height: 150,
                 toolbar: [
                     ['style', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
