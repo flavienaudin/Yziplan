@@ -739,6 +739,11 @@ index:
     activity: Activity
     barbecue: Barbecue
     weekend: Week-end
+  section_directory:
+    title: Activity directory
+    subtitle1: To make you save more time we provide you a directory of activities, all you have to do is to propose them to your friends.<br><i>Yes, it's that easy! </i>
+    subtitle2: "Lastest:"
+    button: Check our activities
   section_feature:
     title: Features
   section_quote:

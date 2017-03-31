@@ -22,7 +22,11 @@ class CoreController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->render('AppBundle:Core:index.html.twig');
+        $activities = $this->get('at.manager.directory')->getActivities(6);
+
+        return $this->render('AppBundle:Core:index.html.twig', array(
+            "activities" => $activities,
+        ));
     }
 
     /**

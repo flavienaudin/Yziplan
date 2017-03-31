@@ -23,7 +23,7 @@ class DirectoryManager
         $this->entityManager = $doctrine;
     }
 
-    public function getActivities()
+    public function getActivities($number = 15)
     {
         return $this->entityManager->getRepository(Activity::class)->getLastAddedActivities(15);
     }

@@ -738,6 +738,11 @@ index:
     activity: Activité
     barbecue: Barbecue
     weekend: Week-end
+  section_directory:
+    title: Annuaire d'activités
+    subtitle1: Pour vous faire gagner toujours plus de temps nous mettons à votre disposition un annuaire d'activités, il ne vous reste plus qu'à les proposer à vos amis.<br><i>Oui, c'est aussi simple que cela.</i>
+    subtitle2: "Nos derniers ajouts :"
+    button: Accéder à l'annuaire
   section_feature:
     title: Fonctionnalités
   section_quote:
