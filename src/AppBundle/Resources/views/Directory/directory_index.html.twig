@@ -90,7 +90,7 @@ Données d'entrée :
                         <a href="{{ path('duplicateEvent', {'tokenDuplication': activity.event.tokenDuplication}) }}" class="btn btn-primary btn-icon-text m-b-10">
                             <i class="zmdi zmdi-plus-circle-o-duplicate"></i>{{ "directory.card.organize"|trans }}
                         </a>
-                        <div class="modal fade" id="modal_information_{{ activity.event.tokenDuplication }}" tabindex="-1" role="dialog" data-backdrop="static"
+                        <div class="modal fade" id="modal_information_{{ activity.event.tokenDuplication }}" tabindex="-1" role="dialog"
                              aria-labelledby="modal_information_{{ activity.event.tokenDuplication }}_title">
                             <div class="modal-dialog modal-lg" role="document">
                                 <div class="modal-content">
@@ -124,6 +124,11 @@ Données d'entrée :
                                     <div class="modal-body">
                                         <p>{{ activity.event.description|raw }}</p>
                                     </div>
+                                    <div class="modal-footer">
+                                        <div class="pull-right">
+                                            <button class="btn btn-flat" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -156,7 +161,8 @@ Données d'entrée :
         $(document).ready(function () {
             $('#{{ searchForm.place.vars.id }}').autocomplete({
                 serviceUrl: '{{ path("placeAutocompletion") }}',
-                minChars: 3
+                minChars: 3,
+                deferRequestBy: 1000
             });
         })
     </script>
