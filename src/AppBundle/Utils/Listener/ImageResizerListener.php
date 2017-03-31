@@ -2,7 +2,7 @@
 
 namespace AppBundle\Utils\Listener;
 
-use AppBundle\Entity\Module\PollProposalElement;
+use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Utils\File\ImageResize;
 use Vich\UploaderBundle\Event\Event;
 
@@ -21,9 +21,9 @@ class ImageResizerListener
         // do your stuff with $object and/or $mapping...
         $imageResizer = new ImageResize();
 
-        if ($object instanceof PollProposalElement) {
+        if ($object instanceof PollProposal) {
             /**
-             * @var $object PollProposalElement
+             * @var $object PollProposal
              */
             $fileName = $object->getPictureFile()->getPathname();
             return $imageResizer->smart_resize_image($fileName, null, 300, 0, true,'file', true, false,90);
