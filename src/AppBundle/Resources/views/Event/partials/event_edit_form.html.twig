@@ -325,9 +325,13 @@
                 addOpeningHourFormDeleteLink(newLi);
 
                 if (isMobile()) {
-                    $('.selectpicker').selectpicker('mobile');
+                    newLi.find('.selectpicker').each(function(){
+                        $(this).selectpicker('mobile');
+                    });
                 } else {
-                    $('.selectpicker').selectpicker();
+                    newLi.find('.selectpicker').each(function(){
+                        $(this).selectpicker();
+                    });
                 }
                 $('.clockpicker').clockpicker();
             });
