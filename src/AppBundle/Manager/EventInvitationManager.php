@@ -261,11 +261,10 @@ class EventInvitationManager
      * Create and send invitations using emails
      * @param Event $event
      * @param array $emailsData
-     * @param boolean $sendEmail
      * @param string $message
      * @return array with results by success/failed/notFound
      */
-    public function createInvitations(Event $event, $emailsData, $sendEmail, $message = null)
+    public function createInvitations(Event $event, $emailsData, $message = null)
     {
         $results = array(
             'success' => array(),
@@ -288,16 +287,12 @@ class EventInvitationManager
                 }
                 try {
                     if ($this->persistEventInvitation()) {
-                        if ($sendEmail) {
-                            if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
-                                $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
-                                $this->persistEventInvitation();
-                                $results['success'][$email] = $this->eventInvitation;
-                            } else {
-                                $results['failed'][$email] = $this->eventInvitation;
-                            }
-                        } else {
+                        if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
+                            $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
+                            $this->persistEventInvitation();
                             $results['success'][$email] = $this->eventInvitation;
+                        } else {
+                            $results['failed'][$email] = $this->eventInvitation;
                         }
                     } else {
                         $results['creationError'][$email] = $this->eventInvitation;
@@ -458,7 +453,7 @@ class EventInvitationManager
                 }
             }
 
-            if($this->eventInvitation->getEvent()->getStatus() == EventStatus::IN_CREATION){
+            if ($this->eventInvitation->getEvent()->getStatus() == EventStatus::IN_CREATION) {
                 $this->eventInvitation->getEvent()->setStatus(EventStatus::IN_ORGANIZATION);
             }
         }

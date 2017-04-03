@@ -168,61 +168,21 @@
                 LetterAvatar.transform();
             });
 
-            {% if notifications is defined %}
-            $('#mark_all_notifications').on('click', function (e) {
-                ajaxRequest($(this), null, e, function () {
-                    $('.lgi-notification').remove();
-                    $('[data-user-alert="sua-notifications"]').find('i').each(function () {
-                        $(this).removeClass('zmdi-notifications');
-                        $(this).addClass('zmdi-notifications-none');
-                    });
-                    $('.notif_new_comment').removeClass('notif_new_comment');
-                })
-            });
-            {% endif %}
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            initialiseYziplanMasonry();
-            $grid = $('.grid');
-            if ($grid[0]) {
-                $grid.masonry('layout');
+            if (typeof google === 'object' && typeof google.maps === 'object') {
+                initEventShowMap();
+            } else {
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.async = true;
+                script.src = "https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_id }}&libraries=places&callback=initEventGMapAPI";
+                document.body.appendChild(script);
             }
 
-            window.onresize = function (event) {
-                $grid = $('.grid');
-                if ($grid[0]) {
-                    $grid.masonry('layout');
-                }
-            };
-
-            new Clipboard("#btn_url_event_public_invitation");
-
-            $('textarea, .auto-size').on('autosize:resized', function () {
-                $grid = $('.grid');
-                if ($grid[0]) {
-                    $grid.masonry('layout');
-                }
+            {% if (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.name is empty %}
+            $(document).ready(function () {
+                $('#event_header_edit_information').click();
             });
-
-            {# Check if invitation is valid before opeing the modal #}
-            $('#eventEditModal').on('show.bs.modal', function (e) {
-                if (!eventInvitationValid && askGuestName !== undefined) {
-                    askGuestName(e, function () {
-                        $('#eventEditModal').modal('show');
-                    }, null);
-                }
-            });
-            {# Check if invitation is valid before opeing the modal #}
-            $('#eventDuplicationSettingsModal').on('show.bs.modal', function (e) {
-                if (!eventInvitationValid && askGuestName !== undefined) {
-                    askGuestName(e, function () {
-                        $('#eventDuplicationSettingsModal').modal('show');
-                    }, null);
-                }
-            });
+            {% endif %}
 
             {% if redirectedAfterEventDuplication is defined and redirectedAfterEventDuplication %}
             {# Affichage de l'événement après une duplication => information à l'utilisateur #}
@@ -238,17 +198,20 @@
                 }
             });
             {% endif %}
-        });
 
-        if (typeof google === 'object' && typeof google.maps === 'object') {
-            initEventShowMap();
-        } else {
-            var script = document.createElement("script");
-            script.type = "text/javascript";
-            script.async = true;
-            script.src = "https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_id }}&libraries=places&callback=initEventGMapAPI";
-            document.body.appendChild(script);
-        }
+            {% if notifications is defined %}
+            $('#mark_all_notifications').on('click', function (e) {
+                ajaxRequest($(this), null, e, function () {
+                    $('.lgi-notification').remove();
+                    $('[data-user-alert="sua-notifications"]').find('i').each(function () {
+                        $(this).removeClass('zmdi-notifications');
+                        $(this).addClass('zmdi-notifications-none');
+                    });
+                    $('.notif_new_comment').removeClass('notif_new_comment');
+                })
+            });
+            {% endif %}
+        });
 
         function initEventGMapAPI() {
             initEventShowMap();
@@ -259,12 +222,6 @@
             // Active l'autocomplétion des champs "Où" lors de l'ajout de proposition "Where"
             initPollProposalWhereElements('.googlePlaceId_name', '.googlePlaceId_value');
         }
-
-        {% if (userEventInvitation.creator or userEventInvitation.administrator) and userEventInvitation.event.name is empty %}
-        $(document).ready(function () {
-            $('#event_header_edit_information').click();
-        });
-        {% endif %}
     </script>
 
 {% endblock %}

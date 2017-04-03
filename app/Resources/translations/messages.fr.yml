@@ -250,6 +250,13 @@ event:
       subtitle:
         text: Identifiez-vous puis partagez
         not_connected: Si vous possédez déjà un compte, connectez-vous pour remplir les informations automatiquement
+      invitation_email:
+        title: Envoyer les invitations par email
+      share_url:
+        title: Partager le lien de l'événement
+      template:
+        title: Lien de duplication à partager
+        paragraphe: "Afficher le lien suivant sur votre site internet et sur les réseaux sociaux. Vos visiteurs pourront facilement organiser leur prochaine sortie dans votre établissement."
     invitations:
       title: Les invités
       subtitle: Renseignez les adresses e-mail des invités. Ils recevront un message avec le lien de leur invitation personnelle.

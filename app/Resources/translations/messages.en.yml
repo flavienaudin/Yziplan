@@ -251,6 +251,13 @@ event:
       subtitle:
         text: Identify yourself and share
         not_connected: If you already have an account, login to fill this information automatically
+      invitation_email:
+        title: Send invitations by email
+      share_url:
+        title: Share the event link
+      template:
+        title: Duplication link to share
+        paragraphe: "Post the following link on your web site and social networks. Your visitors can organise easily their next activity in your establishment"
     invitations:
       title: The guests
       subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link.

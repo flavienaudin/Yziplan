@@ -11,7 +11,37 @@
                 <h4 class="modal-title" id="invitations_new_title">{{ "invitations.display.title"|trans }}</h4>
             </div>
             <div class="modal-body">
-                {{ include("@App/Event/partials/invitations/invitations_new_forms.html.twig", {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
+                <div id="invitationsAccordion" class="panel-group" role="tablist" aria-multiselectable="false">
+                    <div class="panel panel-collapse">
+                        <div class="panel-heading" role="tab" id="eventInvitationsPanel">
+                            <h4 class="panel-title">
+                                <a href="#eventInvitationsCollpase" data-toggle="collapse" data-parent="#invitationsAccordion" class="collapsed in" aria-expanded="true"
+                                   aria-controls="eventInvitationsCollpase">
+                                    {{ "invitations.form.invitations.label"|trans }}</a>
+                            </h4>
+                        </div>
+                        <div id="eventInvitationsCollpase" class=" collapse in" role="tabpanel" aria-labelledby="eventInvitationsPanel" aria-expanded="true">
+                            {{ include("@App/Event/partials/invitations/invitations_new_form.html.twig", {'event':userEventInvitation.event,'invitationsForm':invitationsForm}) }}
+                        </div>
+                    </div>
+                    <div class="panel panel-collapse">
+                        <div class="panel-heading" role="tab" id="eventUrlInvitationsPanel">
+                            <h4 class="panel-title">
+                                <a href="#eventUrlCollpase" data-toggle="collapse" data-parent="#invitationsAccordion" class="collapsed" aria-expanded="false" aria-controls="eventUrlCollpase">
+                                    {{ "event.form.public_invitation.label"|trans }}</a>
+                            </h4>
+                        </div>
+                        <div id="eventUrlCollpase" class="collapse" role="tabpanel" aria-labelledby="eventUrlInvitationsPanel" aria-expanded="false">
+                            {% if userEventInvitation.organizer or not userEventInvitation.event.invitationOnly %}
+                                {% use "@App/Event/partials/block/eventUrl_copyClipboardInput.html.twig" %}
+                                {% set eventInvitationUrlCopyClipboardBlock = block('event_invitation_url_copyClipboard_block') %}
+                                <div class="p-15">
+                                    {{ eventInvitationUrlCopyClipboardBlock|raw }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-flat f-700" data-dismiss="modal">{{ "global.button.close"|trans }}</button>

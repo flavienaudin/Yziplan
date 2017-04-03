@@ -430,7 +430,7 @@ class EventController extends Controller
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     } else if ($eventInvitationsForm->isValid()) {
                         $resultInvitations = array();
-                        $currentEvent = $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, true, $resultInvitations);
+                        $currentEvent = $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $resultInvitations);
 
                         if ((($nbFailed = count($resultInvitations['failed'])) + ($nbCreationError = count($resultInvitations['creationError']))) > 0) {
                             if ($nbFailed > 0) {
@@ -448,8 +448,8 @@ class EventController extends Controller
 
                         $eventInvitationsForm = $eventManager->createEventInvitationsForm();
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_forms_container'] =
-                            $this->renderView("@App/Event/partials/invitations/invitations_new_forms.html.twig", array(
-                                'userEventInvitation' => $userEventInvitation,
+                            $this->renderView("@App/Event/partials/invitations/invitations_new_form.html.twig", array(
+                                'event' => $currentEvent,
                                 'invitationsForm' => $eventInvitationsForm->createView()
                             ));
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#guests_list'] =
@@ -460,8 +460,8 @@ class EventController extends Controller
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_forms_container'] =
-                            $this->renderView("@App/Event/partials/invitations/invitations_new_forms.html.twig", array(
-                                'userEventInvitation' => $userEventInvitation,
+                            $this->renderView("@App/Event/partials/invitations/invitations_new_form.html.twig", array(
+                                'event' => $currentEvent,
                                 'invitationsForm' => $eventInvitationsForm->createView()
                             ));
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
@@ -473,7 +473,7 @@ class EventController extends Controller
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     } elseif ($eventInvitationsForm->isValid()) {
                         $resultInvitations = array();
-                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, true, $resultInvitations);
+                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $resultInvitations);
 
                         if ((($nbFailed = count($resultInvitations['failed'])) + ($nbCreationError = count($resultInvitations['creationError']))) > 0) {
                             if ($nbFailed > 0) {

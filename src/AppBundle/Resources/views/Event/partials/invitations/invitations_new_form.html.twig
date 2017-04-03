@@ -1,0 +1,112 @@
+{# Données d'entrée :
+- event (Event) L'événement concerné
+- invitationsForm (Form) Formulaire permettant d'inviter (renseignement des e-mails des invités)
+#}
+
+<div id="invitations_forms_container">
+    <div id="event_invitations_form_container" class="p-15">
+        {% block form_start %}
+            {{ form_start(invitationsForm, {'action':path('displayEvent',{'token':event.token}),'attr':{'id':'eventInvitations'}}) }}
+        {% endblock form_start %}
+
+        {{ form_row(invitationsForm.invitations, {
+            'label':'invitations.form.invitations.label',
+            'label_attr':{'class':'sr-only'},
+            'attr':{'class':'contacts'}
+        }) }}
+
+        <div class="m-t-10 m-b-10 w-100 text-center">
+            <a role="button" class="btn btn-link c-blue" data-toggle="collapse" href="#invitationsMessageCollapase"> <i class="zmdi zmdi-edit"></i> {{ "invitations.form.message.button"|trans }}
+            </a>
+
+            {#<button type="button" class="btn btn-danger btn-icon-text" id="loadContacts">
+                <i class="zmdi zmdi-google-plus zmdi-hc-lg"></i> {{ "invitations.button.via_gmail_contact.show"|trans }}</button>
+            <button type="button" class="btn btn-danger" id="hideContacts" style="display: none;">{{ "global.button.close"|trans }}</button>
+            {{ include('@App/Event/partials/invitations/gmail_contacts_selection.html.twig') }}#}
+        </div>
+
+        <div class="collapse" id="invitationsMessageCollapase">
+            {{ form_row(invitationsForm.message, {
+                'label':'invitations.form.message.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'placeholder':'invitations.form.message.placeholder', 'rows':3},
+                'widget_options': {'fgline':true}
+            }) }}
+        </div>
+        {% block action_buttons %}
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "invitations.button.send_invitation"|trans }}">
+                    {{ "invitations.button.send_invitation"|trans }}
+                </button>
+            </div>
+        {% endblock action_buttons %}
+        {{ form_end(invitationsForm) }}
+
+        <script>
+            // initialize the Selectize control
+            var $select = $('#{{ invitationsForm.invitations.vars.id }}').selectize({
+                persist: false,
+                maxItems: null,
+                placeholder: "{{ "invitations.form.invitations.placeholder"|trans }}",
+                valueField: 'value',
+                labelField: 'text',
+                searchField: ['text', 'value'],
+                hideSelected: true,
+                createOnBlur: true,
+                render: {
+                    item: renderUserAsItem,
+                    option: renderUserAsOption,
+                    option_create: renderOptionCreate
+                },
+                createFilter: createFilterEmail,
+                create: createUser
+            });
+            // fetch the instance
+            var $newEmailsSelectize = $select[0].selectize;
+
+            $(document).ready(function () {
+                var $hideContactsButton = $('#hideContacts');
+                var $loadContactsButton = $('#loadContacts');
+                $hideContactsButton.hide();
+                $loadContactsButton.on('click', function (e) {
+                    authClick();
+                    $loadContactsButton.hide();
+                    $hideContactsButton.show();
+                });
+                $hideContactsButton.on('click', function (e) {
+                    hideContacts();
+                    $hideContactsButton.hide();
+                    $loadContactsButton.show();
+                });
+
+                {% block js_document_ready %}
+                $('form#eventInvitations').on('submit', function (e) {
+                    e.preventDefault();
+                    var $form = $(this);
+                    if (!eventInvitationValid && askGuestName !== undefined) {
+                        $('#invitations_new_modal').modal('hide');
+                        askGuestName(e, submitNewInvitationsForm, [$form, e], function () {
+                            $('#invitations_new_modal').modal('show');
+                        });
+                    } else {
+                        submitNewInvitationsForm([$form, e]);
+                    }
+                });
+
+                function submitNewInvitationsForm(params) {
+                    var $form = params[0];
+                    var e = params[1];
+                    ajaxFormSubmission($form, e, function (responseJSON, textStatus, jqXHR) {
+                        $hideContactsButton.click();
+                        $('#invitations_new_modal').modal('hide');
+                    }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                        $('#invitations_new_modal').modal('show');
+                    }, null);
+                }
+                {% endblock %}
+            });
+
+            {% block js_function %}{% endblock js_function %}
+        </script>
+    </div>
+</div>

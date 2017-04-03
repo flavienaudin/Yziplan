@@ -164,7 +164,7 @@ class EventWizardController extends Controller
                 if ($eventInvitationsForm->isSubmitted()) {
                     if ($eventInvitationsForm->isValid()) {
                         $resultInvitations = array();
-                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $request->get('sendInvitations'), $resultInvitations);
+                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $resultInvitations);
                         if ((($nbFailed = count($resultInvitations['failed'])) + ($nbCreationError = count($resultInvitations['creationError']))) > 0) {
                             if ($nbFailed > 0) {
                                 $emails = implode(", ", array_keys($resultInvitations['failed']));

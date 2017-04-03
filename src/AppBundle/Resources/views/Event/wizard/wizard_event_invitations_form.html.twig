@@ -1,24 +1,17 @@
-{% extends "@App/Event/partials/invitations/invitations_new_forms.html.twig" %}
+{% extends "@App/Event/partials/invitations/invitations_new_form.html.twig" %}
+
 {# Données d'entrée :
-- userEventInvitation (EventInvitation) L'invitation à afficher (incluant l'événement concerné)
+- event (Event) L'événement concerné
 - invitationsForm (Form) Formulaire permettant d'ajouter des emails
 #}
 
 {% block form_start %}
-    {{ form_start(invitationsForm , {'attr':{'id': 'guestEmails'}, 'action':path('wizardNewEventStep3',{'token':userEventInvitation.event.token})}) }}
+    {{ form_start(invitationsForm , {'attr':{'id': 'guestEmails'}, 'action':path('wizardNewEventStep3',{'token':event.token})}) }}
 {% endblock form_start %}
 
 {% block action_buttons %}
     <div class="text-center">
-        <button type="submit" class="btn btn-primary m-b-10" id="invitations_sendInvitations" name="sendInvitations" value="1">{{ "event.wizard.button.send_invitations"|trans }}</button>
-    </div>
-    {% if event_public_invitation_display_block is defined %}
-        {{ event_public_invitation_display_block }}
-    {% endif %}
-    <div class="text-center">
-        <a href="{{ path('wizardNewEventStep2',{'token':userEventInvitation.event.token}) }}" class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a> <a
-                href="{{ path('displayEvent',{'token':userEventInvitation.event.token}) }}" id="invitations_later" class="btn btn-flat f-700 c-blue m-b-10"
-                role="button">{{ "global.button.later"|trans }}</a>
+        <button type="submit" class="btn btn-primary m-b-10" id="invitations_sendInvitations">{{ "event.wizard.button.send_invitations"|trans }}</button>
     </div>
 {% endblock action_buttons %}
 
