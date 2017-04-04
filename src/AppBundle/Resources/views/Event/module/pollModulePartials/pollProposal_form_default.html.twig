@@ -20,7 +20,7 @@
     {% if pollProposalForm.valString is defined %}
         {{ form_row(pollProposalForm.valString, {
             'label':'pollmodule.modal.pollproposal.form.name.label',
-            'widget_options':{'label_icon':'zmdi-flare', 'fgline':true, 'fgfloat':true}
+            'widget_options':{'label_icon':'zmdi zmdi-flare', 'fgline':true, 'fgfloat':true}
         }) }}<br>
     {% endif %}
     {% if pollProposalForm.valGooglePlaceId is defined %}
@@ -30,7 +30,7 @@
         {{ form_row(pollProposalForm.valText, {
             'label':'pollmodule.modal.pollproposal.form.description.label',
             'label_attr':{'class':'sr-only'},
-            'widget_options':{'label_icon':'zmdi-receipt','fgline':false}
+            'widget_options':{'label_icon':'zmdi zmdi-receipt','fgline':false}
         }) }}
         <script>
             $(document).ready(function () {
@@ -59,7 +59,7 @@
             {{ form_row(pollProposalForm.pictureFile.file, {
                 'label' : 'pollmodule.modal.pollproposal.form.picture.label',
                 'label_attr' : {'class' : 'sr-only'},
-                'widget_options':{'label_icon':'zmdi-image','fgline':false}
+                'widget_options':{'label_icon':'zmdi zmdi-image','fgline':false}
             }) }}
         </div>
         <script>

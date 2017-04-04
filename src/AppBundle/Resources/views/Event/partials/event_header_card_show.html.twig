@@ -96,7 +96,7 @@
 
         {% if (userEventInvitation.event.coordinates is not null and (userEventInvitation.event.coordinates.website ~ userEventInvitation.event.coordinates.facebookURL ~
         userEventInvitation.event.coordinates.googlePlusURL ~ userEventInvitation.event.coordinates.twitterURL ~ userEventInvitation.event.coordinates.instagramURL ~
-        userEventInvitation.event.coordinates.youtubeURL)|trim is not empty) or coordinatesBlock is defined or openingHoursBlock is defined %}
+        userEventInvitation.event.coordinates.youtubeURL ~ userEventInvitation.event.coordinates.tripAdvisorURL)|trim is not empty) or coordinatesBlock is defined or openingHoursBlock is defined %}
             <div class="list-md-icon {{ userEventInvitation.event.openingHours|length == 0 ? 'm-b-15' }}">
                 <ul>
                     {% if userEventInvitation.event.coordinates is not null and userEventInvitation.event.coordinates.website is not null %}
@@ -115,7 +115,8 @@
                     {% endif %}
 
                     {% if userEventInvitation.event.coordinates is not null and (userEventInvitation.event.coordinates.facebookURL ~ userEventInvitation.event.coordinates.googlePlusURL ~
-                    userEventInvitation.event.coordinates.twitterURL ~ userEventInvitation.event.coordinates.instagramURL ~ userEventInvitation.event.coordinates.youtubeURL)|trim is not empty %}
+                    userEventInvitation.event.coordinates.twitterURL ~ userEventInvitation.event.coordinates.instagramURL ~ userEventInvitation.event.coordinates.youtubeURL ~
+                    userEventInvitation.event.coordinates.tripAdvisorURL)|trim is not empty %}
                         <li>
                             {% if userEventInvitation.event.coordinates.facebookURL is not null %}
                                 <a href="{{ userEventInvitation.event.coordinates.facebookURL }}" target="_blank"><span class="zmdi zmdi-facebook-box zmdi-hc-2x"></span></a>
@@ -131,6 +132,9 @@
                             {% endif %}
                             {% if userEventInvitation.event.coordinates.youtubeURL is not null %}
                                 <a href="{{ userEventInvitation.event.coordinates.youtubeURL }}" target="_blank"><span class="zmdi zmdi-youtube zmdi-hc-2x"></span></a>
+                            {% endif %}
+                            {% if userEventInvitation.event.coordinates.tripAdvisorURL is not null %}
+                                <a href="{{ userEventInvitation.event.coordinates.tripAdvisorURL }}" target="_blank"><span class="fa fa-tripadvisor fa-2x"></span></a>
                             {% endif %}
                         </li>
                     {% endif %}

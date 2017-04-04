@@ -216,6 +216,9 @@ event:
       youtubeURL:
         label: Youtube
         placeholder: Youtube
+      tripAdvisorURL:
+        label: Trip Advisor
+        placeholder: Trip Advisor
     opening_hour:
       link_collpase: Horaires d'ouverture
       add_link: Ajouter une plage horaire

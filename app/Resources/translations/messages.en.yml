@@ -217,6 +217,9 @@ event:
       youtubeURL:
         label: Youtube
         placeholder: Youtube
+      tripAdvisorURL:
+        label: Trip Advisor
+        placeholder: Trip Advisor
     opening_hour:
       link_collpase: Opening hours
       add_link: Add a time slot

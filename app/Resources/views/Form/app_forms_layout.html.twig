@@ -20,7 +20,7 @@
                     {% for key,value in widget_options.label_icon_attr|default({}) %}
                         {% set wo_label_icon_attr = wo_label_icon_attr~key~'="'~value~'" ' %}
                     {% endfor %}
-                    <span class="input-group-addon" {{ wo_label_icon_attr }}><i class="zmdi {{ widget_options.label_icon }}"></i></span>
+                    <span class="input-group-addon" {{ wo_label_icon_attr }}><i class="{{ widget_options.label_icon }}"></i></span>
                 {% endif %}
                 {{ widget_options.fgline is defined and widget_options.fgline?'<div class="fg-line">':'' }}
                 {{- form_widget(form,{'widget_options':widget_options}) -}}
@@ -37,7 +37,7 @@
                     {% for key,value in widget_options.label_icon_attr|default({}) %}
                         {% set wo_label_icon_attr = wo_label_icon_attr~key~'="'~value~'" ' %}
                     {% endfor %}
-                    <a class="input-group-addon" {{ wo_label_icon_attr }}><i class="zmdi {{ widget_options.label_icon }}"></i></a>
+                    <a class="input-group-addon" {{ wo_label_icon_attr }}><i class="{{ widget_options.label_icon }}"></i></a>
                 {% endif %}
                 {{ widget_options.fgline is defined and widget_options.fgline?'<div class="fg-line">':'' }}
                 {{- form_widget(form,{'widget_options':widget_options}) -}}
@@ -55,7 +55,7 @@
                 {% for key,value in widget_options.label_icon_attr|default({}) %}
                     {% set wo_label_icon_attr = wo_label_icon_attr~key~'='~value~' ' %}
                 {% endfor %}
-                <span class="input-group-addon" {{ wo_label_icon_attr }}><i class="zmdi {{ widget_options.label_icon }}"></i></span>
+                <span class="input-group-addon" {{ wo_label_icon_attr }}><i class="{{ widget_options.label_icon }}"></i></span>
             {% endif %}
             {{ widget_options.fgline is defined and widget_options.fgline?'<div class="fg-line">':'' }}
             {{- form_label(form, null, {'label_attr':label_attr}) -}}
