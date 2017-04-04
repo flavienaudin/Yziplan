@@ -74,18 +74,16 @@ Données d'entrée :
             </div>
             <div class="media-body">
                 {% block mhMediaBody %}
-                    {% set creatorsNames = "" %}
-                    {% for creatorInvitation in module.creators %}
-                        {% set creatorsNames = creatorsNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, not userModuleInvitation.eventInvitation.organizer) %}
+                    {% set organizerNames = "" %}
+                    {% for organizerInvitation in module.organizers %}
+                        {% set organizerNames = organizerNames~(loop.index > 1?', ')~ organizerInvitation.displayableName(true, not userModuleInvitation.eventInvitation.organizer) %}
                     {% endfor %}
                     <h2>
                         <i class="zmdi zmdi-help zmdi-hc-lg c-white m-r-10"></i> <span id="module_{{ module.token }}_name">
                            {{ module.name is not empty?module.name }}
                         </span>
-                        {% if creatorsNames is not empty %}
-                            <small>{{ "event.header.organised_by"|trans({"%creator%":creatorsNames}) }}
-                                {# TODO décommenter <span class="label label-default">{{ module.status|trans}}</span>#}
-                            </small>
+                        {% if organizerNames is not empty %}
+                            <small>{{ "event.header.organised_by"|trans({"%organizer%":organizerNames}) }}</small>
                         {% endif %}
                     </h2>
                 {% endblock mhMediaBody %}

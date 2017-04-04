@@ -1,4 +1,9 @@
 {% extends "::base.html.twig" %}
+{# Liste des activités publiques
+
+Données d'entrée :
+- activities : liste des activités
+#}
 
 {# LAYOUT : une colonne centrale #}
 {% block main_section_class %}index-main{% endblock %}
@@ -148,7 +153,7 @@
             </div>
         </aside>
 
-        <!-- Portfolio -->
+        {#<!-- Type d'événement -->
         <section id="section-event" class="section-event">
             <div class="container">
                 <div class="row">
@@ -229,6 +234,114 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <!-- /.col-lg-10 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container -->
+        </section>#}
+
+        <!-- Annuaire -->
+        <section id="section-event" class="section-event bgm-white">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 col-lg-offset-1 text-center">
+                        <h2>{{ "index.section_directory.title"|trans }}</h2>
+                        <hr class="small black">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3">
+                                <p>{{ "index.section_directory.subtitle1"|trans|raw }}</p>
+                                <p>{{ "index.section_directory.subtitle2"|trans }}</p>
+                            </div>
+                        </div>
+                        <hr class="small black">
+                        <div class="row">
+                            {% for activity in activities %}
+                            <div class="col-xs-12 col-sm-6 col-md-4 col-xs-p-lr-0">
+                                <div class="card z-depth-1">
+                                    <div class="card-header mini-picture p-0 m-0">
+                                        <div class="focuspoint mini-picture-focuspoint" data-focus-x="{{ activity.event.pictureFocusX is not null ? activity.event.pictureFocusX:0 }}"
+                                             data-focus-y="{{ activity.event.pictureFocusY is not null ? activity.event.pictureFocusY:0 }}"
+                                             data-image-w="{{ activity.event.pictureWidth is not null ? activity.event.pictureWidth:1024 }}"
+                                             data-image-h="{{ activity.event.pictureHeight is not null ? activity.event.pictureHeight:669 }}">
+                                            <img src="{{ activity.event.pictureFilename is not null ? vich_uploader_asset(activity.event, 'pictureFile') :
+                                            asset("bundles/app/img/event-header/organisation.jpeg") }}" alt="{{ activity.event.name }}" class="mini-picture"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="card-header">
+                                        <h2 class="m-b-20">
+                                            {{ activity.event.name }}
+                                        </h2>
+                                        <div class="m-b-15">
+                                            <small><i class="zmdi zmdi-ticket-star"></i>
+                                                {% for activityType in activity.activityTypes %}
+                                                    {% if not loop.first %}
+                                                        ,
+                                                    {% endif %}
+                                                    {{ activityType.keyName }}
+                                                {% endfor %}
+                                            </small>
+                                        </div>
+                                        <div>
+                                            {% for city in  activity.cities %}
+                                                <div>
+                                                    <small><i class="zmdi zmdi-pin"></i> {{ city.name }}, {{ city.department.name }}, {{ city.department.region.name }}</small>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="card-footer text-center">
+                                        <a href="#modal_information_{{ activity.event.tokenDuplication }}" data-toggle="modal" class="btn btn-flat btn-icon-text m-b-10" aria-expanded="false">
+                                            <i class="zmdi zmdi-info-outline"></i> {{ "directory.card.details"|trans }}
+                                        </a>
+                                        <a href="{{ path('duplicateEvent', {'tokenDuplication': activity.event.tokenDuplication}) }}" class="btn btn-primary btn-icon-text m-b-10">
+                                            <i class="zmdi zmdi-plus-circle-o-duplicate"></i>{{ "directory.card.organize"|trans }}
+                                        </a>
+                                        <div class="modal fade" id="modal_information_{{ activity.event.tokenDuplication }}" tabindex="-1" role="dialog" data-backdrop="static"
+                                             aria-labelledby="modal_information_{{ activity.event.tokenDuplication }}_title">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                                                        <h3 class="modal-title" id="modal_information_{{ activity.event.tokenDuplication }}_title">{{ activity.event.name }}</h3>
+                                                        <div class="m-b-15">
+                                                            <small><i class="zmdi zmdi-ticket-star"></i>
+                                                                {% for activityType in activity.activityTypes %}
+                                                                    {% if not loop.first %}
+                                                                        ,
+                                                                    {% endif %}
+                                                                    {{ activityType.keyName }}
+                                                                {% endfor %}
+                                                            </small>
+                                                        </div>
+                                                        <div>
+                                                            {% for city in  activity.cities %}
+                                                                <div>
+                                                                    <small><i class="zmdi zmdi-pin"></i> {{ city.name }}, {{ city.department.name }}, {{ city.department.region.name }}</small>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-body text-center m-b-10">
+                                                        <img class="pp-elt-picture picture-large"
+                                                             src="{{ activity.event.pictureFilename is not null ? vich_uploader_asset(activity.event, 'pictureFile') : asset("bundles/app/img/event-header/organisation.jpeg") }}"
+                                                             alt="{{ activity.event.pictureFile is defined ? '':activity.event.pictureFile.filename }}">
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>{{ activity.event.description|raw }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                        <a href="{{ path('directoryIndex') }}" class="btn btn-action bgm-teal btn-lg">{{ "index.section_directory.button"|trans }}</a>
                     </div>
                     <!-- /.col-lg-10 -->
                 </div>
@@ -325,6 +438,9 @@
 
 {% block javascripts %}
     {{ parent () }}
+    <script>
+        $('.focuspoint').focusPoint();
+    </script>
     <script src="{{ asset("bundles/app/js/parallax.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jqcloud.js") }}"></script>
     <script>

@@ -14,6 +14,7 @@ base:
     text2: Sorry for the inconvenience!
   footer:
     home: Home
+    about_us: About us
     directory: Activities' directory
     pro: Pro
 
@@ -103,9 +104,8 @@ event:
     meta_title:
       new_event: New event
   header:
-    organised_by: "Organised by %creator%"
+    organised_by: "Organised by %organizer%"
   picture:
-    link: Change the picture
     update_modal:
       title: Upload a picture
       subtitle: Once the picture loaded, you can click to select the image focus point, it will be centered automatically
@@ -114,6 +114,7 @@ event:
   menu:
     edit: Edit event
     duplication: Duplication settings
+    cancel: Cancel event
   modal:
     edit:
       title: Edit the event
@@ -136,7 +137,6 @@ event:
       general: Generals
       about_info: More info
     text:
-      when_where: You already know the date and the place ? Set them right now or add a survey in next step
       see_map: See on map
     name:
       label: Event / activity title
@@ -176,6 +176,8 @@ event:
       help:  "All guest will be able to sent new email invitations"
       text.true: Your friends can invite
       text.false: Your friends can not invite
+    activity_provider:
+      label: I am an activity provider
     template:
       link_collpase: Template settings
       label: Set this event as template
@@ -190,7 +192,7 @@ event:
       link_popover: Coordinates
       website:
         label: Website
-        placeholder: Website http://
+        placeholder: Website
       email:
         label: Email
         placeholder: Email
@@ -200,21 +202,21 @@ event:
       mobileNumber:
         label: Mobile number
         placeholder: Mobile number
-      faxNumber:
-        label: Fax number
-        placeholder: Fax number
       facebookURL:
-        label: Facebook link
-        placeholder: Facebook link
+        label: Facebook
+        placeholder: Facebook
       googlePlusURL:
-        label: Google plus link
-        placeholder: Google plus link
+        label: Google plus
+        placeholder: Google plus
       twitterURL:
-        label: Twitter link
-        placeholder: Twitter link
+        label: Twitter
+        placeholder: Twitter
       instagramURL:
-        label: Instagram link
-        placeholder: Instagram link
+        label: Instagram
+        placeholder: Instagram
+      youtubeURL:
+        label: Youtube
+        placeholder: Youtube
     opening_hour:
       link_collpase: Opening hours
       add_link: Add a time slot
@@ -228,20 +230,34 @@ event:
       time_closed:
         label: Closing time
         placeholder: Closing time
+  alert:
+    confirm_cancellation:
+      title: Are you sure you want to delete this event?
+      message: <p><strong>This action is irreversible</strong></p><p>You can not access it anymore, your guests will be noticed and will not be able to participate anymore</p>
+      input:
+        label: Tell to your guests in the field below why you cancel the event
+        placeholder: Optional
   wizard:
     button:
       send_invitations: Send invitations
     main:
       title: Event organization
       subtitle: Describe the event to your guests
-    profile:
-      title: About you
-      subtitle:
-        text: Identify yourself to your guest
-        not_connected: If you already have an account, login to fill this information automatically
     add_module:
       title: Consult your guests
       subtitle: Add survey using links below then click "Next"
+    recapitulatif:
+      title: Congratulations, it is almost done
+      subtitle:
+        text: Identify yourself and share
+        not_connected: If you already have an account, login to fill this information automatically
+      invitation_email:
+        title: Send invitations by email
+      share_url:
+        title: Share the event link
+      template:
+        title: Duplication link to share
+        paragraphe: "Post the following link on your web site and social networks. Your visitors can organise easily their next activity in your establishment"
     invitations:
       title: The guests
       subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link.
@@ -250,12 +266,23 @@ event:
       subtitle: This event is a template, you can activate the possibility to create events from this template.
     error.message:
       wrong_step: An error during the event creation process occrured. Pleaze, try again the operation
+  cancelled:
+    title: Deprogrammed event
+    hello: Hello %guestname%
+    text: This event has been cancelled by the organizer, you should have received an email|This event has been cancelled by organizers, you should have received an email
+    email:
+      subject: "Yziplan : \"%event_name%\" is cancelled"
+      body:
+        hello: Hello %guestname%
+        text: "Sorry, I cancel the event \"%event_name%\".|Sorry, We cancel the event \"%event_name%\"."
   error.message:
-    creation: An error occured while creating an event.
+    creation: An error occured while creating an event
+    deletion: An error occured while cancelling an event
     unauthorized_access: You haven't the authorization to access this event
     valide_guestname_required: This action requires that you validate your invitation with your name. No change was made
   success.message:
     creation: Event created successfully
+    cancellation: Event cancelled successfully. You will be redirected in a second
 
 eventInvitations:
   user_menu:
@@ -304,6 +331,8 @@ eventInvitation:
     email:
       label: Email
       placeholder: Your contact email
+    personal_link:
+      label: Your personnal link <strong>to keep</strong>
     answer:
       label: Your answer
       placeholder: Your answer
@@ -315,9 +344,6 @@ eventInvitation:
     interested: Interested
     not_interested: Not interested
     dont_know: Don't know yet
-  url:
-    label: Your invitation
-    text: Keep this link to come back here
   profile.card:
     title: About you
     badge:
@@ -353,10 +379,7 @@ eventInvitation:
       body:
         hello: "Hi %username%!"
         paragraph:
-          first_part:
-            several_orga: "We are "
-            single_orga: "I am  "
-          second_part: "inviting you to \"%event_name%\""
+          first_part: "I am inviting you to \"%event_name%\"|We are inviting you to \"%event_name%\""
           text_link: "Follow this link to answer:"
           warning_secret: "Keep it secret, this is your personal invitation"
     recap:
@@ -413,7 +436,7 @@ invitations:
     send_invitation: Send invitations
     via_facebook: Via Facebook
     via_gmail_contact:
-      show: My  Gmail Contacts
+      show: Google Contacts
 
 send_message:
   link: Write
@@ -512,9 +535,13 @@ pollmodule:
       title: Edit proposal
     pollproposal:
       form:
-        description:
-          label: Description
-          placeholder: Description
+      name:
+        label: Proposal name
+      description:
+        label: Description
+        placeholder: Description
+      picture:
+        label: Picture
     when:
       startDate: "Start Date/Hour:"
       endDate: "End Date/Hour:"
@@ -541,6 +568,17 @@ duplication:
   message:
     error: You are not allow to duplicate this event
 
+notifications:
+  side_panel:
+    title: Notifications
+    action:
+      mark_all: Mark all
+    none: No unread notitication
+  comment: "%number_new_comments% new comment|%number_new_comments% new comments"
+  new_module: "%organizers% added a new poll|%organizers% added a new poll"
+  new_pollproposal: "%organizer% added a new poll proposal"
+
+
 # Globals
 global:
   project_name: Yziplan
@@ -549,6 +587,8 @@ global:
   link:
     top: Top
   button:
+    yes: Yes
+    no: No
     ok: OK
     valid: Validate
     cancel: Cancel
@@ -706,6 +746,11 @@ index:
     activity: Activity
     barbecue: Barbecue
     weekend: Week-end
+  section_directory:
+    title: Activity directory
+    subtitle1: To make you save more time we provide you a directory of activities, all you have to do is to propose them to your friends.<br><i>Yes, it's that easy! </i>
+    subtitle2: "Lastest:"
+    button: Check our activities
   section_feature:
     title: Features
   section_quote:

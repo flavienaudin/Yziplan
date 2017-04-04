@@ -22,7 +22,11 @@ class CoreController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->render('AppBundle:Core:index.html.twig');
+        $activities = $this->get('at.manager.directory')->getActivities(6);
+
+        return $this->render('AppBundle:Core:index.html.twig', array(
+            "activities" => $activities,
+        ));
     }
 
     /**
@@ -42,36 +46,44 @@ class CoreController extends Controller
     }
 
     /**
-     * @Route("/legal-notices", name="legalNotices")
-     */
+ * @Route("/legal-notices", name="legalNotices")
+ */
     public function legalNoticesAction(Request $request)
     {
         return $this->render('@App/Core/legal_notices.html.twig');
     }
 
     /**
+     * @Route("/about-us", name="aboutUs")
+     */
+    public function aboutUsAction(Request $request)
+    {
+        return $this->render('@App/Core/footer/about_us.html.twig');
+    }
+
+    /**
      * @Route("/testindex", name="testhome")
      */
-    public function testIndexAction(Request $request)
+   /* public function testIndexAction(Request $request)
     {
         if ($this->get('kernel')->getEnvironment() == "dev") {
             return $this->render('AppBundle:Core:testIndex.html.twig');
         } else {
             return $this->redirectToRoute('home');
         }
-    }
+    }*/
 
     /**
      * @Route("/testindex2", name="testhome2")
      */
-    public function testIndex2Action(Request $request)
+    /*public function testIndex2Action(Request $request)
     {
         if ($this->get('kernel')->getEnvironment() == "dev") {
             return $this->render('AppBundle:Core:testIndex2.html.twig');
         } else {
             return $this->redirectToRoute('home');
         }
-    }
+    }*/
 
     /**
      * @Route("/add_suggestion", name="addSuggestion")

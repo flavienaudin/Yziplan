@@ -83,6 +83,12 @@ class EventInvitation
      */
     private $invitationEmailSentAt;
 
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="last_visit_at", type="datetime", nullable=true)
+     */
+    private $lastVisitAt;
+
     /**************************************************************************************************************
      *                                      Jointures
      **************************************************************************************************************/
@@ -302,6 +308,24 @@ class EventInvitation
     public function setInvitationEmailSentAt($invitationEmailSentAt)
     {
         $this->invitationEmailSentAt = $invitationEmailSentAt;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastVisitAt()
+    {
+        return $this->lastVisitAt;
+    }
+
+    /**
+     * @param \DateTime $lastVisitAt
+     * @return EventInvitation
+     */
+    public function setLastVisitAt($lastVisitAt)
+    {
+        $this->lastVisitAt = $lastVisitAt;
         return $this;
     }
 

@@ -3,6 +3,7 @@
 - event (Event) L'événement courant pour afficher les invitations
 - sendMessageForm (Form) Formulaire permettant d'envoyer un rappel aux invités
 - userEventInvitationAnswerForm (Form) Formulaire de réponse à l'invitation
+- invitationsForm (Form|null) Formulaire permettant d'inviter (renseignement des e-mails des invités)
 #}
 
 
@@ -24,6 +25,7 @@
             'event':event}) }}
     </div>
 
+    {# TODO revoir les autorisations si pas déjà fait dans le EvenController et vérifier ici que si les xxx_Form existent #}
     {% if (userEventInvitation.organizer or userEventInvitation.event.guestsCanInvite)
     and (invitationsForm is not null or not userEventInvitation.event.invitationOnly or sendMessageForm is not null) %}
         <div class="card-footer text-center m-t-10">

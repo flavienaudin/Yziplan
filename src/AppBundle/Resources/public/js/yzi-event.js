@@ -16,8 +16,6 @@ $(document).ready(function () {
         }
     };
 
-    new Clipboard("#btn_url_event_public_invitation");
-
     $('textarea, .auto-size').on('autosize:resized', function () {
         $grid = $('.grid');
         if ($grid[0]) {
@@ -25,6 +23,23 @@ $(document).ready(function () {
         }
     });
 
+    // Check if invitation is valid before opening the modal
+    $('#eventEditModal').on('show.bs.modal', function (e) {
+        if (!eventInvitationValid && askGuestName !== undefined) {
+            askGuestName(e, function () {
+                $('#eventEditModal').modal('show');
+            }, null);
+        }
+    });
+
+    // Check if invitation is valid before opening the modal
+    $('#eventDuplicationSettingsModal').on('show.bs.modal', function (e) {
+        if (!eventInvitationValid && askGuestName !== undefined) {
+            askGuestName(e, function () {
+                $('#eventDuplicationSettingsModal').modal('show');
+            }, null);
+        }
+    });
 });
 
 /** Fonctions relatives à la page d'événement */

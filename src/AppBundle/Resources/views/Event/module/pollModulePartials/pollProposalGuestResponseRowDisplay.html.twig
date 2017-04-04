@@ -81,7 +81,7 @@
                                             $(moduleModalsContainer).children('#pollProposalEdition_' + pollProposalId + '_modal_id').each(function () {
                                                 $(this).remove();
                                             });
-                                            if ($('#pp-row-group-{{ userModuleInvitation.module.token }} > tr').length == 1) {
+                                            if ($('#pp-row-group-{{ userModuleInvitation.module.token }} > tr').length === 1) {
                                                 $('#pollModuleDisplayAllResult_{{ userModuleInvitation.module.token }}_button').hide();
                                             }
                                         }

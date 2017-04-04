@@ -1,0 +1,55 @@
+{# Affichage du lien de l'événement donné en entrée, dans un input avec bouton pour copier
+
+Données d'entrée :
+- event (Event) L'événement concerné
+#}
+
+{% block event_invitation_url_copyClipboard_block %}
+    <div id="event_invitation_url_copyClipboard">
+        <div class="form-group animated">
+            <label class="control-label sr-only" for="event_invitation_url">{{ "event.form.public_invitation.label"|trans }}</label>
+            <div class="input-group input-group-sm">
+                <div class="fg-line">
+                    <input type="text" id="event_invitation_url" class="form-control input-sm" readonly="readonly" value="{{ url("displayEvent", {'token':event.token}) }}">
+                </div>
+                <span class="input-group-btn">
+                    <button type="button" id="btn_event_invitation_url" class="btn btn-primary btn-icon-text" data-clipboard-target="#event_invitation_url">
+                        <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button>
+                    <button type="button" class="btn btn-icon-text btn-facebook" id="shareEventFB" name="provider" style="display: none;">
+                        <i class="zmdi zmdi-facebook zmdi-hc-lg"></i> {{ "invitations.button.via_facebook"|trans }}</button>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            new Clipboard("#btn_event_invitation_url");
+
+            $facebookShareLink = $('#shareEventFB');
+            if (isMobile()) {
+                $facebookShareLink.remove();
+            } else {
+                $facebookShareLink.show();
+                // Initialize invitation via facebook
+                $.ajaxSetup({cache: true});
+                $.getScript('//connect.facebook.net/fr_FR/all.js', function () {
+                    FB.init({
+                        appId: {{ facebook_client_id }},
+                        xfbml: true,
+                        version: 'v2.8'
+                    });
+                });
+
+                // React to the invite via facebook button
+                $facebookShareLink.click(function () {
+                    var pageLink = $("#event_invitation_url").val();
+                    FB.ui({
+                        method: 'send',
+                        link: pageLink
+                    });
+                });
+            }
+        });
+    </script>
+{% endblock event_invitation_url_copyClipboard_block %}

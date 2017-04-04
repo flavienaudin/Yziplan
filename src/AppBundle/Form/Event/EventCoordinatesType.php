@@ -9,6 +9,7 @@
 namespace AppBundle\Form\Event;
 
 use AppBundle\Entity\Event\EventCoordinates;
+use AppBundle\Form\Type\UrlDomaineType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -35,22 +36,29 @@ class EventCoordinatesType extends AbstractType
                 'required' => false,))
             ->add("mobileNumber", TextType::class, array(
                 'required' => false,))
-            ->add("faxNumber", TextType::class, array(
-                'required' => false,))
-            ->add("facebookURL", UrlType::class, array(
+            ->add("facebookURL", UrlDomaineType::class, array(
                 'required' => false,
+                'url_domain' => 'https://www.facebook.com/',
                 'constraints' => new Url()
             ))
-            ->add("googlePlusURL", UrlType::class, array(
+            ->add("googlePlusURL", UrlDomaineType::class, array(
                 'required' => false,
+                'url_domain' => 'https://plus.google.com/+',
                 'constraints' => new Url()
             ))
-            ->add("twitterURL", UrlType::class, array(
+            ->add("twitterURL", UrlDomaineType::class, array(
                 'required' => false,
+                'url_domain' => 'https://twitter.com/',
                 'constraints' => new Url()
             ))
-            ->add("instagramURL", UrlType::class, array(
+            ->add("instagramURL", UrlDomaineType::class, array(
                 'required' => false,
+                'url_domain' => 'https://www.instagram.com/',
+                'constraints' => new Url()
+            ))
+            ->add("youtubeURL", UrlDomaineType::class, array(
+                'required' => false,
+                'url_domain' => 'https://www.youtube.com/',
                 'constraints' => new Url()
             ));
     }

@@ -52,13 +52,6 @@ class EventCoordinates
     /**
      * @var string
      *
-     * @ORM\Column(name="faxNumber", type="string", length=31, nullable=true)
-     */
-    private $faxNumber;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="facebookURL", type="string", length=255, nullable=true)
      */
     private $facebookURL;
@@ -83,6 +76,13 @@ class EventCoordinates
      * @ORM\Column(name="instagramURL", type="string", length=255, nullable=true)
      */
     private $instagramURL;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="youtubeURL", type="string", length=255, nullable=true)
+     */
+    private $youtubeURL;
 
 
     /**************************************************************************************************************
@@ -114,7 +114,6 @@ class EventCoordinates
      * Set website
      *
      * @param string $website
-     *
      * @return EventCoordinates
      */
     public function setWebsite($website)
@@ -138,7 +137,6 @@ class EventCoordinates
      * Set email
      *
      * @param string $email
-     *
      * @return EventCoordinates
      */
     public function setEmail($email)
@@ -162,7 +160,6 @@ class EventCoordinates
      * Set phoneNumber
      *
      * @param string $phoneNumber
-     *
      * @return EventCoordinates
      */
     public function setPhoneNumber($phoneNumber)
@@ -186,7 +183,6 @@ class EventCoordinates
      * Set mobileNumber
      *
      * @param string $mobileNumber
-     *
      * @return EventCoordinates
      */
     public function setMobileNumber($mobileNumber)
@@ -207,34 +203,9 @@ class EventCoordinates
     }
 
     /**
-     * Set faxNumber
-     *
-     * @param string $faxNumber
-     *
-     * @return EventCoordinates
-     */
-    public function setFaxNumber($faxNumber)
-    {
-        $this->faxNumber = $faxNumber;
-
-        return $this;
-    }
-
-    /**
-     * Get faxNumber
-     *
-     * @return string
-     */
-    public function getFaxNumber()
-    {
-        return $this->faxNumber;
-    }
-
-    /**
      * Set facebookURL
      *
      * @param string $facebookURL
-     *
      * @return EventCoordinates
      */
     public function setFacebookURL($facebookURL)
@@ -258,7 +229,6 @@ class EventCoordinates
      * Set googlePlusURL
      *
      * @param string $googlePlusURL
-     *
      * @return EventCoordinates
      */
     public function setGooglePlusURL($googlePlusURL)
@@ -282,7 +252,6 @@ class EventCoordinates
      * Set twitterURL
      *
      * @param string $twitterURL
-     *
      * @return EventCoordinates
      */
     public function setTwitterURL($twitterURL)
@@ -306,7 +275,6 @@ class EventCoordinates
      * Set instagramURL
      *
      * @param string $instagramURL
-     *
      * @return EventCoordinates
      */
     public function setInstagramURL($instagramURL)
@@ -324,6 +292,24 @@ class EventCoordinates
     public function getInstagramURL()
     {
         return $this->instagramURL;
+    }
+
+    /**
+     * @return string
+     */
+    public function getYoutubeURL()
+    {
+        return $this->youtubeURL;
+    }
+
+    /**
+     * @param string $youtubeURL
+     * @return EventCoordinates
+     */
+    public function setYoutubeURL($youtubeURL)
+    {
+        $this->youtubeURL = $youtubeURL;
+        return $this;
     }
 
     /**
@@ -361,11 +347,11 @@ class EventCoordinates
         $newCoordinates->setWebsite($this->getWebsite());
         $newCoordinates->setPhoneNumber($this->getPhoneNumber());
         $newCoordinates->setMobileNumber($this->getMobileNumber());
-        $newCoordinates->setFaxNumber($this->getFaxNumber());
         $newCoordinates->setFacebookURL($this->getFacebookURL());
         $newCoordinates->setGooglePlusURL($this->getGooglePlusURL());
         $newCoordinates->setTwitterURL($this->getTwitterURL());
         $newCoordinates->setInstagramURL($this->getInstagramURL());
+        $newCoordinates->setYoutubeURL($this->getYoutubeURL());
         $newEvent->setCoordinates($newCoordinates);
         return $newCoordinates;
     }

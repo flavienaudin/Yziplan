@@ -21,6 +21,7 @@ use AppBundle\Mailer\AppTwigSiwftMailer;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
+use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\Collection;
@@ -170,6 +171,23 @@ class EventInvitationManager
     }
 
     /**
+     * Update the EventInvitation lastVisitAt and persist it
+     * @param EventInvitation|null $eventInvitation
+     * @return bool
+     */
+    public function updateLastVisit(EventInvitation $eventInvitation = null)
+    {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        if ($this->eventInvitation != null) {
+            $this->eventInvitation->setLastVisitAt(new \DateTime());
+            return $this->persistEventInvitation();
+        }
+        return false;
+    }
+
+    /**
      * Initialise une EventInvitation pour un événement et un ApplicationUser (connecté ou non).
      * L'EventInvitation n'est pas persistée en base de données.
      * @param Event $event
@@ -243,11 +261,10 @@ class EventInvitationManager
      * Create and send invitations using emails
      * @param Event $event
      * @param array $emailsData
-     * @param boolean $sendEmail
      * @param string $message
      * @return array with results by success/failed/notFound
      */
-    public function createInvitations(Event $event, $emailsData, $sendEmail, $message = null)
+    public function createInvitations(Event $event, $emailsData, $message = null)
     {
         $results = array(
             'success' => array(),
@@ -270,16 +287,12 @@ class EventInvitationManager
                 }
                 try {
                     if ($this->persistEventInvitation()) {
-                        if ($sendEmail) {
-                            if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
-                                $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
-                                $this->persistEventInvitation();
-                                $results['success'][$email] = $this->eventInvitation;
-                            } else {
-                                $results['failed'][$email] = $this->eventInvitation;
-                            }
-                        } else {
+                        if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
+                            $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
+                            $this->persistEventInvitation();
                             $results['success'][$email] = $this->eventInvitation;
+                        } else {
+                            $results['failed'][$email] = $this->eventInvitation;
                         }
                     } else {
                         $results['creationError'][$email] = $this->eventInvitation;
@@ -341,7 +354,7 @@ class EventInvitationManager
         if ($applicationUser != null && $applicationUser->getAccountUser() instanceof AccountUser) {
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
         } else {
-            $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+            $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
         }
         return $this->eventInvitation;
     }
@@ -413,9 +426,14 @@ class EventInvitationManager
     {
         $this->eventInvitation = $evtInvitForm->getData();
         if (empty($this->eventInvitation->getDisplayableName(false)) && $this->eventInvitation->getStatus() == EventInvitationStatus::VALID) {
-            // Si le nom est vide => l'invitation revient en attente de réponse
-            $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
-
+            // Si le nom est vide et l'invitation était valide
+            if (empty($this->eventInvitation->getDisplayableEmail())) {
+                // Si l'email est vide => l'invitation revient en attente de validation
+                $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
+            } else {
+                // Si l'email est renseigné => l'invitation revient en attente de réponse
+                $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
+            }
             /** @var ModuleInvitation $moduleInvitation */
             foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
                 if ($moduleInvitation->getStatus() == ModuleInvitationStatus::VALID) {
@@ -433,6 +451,10 @@ class EventInvitationManager
                 if ($moduleInvitation->getStatus() != ModuleInvitationStatus::VALID) {
                     $moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
                 }
+            }
+
+            if ($this->eventInvitation->getEvent()->getStatus() == EventStatus::IN_CREATION) {
+                $this->eventInvitation->getEvent()->setStatus(EventStatus::IN_ORGANIZATION);
             }
         }
 

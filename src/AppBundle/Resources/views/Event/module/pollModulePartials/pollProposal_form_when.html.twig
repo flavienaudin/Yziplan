@@ -1,75 +1,50 @@
 {# Données d'entrée :
 - userModuleInvitation (ModueInvitation) Le ModuleInvitation de l'utilisateur connecté
-- pollProposalForm (FormInterface) Le formulaire d'ajout/édition d'un PollProposal
+- pollModuleOptions (Array), contains:
+        - pollProposalAddForm (Form|null) Le formulaire d'ajout d'une proposition
 - pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
 - edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
 #}
-<div>
-    {% if edition %}
-        {{ form_start(pollProposalForm, { 'action' : path('pollProposalEditionForm', {'pollProposalId':pollProposalForm.id.vars.value,'moduleInvitationToken': userModuleInvitation.token}),
-            'attr' : {'id': pp_form_modal_prefix~"_form_id"}}) }}
-    {% else %}
-        {{ form_start(pollProposalForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_form_id"}}) }}
-    {% endif %}
-    {{ form_label(pollProposalForm.pollProposalElements, null, {'label_attr':{'class':'sr-only'}}) }}
-    {{ form_errors(pollProposalForm.pollProposalElements) }}
+{% set pollProposalForm = pollModuleOptions.pollProposalAddForm %}
+{% if pollModuleOptions.pollProposalListAddForm is defined %}
+    {% set pollProposalListForm = pollModuleOptions.pollProposalListAddForm %}
+{% endif %}
 
-    {# Le but de la manoeuvre ci-dessous est d'afficher la startDate avant la EndDate à coup sur #}
-    {% for pollProposalElement in pollProposalForm.pollProposalElements %}
-        {{ form_errors(pollProposalElement) }}
-        {{ "pollmodule.modal.when.startDate"|trans }}
-        <div class="row">
-            <div class="col-xs-12 col-md-6">
-                {{ form_row(pollProposalElement.startDate, {
-                    'label_attr':{'class':'sr-only'},
-                    'widget_options':{
-                        'fgfloat':false,
-                        'fgline':true}
-                }) }}
-            </div>
-            <div class="col-xs-12 col-md-6">
-                {{ form_row(pollProposalElement.startTime, {
-                    'label_attr':{'class':'sr-only'},
-                    'attr': {
-                        'placeholder': "global.form.optional"|trans},
-                    'widget_options':{
-                        'fgfloat':false,
-                        'fgline':true}
-                }) }}
+{% if edition %}
+    {{ include('@App/Event/module/pollModulePartials/pollProposal_form_when_single.html.twig', {
+        "userModuleInvitation":userModuleInvitation,
+        "pollModuleOptions":pollModuleOptions,
+        "pp_form_modal_prefix":pp_form_modal_prefix,
+        "edition":edition
+    }) }}
+{% else %}
+    <div>
+        <div role="tabpanel">
+            <ul class="tab-nav" role="tablist">
+                <li class="active"><a href="#{{ pp_form_modal_prefix }}OneDate" aria-controls="{{ pp_form_modal_prefix }}OneDate" role="tab" data-toggle="tab">Une seule</a></li>
+                <li><a href="#{{ pp_form_modal_prefix }}SeveralDate" aria-controls="{{ pp_form_modal_prefix }}SeveralDate" role="tab" data-toggle="tab">Plusieurs</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="{{ pp_form_modal_prefix }}OneDate">
+                    {{ include('@App/Event/module/pollModulePartials/pollProposal_form_when_single.html.twig', {
+                        "userModuleInvitation":userModuleInvitation,
+                        "pollModuleOptions":pollModuleOptions,
+                        "pp_form_modal_prefix":pp_form_modal_prefix,
+                        "edition":edition
+                    }) }}
+                </div>
+                <div role="tabpanel" class="tab-pane" id="{{ pp_form_modal_prefix }}SeveralDate">
+                    {{ include('@App/Event/module/pollModulePartials/pollProposal_form_when_multiple.html.twig', {
+                        "userModuleInvitation":userModuleInvitation,
+                        "pollModuleOptions":pollModuleOptions,
+                        "pp_form_modal_prefix":pp_form_modal_prefix,
+                        "edition":edition
+                    }) }}
+                </div>
             </div>
         </div>
-        {{ form_errors(pollProposalElement) }}
-        {{ "pollmodule.modal.when.endDate"|trans }} <i class="zmdi zmdi-info" data-toggle="tooltip" title="{{ "pollmodule.modal.when.tooltip"|trans }}"></i>
-        <div class="row">
-            <div class="col-xs-12 col-md-6">
-                {{ form_row(pollProposalElement.endDate, {
-                    'label_attr':{'class':'sr-only'},
-                    'attr': {
-                        'placeholder': "global.form.optional"|trans},
-                    'widget_options':{
-                        'fgfloat':false,
-                        'fgline':true}
-                }) }}
-            </div>
-            <div class="col-xs-12 col-md-6">
-                {{ form_row(pollProposalElement.endTime, {
-                    'label_attr':{'class':'sr-only'},
-                    'attr': {
-                        'placeholder': "global.form.optional"|trans},
-                    'widget_options':{
-                        'fgfloat':false,
-                        'fgline':true}
-                }) }}
-            </div>
-        </div>
-    {% endfor %}
-    {{ form_rest(pollProposalForm) }}
-
-    <div class="pull-right">
-        <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
-        <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
     </div>
-    {{ form_end(pollProposalForm) }}
-</div>
+{% endif %}
 
 

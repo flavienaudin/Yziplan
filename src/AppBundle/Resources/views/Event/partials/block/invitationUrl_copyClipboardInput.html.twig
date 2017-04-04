@@ -1,10 +1,16 @@
-{% block inviationUrl_copyCLipboardInput_block %}{% spaceless %}
+{# Affichage du lien personnel de l'invitation donnée en entrée, dans un input avec bouton pour copier
+
+Données d'entrée :
+- userEventInvitation (EventInvitation)
+#}
+
+{% block inviationUrl_copyClipboardInput_block %}{% spaceless %}
     <label class="control-label text-info" for="url_user_invitation">{{ "eventInvitation.profile.card.guestemail_empty_alert.email_input_label"|trans }}&nbsp;:</label>
-    <div class="input-group">
+    <div class="input-group input-group-sm">
         <div class="fg-line">
-            <input id="url_user_invitation" type="text" class="form-control" readonly="readonly" value="{{ url("displayEventInvitation", {"token":userEventInvitation.token}) }}">
+            <input id="url_user_invitation" type="text" class="form-control input-sm" readonly="readonly" value="{{ url("displayEventInvitation", {"token":userEventInvitation.token}) }}">
         </div>
-        <span class="input-group-btn"><button type="button" id="btn_copy_invitation_url" class="btn btn-primary" data-clipboard-target="#url_user_invitation">
+        <span class="input-group-btn"><button type="button" id="btn_copy_invitation_url" class="btn btn-primary btn-icon-text" data-clipboard-target="#url_user_invitation">
                 <i class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
     </div>
 {% endspaceless %}{% endblock %}

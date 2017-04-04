@@ -53,11 +53,16 @@ class PollProposalResponseManager
         }
         if ($this->pollProposalResponse == null) {
             $pollProposal = $moduleInvitation->getModule()->getPollModule()->getPollProposalById($pollProposalId);
-            $this->initializePollProposalResponse($moduleInvitation, $pollProposal, $value);
+            if ($pollProposal != null) {
+                $this->initializePollProposalResponse($moduleInvitation, $pollProposal, $value);
+            } else {
+                return false;
+            }
         }
 
         $this->entityManager->persist($this->pollProposalResponse);
         $this->entityManager->flush();
+        return true;
     }
 
     /**

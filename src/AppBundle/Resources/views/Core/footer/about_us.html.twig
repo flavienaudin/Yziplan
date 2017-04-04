@@ -1,0 +1,158 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}{{ parent() }} - Qui sommes nous ?{% endblock %}
+{# LAYOUT : une colonne centrale #}
+{% block main_section_class %}index-main{% endblock %}
+{% block main_content_class %}container-fluid{% endblock %}
+
+{# Vidage du menu latéral #}
+{% block sidebar_collapse_cmd %}{% endblock %}
+{% block s_main_menu %}{% endblock s_main_menu %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset("bundles/app/css/yp-index.css") }}">
+{% endblock %}
+
+{% block content_body %}
+<!-- Header -->
+<div class="row">
+    <section class="index-section bgm-white">
+        <div class="container">
+            <div class="row text-center">
+                <h2>Qui sommes nous ?</h2>
+                <hr class="small black">
+                <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                    <img src="{{ asset('includes/img/team/yziteam_03_2017.jpg') }}" class="img-responsive center-block" alt="{{ "global.project_name"|trans }}">
+                </div>
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /.container -->
+    </section>
+
+    <section class="index-section bgm-teal">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <h2 class="c-white">Moins de temps pour s'organiser,<br>Plus de temps pour profiter !</h2>
+                    <hr class="small">
+                    <div class="text-center">
+                        <p class="c-white">Créé à l’origine pour organiser un week-end entre potes, Yziplan est apparu comme logique dans la tête de nos créateurs.</p>
+                        <p class="c-white">Enfin une façon d’organiser facilement et rapidement nos prochains week-end, pourquoi pas l’étendre à toutes les activités entre amis!</p>
+                        <p class="c-white">Aujourd’hui la team Yzi c’est : </p>
+                    </div>
+                    <hr class="small">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="row">
+                                <div class="col-xs-12"></div>
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="service-item">
+                                        <img src="{{ asset('includes/img/team/edouard.jpg') }}" class="about-us-avatar" alt="Edouard">
+                                        <h4 class="c-white">
+                                            <strong>Edouard : <i>Marketing Artist</i></strong>
+                                        </h4>
+                                        <p class="c-white">Toujours le 1er pour organiser des soirées ligue des champions et toujours le dernier pour trouver les bons pronos.</p>
+                                        <p class="c-white">Mon meilleur Yziplan : L’organisation d’un week-end à Marseille pour une réunion d’anciens élèves mémorables.</p>
+                                        <p>
+                                            <a href="https://www.linkedin.com/in/edouard-vitroly-37936861/" target="_blank"><i class="zmdi zmdi-linkedin-box zmdi-hc-2x c-white"></i></a>
+                                            <a href="mailto:edouard@yziplan.fr"><i class="zmdi zmdi-email zmdi-hc-2x c-white m-l-15"></i></a>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="service-item">
+                                        <img src="{{ asset('includes/img/team/flavien.jpg') }}" class="about-us-avatar" alt="Flavien">
+                                        <h4 class="c-white">
+                                            <strong>Flavien : <i>Bit Artisan</i></strong>
+                                        </h4>
+                                        <p class="c-white">Habite quelque part entre la campagne et internet.</p>
+                                        <p class="c-white">Mon meilleur Yziplan : L'organisation de mon 30ème anniversaire qui fêtera également les 1 an d'Yziplan.</p>
+                                        <p>
+                                            <a href="https://www.linkedin.com/in/flavienaudin/" target="_blank"><i class="zmdi zmdi-linkedin-box zmdi-hc-2x c-white"></i></a>
+                                            <a href="mailto:flavien@yziplan.fr"><i class="zmdi zmdi-email zmdi-hc-2x c-white m-l-15"></i></a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12 col-sm-6">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="service-item">
+                                        <img src="{{ asset('includes/img/team/patrick.jpg') }}" class="about-us-avatar" alt="Patrick">
+                                        <h4 class="c-white">
+                                            <strong>Patrick : <i>Multitask Performer</i></strong>
+                                        </h4>
+                                        <p class="c-white">A des jeux de société à tester et cherche des volontaires pour lire les règles à sa place.</p>
+                                        <p class="c-white">Mon meilleur Yziplan : Avoir été le premier à utiliser Yziplan pour organiser un week-end au sein de la Yziteam!</p>
+                                        <p>
+                                            <a href="https://www.linkedin.com/in/patrick-masse/" target="_blank"><i class="zmdi zmdi-linkedin-box zmdi-hc-2x c-white"></i></a>
+                                            <a href="mailto:patrick@yziplan.fr"><i class="zmdi zmdi-email zmdi-hc-2x c-white m-l-15"></i></a></p>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <div class="service-item">
+                                        <img src="{{ asset('includes/img/team/quentin.jpg') }}" class="about-us-avatar" alt="Quentin">
+                                        <h4 class="c-white">
+                                            <strong>Quentin : <i>Sales Scientist</i></strong>
+                                        </h4>
+                                        <p class="c-white">A le meilleur plan bières artisanales + charcuteries + fromages de producteurs de la Yziteam.</p>
+                                        <p class="c-white">Mon meilleur Yziplan : Parc Asterix en famille, voir Mamie utiliser yziplan prouve que le contrat est rempli!</p>
+                                        <p>
+                                            <a href="https://www.linkedin.com/in/quentinbrillard/" target="_blank"><i class="zmdi zmdi-linkedin-box zmdi-hc-2x c-white"></i></a>
+                                            <a href="mailto:quentin@yziplan.fr"><i class="zmdi zmdi-email zmdi-hc-2x c-white m-l-15"></i></a></p>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="index-section  bgm-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1 text-center">
+                    <h2><strong>Contactez-nous pour plus d’information :</strong></h2>
+                    <hr class="small black">
+                    <ul class="list-inline">
+                        <li>
+                            <i class="zmdi zmdi-email zmdi-hc-3x"></i><br>
+                            <a href="mailto:contact@yziplan.fr"><strong>contact@yziplan.fr</strong></a>
+                        </li>
+                        <li>
+                            <i class="zmdi zmdi-phone zmdi-hc-3x"></i><br>
+                            <strong>06 28 92 21 53</strong>
+                        </li>
+                    </ul>
+                    <hr class="small black">
+                    <p>Ou via les réseaux sociaux:</p>
+                    <ul class="list-inline">
+                        <li>
+                            <a href="https://www.facebook.com/Yziplan" target="_blank" class="link-facebook m-r-15" title="{{ "text.social_network.facebook"|trans }}">
+                                <i class="zmdi zmdi-facebook-box zmdi-hc-4x"></i></a>
+                        </li>
+                        <li>
+                            <a href="https://twitter.com/Yziplan" target="_blank" class="link-twitter m-l-15" title="{{ "text.social_network.twitter"|trans }}">
+                                <i class="zmdi zmdi-twitter zmdi-hc-4x"></i></a>
+                        </li>
+                        <li>
+                            <a href="https://www.instagram.com/yziplan/n" target="_blank" class="link-instagram m-l-15" title="{{ "text.social_network.instagram"|trans }}">
+                                <i class="zmdi zmdi-instagram zmdi-hc-4x"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endblock %}
+
+    {% block javascripts %}
+    {{ parent () }}
+{% endblock %}

@@ -1,0 +1,126 @@
+{# Données d'entrée :
+- userModuleInvitation (ModueInvitation) Le ModuleInvitation de l'utilisateur connecté
+- pollModuleOptions (Array), contains:
+        - pollProposalAddForm (Form|null) Le formulaire d'ajout d'une proposition
+- pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
+- edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
+#}
+{% set pollProposalForm = pollModuleOptions.pollProposalAddForm %}
+{% if pollModuleOptions.pollProposalListAddForm is defined %}
+    {% set pollProposalListForm = pollModuleOptions.pollProposalListAddForm %}
+{% endif %}
+<div>
+    <div>
+        <div role="tabpanel" class="tab-pane" id="{{ pp_form_modal_prefix }}SeveralDate">
+            <div id="{{ pp_form_modal_prefix }}SeveralDate1">
+                <div class="row m-t-15">
+                    <div class="center-block m-b-15 col-xs-12 {#col-sm-7#}">
+                        <div class="datepicker-inline center-block" id="{{ pp_form_modal_prefix }}Datepicker" data-date=""></div>
+                    </div>
+                    {#<div class="center-block col-xs-12 col-sm-5">
+                        <div class="row">
+                            <div class="center-block col-xs-12">
+                                <div class="form-group ">
+                                    <div class="fg-line"><label class="sr-only control-label">Quand</label>
+                                        <div class="input-group ag-time-picker clockpicker" data-autoclose="true">
+                                        <span class="input-group-addon">
+                                            <span class="zmdi zmdi-time"></span>
+                                        </span>
+                                            <input type="text" placeholder="Heure de début" class="readonly-onmobile form-control" onkeypress="refuserToucheEntree(event);"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="center-block col-xs-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Durée">
+                                </div>
+                            </div>
+                            <div class="center-block col-xs-6">
+                                <select class="selectpicker bs-select-hidden">
+                                    <option>Min</option>
+                                    <option>Heure</option>
+                                    <option>Jour</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="center-block col-xs-6">
+                            <a class="btn btn-link btn-icon-text c-blue p-l-0" href="#"> <i class="zmdi zmdi-plus-square"></i>Ajouter un horaire</a>
+                        </div>
+                    </div>#}
+                </div>
+            </div>
+            <div id="{{ pp_form_modal_prefix }}SeveralDate2" class="">
+                {{ form_start(pollProposalListForm, {'action':path('displayEvent',{'token':userModuleInvitation.module.event.token}),'attr':{'id': pp_form_modal_prefix~"_list_form_id"}}) }}
+                {{ form_label(pollProposalListForm, null, {'label_attr':{'class':'sr-only'}}) }}
+                {{ form_errors(pollProposalListForm) }}
+                <div id="{{ pp_form_modal_prefix }}-add-date-container"
+                     data-prototype="{{ form_widget(pollProposalListForm.pollProposalWhens.vars.prototype)|e }}"
+                     data-index="0">
+                </div>
+                <div class="pull-right">
+                    <button id="{{ pp_form_modal_prefix }}-back-date-button" type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
+                    <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
+                </div>
+                {{ form_end(pollProposalListForm) }}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var locale_format = "dd/mm/yyyy";
+            if (locale_js == 'en') {
+                locale_format = "mm/dd/yyyy";
+            }
+            $('#{{ pp_form_modal_prefix }}Datepicker').datepicker({
+                format: locale_format,
+                language: locale_js,
+                maxViewMode: 2,
+                multidate: true,
+                todayHighlight: true,
+                autoclose: false,
+                todayBtn: true
+            });
+
+            $("#{{ pp_form_modal_prefix }}_list_form_id").on("submit", function (e) {
+                var $form = $(this);
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    e.preventDefault();
+                    var modalContainer = $("#{{ pp_form_modal_prefix }}_modal_id");
+                    if (modalContainer[0]) {
+                        modalContainer.modal('hide');
+                    }
+                    askGuestName(e, submitAddPollProposalForm, [$form, e, '{{ userModuleInvitation.module.token }}', '{{ pp_form_modal_prefix }}', '{{ edition }}']);
+                } else {
+                    var container = $('#{{ pp_form_modal_prefix }}-add-date-container');
+                    var index = container.data('index');
+                    var dateList = $('#{{ pp_form_modal_prefix }}Datepicker').datepicker('getFormattedDate').split(',');
+
+                    dateList.forEach(function (element) {
+                        // Get the data-prototype explained earlier
+                        var prototype = container.data('prototype');
+
+                        // Replace '__name__' in the prototype's HTML to
+                        // instead be a number based on how many items we have
+                        var newForm = prototype.replace(/__name__/g, index);
+                        // increase the index with one for the next item
+                        //container.data('index', index + 1);
+                        index++;
+
+                        // Display the new form
+                        var newFormDiv = $('<div class="hidden"></div>').html(newForm);
+                        newFormDiv.find('input:first').val(element);
+                        //newFormDiv.find("input[id='startTime']").addClass('hidden');
+                        //newFormDiv.find("input[id='endDate']").addClass('hidden');
+                        //newFormDiv.find("input[id='endTime']").addClass('hidden');
+                        container.append(newFormDiv);
+                    });
+
+                    submitAddPollProposalForm([$form, e, '{{ userModuleInvitation.module.token }}', '{{ pp_form_modal_prefix }}', '{{ edition }}']);
+                }
+            });
+        })
+    </script>
+</div>
+
+

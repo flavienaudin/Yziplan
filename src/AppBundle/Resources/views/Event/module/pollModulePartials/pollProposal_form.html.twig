@@ -1,6 +1,7 @@
 {# Données d'entrée :
 - userModuleInvitation (ModueInvitation) Le ModuleInvitation de l'utilisateur connecté
-- pollProposalForm (FormInterface) Le formulaire d'ajout/édition d'un PollProposal
+- pollModuleOptions (Array), contains:
+        - pollProposalAddForm (Form|null) Le formulaire d'ajout d'une proposition
 - pp_form_modal_prefix (string) Le prefix utilisé pour identifier la modal
 - edition (boolean) false si le formulaire concerne la création d'une nouvelle PollProposal
 #}
@@ -10,14 +11,14 @@
     {% if userModuleInvitation.module.pollModule.getType() == constant('AppBundle\\Utils\\enum\\PollModuleType::WHEN') %}
         {{ include('@App/Event/module/pollModulePartials/pollProposal_form_when.html.twig', {
             "userModuleInvitation":userModuleInvitation,
-            "pollProposalForm":pollProposalForm,
+            "pollModuleOptions":pollModuleOptions,
             "pp_form_modal_prefix":pp_form_modal_prefix,
             "edition":edition
         }) }}
     {% else %}
         {{ include('@App/Event/module/pollModulePartials/pollProposal_form_default.html.twig', {
             "userModuleInvitation":userModuleInvitation,
-            "pollProposalForm":pollProposalForm,
+            "pollModuleOptions":pollModuleOptions,
             "pp_form_modal_prefix":pp_form_modal_prefix,
             "edition":edition
         }) }}

@@ -12,24 +12,37 @@
 
     <div class="card-body card-padding-xs">
         <div class="pmb-block m-0 p-0" id="pmbblock_event_header">
-            {% if eventForm is not null %}
-                <div class="text-right">
-                    <ul class="actions">
-                        <li class="dropdown">
-                            <a href="" data-toggle="dropdown" aria-expanded="false"> <i class="zmdi zmdi-settings"></i> </a>
-                            <ul class="dropdown-menu dropdown-menu-right dm-icon">
-                                <li>
-                                    <a id="event_header_edit_information" href="#eventEditModal" data-toggle="modal"><i class="zmdi zmdi-edit"></i> {{ "event.menu.edit"|trans }}</a>
-                                </li>
-                                {% if eventTemplateSettingsForm is not null or eventTemplateSettingsForm is not null %}
-                                    <li><a id="event_header_edit_information" href="#eventDuplicationSettingsModal" data-toggle="modal"><i
-                                                    class="zmdi zmdi-plus-circle-o-duplicate"></i> {{ "event.menu.duplication"|trans }}</a></li>
-                                {% endif %}
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            {% endif %}
+            <div class="media">
+                {% if eventForm is not null or eventTemplateSettingsForm is not null or eventTemplateSettingsForm is not null or userEventInvitation.creator %}
+                    <div class="pull-right">
+                        <ul class="actions">
+                            <li class="dropdown">
+                                <a href="" data-toggle="dropdown" aria-expanded="false"> <i class="zmdi zmdi-settings"></i> </a>
+                                <ul class="dropdown-menu dropdown-menu-right dm-icon">
+                                    {% if eventForm is not null %}
+                                        <li>
+                                            <a id="event_header_edit_information" href="#eventEditModal" data-toggle="modal"><i class="zmdi zmdi-edit"></i> {{ "event.menu.edit"|trans }}</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if eventTemplateSettingsForm is not null or eventTemplateSettingsForm is not null %}
+                                        <li><a id="event_header_duplication_settings" href="#eventDuplicationSettingsModal" data-toggle="modal"><i
+                                                        class="zmdi zmdi-plus-circle-o-duplicate"></i> {{ "event.menu.duplication"|trans }}</a></li>
+                                    {% endif %}
+                                    {% if is_granted(constant('AppBundle\\Security\\EventVoter::CANCEL'), userEventInvitation) %}
+                                        <li><a id="event_header_cancel_event" href="{{ path('cancelEvent', {'token': userEventInvitation.event.token}) }}"> <i
+                                                        class="zmdi zmdi-delete c-red"></i> {{ "event.menu.cancel"|trans }}</a></li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
+                {% if userEventInvitation.event.status == constant('AppBundle\\Utils\\enum\\EventStatus::DEPROGRAMMED') %}
+                    <div class="media-body">
+                        <span class="text-danger">{{ "eventstatus.deprogrammed"|trans }}</span>
+                    </div>
+                {% endif %}
+            </div>
             <div class="pmbb-body">
                 {{ include("@App/Event/partials/event_header_card_show.html.twig", {'userEventInvitation':userEventInvitation}) }}
             </div>
@@ -38,6 +51,7 @@
 
     {% if thread is defined and thread is not null %}
         <div id="event_comment_thread" data-thread="{{ thread.id }}" class="commentable_thread wall-comment-list">
+            <span class="anchor-offset" id="event_comment_thread_anchor"></span>
             {% include 'FOSCommentBundle:Thread:comments.html.twig' with {'comments':comments, 'thread':thread, 'view':'flat', 'userEventInvitation':userEventInvitation} %}
         </div>
     {% endif %}
@@ -47,6 +61,33 @@
             if (typeof google === 'object' && typeof google.maps === 'object') {
                 initEventShowMap();
             }
+
+            $('#event_header_cancel_event').on('click', function (e) {
+                e.preventDefault();
+                var $link = $(this);
+                var swalOptions = {
+                    title: '{{ "event.alert.confirm_cancellation.title"|trans }}',
+                    html: '{{ "event.alert.confirm_cancellation.message"|trans|raw }}',
+                    type: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: '{{ "global.button.cancel"|trans }}',
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: '{{ "global.button.yes"|trans }}',
+                    showLoaderOnConfirm: true
+                };
+                {% if userEventInvitation.event.guests|length > 0 %}
+                swalOptions.html = swalOptions.html + "<p><small>{{ "event.alert.confirm_cancellation.input.label"|trans|e }}</small></p>";
+                swalOptions.input = "textarea";
+                swalOptions.inputPlaceholder = '{{ "event.alert.confirm_cancellation.input.placeholder"|trans }}';
+                {% endif %}
+                swal(swalOptions).then(function (input) {
+                    var data = null;
+                    if(input !== true && input !== ''){
+                        data = {"reason": input}
+                    }
+                    ajaxRequest($link, data, e, null, null, null);
+                });
+            });
 
             if (typeof window.fos !== 'undefined' && typeof window.fos.Comment !== "undefined") {
                 window.fos.Comment.thread_container = $('.commentable_thread ');

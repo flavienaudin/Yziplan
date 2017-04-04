@@ -95,8 +95,7 @@ function scrollBar(selector, theme, mousewheelaxis) {
 function closeModalOnReturn(modalsSelector) {
     $(modalsSelector).on('show.bs.modal', function () {
         var modal = this;
-        var hash = modal.id;
-        window.location.hash = hash;
+        window.location.hash = modal.id;
         window.onhashchange = function () {
             if (!location.hash) {
                 $(modal).modal('hide');
@@ -136,7 +135,7 @@ function initTextFieldsFgLineFloat() {
             var i = p.find('.form-control').val();
 
             if (p.hasClass('fg-float')) {
-                if (i.length == 0) {
+                if (i.length === 0) {
                     $(this).closest('.fg-line').removeClass('fg-toggled');
                 }
             }
@@ -151,7 +150,7 @@ function initTextFieldsFgLineFloat() {
         $('.fg-float .form-control').each(function () {
             var i = $(this).val();
 
-            if (!i.length == 0) {
+            if (!i.length === 0) {
                 $(this).closest('.fg-line').addClass('fg-toggled');
             }
         });
@@ -218,32 +217,47 @@ function jsPlugginActivation() {
     }
 
     $('.clockpicker').clockpicker();
-    var locale_format = "DD/MM/YYYY";
-    if (locale_js == 'en') {
-        locale_format = "MM/DD/YYYY";
+    var locale_format = "dd/mm/yyyy";
+    if (locale_js === 'en') {
+        locale_format = "mm/dd/yyyy";
     }
-    $('.ag-date-picker').datetimepicker({
+    $('.ag-date-picker').datepicker({
         format: locale_format,
-        locale: locale_js,
-        showClear: true,
-        ignoreReadonly: true,
-        icons: {
-            time: 'zmdi zmdi-time',
-            date: 'zmdi zmdi-calendar',
-            up: 'zmdi zmdi-chevron-up',
-            down: 'zmdi zmdi-chevron-down',
-            previous: 'zmdi zmdi-chevron-left',
-            next: 'zmdi zmdi-chevron-right',
-            today: 'zmdi zmdi-gps-dot',
-            clear: 'zmdi zmdi-delete zmdi-hc-lg',
-            close: 'zmdi zmdi-close-circle-o zmdi-hc-lg'
-        },
-        widgetPositioning: {
-            horizontal: 'auto',
-            vertical: 'bottom'
-        }
+        language: locale_js,
+        maxViewMode: 2,
+        todayHighlight: true,
+        autoclose: true,
+        todayBtn: true
     });
-    $('.selectpicker').selectpicker();
+    /*$('.ag-date-picker').datetimepicker({
+     format: locale_format,
+     locale: locale_js,
+     showClear: true,
+     ignoreReadonly: true,
+     icons: {
+     time: 'zmdi zmdi-time',
+     date: 'zmdi zmdi-calendar',
+     up: 'zmdi zmdi-chevron-up',
+     down: 'zmdi zmdi-chevron-down',
+     previous: 'zmdi zmdi-chevron-left',
+     next: 'zmdi zmdi-chevron-right',
+     today: 'zmdi zmdi-gps-dot',
+     clear: 'zmdi zmdi-delete zmdi-hc-lg',
+     close: 'zmdi zmdi-close-circle-o zmdi-hc-lg'
+     },
+     widgetPositioning: {
+     horizontal: 'auto',
+     vertical: 'bottom'
+     }
+     });*/
+
+    if (isMobile()) {
+        $('.selectpicker:not([multiple="multiple"])').selectpicker('mobile');
+        $('.selectpicker[multiple="multiple"]').selectpicker();
+    } else {
+        $('.selectpicker').selectpicker();
+    }
+
     $('.toggle-tooltip, [data-toggle="tooltip"]').tooltip();
 
     var masonryGrid = $('.grid');
@@ -256,7 +270,7 @@ function jsPlugginActivation() {
     if ($('.fg-float')[0]) {
         $('.fg-float .form-control').each(function () {
             var i = $(this).val();
-            if (i.length != 0) {
+            if (i.length !== 0) {
                 $(this).closest('.fg-line').addClass('fg-toggled');
             }
         });
@@ -307,14 +321,14 @@ function getAnchor(url) {
 // Attention au cas où une alerte de confirmation doit être affichée : e.preventDefault() doit être appelé avant l'appel à la fonction de requête Ajax
 
 function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCallback, method) {
-    if (event != null) {
+    if (event !== null) {
         event.preventDefault();
     }
     var preloader = $('.at-global-preloader');
     $(preloader).show();
 
     var urlTarget;
-    if (typeof target == 'string') {
+    if (typeof target === 'string') {
         urlTarget = target;
     } else {
         urlTarget = $(target).attr('href');
@@ -328,40 +342,61 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
         type: method,
         data: data
     }).done(function (responseJSON, textStatus, jqXHR) {
-        if (responseJSON.hasOwnProperty('htmlContents')) {
-            treatHtmlContents(responseJSON['htmlContents']);
-        }
-        if (doneCallback) {
-            doneCallback(responseJSON, textStatus, jqXHR);
+        if (typeof responseJSON !== 'undefined') {
+            if (responseJSON.hasOwnProperty('htmlContents')) {
+                treatHtmlContents(responseJSON['htmlContents']);
+            }
+            if (doneCallback) {
+                doneCallback(responseJSON, textStatus, jqXHR);
+            }
+        } else {
+            console.error('undefined response');
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
-        if (failCallback) {
-            failCallback(jqXHR, textStatus, errorThrown);
+        if (typeof jqXHR !== 'undefined') {
+            if (failCallback) {
+                failCallback(jqXHR, textStatus, errorThrown);
+            }
+        } else {
+            console.error('undefined response');
         }
     }).always(function (responseDataOrJSON) {
-        if (alwaysCallback) {
-            alwaysCallback(responseDataOrJSON);
-        }
-        if (responseDataOrJSON.hasOwnProperty('responseJSON')) {
-            responseDataOrJSON = responseDataOrJSON['responseJSON'];
-        }
-        if (responseDataOrJSON.hasOwnProperty('messages')) {
-            var messages = responseDataOrJSON['messages'];
-            for (var messageType in messages) {
-                if (messages.hasOwnProperty(messageType)) {
-                    messages[messageType].forEach(function (mess) {
-                        toastr[messageType](mess);
-                    });
+        if (typeof responseDataOrJSON !== 'undefined') {
+            if (responseDataOrJSON.hasOwnProperty('redirect')) {
+                var waitTime = 0;
+                if (responseDataOrJSON.hasOwnProperty('messages')) {
+                    waitTime = 5000;
+                }
+                setTimeout(function () {
+                    window.location.href = responseDataOrJSON['redirect'];
+                }, waitTime);
+            }
+            if (alwaysCallback) {
+                alwaysCallback(responseDataOrJSON);
+            }
+            if (responseDataOrJSON.hasOwnProperty('responseJSON')) {
+                responseDataOrJSON = responseDataOrJSON['responseJSON'];
+            }
+            if (responseDataOrJSON.hasOwnProperty('messages')) {
+                var messages = responseDataOrJSON['messages'];
+                for (var messageType in messages) {
+                    if (messages.hasOwnProperty(messageType)) {
+                        messages[messageType].forEach(function (mess) {
+                            toastr[messageType](mess);
+                        });
+                    }
                 }
             }
+            $(preloader).hide();
+        } else {
+            console.error('undefined response');
         }
-        $(preloader).hide();
     });
     return false;
 }
 
 function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallback, async) {
-    if (event != null) {
+    if (event !== null) {
         event.preventDefault();
     }
     var preloader = $('.at-global-preloader');
@@ -384,11 +419,11 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         type: $(form).attr('method')
     };
 
-    if (typeof async == "boolean") {
+    if (typeof async === "boolean") {
         ajaxOptions.async = async;
     }
 
-    if ($(form).attr("enctype") == "multipart/form-data") {
+    if ($(form).attr("enctype") === "multipart/form-data") {
         ajaxOptions.data = new FormData($(form)[0]);
         ajaxOptions.contentType = false;
         ajaxOptions.processData = false;
@@ -480,12 +515,12 @@ function refuserToucheEntree(event) {
         event = window.event;
     }
 // IE
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
         event.returnValue = false;
         event.cancelBubble = true;
     }
 // DOM
-    if (event.which == 13) {
+    if (event.which === 13) {
         event.preventDefault();
         event.stopPropagation();
     }

@@ -16,7 +16,11 @@
             <dt class="p-t-10">{{- form_label(form) -}}</dt>
             <dd {{ widget_options.label_icon is defined?'class=input-group' }}>
                 {% if widget_options.label_icon is defined %}
-                    <span class="input-group-addon"><i class="zmdi {{ widget_options.label_icon }}"></i></span>
+                    {% set wo_label_icon_attr = ' ' %}
+                    {% for key,value in widget_options.label_icon_attr|default({}) %}
+                        {% set wo_label_icon_attr = wo_label_icon_attr~key~'="'~value~'" ' %}
+                    {% endfor %}
+                    <span class="input-group-addon" {{ wo_label_icon_attr }}><i class="zmdi {{ widget_options.label_icon }}"></i></span>
                 {% endif %}
                 {{ widget_options.fgline is defined and widget_options.fgline?'<div class="fg-line">':'' }}
                 {{- form_widget(form,{'widget_options':widget_options}) -}}
@@ -29,7 +33,11 @@
             {{- form_label(form, label, {'label_attr':{'class' : 'col-sm-2'}} ) -}}
             <div class="col-sm-10 {{ widget_options.label_icon is defined?"input-group" }}">
                 {% if widget_options.label_icon is defined and widget_options.label_icon is not empty %}
-                    <span class="input-group-addon"><i class="zmdi {{ widget_options.label_icon }}"></i></span>
+                    {% set wo_label_icon_attr = ' ' %}
+                    {% for key,value in widget_options.label_icon_attr|default({}) %}
+                        {% set wo_label_icon_attr = wo_label_icon_attr~key~'="'~value~'" ' %}
+                    {% endfor %}
+                    <a class="input-group-addon" {{ wo_label_icon_attr }}><i class="zmdi {{ widget_options.label_icon }}"></i></a>
                 {% endif %}
                 {{ widget_options.fgline is defined and widget_options.fgline?'<div class="fg-line">':'' }}
                 {{- form_widget(form,{'widget_options':widget_options}) -}}
@@ -43,7 +51,11 @@
         {% set attr = attr|default({})|merge({'class':attr.class|default('')~(fgfloat?' fg-input':'')}) %}
         <div class="{{ widget_options.label_icon is defined?"input-group":"form-group" }} {{ fgfloat?'fg-float' }}{% if (not compound or force_error|default(false)) and not valid %} has-error{% endif %}">
             {% if widget_options.label_icon is defined %}
-                <span class="input-group-addon"><i class="zmdi {{ widget_options.label_icon }}"></i></span>
+                {% set wo_label_icon_attr = ' ' %}
+                {% for key,value in widget_options.label_icon_attr|default({}) %}
+                    {% set wo_label_icon_attr = wo_label_icon_attr~key~'='~value~' ' %}
+                {% endfor %}
+                <span class="input-group-addon" {{ wo_label_icon_attr }}><i class="zmdi {{ widget_options.label_icon }}"></i></span>
             {% endif %}
             {{ widget_options.fgline is defined and widget_options.fgline?'<div class="fg-line">':'' }}
             {{- form_label(form, null, {'label_attr':label_attr}) -}}
@@ -97,17 +109,15 @@
 {% block datetime_widget -%}
     {% set widget_options = widget_options|default({}) %}
     {% if widget_options.displayInRow is defined and widget_options.displayInRow -%}
-        {#{% if displayInRow is defined and displayInRow -%}#}
-        <div class="row">
-            <div class="col-sm-6">
-                {{- form_widget(form.date, { datetime: true } ) -}}
-                {{- form_errors(form.date) -}}
-            </div>
-            <div class="col-sm-6">
-                {{- form_widget(form.time, { datetime: true } ) -}}
-                {{- form_errors(form.time) -}}
-            </div>
+        <div class="pull-left w-120px">
+            {{- form_widget(form.date, { datetime: true } ) -}}
+            {{- form_errors(form.date) -}}
         </div>
+        <div class="pull-left w-100px">
+            {{- form_widget(form.time, { datetime: true } ) -}}
+            {{- form_errors(form.time) -}}
+        </div>
+        <div class="clearfix"></div>
     {% elseif widget == 'single_text' %}
         {{- block('form_widget_simple') -}}
     {% else -%}
@@ -123,11 +133,11 @@
 {% block date_widget -%}
     {% if widget == 'single_text' %}
         <div class="dtp-container dropdown">
-            <div class="input-group date">{# add class : ag-date-picker to activate picker on ICOe instead of the field #}
+            <div class="input-group date">{# add class : ag-date-picker to activate picker on ICONE instead of the field #}
                 <span class="input-group-addon">
                     <i class="zmdi zmdi-calendar"></i>
                 </span>
-                {% set attr = attr|merge({class: (attr.class|default('') ~ ' ag-date-picker readonly-onmobile')|trim}) -%}
+                {% set attr = attr|merge({class: (attr.class|default('') ~ 'ag-date-picker readonly-onmobile')|trim}) -%}
                 {{- block('form_widget_simple') -}}
             </div>
         </div>
@@ -155,7 +165,8 @@
             <span class="input-group-addon">
                 <span class="zmdi zmdi-time"></span>
             </span>
-            {% set attr = attr|merge({class: (attr.class|default('') ~ ' readonly-onmobile' ~ (widget_options.input_sm is defined and widget_options.input_sm?' input-sm'))|trim    }) -%}
+            {% set attr = attr|merge({class: (attr.class|default('') ~ ' readonly-onmobile' ~ (widget_options.input_sm is defined and widget_options.input_sm?' input-sm  w-60px'))|trim    }) -%}
+            {% set type = 'time' %}
             {{- block('form_widget_simple') -}}
         </div>
     {% else -%}
@@ -271,7 +282,7 @@
 {% block md_toggle_switch_widget -%}
     {%- set attr = attr|merge({class: (attr.class|default(''))|replace({"md-toogle-switch":""})|trim}) -%}
     {%- set label_attr = label_attr|merge({class: (' ts-label')|trim}) -%}
-    <div class="toggle-switch {{ 'disabled' in attr?' disabled' }}">
+    <div class="toggle-switch{{ 'disabled' in attr?' disabled' }}">
         <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} hidden="hidden"/> <label
                 for="{{ id }}" class="ts-helper"></label>&nbsp; {{ block('form_label') }}
     </div>

@@ -19,6 +19,7 @@ use AppBundle\Security\EventVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\Notifications\Notification;
 use AppBundle\Utils\Response\AppJsonResponse;
 use AppBundle\Utils\Response\FileInputJsonResponse;
 use ATUserBundle\Entity\AccountUser;
@@ -39,11 +40,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
  */
 class EventController extends Controller
 {
-    const WIZARD_NEW_EVENT_STEP_MAIN = "main";
-    const WIZARD_NEW_EVENT_STEP_PROFILE = "profile";
-    const WIZARD_NEW_EVENT_STEP_ADD_MODULE = "addmodule";
-    const WIZARD_NEW_EVENT_STEP_INVITATIONS = "invitations";
-    const WIZARD_NEW_EVENT_STEP_TEMPLATE_SETTINGS = "templateSettings";
 
     const REDIRECTED_AFTER_EVENT_DUPLICATION = "redirected/eventDuplication";
 
@@ -62,140 +58,7 @@ class EventController extends Controller
             $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $currentEvent->getToken(), $currentEventInvitation->getToken());
         }
 
-        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_MAIN));
-    }
-
-    /**
-     * @Route("/wizard/{token}/{stepIndex}", name="wizardNewEvent")
-     * @ParamConverter("currentEvent", class="AppBundle:Event\Event")
-     */
-    public function wizardNewEventAction(Event $currentEvent, $stepIndex = self::WIZARD_NEW_EVENT_STEP_MAIN, Request $request)
-    {
-        /** @var EventManager $eventManager */
-        $eventManager = $this->get('at.manager.event');
-        $eventManager->setEvent($currentEvent);
-
-        $eventInvitationManager = $this->get("at.manager.event_invitation");
-        $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($currentEvent, false, false, $this->getUser());
-        if ($userEventInvitation == null) {
-            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
-            return $this->redirectToRoute("home");
-        } else {
-            $this->denyAccessUnlessGranted(EventVoter::EDIT, $userEventInvitation);
-            if ($stepIndex == self::WIZARD_NEW_EVENT_STEP_MAIN) {
-                // Event Form :
-                /** @var Form $eventForm */
-                $eventForm = $eventManager->initEventForm();
-                $eventForm->handleRequest($request);
-                if ($eventForm->isSubmitted()) {
-                    if ($eventForm->isValid()) {
-                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
-                        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_PROFILE));
-                    }
-                }
-                return $this->render("@App/Event/wizard/step_event_main.html.twig", array(
-                    'event' => $currentEvent,
-                    'userEventInvitation' => $userEventInvitation,
-                    'eventForm' => $eventForm->createView()
-                ));
-            } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_PROFILE) {
-                // Profile Form :
-                /** @var Form $eventForm */
-                $eventProfileForm = $eventInvitationManager->createEventInvitationForm();
-                $eventProfileForm->handleRequest($request);
-                if ($eventProfileForm->isSubmitted()) {
-                    if ($eventProfileForm->isValid()) {
-                        $eventInvitationManager->treatEventInvitationFormSubmission($eventProfileForm);
-                        return $this->redirectToRoute('wizardNewEvent', array('token' => $currentEvent->getToken(), 'stepIndex' => self::WIZARD_NEW_EVENT_STEP_ADD_MODULE));
-                    }
-                }
-                return $this->render("@App/Event/wizard/step_event_profile.html.twig", array(
-                    'event' => $currentEvent,
-                    'userEventInvitation' => $userEventInvitation,
-                    'userEventInvitationForm' => $eventProfileForm->createView()
-                ));
-            } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_ADD_MODULE) {
-                $modules = $eventManager->getModulesToDisplay($userEventInvitation);
-                $this->treatModulesToDisplay($currentEvent, $modules, $userEventInvitation, $request);
-                return $this->render("@App/Event/wizard/step_event_addModule.html.twig", array('event' => $currentEvent, 'modules' => $modules, 'userEventInvitation' => $userEventInvitation));
-
-            } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_INVITATIONS) {
-                if ($currentEvent->isTemplate()) {
-                    // TODO activer la possibilité de définir des administrateurs
-                    return $this->redirectToRoute('wizardNewEvent', array(
-                        'token' => $currentEvent->getToken(),
-                        'stepIndex' => self::WIZARD_NEW_EVENT_STEP_TEMPLATE_SETTINGS
-                    ));
-                } else {
-                    // Invitations Form :
-                    $eventInvitationsForm = $eventManager->createEventInvitationsForm();
-                    $eventInvitationsForm->handleRequest($request);
-                    if ($eventInvitationsForm->isSubmitted()) {
-                        if ($eventInvitationsForm->isValid()) {
-                            $resultInvitations = array();
-                            $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $request->get('sendInvitations'), $resultInvitations);
-                            if ((($nbFailed = count($resultInvitations['failed'])) + ($nbCreationError = count($resultInvitations['creationError']))) > 0) {
-                                if ($nbFailed > 0) {
-                                    $emails = implode(", ", array_keys($resultInvitations['failed']));
-                                    $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get("translator")->trans("invitations.message.mail_not_sent", ['%email_list%' => $emails]));
-                                }
-                                if ($nbCreationError > 0) {
-                                    $emails = implode(", ", array_values($resultInvitations['creationError']));
-                                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("invitations.message.invitation_not_created", ['%email_list%' => $emails]));
-                                }
-                            }
-                            return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
-                        }
-
-                    }
-                    return $this->render("@App/Event/wizard/step_event_invitations.html.twig", array(
-                        'event' => $currentEvent,
-                        'userEventInvitation' => $userEventInvitation,
-                        'invitationsForm' => $eventInvitationsForm->createView()
-                    ));
-                }
-            } elseif ($stepIndex == self::WIZARD_NEW_EVENT_STEP_TEMPLATE_SETTINGS) {
-                $templateSettingsForm = $eventManager->createTemplateSettingsForm();
-                $templateSettingsForm->handleRequest($request);
-                if ($templateSettingsForm->isSubmitted()) {
-                    if ($request->isXmlHttpRequest()) {
-                        if ($templateSettingsForm->isValid()) {
-                            $currentEvent = $eventManager->treatTemplateSettingsForm($templateSettingsForm);
-                            $templateSettingsForm = $eventManager->createTemplateSettingsForm();
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventTemplateSettings_formContainer'] =
-                                $this->renderView("@App/Event/wizard/wizard_event_templateSettings_form.html.twig", array(
-                                    'event' => $currentEvent,
-                                    'eventTemplateSettingsForm' => $templateSettingsForm->createView()
-                                ));
-                            return new AppJsonResponse($data, Response::HTTP_OK);
-                        } else {
-                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventEdit_form_container'] =
-                                $this->renderView("@App/Event/wizard/wizard_event_templateSettings_form.html.twig", array(
-                                    'event' => $currentEvent,
-                                    'eventTemplateSettingsForm' => $templateSettingsForm->createView()
-                                ));
-                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                        }
-                    } else {
-                        if ($templateSettingsForm->isValid()) {
-                            $currentEvent = $eventManager->treatTemplateSettingsForm($templateSettingsForm);
-                            return $this->redirectToRoute('wizardNewEvent', array(
-                                'token' => $currentEvent->getToken(),
-                                'stepIndex' => self::WIZARD_NEW_EVENT_STEP_TEMPLATE_SETTINGS
-                            ));
-                        }
-                    }
-                }
-                return $this->render("@App/Event/wizard/step_event_templateSettings.html.twig", array(
-                    'event' => $currentEvent,
-                    'eventTemplateSettingsForm' => $templateSettingsForm->createView()
-                ));
-            } else {
-                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('event.wizard.error.message.wrong_step'));
-                return $this->redirectToRoute('home');
-            }
-        }
+        return $this->redirectToRoute('wizardNewEventStep1', array('token' => $currentEvent->getToken()));
     }
 
     /**
@@ -254,6 +117,9 @@ class EventController extends Controller
         $eventManager = $this->get('at.manager.event');
         $eventManager->setEvent($currentEvent);
 
+        /** @var $notifications array Tableau de notifications {idx => Notification} */
+        $notifications = array();
+
         /////////////////////////////////////
         // User EventInvitation management //
         /////////////////////////////////////
@@ -263,9 +129,17 @@ class EventController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
             return $this->redirectToRoute("home");
         } else {
+            if ($currentEvent->getStatus() == EventStatus::DEPROGRAMMED) {
+                return $this->render("@App/Event/event_cancelled.html.twig", array("event" => $currentEvent, "userEventInvitation" => $userEventInvitation));
+            }
+
             /* TODO : invitation annulée : désactiver les formulaires */
             if ($userEventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                 $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans('eventInvitation.message.warning.invitation_cancelled'));
+            }
+
+            if ($userEventInvitation->getLastVisitAt() == null) {
+                $eventInvitationManager->updateLastVisit();
             }
 
             $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
@@ -291,8 +165,9 @@ class EventController extends Controller
                     } else {
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#eventInvitationProfile_formContainer'] =
                             $this->renderView('@App/Event/partials/profile/eventInvitation_profile_form.html.twig', array(
-                                'userEventInvitationForm' => $eventInvitationForm->createView(),
-                                'userEventInvitation' => $userEventInvitation,));
+                                'userEventInvitation' => $userEventInvitation,
+                                'userEventInvitationForm' => $eventInvitationForm->createView()
+                            ));
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     }
                 } else {
@@ -352,6 +227,10 @@ class EventController extends Controller
             $thread = $discussionManager->createCommentableThread($currentEvent);
         }
         $comments = $discussionManager->getCommentsThread($thread);
+        $eventThreadNotif = $discussionManager->getNotification($userEventInvitation, $comments, $currentEvent);
+        if ($eventThreadNotif != null) {
+            array_push($notifications, $eventThreadNotif);
+        }
 
         ////////////////////////
         // Edition management //
@@ -374,7 +253,7 @@ class EventController extends Controller
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     } elseif ($eventForm->isValid()) {
-                        $eventManager->treatEventFormSubmission($eventForm);
+                        $eventManager->treatEventFormSubmission($eventForm, $userEventInvitation);
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
 
                         // Creation du templateSettingsForm nécessaire à l'affichage du template
@@ -411,7 +290,7 @@ class EventController extends Controller
                         $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     } elseif ($eventForm->isValid()) {
-                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm);
+                        $currentEvent = $eventManager->treatEventFormSubmission($eventForm, $userEventInvitation);
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     }
                 }
@@ -551,7 +430,7 @@ class EventController extends Controller
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                     } else if ($eventInvitationsForm->isValid()) {
                         $resultInvitations = array();
-                        $currentEvent = $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, true, $resultInvitations);
+                        $currentEvent = $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $resultInvitations);
 
                         if ((($nbFailed = count($resultInvitations['failed'])) + ($nbCreationError = count($resultInvitations['creationError']))) > 0) {
                             if ($nbFailed > 0) {
@@ -569,8 +448,8 @@ class EventController extends Controller
 
                         $eventInvitationsForm = $eventManager->createEventInvitationsForm();
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_forms_container'] =
-                            $this->renderView("@App/Event/partials/invitations/invitations_new_forms.html.twig", array(
-                                'userEventInvitation' => $userEventInvitation,
+                            $this->renderView("@App/Event/partials/invitations/invitations_new_form.html.twig", array(
+                                'event' => $currentEvent,
                                 'invitationsForm' => $eventInvitationsForm->createView()
                             ));
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#guests_list'] =
@@ -581,8 +460,8 @@ class EventController extends Controller
                         return new AppJsonResponse($data, Response::HTTP_OK);
                     } else {
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_forms_container'] =
-                            $this->renderView("@App/Event/partials/invitations/invitations_new_forms.html.twig", array(
-                                'userEventInvitation' => $userEventInvitation,
+                            $this->renderView("@App/Event/partials/invitations/invitations_new_form.html.twig", array(
+                                'event' => $currentEvent,
                                 'invitationsForm' => $eventInvitationsForm->createView()
                             ));
                         return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
@@ -594,7 +473,7 @@ class EventController extends Controller
                         return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
                     } elseif ($eventInvitationsForm->isValid()) {
                         $resultInvitations = array();
-                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, true, $resultInvitations);
+                        $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $resultInvitations);
 
                         if ((($nbFailed = count($resultInvitations['failed'])) + ($nbCreationError = count($resultInvitations['creationError']))) > 0) {
                             if ($nbFailed > 0) {
@@ -617,9 +496,9 @@ class EventController extends Controller
         ////////////////////////
         // modules management //
         ////////////////////////
-        $modules = $eventManager->getModulesToDisplay($userEventInvitation);
-        $response = $this->treatModulesToDisplay($currentEvent, $modules, $userEventInvitation, $request);
-        if ($response != null) {
+        $modules = $eventManager->getModulesToDisplay($userEventInvitation, $notifications);
+        $response = $eventManager->treatModulesToDisplay($currentEvent, $modules, $userEventInvitation, $request);
+        if ($response instanceof Response) {
             return $response;
         }
 
@@ -629,6 +508,9 @@ class EventController extends Controller
             $redirectedAfterEventDuplication = true;
             $request->getSession()->remove(self::REDIRECTED_AFTER_EVENT_DUPLICATION);
         }
+
+        uasort($notifications, array(Notification::class, 'compare'));
+
         return $this->render('AppBundle:Event:event.html.twig', array(
             'event' => $currentEvent,
             'eventForm' => ($eventForm != null ? $eventForm->createView() : null),
@@ -641,7 +523,8 @@ class EventController extends Controller
             'userEventInvitation' => $userEventInvitation,
             'userEventInvitationForm' => $eventInvitationForm->createView(),
             'userEventInvitationAnswerForm' => $eventInvitationAnswerForm->createView(),
-            'redirectedAfterEventDuplication' => $redirectedAfterEventDuplication
+            'redirectedAfterEventDuplication' => $redirectedAfterEventDuplication,
+            'notifications' => $notifications
         ));
     }
 
@@ -713,19 +596,64 @@ class EventController extends Controller
         }
     }
 
+    /**
+     * @Route("/cancel/{token}", name="cancelEvent")
+     * @ParamConverter("event" , class="AppBundle:Event\Event")
+     * @param Event $event The current event
+     * @return AppJsonResponse|FileInputJsonResponse|RedirectResponse
+     */
+    public function cancelEventAction(Event $event, Request $request)
+    {
+        $eventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
+        if (!$this->isGranted(EventVoter::CANCEL, $eventInvitation)) {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
+                return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("global.error.unauthorized_access"));
+                return $this->redirectToRoute("displayEvent", array("tolen" => $event->getToken()));
+            }
+        }
+
+        $eventManager = $this->get("at.manager.event");
+        $requestData = $request->request->all();
+        if ($eventManager->cancelEvent($requestData, $eventInvitation, $event)) {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.success.message.cancellation');
+                $data[AppJsonResponse::REDIRECT] = $this->generateUrl("displayEvent", array("token" => $event->getToken()));
+                return new AppJsonResponse($data, Response::HTTP_OK);
+            } else {
+                return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+            }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.deletion");
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.deletion"));
+                return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+            }
+        }
+    }
 
     /**
      * @Route("/status/validated/{token}", name="validateEvent")
      * @ParamConverter("event" , class="AppBundle:Event\Event")
      * @param Event $event The current event
-     * @return AppJsonResponse|FileInputJsonResponse|RedirectResponse
+     * @return AppJsonResponse|RedirectResponse
      */
     public function validateEventAction(Event $event, Request $request)
     {
+        // TODO : vérifier le fonctionnement de la méthode avec l'activation de la fonctionnalité
         $eventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
         if (!$this->isGranted(EventVoter::EDIT, $eventInvitation)) {
-            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
-            return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
+                return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("global.error.unauthorized_access"));
+                return $this->redirectToRoute("displayEvent", array("tolen" => $event->getToken()));
+            }
         }
 
         $eventManager = $this->get("at.manager.event");
@@ -756,131 +684,5 @@ class EventController extends Controller
         } else {
             return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
         }
-    }
-
-
-    /*********************************************/
-    /** HELPERS */
-    /*********************************************/
-
-
-    /**
-     * @param Event $event
-     * @param array $modules
-     * @param EventInvitation $userEventInvitation
-     * @param Request $request
-     * @return Response|null
-     */
-    public function treatModulesToDisplay(Event $event, array &$modules, EventInvitation $userEventInvitation, Request $request)
-    {
-        $moduleManager = $this->get("at.manager.module");
-        foreach ($modules as $moduleId => $moduleDescription) {
-            /** @var ModuleInvitation $userModuleEventInvitation Le ModuleInvitation de l'utilisateur connecté pour le module courant */
-            $userModuleEventInvitation = $userEventInvitation->getModuleInvitationForModule($moduleDescription['module']);
-            if (key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
-                /** @var Form $moduleForm */
-                $moduleForm = $moduleDescription['moduleForm'];
-                $moduleForm->handleRequest($request);
-                if ($moduleForm->isSubmitted()) {
-                    if ($request->isXmlHttpRequest()) {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
-                            // Vérification serveur de la validité de l'invitation
-                            $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
-                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
-                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                        } else if ($moduleForm->isValid()) {
-                            $currentModule = $moduleManager->treatUpdateFormModule($moduleForm);
-                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("global.success.data_saved");
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['.module-' . $currentModule->getToken() . '-description'] = $currentModule->getDescription();
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-header-' . $currentModule->getToken()] =
-                                $this->renderView("@App/Event/module/displayModule_header.html.twig", array(
-                                    'module' => $moduleDescription['module'],
-                                    'moduleForm' => $moduleForm->createView(),
-                                    'userModuleInvitation' => $userModuleEventInvitation
-                                ));
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-information-' . $currentModule->getToken()] =
-                                $this->renderView("@App/Event/module/displayModule_informations.html.twig", array(
-                                    'module' => $moduleDescription['module'],
-                                    'userModuleInvitation' => $userModuleEventInvitation
-                                ));
-                            return new AppJsonResponse($data, Response::HTTP_OK);
-                        } else {
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#moduleEdit_form_' . $moduleDescription['module']->getToken()] =
-                                $this->renderView('@App/Event/module/displayModule_form.html.twig', array(
-                                    'module' => $moduleDescription['module'],
-                                    'moduleForm' => $moduleForm->createView(),
-                                    'userModuleInvitation' => $userModuleEventInvitation
-                                ));
-                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                        }
-                    } else {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
-                            // Vérification serveur de la validité de l'invitation
-                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
-                            return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
-                        } elseif ($moduleForm->isValid()) {
-                            $module = $moduleManager->treatUpdateFormModule($moduleForm);
-                            return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . '#module-' . $module->getToken());
-                        }
-                    }
-                }
-                $modules[$moduleId]['moduleForm'] = $moduleForm->createView();
-            }
-
-            //////////////////////
-            // poll module case //
-            //////////////////////
-            if (array_key_exists('pollProposalAddForm', $moduleDescription) && $moduleDescription['pollProposalAddForm'] instanceof Form) {
-                /** @var FormInterface $pollProposalAddForm */
-                $pollProposalAddForm = $moduleDescription['pollProposalAddForm'];
-                $pollProposalAddForm->handleRequest($request);
-                if ($pollProposalAddForm->isSubmitted()) {
-                    if ($request->isXmlHttpRequest()) {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
-                            // Vérification serveur de la validité de l'invitation
-                            $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
-                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
-                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                        } else if ($pollProposalAddForm->isValid()) {
-                            $pollProposalManager = $this->get('at.manager.pollproposal');
-                            $pollProposal = $pollProposalManager->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
-                            $data[AppJsonResponse::DATA] = $pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
-
-                            // Form reset
-                            $pollProposalAddForm = $pollProposalManager->createPollProposalAddForm($moduleDescription['module']->getPollModule(), $userModuleEventInvitation);
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
-                                $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
-                                    'userModuleInvitation' => $userModuleEventInvitation,
-                                    'pollProposalForm' => $pollProposalAddForm->createView(),
-                                    'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
-                                    'edition' => false
-                                ));
-                            return new AppJsonResponse($data, Response::HTTP_OK);
-                        } else {
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#add_pp_fm_' . $moduleDescription['module']->getToken() . '_formContainer'] =
-                                $this->renderView('@App/Event/module/pollModulePartials/pollProposal_form.html.twig', array(
-                                    'userModuleInvitation' => $userModuleEventInvitation,
-                                    'pollProposalForm' => $pollProposalAddForm->createView(),
-                                    'pp_form_modal_prefix' => "add_pp_fm_" . $moduleDescription['module']->getToken(),
-                                    'edition' => false
-                                ));
-                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                        }
-                    } else {
-                        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
-                            // Vérification serveur de la validité de l'invitation
-                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
-                            return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . '#module-' . $moduleDescription['module']->getToken());
-                        } else if ($pollProposalAddForm->isValid()) {
-                            $this->get('at.manager.pollproposal')->treatPollProposalForm($pollProposalAddForm, $moduleDescription['module']);
-                            return $this->redirect($this->generateUrl('displayEvent', array('token' => $event->getToken())) . '#module-' . $moduleDescription['module']->getToken());
-                        }
-                    }
-                }
-                $modules[$moduleId]['pollProposalAddForm'] = $pollProposalAddForm->createView();
-            }
-        }
-        // nothing to return continue the action
-        return null;
     }
 }

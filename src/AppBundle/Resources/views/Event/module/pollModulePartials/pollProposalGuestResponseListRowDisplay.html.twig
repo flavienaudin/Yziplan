@@ -1,0 +1,13 @@
+{# Données d'entrée :
+- pollProposals (array of PollProposal) Les propositions à afficher
+- userModuleInvitation (ModuleInvitaion) L'invitation du module de l'utilisateur
+- moduleInvitations ([ModuleInvitaion]) les invitations du module
+#}
+
+{% for pollProposal in pollProposals %}
+    {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay.html.twig', {
+        "pollProposal":pollProposal,
+        "userModuleInvitation":userModuleInvitation,
+        "moduleInvitations":moduleInvitations
+    }) }}
+{% endfor %}

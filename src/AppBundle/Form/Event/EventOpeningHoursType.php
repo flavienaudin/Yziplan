@@ -27,14 +27,12 @@ class EventOpeningHoursType extends AbstractType
                 'constraints' => new NotBlank()
             ))
             ->add('timeOpen', TimeType::class, array(
-                'required' => true,
-                'widget' => 'single_text',
-                'constraints' => new NotBlank()
+                'required' => false,
+                'widget' => 'single_text'
             ))
             ->add('timeClosed', TimeType::class, array(
-                'required' => true,
-                'widget' => 'single_text',
-                'constraints' => new NotBlank()
+                'required' => false,
+                'widget' => 'single_text'
             ));
     }
 

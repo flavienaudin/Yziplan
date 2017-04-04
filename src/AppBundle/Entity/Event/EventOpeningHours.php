@@ -156,6 +156,14 @@ class EventOpeningHours
      ***********************************************************************/
 
     /**
+     * @return bool true si la plage horaire est valide, false sinon
+     */
+    public function isValid()
+    {
+        return !empty($this->getDayOfWeek()) && !empty($this->getTimeOpen()) && !empty($this->getTimeClosed());
+    }
+
+    /**
      * Copie la plage horaire et la rattache à l'événement donné
      * @param Event $newEvent
      * @return EventOpeningHours

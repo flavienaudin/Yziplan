@@ -13,13 +13,9 @@
             asset("bundles/app/img/event-header/organisation.jpeg") }}" alt="{{ userEventInvitation.event.name }}" height="250px"/>
         </div>
 
-
         {% if editEvent %}
-            <a href="#event_picture_update_modal" class="c-white event-title event-change-picture" data-toggle="modal">
-                <span class="zmdi-hc-stack zmdi-hc-2x">
-                    <i class="zmdi zmdi-square-o zmdi-hc-stack-2x"></i>
-                    <i class="zmdi zmdi-camera-add zmdi-hc-stack-1x"></i></span>
-                {#{{ 'event.picture.link'|trans }}#}</a>
+            <a href="#event_picture_update_modal" class="c-white event-title event-change-picture" data-toggle="modal"><span class="zmdi-hc-stack zmdi-hc-2x"><i
+                            class="zmdi zmdi-square-o zmdi-hc-stack-2x"></i><i class="zmdi zmdi-camera-add zmdi-hc-stack-1x"></i></span></a>
         {% endif %}
         <h1 class="c-white event-title"><span id="event-name">{{ userEventInvitation.event.name }}</span></h1>
 

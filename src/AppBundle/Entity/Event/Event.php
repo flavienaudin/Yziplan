@@ -142,6 +142,12 @@ class Event implements CommentableInterface
     private $status;
 
     /**
+     * @var string
+     * @ORM\Column(name="cancellation_reason", type="text", nullable=true)
+     */
+    private $cancellationReason;
+
+    /**
      * @var DateTime
      * @ORM\Column(name="response_deadline", type="datetime", unique=false, nullable=true)
      */
@@ -168,6 +174,13 @@ class Event implements CommentableInterface
      * @ORM\Column(name="guests_can_add_module", type="boolean")
      */
     private $guestsCanAddModule = true;
+
+    /**
+     * If "true" the event is created by an activity provider
+     * @var bool
+     * @ORM\Column(name="activity_provider", type="boolean")
+     */
+    private $activityProvider = false;
 
     /**
      * If "true" the event is consider as template and can be duplicated to organized other events (for professionals)
@@ -561,6 +574,24 @@ class Event implements CommentableInterface
     }
 
     /**
+     * @return mixed
+     */
+    public function getCancellationReason()
+    {
+        return $this->cancellationReason;
+    }
+
+    /**
+     * @param mixed $cancellationReason
+     * @return Event
+     */
+    public function setCancellationReason($cancellationReason)
+    {
+        $this->cancellationReason = $cancellationReason;
+        return $this;
+    }
+
+    /**
      * Get responseDeadline
      *
      * @return DateTime
@@ -640,6 +671,24 @@ class Event implements CommentableInterface
     /**
      * @return bool
      */
+    public function isActivityProvider()
+    {
+        return $this->activityProvider;
+    }
+
+    /**
+     * @param bool $activityProvider
+     * @return Event
+     */
+    public function setActivityProvider($activityProvider)
+    {
+        $this->activityProvider = $activityProvider;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
     public function isTemplate()
     {
         return $this->template;
@@ -694,10 +743,10 @@ class Event implements CommentableInterface
      */
     public function setEventParent($eventParent)
     {
-        if($this->getEventParent() != null && $eventParent == null){
+        if ($this->getEventParent() != null && $eventParent == null) {
             $this->eventParent->getSubevents()->removeElement($this);
             $this->eventParent = null;
-        }else {
+        } else {
             $this->eventParent = $eventParent;
             $eventParent->getSubevents()->add($this);
         }
@@ -766,7 +815,7 @@ class Event implements CommentableInterface
     }
 
     /**
-     * Get eventInvitations
+     * Get eventInvitations. Attention : toutes les invitations mêmes celles annulées sont présentes
      *
      * @return ArrayCollection
      */
@@ -857,8 +906,6 @@ class Event implements CommentableInterface
     }
 
 
-
-
     /***********************************************************************
      *                      Helpers
      ***********************************************************************/
@@ -869,7 +916,9 @@ class Event implements CommentableInterface
      */
     public function getCreators()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq("creator", true));
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED))
+            ->andWhere(Criteria::expr()->eq("creator", true));
         return $this->eventInvitations->matching($criteria);
     }
 
@@ -879,7 +928,9 @@ class Event implements CommentableInterface
      */
     public function getAdministrators()
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq("administrator", true));
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED))
+            ->andWhere(Criteria::expr()->eq("administrator", true));
         return $this->eventInvitations->matching($criteria);
     }
 
@@ -890,8 +941,11 @@ class Event implements CommentableInterface
     public function getOrganizers()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("creator", true))
-            ->orWhere(Criteria::expr()->eq("administrator", true));
+            ->where(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED))
+            ->andWhere(Criteria::expr()->orX(
+                Criteria::expr()->eq("creator", true),
+                Criteria::expr()->eq("administrator", true)
+            ));
         return $this->eventInvitations->matching($criteria);
     }
 
@@ -902,9 +956,9 @@ class Event implements CommentableInterface
     public function getGuests()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("creator", false))
-            ->andWhere(Criteria::expr()->eq("administrator", false))
-            ->andWhere(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED));
+            ->where(Criteria::expr()->neq("status", EventInvitationStatus::CANCELLED))
+            ->andWhere(Criteria::expr()->eq("creator", false))
+            ->andWhere(Criteria::expr()->eq("administrator", false));
         return $this->eventInvitations->matching($criteria);
     }
 
@@ -962,5 +1016,39 @@ class Event implements CommentableInterface
             );
         }
         return $orderedArray;
+    }
+
+    public function initializeWeekOpeningHours()
+    {
+        if($this->openingHours == null){
+            $this->openingHours = new ArrayCollection();
+        }
+        $mondayOH = new EventOpeningHours();
+        $mondayOH->setDayOfWeek(DayOfWeek::MONDAY);
+        $this->addopeningHour($mondayOH);
+
+        $tuesdayOH = new EventOpeningHours();
+        $tuesdayOH->setDayOfWeek(DayOfWeek::TUESDAY);
+        $this->addopeningHour($tuesdayOH);
+
+        $wednesdayOH = new EventOpeningHours();
+        $wednesdayOH->setDayOfWeek(DayOfWeek::WEDNESDAY);
+        $this->addopeningHour($wednesdayOH);
+
+        $thursdayOH = new EventOpeningHours();
+        $thursdayOH->setDayOfWeek(DayOfWeek::THURSDAY);
+        $this->addopeningHour($thursdayOH);
+
+        $fridayOH = new EventOpeningHours();
+        $fridayOH->setDayOfWeek(DayOfWeek::FRIDAY);
+        $this->addopeningHour($fridayOH);
+
+        $saturdayOH = new EventOpeningHours();
+        $saturdayOH->setDayOfWeek(DayOfWeek::SATURDAY);
+        $this->addopeningHour($saturdayOH);
+
+        $sundayOH = new EventOpeningHours();
+        $sundayOH->setDayOfWeek(DayOfWeek::SUNDAY);
+        $this->addopeningHour($sundayOH);
     }
 }

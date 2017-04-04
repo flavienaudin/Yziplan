@@ -10246,6 +10246,10 @@ pre {
     color: #fff;
 }
 
+.hmp-alert > a {
+    color: #fff;
+}
+
 .hm-icon {
     font-size: 24px;
     line-height: 36px;
@@ -11296,7 +11300,7 @@ pre {
 
 .card-header {
     position: relative;
-    padding: 30px;
+    padding: 20px;
     border-radius: 2px 2px 0 0;
 }
 
@@ -15642,6 +15646,10 @@ body.o-hidden {
     margin-bottom: 15px;
 }
 
+.wcl-list{
+    max-height: 150px;
+    overflow-y: auto;
+}
 .wcl-list + .wcl-form {
     margin-top: 25px;
 }
