@@ -11,13 +11,13 @@
         'label':'event.form.name.label',
         'label_attr':{'class':'sr-only'},
         'attr':{'placeholder':'event.form.name.placeholder'|trans},
-        'widget_options':{'label_icon':'zmdi-flare', 'fgline':true}
+        'widget_options':{'label_icon':'zmdi zmdi-flare', 'fgline':true}
     }) }}<br>
     {{ form_row(eventForm.description, {
         'label':'event.form.description.label',
         'label_attr':{'class':'sr-only'},
         'attr':{'placeholder':'event.form.description.placeholder'},
-        'widget_options':{'label_icon':'zmdi-receipt', 'fgline':true}
+        'widget_options':{'label_icon':'zmdi zmdi-receipt', 'fgline':true}
     }) }}<br>
     {{ form_row(eventForm.when, {
         'label':'event.form.when.label',
@@ -37,7 +37,7 @@
                 'aria-expanded':"false",
                 'aria-controls':"showMapContainer"
             },
-            'label_icon':'zmdi-pin c-blue',
+            'label_icon':'zmdi zmdi-pin c-blue',
             'fgline':true, 'displayInRow' : true}
     }) }}
     {{ form_row(eventForm.whereGooglePlaceId) }}
@@ -95,55 +95,61 @@
                         'label':'event.form.coordinates.website.label',
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'event.form.coordinates.website.placeholder'},
-                        'widget_options':{'fgline':true, 'label_icon':'zmdi-globe'}
+                        'widget_options':{'fgline':true, 'label_icon':'zmdi zmdi-globe'}
                     }) }}
                     {{ form_row(eventForm.coordinates.email, {
                         'label':'event.form.coordinates.email.label',
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'event.form.coordinates.email.placeholder'},
-                        'widget_options':{'fgline':true, 'label_icon':'zmdi-email'}
+                        'widget_options':{'fgline':true, 'label_icon':'zmdi zmdi-email'}
                     }) }}
                     {{ form_row(eventForm.coordinates.phoneNumber, {
                         'label':'event.form.coordinates.phoneNumber.label',
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'event.form.coordinates.phoneNumber.placeholder'},
-                        'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
+                        'widget_options':{'fgline':true, 'label_icon':'zmdi zmdi-phone'}
                     }) }}
                     {{ form_row(eventForm.coordinates.mobileNumber, {
                         'label':'event.form.coordinates.mobileNumber.label',
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'event.form.coordinates.mobileNumber.placeholder'},
-                        'widget_options':{'fgline':true, 'label_icon':'zmdi-phone'}
+                        'widget_options':{'fgline':true, 'label_icon':'zmdi zmdi-phone'}
                     }) }}
                     {{ form_row(eventForm.coordinates.facebookURL, {
                         'label':'event.form.coordinates.facebookURL.label',
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'event.form.coordinates.facebookURL.placeholder'},
-                        'widget_options':{'fgline':true, 'label_icon':'zmdi-facebook'}
+                        'widget_options':{'fgline':true, 'label_icon':'zmdi zmdi-facebook'}
                     }) }}
                     {{ form_row(eventForm.coordinates.googlePlusURL, {
                         'label':'event.form.coordinates.googlePlusURL.label',
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'event.form.coordinates.googlePlusURL.placeholder'},
-                        'widget_options':{'fgline':true, 'label_icon':'zmdi-google-plus'}
+                        'widget_options':{'fgline':true, 'label_icon':'zmdi zmdi-google-plus'}
                     }) }}
                     {{ form_row(eventForm.coordinates.twitterURL, {
                         'label':'event.form.coordinates.twitterURL.label',
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'event.form.coordinates.twitterURL.placeholder'},
-                        'widget_options':{'fgline':true, 'label_icon':'zmdi-twitter'}
+                        'widget_options':{'fgline':true, 'label_icon':'zmdi zmdi-twitter'}
                     }) }}
                     {{ form_row(eventForm.coordinates.instagramURL, {
                         'label':'event.form.coordinates.instagramURL.label',
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'event.form.coordinates.instagramURL.placeholder'},
-                        'widget_options':{'fgline':true, 'label_icon':'zmdi-instagram'}
+                        'widget_options':{'fgline':true, 'label_icon':'zmdi zmdi-instagram'}
                     }) }}
                     {{ form_row(eventForm.coordinates.youtubeURL, {
                         'label':'event.form.coordinates.youtubeURL.label',
                         'label_attr':{'class':'sr-only'},
                         'attr':{'placeholder':'event.form.coordinates.youtubeURL.placeholder'},
-                        'widget_options':{'fgline':true, 'label_icon':'zmdi-youtube'}
+                        'widget_options':{'fgline':true, 'label_icon':'zmdi zmdi zmdi-youtube'}
+                    }) }}
+                    {{ form_row(eventForm.coordinates.tripAdvisorURL, {
+                        'label':'event.form.coordinates.tripAdvisorURL.label',
+                        'label_attr':{'class':'sr-only'},
+                        'attr':{'placeholder':'event.form.coordinates.tripAdvisorURL.placeholder'},
+                        'widget_options':{'fgline':true, 'label_icon':'fa fa-tripadvisor'}
                     }) }}
                 </div>
             </div>

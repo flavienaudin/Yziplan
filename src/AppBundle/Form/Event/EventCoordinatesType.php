@@ -60,6 +60,10 @@ class EventCoordinatesType extends AbstractType
                 'required' => false,
                 'url_domain' => 'https://www.youtube.com/',
                 'constraints' => new Url()
+            ))
+            ->add("tripAdvisorURL", UrlType::class, array(
+                'required' => false,
+                'constraints' => new Url()
             ));
     }
 

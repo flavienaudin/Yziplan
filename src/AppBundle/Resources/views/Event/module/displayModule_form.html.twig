@@ -12,18 +12,18 @@
             {{ form_row(moduleForm.name, {
                 'label': 'module.form.name.label',
                 'attr':{},
-                'widget_options':{'label_icon':'zmdi-flare','fgfloat':true, 'fgline':true}
+                'widget_options':{'label_icon':'zmdi zmdi-flare','fgfloat':true, 'fgline':true}
             }) }}<br/>
             {{ form_row(moduleForm.description, {
                 'label':'module.form.description.label',
                 'label_attr':{'class':'sr-only'},
                 'attr':{'rows':3},
-                'widget_options':{'label_icon':'zmdi-receipt','fgline':false}
+                'widget_options':{'label_icon':'zmdi zmdi-receipt','fgline':false}
             }) }}
         </div>
     </div>
     {% block action_buttons %}
-        <div class="pull-right m-r-20">
+        <div class="pull-right m-r-20 m-t-10">
             <button type="button" class="btn btn-flat waves-effect" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
             <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
         </div>

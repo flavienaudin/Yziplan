@@ -84,6 +84,13 @@ class EventCoordinates
      */
     private $youtubeURL;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tripAdvisorURL", type="string", length=255, nullable=true)
+     */
+    private $tripAdvisorURL;
+
 
     /**************************************************************************************************************
      *                                      Jointures
@@ -309,6 +316,24 @@ class EventCoordinates
     public function setYoutubeURL($youtubeURL)
     {
         $this->youtubeURL = $youtubeURL;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTripAdvisorURL()
+    {
+        return $this->tripAdvisorURL;
+    }
+
+    /**
+     * @param string $tripAdvisorURL
+     * @return EventCoordinates
+     */
+    public function setTripAdvisorURL($tripAdvisorURL)
+    {
+        $this->tripAdvisorURL = $tripAdvisorURL;
         return $this;
     }
 
