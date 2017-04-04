@@ -70,6 +70,30 @@ hr.small.black {
     max-height: 500px;
 }
 
+.img-maxw300px {
+    width: 100%;
+    max-width: 300px;
+}
+
+.img-maxw400px {
+    width: 100%;
+    max-width: 400px;
+}
+
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .m-t-why {
+        margin-top: 70px;
+    }
+}
+
+@media (min-width: 992px) {
+    .m-t-why {
+        margin-top: 100px;
+    }
+}
+
+
 /* Callout */
 
 .callout {
