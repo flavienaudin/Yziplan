@@ -138,7 +138,8 @@
             </div>
         {% endif %}
 
-        {% if userEventInvitation.organizer %}
+        {# TODO: decommenter quand la possibilité d'invité sera gérée #}
+        {#{% if userEventInvitation.organizer %}
             {% if userEventInvitation.event.guestsCanInvite %}
                 <div class="text-success">
                     <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
@@ -148,7 +149,7 @@
                     <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
                 </div>
             {% endif %}
-        {% endif %}
+        {% endif %}#}
     </div>
     {% if userEventInvitation.event.whereGooglePlaceId is not null %}
         <div class="col-xs-12 col-sm-4">
