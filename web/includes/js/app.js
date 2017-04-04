@@ -433,39 +433,52 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
 
     $.ajax(ajaxOptions)
         .done(function (responseJSON, textStatus, jqXHR) {
-            if (responseJSON.hasOwnProperty('htmlContents')) {
-                treatHtmlContents(responseJSON['htmlContents']);
-            }
-            if (doneCallback) {
-                doneCallback(responseJSON, textStatus, jqXHR);
+            if (typeof responseJSON !== 'undefined') {
+                if (responseJSON.hasOwnProperty('htmlContents')) {
+                    treatHtmlContents(responseJSON['htmlContents']);
+                }
+                if (doneCallback) {
+                    doneCallback(responseJSON, textStatus, jqXHR);
+                }
+            } else {
+                console.error('undefined response');
             }
         })
         .fail(function (jqXHR, textStatus, errorThrown) {
-            var responseJSON = jqXHR['responseJSON'];
-            if (responseJSON.hasOwnProperty('htmlContents')) {
-                treatHtmlContents(responseJSON['htmlContents']);
-            }
-            if (failCallback) {
-                failCallback(jqXHR, textStatus, errorThrown);
+            if (typeof jqXHR !== 'undefined') {
+                var responseJSON = jqXHR['responseJSON'];
+                if (responseJSON.hasOwnProperty('htmlContents')) {
+                    treatHtmlContents(responseJSON['htmlContents']);
+                }
+                if (failCallback) {
+                    failCallback(jqXHR, textStatus, errorThrown);
+                }
+            } else {
+                console.error('undefined response');
             }
         })
         .always(function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-            if (alwaysCallback) {
-                alwaysCallback(dataOrJqXHR, textStatus, jqXHROrErrorThrown);
-            }
-            if (dataOrJqXHR.hasOwnProperty('responseJSON')) {
-                dataOrJqXHR = dataOrJqXHR['responseJSON'];
-            }
-            if (dataOrJqXHR.hasOwnProperty('messages')) {
-                var messages = dataOrJqXHR['messages'];
-                for (var messageType in messages) {
-                    if (messages.hasOwnProperty(messageType)) {
-                        messages[messageType].forEach(function (mess) {
-                            toastr[messageType](mess);
-                        });
+            if (typeof dataOrJqXHR !== 'undefined') {
+                if (alwaysCallback) {
+                    alwaysCallback(dataOrJqXHR, textStatus, jqXHROrErrorThrown);
+                }
+                if (dataOrJqXHR.hasOwnProperty('responseJSON')) {
+                    dataOrJqXHR = dataOrJqXHR['responseJSON'];
+                }
+                if (typeof dataOrJqXHR !== 'undefined' && dataOrJqXHR.hasOwnProperty('messages')) {
+                    var messages = dataOrJqXHR['messages'];
+                    for (var messageType in messages) {
+                        if (messages.hasOwnProperty(messageType)) {
+                            messages[messageType].forEach(function (mess) {
+                                toastr[messageType](mess);
+                            });
+                        }
                     }
                 }
+            } else {
+                console.error('undefined response');
             }
+            
             $(preloader).hide();
             $(form).find('[type=submit]').each(function () {
                 $(this).off('click');
