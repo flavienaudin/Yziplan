@@ -55,11 +55,10 @@
         </script>
     {% endif %}
     {% if pollProposalForm.pictureFile is defined %}
-        <div class="kv-avatar center-block w-100">
-            {{ form_widget(pollProposalForm.pictureFile, {
-                'label':'',
-                'label_attr':{'class':'sr-only'},
-                'attr':{'placeholder':''},
+        <div class="kv-avatar center-block w-100 m-t-15">
+            {{ form_row(pollProposalForm.pictureFile.file, {
+                'label' : 'pollmodule.modal.pollproposal.form.picture.label',
+                'label_attr' : {'class' : 'sr-only'},
                 'widget_options':{'label_icon':'zmdi-image','fgline':false}
             }) }}
         </div>
