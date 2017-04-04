@@ -227,7 +227,8 @@ function jsPlugginActivation() {
         maxViewMode: 2,
         todayHighlight: true,
         autoclose: true,
-        todayBtn: true
+        todayBtn: true,
+        clearBtn: true
     });
     /*$('.ag-date-picker').datetimepicker({
      format: locale_format,
