@@ -448,7 +448,7 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         .fail(function (jqXHR, textStatus, errorThrown) {
             if (typeof jqXHR !== 'undefined') {
                 var responseJSON = jqXHR['responseJSON'];
-                if (responseJSON.hasOwnProperty('htmlContents')) {
+                if (typeof responseJSON !== 'undefined' && responseJSON.hasOwnProperty('htmlContents')) {
                     treatHtmlContents(responseJSON['htmlContents']);
                 }
                 if (failCallback) {
