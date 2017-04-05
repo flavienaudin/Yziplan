@@ -36,13 +36,21 @@
         "bundles/app/css/focuspoint.css"
         "bundles/app/css/summernote-0.8.2/summernote.css"
         "bundles/app/css/jquery.rateyo.css"
+        output="css/tiers.2.0.6.css" %}
+        <link rel="stylesheet" href="{{ asset_url }}" type="text/css"/>
+        {% endstylesheets %}
+
+        {% stylesheets filter='cssrewrite' filter='?uglifycss'
         "bundles/app/css/app.min.1.css"
         "bundles/app/css/app.min.2.css"
         "bundles/app/css/app_style.css"
-        output="css/main.2.0.5.css" %}
+        output="css/yziplan.2.0.6.css" %}
         <link rel="stylesheet" href="{{ asset_url }}" type="text/css"/>
         {% endstylesheets %}
+
     {% endblock %}
+
+
 
 
     <link rel="stylesheet" href="{{ asset("bundles/app/css/print_style.css") }}" media="print">
@@ -66,7 +74,7 @@
     'bundles/app/js/selectize-standalone.min.js'
     'bundles/app/js/jquery.focuspoint.min.js'
     'bundles/app/js/yzi-selectize.js'
-    output='js/main-pre.2.0.5.js' %}
+    output='js/tiers-pre.2.0.6.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock top_javascripts %}
@@ -322,10 +330,15 @@
     'bundles/app/js/summernote-0.8.2/lang/summernote-fr-FR.js'
     'bundles/app/js/jquery.cookiesdirective-updated-fr.js'
     'bundles/app/js/jquery.rot13.min.js'
+    output='js/tiers.2.0.6.js' %}
+    <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+
+    {% javascripts filter='?uglifyjs2'
     'bundles/app/js/actions.js'
     'includes/js/app.js'
     "bundles/app/js/yzi-event.js"
-    output='js/main.2.0.5.js' %}
+    output='js/yziplan.2.0.6.js' %}
     <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
