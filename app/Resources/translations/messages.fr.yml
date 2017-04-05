@@ -228,10 +228,10 @@ event:
         placeholder: Jour
       time_open:
         label: Heure d'ouverture
-        placeholder: Heure d'ouverture
+        placeholder: 00:00
       time_closed:
         label: Heure de fermeture
-        placeholder: Heure de fermeture
+        placeholder: 00:00
   alert:
     confirm_cancellation:
       title: Etes-vous sûr de vouloir annuler cet événement ?

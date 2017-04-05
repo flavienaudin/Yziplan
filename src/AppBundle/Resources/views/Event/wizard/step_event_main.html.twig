@@ -12,11 +12,6 @@
     {{ include('@App/Event/partials/event_header_card_header.html.twig', {'userEventInvitation':userEventInvitation, 'editEvent' : true }) }}
 {% endblock wizard_header %}
 
-{#{% block wizard_step_title %}
-    {{ "event.wizard.main.title"|trans }}
-    <small>{{ "event.wizard.main.subtitle"|trans }}</small>
-{% endblock %}#}
-
 {% block wizard_step %}
     {{ include('@App/Event/wizard/wizard_event_edit_form.html.twig', {"userEventInvitation":userEventInvitation, "eventForm":eventForm }) }}
 {% endblock wizard_step %}
