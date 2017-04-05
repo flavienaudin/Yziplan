@@ -26,14 +26,14 @@ class ImageResizerListener
              * @var $object PollProposal
              */
             $fileName = $object->getPictureFile()->getPathname();
-            return $imageResizer->smart_resize_image($fileName, null, 300, 0, true,'file', true, false,90);
+            return $imageResizer->smart_resize_image($fileName, null, 300, 0, true,'file', true, false,95);
         }
         elseif ($object instanceof \AppBundle\Entity\Event\Event) {
             /**
              * @var $object \AppBundle\Entity\Event\Event
              */
             $fileName = $object->getPictureFile()->getPathname();
-            return $imageResizer->smart_resize_image($fileName, null, 1000, 0, true, 'file', true, false,90);
+            return $imageResizer->smart_resize_image($fileName, null, 1000, 0, true, 'file', true, false,95);
         }
         return null;
     }
