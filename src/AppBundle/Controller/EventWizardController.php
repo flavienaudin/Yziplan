@@ -12,6 +12,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Event\Event;
 use AppBundle\Manager\EventManager;
 use AppBundle\Security\EventVoter;
+use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -158,6 +159,7 @@ class EventWizardController extends Controller
 
             $eventInvitationsForm = null;
             if (!$currentEvent->isTemplate()) {
+                // Invitations Form :
                 /** @var FormInterface $eventInvitationsForm */
                 $eventInvitationsForm = $eventManager->createEventInvitationsForm();
                 $eventInvitationsForm->handleRequest($request);
@@ -165,21 +167,49 @@ class EventWizardController extends Controller
                     if ($eventInvitationsForm->isValid()) {
                         $resultInvitations = array();
                         $eventManager->treatEventInvitationsFormSubmission($eventInvitationsForm, $resultInvitations);
+                        $data = [];
                         if ((($nbFailed = count($resultInvitations['failed'])) + ($nbCreationError = count($resultInvitations['creationError']))) > 0) {
                             if ($nbFailed > 0) {
                                 $emails = implode(", ", array_keys($resultInvitations['failed']));
-                                $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get("translator")->trans("invitations.message.mail_not_sent", ['%email_list%' => $emails]));
+                                if ($request->isXmlHttpRequest()) {
+                                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get("translator")->trans("invitations.message.mail_not_sent", ['%email_list%' => $emails]);
+                                } else {
+                                    $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get("translator")->trans("invitations.message.mail_not_sent", ['%email_list%' => $emails]));
+                                }
                             }
                             if ($nbCreationError > 0) {
                                 $emails = implode(", ", array_values($resultInvitations['creationError']));
-                                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("invitations.message.invitation_not_created", ['%email_list%' => $emails]));
+                                if ($request->isXmlHttpRequest()) {
+                                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("invitations.message.invitation_not_created", ['%email_list%' => $emails]);
+                                } else {
+                                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("invitations.message.invitation_not_created", ['%email_list%' => $emails]));
+                                }
                             }
                         }
-                        return $this->redirectToRoute('displayEvent', array('token' => $currentEvent->getToken()));
+                        if ($request->isXmlHttpRequest()) {
+                            $eventInvitationsForm = $eventManager->createEventInvitationsForm();
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_forms_container'] =
+                                $this->renderView('@App/Event/wizard/wizard_event_invitations_form.html.twig', array(
+                                    'event' => $currentEvent,
+                                    'invitationsForm' => $eventInvitationsForm->createView()
+                                ));
+
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['.eventInvitations_list'] =
+                                $this->renderView('@App/Event/partials/guests_list/eventInvitations_list.html.twig', array(
+                                    'userEventInvitation' => $userEventInvitation,
+                                    'firstEventInvitation' => $userEventInvitation,
+                                    'eventInvitations' => $currentEvent->getEventInvitationByAnswer(array(EventInvitationAnswer::YES, EventInvitationAnswer::NO, EventInvitationAnswer::DONT_KNOW))
+                                ));
+                            return new AppJsonResponse($data, Response::HTTP_OK);
+                        } else {
+                            return $this->redirectToRoute('wizardNewEventStep3', array('token' => $currentEvent->getToken()));
+                        }
                     }
                 }
                 $templateOptions['invitationsForm'] = $eventInvitationsForm->createView();
+                $templateOptions['eventInvitations'] = $currentEvent->getEventInvitationByAnswer([EventInvitationAnswer::DONT_KNOW, EventInvitationAnswer::YES, EventInvitationAnswer::NO]);
             }
+
             return $this->render("@App/Event/wizard/step_event_recapitulatif.html.twig", $templateOptions);
         }
     }

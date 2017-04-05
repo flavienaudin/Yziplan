@@ -22,7 +22,6 @@
         var GMAIL_CONTACTS = [];
         var bootGridTable = null;
 
-        var $loadGmailContactsContent = $('#loadGmailContacts_Content').hide();
         var $gmailPreloader = $('#gmail-preloader').hide();
 
         {# Your Client ID is retrieved from your project in the Developer Console => https://console.developers.google.com#}
@@ -40,9 +39,10 @@
          * Start the process to load the Gmail contacts
          */
         function authClick() {
-            $loadGmailContactsContent.show();
-            $gmailPreloader.show();
-            gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: false}, authResult);
+            if (GMAIL_CONTACTS.length === 0) {
+                $gmailPreloader.show();
+                gapi.auth.authorize({client_id: CLIENT_ID, scope: SCOPES, immediate: false}, authResult);
+            }
             return false;
         }
 
@@ -81,13 +81,12 @@
             };
             if (pageToken != null) {
                 options['pageToken'] = pageToken;
-
             }
             var request = gapi.client.people.people.connections.list(options);
             request.execute(function (resp) {
                 var connections = resp.connections;
 
-                if (connections != null && connections.length > 0) {
+                if (typeof connections !== 'undefined' && connections !== null && connections.length > 0) {
                     for (i = 0; i < connections.length; i++) {
                         var person = connections[i];
                         if (person.emailAddresses && person.emailAddresses.length > 0) {
@@ -121,7 +120,7 @@
          */
         function showContacts() {
             var _Html = "<table id='tab-gmail-contact' class='table table-condensed table-hover table-striped'><thead><tr>" +
-                "<th data-column-id='avatar' data-formatter='avatar' data-sortable='false' data-align='center'>{{ "contactsgmail.results.avatar"|trans }}</th>" +
+                "<th data-column-id='avatar' data-formatter='avatar' data-sortable='false' data-align='center'></th>" +
                 "<th data-column-id='name' data-searchable='true'>{{ "contactsgmail.results.contact"|trans }}</th>" +
                 "<th data-column-id='email' data-identifier='true'>{{ "contactsgmail.results.email"|trans }}</th>" +
                 "</tr></thead><tbody>";
@@ -165,10 +164,6 @@
                 {% block js_onBootgrid_deselection %}{% endblock %}
             });
             $gmailPreloader.hide();
-        }
-
-        function hideContacts() {
-            $loadGmailContactsContent.hide();
         }
     </script>
 </div>

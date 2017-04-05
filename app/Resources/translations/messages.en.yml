@@ -256,6 +256,8 @@ event:
         not_connected: If you already have an account, login to fill this information automatically
       invitation_email:
         title: Send invitations by email
+      invitation_list:
+        title: Posted invitations
       share_url:
         title: Share the event link
       template:

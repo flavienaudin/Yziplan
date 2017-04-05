@@ -41,6 +41,8 @@
         </div>
         {% if invitationsForm is not null or not userEventInvitation.event.invitationOnly %}
             {{ include('@App/Event/partials/invitations/invitations_new_modal.html.twig', {'userEventInvitation':userEventInvitation,'invitationsForm':invitationsForm}) }}
+            {{ include('@App/Event/partials/invitations/gmail_contacts_modal.html.twig') }}
+
         {% endif %}
         {% if sendMessageForm is not null %}
             {{ include('@App/Event/partials/invitations/invitations_send_message_modal.html.twig', {'userEventInvitation' : userEventInvitation, 'sendMessageForm ': sendMessageForm}) }}
