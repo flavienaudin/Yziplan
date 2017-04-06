@@ -8,7 +8,6 @@
         {{ form_start(userEventInvitationForm, {'action': path('displayEvent',{'token':userEventInvitation.event.token}), 'attr':{'id':userEventInvitationForm.vars.id}}) }}
     {% endblock form_start %}
 
-
     {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") %}
         <div class="row">
             <div class="col-xs-12 text-center m-b-10">
@@ -16,6 +15,7 @@
             </div>
         </div>
     {% endif %}
+
     <div class="row">
         <div class="col-xs-7">
             {{ form_row(userEventInvitationForm.guestName, {
@@ -39,21 +39,24 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <div class="form-group">
-                <a href="#invitation_personnal_link_container" data-toggle="collapse" aria-controls="#invitation_personnal_link_container" aria-expanded="false"> <label class="control-label"
-                                                                                                                                                                         for="invitation_personnal_link">{{ "eventInvitation.form.personal_link.label"|trans|raw }}</label></a>
-                <div class="collapse animated" id="invitation_personnal_link_container">
-                    <div class="input-group input-group-sm">
-                        <div class="fg-line">
-                            <input type="text" id="invitation_personnal_link" class="form-control input-sm" readonly="readonly"
-                                   value="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}">
-                        </div>
-                        <span class="input-group-btn">
+            {% if not is_granted("IS_AUTHENTICATED_REMEMBERED") or (wizard_context is defined and wizard_context) %}
+                <div class="form-group">
+                    <a href="#invitation_personnal_link_container" data-toggle="collapse" aria-controls="#invitation_personnal_link_container" aria-expanded="false"> <label class="control-label"
+                                                                                                                                                                             for="invitation_personnal_link">
+                            {{ (userEventInvitation.organizer?"eventInvitation.form.administration_link.label"|trans|raw:"eventInvitation.form.personal_link.label"|trans|raw) }}</label></a>
+                    <div class="collapse animated" id="invitation_personnal_link_container">
+                        <div class="input-group input-group-sm">
+                            <div class="fg-line">
+                                <input type="text" id="invitation_personnal_link" class="form-control input-sm" readonly="readonly"
+                                       value="{{ url("displayEventInvitation",{'token':userEventInvitation.token}) }}">
+                            </div>
+                            <span class="input-group-btn">
                                 <button type="button" id="btn_invitation_personnal_link" class="btn btn-primary btn-icon-text" data-clipboard-target="#invitation_personnal_link"><i
                                             class="zmdi zmdi-copy"></i>{{ "global.button.copy"|trans }}</button></span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
 
             {% block action_buttons %}
                 <div class="text-center">
@@ -82,7 +85,7 @@
                 $('form#{{ userEventInvitationForm.vars.id }}').on("submit", preSubmitEventInvitationProfileForm);
 
                 {% if userEventInvitation.displayableName(false) is empty %}
-                    $('#invitation_personnal_link_container').collapse('show');
+                $('#invitation_personnal_link_container').collapse('show');
                 {% endif %}
 
                 {% block js_document_ready %}{% endblock js_document_ready %}
@@ -147,7 +150,7 @@
                         }
                         thenCancelCallback(thenCancelCallbackParams)
                     }
-                }, function(){
+                }, function () {
                     LetterAvatar.transform();
                 });
             }

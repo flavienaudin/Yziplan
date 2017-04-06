@@ -338,6 +338,8 @@ eventInvitation:
       placeholder: Your contact email
     personal_link:
       label: Your personnal link <strong>to keep</strong>
+    administration_link:
+      label: Your personnal administration link <strong>to keep</strong>
     answer:
       label: Your answer
       placeholder: Your answer

@@ -337,6 +337,8 @@ eventInvitation:
       placeholder: Votre e-mail de contact
     personal_link:
       label: Votre lien personnel <strong>à conserver</strong>
+    administration_link:
+      label: Votre lien personnel d'administration <strong>à conserver</strong>
     answer:
       label: Serez-vous présents ?
       placeholder: Serez-vous présents ?

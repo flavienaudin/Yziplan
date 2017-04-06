@@ -4,6 +4,8 @@
 - userEventInvitationForm (Form) Formulaire du profil de l'invité pour l'invitation
 #}
 
+{% set wizard_context = true %}
+
 {% block form_start %}
     {{ form_start(userEventInvitationForm, {'attr':{'id':userEventInvitationForm.vars.id}, 'action': path('wizardNewEventStep3', {'token':userEventInvitation.event.token})}) }}
 {% endblock form_start %}
