@@ -15,9 +15,9 @@ use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Module\PollModule\PollProposalActivityType;
+use AppBundle\Form\Module\PollModule\PollProposalType;
 use AppBundle\Form\Module\PollModule\PollProposalWhatType;
 use AppBundle\Form\Module\PollModule\PollProposalWhenCollectionType;
-use AppBundle\Form\Module\PollModule\PollProposalType;
 use AppBundle\Form\Module\PollModule\PollProposalWhenType;
 use AppBundle\Form\Module\PollModule\PollProposalWhereType;
 use AppBundle\Utils\enum\PollModuleType;
@@ -97,7 +97,7 @@ class PollProposalManager
      */
     public function displayPollProposalListRowPartial($pollProposals, EventInvitation $userEventInvitation)
     {
-        if(!empty($pollProposals)) {
+        if (!empty($pollProposals)) {
             $pollModule = $pollProposals[0]->getPollModule();
             $userModuleInvitation = null;
             if ($userEventInvitation != null) {

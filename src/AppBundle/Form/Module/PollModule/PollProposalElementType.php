@@ -112,7 +112,9 @@ class PollProposalElementType extends AbstractType
                         )
                     ));
                 } elseif ($pollProposalElement->getPollElement()->getType() == PollElementType::RICHTEXT) {
-                    $form->add('valText', TextareaType::class, array());
+                    $form->add('valText', TextareaType::class, array(
+                        'required' => false
+                    ));
                 } else {
                     $param = array(
                         'label' => $pollProposalElement->getPollElement()->getName(),

@@ -97,12 +97,9 @@ class PollProposalType extends AbstractType
                         'class' => 'sr-only'
                     )
                 ))
-                ->add('valText', TextareaType::class, array())
-                ->add('valString', TextType::class, array(
-                    'required' => true,
-                    'constraints' => new NotBlank()
+                ->add('valText', TextareaType::class, array(
+                    'required' => false
                 ));
-
             if (($pollProposal != null) && !empty($pollProposal->getId())) {
                 $form->add('id', HiddenType::class, array(
                     'disabled' => true

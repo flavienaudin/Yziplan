@@ -36,7 +36,9 @@ class PollProposalActivityType extends AbstractType
                     'required' => true,
                     'constraints' => new NotBlank()
                 ))
-                ->add('valText', TextareaType::class, array())
+                ->add('valText', TextareaType::class, array(
+                    'required' => false
+                ))
                 ->add('pictureFile', VichImageType::class, array(
                     'required' => false,
                     'label_attr' => array(
