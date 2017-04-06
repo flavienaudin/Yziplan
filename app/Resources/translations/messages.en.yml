@@ -261,7 +261,7 @@ event:
       share_url:
         title: Share the event link
       template:
-        title: Duplication link to share
+        title: Link to share
         paragraphe: "Post the following link on your web site and social networks. Your visitors can organise easily their next activity in your establishment"
     invitations:
       title: The guests
@@ -338,6 +338,8 @@ eventInvitation:
       placeholder: Your contact email
     personal_link:
       label: Your personnal link <strong>to keep</strong>
+    administration_link:
+      label: Your personnal administration link <strong>to keep</strong>
     answer:
       label: Your answer
       placeholder: Your answer

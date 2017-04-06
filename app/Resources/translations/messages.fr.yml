@@ -260,8 +260,8 @@ event:
       share_url:
         title: Partager le lien de l'événement
       template:
-        title: Lien de duplication à partager
-        paragraphe: "Afficher le lien suivant sur votre site internet et sur les réseaux sociaux. Vos visiteurs pourront facilement organiser leur prochaine sortie dans votre établissement."
+        title: Lien à partager
+        paragraphe: "Affichez le lien suivant sur votre site internet et sur les réseaux sociaux. Vos visiteurs pourront facilement organiser leur prochaine sortie dans votre établissement."
     invitations:
       title: Les invités
       subtitle: Renseignez les adresses e-mail des invités. Ils recevront un message avec le lien de leur invitation personnelle.
@@ -337,6 +337,8 @@ eventInvitation:
       placeholder: Votre e-mail de contact
     personal_link:
       label: Votre lien personnel <strong>à conserver</strong>
+    administration_link:
+      label: Votre lien personnel d'administration <strong>à conserver</strong>
     answer:
       label: Serez-vous présents ?
       placeholder: Serez-vous présents ?
