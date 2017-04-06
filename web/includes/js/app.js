@@ -397,7 +397,7 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
 }
 
 function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallback, async) {
-    if (event !== null) {
+    if (typeof event !== 'undefined' && event !== null) {
         event.preventDefault();
     }
     var preloader = $('.at-global-preloader');
@@ -479,7 +479,7 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
             } else {
                 console.error('undefined response');
             }
-            
+
             $(preloader).hide();
             $(form).find('[type=submit]').each(function () {
                 $(this).off('click');
