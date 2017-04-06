@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Form\ActivityDirectory\NewActivityType;
 use AppBundle\Form\ActivityDirectory\SearchActivityType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -47,4 +48,29 @@ class DirectoryController extends Controller
             "searchForm" => $searchForm->createView()
         ));
     }
+    /**
+     * @Route("/admin/new", name="directoryAdminNew")
+     */
+    public function adminNew(Request $request)
+    {
+        $activities = null;
+        $addActivityForm = $this->get('form.factory')->create(NewActivityType::class);
+        $addActivityForm->handleRequest($request);
+        if ($addActivityForm->isSubmitted()) {
+            if ($addActivityForm->isValid()) {
+                $eventId = $addActivityForm->get('event')->getData();
+                $typeIds = $addActivityForm->get('activityTypes')->getData();
+                $place = $addActivityForm->get('place')->getData();
+                $this->get('at.manager.directory')->treatAddActivityForm($eventId, $typeIds, $place);
+            }
+        }
+        /** @var FormInterface $newForm */
+        $newForm = $this->get('form.factory')->create(NewActivityType::class);
+
+        return $this->render('AppBundle:Directory:directory_admin_new.html.twig', array(
+            "activities" => $activities,
+            "newForm" => $newForm->createView()
+        ));
+    }
+
 }
