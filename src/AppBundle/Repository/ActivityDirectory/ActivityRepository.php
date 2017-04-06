@@ -30,14 +30,15 @@ class ActivityRepository extends EntityRepository
      * @param array $types liste d'id d'ActivityType
      * @param array $place liste de nom de lieu
      *
+     * @param null $cp
      * @return array de Activity
      */
-    public function getActivityByTypeAndPlace($types, $place)
+    public function getActivityByTypeAndPlace($types, $place, $cp = null)
     {
         $qb = $this->createQueryBuilder('a');
         $qb->leftJoin('a.event', 'e')
             ->where('e.duplicationEnabled = 1');
-        if (!empty($types) && !empty($types[0]) ) {
+        if (!empty($types) && !empty($types[0])) {
             $qb->leftJoin('a.activityTypes', 'at')
                 ->andWhere('at.id in (:types)')
                 ->setParameter(':types', $types);
@@ -51,7 +52,11 @@ class ActivityRepository extends EntityRepository
                     $qb->expr()->like('d.name', ':place'),
                     $qb->expr()->like('r.name', ':place')
                 ))
-                ->setParameter(':place', $place.'%');
+                ->setParameter(':place', $place . '%');
+            if (!empty($cp)) {
+                $qb->andWhere('c.postal_code = :cp')
+                    ->setParameter(':cp', $cp);
+            }
         }
         return $qb
             ->getQuery()
