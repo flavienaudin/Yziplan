@@ -20,7 +20,7 @@ services:
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
-    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@session','@security.authorization_checker','@router','@templating','@translator','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation','@at.manager.discussion','@app.mailer.twig_swift']
+    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@session','@security.authorization_checker','@router','@templating','@translator','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation','@at.manager.discussion','@app.mailer.twig_swift', '@at.manager.notification']
 
   at.manager.discussion:
     class: AppBundle\Manager\DiscussionManager
@@ -40,7 +40,7 @@ services:
 
   at.manager.pollproposal:
     class: AppBundle\Manager\PollProposalManager
-    arguments: ['@doctrine.orm.entity_manager','@form.factory','@templating','@at.manager.pollproposal_element']
+    arguments: ['@doctrine.orm.entity_manager','@form.factory','@templating','@at.manager.pollproposal_element','@at.manager.notification']
     lazy:  true
 
   at.manager.pollproposal_element:
@@ -51,6 +51,10 @@ services:
   at.manager.pollproposal_response:
     class: AppBundle\Manager\PollProposalResponseManager
     arguments: ['@doctrine.orm.entity_manager','@templating']
+
+  at.manager.notification:
+    class: AppBundle\Manager\NotificationManager
+    arguments: ['@doctrine.orm.entity_manager']
 
   at.manager.application_user:
     class: AppBundle\Manager\ApplicationUserManager
@@ -116,12 +120,6 @@ services:
     tags:
     - { name: form.type }
 
-
-  at.form_type.poll_proposal_element:
-    class: AppBundle\Form\Module\PollProposalElementType
-    tags:
-    - { name: form.type }
-
 # Event Subscribers
   at.event_subscriber.kernel_events.:
     class: AppBundle\EventListener\KernelEventsSubscriber
@@ -131,7 +129,7 @@ services:
 
   at.event_listener.discussion:
     class: AppBundle\EventListener\Comment\DiscussionEventSubscriber
-    arguments: ['@security.token_storage','@request_stack', '@at.manager.event','@at.manager.module','@at.manager.event_invitation','@at.mailer.twig_swift']
+    arguments: ['@security.token_storage','@request_stack', '@at.manager.event','@at.manager.module','@at.manager.event_invitation','@at.mailer.twig_swift','@at.manager.notification']
     tags:
       - { name: kernel.event_subscriber }
 

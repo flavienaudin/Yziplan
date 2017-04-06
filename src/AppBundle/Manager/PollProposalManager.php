@@ -42,15 +42,19 @@ class PollProposalManager
     /** @var EngineInterface */
     private $templating;
 
+    /** @var NotificationManager */
+    private $notificationManager;
+
     /** @var PollProposal */
     private $pollProposal;
 
-    public function __construct(EntityManager $doctrine, FormFactoryInterface $formFactory, EngineInterface $templating, PollProposalElementManager $pollProposalElementManager)
+    public function __construct(EntityManager $doctrine, FormFactoryInterface $formFactory, EngineInterface $templating, PollProposalElementManager $pollProposalElementManager, NotificationManager $notificationManager)
     {
         $this->entityManager = $doctrine;
         $this->pollProposalElementManager = $pollProposalElementManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
+        $this->notificationManager = $notificationManager;
     }
 
     /**
@@ -183,9 +187,10 @@ class PollProposalManager
         if ($this->pollProposal->getPollModule() == null) {
             $this->pollProposal->setPollModule($module->getPollModule());
         }
-
         $this->entityManager->persist($this->pollProposal);
         $this->entityManager->flush();
+
+        $this->notificationManager->createAddPollProposalNotifications($this->pollProposal, ($moduleInvitation != null ? $moduleInvitation->getEventInvitation() : null));
         return $this->pollProposal;
     }
 

@@ -3,7 +3,7 @@
 #}
 
 <li class="list-group-item media lgi-notification">
-    {% if notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::COMMENT') %}
+    {% if notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::POST_COMMENT') %}
         <div class="media">
             <div class="pull-left">
             <span class="zmdi-hc-stack zmdi-hc-lg">
@@ -13,17 +13,17 @@
             </div>
             <div class="media-body">
                 <div class="lgi-heading">
-                    <a href="#{{ notification.datas.subject is instanceof("AppBundle\\Entity\\Event\\Module")?
-                    'module_'~notification.datas.subject.token~'_comment_thread_anchor':'event_comment_thread_anchor' }}">{{ notification.datas.subject.name }}</a>
+                    <a href="#{{ notification.data.subject.type == "module"?
+                    'module_'~notification.data.subject.token~'_comment_thread_anchor':'event_comment_thread_anchor' }}">{{ notification.data.subject.name }}</a>
                 </div>
                 <small class="lgi-text">
-                    {{ "notifications.comment"|transchoice(notification.datas.new_comments_number, {
-                        '%subject_name%':notification.datas.subject.name,
-                        '%number_new_comments%':notification.datas.new_comments_number
+                    {{ "notifications.comment"|transchoice(notification.data.new_comments_number, {
+                        '%subject_name%':notification.data.subject.name,
+                        '%number_new_comments%':notification.data.new_comments_number
                     }) }}</small>
             </div>
         </div>
-    {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::MODULE') %}
+    {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::ADD_MODULE') %}
         <div class="media">
             <div class="pull-left">
             <span class="zmdi-hc-stack zmdi-hc-lg">
@@ -32,22 +32,22 @@
             </span>
             </div>
             <div class="media-body">
-                <div class="lgi-heading"><a href="#module-{{ notification.datas.subject.token }}_anchor">{{ notification.datas.subject.name }}</a></div>
+                <div class="lgi-heading"><a href="#module-{{ notification.data.subject.token }}_anchor">{{ notification.data.subject.name }}</a></div>
                 <small class="lgi-text">
-                    {{ "notifications.new_module"|transchoice(notification.datas.creator_names|split(',')|length, {
-                        '%organizers%':notification.datas.creator_names
+                    {{ "notifications.new_module"|transchoice(notification.data.creator_names|split(',')|length, {
+                        '%organizers%':notification.data.creator_names
                     }) }}</small>
             </div>
         </div>
-    {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::POLL_PROPOSAL') %}
+    {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::ADD_POLL_PROPOSAL') %}
         <div class="media">
             <div class="pull-left">
                 <i class="zmdi zmdi-collection-item zmdi-hc-2x"></i>
             </div>
             <div class="media-body">
-                <div class="lgi-heading"><a href="#module-{{ notification.datas.subject.token }}_anchor">{{ notification.datas.subject.name }}</a></div>
+                <div class="lgi-heading"><a href="#module-{{ notification.data.subject.token }}_anchor">{{ notification.data.subject.name }}</a></div>
                 <small class="lgi-text">
-                    {{ "notifications.new_pollproposal"|trans({'%organizer%':notification.datas.creator_name}) }}</small>
+                    {{ "notifications.new_pollproposal"|trans({'%organizer%':notification.data.creator_name}) }}</small>
             </div>
         </div>
     {% endif %}

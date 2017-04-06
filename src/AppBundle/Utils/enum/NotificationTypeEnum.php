@@ -13,13 +13,13 @@ use AppBundle\Entity\Comment\Comment;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Module\PollProposal;
 
-class NotificationTypeEnum
+class NotificationTypeEnum extends AbstractEnumType
 {
     /* Values */
-    const COMMENT = Comment::class;
-    const MODULE = Module::class;
-    const POLL_PROPOSAL = PollProposal::class;
+    const POST_COMMENT = 'notification_type.post_comment';
+    const ADD_MODULE = 'notification_type.add_module';
+    const ADD_POLL_PROPOSAL = 'notification_type.add_pollproposal';
 
     protected $name = 'enum_notification_type';
-    protected $values = array(self::COMMENT, self::MODULE, self::POLL_PROPOSAL);
+    protected $values = array(self::POST_COMMENT, self::ADD_MODULE, self::ADD_POLL_PROPOSAL);
 }

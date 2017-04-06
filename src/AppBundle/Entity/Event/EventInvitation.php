@@ -2,12 +2,14 @@
 
 namespace AppBundle\Entity\Event;
 
+use AppBundle\Entity\Notifications\Notification;
 use AppBundle\Entity\Payment\Wallet;
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
+
 
 /**
  * EventInvitation
@@ -31,7 +33,6 @@ class EventInvitation
 
     /**
      * @var string
-     *
      * @ORM\Column(name="token", type="string", length=128, unique=true)
      */
     private $token;
@@ -122,6 +123,12 @@ class EventInvitation
      */
     private $wallet;
 
+    /**
+     * @var ArrayCollection Ensemble des notifications à afficher pour cette invitation
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Notifications\Notification", mappedBy="eventInvitation")
+     */
+    private $notifications;
+
 
     /***********************************************************************
      *                      Constructor
@@ -129,6 +136,7 @@ class EventInvitation
     public function __construct()
     {
         $this->moduleInvitations = new ArrayCollection();
+        $this->notifications = new ArrayCollection();
     }
 
 
@@ -236,7 +244,6 @@ class EventInvitation
 
     /**
      * Get event
-     *
      * @return Event
      */
     public function getEvent()
@@ -246,9 +253,7 @@ class EventInvitation
 
     /**
      * Set event
-     *
      * @param Event $event
-     *
      * @return EventInvitation
      */
     public function setEvent(Event $event)
@@ -388,6 +393,37 @@ class EventInvitation
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getNotifications()
+    {
+        return $this->notifications;
+    }
+
+    /**
+     * Add Notification
+     *
+     * @param Notification $notification
+     * @return EventInvitation
+     */
+    public function addNotification(Notification $notification)
+    {
+        $this->notifications[] = $notification;
+        $notification->setEventInvitation($this);
+
+        return $this;
+    }
+
+    /**
+     * Remove Notification
+     * @param Notification $notification
+     */
+    public function removeNotification(Notification $notification)
+    {
+        $this->notifications->removeElement($notification);
+    }
+
+    /**
      * @return mixed
      */
     public function getWallet()
@@ -465,6 +501,16 @@ class EventInvitation
             }
         }
         return null;
+    }
+
+    /**
+     * @return array Les notifications triées par date
+     */
+    public function getSortedNotifications($order = 'Asc')
+    {
+        $notifications = $this->notifications->toArray();
+        uasort($notifications, array(Notification::class, 'compare'.$order));
+        return $notifications;
     }
 
 }
