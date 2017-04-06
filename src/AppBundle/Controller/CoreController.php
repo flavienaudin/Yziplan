@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Form\ActivityDirectory\SearchActivityType;
 use AppBundle\Form\Core\SuggestionType;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
@@ -23,9 +24,11 @@ class CoreController extends Controller
     public function indexAction(Request $request)
     {
         $activities = $this->get('at.manager.directory')->getActivities(6);
+        $searchForm = $this->get('form.factory')->create(SearchActivityType::class);
 
         return $this->render('AppBundle:Core:index.html.twig', array(
             "activities" => $activities,
+            "searchForm" => $searchForm->createView()
         ));
     }
 

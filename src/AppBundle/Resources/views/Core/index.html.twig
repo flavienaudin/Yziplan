@@ -3,6 +3,7 @@
 
 Données d'entrée :
 - activities : liste des activités
+- searchForm : formulaire de recherche d'activité
 #}
 
 {# LAYOUT : une colonne centrale #}
@@ -341,7 +342,41 @@ Données d'entrée :
                             </div>
                         {% endfor %}
                         </div>
-                        <a href="{{ path('directoryIndex') }}" class="btn btn-action bgm-teal btn-lg">{{ "index.section_directory.button"|trans }}</a>
+                        <div class="card z-depth-1">
+                            <div class="card-header">
+                                <h2>{{ "directory.title"|trans }}
+                                    <small>{{ "directory.subtitle"|trans }}</small>
+                                </h2>
+                            </div>
+                            <div class="card-body card-padding-sm">
+                                {{ form_start(searchForm, {'action':path('directoryIndex')}) }}
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-3 col-md-offset-2 col-md-3 col-md-offset-2">
+                                        {{ form_row(searchForm.type, {
+                                            'label_attr': {'class': 'hidden'},
+                                            'attr':{'title':'directory.form.type', 'class':'selectpicker', 'data-live-search':'true'},
+                                            'widget_options':{'fgline':true, 'displayInRow' : true}
+                                        }) }}
+                                    </div>
+                                    <div class="col-sm-6 col-md-3">
+                                        {{ form_row(searchForm.place, {
+                                            'label_attr': {'class': 'hidden'},
+                                            'attr':{'placeholder':'directory.form.place'},
+                                            'widget_options':{'fgline':true, 'displayInRow' : true}
+                                        }) }}
+                                    </div>
+                                    <div class="col-sm-12 col-md-2">
+                                        <div>
+                                            <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                                                <i class="zmdi zmdi-search zmdi-hc-lg"></i> {{ "directory.form.button"|trans }}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {{ form_end(searchForm) }}
+                            </div>
+                        </div>
+                        {#<a href="{{ path('directoryIndex') }}" class="btn btn-action bgm-teal btn-lg">{{ "index.section_directory.button"|trans }}</a>#}
                     </div>
                     <!-- /.col-lg-10 -->
                 </div>
@@ -443,6 +478,22 @@ Données d'entrée :
     </script>
     <script src="{{ asset("bundles/app/js/parallax.js") }}"></script>
     <script src="{{ asset("bundles/app/js/jqcloud.js") }}"></script>
+    <script>
+        {# La réponse doit être sous la forme : "suggestions": [
+            { "value": "United Arab Emirates", "data": "AE" },
+            { "value": "United Kingdom",       "data": "UK" },
+            { "value": "United States",        "data": "US" }
+        ]
+
+        Documenttation : https://www.devbridge.com/sourcery/components/jquery-autocomplete/#}
+        $(document).ready(function () {
+            $('#{{ searchForm.place.vars.id }}').autocomplete({
+                serviceUrl: '{{ path("placeAutocompletion") }}',
+                minChars: 3,
+                deferRequestBy: 1000
+            });
+        })
+    </script>
     <script>
         $('.parallax-window').parallax();
     </script>

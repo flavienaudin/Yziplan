@@ -25,7 +25,7 @@ class DirectoryManager
 
     public function getActivities($number = 15)
     {
-        return $this->entityManager->getRepository(Activity::class)->getLastAddedActivities(15);
+        return $this->entityManager->getRepository(Activity::class)->getLastAddedActivities($number);
     }
 
     public function searchActivities($types, $place)
