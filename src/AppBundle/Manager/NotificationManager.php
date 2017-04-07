@@ -16,6 +16,7 @@ use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Notifications\Notification;
+use AppBundle\Mailer\AppTwigSiwftMailer;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\NotificationTypeEnum;
@@ -25,10 +26,34 @@ class NotificationManager
 {
     /** @var EntityManager */
     private $entityManager;
+    /** @var AppTwigSiwftMailer */
+    private $appTwigSiwftMailer;
 
-    public function __construct(EntityManager $doctrine)
+    /** @var Notification $notification */
+    private $notification;
+
+    public function __construct(EntityManager $doctrine, AppTwigSiwftMailer $appTwigSiwftMailer)
     {
         $this->entityManager = $doctrine;
+        $this->appTwigSiwftMailer = $appTwigSiwftMailer;
+    }
+
+    /**
+     * @return Notification
+     */
+    public function getNotification()
+    {
+        return $this->notification;
+    }
+
+    /**
+     * @param Notification $notification
+     * @return NotificationManager
+     */
+    public function setNotification($notification)
+    {
+        $this->notification = $notification;
+        return $this;
     }
 
     /**
@@ -112,13 +137,13 @@ class NotificationManager
         $data = array(
             "new_comments_number" => 1,
             "subject" => array(
-                'type' => ($subject instanceof Module?'module':'event'),
+                'type' => ($subject instanceof Module ? 'module' : 'event'),
                 'token' => $subject->getToken(),
                 'name' => $subject->getName()
             )
         );
         /** @var Event $event */
-        $event = ($subject instanceof Module?$subject->getEvent():$subject);
+        $event = ($subject instanceof Module ? $subject->getEvent() : $subject);
 
         /** @var EventInvitation $eventInvitation */
         foreach ($event->getEventInvitationByAnswer([EventInvitationAnswer::YES, EventInvitationAnswer::DONT_KNOW, EventInvitationAnswer::NO]) as $eventInvitation) {
@@ -131,6 +156,31 @@ class NotificationManager
                 $this->entityManager->persist($new_module_notification);
             }
         }
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Delete all notifications of EventInvitation
+     * @param EventInvitation $eventInvitation
+     */
+    public function markAllView(EventInvitation $eventInvitation)
+    {
+        /** @var Notification $notification */
+        foreach ($eventInvitation->getNotifications() as $notification) {
+            $this->entityManager->remove($notification);
+        }
+        $eventInvitation->removeAllNotifications();
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Delete a notification of EventInvitation
+     * @param Notification $notification
+     */
+    public function markAsView(Notification $notification)
+    {
+        $notification->getEventInvitation()->removeNotification($notification);
+        $this->entityManager->remove($notification);
         $this->entityManager->flush();
     }
 }

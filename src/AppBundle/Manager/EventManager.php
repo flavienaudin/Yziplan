@@ -13,7 +13,6 @@ use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\EventOpeningHours;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
-use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Event\EventTemplateSettingsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
@@ -88,7 +87,7 @@ class EventManager
     /** @var DiscussionManager */
     private $discussionManager;
 
-    /** @var AppTwigSiwftMailer  */
+    /** @var AppTwigSiwftMailer */
     private $appTwigSiwftMailer;
 
     /** @var NotificationManager */
@@ -528,53 +527,6 @@ class EventManager
                             $moduleDescription['pollModuleOptions']['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule());
                             $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
                         }
-
-//                        if (is_array($notifications)) {
-//                            // Création d'une notification si le module est nouveau depuis la dernière visite
-//                            if ($module->getCreatedAt() > $userEventInvitation->getLastVisitAt()) {
-//                                $new_module_notification = new Notification();
-//                                $new_module_notification->setDate($module->getCreatedAt());
-//                                $new_module_notification->setType(NotificationTypeEnum::ADD_MODULE);
-//                                $creatorNames = "";
-//                                /** @var ModuleInvitation $creator */
-//                                foreach ($module->getCreators() as $creator) {
-//                                    $creatorNames .= (!empty($creatorNames) ? ' ,' : '') . $creator->getDisplayableName(true, true);
-//                                }
-//                                $new_module_notification->setData(array(
-//                                    "subject" => array(
-//                                        'token' => $module->getToken(),
-//                                        'name' => $module->getName()
-//                                    ),
-//                                    "creator_names" => $creatorNames
-//                                ));
-//                                array_push($notifications, $new_module_notification);
-//                            }
-//                            if ($module->getPollModule() != null) {
-//                                /** @var PollProposal $pollProposal */
-//                                foreach ($module->getPollModule()->getValidPollProposal() as $pollProposal) {
-//                                    if ($pollProposal->getCreatedAt() > $userEventInvitation->getLastVisitAt()) {
-//                                        $new_pollproposal_notification = new Notification();
-//                                        $new_pollproposal_notification->setDate($pollProposal->getCreatedAt());
-//                                        $new_pollproposal_notification->setType(NotificationTypeEnum::ADD_POLL_PROPOSAL);
-//                                        $new_pollproposal_notification->setData(array(
-//                                            "subject" => array(
-//                                                'token' => $module->getToken(),
-//                                                'name' => $module->getName()
-//                                            ),
-//                                            "creator_name" => $pollProposal->getCreator()->getDisplayableName(true, true)
-//                                        ));
-//                                        array_push($notifications, $new_pollproposal_notification);
-//                                    }
-//                                }
-//                            }
-//
-//                            // Création d'une notification s'il y a de nouveaux commentaires
-//                            $eventThreadNotif = $this->discussionManager->getNotification($userEventInvitation, $moduleDescription['comments'], $module);
-//                            if ($eventThreadNotif != null) {
-//                                array_push($notifications, $eventThreadNotif);
-//                            }
-//                        }
-
                         $modules[$module->getId()] = $moduleDescription;
                     }
                 }

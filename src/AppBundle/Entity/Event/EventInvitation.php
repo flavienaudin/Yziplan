@@ -424,6 +424,15 @@ class EventInvitation
     }
 
     /**
+     * Remove Notification
+     * @param Notification $notification
+     */
+    public function removeAllNotifications()
+    {
+        $this->notifications->clear();
+    }
+
+    /**
      * @return mixed
      */
     public function getWallet()
@@ -509,7 +518,7 @@ class EventInvitation
     public function getSortedNotifications($order = 'Asc')
     {
         $notifications = $this->notifications->toArray();
-        uasort($notifications, array(Notification::class, 'compare'.$order));
+        uasort($notifications, array(Notification::class, 'compare' . $order));
         return $notifications;
     }
 

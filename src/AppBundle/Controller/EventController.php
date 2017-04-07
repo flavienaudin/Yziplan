@@ -223,10 +223,6 @@ class EventController extends Controller
             $thread = $discussionManager->createCommentableThread($currentEvent);
         }
         $comments = $discussionManager->getCommentsThread($thread);
-//        $eventThreadNotif = $discussionManager->getNotification($userEventInvitation, $comments, $currentEvent);
-//        if ($eventThreadNotif != null) {
-//            array_push($notifications, $eventThreadNotif);
-//        }
 
         ////////////////////////
         // Edition management //
