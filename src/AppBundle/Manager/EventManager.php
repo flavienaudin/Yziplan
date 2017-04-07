@@ -17,7 +17,7 @@ use AppBundle\Form\Event\EventTemplateSettingsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
 use AppBundle\Form\Event\SendMessageType;
-use AppBundle\Mailer\AppTwigSiwftMailer;
+use AppBundle\Mailer\AppTwigSwiftMailer;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
@@ -87,8 +87,8 @@ class EventManager
     /** @var DiscussionManager */
     private $discussionManager;
 
-    /** @var AppTwigSiwftMailer */
-    private $appTwigSiwftMailer;
+    /** @var AppTwigSwiftMailer */
+    private $appTwigSwiftMailer;
 
     /** @var NotificationManager */
     private $notificationManager;
@@ -102,7 +102,7 @@ class EventManager
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, Session $session, AuthorizationCheckerInterface $authorizationChecker, RouterInterface $router,
                                 EngineInterface $templating, TranslatorInterface $translator, FormFactory $formFactory, GenerateursToken $generateurToken, ModuleManager $moduleManager,
                                 PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager, ModuleInvitationManager $moduleInvitationManager,
-                                DiscussionManager $discussionManager, AppTwigSiwftMailer $appTwigSiwftMailer, NotificationManager $notificationManager)
+                                DiscussionManager $discussionManager, AppTwigSwiftMailer $appTwigSwiftMailer, NotificationManager $notificationManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -118,7 +118,7 @@ class EventManager
         $this->eventInvitationManager = $eventInvitationManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
         $this->discussionManager = $discussionManager;
-        $this->appTwigSiwftMailer = $appTwigSiwftMailer;
+        $this->appTwigSwiftMailer = $appTwigSwiftMailer;
         $this->notificationManager = $notificationManager;
     }
 
@@ -440,12 +440,12 @@ class EventManager
 
             $guests = $this->event->getGuests();
             foreach ($guests as $guest) {
-                $this->appTwigSiwftMailer->sendCancellationEmail($guest, $message);
+                $this->appTwigSwiftMailer->sendCancellationEmail($guest, $message);
             }
             $organizers = $this->event->getOrganizers();
             foreach ($organizers as $organizer) {
                 if ($organizer != $userEventInvitation) {
-                    $this->appTwigSiwftMailer->sendCancellationEmail($organizer, $message);
+                    $this->appTwigSwiftMailer->sendCancellationEmail($organizer, $message);
                 }
             }
 

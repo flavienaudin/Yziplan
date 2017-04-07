@@ -74,7 +74,7 @@ line-height: 1.6; background-color: #f6f6f6;">
                                     </tr>
                                     <tr>
                                         <td style="padding: 0 0 20px;">
-                                            <h4>{% if organizerNames is not empty %}{{ organizerNames }}{% else %}{{ "email.organisers"|trans }}{% endif %}</h4>
+                                            <h4>{% if organizerNames is not empty %}{{ organizerNames }}{% else %}{{ "email.signature.organizers"|trans }}{% endif %}</h4>
                                         </td>
                                     </tr>
                                 </table>
@@ -96,6 +96,4 @@ line-height: 1.6; background-color: #f6f6f6;">
     </table>
 
     </body>
-    </html>
-
 {% endspaceless %}{% endblock %}

@@ -160,25 +160,27 @@ services:
 
 # Mailer
   app.mailer.twig_swift:
-    class: AppBundle\Mailer\AppTwigSiwftMailer
+    class: AppBundle\Mailer\AppTwigSwiftMailer
     parent: fos_user.mailer.twig_swift
+    calls:
+      - [loadYziplanFromEmail]
     public: true
 
 # Twig Extenstions
   at.twig_extension.country:
-        class: AppBundle\Twig\CountryTwigExtension
-        public: false
-        tags:
-            - { name: twig.extension }
+      class: AppBundle\Twig\CountryTwigExtension
+      public: false
+      tags:
+          - { name: twig.extension }
 
   at.twig_extension.class:
-          class: AppBundle\Twig\ClassTwigExtension
-          public: false
-          tags:
-              - { name: twig.extension }
+      class: AppBundle\Twig\ClassTwigExtension
+      public: false
+      tags:
+          - { name: twig.extension }
 
 # Gestion retour utilisateur
   at.manager.retour_utilisateur:
-          class: AppBundle\Manager\RetourUtilisateurManager
-          arguments: ['@app.mailer.twig_swift', '%trello.token_or_login%', '%trello.pass%']
+      class: AppBundle\Manager\RetourUtilisateurManager
+      arguments: ['@app.mailer.twig_swift', '%trello.token_or_login%', '%trello.pass%']
 

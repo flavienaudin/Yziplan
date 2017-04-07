@@ -10,8 +10,11 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Entity\Notifications\Notification;
+use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class TestController
@@ -23,23 +26,13 @@ class TestController extends Controller
 {
 
     /**
-     * @Route("/sendInvitation")
+     * @Route("/action")
      */
-    public function sendInvitationEmail()
+    public function testAction()
     {
         if ($this->get('kernel')->getEnvironment() == "dev") {
-            $eventInvitation = $this->get('doctrine')->getRepository(EventInvitation::class)->find(2);
-
-            /*return $this->render("@App/EventInvitation/emails/invitation.html.twig", array(
-                'eventInvitation' => $eventInvitation
-            ));*/
-
-            //$this->get("app.mailer.twig_swift")->sendEventInvitationEmail($eventInvitation, $message);
-            $messages[] = ['eventInvitation'=> $eventInvitation, 'message' => null];
-            $message = "Saut les amis, ca va être sympa cette fête";
-            $messages[] = ['eventInvitation'=> $eventInvitation, 'message' => $message];
-
-            return $this->render("@App/Test/test_sendInvitationEmail.html.twig", ['messages' => $messages]);
+            // Test here
+            return new Response();
         }
         return $this->render("@App/Test/test_sendInvitationEmail.html.twig", ['message' => "MAUVAIS ENVIRONNEMENT"]);
 

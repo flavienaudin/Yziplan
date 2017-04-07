@@ -1,36 +1,33 @@
 {# Données :
 - eventInvitation (EventInvitation) L'invitation de l'invité à qui envoyer l'email
-- message (String|null) Le message personnel des organisateurs
+- notification (Notification) La notification a envoyé
+- triggerer (EventInvitation) L'invité ayant généré la notification
 #}
 
 {% block subject %}
     {% autoescape false %}
-        {{ 'event.cancelled.email.subject'|trans({"%event_name%":eventInvitation.event.name}) }}
+        {{ 'notifications.emails.new_comment.subject'|trans({"%event_name%":eventInvitation.event.name}) }}
     {% endautoescape %}
 {% endblock %}
 {% block body_text %}
-    {% set organizerNames = "" %}
-    {% set organizersInvitations = eventInvitation.event.organizers %}
-    {% for creatorInvitation in organizersInvitations %}
-        {% set organizerNames = organizerNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
-    {% endfor %}
     {% autoescape false %}
-        {{ 'event.cancelled.email.body.hello'|trans({'%guestname%': eventInvitation.displayableName(true, false)}) }}
-        {{ "event.cancelled.email.body.text"|transchoice(organizersInvitations|length, {"%event_name%":eventInvitation.event.name}) }}
-        {% if message is defined and message is not empty %}
-            {{ message|escape }}
+        {{ 'notifications.emails.new_comment.body.hello'|trans({'%username%': eventInvitation.displayableName(true, false)}) }}
+        {% if notification.data.subject.type == 'module' %}
+            {{ 'notifications.emails.new_comment.body.paragraph_module'|trans({"%triggerer%":triggerer.displayableName(true, true), "%subject_name%":notification.data.subject.name}) }}
+        {% else %}
+            {{ 'notifications.emails.new_comment.body.paragraph_event'|trans({"%triggerer%":triggerer.displayableName(true, true)}) }}
         {% endif %}
+        {% if notification.data.message is not empty %}
+            {{ notification.data.message }}
+        {% endif %}
+        {{ 'notifications.emails.new_comment.body.invitation_link'|trans }}
+        {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
+
         {{ "email.salutation"|trans }},
-        {% if organizerNames is not empty %}{{ organizerNames }}{% endif %}
+        {{ "email.signature.yziplan"|trans }}
     {% endautoescape %}
 {% endblock %}
 {% block body_html %}{% spaceless %}
-    {% set organizerNames = "" %}
-    {% set organizersInvitations = eventInvitation.event.organizers %}
-    {% for creatorInvitation in organizersInvitations %}
-        {% set organizerNames = organizerNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
-    {% endfor %}
-
     <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100% !important; height: 100%;
 line-height: 1.6; background-color: #f6f6f6;">
     <table style="background-color: #f6f6f6; width: 100%;">
@@ -50,17 +47,24 @@ line-height: 1.6; background-color: #f6f6f6;">
                                     <tr>
                                         <td style="padding: 0 0 20px;">
                                             <h3 style="font-size: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; margin: 40px 0 0; line-height: 1.2;
-                                        font-weight: 400;">{{ "event.cancelled.email.body.hello"|trans({"%guestname%":eventInvitation.displayableName(true, false)}) }}</h3>
+                                        font-weight: 400;">{{ "notifications.emails.new_comment.body.hello"|trans({"%username%":eventInvitation.displayableName(true, false)}) }}</h3>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style="padding: 0 0 20px;">
-                                            <p>{{ "event.cancelled.email.body.text"|transchoice(organizersInvitations|length, {"%event_name%":eventInvitation.event.name}) }}</p>
-                                            {% if message is defined and message is not empty %}
-                                                <div style="background: #f5f5f5; border: 1px solid #e3e3e3; border-radius: 2px; padding: 0 9px">
-                                                    {{ message|nl2br }}
+                                            {% if notification.data.subject.type == 'module' %}
+                                                {{ 'notifications.emails.new_comment.body.paragraph_module'|trans({"%triggerer%":triggerer.displayableName(true, true), "%subject_name%":notification.data.subject.name}) }}
+                                            {% else %}
+                                                {{ 'notifications.emails.new_comment.body.paragraph_event'|trans({"%triggerer%":triggerer.displayableName(true, true)}) }}
+                                            {% endif %}
+                                            {% if notification.data.message is not empty %}
+                                                <div style="min-height: 20px;padding: 9px;margin-bottom: 20px;background-color: #f5f5f5;border: 1px solid #e3e3e3;border-radius: 2px;
+                                                -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05); box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);">
+                                                    {{ notification.data.message }}
                                                 </div>
                                             {% endif %}
+                                            {{ 'notifications.emails.new_comment.body.invitation_link'|trans }}<br>
+                                            {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
                                         </td>
                                     </tr>
                                     <tr>
@@ -70,7 +74,7 @@ line-height: 1.6; background-color: #f6f6f6;">
                                     </tr>
                                     <tr>
                                         <td style="padding: 0 0 20px;">
-                                            <h4>{% if organizerNames is not empty %}{{ organizerNames }}{% else %}{{ "email.signature.organizers"|trans }}{% endif %}</h4>
+                                            <h4>{{ "email.signature.yziplan"|trans }}</h4>
                                         </td>
                                     </tr>
                                 </table>
@@ -81,7 +85,7 @@ line-height: 1.6; background-color: #f6f6f6;">
                         <table width="100%">
                             <tr>
                                 <td style="padding: 0 0 20px; text-align: center;"><a style="color: #999; font-size: 12px;" href="{{ url("home") }}">{{ "global.project_name"|trans }}
-                                        &nbsp;-&nbsp;{{ url("home") }}</a></td>
+                                        - {{ url("home") }}</a></td>
                             </tr>
                         </table>
                     </div>
@@ -92,6 +96,4 @@ line-height: 1.6; background-color: #f6f6f6;">
     </table>
 
     </body>
-    </html>
-
 {% endspaceless %}{% endblock %}

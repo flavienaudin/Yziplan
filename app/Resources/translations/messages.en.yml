@@ -584,7 +584,14 @@ notifications:
   comment: "%number_new_comments% new comment|%number_new_comments% new comments"
   new_module: "%organizers% added a new poll|%organizers% added a new poll"
   new_pollproposal: "%organizer% added a new poll proposal"
-
+  emails:
+    new_comment:
+      subject: "%event_name% - You received a message"
+      body:
+        hello: "Hello %username%!"
+        paragraph_event: "%triggerer% wrote on the event's thread"
+        paragraph_module: "%triggerer% wrote on the poll's thread \"%subject_name%\":"
+        invitation_link: "Follow the link bellow to go to the event page:"
 
 # Globals
 global:
@@ -700,7 +707,10 @@ day_of_week:
 # Emails
 email:
   salutation: Cordially
-  organisers: The organisers
+  signature:
+    yziplan: Yziplan
+    organizers: The organizers
+  dont_answer_email: Thank you for not answering this email, your answer cannot be treated.
 
 # Modale suggestion :
 suggestion:

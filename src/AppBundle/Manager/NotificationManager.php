@@ -16,7 +16,7 @@ use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Notifications\Notification;
-use AppBundle\Mailer\AppTwigSiwftMailer;
+use AppBundle\Mailer\AppTwigSwiftMailer;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\NotificationTypeEnum;
@@ -26,16 +26,16 @@ class NotificationManager
 {
     /** @var EntityManager */
     private $entityManager;
-    /** @var AppTwigSiwftMailer */
-    private $appTwigSiwftMailer;
+    /** @var AppTwigSwiftMailer */
+    private $appTwigSwiftMailer;
 
     /** @var Notification $notification */
     private $notification;
 
-    public function __construct(EntityManager $doctrine, AppTwigSiwftMailer $appTwigSiwftMailer)
+    public function __construct(EntityManager $doctrine, AppTwigSwiftMailer $appTwigSwiftMailer)
     {
         $this->entityManager = $doctrine;
-        $this->appTwigSiwftMailer = $appTwigSiwftMailer;
+        $this->appTwigSwiftMailer = $appTwigSwiftMailer;
     }
 
     /**
@@ -136,6 +136,7 @@ class NotificationManager
         $new_notification_type = NotificationTypeEnum::POST_COMMENT;
         $data = array(
             "new_comments_number" => 1,
+            "message" => $comment->getBody(),
             "subject" => array(
                 'type' => ($subject instanceof Module ? 'module' : 'event'),
                 'token' => $subject->getToken(),
@@ -154,6 +155,10 @@ class NotificationManager
                 $new_module_notification->setData($data);
                 $eventInvitation->addNotification($new_module_notification);
                 $this->entityManager->persist($new_module_notification);
+
+                // TODO Vérifier les préférences de l'invité en matière de reception de notification par email
+                $this->appTwigSwiftMailer->sendNewCommentNotificationEmail($eventInvitation, $new_module_notification, $creatorEventInvitation);
+
             }
         }
         $this->entityManager->flush();

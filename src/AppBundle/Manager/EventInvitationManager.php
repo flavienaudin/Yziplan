@@ -17,7 +17,7 @@ use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Form\Event\EventInvitationAnswerType;
 use AppBundle\Form\Event\EventInvitationType;
-use AppBundle\Mailer\AppTwigSiwftMailer;
+use AppBundle\Mailer\AppTwigSwiftMailer;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
@@ -60,14 +60,14 @@ class EventInvitationManager
     /** @var  ModuleInvitationManager */
     private $moduleInvitationManager;
 
-    /** @var AppTwigSiwftMailer */
-    private $appTwigSiwftMailer;
+    /** @var AppTwigSwiftMailer */
+    private $appTwigSwiftMailer;
 
     /** @var EventInvitation L'invitation à l'événement en cours de traitement */
     private $eventInvitation;
 
 
-    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, ApplicationUserManager $applicationUserManager, ModuleInvitationManager $moduleInvitationManager, AppTwigSiwftMailer $appTwigSiwftMailer)
+    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, ApplicationUserManager $applicationUserManager, ModuleInvitationManager $moduleInvitationManager, AppTwigSwiftMailer $appTwigSwiftMailer)
     {
         $this->entityManager = $doctrine;
         $this->authorizationChecker = $authorizationChecker;
@@ -76,7 +76,7 @@ class EventInvitationManager
         $this->session = $session;
         $this->applicationUserManager = $applicationUserManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
-        $this->appTwigSiwftMailer = $appTwigSiwftMailer;
+        $this->appTwigSwiftMailer = $appTwigSwiftMailer;
     }
 
     /**
@@ -287,7 +287,7 @@ class EventInvitationManager
                 }
                 try {
                     if ($this->persistEventInvitation()) {
-                        if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
+                        if ($this->appTwigSwiftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
                             $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
                             $this->persistEventInvitation();
                             $results['success'][$email] = $this->eventInvitation;
@@ -317,7 +317,7 @@ class EventInvitationManager
         /** @var EventInvitation $eventInvitation */
         foreach ($eventInvitations as $eventInvitation) {
             $this->eventInvitation = $eventInvitation;
-            if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation)) {
+            if ($this->appTwigSwiftMailer->sendEventInvitationEmail($this->eventInvitation)) {
                 $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
             } else {
                 $failedRecipients[] = $this->eventInvitation->getDisplayableEmail();
@@ -334,7 +334,7 @@ class EventInvitationManager
         /** @var EventInvitation $eventInvitation */
         foreach ($eventInvitations as $eventInvitation) {
             $this->eventInvitation = $eventInvitation;
-            if (!$this->appTwigSiwftMailer->sendMessageEmail($this->eventInvitation, $message)) {
+            if (!$this->appTwigSwiftMailer->sendMessageEmail($this->eventInvitation, $message)) {
                 $failedRecipients[] = $this->eventInvitation;
             }
         }
@@ -471,7 +471,7 @@ class EventInvitationManager
                 }
                 // If an AppUserEmail exists, it can't be associated to AccountUser due to EmailNotBelongToAccountUser constraint
                 $applicationUser->addEventInvitation($this->eventInvitation);
-                $this->appTwigSiwftMailer->sendRecapEventInvitationEmail($this->eventInvitation);
+                $this->appTwigSwiftMailer->sendRecapEventInvitationEmail($this->eventInvitation);
             }
         }
         $this->persistEventInvitation();

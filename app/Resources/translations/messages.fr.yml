@@ -583,7 +583,14 @@ notifications:
   comment: "%number_new_comments% nouveau commentaire|%number_new_comments% nouveaux commentaires"
   new_module: "%organizers% a ajouté un nouveau sondage|%organizers% ont ajouté un nouveau sondage"
   new_pollproposal: "%organizer% a ajouté une nouvel proposition"
-
+  emails:
+    new_comment:
+      subject: "%event_name% - Vous avez reçu un message"
+      body:
+        hello: "Bonjour %username%!"
+        paragraph_event: "%triggerer% a écrit sur l'événement"
+        paragraph_module: "%triggerer% a écrit sur le sondage \"%subject_name%\":"
+        invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
 
 # Globals
 global:
@@ -699,7 +706,10 @@ day_of_week:
 # Emails
 email:
   salutation: Cordialement
-  organisers: Les organisateurs
+  signature:
+    yziplan: Yziplan
+    organizers: Les organisateurs
+  dont_answer_email: Merci de ne pas y répondre à cet e-mail, votre réponse ne pourra être traitée.
 
 # Modale suggestion :
 suggestion:
