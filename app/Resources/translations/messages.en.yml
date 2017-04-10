@@ -588,9 +588,18 @@ notifications:
     new_comment:
       subject: "%event_name% - You received a message"
       body:
-        hello: "Hello %username%!"
         paragraph_event: "%triggerer% wrote on the event's thread"
         paragraph_module: "%triggerer% wrote on the poll's thread \"%subject_name%\":"
+        invitation_link: "Follow the link bellow to go to the event page:"
+    new_module:
+      subject: "%event_name% - New poll"
+      body:
+        paragraph_event: "%triggerer% added a poll \"%subject_name%\""
+        invitation_link: "Follow the link bellow to go to the event page:"
+    new_poll_proposal:
+      subject: "%event_name% - New poll proposal"
+      body:
+        paragraph_event: "%triggerer% added a poll proposal to \"%subject_name%\""
         invitation_link: "Follow the link bellow to go to the event page:"
 
 # Globals
@@ -706,6 +715,7 @@ day_of_week:
 
 # Emails
 email:
+  hello: "Hello %recipient_name%,"
   salutation: Cordially
   signature:
     yziplan: Yziplan

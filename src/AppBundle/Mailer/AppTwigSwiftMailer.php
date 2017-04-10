@@ -11,6 +11,7 @@ namespace AppBundle\Mailer;
 
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Notifications\Notification;
+use AppBundle\Utils\enum\NotificationTypeEnum;
 use FOS\UserBundle\Mailer\TwigSwiftMailer;
 
 
@@ -94,8 +95,7 @@ class AppTwigSwiftMailer extends TwigSwiftMailer
         return true;
     }
 
-
-    public function sendNewCommentNotificationEmail(EventInvitation $eventInvitation, Notification $notification, EventInvitation $triggerer)
+    public function sendNewNotificationEmail(EventInvitation $eventInvitation, Notification $notification, EventInvitation $triggerer)
     {
         if ($eventInvitation->getApplicationUser() != null) {
             if ($eventInvitation->getApplicationUser()->getAccountUser() != null) {
@@ -105,8 +105,23 @@ class AppTwigSwiftMailer extends TwigSwiftMailer
             }
         }
         if (!empty($emailTo)) {
-            $context = array("eventInvitation" => $eventInvitation, 'notification' => $notification, 'triggerer' => $triggerer);
-            $this->sendMessage("@App/Notifications/emails/notification_new_comment_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
+            $context = array(
+                'recipient_name' => $eventInvitation->getDisplayableName(true, false),
+                'eventInvitation' => $eventInvitation,
+                'notification' => $notification,
+                'triggerer' => $triggerer);
+            switch ($notification->getType()) {
+                case NotificationTypeEnum::POST_COMMENT:
+                    $this->sendMessage("@App/Notifications/emails/notification_new_comment_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
+                    break;
+                case NotificationTypeEnum::ADD_MODULE:
+                    $this->sendMessage("@App/Notifications/emails/notification_new_module_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
+                    break;
+                case NotificationTypeEnum::ADD_POLL_PROPOSAL:
+                    $this->sendMessage("@App/Notifications/emails/notification_new_pollProposal_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
+                    break;
+            }
+
             return true;
         }
         return false;

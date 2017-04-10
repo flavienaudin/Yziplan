@@ -77,6 +77,7 @@ class NotificationManager
             "creator_names" => $creatorNames
         );
 
+        // Gestion des notifications
         /** @var ModuleInvitation $moduleInvitation */
         foreach ($module->getModuleInvitations() as $moduleInvitation) {
             $eventInvitation = $moduleInvitation->getEventInvitation();
@@ -87,6 +88,9 @@ class NotificationManager
                 $new_module_notification->setData($data);
                 $eventInvitation->addNotification($new_module_notification);
                 $this->entityManager->persist($new_module_notification);
+
+                // TODO Vérifier les préférences de l'invité en matière de reception de notification par email
+                $this->appTwigSwiftMailer->sendNewNotificationEmail($eventInvitation, $new_module_notification, $creatorEventInvitation);
             }
         }
         $this->entityManager->flush();
@@ -110,16 +114,20 @@ class NotificationManager
             "creator_name" => $creatorName
         );
 
+        // Gestion des notifications
         /** @var ModuleInvitation $moduleInvitation */
         foreach ($module->getModuleInvitations() as $moduleInvitation) {
             $eventInvitation = $moduleInvitation->getEventInvitation();
             if ($eventInvitation !== $creatorEventInvitation && $eventInvitation->getStatus() != EventInvitationStatus::CANCELLED) {
-                $new_module_notification = new Notification();
-                $new_module_notification->setDate($new_notification_date);
-                $new_module_notification->setType($new_notification_type);
-                $new_module_notification->setData($data);
-                $eventInvitation->addNotification($new_module_notification);
-                $this->entityManager->persist($new_module_notification);
+                $new_pollproposal_notification = new Notification();
+                $new_pollproposal_notification->setDate($new_notification_date);
+                $new_pollproposal_notification->setType($new_notification_type);
+                $new_pollproposal_notification->setData($data);
+                $eventInvitation->addNotification($new_pollproposal_notification);
+                $this->entityManager->persist($new_pollproposal_notification);
+
+                // TODO Vérifier les préférences de l'invité en matière de reception de notification par email
+                $this->appTwigSwiftMailer->sendNewNotificationEmail($eventInvitation, $new_pollproposal_notification, $creatorEventInvitation);
             }
         }
         $this->entityManager->flush();
@@ -143,22 +151,22 @@ class NotificationManager
                 'name' => $subject->getName()
             )
         );
+
+        // Gestion des notifications
         /** @var Event $event */
         $event = ($subject instanceof Module ? $subject->getEvent() : $subject);
-
         /** @var EventInvitation $eventInvitation */
         foreach ($event->getEventInvitationByAnswer([EventInvitationAnswer::YES, EventInvitationAnswer::DONT_KNOW, EventInvitationAnswer::NO]) as $eventInvitation) {
             if ($eventInvitation !== $creatorEventInvitation) {
-                $new_module_notification = new Notification();
-                $new_module_notification->setDate($new_notification_date);
-                $new_module_notification->setType($new_notification_type);
-                $new_module_notification->setData($data);
-                $eventInvitation->addNotification($new_module_notification);
-                $this->entityManager->persist($new_module_notification);
+                $new_comment_notification = new Notification();
+                $new_comment_notification->setDate($new_notification_date);
+                $new_comment_notification->setType($new_notification_type);
+                $new_comment_notification->setData($data);
+                $eventInvitation->addNotification($new_comment_notification);
+                $this->entityManager->persist($new_comment_notification);
 
                 // TODO Vérifier les préférences de l'invité en matière de reception de notification par email
-                $this->appTwigSwiftMailer->sendNewCommentNotificationEmail($eventInvitation, $new_module_notification, $creatorEventInvitation);
-
+                $this->appTwigSwiftMailer->sendNewNotificationEmail($eventInvitation, $new_comment_notification, $creatorEventInvitation);
             }
         }
         $this->entityManager->flush();

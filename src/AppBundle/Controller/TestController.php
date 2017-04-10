@@ -9,12 +9,8 @@
 namespace AppBundle\Controller;
 
 
-use AppBundle\Entity\Event\EventInvitation;
-use AppBundle\Entity\Notifications\Notification;
-use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class TestController
@@ -31,10 +27,12 @@ class TestController extends Controller
     public function testAction()
     {
         if ($this->get('kernel')->getEnvironment() == "dev") {
+
             // Test here
-            return new Response();
+
+            return $this->render("@App/Test/testResult.html.twig", []);
         }
-        return $this->render("@App/Test/test_sendInvitationEmail.html.twig", ['message' => "MAUVAIS ENVIRONNEMENT"]);
+        return $this->render("@App/Test/testResult.html.twig", ['error' => "MAUVAIS ENVIRONNEMENT"]);
 
     }
 

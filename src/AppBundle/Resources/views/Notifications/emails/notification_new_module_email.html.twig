@@ -1,0 +1,22 @@
+{% extends ':Email:template_email.html.twig' %}
+
+{# Données :
+- recipient_name (string) Le nom du destinaire
+
+- eventInvitation (EventInvitation) L'invitation de l'invité à qui envoyer l'email
+- notification (Notification) La notification a envoyé
+- triggerer (EventInvitation) L'invité ayant généré la notification
+#}
+
+{% block subject_email %}{{ 'notifications.emails.new_module.subject'|trans({"%event_name%":eventInvitation.event.name}) }}{% endblock %}
+{% block text_body %}
+    {{ 'notifications.emails.new_module.body.paragraph_event'|trans({"%triggerer%":triggerer.displayableName(true, true),"%subject_name%":notification.data.subject.name}) }}
+    {{ 'notifications.emails.new_module.body.invitation_link'|trans }}
+    {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
+{% endblock %}
+
+{% block html_body %}{% spaceless %}
+    {{ 'notifications.emails.new_module.body.paragraph_event'|trans({"%triggerer%":triggerer.displayableName(true, true),"%subject_name%":notification.data.subject.name}) }}<br>
+    {{ 'notifications.emails.new_module.body.invitation_link'|trans }}<br>
+    {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
+{% endspaceless %}{% endblock %}

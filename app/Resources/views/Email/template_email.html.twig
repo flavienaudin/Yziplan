@@ -1,0 +1,87 @@
+{# Template pour l'envoi d'email
+Données :
+- recipient_name (string) Le nom du destinaire
+#}
+
+{% block subject %}{% autoescape false %}{% block subject_email %}{% endblock %}{% endautoescape %}{% endblock %}
+{% block body_text %}
+    {% autoescape false %}
+        {% block text_hello %}
+            {{ "email.hello"|trans({'%recipient_name%':recipient_name}) }}
+        {% endblock text_hello %}
+
+        {% block text_body %}{% endblock text_body %}
+
+        {% block text_salutation %}
+            {{ "email.salutation"|trans }},
+        {% endblock text_salutation %}
+
+        {% block text_signature %}
+            {{ "email.signature.yziplan"|trans }}
+        {% endblock text_signature %}
+
+        {% block text_footer %}
+            {{ "email.dont_answer_email"|trans }}
+            {{ "global.project_name"|trans }} - {{ url("home") }}
+        {% endblock text_footer %}
+    {% endautoescape %}
+{% endblock %}
+{% block body_html %}{% spaceless %}
+    {% block html_pre_body %}{% endblock html_pre_body %}
+    <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100% !important; height: 100%;
+line-height: 1.6; background-color: #f6f6f6;">
+    <table style="background-color: #f6f6f6; width: 100%;">
+        <tr>
+            <td></td>
+            <td style="display: block !important; max-width: 600px !important; margin: 0 auto !important; clear: both !important;" width="600">
+                <div style="max-width: 600px; margin: 0 auto; display: block; padding: 20px;">
+                    <table style="background: #fff; border: 1px solid #e9e9e9; border-radius: 3px;" width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td style="padding: 20px;">
+                                <table style="background: #fff;" width="100%" cellpadding="0" cellspacing="0">
+                                    <tr>
+                                        <td style="background-color: #009688; text-align: center;">
+                                            <h1 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: white; line-height: 1.2; font-weight: 400;">{{ "global.project_name"|trans }}</h1>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0 0 20px;">
+                                            <h3 style="font-size: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; margin: 40px 0 0; line-height: 1.2;
+                                        font-weight: 400;">{% block html_hello %}{{ "email.hello"|trans({'%recipient_name%':recipient_name}) }}{% endblock html_hello %}</h3>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0 0 20px;">
+                                            {% block html_body %}{% endblock html_body %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0 0 5px;">
+                                            {% block html_salutation %}{{ "email.salutation"|trans }},{% endblock html_salutation %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 0 0 20px;">
+                                            <h4>{% block html_signature %}{{ "email.signature.yziplan"|trans }}{% endblock html_signature %}</h4>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                    <div style=" width: 100%; clear: both; color: #999; padding: 20px;">
+                        <table width="100%">
+                            <tr>
+                                <td style="padding: 0 0 20px; text-align: center;">
+                                    <a style="color: #999; font-size: 12px;" href="{{ url("home") }}">{{ "global.project_name"|trans }} - {{ url("home") }}</a><br>
+                                    {{ "email.dont_answer_email"|trans }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+    </body>
+{% endspaceless %}{% endblock %}

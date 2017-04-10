@@ -587,9 +587,18 @@ notifications:
     new_comment:
       subject: "%event_name% - Vous avez reçu un message"
       body:
-        hello: "Bonjour %username%!"
         paragraph_event: "%triggerer% a écrit sur l'événement"
         paragraph_module: "%triggerer% a écrit sur le sondage \"%subject_name%\":"
+        invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
+    new_module:
+      subject: "%event_name% - Nouveau sondage"
+      body:
+        paragraph_event: "%triggerer% a ajouté un sondage \"%subject_name%\""
+        invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
+    new_poll_proposal:
+      subject: "%event_name% - Nouvelle proposition"
+      body:
+        paragraph_event: "%triggerer% a ajouté une proposition au sondage \"%subject_name%\""
         invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
 
 # Globals
@@ -705,6 +714,7 @@ day_of_week:
 
 # Emails
 email:
+  hello: "Bonjour %recipient_name%,"
   salutation: Cordialement
   signature:
     yziplan: Yziplan
