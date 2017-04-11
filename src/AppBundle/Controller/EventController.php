@@ -133,7 +133,7 @@ class EventController extends Controller
             if ($userEventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                 $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans('eventInvitation.message.warning.invitation_cancelled'));
             }
-            
+
             $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
             $eventInvitationForm->handleRequest($request);
             if ($eventInvitationForm->isSubmitted()) {
