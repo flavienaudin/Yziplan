@@ -198,7 +198,9 @@
                 allowEscapeKey: false
             }).then(function () {
                 if (typeof askGuestName === "function") {
-                    askGuestName();
+                    {# On ne demande plus le nom après une duplication pour laisser le temps à l'utilisateur de découvrir la page
+                        // askGuestName();
+                    #}
                 }
             });
             {% endif %}
