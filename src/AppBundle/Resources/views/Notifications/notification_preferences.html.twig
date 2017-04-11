@@ -1,0 +1,28 @@
+{% extends '@App/Notifications/layout_cboxed.html.twig' %}
+
+{# Page de gestion des préférences en matière de reception de notification par email
+
+Données d'entrée :
+- eventInvitation (EventInvitation) L'invitation pour laquel gérer les préférences
+- notificationPreferencesForm (Form) Formulaire de gestion des préférences de notification par email
+#}
+
+{% block title %}{{ parent() }} - {{ "event_invitation_preferences.notification.page.title"|trans }}{% endblock title %}
+
+{% block notifications_page_content %}
+    <div class="row">
+    <div class="col-xs-12 col-xs-p-lr-0">
+        <div class="card z-depth-1">
+            <div class="card-header">
+                <h2>{{ "event_invitation_preferences.notification.page.title"|trans }}
+                    <small>{{ "event_invitation_preferences.notification.page.subtitle"|trans({"%event_name%" : eventInvitation.event.name})}}</small>
+                </h2>
+            </div>
+            <div class="card-body card-padding">
+                {{ include('@App/Notifications/partials/notification_preferences_form.html.twig', {
+                    'eventInvitation':eventInvitation,
+                    'notificationPreferencesForm':notificationPreferencesForm}) }}
+            </div>
+        </div>
+    </div>
+{% endblock notifications_page_content %}

@@ -4,7 +4,7 @@
 
 <ul class="list-group" id="notificationsSidePanel">
     {% for notification in notifications %}
-        {{ include('@App/Notifications/notification_display.html.twig', {'notification':notification}) }}
+        {{ include('@App/Notifications/partials/notification_display.html.twig', {'notification':notification}) }}
     {% endfor %}
     <li id="notification-none" class="list-group-item"><i>{{ "notifications.side_panel.none"|trans }}</i></li>
 </ul>

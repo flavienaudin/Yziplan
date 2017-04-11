@@ -31,6 +31,67 @@ use Symfony\Component\HttpFoundation\Response;
 class NotificationsController extends Controller
 {
     /**
+     * Action pour gérer les préférenes de notification par email d'une invitation
+     *
+     * @Route("/preferences/{token}", name="setEmailNotificationPreferences" )
+     * @ParamConverter("eventInvitation", class="AppBundle:Event\EventInvitation")
+     */
+    public function setEmailNotificationPreferencesAction(EventInvitation $eventInvitation = null, Request $request)
+    {
+        if ($eventInvitation == null) {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access");
+                $data[AppJsonResponse::REDIRECT] = $this->generateUrl('home');
+                return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
+                return $this->redirectToRoute("home");
+            }
+        }
+        $this->denyAccessUnlessGranted(EventInvitationVoter::EDIT, $eventInvitation);
+
+        $eventInvitationManager = $this->get('at.manager.event_invitation');
+        $eventInvitationManager->setEventInvitation($eventInvitation);
+
+        $notificationPreferencesForm = $eventInvitationManager->createNotificationPreferencesForm();
+        $notificationPreferencesForm->handleRequest($request);
+        if ($notificationPreferencesForm->isSubmitted()) {
+            if ($request->isXmlHttpRequest()) {
+                if ($notificationPreferencesForm->isValid()) {
+                    $eventInvitationManager->treatNotificationPreferencesForm($notificationPreferencesForm);
+                    $notificationPreferencesForm = $eventInvitationManager->createNotificationPreferencesForm();
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('global.success.data_saved');
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#notificationPreferences_formContainer'] =
+                        $this->renderView('@App/Notifications/partials/notification_preferences_form.html.twig', array(
+                            'eventInvitation' => $eventInvitation,
+                            'notificationPreferencesForm' => $notificationPreferencesForm->createView()
+                        ));
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#notificationPreferences_formContainer'] =
+                        $this->renderView('@App/Notifications/partials/notification_preferences_form.html.twig', array(
+                            'eventInvitation' => $eventInvitation,
+                            'notificationPreferencesForm' => $notificationPreferencesForm->createView()
+                        ));
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                }
+            } else {
+                if ($notificationPreferencesForm->isValid()) {
+                    $eventInvitationManager->treatNotificationPreferencesForm($notificationPreferencesForm);
+
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans('global.success.data_saved'));
+                    return $this->redirectToRoute('setEmailNotificationPreferences', array('token' => $eventInvitation->getToken()));
+                }
+            }
+        }
+        return $this->render('@App/Notifications/notification_preferences.html.twig', array(
+            'eventInvitation' => $eventInvitation,
+            'notificationPreferencesForm' => $notificationPreferencesForm->createView()
+        ));
+    }
+
+    /**
      * Action pour mettre a jour la date de dernière visit d'une invitation
      *
      * @Route("/visited/{token}", name="updateLastVisitAtEventInvitation" )

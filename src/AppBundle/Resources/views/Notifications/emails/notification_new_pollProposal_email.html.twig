@@ -8,15 +8,25 @@
 - triggerer (EventInvitation) L'invité ayant généré la notification
 #}
 
-{% block subject_email %}{{ 'notifications.emails.new_poll_proposal.subject'|trans({"%event_name%":eventInvitation.event.name}) }}{% endblock %}
+{% block subject_email %}{{ 'notifications.emails.new_poll_proposal.subject'|trans({"%event_name%":eventInvitation.event.name, "%subject_name%":notification.data.subject.name}) }}{% endblock %}
 {% block text_body %}
     {{ 'notifications.emails.new_poll_proposal.body.paragraph_event'|trans({"%triggerer%":triggerer.displayableName(true, true),"%subject_name%":notification.data.subject.name}) }}
-    {{ 'notifications.emails.new_poll_proposal.body.invitation_link'|trans }}
+    {{ 'notifications.emails.common.invitation_link'|trans }}
     {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
 {% endblock %}
+{% block text_footer %}
+    {{ parent() }}
+    {{ "notifications.emails.common.preferences_link"|trans }}
+    {{ url('setEmailNotificationPreferences', {'token':eventInvitation.token}) }}
+{% endblock text_footer %}
 
 {% block html_body %}{% spaceless %}
-    {{ 'notifications.emails.new_poll_proposal.body.paragraph_event'|trans({"%triggerer%":triggerer.displayableName(true, true),"%subject_name%":notification.data.subject.name}) }}<br>
-    {{ 'notifications.emails.new_poll_proposal.body.invitation_link'|trans }}<br>
+    <p>{{ 'notifications.emails.new_poll_proposal.body.paragraph_event'|trans({"%triggerer%":triggerer.displayableName(true, true),"%subject_name%":notification.data.subject.name}) }}</p>
+    {{ 'notifications.emails.common.invitation_link'|trans }}<br>
     {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
 {% endspaceless %}{% endblock %}
+{% block html_footer %}
+    {{ parent() }}
+    {{ "notifications.emails.common.preferences_link"|trans }}
+    {{ url('setEmailNotificationPreferences', {'token':eventInvitation.token}) }}
+{% endblock html_footer %}

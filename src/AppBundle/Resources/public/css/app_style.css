@@ -139,6 +139,7 @@
     background-color: #000000;
     opacity: 0.5;
     display: block;
+    pointer-events: none;
 }
 
 /*---------------------------------
@@ -740,6 +741,10 @@ label.required:after {
     content: " *";
 }
 
+label.control-label {
+    margin-right: 5px;
+}
+
 .ismobile .readonly-onmobile {
     background-color: white !important;
 }
@@ -984,6 +989,10 @@ label.required:after {
 /*---------------------------------
     User select
 ---------------------------------*/
+
+.bootstrap-select{
+    max-width: 350px;
+}
 
 .bootstrap-select.btn-group .btn .filter-option {
     display: inline-block;

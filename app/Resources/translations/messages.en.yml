@@ -395,6 +395,29 @@ eventInvitation:
         hello: "Hi %username%!"
         paragraph: "You participate to the organization of event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
 
+event_invitation_preferences:
+  notification:
+    page:
+      title: "Email notification preferences"
+      subtitle: "About the event \"%event_name%\" to which you are invited"
+      paragraphe:
+        contact_email: "Your email contact: %contact_name% %email%"
+        frequency_management: "Manage the frequency of emails warning you about participation on this event"
+        type_management: "Choose the notifications which you wish to receive"
+    form:
+      notif_email_frequency:
+        label: "Frequency of emails"
+        placeholder: "Frequency of emails"
+      notif_new_comment:
+        label: "When a comment is posted"
+        placeholder: "When a comment is posted"
+      notif_new_module:
+        label: "When a poll is created"
+        placeholder: "When a poll is created"
+      notif_new_pollProposal:
+        label: "When a proposal is added to a poll"
+        placeholder: "When a proposal is added to a poll"
+
 invitations_list:
   display:
     title: Guests list
@@ -585,22 +608,22 @@ notifications:
   new_module: "%organizers% added a new poll|%organizers% added a new poll"
   new_pollproposal: "%organizer% added a new poll proposal"
   emails:
+    common:
+      invitation_link: "Follow the link bellow to go to the event page:"
+      preferences_link: "You receive this notification because you subscribe to it. Follow the link below to unsubscribe:"
     new_comment:
       subject: "%event_name% - You received a message"
       body:
         paragraph_event: "%triggerer% wrote on the event's thread"
         paragraph_module: "%triggerer% wrote on the poll's thread \"%subject_name%\":"
-        invitation_link: "Follow the link bellow to go to the event page:"
     new_module:
       subject: "%event_name% - New poll"
       body:
         paragraph_event: "%triggerer% added a poll \"%subject_name%\""
-        invitation_link: "Follow the link bellow to go to the event page:"
     new_poll_proposal:
-      subject: "%event_name% - New poll proposal"
+      subject: "%event_name% : %subject_name% - New poll proposal"
       body:
         paragraph_event: "%triggerer% added a poll proposal to \"%subject_name%\""
-        invitation_link: "Follow the link bellow to go to the event page:"
 
 # Globals
 global:
@@ -713,6 +736,12 @@ day_of_week:
   6_saturday: Saturday
   7_sunday: sunday
 
+notification_frequency:
+  never: Never
+  each_notification: Each notification
+  daily: Once a day
+  weekly: Once a week
+
 # Emails
 email:
   hello: "Hello %recipient_name%,"
@@ -746,7 +775,7 @@ suggestion:
 index:
   header:
     title: Yziplan
-    subtitle: Get organised with your friends.
+    subtitle: Get organised with your friends
     button: Let's go!
   about:
     title: To get organised it's Yzi!

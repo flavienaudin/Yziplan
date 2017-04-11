@@ -8,21 +8,25 @@
 - triggerer (EventInvitation) L'invité ayant généré la notification
 #}
 
-
-
 {% block subject_email %}{{ 'notifications.emails.new_comment.subject'|trans({"%event_name%":eventInvitation.event.name}) }}{% endblock %}
+
 {% block text_body %}
     {% if notification.data.subject.type == 'module' %}
-{{ 'notifications.emails.new_comment.body.paragraph_module'|trans({"%triggerer%":triggerer.displayableName(true, true), "%subject_name%":notification.data.subject.name}) }}
+        {{ 'notifications.emails.new_comment.body.paragraph_module'|trans({"%triggerer%":triggerer.displayableName(true, true), "%subject_name%":notification.data.subject.name}) }}
     {% else %}
-{{ 'notifications.emails.new_comment.body.paragraph_event'|trans({"%triggerer%":triggerer.displayableName(true, true)}) }}
+        {{ 'notifications.emails.new_comment.body.paragraph_event'|trans({"%triggerer%":triggerer.displayableName(true, true)}) }}
     {% endif %}
     {% if notification.data.message is not empty %}
-{{ notification.data.message }}
+        {{ notification.data.message }}
     {% endif %}
-{{ 'notifications.emails.new_comment.body.invitation_link'|trans }}
-{{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
+    {{ 'notifications.emails.common.invitation_link'|trans }}
+    {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
 {% endblock %}
+{% block text_footer %}
+    {{ parent() }}
+    {{ "notifications.emails.common.preferences_link"|trans }}
+    {{ url('setEmailNotificationPreferences', {'token':eventInvitation.token}) }}
+{% endblock text_footer %}
 
 {% block html_body %}{% spaceless %}
     {% if notification.data.subject.type == 'module' %}
@@ -36,6 +40,11 @@
             {{ notification.data.message }}
         </div>
     {% endif %}
-    {{ 'notifications.emails.new_comment.body.invitation_link'|trans }}<br>
+    {{ 'notifications.emails.common.invitation_link'|trans }}<br>
     {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
 {% endspaceless %}{% endblock %}
+{% block html_footer %}
+    {{ parent() }}
+    {{ "notifications.emails.common.preferences_link"|trans }}
+    {{ url('setEmailNotificationPreferences', {'token':eventInvitation.token}) }}
+{% endblock html_footer %}

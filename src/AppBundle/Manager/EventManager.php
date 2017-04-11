@@ -477,6 +477,7 @@ class EventManager
 
         // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator).
         $this->moduleInvitationManager->initializeModuleInvitationsForEvent($this->event, $module);
+
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
 

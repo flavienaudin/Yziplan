@@ -394,6 +394,29 @@ eventInvitation:
         hello: "Bonjour %username%!"
         paragraph: "Vous participez à l'organisation de l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier votre participation, utilisez le lien ci-dessous :"
 
+event_invitation_preferences:
+  notification:
+    page:
+      title: "Préférences de notification par email"
+      subtitle: "Concernant l'événement \"%event_name%\" auquel vous êtes conviés"
+      paragraphe:
+        contact_email: "Votre email de contact : %contact_name% %email%"
+        frequency_management: "Gérez la fréquence des emails vous avertissant des participation sur l'événement"
+        type_management: "Choisissez les notifications que vous souhaitez recevoir :"
+    form:
+      notif_email_frequency:
+        label: "Fréquence des emails"
+        placeholder: "Fréquence des emails"
+      notif_new_comment:
+        label: "Quand un commentaire est posté"
+        placeholder: "Quand un commentaire est posté"
+      notif_new_module:
+        label: "Quand un sondage est créé"
+        placeholder: "Quand un sondage est créé"
+      notif_new_pollProposal:
+        label: "Quand une proposition est ajoutée à un sondage"
+        placeholder: "Quand une proposition est ajoutée à un sondage"
+
 invitations_list:
   display:
     title: Liste des invités
@@ -584,22 +607,22 @@ notifications:
   new_module: "%organizers% a ajouté un nouveau sondage|%organizers% ont ajouté un nouveau sondage"
   new_pollproposal: "%organizer% a ajouté une nouvel proposition"
   emails:
+    common:
+      invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
+      preferences_link: "Vous recevez cette notification car vous y êtes abonnés. Suivez-le lien ci-dessous pour vous désinscrire:"
     new_comment:
       subject: "%event_name% - Vous avez reçu un message"
       body:
         paragraph_event: "%triggerer% a écrit sur l'événement"
         paragraph_module: "%triggerer% a écrit sur le sondage \"%subject_name%\":"
-        invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
     new_module:
       subject: "%event_name% - Nouveau sondage"
       body:
         paragraph_event: "%triggerer% a ajouté un sondage \"%subject_name%\""
-        invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
     new_poll_proposal:
-      subject: "%event_name% - Nouvelle proposition"
+      subject: "%event_name% : %subject_name% - Nouvelle proposition"
       body:
         paragraph_event: "%triggerer% a ajouté une proposition au sondage \"%subject_name%\""
-        invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
 
 # Globals
 global:
@@ -712,6 +735,12 @@ day_of_week:
   6_saturday: Samedi
   7_sunday: Dimanche
 
+notification_frequency:
+  never: Jamais
+  each_notification: A chaque notification
+  daily: Une fois par jour
+  weekly: Une fois par semaine
+
 # Emails
 email:
   hello: "Bonjour %recipient_name%,"
@@ -745,7 +774,7 @@ suggestion:
 index:
   header:
     title: Yziplan
-    subtitle: Organisez-vous entre amis.
+    subtitle: Organisez-vous entre amis
     button: C'est parti!
   about:
     title: Pour s'organiser c'est Yzi!

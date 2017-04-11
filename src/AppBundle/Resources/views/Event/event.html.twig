@@ -45,7 +45,7 @@
     {% endblock %}
 
     {% block notifications_side_panel_content %}
-        {{ include('@App/Notifications/notifications_side_panel.html.twig', {'notifications':notifications}) }}
+        {{ include('@App/Notifications/partials/notifications_side_panel.html.twig', {'notifications':notifications}) }}
     {% endblock notifications_side_panel_content %}
 {% endif %}
 

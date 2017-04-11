@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Event;
 
+use AppBundle\Entity\Notifications\EventInvitationPreferences;
 use AppBundle\Entity\Notifications\Notification;
 use AppBundle\Entity\Payment\Wallet;
 use AppBundle\Entity\User\ApplicationUser;
@@ -128,6 +129,13 @@ class EventInvitation
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Notifications\Notification", mappedBy="eventInvitation")
      */
     private $notifications;
+
+    /**
+     * @var EventInvitationPreferences
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Notifications\EventInvitationPreferences", inversedBy="eventInvitation", cascade={"persist"})
+     * @ORM\JoinColumn(name="event_invitation_preferences", referencedColumnName="id", nullable=true)
+     */
+    private $eventInvitationPreferences;
 
 
     /***********************************************************************
@@ -447,6 +455,27 @@ class EventInvitation
     public function setWallet(Wallet $wallet)
     {
         $this->wallet = $wallet;
+        return $this;
+    }
+
+    /**
+     * @return EventInvitationPreferences
+     */
+    public function getEventInvitationPreferences()
+    {
+        if($this->eventInvitationPreferences == null){
+            $this->setEventInvitationPreferences(new EventInvitationPreferences());
+        }
+        return $this->eventInvitationPreferences;
+    }
+
+    /**
+     * @param EventInvitationPreferences $eventInvitationPreferences
+     * @return EventInvitation
+     */
+    public function setEventInvitationPreferences($eventInvitationPreferences)
+    {
+        $this->eventInvitationPreferences = $eventInvitationPreferences;
         return $this;
     }
 

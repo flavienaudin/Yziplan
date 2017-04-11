@@ -97,6 +97,7 @@ doctrine:
             enum_payment_transactiontrigger: AppBundle\Utils\enum\TransactionTrigger
             enum_dayofweek: AppBundle\Utils\enum\DayOfWeek
             enum_notification_type: AppBundle\Utils\enum\NotificationTypeEnum
+            enum_notification_frequency: AppBundle\Utils\enum\NotificationFrequencyEnum
         connections:
             default:
                 driver:   pdo_mysql

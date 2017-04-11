@@ -26,6 +26,7 @@ Données :
         {% endblock text_footer %}
     {% endautoescape %}
 {% endblock %}
+
 {% block body_html %}{% spaceless %}
     {% block html_pre_body %}{% endblock html_pre_body %}
     <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100% !important; height: 100%;
@@ -73,8 +74,11 @@ line-height: 1.6; background-color: #f6f6f6;">
                         <table width="100%">
                             <tr>
                                 <td style="padding: 0 0 20px; text-align: center;">
-                                    <a style="color: #999; font-size: 12px;" href="{{ url("home") }}">{{ "global.project_name"|trans }} - {{ url("home") }}</a><br>
-                                    {{ "email.dont_answer_email"|trans }}</td>
+                                    {% block html_footer %}
+                                        <a style="color: #999; font-size: 12px;" href="{{ url("home") }}">{{ "global.project_name"|trans }} - {{ url("home") }}</a><br>
+                                        {{ "email.dont_answer_email"|trans }}
+                                    {% endblock html_footer %}
+                                </td>
                             </tr>
                         </table>
                     </div>
