@@ -24,7 +24,7 @@ Données d'entrée :
     <div class="wcl-list {{ depth == 0? "collapse" }}" {% if depth == 0 %}id="eventCommentListCollapse_{{ thread.id }}"{% endif %} }}>
         {% for commentinfo in comments if commentinfo.comment is not fos_comment_in_state(constant('FOS\\CommentBundle\\Model\\CommentInterface::STATE_DELETED')) %}
             {% set nb_comments = nb_comments + 1 %}
-            {% set new_comment = new_comment or userEventInvitation.lastVisitAt < commentinfo.comment.createdAt %}
+            {% set new_comment = new_comment or userEventInvitation.lastVisitAt is null or userEventInvitation.lastVisitAt < commentinfo.comment.createdAt %}
             {% include "FOSCommentBundle:Thread:comment.html.twig" with { "children": commentinfo.children, "comment": commentinfo.comment, "depth": depth, "view": view, 'userEventInvitation':userEventInvitation } %}
         {% endfor %}
     </div>
