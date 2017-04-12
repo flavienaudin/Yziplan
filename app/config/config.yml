@@ -143,16 +143,26 @@ vich_uploader:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: "%mailer_transport%"
-    encryption: "%mailer_encryption%"
-    host:      "%mailer_host%"
-    port:      "%mailer_port%"
-    username:  "%mailer_user%"
-    password:  "%mailer_password%"
-    spool:     { type: memory }
-#    spool:
-#        type:                 file
-#        path:                 '%kernel.cache_dir%/swiftmailer/spool'
+    default_mailer: default_mailer
+    mailers:
+        default_mailer:
+            transport: "%mailer_transport%"
+            encryption: "%mailer_encryption%"
+            host:      "%mailer_host%"
+            port:      "%mailer_port%"
+            username:  "%mailer_user%"
+            password:  "%mailer_password%"
+            spool:     { type: memory }
+        spool_file_quickly:
+            transport: "%mailer_transport%"
+            encryption: "%mailer_encryption%"
+            host:      "%mailer_host%"
+            port:      "%mailer_port%"
+            username:  "%mailer_user%"
+            password:  "%mailer_password%"
+            spool:
+                type: file
+                path: '%kernel.cache_dir%/swiftmailer/spool'
 
 # FOS_User
 fos_user:

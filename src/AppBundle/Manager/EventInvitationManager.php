@@ -19,7 +19,7 @@ use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Form\Event\EventInvitationAnswerType;
 use AppBundle\Form\Event\EventInvitationType;
 use AppBundle\Form\Notifications\EventInvitationNotificationPreferencesType;
-use AppBundle\Mailer\AppTwigSwiftMailer;
+use AppBundle\Mailer\AppMailer;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
@@ -61,14 +61,14 @@ class EventInvitationManager
     /** @var  ModuleInvitationManager */
     private $moduleInvitationManager;
 
-    /** @var AppTwigSwiftMailer */
-    private $appTwigSwiftMailer;
+    /** @var AppMailer */
+    private $appMailer;
 
     /** @var EventInvitation L'invitation à l'événement en cours de traitement */
     private $eventInvitation;
 
 
-    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, ApplicationUserManager $applicationUserManager, ModuleInvitationManager $moduleInvitationManager, AppTwigSwiftMailer $appTwigSwiftMailer)
+    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, ApplicationUserManager $applicationUserManager, ModuleInvitationManager $moduleInvitationManager, AppMailer $appMailer)
     {
         $this->entityManager = $doctrine;
         $this->authorizationChecker = $authorizationChecker;
@@ -77,7 +77,7 @@ class EventInvitationManager
         $this->session = $session;
         $this->applicationUserManager = $applicationUserManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
-        $this->appTwigSwiftMailer = $appTwigSwiftMailer;
+        $this->appMailer = $appMailer;
     }
 
     /**
@@ -264,7 +264,7 @@ class EventInvitationManager
                 }
                 try {
                     if ($this->persistEventInvitation()) {
-                        if ($this->appTwigSwiftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
+                        if ($this->appMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
                             $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
                             $this->persistEventInvitation();
                             $results['success'][$email] = $this->eventInvitation;
@@ -318,7 +318,7 @@ class EventInvitationManager
         /** @var EventInvitation $eventInvitation */
         foreach ($eventInvitations as $eventInvitation) {
             $this->eventInvitation = $eventInvitation;
-            if ($this->appTwigSwiftMailer->sendEventInvitationEmail($this->eventInvitation)) {
+            if ($this->appMailer->sendEventInvitationEmail($this->eventInvitation)) {
                 $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
             } else {
                 $failedRecipients[] = $this->eventInvitation->getDisplayableEmail();
@@ -335,7 +335,7 @@ class EventInvitationManager
         /** @var EventInvitation $eventInvitation */
         foreach ($eventInvitations as $eventInvitation) {
             $this->eventInvitation = $eventInvitation;
-            if (!$this->appTwigSwiftMailer->sendMessageEmail($this->eventInvitation, $message)) {
+            if (!$this->appMailer->sendMessageEmail($this->eventInvitation, $message)) {
                 $failedRecipients[] = $this->eventInvitation;
             }
         }
@@ -472,7 +472,7 @@ class EventInvitationManager
                 }
                 // If an AppUserEmail exists, it can't be associated to AccountUser due to EmailNotBelongToAccountUser constraint
                 $applicationUser->addEventInvitation($this->eventInvitation);
-                $this->appTwigSwiftMailer->sendRecapEventInvitationEmail($this->eventInvitation);
+                $this->appMailer->sendRecapEventInvitationEmail($this->eventInvitation);
             }
         }
         $this->persistEventInvitation();

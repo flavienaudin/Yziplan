@@ -7,7 +7,7 @@ Données :
 {% block body_text %}
     {% autoescape false %}
         {% block text_hello %}
-            {{ "email.hello"|trans({'%recipient_name%':recipient_name}) }}
+            {{ "email.hello"|trans({'%recipient_name%':(recipient_name is defined?recipient_name:'')}) }}
         {% endblock text_hello %}
 
         {% block text_body %}{% endblock text_body %}
@@ -48,7 +48,7 @@ line-height: 1.6; background-color: #f6f6f6;">
                                     <tr>
                                         <td style="padding: 0 0 20px;">
                                             <h3 style="font-size: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; margin: 40px 0 0; line-height: 1.2;
-                                        font-weight: 400;">{% block html_hello %}{{ "email.hello"|trans({'%recipient_name%':recipient_name}) }}{% endblock html_hello %}</h3>
+                                        font-weight: 400;">{% block html_hello %}{{ "email.hello"|trans({'%recipient_name%':(recipient_name is defined?recipient_name:'')}) }}{% endblock html_hello %}</h3>
                                         </td>
                                     </tr>
                                     <tr>
