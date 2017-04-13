@@ -90,8 +90,9 @@ class InscriptionListener implements EventSubscriberInterface
             $user->setPasswordKnown(true);
             /** @var AppUserEmail $appUserEmail */
             $appUserEmail = $this->applicationUserManager->findAppUserEmailByEmail($user->getEmail());
-            if ($appUserEmail != null && $appUserEmail->getApplicationUser()->getAccountUser() != $user) {
+            if ($appUserEmail != null && $appUserEmail->getApplicationUser()->getAccountUser() !== $user) {
                 $appUserEmail->setUseToReceiveEmail(true);
+                $appUserEmail->setConfirmationToken(null);
                 $user->getApplicationUser()->addAppUserEmail($appUserEmail);
             }
         }

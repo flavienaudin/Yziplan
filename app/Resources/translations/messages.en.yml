@@ -82,14 +82,11 @@ appuseremail:
       not_found: The associated email with given token does not exist.
       wrong_user: The email is not associated with this account.
     confirmationAppUserEmail_email:
-      subject: Yziplan Confirmation - Email association
+      subject: Yziplan - Email association confirmation
       message: |
         Hello %username%!
 
         To finish associating the email "%email%" - please visit %confirmationUrl%
-
-        Regards,
-        The Team.
   edit:
     message:
       error: Impossible to edit this association.
@@ -749,7 +746,7 @@ email:
   signature:
     yziplan: Yziplan
     organizers: The organizers
-  dont_answer_email: Thank you for not answering this email, your answer cannot be treated.
+  dont_answer_email: Thank you for not answering this automatic email, your answer cannot be treated.
 
 # Modale suggestion :
 suggestion:

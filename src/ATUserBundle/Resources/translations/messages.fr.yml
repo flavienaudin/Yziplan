@@ -29,15 +29,13 @@ register:
       meta_title: E-mail envoyé
       title: E-mail envoyé
   lossAppUserEmail_email:
-    subject: Yziplan Avertissement - Inscription à partir d''une adresse e-mail que vous possédez
+    subject: Yziplan - Attention! Inscription à partir d''une adresse e-mail que vous possédez
     message: |
         Bonjour %username%!
 
         Nous avons enregistré un inscription avec l'adresse "%email%" que vous avez attachés à votre compte. Cet e-mail va être transféré au nouveau compte.
         Si vous n'êtes pas à l'initiative de cette inscription, vérifiez immédiatement la boîte e-mail correspondante et annulez la demande.
 
-        Cordialement,
-        L'équipe
 confirmed:
   page:
     meta_title: Confirmation
@@ -62,6 +60,7 @@ resetting:
       meta_title: Initialisation de mon mot de passe
       title: Initialisation de mon mot de passe
   request:
+    invalid_username: Nom d'utilisateur ou e-mail invalide
     page:
       meta_title: Mot de passe oublié
       title: Mot de passe oublié

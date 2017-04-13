@@ -5,26 +5,32 @@ Données :
 
 {% block subject %}{% autoescape false %}{% block subject_email %}{% endblock %}{% endautoescape %}{% endblock %}
 {% block body_text %}
-    {% autoescape false %}
-        {% block text_hello %}
+    {% block text_hello %}
+        {%- autoescape false -%}
             {{ "email.hello"|trans({'%recipient_name%':(recipient_name is defined?recipient_name:'')}) }}
-        {% endblock text_hello %}
+        {%- endautoescape -%}
+    {% endblock text_hello %}
 
-        {% block text_body %}{% endblock text_body %}
+    {% block text_body %}{% endblock text_body %}
 
-        {% block text_salutation %}
+    {% block text_salutation %}
+        {%- autoescape false -%}
             {{ "email.salutation"|trans }},
-        {% endblock text_salutation %}
+        {%- endautoescape -%}
+    {% endblock text_salutation %}
 
-        {% block text_signature %}
+    {% block text_signature %}
+        {%- autoescape false -%}
             {{ "email.signature.yziplan"|trans }}
-        {% endblock text_signature %}
+        {%- endautoescape -%}
+    {% endblock text_signature %}
 
-        {% block text_footer %}
+    {% block text_footer %}
+        {%- autoescape false -%}
             {{ "email.dont_answer_email"|trans }}
             {{ "global.project_name"|trans }} - {{ url("home") }}
-        {% endblock text_footer %}
-    {% endautoescape %}
+        {%- endautoescape -%}
+    {% endblock text_footer %}
 {% endblock %}
 
 {% block body_html %}{% spaceless %}
@@ -47,23 +53,13 @@ line-height: 1.6; background-color: #f6f6f6;">
                                     </tr>
                                     <tr>
                                         <td style="padding: 0 0 20px;">
-                                            <h3 style="font-size: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; margin: 40px 0 0; line-height: 1.2;
-                                        font-weight: 400;">{% block html_hello %}{{ "email.hello"|trans({'%recipient_name%':(recipient_name is defined?recipient_name:'')}) }}{% endblock html_hello %}</h3>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 0 0 20px;">
+                                            {% block html_hello %}<h3 style="font-size: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; margin: 40px 0 0; line-height: 1.2;
+                                        font-weight: 400;">{{ "email.hello"|trans({'%recipient_name%':(recipient_name is defined?recipient_name:'')}) }}</h3>{% endblock html_hello %}
+                                            <div>
                                             {% block html_body %}{% endblock html_body %}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 0 0 5px;">
-                                            {% block html_salutation %}{{ "email.salutation"|trans }},{% endblock html_salutation %}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 0 0 20px;">
-                                            <h4>{% block html_signature %}{{ "email.signature.yziplan"|trans }}{% endblock html_signature %}</h4>
+                                            </div>
+                                            <p style="padding-top: 10px">{% block html_salutation %}{{ "email.salutation"|trans }},{% endblock html_salutation %}</p>
+                                            {% block html_signature %}<h4>{{ "email.signature.yziplan"|trans }}</h4>{% endblock html_signature %}
                                         </td>
                                     </tr>
                                 </table>

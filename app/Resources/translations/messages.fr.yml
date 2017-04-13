@@ -82,14 +82,11 @@ appuseremail:
       not_found: L'e-mail associé avec le token donné n'existe pas.
       wrong_user: L'e-mail n'est pas associé à ce compte.
     confirmationAppUserEmail_email:
-      subject: Yziplan Confirmation - Association d'un e-mail
+      subject: Yziplan - Confirmation de l'association d'un e-mail
       message: |
         Bonjour %username% !
 
         Pour valider l'association de l'email %email%, merci de vous rendre sur %confirmationUrl%
-
-        Cordialement,
-        L'équipé Yziplan.
   edit:
     message:
       error: Impossible de modifier cette association.
@@ -748,7 +745,7 @@ email:
   signature:
     yziplan: Yziplan
     organizers: Les organisateurs
-  dont_answer_email: Merci de ne pas y répondre à cet e-mail, votre réponse ne pourra être traitée.
+  dont_answer_email: Merci de ne pas répondre à cet e-mail automatique, votre réponse ne pourra être traitée.
 
 # Modale suggestion :
 suggestion:
