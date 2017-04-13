@@ -117,7 +117,12 @@ class AppMailer
         $this->sendMessage("@ATUser/Registration/email_confirmationAppUserEmail.txt.twig", $context, $this->parameters['from_email']['confirmation'], $appUserEmail->getEmail());
     }
 
-
+    /**
+     * Envoi d'un e-mail d'invitation à un événement
+     * @param EventInvitation $eventInvitation
+     * @param string|null $message
+     * @return bool
+     */
     public function sendEventInvitationEmail(EventInvitation $eventInvitation, $message = null)
     {
         if ($eventInvitation->getApplicationUser()->getAccountUser() != null) {
@@ -143,6 +148,11 @@ class AppMailer
         return false;
     }
 
+    /**
+     * @param EventInvitation $eventInvitation
+     * @param null $message
+     * @return bool
+     */
     public function sendCancellationEmail(EventInvitation $eventInvitation, $message = null)
     {
         if ($eventInvitation->getApplicationUser() != null) {
@@ -153,7 +163,19 @@ class AppMailer
             }
         }
         if (!empty($emailTo)) {
-            $context = array("eventInvitation" => $eventInvitation, 'message' => $message);
+
+            $organizerNames = '';
+            /** @var EventInvitation $organizer */
+            foreach ($eventInvitation->getEvent()->getOrganizers() as $organizer) {
+                $organizerNames .= (!empty($organizerNames) ? ', ' : '') . $organizer->getDisplayableName(true, true);
+            }
+            $context = array(
+                "recipient_name" => $eventInvitation->getDisplayableName(true, false),
+                "eventInvitation" => $eventInvitation,
+                'message' => $message,
+                'organizerNames' => $organizerNames
+            );
+
             $this->sendMessage("@App/Event/partials/invitations/invitations_send_cancellation_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
             return true;
         }

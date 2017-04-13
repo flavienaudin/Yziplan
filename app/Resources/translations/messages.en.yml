@@ -273,9 +273,8 @@ event:
     hello: Hello %guestname%
     text: This event has been cancelled by the organizer, you should have received an email|This event has been cancelled by organizers, you should have received an email
     email:
-      subject: "Yziplan : \"%event_name%\" is cancelled"
+      subject: "%event_name% - Event cancelled"
       body:
-        hello: Hello %guestname%
         text: "Sorry, I cancel the event \"%event_name%\".|Sorry, We cancel the event \"%event_name%\"."
   error.message:
     creation: An error occured while creating an event
