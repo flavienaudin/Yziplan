@@ -384,7 +384,7 @@ eventInvitation:
         paragraph:
           first_part: "Je vous invite à \"%event_name%\"|Nous vous invitons à \"%event_name%\""
           text_link: "Suivez le lien suivant pour y répondre:"
-          warning_secret: "Gardez-le secrètement, ceci votre invitation personnelle"
+          warning_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
     recap:
       subject: "Yziplan : Lien personnel de votre invitation"
       body:

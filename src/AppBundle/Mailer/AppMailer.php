@@ -126,8 +126,18 @@ class AppMailer
             $emailTo = $eventInvitation->getApplicationUser()->getAppUserEmails()->first()->getEmail();
         }
         if (!empty($emailTo)) {
-            $context = array("eventInvitation" => $eventInvitation, 'message' => $message);
-            $this->sendMessage("@App/EventInvitation/emails/invitation.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
+            $organizerNames = '';
+            /** @var EventInvitation $organizer */
+            foreach ($eventInvitation->getEvent()->getOrganizers() as $organizer) {
+                $organizerNames .= (!empty($organizerNames) ? ', ' : '') . $organizer->getDisplayableName(true, true);
+            }
+            $context = array(
+                "recipient_name" => $eventInvitation->getDisplayableName(true, false),
+                "eventInvitation" => $eventInvitation,
+                'message' => $message,
+                'organizerNames' => $organizerNames
+            );
+            $this->sendMessage("@App/EventInvitation/emails/invitation.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo, self::SEND_IMMEDIATLY);
             return true;
         }
         return false;
