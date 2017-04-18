@@ -6,9 +6,9 @@
 - message : le message à envoyer
 #}
 
-{% block subject_email %}Yziplan Suggestion : {{ titre }}{% endblock %}
+{% block subject_email %}Yziplan Suggestion : {{ titre|raw }}{% endblock %}
 
-{% block text_body %}{{ message|nl2br }}{% endblock text_body %}
+{% block text_body %}{{ message }}{% endblock text_body %}
 {% block text_footer %}{% endblock text_footer %}
 
 {% block html_body %}{{ message|nl2br }}{% endblock html_body %}

@@ -249,16 +249,15 @@ class AppMailer
                 'triggerer' => $triggerer);
             switch ($notification->getType()) {
                 case NotificationTypeEnum::POST_COMMENT:
-                    $this->sendMessage("@App/Notifications/emails/notification_new_comment_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
+                    $this->sendMessage("@App/Notifications/emails/notification_new_comment_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo, self::SEND_SPOLL_QUICKLY);
                     break;
                 case NotificationTypeEnum::ADD_MODULE:
-                    $this->sendMessage("@App/Notifications/emails/notification_new_module_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
+                    $this->sendMessage("@App/Notifications/emails/notification_new_module_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo, self::SEND_SPOLL_QUICKLY);
                     break;
                 case NotificationTypeEnum::ADD_POLL_PROPOSAL:
-                    $this->sendMessage("@App/Notifications/emails/notification_new_pollProposal_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
+                    $this->sendMessage("@App/Notifications/emails/notification_new_pollProposal_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo, self::SEND_SPOLL_QUICKLY);
                     break;
             }
-
             return true;
         }
         return false;
