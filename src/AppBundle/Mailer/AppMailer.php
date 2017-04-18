@@ -163,7 +163,6 @@ class AppMailer
             }
         }
         if (!empty($emailTo)) {
-
             $organizerNames = '';
             /** @var EventInvitation $organizer */
             foreach ($eventInvitation->getEvent()->getOrganizers() as $organizer) {
@@ -175,7 +174,6 @@ class AppMailer
                 'message' => $message,
                 'organizerNames' => $organizerNames
             );
-
             $this->sendMessage("@App/Event/partials/invitations/invitations_send_cancellation_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
             return true;
         }
@@ -191,10 +189,18 @@ class AppMailer
             $emailTo = $eventInvitation->getApplicationUser()->getAppUserEmails()->first()->getEmail();
         }
         if (!empty($emailTo)) {
-            $context = array("eventInvitation" => $eventInvitation);
+            $organizerNames = '';
+            /** @var EventInvitation $organizer */
+            foreach ($eventInvitation->getEvent()->getOrganizers() as $organizer) {
+                $organizerNames .= (!empty($organizerNames) ? ', ' : '') . $organizer->getDisplayableName(true, true);
+            }
+            $context = array(
+                "recipient_name" => $eventInvitation->getDisplayableName(true, false),
+                "eventInvitation" => $eventInvitation,
+                'organizerNames' => $organizerNames
+            );
             $this->sendMessage("@App/EventInvitation/emails/recap_invitation.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo);
             return true;
-
         }
         return false;
     }

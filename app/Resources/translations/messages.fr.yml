@@ -385,10 +385,10 @@ eventInvitation:
           text_link: "Suivez le lien suivant pour y répondre:"
           warning_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
     recap:
-      subject: "Yziplan : Lien personnel de votre invitation"
+      subject: "%eventName% : Votre lien personnel d'invitation"
       body:
-        hello: "Bonjour %username%!"
-        paragraph: "Vous participez à l'organisation de l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier votre participation, utilisez le lien ci-dessous :"
+        paragraph: "Vous participez à l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier votre participation, utilisez le lien ci-dessous :"
+        warning_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
 
 event_invitation_preferences:
   notification:

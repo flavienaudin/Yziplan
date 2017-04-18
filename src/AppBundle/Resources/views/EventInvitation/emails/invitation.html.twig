@@ -2,6 +2,7 @@
 {# Données :
 - recipient_name (string) Le nom du destinaire
 - eventInvitation (EventInvitation) L'invitation à envoyer
+- message (String|null) Le message personnel des organisateurs
 - organizerNames (string) Le noms du.des organisateur.s à faire apparaître dans la signature
 #}
 
@@ -37,7 +38,8 @@
     <p>{{ "eventInvitation.email.invitation.body.paragraph.text_link"|trans }}
         <a href="{{ url('displayEventInvitation', {'token':eventInvitation.token}) }}">
             {{ url ('displayEventInvitation', {'token':eventInvitation.token}) }}</a>
-    </p><p style="text-align:center"><i>{{ "eventInvitation.email.invitation.body.paragraph.warning_secret"|trans }}</i></p>
+    </p>
+    <p style="text-align:center"><i>{{ "eventInvitation.email.invitation.body.paragraph.warning_secret"|trans }}</i></p>
 {% endblock %}
 {% block html_signature %}
     <h4>{% if organizerNames is not empty %}{{ organizerNames }}{% else %}{{ "email.signature.organizers"|trans }}{% endif %}</h4>

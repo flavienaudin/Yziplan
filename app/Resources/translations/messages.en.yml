@@ -386,10 +386,10 @@ eventInvitation:
           text_link: "Follow this link to answer:"
           warning_secret: "Keep it secret, this is your personal invitation"
     recap:
-      subject: "Yziplan : Personal link to your invitation"
+      subject: "%eventName%: Your personal invitation link"
       body:
-        hello: "Hi %username%!"
-        paragraph: "You participate to the organization of event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
+        paragraph: "You participate to the event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
+        warning_secret: "Keep it secret, this is your personal invitation"
 
 event_invitation_preferences:
   notification:
