@@ -605,6 +605,7 @@ notifications:
     common:
       invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
       preferences_link: "Vous recevez cette notification car vous y êtes abonnés. Suivez-le lien ci-dessous pour vous désinscrire:"
+      preferences: Préférences
     new_comment:
       subject: "%event_name% - Vous avez reçu un message"
       body:
@@ -744,6 +745,7 @@ email:
     yziplan: Yziplan
     organizers: Les organisateurs
   dont_answer_email: Merci de ne pas répondre à cet e-mail automatique, votre réponse ne pourra être traitée.
+  invitation_keep_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
 
 # Modale suggestion :
 suggestion:

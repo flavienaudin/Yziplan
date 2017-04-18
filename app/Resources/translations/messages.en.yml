@@ -606,6 +606,7 @@ notifications:
     common:
       invitation_link: "Follow the link bellow to go to the event page:"
       preferences_link: "You receive this notification because you subscribe to it. Follow the link below to unsubscribe:"
+      preferences: Preferences
     new_comment:
       subject: "%event_name% - You received a message"
       body:
@@ -745,6 +746,7 @@ email:
     yziplan: Yziplan
     organizers: The organizers
   dont_answer_email: Thank you for not answering this automatic email, your answer cannot be treated.
+  invitation_keep_secret: "Keep it secret, this is your personal invitation"
 
 # Modale suggestion :
 suggestion:
