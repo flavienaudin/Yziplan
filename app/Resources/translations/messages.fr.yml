@@ -379,7 +379,6 @@ eventInvitation:
     invitation:
       subject: "Yziplan : Vous avez reçu une invitation"
       body:
-        hello: "Bonjour %username%!"
         paragraph:
           first_part: "Je vous invite à \"%event_name%\"|Nous vous invitons à \"%event_name%\""
           text_link: "Suivez le lien suivant pour y répondre:"
@@ -481,8 +480,8 @@ send_message:
   email:
     subject: "Yziplan : Vous avez reçu un message à propos de l'événement \"%event_name%\""
     body:
-      hello: "Bonjour %username%!"
       paragraph: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
+      warning_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
 
 contactsgmail:
   title: Contacts Gmail
