@@ -45,5 +45,10 @@ assetic:
     use_controller: false
 
 swiftmailer:
-#    disable_delivery: true
-    delivery_address: '%dev_delivery_address%'
+    mailers:
+        default_mailer:
+#            disable_delivery: true
+            delivery_addresses: ['%dev_delivery_address%']
+        spool_file_quickly:
+#            disable_delivery: true
+            delivery_addresses: ['%dev_delivery_address%']

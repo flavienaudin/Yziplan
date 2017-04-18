@@ -9,7 +9,7 @@
 namespace AppBundle\Manager;
 
 
-use AppBundle\Mailer\AppTwigSwiftMailer;
+use AppBundle\Mailer\AppMailer;
 use Symfony\Component\Form\FormInterface;
 use Trello\Api\Card;
 use Trello\Client;
@@ -21,8 +21,8 @@ class RetourUtilisateurManager
     const CARDS_LIST_NAME = "Suggestions/Bugs";
     const CARDS_BOARD_ID = "MY1WgL9v";
 
-    /** @var AppTwigSwiftMailer */
-    private $emailManager;
+    /** @var AppMailer */
+    private $appMailer;
 
     /** @var string */
     private $trelloTokenOrLogin;
@@ -33,9 +33,9 @@ class RetourUtilisateurManager
     /**
      * RetourUtilisateurManager constructor
      */
-    public function __construct(AppTwigSwiftMailer $emailManager, $trelloTokenOrLogin, $trelloPass)
+    public function __construct(AppMailer $appMailer, $trelloTokenOrLogin, $trelloPass)
     {
-        $this->emailManager = $emailManager;
+        $this->appMailer = $appMailer;
         $this->trelloTokenOrLogin = $trelloTokenOrLogin;
         $this->trelloPass = $trelloPass;
     }
@@ -83,6 +83,6 @@ class RetourUtilisateurManager
         }
 
         // Envoie d'un email
-        $this->emailManager->sendSuggestionEmail($suggestionForm->get('titre')->getData(), $descriptionSuggestion);
+        $this->appMailer->sendSuggestionEmail($suggestionForm->get('titre')->getData(), $descriptionSuggestion);
     }
 }

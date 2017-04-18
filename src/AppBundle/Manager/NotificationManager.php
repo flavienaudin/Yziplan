@@ -16,7 +16,7 @@ use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Notifications\Notification;
-use AppBundle\Mailer\AppTwigSwiftMailer;
+use AppBundle\Mailer\AppMailer;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\NotificationFrequencyEnum;
@@ -27,16 +27,16 @@ class NotificationManager
 {
     /** @var EntityManager */
     private $entityManager;
-    /** @var AppTwigSwiftMailer */
-    private $appTwigSwiftMailer;
+    /** @var AppMailer */
+    private $appMailer;
 
     /** @var Notification $notification */
     private $notification;
 
-    public function __construct(EntityManager $doctrine, AppTwigSwiftMailer $appTwigSwiftMailer)
+    public function __construct(EntityManager $doctrine, AppMailer $appMailer)
     {
         $this->entityManager = $doctrine;
-        $this->appTwigSwiftMailer = $appTwigSwiftMailer;
+        $this->appMailer = $appMailer;
     }
 
     /**
@@ -93,7 +93,7 @@ class NotificationManager
                 if ($eventInvitation->getEventInvitationPreferences()->getNotifEmailFrequency() !== NotificationFrequencyEnum::NEVER
                     && $eventInvitation->getEventInvitationPreferences()->isNotifNewModule()
                 ) {
-                    $this->appTwigSwiftMailer->sendNewNotificationEmail($eventInvitation, $new_module_notification, $creatorEventInvitation);
+                    $this->appMailer->sendNewNotificationEmail($eventInvitation, $new_module_notification, $creatorEventInvitation);
                 }
             }
         }
@@ -134,7 +134,7 @@ class NotificationManager
                 if ($eventInvitation->getEventInvitationPreferences()->getNotifEmailFrequency() !== NotificationFrequencyEnum::NEVER
                     && $eventInvitation->getEventInvitationPreferences()->isNotifNewPollpropsal()
                 ) {
-                    $this->appTwigSwiftMailer->sendNewNotificationEmail($eventInvitation, $new_pollproposal_notification, $creatorEventInvitation);
+                    $this->appMailer->sendNewNotificationEmail($eventInvitation, $new_pollproposal_notification, $creatorEventInvitation);
                 }
             }
         }
@@ -177,7 +177,7 @@ class NotificationManager
                 if ($eventInvitation->getEventInvitationPreferences()->getNotifEmailFrequency() !== NotificationFrequencyEnum::NEVER
                     && $eventInvitation->getEventInvitationPreferences()->isNotifNewComment()
                 ) {
-                    $this->appTwigSwiftMailer->sendNewNotificationEmail($eventInvitation, $new_comment_notification, $creatorEventInvitation);
+                    $this->appMailer->sendNewNotificationEmail($eventInvitation, $new_comment_notification, $creatorEventInvitation);
                 }
             }
         }

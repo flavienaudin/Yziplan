@@ -82,14 +82,11 @@ appuseremail:
       not_found: The associated email with given token does not exist.
       wrong_user: The email is not associated with this account.
     confirmationAppUserEmail_email:
-      subject: Yziplan Confirmation - Email association
+      subject: Yziplan - Email association confirmation
       message: |
         Hello %username%!
 
         To finish associating the email "%email%" - please visit %confirmationUrl%
-
-        Regards,
-        The Team.
   edit:
     message:
       error: Impossible to edit this association.
@@ -276,9 +273,8 @@ event:
     hello: Hello %guestname%
     text: This event has been cancelled by the organizer, you should have received an email|This event has been cancelled by organizers, you should have received an email
     email:
-      subject: "Yziplan : \"%event_name%\" is cancelled"
+      subject: "%event_name% - Event cancelled"
       body:
-        hello: Hello %guestname%
         text: "Sorry, I cancel the event \"%event_name%\".|Sorry, We cancel the event \"%event_name%\"."
   error.message:
     creation: An error occured while creating an event
@@ -384,16 +380,15 @@ eventInvitation:
     invitation:
       subject: "Yziplan : You received an invitation"
       body:
-        hello: "Hi %username%!"
         paragraph:
           first_part: "I am inviting you to \"%event_name%\"|We are inviting you to \"%event_name%\""
           text_link: "Follow this link to answer:"
           warning_secret: "Keep it secret, this is your personal invitation"
     recap:
-      subject: "Yziplan : Personal link to your invitation"
+      subject: "%eventName%: Your personal invitation link"
       body:
-        hello: "Hi %username%!"
-        paragraph: "You participate to the organization of event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
+        paragraph: "You participate to the event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
+        warning_secret: "Keep it secret, this is your personal invitation"
 
 event_invitation_preferences:
   notification:
@@ -486,8 +481,8 @@ send_message:
   email:
     subject: "Yziplan : You have a message about the event \"%event_name%\""
     body:
-      hello: "Hello %username%!"
       paragraph: "Follow the link bellow to go to the event page:"
+      warning_secret: "Keep it secret, this is your personal invitation"
 
 contactsgmail:
   title: Gmail contacts
@@ -611,6 +606,7 @@ notifications:
     common:
       invitation_link: "Follow the link bellow to go to the event page:"
       preferences_link: "You receive this notification because you subscribe to it. Follow the link below to unsubscribe:"
+      preferences: Preferences
     new_comment:
       subject: "%event_name% - You received a message"
       body:
@@ -749,7 +745,8 @@ email:
   signature:
     yziplan: Yziplan
     organizers: The organizers
-  dont_answer_email: Thank you for not answering this email, your answer cannot be treated.
+  dont_answer_email: Thank you for not answering this automatic email, your answer cannot be treated.
+  invitation_keep_secret: "Keep it secret, this is your personal invitation"
 
 # Modale suggestion :
 suggestion:

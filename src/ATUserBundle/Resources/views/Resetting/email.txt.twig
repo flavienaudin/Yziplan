@@ -1,0 +1,20 @@
+{% extends ":Email:template_email.html.twig" %}
+
+{% trans_default_domain 'FOSUserBundle' %}
+{% block subject_email%}
+{{ 'resetting.email.subject'|trans({'%username%': user.username}) }}
+{% endblock %}
+
+{% block text_hello %}{% endblock %}
+{% block text_body%}
+{{ 'resetting.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+{% endblock %}
+{% block text_salutation %}{% endblock %}
+{% block text_signature %}{% endblock %}
+
+{% block html_hello %}{% endblock html_hello %}
+{% block html_body %}
+{{ 'resetting.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl})|nl2br }}
+{% endblock %}
+{% block html_salutation %}{% endblock html_salutation %}
+{% block html_signature %}{% endblock html_signature %}

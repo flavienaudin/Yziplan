@@ -82,14 +82,11 @@ appuseremail:
       not_found: L'e-mail associé avec le token donné n'existe pas.
       wrong_user: L'e-mail n'est pas associé à ce compte.
     confirmationAppUserEmail_email:
-      subject: Yziplan Confirmation - Association d'un e-mail
+      subject: Yziplan - Confirmation de l'association d'un e-mail
       message: |
         Bonjour %username% !
 
         Pour valider l'association de l'email %email%, merci de vous rendre sur %confirmationUrl%
-
-        Cordialement,
-        L'équipé Yziplan.
   edit:
     message:
       error: Impossible de modifier cette association.
@@ -275,9 +272,8 @@ event:
     hello: Bonjour %guestname%
     text: Cet événement a été annnulé par l'organisateur, vous avez dû recevoir un e-mail|Cet événement a été annnulé par les organisateurs, vous avez dû recevoir un e-mail
     email:
-      subject: "Yziplan : \"%event_name%\" est annulé"
+      subject: "%event_name% - Evénement annulé"
       body:
-        hello: Bonjour %guestname%
         text: "Désolé, j'annule l'événement \"%event_name%\".|Désolé, nous annulons l'événement \"%event_name%\"."
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement
@@ -383,16 +379,15 @@ eventInvitation:
     invitation:
       subject: "Yziplan : Vous avez reçu une invitation"
       body:
-        hello: "Bonjour %username%!"
         paragraph:
           first_part: "Je vous invite à \"%event_name%\"|Nous vous invitons à \"%event_name%\""
           text_link: "Suivez le lien suivant pour y répondre:"
-          warning_secret: "Gardez-le secrètement, ceci votre invitation personnelle"
+          warning_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
     recap:
-      subject: "Yziplan : Lien personnel de votre invitation"
+      subject: "%eventName% : Votre lien personnel d'invitation"
       body:
-        hello: "Bonjour %username%!"
-        paragraph: "Vous participez à l'organisation de l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier votre participation, utilisez le lien ci-dessous :"
+        paragraph: "Vous participez à l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier votre participation, utilisez le lien ci-dessous :"
+        warning_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
 
 event_invitation_preferences:
   notification:
@@ -485,8 +480,8 @@ send_message:
   email:
     subject: "Yziplan : Vous avez reçu un message à propos de l'événement \"%event_name%\""
     body:
-      hello: "Bonjour %username%!"
       paragraph: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
+      warning_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
 
 contactsgmail:
   title: Contacts Gmail
@@ -610,6 +605,7 @@ notifications:
     common:
       invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
       preferences_link: "Vous recevez cette notification car vous y êtes abonnés. Suivez-le lien ci-dessous pour vous désinscrire:"
+      preferences: Préférences
     new_comment:
       subject: "%event_name% - Vous avez reçu un message"
       body:
@@ -748,7 +744,8 @@ email:
   signature:
     yziplan: Yziplan
     organizers: Les organisateurs
-  dont_answer_email: Merci de ne pas y répondre à cet e-mail, votre réponse ne pourra être traitée.
+  dont_answer_email: Merci de ne pas répondre à cet e-mail automatique, votre réponse ne pourra être traitée.
+  invitation_keep_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
 
 # Modale suggestion :
 suggestion:

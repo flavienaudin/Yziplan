@@ -1,12 +1,23 @@
+{% extends ":Email:template_email.html.twig" %}
 
-{% block subject %}
-{% autoescape false %}
+{# Email d'avertissement : Une inscription a été effectué en utilisant une adresse e-mail associée à un compte (non l'adresse de connexion
+Données d'entrée :
+- username Nom d'utilisateur
+- email Adresse email concertnée
+#}
+
+{% block subject_email %}
 {{ 'register.lossAppUserEmail_email.subject'|trans({'%username%': username, '%email%': email}) }}
-{% endautoescape %}
 {% endblock %}
-{% block body_text %}
-{% autoescape false %}
+
+{% block text_hello %}{% endblock %}
+{% block text_body %}
 {{ 'register.lossAppUserEmail_email.message'|trans({'%username%': username, '%email%': email}) }}
-{% endautoescape %}
 {% endblock %}
-{% block body_html %}{% endblock %}
+
+
+{%  block body_html %}{% endblock %}{#
+{% block html_hello %}{% endblock html_hello %}
+{% block html_body %}
+{{ 'register.lossAppUserEmail_email.message'|trans({'%username%': username, '%email%': email})|nl2br }}
+{% endblock %}#}
