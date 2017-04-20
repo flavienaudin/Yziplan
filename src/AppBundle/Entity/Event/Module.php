@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Event;
 use AppBundle\Entity\Comment\CommentableInterface;
 use AppBundle\Entity\Comment\Thread;
 use AppBundle\Entity\Module\ExpenseModule;
+use AppBundle\Entity\Module\KittyModule;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Payment\PaymentModule;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
@@ -144,10 +145,10 @@ class Module implements CommentableInterface
 
     /**
      * Module de type Cagnotte
-     * @ var PoolModule     *
-     * @ ORM\OneToOne(targetEntity="AppBundle\Entity\Module\ExpenseModule", mappedBy="module", cascade={"persist"})
+     * @var KittyModule
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Module\KittyModule", mappedBy="module", cascade={"persist"})
      */
-    // TOTO private $poolModule;
+    private $kittyModule;
 
 
     /***********************************************************************
@@ -346,7 +347,6 @@ class Module implements CommentableInterface
 
     /**
      * Get moduleInvitations
-     *
      * @return ArrayCollection
      */
     public function getModuleInvitations()
@@ -398,7 +398,6 @@ class Module implements CommentableInterface
 
     /**
      * Get pollModule
-     *
      * @return PollModule
      */
     public function getPollModule()
@@ -408,9 +407,7 @@ class Module implements CommentableInterface
 
     /**
      * Set pollModule
-     *
      * @param PollModule $pollModule
-     *
      * @return Module
      */
     public function setPollModule(PollModule $pollModule)
@@ -423,7 +420,6 @@ class Module implements CommentableInterface
 
     /**
      * Get expenseModule
-     *
      * @return ExpenseModule
      */
     public function getExpenseModule()
@@ -433,18 +429,35 @@ class Module implements CommentableInterface
 
     /**
      * Set expenseModule
-     *
      * @param ExpenseModule $expenseModule
-     *
      * @return Module
      */
     public function setExpenseModule(ExpenseModule $expenseModule)
     {
         $this->expenseModule = $expenseModule;
         $expenseModule->setModule($this);
-
         return $this;
     }
+
+    /**
+     * @return KittyModule
+     */
+    public function getKittyModule()
+    {
+        return $this->kittyModule;
+    }
+
+    /**
+     * @param KittyModule $kittyModule
+     * @return Module
+     */
+    public function setKittyModule($kittyModule)
+    {
+        $this->kittyModule = $kittyModule;
+        $kittyModule->setModule($this);
+        return $this;
+    }
+
 
     /***********************************************************************
      *                      Helpers

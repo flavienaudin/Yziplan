@@ -3,43 +3,48 @@
 #}
 
 <div class="row">
-    <div class="col-xs-3 col-sm-2 col-sm-offset-1 text-center">
-        <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+    <div class="col-xs-3 col-sm-2 text-center">
+        <a class="add-module-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
             'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::ACTIVITY')}) }}" id="addActivityPollModule"> <i class="waves-effect zmdi zmdi-ticket-star zmdi-hc-3x"></i>
             <p>{{ "pollmodule.add_link.activity"|trans }}</p></a>
     </div>
     <div class="col-xs-3 col-sm-2 text-center">
-        <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+        <a class="add-module-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
             'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHEN')}) }}" id="addWhenPollModule"> <i class="waves-effect zmdi zmdi-calendar zmdi-hc-3x"></i>
             <p>{{ "pollmodule.add_link.when"|trans }}</p></a>
     </div>
     <div class="col-xs-3 col-sm-2 text-center">
-        <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+        <a class="add-module-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
             'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHERE')}) }}" id="addWherePollModule"> <i class="waves-effect zmdi zmdi-pin zmdi-hc-3x"></i>
             <p>{{ "pollmodule.add_link.where"|trans }}</p></a>
     </div>
     <div class="col-xs-3 col-sm-2 text-center">
-        <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+        <a class="add-module-link" href="{{ url('addEventModule', {'token': event.token,'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
             'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHO_BRINGS_WHAT')}) }}" id="addWhoBringsWhatPollModule"> <i class="waves-effect zmdi zmdi-format-list-bulleted zmdi-hc-3x"></i>
             <p>{{ "pollmodule.add_link.whobringswhat"|trans }}</p></a>
     </div>
     <div class="col-xs-3 col-sm-2 text-center">
-        <a class="add-pollmodule-link" href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
+        <a class="add-module-link" href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Utils\\enum\\ModuleType::POLL_MODULE'),
             'subtype':constant('AppBundle\\Utils\\enum\\PollModuleType::WHAT')}) }}" id="addWhatPollModule"> <i class="waves-effect zmdi zmdi-pin-help zmdi-hc-3x"></i>
             <p>{{ "pollmodule.add_link.what"|trans }}</p></a>
+    </div>
+    <div class="col-xs-3 col-sm-2 text-center">
+        <a class="add-module-link" href="{{ url('addEventModule', {'token': event.token, 'type':constant('AppBundle\\Utils\\enum\\ModuleType::KITTY_MODULE')}) }}" id="addWhatPollModule"> <i
+                    class="waves-effect fa fa-euro fa-3x"></i>
+            <p>{{ "kittymodule.add_link"|trans }}</p></a>
     </div>
 
 
     <script>
         $(document).ready(function () {
-            $('.add-pollmodule-link').on('click', function (e) {
+            $('.add-module-link').on('click', function (e) {
                 var target = $(this);
                 e.preventDefault();
                 if (!target.hasClass('disabled')) {
-                    $('.add-pollmodule-link').addClass("disabled");
+                    $('.add-module-link').addClass("disabled");
                     if (!eventInvitationValid && askGuestName !== undefined) {
                         askGuestName(e, addModuleAction, [target, e], function () {
-                            $('.add-pollmodule-link').removeClass("disabled");
+                            $('.add-module-link').removeClass("disabled");
                         });
                     } else {
                         addModuleAction([target, e]);

@@ -1,0 +1,22 @@
+{% extends "@App/Event/module/displayModule.html.twig" %}
+
+{# Données d'entrée :
+- module (Module) Le module à afficher
+- moduleForm (Form|null) Le formulaire d'édition du module
+- userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
+- thread (Thread) Le fil de discussion du module
+- comments(Comment[]) Les commentaires appartenant au fil de discussion du module
+
+#}
+
+{% block moduleCardClass %}{{ parent() }}{% endblock moduleCardClass %}
+{% block moduleHeaderClass %}{{ parent() }}{% endblock moduleHeaderClass %}
+{% block moduleHeaderAttributs %}{{ parent() }}{% endblock moduleHeaderAttributs %}
+
+{% block mhBtnFloat %}{% endblock mhBtnFloat %}
+
+{% block moduleBody %}
+    <div class="card-body card-padding-sm">
+        {{ include("@App/Event/module/kittyModulePartials/kittyModule_body_content.html.twig", {'module':module}) }}
+    </div>
+{% endblock moduleBody %}

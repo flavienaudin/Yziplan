@@ -13,10 +13,12 @@ use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Entity\Module\KittyModule;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Module\ModuleType;
 use AppBundle\Security\ModuleVoter;
+use AppBundle\Utils\enum\KittyObjectiveTypeEnum;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\ModuleType as EnumModuleType;
 use AppBundle\Utils\enum\PollModuleType;
@@ -123,7 +125,11 @@ class ModuleManager
         $this->module->setStatus(ModuleStatus::IN_CREATION);
         $this->module->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
 
-        $this->initializePollModule($type, $subtype);
+        if ($type == EnumModuleType::POLL_MODULE) {
+            $this->initializePollModule($subtype);
+        } elseif ($type == EnumModuleType::KITTY_MODULE) {
+            $this->initializeKittyModule();
+        }
 
         $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
         $moduleInvitationCreator->setCreator(true);
@@ -134,50 +140,67 @@ class ModuleManager
 
     /**
      * Create a module and set required data.
-     * @param $type
      * @param $subtype
-     * @param EventInvitation $creatorEventInvitation The user's eventInvitation to set the module creator
      * @return Module The module added to the event
      */
-    public function initializePollModule($type, $subtype, $module = null)
+    public function initializePollModule($subtype, $module = null)
     {
         if ($module != null) {
             $this->module = $module;
         }
 
-        if ($type == EnumModuleType::POLL_MODULE) {
-            $pollModule = new PollModule();
-            $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
+        $pollModule = new PollModule();
+        $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
 
-            $pollElements = new ArrayCollection();
+        $pollElements = new ArrayCollection();
 
-            if ($subtype == PollModuleType::WHEN) {
-                $this->module->setName($this->translator->trans("pollmodule.add_link.when"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-                $pollModule->setType(PollModuleType::WHEN);
-            } elseif ($subtype == PollModuleType::WHAT) {
-                $this->module->setName($this->translator->trans("pollmodule.add_link.what"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-                $pollModule->setType(PollModuleType::WHAT);
-            } elseif ($subtype == PollModuleType::WHERE) {
-                $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-                $pollModule->setType(PollModuleType::WHERE);
-            } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
-                $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-                $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
-                $pollModule->setType(PollModuleType::WHO_BRINGS_WHAT);
-            } elseif ($subtype == PollModuleType::ACTIVITY) {
-                $this->module->setName($this->translator->trans("pollmodule.add_link.activity"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-                $pollModule->setVotingType(PollModuleVotingType::RANKING);
-                $pollModule->setType(PollModuleType::ACTIVITY);
-            }
-            $pollModule->addPollElements($pollElements);
-
-            $this->module->setPollModule($pollModule);
+        if ($subtype == PollModuleType::WHEN) {
+            $this->module->setName($this->translator->trans("pollmodule.add_link.when"));
+            $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+            $pollModule->setType(PollModuleType::WHEN);
+        } elseif ($subtype == PollModuleType::WHAT) {
+            $this->module->setName($this->translator->trans("pollmodule.add_link.what"));
+            $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+            $pollModule->setType(PollModuleType::WHAT);
+        } elseif ($subtype == PollModuleType::WHERE) {
+            $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
+            $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+            $pollModule->setType(PollModuleType::WHERE);
+        } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
+            $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
+            $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+            $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
+            $pollModule->setType(PollModuleType::WHO_BRINGS_WHAT);
+        } elseif ($subtype == PollModuleType::ACTIVITY) {
+            $this->module->setName($this->translator->trans("pollmodule.add_link.activity"));
+            $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+            $pollModule->setVotingType(PollModuleVotingType::RANKING);
+            $pollModule->setType(PollModuleType::ACTIVITY);
         }
+        $pollModule->addPollElements($pollElements);
+
+        $this->module->setPollModule($pollModule);
+        return $this->module;
+    }
+
+    /**
+     * Create a module and set required data.
+     * @param $type
+     * @return Module The module added to the event
+     */
+    public function initializeKittyModule($module = null)
+    {
+        if ($module != null) {
+            $this->module = $module;
+        }
+        $this->module->setName($this->translator->trans("kittymodule.add_link"));
+
+        $kittyModule = new KittyModule();
+        $kittyModule->setCurrency("eur");
+        $kittyModule->setTotalAmount(0);
+
+        $this->module->setKittyModule($kittyModule);
+
         return $this->module;
     }
 
@@ -287,6 +310,18 @@ class ModuleManager
         }
 
         // TODO faire des vérifications/traitement sur les données
+        if ($this->module->getKittyModule() != null && ($kittyModuleForm = $moduleForm->get("kittyModule"))) {
+            // KittyModule case
+            if ($kittyModuleForm->get("objectiveAmount")->getData() == null) {
+                $this->module->getKittyModule()->setObjectiveType(null);
+            } else {
+                if ($kittyModuleForm->get("indicativeObjective")->getData()) {
+                    $this->module->getKittyModule()->setObjectiveType(KittyObjectiveTypeEnum::INDICATIVE);
+                } else {
+                    $this->module->getKittyModule()->setObjectiveType(KittyObjectiveTypeEnum::STRICT);
+                }
+            }
+        }
 
         $this->entityManager->persist($this->module);
         $this->entityManager->flush();

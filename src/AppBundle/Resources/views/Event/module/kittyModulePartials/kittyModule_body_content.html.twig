@@ -1,0 +1,40 @@
+{# Données d'entrée :
+- module (Module) Le module à afficher
+#}
+
+<div id="module-{{ module.token }}-bodyContent">
+    {% if module.kittyModule.objectiveAmount is not null and module.kittyModule.objectiveAmount > 0 %}
+        {% set objectivePercentage = (module.kittyModule.totalAmount * 100 / module.kittyModule.objectiveAmount) %}
+        <div class="text-center">
+            <div class="di-block {{ objectivePercentage >= 100?'bgm-green':'bgm-orange' }} brd-2 p-15 m-r-5 w-150px text-left">
+                <div class="c-white m-b-5">{{ "kittymodule.display.totalAmount"|trans }}</div>
+                <h2 class="m-0 c-white f-300">{{ module.kittyModule.totalAmount|localizedcurrency(module.kittyModule.currency) }}</h2>
+                <small class="pull-right c-white">{{ 'kittymodule.display.participation'|transchoice(module.kittyModule.participations|length, {
+                        '%nbParticipations%':module.kittyModule.participations|length}) }}</small>
+            </div>
+            <div class="di-block bgm-gray brd-2 p-15 m-l-5 w-150px text-left">
+                <div class="c-white m-b-5">{{ "kittymodule.display.objectiveAmount"|trans }}</div>
+                <h2 class="m-0 c-white f-300">{{ module.kittyModule.objectiveAmount|localizedcurrency(module.kittyModule.currency) }}</h2>
+                <small class="pull-right c-white">{{ module.kittyModule.objectiveType == constant('AppBundle\\Utils\\enum\\KittyObjectiveTypeEnum::STRICT')?
+                    'kittyobjectivetype.strict'|trans:'kittyobjectivetype.indicative'|trans }}</small>
+            </div>
+            <div class="w-150px center-block">
+                <div class="m-b-5 text-left">{{ "kittymodule.display.progressBar.title"|trans }}</div>
+                <div class="progress">
+                    <div class="progress-bar {{ objectivePercentage>=100?'progress-bar-success':'progress-bar-warning' }}" role="progressbar" aria-valuenow="{{ objectivePercentage }}"
+                         aria-valuemin="0" aria-valuemax="100" style="width: {{ objectivePercentage }}%">
+                        <span class="sr-only">{{ "kittymodule.display.progressBar.label"|trans({'%percent%':objectivePercentage}) }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="w-150px center-block m-t-15">
+                <button class="btn btn-primary">{{ "global.button.participate"|trans }}</button>
+            </div>
+        </div>
+    {% else %}
+        <div class="center-block bgm-teal brd-2 p-15 w-150px">
+            <div class="c-white m-b-5">{{ "kittymodule.display.totalAmount"|trans }}</div>
+            <h2 class="m-0 c-white f-300">{{ module.kittyModule.totalAmount|localizedcurrency(module.kittyModule.currency) }}</h2>
+        </div>
+    {% endif %}
+</div>

@@ -578,6 +578,18 @@ class EventManager
                                     'module' => $currentModule,
                                     'userModuleInvitation' => $userModuleEventInvitation
                                 ));
+                            $newModuleForm = $this->moduleManager->createModuleForm($currentModule);
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#moduleEdit_form_' . $currentModule->getToken()] =
+                                $this->templating->render("@App/Event/module/displayModule_form.html.twig", array(
+                                    'module' => $currentModule,
+                                    'moduleForm' => $newModuleForm->createView()
+                                ));
+                            if ($currentModule->getKittyModule() != null) {
+                                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-' . $currentModule->getToken() . '-bodyContent'] =
+                                    $this->templating->render("@App/Event/module/kittyModulePartials/kittyModule_body_content.html.twig", array(
+                                        'module' => $currentModule
+                                    ));
+                            }
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#moduleEdit_form_' . $currentModule->getToken()] =

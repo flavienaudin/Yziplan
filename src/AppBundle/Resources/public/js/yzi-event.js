@@ -151,7 +151,7 @@ function addModuleAction(params) {
         }
         LetterAvatar.transform();
     }, null, function () {
-        $('.add-pollmodule-link').removeClass("disabled");
+        $('.add-module-link').removeClass("disabled");
     });
 }
 

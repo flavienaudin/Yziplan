@@ -580,6 +580,22 @@ addModule:
   display:
     title: Add an item
 
+kittymodule:
+  add_link: Kitty
+  display:
+    totalAmount: "Collected amount:"
+    objectiveAmount: "Objective:"
+    participation: "%nbParticipations% participation|%nbParticipations% participations"
+    progressBar:
+      title: "Progress"
+      Label: "%percent%% completed"
+  form:
+    displayMoreOptions: "Display more options"
+    objectiveAmount:
+      label: "Going up to"
+    objectiveType:
+      label: "Objective given on an indicative basis"
+
 moduleInvitation:
   error.message:
     missing_data: Data are missing to treat the request.
@@ -655,6 +671,7 @@ global:
     archive: Archive
     unarchive: Unarchive
     continue: Continue
+    participate: Participate
   success:
     data_saved: Information saved
   error:
@@ -737,6 +754,10 @@ notification_frequency:
   each_notification: Each notification
   daily: Once a day
   weekly: Once a week
+
+kittyobjectivetype:
+  strict: "Mandatory"
+  indicative: "Indicative"
 
 # Emails
 email:

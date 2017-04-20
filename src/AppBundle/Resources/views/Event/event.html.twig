@@ -92,8 +92,8 @@
                             'thread':moduleDescription.thread,'comments':moduleDescription.comments,
                             'pollModuleOptions':(moduleDescription.pollModuleOptions is defined?moduleDescription.pollModuleOptions:null )
                         }) }}
-                    {% elseif moduleDescription.module.expenseModule is not null %}
-                        {{ include('@App/Event/module/displayExpenseModule.html.twig', {
+                    {% elseif moduleDescription.module.kittyModule is not null %}
+                        {{ include('@App/Event/module/displayKittyModule.html.twig', {
                             'module':moduleDescription.module,
                             'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
                             'userModuleInvitation':userModuleInvitation,

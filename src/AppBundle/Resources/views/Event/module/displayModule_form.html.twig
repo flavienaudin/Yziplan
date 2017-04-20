@@ -21,6 +21,24 @@
                 'widget_options':{'label_icon':'zmdi zmdi-receipt','fgline':false}
             }) }}
         </div>
+        {% if module.kittyModule is not null %}
+            <div class="col-sm-12 m-t-15 m-l-20">
+                <a href="#kittyModule_{{ module.token }}_moreOptionForm" class="" data-toggle="collapse">{{ "kittymodule.form.displayMoreOptions"|trans }}</a>
+            </div>
+            <div class="col-sm-12 collapse" id="kittyModule_{{ module.token }}_moreOptionForm">
+                {{ form_row(moduleForm.kittyModule.objectiveAmount, {
+                    'label': 'kittymodule.form.objectiveAmount.label',
+                    'attr':{},
+                    'widget_options':{'label_icon':'fa fa-euro', 'fgfloat':true,'fgline':true}
+                }) }}
+                <div class="m-l-15">
+                    {{ form_row(moduleForm.kittyModule.indicativeObjective, {
+                        'label':'kittymodule.form.objectiveType.label',
+                        'attr':{}
+                    }) }}
+                </div>
+            </div>
+        {% endif %}
     </div>
     {% block action_buttons %}
         <div class="pull-right m-r-20 m-t-10">
@@ -54,6 +72,10 @@
             {% endif %}
             $('#{{ moduleForm.description.vars.id }}').summernote(summernoteOptions);
 
+            {% if module.kittyModule is not null %}
+            $('#kittyModule_{{ module.token }}_moreOptionForm:has(".has-error")').collapse('show');
+            {% endif %}
+
             {% block js_document_ready %}
             // Update the Event name while editing the form field
             $('#module_form_{{ module.token }}_name').on('input', function () {
@@ -63,7 +85,6 @@
                 }
                 $('#module_{{ module.token }}_name').html(moduleName);
             });
-
 
             $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
                 e.preventDefault();
