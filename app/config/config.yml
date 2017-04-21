@@ -99,7 +99,7 @@ doctrine:
             enum_notification_type: AppBundle\Utils\enum\NotificationTypeEnum
             enum_notification_frequency: AppBundle\Utils\enum\NotificationFrequencyEnum
             enum_kittymodule_objectivetype: AppBundle\Utils\enum\KittyObjectiveTypeEnum
-            enum_kittymodule_objectivetype: AppBundle\Utils\enum\KittyParticipationStatus
+            enum_kittymodule_objectivestatus: AppBundle\Utils\enum\KittyParticipationStatus
         connections:
             default:
                 driver:   pdo_mysql

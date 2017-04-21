@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Event;
 
 use AppBundle\Entity\Module\ExpenseElement;
+use AppBundle\Entity\Module\KittyParticipation;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalResponse;
@@ -89,6 +90,13 @@ class ModuleInvitation
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Module\PollProposalResponse", mappedBy="moduleInvitation")
      */
     private $pollProposalResponses;
+
+    /**
+     * Participations à la cagnotte
+     * @var ArrayCollection
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Module\KittyParticipation", mappedBy="payer")
+     */
+    private $kittyParticipations;
 
     /**
      * Dépenses créées par l'invité
@@ -271,6 +279,34 @@ class ModuleInvitation
     public function removeProposalElementResponse(PollProposalResponse $pollProposalResponse)
     {
         $this->pollProposalResponses->removeElement($pollProposalResponse);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getKittyParticipations()
+    {
+        return $this->kittyParticipations;
+    }
+
+    /**
+     * @param KittyParticipation $kittyParticipation
+     * @return ModuleInvitation
+     */
+    public function addKittyParticipation(KittyParticipation $kittyParticipation)
+    {
+        $this->kittyParticipations[] = $kittyParticipation;
+        $kittyParticipation->setPayer($this);
+        return $this;
+    }
+
+    /**
+     * Remove KittyParticipation
+     * @param KittyParticipation $kittyParticipation
+     */
+    public function removeKittyParticipation(KittyParticipation $kittyParticipation)
+    {
+        $this->kittyParticipations->removeElement($kittyParticipation);
     }
 
     /**

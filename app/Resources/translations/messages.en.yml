@@ -596,6 +596,16 @@ kittymodule:
     objectiveType:
       label: "Objective given on an indicative basis"
 
+kittyParticipation:
+  modal:
+    title: "Participate to the kitty"
+  form:
+    amount:
+      label: "Participation amount:"
+    message:
+      label: "Message"
+      placeholder: "Write a message about your participation"
+
 moduleInvitation:
   error.message:
     missing_data: Data are missing to treat the request.

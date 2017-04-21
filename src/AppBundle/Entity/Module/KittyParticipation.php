@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\Module;
 
+use AppBundle\Entity\Event\ModuleInvitation;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,7 +30,13 @@ class KittyParticipation
 
     /**
      * @var string
-     * @ORM\Column(name="status", type="enum_kittymodule_objectivetype")
+     * @ORM\Column(name="message", type="text", nullable=true)
+     */
+    private $message;
+
+    /**
+     * @var string
+     * @ORM\Column(name="status", type="enum_kittymodule_objectivestatus")
      */
     private $status;
 
@@ -43,6 +50,13 @@ class KittyParticipation
      * @ORM\JoinColumn(name="poll_module_id", referencedColumnName="id")
      */
     private $kittyModule;
+
+    /**
+     * @var ModuleInvitation
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Event\ModuleInvitation", inversedBy="kittyParticipations")
+     * @ORM\JoinColumn(name="payer_id", referencedColumnName="id")
+     */
+    private $payer;
 
 
     /***********************************************************************
@@ -85,6 +99,24 @@ class KittyParticipation
     /**
      * @return string
      */
+    public function getMessage()
+    {
+        return $this->message;
+    }
+
+    /**
+     * @param string $message
+     * @return KittyParticipation
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
     public function getStatus()
     {
         return $this->status;
@@ -115,6 +147,24 @@ class KittyParticipation
     public function setKittyModule($kittyModule)
     {
         $this->kittyModule = $kittyModule;
+        return $this;
+    }
+
+    /**
+     * @return ModuleInvitation
+     */
+    public function getPayer()
+    {
+        return $this->payer;
+    }
+
+    /**
+     * @param ModuleInvitation $payer
+     * @return KittyParticipation
+     */
+    public function setPayer($payer)
+    {
+        $this->payer = $payer;
         return $this;
     }
 }

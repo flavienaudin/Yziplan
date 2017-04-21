@@ -75,6 +75,9 @@ class EventManager
     /** @var ModuleManager */
     private $moduleManager;
 
+    /** @var KittyModuleManager */
+    private $kittyModuleManager;
+
     /** @var PollProposalManager */
     private $pollProposalManager;
 
@@ -101,8 +104,7 @@ class EventManager
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, Session $session, AuthorizationCheckerInterface $authorizationChecker, RouterInterface $router,
                                 EngineInterface $templating, TranslatorInterface $translator, FormFactory $formFactory, GenerateursToken $generateurToken, ModuleManager $moduleManager,
-                                PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager, ModuleInvitationManager $moduleInvitationManager,
-                                DiscussionManager $discussionManager, AppMailer $appMailer, NotificationManager $notificationManager)
+                                KittyModuleManager $kittymoduleManager, PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager, ModuleInvitationManager $moduleInvitationManager, DiscussionManager $discussionManager, AppMailer $appMailer, NotificationManager $notificationManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -114,6 +116,7 @@ class EventManager
         $this->formFactory = $formFactory;
         $this->generateursToken = $generateurToken;
         $this->moduleManager = $moduleManager;
+        $this->kittyModuleManager = $kittymoduleManager;
         $this->pollProposalManager = $pollProposalManager;
         $this->eventInvitationManager = $eventInvitationManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
@@ -527,6 +530,8 @@ class EventManager
                             // TODO Vérifier les autorisations d'ajouter des propositions au module
                             $moduleDescription['pollModuleOptions']['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule());
                             $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
+                        } elseif ($module->getKittyModule() != null) {
+                            $moduleDescription['kittyModuleOptions']['kittyPraticipationForm'] = $this->kittyModuleManager->createParticipationForm($module->getKittyModule());
                         }
                         $modules[$module->getId()] = $moduleDescription;
                     }
@@ -585,7 +590,7 @@ class EventManager
                                     'moduleForm' => $newModuleForm->createView()
                                 ));
                             if ($currentModule->getKittyModule() != null) {
-                                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-' . $currentModule->getToken() . '-bodyContent'] =
+                                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#kittyModule-' . $currentModule->getToken() . '-bodyContent'] =
                                     $this->templating->render("@App/Event/module/kittyModulePartials/kittyModule_body_content.html.twig", array(
                                         'module' => $currentModule
                                     ));
@@ -619,61 +624,111 @@ class EventManager
             //////////////////////
             // poll module case //
             //////////////////////
-            if (array_key_exists('pollModuleOptions', $moduleDescription)
-                && array_key_exists('pollProposalAddForm', $moduleDescription['pollModuleOptions'])
-                && $moduleDescription['pollModuleOptions']['pollProposalAddForm'] instanceof Form
-            ) {
-                /** @var FormInterface $pollProposalAddForm */
-                $pollProposalAddForm = $moduleDescription['pollModuleOptions']['pollProposalAddForm'];
-                $data = array();
-                $pollProposalAddForm->handleRequest($request);
-                if ($pollProposalAddForm->isSubmitted()) {
-                    if ($request->isXmlHttpRequest()) {
-                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
-                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
-                        ) {
-                            // Vérification serveur de la validité de l'invitation
-                            $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
-                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
-                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                        } else if ($pollProposalAddForm->isValid()) {
-                            $pollProposal = $this->pollProposalManager->treatPollProposalForm($pollProposalAddForm, $currentModule, $userModuleEventInvitation);
-                            $data[AppJsonResponse::DATA] = $this->pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
+            if($currentModule->getPollModule() != null) {
+                if (array_key_exists('pollModuleOptions', $moduleDescription)
+                    && array_key_exists('pollProposalAddForm', $moduleDescription['pollModuleOptions'])
+                    && $moduleDescription['pollModuleOptions']['pollProposalAddForm'] instanceof FormInterface
+                ) {
+                    /** @var FormInterface $pollProposalAddForm */
+                    $pollProposalAddForm = $moduleDescription['pollModuleOptions']['pollProposalAddForm'];
+                    $data = array();
+                    $pollProposalAddForm->handleRequest($request);
+                    if ($pollProposalAddForm->isSubmitted()) {
+                        if ($request->isXmlHttpRequest()) {
+                            if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                                ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                            ) {
+                                // Vérification serveur de la validité de l'invitation
+                                $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
+                                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                            } else if ($pollProposalAddForm->isValid()) {
+                                $pollProposal = $this->pollProposalManager->treatPollProposalForm($pollProposalAddForm, $currentModule, $userModuleEventInvitation);
+                                $data[AppJsonResponse::DATA] = $this->pollProposalManager->displayPollProposalRowPartial($pollProposal, $userEventInvitation);
 
-                            // Form reset
-                            $pollProposalAddForm = $this->pollProposalManager->createPollProposalAddForm($currentModule->getPollModule());
-                            $pollProposalListAddForm = $this->pollProposalManager->createPollProposalListAddForm($currentModule->getPollModule());
-                            $data = $this->createPollProposalFormActionReplace($userModuleEventInvitation, $pollProposalAddForm, $pollProposalListAddForm, $moduleDescription, $data);
-                            return new AppJsonResponse($data, Response::HTTP_OK);
+                                // Form reset
+                                $pollProposalAddForm = $this->pollProposalManager->createPollProposalAddForm($currentModule->getPollModule());
+                                $pollProposalListAddForm = $this->pollProposalManager->createPollProposalListAddForm($currentModule->getPollModule());
+                                $data = $this->createPollProposalFormActionReplace($userModuleEventInvitation, $pollProposalAddForm, $pollProposalListAddForm, $moduleDescription, $data);
+                                return new AppJsonResponse($data, Response::HTTP_OK);
+                            } else {
+                                $pollProposalListAddForm = $this->pollProposalManager->createPollProposalListAddForm($currentModule->getPollModule());
+                                $data = $this->createPollProposalFormActionReplace($userModuleEventInvitation, $pollProposalAddForm, $pollProposalListAddForm, $moduleDescription, $data);
+                                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                            }
                         } else {
-                            $pollProposalListAddForm = $this->pollProposalManager->createPollProposalListAddForm($currentModule->getPollModule());
-                            $data = $this->createPollProposalFormActionReplace($userModuleEventInvitation, $pollProposalAddForm, $pollProposalListAddForm, $moduleDescription, $data);
-                            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                        }
-                    } else {
-                        if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
-                            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
-                        ) {
-                            // Vérification serveur de la validité de l'invitation
-                            $this->session->getFlashBag()->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("event.error.message.valide_guestname_required"));
-                            return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
-                        } else if ($pollProposalAddForm->isValid()) {
-                            $this->pollProposalManager->treatPollProposalForm($pollProposalAddForm, $currentModule, $userModuleEventInvitation);
-                            return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
+                            if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                                ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                            ) {
+                                // Vérification serveur de la validité de l'invitation
+                                $this->session->getFlashBag()->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("event.error.message.valide_guestname_required"));
+                                return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
+                            } else if ($pollProposalAddForm->isValid()) {
+                                $this->pollProposalManager->treatPollProposalForm($pollProposalAddForm, $currentModule, $userModuleEventInvitation);
+                                return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
+                            }
                         }
                     }
+                    $modules[$moduleId]['pollModuleOptions']['pollProposalAddForm'] = $pollProposalAddForm->createView();
                 }
-                $modules[$moduleId]['pollModuleOptions']['pollProposalAddForm'] = $pollProposalAddForm->createView();
+                if (array_key_exists('pollModuleOptions', $moduleDescription)
+                    && array_key_exists('pollProposalListAddForm', $moduleDescription['pollModuleOptions'])
+                    && $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] instanceof FormInterface
+                ) {
+                    /** @var FormInterface $pollProposalListAddForm */
+                    $pollProposalListAddForm = $moduleDescription['pollModuleOptions']['pollProposalListAddForm'];
+                    $data = array();
+                    $pollProposalListAddForm->handleRequest($request);
+                    if ($pollProposalListAddForm->isSubmitted()) {
+                        if ($request->isXmlHttpRequest()) {
+                            if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                                ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                            ) {
+                                // Vérification serveur de la validité de l'invitation
+                                $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
+                                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                            } else if ($pollProposalListAddForm->isValid()) {
+                                $pollProposals = $this->pollProposalManager->treatPollProposalListForm($pollProposalListAddForm, $currentModule, $userModuleEventInvitation);
+                                $data[AppJsonResponse::DATA] = $this->pollProposalManager->displayPollProposalListRowPartial($pollProposals, $userEventInvitation);
+                                // Form reset
+                                $pollProposalAddForm = $this->pollProposalManager->createPollProposalAddForm($currentModule->getPollModule());
+                                $pollProposalListAddForm = $this->pollProposalManager->createPollProposalListAddForm($currentModule->getPollModule());
+                                $data = $this->createPollProposalFormActionReplace($userModuleEventInvitation, $pollProposalAddForm, $pollProposalListAddForm, $moduleDescription, $data);
+                                return new AppJsonResponse($data, Response::HTTP_OK);
+                            } else {
+                                $pollProposalAddForm = $this->pollProposalManager->createPollProposalAddForm($currentModule->getPollModule());
+                                $data = $this->createPollProposalFormActionReplace($userModuleEventInvitation, $pollProposalAddForm, $pollProposalListAddForm, $moduleDescription, $data);
+                                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                            }
+                        } else {
+                            if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+                                ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                            ) {
+                                // Vérification serveur de la validité de l'invitation
+                                $this->session->getFlashBag()->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("event.error.message.valide_guestname_required"));
+                                return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
+                            } else if ($pollProposalListAddForm->isValid()) {
+                                $this->pollProposalManager->treatPollProposalListForm($pollProposalListAddForm, $currentModule, $userModuleEventInvitation);
+                                return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
+                            }
+                        }
+                    }
+                    $modules[$moduleId]['pollModuleOptions']['pollProposalListAddForm'] = $pollProposalListAddForm->createView();
+                }
             }
-            if (array_key_exists('pollModuleOptions', $moduleDescription)
-                && array_key_exists('pollProposalListAddForm', $moduleDescription['pollModuleOptions'])
-                && $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] instanceof Form
+
+            //////////////////////
+            // kitty module case //
+            //////////////////////
+            if ($currentModule->getKittyModule() != null && array_key_exists('kittyModuleOptions', $moduleDescription)
+                && array_key_exists('kittyPraticipationForm', $moduleDescription['kittyModuleOptions'])
+                && $moduleDescription['kittyModuleOptions']['kittyPraticipationForm'] instanceof FormInterface
             ) {
-                /** @var FormInterface $pollProposalListAddForm */
-                $pollProposalListAddForm = $moduleDescription['pollModuleOptions']['pollProposalListAddForm'];
-                $data = array();
-                $pollProposalListAddForm->handleRequest($request);
-                if ($pollProposalListAddForm->isSubmitted()) {
+                /** @var FormInterface $kittyParticipationForm */
+                $kittyParticipationForm = $moduleDescription['kittyModuleOptions']['kittyPraticipationForm'];
+                $kittyParticipationForm->handleRequest($request);
+                if ($kittyParticipationForm->isSubmitted()) {
                     if ($request->isXmlHttpRequest()) {
                         if ($request->server->get('HTTP_REFERER') != $this->router->generate('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
                             ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
@@ -682,17 +737,29 @@ class EventManager
                             $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->translator->trans("event.error.message.valide_guestname_required");
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                        } else if ($pollProposalListAddForm->isValid()) {
-                            $pollProposals = $this->pollProposalManager->treatPollProposalListForm($pollProposalListAddForm, $currentModule, $userModuleEventInvitation);
-                            $data[AppJsonResponse::DATA] = $this->pollProposalManager->displayPollProposalListRowPartial($pollProposals, $userEventInvitation);
+                        } else if ($kittyParticipationForm->isValid()) {
+                            $this->kittyModuleManager->treatParticipationForm($kittyParticipationForm, $currentModule->getKittyModule(), $userModuleEventInvitation);
                             // Form reset
-                            $pollProposalAddForm = $this->pollProposalManager->createPollProposalAddForm($currentModule->getPollModule());
-                            $pollProposalListAddForm = $this->pollProposalManager->createPollProposalListAddForm($currentModule->getPollModule());
-                            $data = $this->createPollProposalFormActionReplace($userModuleEventInvitation, $pollProposalAddForm, $pollProposalListAddForm, $moduleDescription, $data);
+                            $kittyParticipationForm = $this->kittyModuleManager->createParticipationForm($currentModule->getKittyModule());
+
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#kittyModule-" . $currentModule->getToken() . "-participationForm"] =
+                                $this->templating->render("@App/Event/module/kittyModulePartials/kittyModule_participation_form.html.twig", array(
+                                    "module" => $currentModule,
+                                    "userModuleInvitation" => $userModuleEventInvitation,
+                                    "participationForm" => $kittyParticipationForm->createView()
+                                ));
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#kittyModule-' . $currentModule->getToken() . '-bodyContent'] =
+                                $this->templating->render("@App/Event/module/kittyModulePartials/kittyModule_body_content.html.twig", array(
+                                    'module' => $currentModule
+                                ));
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
-                            $pollProposalAddForm = $this->pollProposalManager->createPollProposalAddForm($currentModule->getPollModule());
-                            $data = $this->createPollProposalFormActionReplace($userModuleEventInvitation, $pollProposalAddForm, $pollProposalListAddForm, $moduleDescription, $data);
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]["#kittyModule-" . $currentModule->getToken() . "-participationForm"] =
+                                $this->templating->render("@App/Event/module/kittyModulePartials/kittyModule_participation_form.html.twig", array(
+                                    "module" => $currentModule,
+                                    "userModuleInvitation" => $userModuleEventInvitation,
+                                    "participationForm" => $kittyParticipationForm->createView()
+                                ));
                             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                         }
                     } else {
@@ -702,13 +769,13 @@ class EventManager
                             // Vérification serveur de la validité de l'invitation
                             $this->session->getFlashBag()->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("event.error.message.valide_guestname_required"));
                             return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
-                        } else if ($pollProposalListAddForm->isValid()) {
-                            $this->pollProposalManager->treatPollProposalListForm($pollProposalListAddForm, $currentModule, $userModuleEventInvitation);
+                        } else if ($kittyParticipationForm->isValid()) {
+                            $this->kittyModuleManager->treatParticipationForm($kittyParticipationForm, $currentModule->getKittyModule(), $userModuleEventInvitation);
                             return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())) . '#module-' . $currentModule->getToken());
                         }
                     }
                 }
-                $modules[$moduleId]['pollModuleOptions']['pollProposalListAddForm'] = $pollProposalListAddForm->createView();
+                $modules[$moduleId]['kittyModuleOptions']['kittyPraticipationForm'] = $kittyParticipationForm->createView();
             }
         }
         // nothing to return continue the action

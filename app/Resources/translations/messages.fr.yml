@@ -595,6 +595,16 @@ kittymodule:
     objectiveType:
       label: "Objectif donné à titre indicatif"
 
+kittyParticipation:
+  modal:
+    title: "Participer à la cagnotte"
+  form:
+    amount:
+      label: "Montant de votre participation :"
+    message:
+      label: "Message"
+      placeholder: "Ecrivez un message au sujet de votre participation"
+
 moduleInvitation:
   error.message:
     missing_data: Des informations sont manquantes pour traiter la requête.

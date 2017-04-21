@@ -97,7 +97,8 @@
                             'module':moduleDescription.module,
                             'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
                             'userModuleInvitation':userModuleInvitation,
-                            'thread':moduleDescription.thread,'comments':moduleDescription.comments
+                            'thread':moduleDescription.thread,'comments':moduleDescription.comments,
+                            'kittyModuleOptions':(moduleDescription.kittyModuleOptions is defined?moduleDescription.kittyModuleOptions:null)
                         }) }}
                     {% else %}
                         {{ include('@App/Event/module/displayModule.html.twig', {

@@ -1,0 +1,53 @@
+{# Formulaire de participation à une cagnotte
+
+Données d'entrée :
+- module (Module) Le module à afficher
+- userModuleInvitation (ModuleInvitation) l'invitation au module de l'utilisateur courant
+- participationForm (Form) le forumulaire pour participer à la cagnotte
+#}
+
+
+<div id="kittyModule-{{ module.token }}-participationForm">
+    {{ form_start(participationForm, {'action':path('displayEvent', {'token':module.event.token}), 'attr':{'id':participationForm.vars.id} }) }}
+    <div class="row">
+        <div class="col-sm-12">
+            {{ form_row(participationForm.amount, {
+                'label': 'kittyParticipation.form.amount.label',
+                'attr':{},
+                'widget_options':{'label_icon':'fa fa-euro','fgfloat':true, 'fgline':true}
+            }) }}<br/>
+            {{ form_row(participationForm.message, {
+                'label':'kittyParticipation.form.message.label',
+                'label_attr':{'class':'sr-only'},
+                'attr':{'rows':3, 'placeholder':'kittyParticipation.form.message.placeholder'},
+                'widget_options':{'label_icon':'zmdi zmdi-receipt','fgline':true}
+            }) }}
+        </div>
+    </div>
+
+    <div class="pull-right m-r-20 m-t-10">
+        <button type="button" class="btn btn-flat waves-effect" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
+        <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+    </div>
+
+    <div class="hidden">
+        {{ form_rest(participationForm) }}
+    </div>
+    {{ form_end(participationForm) }}
+    <div class="clearfix"></div>
+
+    <script>
+        $(document).ready(function () {
+            $('form#{{ participationForm.vars.id }}').on("submit", function (e) {
+                e.preventDefault();
+                var form = $(this);
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    $('#kittyModule-{{ module.token }}-participationModal-id').modal('hide');
+                    askGuestName(e, submitKittyParticipationForm, [form, e, "{{ module.token }}"]);
+                } else {
+                    submitKittyParticipationForm([form, e, "{{ module.token }}"]);
+                }
+            });
+        });
+    </script>
+</div>

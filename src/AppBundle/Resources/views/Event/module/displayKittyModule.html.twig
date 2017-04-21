@@ -7,6 +7,8 @@
 - thread (Thread) Le fil de discussion du module
 - comments(Comment[]) Les commentaires appartenant au fil de discussion du module
 
+- kittyModuleOptions  (Array), contains:
+    - kittyPraticipationForm (Form|null) Le formulaire de participation
 #}
 
 {% block moduleCardClass %}{{ parent() }}{% endblock moduleCardClass %}
@@ -20,3 +22,11 @@
         {{ include("@App/Event/module/kittyModulePartials/kittyModule_body_content.html.twig", {'module':module}) }}
     </div>
 {% endblock moduleBody %}
+
+{% block module_modal_container %}
+    {% if kittyModuleOptions.kittyPraticipationForm is defined %}
+        {{ include('@App/Event/module/kittyModulePartials/kittyModule_participation_modal.html.twig', {
+            'module':module, 'userModuleInvitation':userModuleInvitation, 'participationForm':kittyModuleOptions.kittyPraticipationForm
+        }) }}
+    {% endif %}
+{% endblock module_modal_container %}

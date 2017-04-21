@@ -20,7 +20,7 @@ services:
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
-    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@session','@security.authorization_checker','@router','@templating','@translator','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation','@at.manager.discussion','@app.mailer.common', '@at.manager.notification']
+    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@session','@security.authorization_checker','@router','@templating','@translator','@form.factory','@at.service.gentoken','@at.manager.module', '@at.manager.kittymodule', '@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation','@at.manager.discussion','@app.mailer.common', '@at.manager.notification']
 
   at.manager.discussion:
     class: AppBundle\Manager\DiscussionManager
@@ -29,6 +29,10 @@ services:
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
     arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation','@at.manager.pollproposal','@at.manager.discussion','@translator']
+
+  at.manager.kittymodule:
+    class: AppBundle\Manager\KittyModuleManager
+    arguments: ['@doctrine.orm.entity_manager','@form.factory','@templating']
 
   at.manager.event_invitation:
     class: AppBundle\Manager\EventInvitationManager

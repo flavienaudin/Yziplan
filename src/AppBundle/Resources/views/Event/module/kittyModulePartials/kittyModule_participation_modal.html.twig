@@ -1,0 +1,28 @@
+{# Modal de participation à une cagnotte
+
+Données d'entrée :
+- module (Module) Le module à afficher
+- userModuleInvitation (ModuleInvitation) l'invitation au module de l'utilisateur courant
+- participationForm (Form) le forumulaire pour participer à la cagnotte
+#}
+
+<div class="modal fade" id="kittyModule-{{ module.token }}-participationModal-id" tabindex="-1" role="dialog" aria-hidden="true"
+     aria-labelledby="#kittyModule-{{ module.token }}-participationModal-title" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="kittyModule-{{ module.token }}-participationModal-title">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
+                    <h3>{{ "kittyParticipation.modal.title"|trans }}</h3>
+                    <small>{{ module.description|raw }}</small>
+                </div>
+            </div>
+            <div class="modal-body">
+                {{ include('@App/Event/module/kittyModulePartials/kittyModule_participation_form.html.twig', {
+                    'module' : module, 'userModuleInvitation':userModuleInvitation, 'participationForm': participationForm
+                }) }}
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -203,3 +203,19 @@ function submitModuleEditionForm(params) {
         }
     });
 }
+
+
+/** fonction pour soumettre le formulaire de participation à une cagnotte */
+function submitKittyParticipationForm(params) {
+    var form = params[0];
+    var e = params[1];
+    var moduleToken = params[2];
+    ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
+        $("#kittyModule-" + moduleToken + "-participationModal-id").modal('hide');
+    }, null, function () {
+        $grid = $('.grid');
+        if ($grid[0]) {
+            $grid.masonry('layout');
+        }
+    });
+}

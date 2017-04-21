@@ -3,9 +3,9 @@
 namespace AppBundle\Entity\Module;
 
 use AppBundle\Entity\Event\Module;
+use AppBundle\Utils\enum\KittyParticipationStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Intl\Intl;
 
 /**
  * KittyModule
@@ -212,5 +212,19 @@ class KittyModule
     {
         $this->participations->removeElement($participation);
     }
+
+    /** Recalculate the totalAmount */
+    public function updateTotalAmount()
+    {
+        $this->totalAmount = 0;
+        /** @var KittyParticipation $participation */
+        foreach ($this->participations as $participation) {
+            if ($participation->getStatus() === KittyParticipationStatus::OK) {
+                $this->totalAmount += $participation->getAmount();
+            }
+        }
+        return $this->totalAmount;
+    }
 }
+
 

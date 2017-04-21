@@ -2,7 +2,7 @@
 - module (Module) Le module à afficher
 #}
 
-<div id="module-{{ module.token }}-bodyContent">
+<div id="kittyModule-{{ module.token }}-bodyContent">
     {% if module.kittyModule.objectiveAmount is not null and module.kittyModule.objectiveAmount > 0 %}
         {% set objectivePercentage = (module.kittyModule.totalAmount * 100 / module.kittyModule.objectiveAmount) %}
         <div class="text-center">
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="w-150px center-block m-t-15">
-                <button class="btn btn-primary">{{ "global.button.participate"|trans }}</button>
+                <button class="btn btn-primary" data-toggle="modal" data-target="#kittyModule-{{ module.token }}-participationModal-id">{{ "global.button.participate"|trans }}</button>
             </div>
         </div>
     {% else %}
