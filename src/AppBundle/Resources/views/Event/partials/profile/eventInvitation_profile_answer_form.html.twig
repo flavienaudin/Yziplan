@@ -10,7 +10,7 @@ Données d'entrée :
     {% else %}
         {{ form_start(userEventInvitationAnswerForm, {'action': path('displayEvent', {'token':userEventInvitation.event.token}), 'attr':{'id':'userEventInvitationAnswer','class':'answer-form'}}) }}
 
-        <h4>{{ "eventInvitation.form.answer.label"|trans }}
+        <h4>{{ event.when is null ?"eventInvitation.form.answer.interested"|trans:"eventInvitation.form.answer.present"|trans }}
             {{ form_row(userEventInvitationAnswerForm.answer,{
                 'label_attr':{'class' : 'sr-only'},
                 'attr':{'type' : 'answer'}

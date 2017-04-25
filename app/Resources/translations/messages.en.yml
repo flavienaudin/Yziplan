@@ -337,8 +337,8 @@ eventInvitation:
     administration_link:
       label: Your personnal administration link <strong>to keep</strong>
     answer:
-      label: Your answer
-      placeholder: Your answer
+      interested: Are you interested?
+      present: Will you be present?
   answer:
     card:
       title: Your answer
