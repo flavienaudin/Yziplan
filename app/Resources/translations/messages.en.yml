@@ -415,7 +415,9 @@ event_invitation_preferences:
 
 invitations_list:
   display:
-    title: Guests list
+    title:
+      event: Guests list
+      template: Administrators list
     all_answers: See all the invitations
     new_invitations: Invite
     send_email: Send invitations

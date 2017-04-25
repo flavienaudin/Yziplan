@@ -10,7 +10,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
-                <h4 class="modal-title" id="guestsList_modal_title">{{ "invitations_list.display.title"|trans }}</h4>
+                <h4 class="modal-title" id="guestsList_modal_title">{{ event.template?"invitations_list.display.title.template"|trans:"invitations_list.display.title.event"|trans }}</h4>
             </div>
             <div class="modal-body p-0">
                 <div class="list-group text-center">

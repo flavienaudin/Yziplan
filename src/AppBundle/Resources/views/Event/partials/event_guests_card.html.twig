@@ -9,15 +9,17 @@
 
 <div class="card c-dark z-depth-1">
     <div class="card-header palette-Teal bg">
-        <h2><i class="zmdi zmdi-accounts-add zmdi-hc-lg c-white m-r-15"></i>{{ "invitations_list.display.title"|trans }}</h2>
+        <h2><i class="zmdi zmdi-accounts-add zmdi-hc-lg c-white m-r-15"></i>{{ event.template?"invitations_list.display.title.template"|trans:"invitations_list.display.title.event"|trans }}</h2>
     </div>
 
-    <div class="card-body border-bottom">
-        {{ include('@App/Event/partials/profile/eventInvitation_profile_answer_form.html.twig',{
-            'userEventInvitation' : userEventInvitation,
-            'userEventInvitationAnswerForm' : userEventInvitationAnswerForm
-        }) }}
-    </div>
+    {% if not event.template %}
+        <div class="card-body border-bottom">
+            {{ include('@App/Event/partials/profile/eventInvitation_profile_answer_form.html.twig',{
+                'userEventInvitation' : userEventInvitation,
+                'userEventInvitationAnswerForm' : userEventInvitationAnswerForm
+            }) }}
+        </div>
+    {% endif %}
 
     <div class="card-body border-bottom">
         {{ include("@App/Event/partials/guests_list/guestsList_card_body.html.twig", {
