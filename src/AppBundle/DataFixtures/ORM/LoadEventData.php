@@ -162,18 +162,12 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
 
         $pollProposal1 = new PollProposal();
         $pollProposal1->setCreator($eventInvitationCreator->getModuleInvitationForModule($modulePoll));
-        $pollProposal1Act1 = new PollProposalElement();
-        $pollProposal1Act1->setValString("Match de rugby");
-        $pollModule->getPollElements()->first()->addPollProposalElement($pollProposal1Act1);
-        $pollProposal1->addPollProposalElement($pollProposal1Act1);
+        $pollProposal1->setValString("Match de rugby");
         $pollModule->addPollProposal($pollProposal1);
 
         $pollProposal2 = new PollProposal();
         $pollProposal2->setCreator($eventInvitationCreator->getModuleInvitationForModule($modulePoll));
-        $pollProposal2Act1 = new PollProposalElement();
-        $pollProposal2Act1->setValString("Carcassonne");
-        $pollModule->getPollElements()->first()->addPollProposalElement($pollProposal2Act1);
-        $pollProposal2->addPollProposalElement($pollProposal2Act1);
+        $pollProposal2->setValString("Carcassonne");
         $pollModule->addPollProposal($pollProposal2);
 
         $manager->persist($event1);
