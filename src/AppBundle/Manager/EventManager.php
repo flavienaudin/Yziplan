@@ -595,7 +595,7 @@ class EventManager
                             ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
                         ) {
                             // Vérification serveur de la validité de l'invitation
-                            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->translator->trans("event.error.message.valide_guestname_required");
+                            $this->session->getFlashBag()->add(FlashBagTypes::ERROR_TYPE, $this->translator->trans("event.error.message.valide_guestname_required"));
                             return new RedirectResponse($this->router->generate('displayEvent', array('token' => $event->getToken())));
                         } elseif ($moduleForm->isValid()) {
                             $module = $this->moduleManager->treatUpdateFormModule($moduleForm);

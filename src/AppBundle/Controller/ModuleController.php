@@ -49,7 +49,7 @@ class ModuleController extends Controller
                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");;
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.valide_guestname_required"));
                 return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
             }
         } else {
@@ -92,7 +92,7 @@ class ModuleController extends Controller
                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.valide_guestname_required"));
                 return $this->redirectToRoute('displayEvent', array('token' => $module->getEvent()->getToken()));
             }
         } else {
