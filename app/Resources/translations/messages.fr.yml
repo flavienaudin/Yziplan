@@ -14,7 +14,7 @@ base:
     text2: Désolé pour le dérangement!
   footer:
     home: Accueil
-    about_us: Qui sommes nous?
+    about_us: Qui sommes nous ?
     directory: Annuaire d'activités
     pro: Pro
 
@@ -234,7 +234,7 @@ event:
       title: Etes-vous sûr de vouloir annuler cet événement ?
       message: <p><strong>Cette action est irréversible</strong></p><p>Vous ne pourrez plus y accéder, vos invités seront avertis et ne pourront également plus participer</p>
       input:
-        label: Indiquez ci-dessous à vos invités pourquoi vous annulez cet événement :
+        label: Pourquoi annulez-vous cet événement :
         placeholder: Facultatif
   wizard:
     button:
@@ -336,8 +336,8 @@ eventInvitation:
     administration_link:
       label: Votre lien personnel d'administration <strong>à conserver</strong>
     answer:
-      interested: Etes-vous intéressés ?
-      present: Serez-vous présents ?
+      interested: Etes-vous intéressé ?
+      present: Serez-vous présent ?
   answer:
     card:
       title: Votre réponse
@@ -370,7 +370,7 @@ eventInvitation:
   message:
     warning:
       email_owned_by_accountuser: Attention! Cet e-mail appartient à un compte utilisateur. Connectez-vous afin de profiter de toutes les fonctionnalités
-      another_invitation_already_exists_for_user: Vous avez déjà une invitation pour cet événement, vous avez été redirigés vers celle-ci
+      another_invitation_already_exists_for_user: Vous avez déjà une invitation pour cet événement, vous avez été redirigé vers celle-ci
       invitation_cancelled: Votre invitation est annulée, vous ne pouvez plus participer à l'organisation
     error:
       unauthorized_modify_answer: Vous n'avez pas les autorisations pour modifier la réponse de cette invitation
@@ -394,7 +394,7 @@ event_invitation_preferences:
   notification:
     page:
       title: "Préférences de notification par email"
-      subtitle: "Concernant l'événement \"%event_name%\" auquel vous êtes conviés"
+      subtitle: "Concernant l'événement \"%event_name%\" auquel vous êtes convié"
       paragraphe:
         contact_email: "Votre email de contact : %contact_name% %email%"
         frequency_management: "Gérez la fréquence des emails vous avertissant des participation sur l'événement"
@@ -587,7 +587,7 @@ addModule:
 moduleInvitation:
   error.message:
     missing_data: Des informations sont manquantes pour traiter la requête.
-    unauthorized_access: Vous n'êtes pas autoriser à modifier cette réponse
+    unauthorized_access: Vous n'êtes pas autorisé à modifier cette réponse
 
 duplication:
   notice:
@@ -609,7 +609,7 @@ notifications:
   emails:
     common:
       invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
-      preferences_link: "Vous recevez cette notification car vous y êtes abonnés. Suivez-le lien ci-dessous pour vous désinscrire:"
+      preferences_link: "Vous recevez cette notification car vous y êtes abonné. Suivez-le lien ci-dessous pour vous désinscrire:"
       preferences: Préférences
     new_comment:
       subject: "%event_name% - Vous avez reçu un message"
