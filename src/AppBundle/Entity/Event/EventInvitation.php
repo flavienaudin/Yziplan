@@ -502,7 +502,7 @@ class EventInvitation
      * Retourne l'email de l'invité à afficher en fonction de l'utilisateur associé.
      * @return string
      */
-    public function getDisplayableEmail()
+    public function getDisplayableEmail($appliedRot13 = false)
     {
         $displayableEmail = null;
         if ($this->getApplicationUser() != null) {
@@ -511,6 +511,9 @@ class EventInvitation
             } elseif ($this->getApplicationUser()->getAccountUser() != null) {
                 $displayableEmail = $this->getApplicationUser()->getAccountUser()->getEmail();
             }
+        }
+        if($appliedRot13){
+            $displayableEmail = str_rot13($displayableEmail);
         }
         return $displayableEmail;
     }

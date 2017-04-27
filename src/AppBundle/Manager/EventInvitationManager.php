@@ -361,6 +361,27 @@ class EventInvitationManager
     }
 
     /**
+     * Set EventInvitation.answer == $answerValue
+     *
+     * @param EventInvitation|null $eventInvitation If null, $this->eventInvitation is used
+     * @param $answerValue string La nouvelle valeure de la réponse
+     * @return bool true if the update is successful
+     */
+    public function modifyAnswerEventInvitation(EventInvitation $eventInvitation = null, $answerValue)
+    {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        if ($this->eventInvitation != null) {
+            //if (EventInvitationAnswer::hasType($answerValue)) {
+                $this->eventInvitation->setAnswer($answerValue);
+                return $this->persistEventInvitation();
+            //}
+        }
+        return false;
+    }
+
+    /**
      * Set EventInvitation.status == EventInvitationStatus::CANCELLED
      *
      * @param EventInvitation|null $eventInvitation If null, $this->eventInvitation is used;

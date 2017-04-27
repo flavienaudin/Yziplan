@@ -50,19 +50,6 @@ $(document).ready(function () {
             customClass: 'ie9-placeholder'
         });
     }
-
-    /* --------------------------------------------------------
-     Decode hidden email
-     ----------------------------------------------------------*/
-    $("a.hidden-email").each(function () {
-        var hrefEmail = $(this).attr("href");
-        if (hrefEmail.indexOf("mailto:") === 0) {
-            hrefEmail = hrefEmail.substr(7);
-        }
-        var decodedEmail = $.rot13(hrefEmail);
-        $(this).attr("href", "mailto:" + decodedEmail);
-        $(this).rot13();
-    });
 });
 
 /**
@@ -201,6 +188,7 @@ function initPopover() {
  *  - Waves Effect
  *  - FgLine/FgFloat text fields
  *  - Popover
+ *  - hidden-email rot13
  */
 function jsPlugginActivation() {
     /** Autosize **/
@@ -283,6 +271,21 @@ function jsPlugginActivation() {
     initTextFieldsFgLineFloat();
     /** Popover */
     initPopover();
+
+    /* --------------------------------------------------------
+     Decode hidden email
+     ----------------------------------------------------------*/
+    $(".hidden-email").each(function () {
+        var hrefEmail = $(this).attr("href");
+        if (hrefEmail) {
+            if (hrefEmail.indexOf("mailto:") === 0) {
+                hrefEmail = hrefEmail.substr(7);
+            }
+            var decodedEmail = $.rot13(hrefEmail);
+            $(this).attr("href", "mailto:" + decodedEmail);
+        }
+        $(this).rot13();
+    });
 }
 
 /**

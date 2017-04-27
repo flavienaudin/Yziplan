@@ -24,6 +24,8 @@ class EventInvitationVoter extends Voter
     const INVITE = 'event_invitation.invite';
     /* When user want to access an EventInvitation to edit it */
     const EDIT = 'event_invitation.edit';
+    /* When user want to access an EventInvitation to modify its answer */
+    const MODIFY_ANSWER = 'event_invitation.modify_anwser';
     /* To cancel en event invitation : the user's EventInvitation and the EventInvitation to cancel are required */
     const CANCEL = 'event_invitation.cancel';
     /* To cancel en event invitation : the user's EventInvitation and the EventInvitation to cancel are required */
@@ -34,7 +36,7 @@ class EventInvitationVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, array(self::CREATE, self::INVITE, self::EDIT, self::CANCEL, self::ARCHIVE))) {
+        if (!in_array($attribute, array(self::CREATE, self::INVITE, self::EDIT, self::MODIFY_ANSWER, self::CANCEL, self::ARCHIVE))) {
             return false;
         }
         if (($attribute == self::CREATE || $attribute == self::INVITE) && !$subject instanceof Event) {
@@ -43,7 +45,8 @@ class EventInvitationVoter extends Voter
         if (($attribute == self::EDIT || $attribute == self::ARCHIVE) && !$subject instanceof EventInvitation) {
             return false;
         }
-        if ($attribute == self::CANCEL && (!is_array($subject) || count($subject) != 2 || !($subject[0] instanceof EventInvitation) || !($subject[1] instanceof EventInvitation))) {
+        if ( ($attribute == self::CANCEL || $attribute == self::MODIFY_ANSWER) && (!is_array($subject) || count($subject) != 2 || !($subject[0] instanceof EventInvitation) || !($subject[1] instanceof
+                    EventInvitation))) {
             return false;
         }
         return true;
@@ -82,6 +85,7 @@ class EventInvitationVoter extends Voter
                     return true;
                 }
                 return false;
+            case self::MODIFY_ANSWER:
             case self::CANCEL:
                 /** @var EventInvitation $userEventInvitation */
                 $userEventInvitation = $subject[0]; // $subject[0] must be an EventInvitation instance, thanks to the supports method

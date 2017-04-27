@@ -373,6 +373,7 @@ eventInvitation:
       another_invitation_already_exists_for_user: Vous avez déjà une invitation pour cet événement, vous avez été redirigés vers celle-ci
       invitation_cancelled: Votre invitation est annulée, vous ne pouvez plus participer à l'organisation
     error:
+      unauthorized_modify_answer: Vous n'avez pas les autorisations pour modifier la réponse de cette invitation
       unauthorized_cancel: Vous n'avez pas les autorisations pour annuler cette invitation
       unauthorized_access: Vous n'êtes pas invité à cet événement
   email:
@@ -437,13 +438,15 @@ invitations:
   display:
     title: Invitez des amis
     cancel:
-      link: Annuler l'invitation de %name%
-      link_noname: Annuler l'invitation
+      link: Annuler l'invitation
       swal:
         text: Etes-vous sûr de vouloir annuler l'invitation de %name% ?
         text_noname: Etes-vous sûr de vouloir annuler cette invitation ?
       message:
         success: L'invitation a bien été annulée
+    modify_answer:
+      link: Modifier la réponse
+      message.success: La réponse a bien été modifiée
   form:
     invitations:
       label: En leur envoyant un e-mail

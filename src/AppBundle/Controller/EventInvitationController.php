@@ -138,6 +138,55 @@ class EventInvitationController extends Controller
         }
     }*/
 
+
+    /**
+     * @Route("/modify-answer/{eventInvitTokenToModifyAnswer}/{answerValue}", name="modifyGuestEventInvitation" )
+     * @ParamConverter("eventInvitTokenToModifyAnswer", class="AppBundle:Event\EventInvitation", options={"mapping": {"eventInvitTokenToModifyAnswer":"token"}})
+     */
+    public function modifyGuestEventInvitationAnswerAction(EventInvitation $eventInvitTokenToModifyAnswer, $answerValue, Request $request)
+    {
+        $userEventInvitation = null;
+        $eventInvitationManager = $this->get("at.manager.event_invitation");
+        if ($eventInvitTokenToModifyAnswer != null) {
+            // Get the UserInvitation
+            $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($eventInvitTokenToModifyAnswer->getEvent(), false, false, $this->getUser());
+        }
+
+        // Only creator/admnsitrators can cancel an EventInvitation
+        if ($this->isGranted(EventInvitationVoter::MODIFY_ANSWER, [$userEventInvitation, $eventInvitTokenToModifyAnswer])) {
+            if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                // Vérification serveur de la validité de l'invitation
+                if ($request->isXmlHttpRequest()) {
+                    $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                } else {
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.valide_guestname_required"));
+                    return $this->redirectToRoute('displayEvent', array('token' => $userEventInvitation->getEvent()->getToken()));
+                }
+            } elseif ($eventInvitationManager->modifyAnswerEventInvitation($eventInvitTokenToModifyAnswer, $answerValue)) {
+                if ($request->isXmlHttpRequest()) {
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("invitations.display.modify_answer.message.success");
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("invitations.display.modify_answer.message.success"));
+                    return $this->redirectToRoute("displayEvent", array("token" => $eventInvitTokenToModifyAnswer->getEvent()->getToken()));
+                }
+            }
+        }
+        if ($request->isXmlHttpRequest()) {
+            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.message.error.unauthorized_modify_answer");
+            return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_modify_answer"));
+            if ($eventInvitTokenToModifyAnswer != null) {
+                return $this->redirectToRoute("displayEvent", array("token" => $eventInvitTokenToModifyAnswer->getEvent()->getToken()));
+            } else {
+                return $this->redirectToRoute("home");
+            }
+        }
+    }
+
     /**
      * @Route("/cancel/{eventInvitationTokenToCancel}", name="cancelEventInvitation" )
      * @ParamConverter("eventInvitationToCancel", class="AppBundle:Event\EventInvitation", options={"mapping": {"eventInvitationTokenToCancel":"token"}})

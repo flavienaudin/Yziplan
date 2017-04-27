@@ -374,6 +374,7 @@ eventInvitation:
       another_invitation_already_exists_for_user: You already have an invitation to this event, you were redirected
       invitation_cancelled: Your invitation is cancelled, you cannot participate in the organization anymore
     error:
+      unauthorized_modify_answer: You are not allowed to modify the answer of this invitation
       unauthorized_cancel: You are not allowed to cancel this invitation
       unauthorized_access: You are ot invited to this event
   email:
@@ -438,13 +439,15 @@ invitations:
   display:
     title: Invite your friends
     cancel:
-      link: Cancel %name%'s invitation
-      link_noname: Cancel invitation
+      link: Cancel this invitation
       swal:
         text: Are you sure you want to cancel %name%'s invitation?
         text_noname: Are you sure you want to cancel this invitation?
       message:
         success: The invitation has been cancelled
+    modify_answer:
+      link: Modify the answer
+      message.success: The answer has been modfied
   form:
     invitations:
       label: By sending them an email
