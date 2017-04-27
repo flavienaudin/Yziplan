@@ -167,6 +167,11 @@ class EventInvitationController extends Controller
             } elseif ($eventInvitationManager->modifyAnswerEventInvitation($eventInvitTokenToModifyAnswer, $answerValue)) {
                 if ($request->isXmlHttpRequest()) {
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("invitations.display.modify_answer.message.success");
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#guests_list'] =
+                        $this->renderView("@App/Event/partials/guests_list/guestsList_card_body.html.twig", array(
+                            'userEventInvitation' => $userEventInvitation,
+                            'event' => $eventInvitTokenToModifyAnswer->getEvent()
+                        ));
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("invitations.display.modify_answer.message.success"));
