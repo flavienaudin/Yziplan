@@ -580,7 +580,7 @@ h1.event-title {
 .answer-form .btn-answer-maybe:active {
     background-color: #ffc107;
     color: white;
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .answer-form .btn-answer-true,
