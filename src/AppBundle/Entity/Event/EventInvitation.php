@@ -63,9 +63,9 @@ class EventInvitation
      * Cf. AppBundle/Utils/enum/EventInvitationAnswer
      * @var string
      *
-     * @ORM\Column(name="answer", type="enum_eventinvitation_answer", length=128, nullable=false)
+     * @ORM\Column(name="answer", type="enum_eventinvitation_answer", length=128, nullable=true)
      */
-    private $answer = EventInvitationAnswer::DONT_KNOW;
+    private $answer;
 
     /**
      * @var bool

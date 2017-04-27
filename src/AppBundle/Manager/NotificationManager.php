@@ -17,7 +17,6 @@ use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Notifications\Notification;
 use AppBundle\Mailer\AppMailer;
-use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\NotificationFrequencyEnum;
 use AppBundle\Utils\enum\NotificationTypeEnum;
@@ -164,7 +163,7 @@ class NotificationManager
         /** @var Event $event */
         $event = ($subject instanceof Module ? $subject->getEvent() : $subject);
         /** @var EventInvitation $eventInvitation */
-        foreach ($event->getEventInvitationByAnswer([EventInvitationAnswer::YES, EventInvitationAnswer::DONT_KNOW, EventInvitationAnswer::NO]) as $eventInvitation) {
+        foreach ($event->getEventInvitationByAnswer() as $eventInvitation) {
             if ($eventInvitation !== $creatorEventInvitation) {
                 $new_comment_notification = new Notification();
                 $new_comment_notification->setDate($new_notification_date);
@@ -172,7 +171,6 @@ class NotificationManager
                 $new_comment_notification->setData($data);
                 $eventInvitation->addNotification($new_comment_notification);
                 $this->entityManager->persist($new_comment_notification);
-
 
                 if ($eventInvitation->getEventInvitationPreferences()->getNotifEmailFrequency() !== NotificationFrequencyEnum::NEVER
                     && $eventInvitation->getEventInvitationPreferences()->isNotifNewComment()

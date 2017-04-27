@@ -11034,7 +11034,8 @@ pre {
     transition-duration: 300ms;
 }
 
-.dropdown-menu.dm-icon > li > a > .zmdi {
+.dropdown-menu.dm-icon > li > a > .zmdi,
+.dropdown-menu.dm-icon > li > a > .fa {
     line-height: 100%;
     vertical-align: top;
     font-size: 18px;
@@ -11236,7 +11237,8 @@ pre {
     text-align: center;
 }
 
-.tab-nav.tn-icon > li .zmdi {
+.tab-nav.tn-icon > li .zmdi,
+.tab-nav.tn-icon > li .fa {
     font-size: 22px;
     line-height: 100%;
     min-height: 25px;
@@ -12350,19 +12352,23 @@ pre {
     margin-bottom: 4px;
 }
 
-.rating-list .rl-star .zmdi {
+.rating-list .rl-star .zmdi,
+.rating-list .rl-star .fa {
     font-size: 20px;
 }
 
-.rating-list .rl-star .zmdi:not(.active) {
+.rating-list .rl-star .zmdi:not(.active),
+.rating-list .rl-star .fa:not(.active) {
     color: #ccc;
 }
 
-.rating-list .rl-star .zmdi.active {
+.rating-list .rl-star .zmdi.active,
+.rating-list .rl-star .fa.active {
     color: #ff9800;
 }
 
-.rating-list .media .zmdi-star {
+.rating-list .media .zmdi-star,
+.rating-list .media .fa-star {
     line-height: 100%;
     font-size: 22px;
     color: #FF9800;
@@ -12676,11 +12682,13 @@ fieldset[disabled] .btn-inverse:active {
     text-align: center;
 }
 
-.btn-icon .zmdi {
+.btn-icon .zmdi,
+.btn-icon .fa {
     font-size: 17px;
 }
 
-.btn-icon-text > .zmdi {
+.btn-icon-text > .zmdi,
+.btn-icon-text > .fa {
     font-size: 15px;
     vertical-align: top;
     display: inline-block;
@@ -12689,7 +12697,8 @@ fieldset[disabled] .btn-inverse:active {
     margin-right: 5px;
 }
 
-.btn-lg.btn-icon-text > .zmdi {
+.btn-lg.btn-icon-text > .zmdi,
+.btn-lg.btn-icon-text > .fa {
     font-size: 17px;
     vertical-align: baseline;
     margin-top: 0;
@@ -13013,7 +13022,8 @@ html:not(.ie9) .select.fg-line:before {
     min-width: 45px;
 }
 
-.input-group .input-group-addon > .zmdi {
+.input-group .input-group-addon > .zmdi,
+.input-group .input-group-addon > .fa {
     position: relative;
     top: 3px;
 }
@@ -13346,7 +13356,9 @@ html:not(.ie9) .select.fg-line:before {
 }
 
 .pagination > li > a > .zmdi,
-.pagination > li > span > .zmdi {
+.pagination > li > a > .fa,
+.pagination > li > span > .zmdi,
+.pagination > li > span > .fa {
     font-size: 22px;
     line-height: 39px;
 }
@@ -13521,7 +13533,8 @@ html:not(.ie9) .select.fg-line:before {
     filter: alpha(opacity=0);
 }
 
-.carousel .carousel-control .zmdi {
+.carousel .carousel-control .zmdi,
+.carousel .carousel-control .fa {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -13529,7 +13542,8 @@ html:not(.ie9) .select.fg-line:before {
 }
 
 @media screen and (min-width: 768px) {
-    .carousel .carousel-control .zmdi {
+    .carousel .carousel-control .zmdi,
+    .carousel .carousel-control .fa {
         font-size: 60px;
         width: 60px;
         height: 60px;
@@ -13539,7 +13553,8 @@ html:not(.ie9) .select.fg-line:before {
 }
 
 @media screen and (max-width: 991px) {
-    .carousel .carousel-control .zmdi {
+    .carousel .carousel-control .zmdi,
+    .carousel .carousel-control .fa {
         width: 24px;
         height: 24px;
         margin-top: -12px;

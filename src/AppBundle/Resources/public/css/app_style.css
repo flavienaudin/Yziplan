@@ -322,6 +322,14 @@
 }
 
 /*-----------------------------------
+    Generic filter
+-----------------------------------*/
+.grayscale-1{
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+}
+
+/*-----------------------------------
     Avatar (Adapt Material Design Extebded Admin
 ------------------------------------*/
 .avatar-img,
@@ -565,6 +573,7 @@ h1.event-title {
 .answer-form .btn-answer-maybe,
 .answer-form .btn-answer-maybe:hover {
     color: #ffc107;
+    font-weight: normal;
 }
 
 .answer-form .btn-answer-maybe.active,

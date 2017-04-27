@@ -17,5 +17,5 @@ class EventInvitationAnswer extends AbstractEnumType
     const NOT_INTERESTED = "eventInvitation.answer.not_interested";
 
     protected $name = 'enum_eventinvitation_answer';
-    protected $values = array(self::DONT_KNOW, self::YES, self::NO, self::INTERESTED, self::NOT_INTERESTED);
+    protected $values = array(null, self::DONT_KNOW, self::YES, self::NO, self::INTERESTED, self::NOT_INTERESTED);
 }

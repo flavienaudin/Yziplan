@@ -19,6 +19,7 @@ use AppBundle\Form\Event\InvitationsType;
 use AppBundle\Form\Event\SendMessageType;
 use AppBundle\Mailer\AppMailer;
 use AppBundle\Security\ModuleVoter;
+use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
@@ -376,7 +377,8 @@ class EventManager
             if ($selection == null || !is_array($selection)) {
                 $selection = array();
             }
-            $recipients = $this->event->getEventInvitationByAnswer($selection);
+            $getAnswerNull = in_array(EventInvitationAnswer::DONT_KNOW, $selection);
+            $recipients = $this->event->getEventInvitationByAnswer($selection, $getAnswerNull);
             if ($recipients->contains($userEventInvitation)) {
                 // On n'envoit pas le message à l'expéditeur
                 $recipients->removeElement($userEventInvitation);

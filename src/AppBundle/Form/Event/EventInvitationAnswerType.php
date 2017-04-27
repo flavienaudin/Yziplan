@@ -72,7 +72,7 @@ class EventInvitationAnswerType extends AbstractType
                             } elseif ($val == EventInvitationAnswer::NO) {
                                 $data_class = 'btn-answer-false zmdi zmdi-close';
                             } else {
-                                $data_class = 'btn-answer-maybe';
+                                $data_class = 'btn-answer-maybe fa fa-question';
                             }
                             return ['dataclass' => $data_class];
                         },
@@ -82,7 +82,7 @@ class EventInvitationAnswerType extends AbstractType
                             } elseif ($val == EventInvitationAnswer::NO) {
                                 return false;
                             } else {
-                                return "?";
+                                return false;
                             }
                         }
                     ));
