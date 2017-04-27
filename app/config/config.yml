@@ -35,6 +35,7 @@ framework:
         # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
         handler_id:  session.handler.native_file
         save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
+        cookie_lifetime:  604800
     fragments:       ~
     http_method_override: true
     assets: ~
@@ -95,6 +96,8 @@ doctrine:
             enum_transaction_status: AppBundle\Utils\enum\TransactionStatus
             enum_payment_transactiontrigger: AppBundle\Utils\enum\TransactionTrigger
             enum_dayofweek: AppBundle\Utils\enum\DayOfWeek
+            enum_notification_type: AppBundle\Utils\enum\NotificationTypeEnum
+            enum_notification_frequency: AppBundle\Utils\enum\NotificationFrequencyEnum
         connections:
             default:
                 driver:   pdo_mysql
@@ -140,16 +143,26 @@ vich_uploader:
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: "%mailer_transport%"
-    encryption: "%mailer_encryption%"
-    host:      "%mailer_host%"
-    port:      "%mailer_port%"
-    username:  "%mailer_user%"
-    password:  "%mailer_password%"
-    spool:     { type: memory }
-#    spool:
-#        type:                 file
-#        path:                 '%kernel.cache_dir%/swiftmailer/spool'
+    default_mailer: default_mailer
+    mailers:
+        default_mailer:
+            transport: "%mailer_transport%"
+            encryption: "%mailer_encryption%"
+            host:      "%mailer_host%"
+            port:      "%mailer_port%"
+            username:  "%mailer_user%"
+            password:  "%mailer_password%"
+            spool:     { type: memory }
+        spool_file_quickly:
+            transport: "%mailer_transport%"
+            encryption: "%mailer_encryption%"
+            host:      "%mailer_host%"
+            port:      "%mailer_port%"
+            username:  "%mailer_user%"
+            password:  "%mailer_password%"
+            spool:
+                type: file
+                path: '%kernel.cache_dir%/swiftmailer/spool'
 
 # FOS_User
 fos_user:

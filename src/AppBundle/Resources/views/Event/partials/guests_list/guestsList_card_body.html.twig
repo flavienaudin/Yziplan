@@ -20,12 +20,11 @@
             <a href="#guestsList_modal" class="btn btn-link c-blue" data-toggle="modal">{{ "invitations_list.display.list.yes"|trans({"%number%":eventInvitation_answer_yes|length}) }}</a>
             {% if eventInvitation_answer_yes|length>0 %}
                 <ul class="list-inline eventInvitations_list">
-                    {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
-                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
-                    {% endif %}
-                    {% for eventInvitation in eventInvitation_answer_yes if eventInvitation != userEventInvitation %}
-                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
-                    {% endfor %}
+                    {{ include('@App/Event/partials/guests_list/eventInvitations_list.html.twig', {
+                        'userEventInvitation' : userEventInvitation,
+                        'firstEventInvitation' : (userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES')?userEventInvitation:null),
+                        'eventInvitations' : eventInvitation_answer_yes
+                    }) }}
                 </ul>
             {% endif %}
         </div>
@@ -34,12 +33,11 @@
                 ({"%number%":eventInvitation_answer_dont_know|length}) }}</a>
             {% if eventInvitation_answer_dont_know|length>0 %}
                 <ul class="list-inline eventInvitations_list">
-                    {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') %}
-                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
-                    {% endif %}
-                    {% for eventInvitation in eventInvitation_answer_dont_know if eventInvitation != userEventInvitation %}
-                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
-                    {% endfor %}
+                    {{ include('@App/Event/partials/guests_list/eventInvitations_list.html.twig', {
+                        'userEventInvitation' : userEventInvitation,
+                        'firstEventInvitation' : (userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')?userEventInvitation:null),
+                        'eventInvitations' : eventInvitation_answer_dont_know
+                    }) }}
                 </ul>
             {% endif %}
         </div>
@@ -47,12 +45,11 @@
             <a href="#guestsList_modal" class="btn btn-link c-blue" data-toggle="modal">{{ "invitations_list.display.list.no"|trans({"%number%":eventInvitation_answer_no|length}) }}</a>
             {% if eventInvitation_answer_no|length>0 %}
                 <ul class="list-inline eventInvitations_list ">
-                    {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
-                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
-                    {% endif %}
-                    {% for eventInvitation in eventInvitation_answer_no if eventInvitation != userEventInvitation %}
-                        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
-                    {% endfor %}
+                    {{ include('@App/Event/partials/guests_list/eventInvitations_list.html.twig', {
+                        'userEventInvitation' : userEventInvitation,
+                        'firstEventInvitation' : (userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO')?userEventInvitation:null),
+                        'eventInvitations' : eventInvitation_answer_no
+                    }) }}
                 </ul>
             {% endif %}
         </div>
@@ -64,33 +61,33 @@
         </div>
     </div>
     <script>
-        $('.eventInvitations_list').find('li a.cancelInvitation').each(function () {
-            var $link = $(this);
-            $link.on('click', function (e) {
-                e.preventDefault();
-                var title = "";
-                if ($link.data('guestname') == "") {
-                    title = "{{ "invitations.display.cancel.swal.text_noname"|trans }}";
-                } else {
-                    title = "{{ "invitations.display.cancel.swal.text"|trans }}";
-                    title = title.replace('%name%', $link.data('guestname'));
-                }
-                swal({
-                    title: title,
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: '{{ "global.button.delete"|trans }}',
-                    showLoaderOnConfirm: true
-                }).then(function () {
-                    ajaxRequest($link, null, e, function (responseJSON, textStatus, jqXHR) {
-                        $($link).closest('li').remove();
-                    }, null, null);
+        $(document).ready(function () {
+            $('.eventInvitations_list').find('li a.cancelInvitation').each(function () {
+                var $link = $(this);
+                $link.on('click', function (e) {
+                    e.preventDefault();
+                    var title = "";
+                    if ($link.data('guestname') === "") {
+                        title = "{{ "invitations.display.cancel.swal.text_noname"|trans }}";
+                    } else {
+                        title = "{{ "invitations.display.cancel.swal.text"|trans }}";
+                        title = title.replace('%name%', $link.data('guestname'));
+                    }
+                    swal({
+                        title: title,
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: '{{ "global.button.delete"|trans }}',
+                        showLoaderOnConfirm: true
+                    }).then(function () {
+                        ajaxRequest($link, null, e, function (responseJSON, textStatus, jqXHR) {
+                            $($link).closest('li').remove();
+                        }, null, null);
+                    });
                 });
             });
-        });
 
-        $(document).ready(function () {
             LetterAvatar.transform();
         });
     </script>

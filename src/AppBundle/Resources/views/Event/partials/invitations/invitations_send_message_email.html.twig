@@ -1,101 +1,33 @@
+{% extends ":Email:template_email.html.twig" %}
 {# Données :
+- recipient_name (string) Le nom du destinaire
 - eventInvitation (EventInvitation) L'invitation de l'invité à qui envoyer l'email
 - message (String|null) Le message personnel des organisateurs
+- organizerNames (string) Le noms du.des organisateur.s à faire apparaître dans la signature
 #}
 
-{% block subject %}
-    {% autoescape false %}
-        {{ 'send_message.email.subject'|trans({"%event_name%":eventInvitation.event.name}) }}
-    {% endautoescape %}
+{% block subject_email %}{{ 'send_message.email.subject'|trans({"%event_name%":eventInvitation.event.name})|raw }}{% endblock %}
+
+{% block text_body %}
+    {% if message is defined and message is not empty %}
+        {{ message }}
+    {% endif %}
+
+    {{ "send_message.email.body.paragraph"|trans({"%event_name%":eventInvitation.event.name}) }}
+    {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
+    {{ "send_message.email.body.warning_secret"|trans }}
 {% endblock %}
-{% block body_text %}
-    {% set organizerNames = "" %}
-    {% set organizersInvitations = eventInvitation.event.organizers %}
-    {% for creatorInvitation in organizersInvitations %}
-        {% set organizerNames = organizerNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
-    {% endfor %}
-    {% autoescape false %}
-        {{ 'send_message.email.body.hello'|trans({'%username%': eventInvitation.displayableName(true, false)}) }}
+{% block text_signature %}{{ organizerNames is not empty?organizerNames:"email.signature.organizers"|trans }}{% endblock text_signature %}
 
-        {% if message is defined and message is not empty %}
-            {{ message|escape }}
-        {% endif %}
+{% block html_body %}
+    {% if message is defined and message is not empty %}
+        <div>{{ message|nl2br }}</div>
+    {% endif %}
 
-        {{ "send_message.email.body.paragraph"|trans({"%event_name%":eventInvitation.event.name}) }}
-        {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
-
-        {{ "email.salutation"|trans }},
-        {% if organizerNames is not empty %}{{ organizerNames }}{% endif %}
-    {% endautoescape %}
+    <p>{{ "send_message.email.body.paragraph"|trans({"%event_name%":eventInvitation.event.name}) }}<br> <a href="{{ url('displayEventInvitation', {'token':eventInvitation.token}) }}">
+            {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}</a></p>
+    <p style="text-align:center"><i>{{ "send_message.email.body.warning_secret"|trans }}</i></p>
 {% endblock %}
-{% block body_html %}{% spaceless %}
-    {% set organizerNames = "" %}
-    {% for creatorInvitation in eventInvitation.event.creators|merge(eventInvitation.event.administrators) %}
-        {% set organizerNames = organizerNames~(loop.index > 1?', ')~ creatorInvitation.displayableName(true, true) %}
-    {% endfor %}
-
-    <body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif; box-sizing: border-box; font-size: 14px; width: 100% !important; height: 100%;
-line-height: 1.6; background-color: #f6f6f6;">
-    <table style="background-color: #f6f6f6; width: 100%;">
-        <tr>
-            <td></td>
-            <td style="display: block !important; max-width: 600px !important; margin: 0 auto !important; clear: both !important;" width="600">
-                <div style="max-width: 600px; margin: 0 auto; display: block; padding: 20px;">
-                    <table style="background: #fff; border: 1px solid #e9e9e9; border-radius: 3px;" width="100%" cellpadding="0" cellspacing="0">
-                        <tr>
-                            <td style="padding: 20px;">
-                                <table style="background: #fff;" width="100%" cellpadding="0" cellspacing="0">
-                                    <tr>
-                                        <td style="background-color: #009688; text-align: center;">
-                                            <h1 style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: white; line-height: 1.2; font-weight: 400;">{{ "global.project_name"|trans }}</h1>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 0 0 20px;">
-                                            <h3 style="font-size: 18px; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; color: #000; margin: 40px 0 0; line-height: 1.2;
-                                        font-weight: 400;">{{ "eventInvitation.email.recap.body.hello"|trans({"%username%":eventInvitation.displayableName(true, false)}) }}</h3>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 0 0 20px;">
-                                            {% if message is defined and message is not empty %}
-                                                <div>{{ message|escape|nl2br }}</div>
-                                            {% endif %}
-                                            <br>
-                                            {{ "send_message.email.body.paragraph"|trans({"%event_name%":eventInvitation.event.name}) }}<br> <a
-                                                    href="{{ url('displayEventInvitation', {'token':eventInvitation.token}) }}">
-                                                {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}</a>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 0 0 5px;">
-                                            <p>{{ "email.salutation"|trans }},</p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style="padding: 0 0 20px;">
-                                            <h4>{% if organizerNames is not empty %}{{ organizerNames }}{% else %}{{ "email.organisers"|trans }}{% endif %}</h4>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                    <div style=" width: 100%; clear: both; color: #999; padding: 20px;">
-                        <table width="100%">
-                            <tr>
-                                <td style="padding: 0 0 20px; text-align: center;"><a style="color: #999; font-size: 12px;" href="{{ url("home") }}">{{ "global.project_name"|trans }}
-                                        - {{ url("home") }}</a></td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </td>
-            <td></td>
-        </tr>
-    </table>
-
-    </body>
-    </html>
-
-{% endspaceless %}{% endblock %}
+{% block html_signature %}
+    <h4>{% if organizerNames is not empty %}{{ organizerNames }}{% else %}{{ "email.signature.organizers"|trans }}{% endif %}</h4>
+{% endblock %}

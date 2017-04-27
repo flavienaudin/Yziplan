@@ -33,7 +33,11 @@
 
             {#Commande d'ouverture des panneaux d'affichage des notifications de l'utilisateur connecté "aside#s-user-alerts" #}
             <div class="hmp-alert" data-user-alert="sua-notifications" data-ma-action="sidebar-open" data-ma-target="user-alerts">
-                <a><i class="hm-icon zmdi {{ notifications|length>0?'zmdi-notifications':'zmdi-notifications-none' }}"></i></a>
+                <a> <i class="hm-icon zmdi {{ notifications|length>0?'zmdi-notifications-active animated infinite pulse':'zmdi-notifications-none' }}"></i>
+                    {% if notifications|length>0 %}
+                        <span class="notif_number">{{ notifications|length }}</span>
+                    {% endif %}
+                </a>
             </div>
         </li>
     {% endif %}
@@ -45,7 +49,7 @@
     {% endblock %}
 
     {% block notifications_side_panel_content %}
-        {{ include('@App/Notifications/notifications_side_panel.html.twig', {'notifications':notifications}) }}
+        {{ include('@App/Notifications/partials/notifications_side_panel.html.twig', {'notifications':notifications}) }}
     {% endblock notifications_side_panel_content %}
 {% endif %}
 
@@ -194,23 +198,47 @@
                 allowEscapeKey: false
             }).then(function () {
                 if (typeof askGuestName === "function") {
-                    askGuestName();
+                    {# On ne demande plus le nom après une duplication pour laisser le temps à l'utilisateur de découvrir la page
+                        // askGuestName();
+                    #}
                 }
             });
             {% endif %}
 
             {% if notifications is defined %}
+            var numberNotif = {{ notifications|length }};
             $('#mark_all_notifications').on('click', function (e) {
                 ajaxRequest($(this), null, e, function () {
                     $('.lgi-notification').remove();
                     $('[data-user-alert="sua-notifications"]').find('i').each(function () {
-                        $(this).removeClass('zmdi-notifications');
+                        $(this).removeClass('zmdi-notifications-active animated infinite pulse');
                         $(this).addClass('zmdi-notifications-none');
                     });
                     $('.notif_new_comment').removeClass('notif_new_comment');
+                    $('.notif_number').remove();
+                    numberNotif = 0;
                 })
             });
+
+            {# Suppression des notifications à la demande de l'utilisateur #}
+            $('#notificationsSidePanel').find('.notification_delete_link').on('click', function (e) {
+                ajaxRequest($(this), null, e, function () {
+                    numberNotif--;
+                    if(numberNotif === 0){
+                        $('[data-user-alert="sua-notifications"]').find('i').each(function () {
+                            $(this).removeClass('zmdi-notifications-active animated infinite pulse');
+                            $(this).addClass('zmdi-notifications-none');
+                        });
+                        $('.notif_number').remove();
+                    }else{
+                        $('.notif_number').html(numberNotif);
+                    }
+                });
+            });
             {% endif %}
+
+            {# Mise à jour de la date de dernière visite de l'utilisateur une fois la page générée #}
+            ajaxRequest('{{ path('updateLastVisitAtEventInvitation', {'token':userEventInvitation.token}) }}', null, null);
         });
 
         function initEventGMapAPI() {

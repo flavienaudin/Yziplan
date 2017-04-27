@@ -1,0 +1,70 @@
+{# Vue du formulaire de gestion des préférences de notification par email, liée à une EventInvitation
+Données d'entrée :
+- eventInvitation (EventInvitation) L'invitation concernée
+- notificationPreferencesForm (Form) Le formulaire à afficher
+#}
+
+<div id="notificationPreferences_formContainer">
+    {{ form_start(notificationPreferencesForm, { 'action' : path('setEmailNotificationPreferences', {'token':eventInvitation.token}),
+        'attr' : {'id': notificationPreferencesForm.vars.id }}) }}
+
+    <p>{{ "event_invitation_preferences.notification.page.paragraphe.contact_email"|trans({
+            '%contact_name%':eventInvitation.displayableName(false, false),
+            '%email%':eventInvitation.displayableEmail}
+        ) }}</p>
+
+    <p class="f-700">{{ "event_invitation_preferences.notification.page.paragraphe.frequency_management"|trans }}</p>
+    {{ form_row(notificationPreferencesForm.notifEmailFrequency, {
+        'label':'event_invitation_preferences.notification.form.notif_email_frequency.label'|trans,
+        'attr':{'class':'selectpicker'},
+        'widget_options':{'fgline':false}
+    }) }}
+
+    <div class="" id="notificationTypeInputs">
+        <p class="f-700">{{ "event_invitation_preferences.notification.page.paragraphe.type_management"|trans }}</p>
+        {% set toogleSwitchAttrs = {'class':'md-toogle-switch'} %}
+        {% if notificationPreferencesForm.notifEmailFrequency.vars.value == constant('AppBundle\\Utils\\enum\\NotificationFrequencyEnum::NEVER') %}
+            {% set toogleSwitchAttrs = {'class':'md-toogle-switch disabled', 'disabled':'disabled'} %}
+        {% endif %}
+        {{ form_row(notificationPreferencesForm.notifNewComment, {
+            'label' : 'event_invitation_preferences.notification.form.notif_new_comment.label'|trans,
+            'attr': toogleSwitchAttrs
+        }) }}
+        {{ form_row(notificationPreferencesForm.notifNewModule, {
+            'label' : 'event_invitation_preferences.notification.form.notif_new_module.label'|trans,
+            'attr': toogleSwitchAttrs
+        }) }}
+        {{ form_row(notificationPreferencesForm.notifNewPollpropsal, {
+            'label' : 'event_invitation_preferences.notification.form.notif_new_pollProposal.label'|trans,
+            'attr': toogleSwitchAttrs
+        }) }}
+    </div>
+    <div class="text-center">
+        <button type="reset" class="btn btn-flat">{{ "global.button.cancel"|trans }}</button>
+        <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}"
+                data-original-text="{{ "global.button.save"|trans }}">{{ "global.button.save"|trans }}</button>
+    </div>
+    {{ form_rest(notificationPreferencesForm) }}
+    {{ form_end(notificationPreferencesForm) }}
+    <script>
+        $(document).ready(function () {
+            $('#{{ notificationPreferencesForm.notifEmailFrequency.vars.id }}').on("change", function (e) {
+                if ($(this).val() === "{{ constant('AppBundle\\Utils\\enum\\NotificationFrequencyEnum::NEVER') }}") {
+                    $("#notificationTypeInputs").find('div.toggle-switch').each(function () {
+                        $(this).addClass('disabled');
+                        $(this).children('input').attr('disabled', 'disabled');
+                    });
+                } else {
+                    $("#notificationTypeInputs").find('div.toggle-switch').each(function () {
+                        $(this).removeClass('disabled');
+                        $(this).children('input').removeAttr('disabled');
+                    });
+                }
+            });
+
+            $('form#{{ notificationPreferencesForm.vars.id }}').on('submit', function (e) {
+                ajaxFormSubmission($(this), e);
+            })
+        });
+    </script>
+</div>

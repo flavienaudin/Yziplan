@@ -82,14 +82,11 @@ appuseremail:
       not_found: L'e-mail associé avec le token donné n'existe pas.
       wrong_user: L'e-mail n'est pas associé à ce compte.
     confirmationAppUserEmail_email:
-      subject: Yziplan Confirmation - Association d'un e-mail
+      subject: Yziplan - Confirmation de l'association d'un e-mail
       message: |
         Bonjour %username% !
 
         Pour valider l'association de l'email %email%, merci de vous rendre sur %confirmationUrl%
-
-        Cordialement,
-        L'équipé Yziplan.
   edit:
     message:
       error: Impossible de modifier cette association.
@@ -228,10 +225,10 @@ event:
         placeholder: Jour
       time_open:
         label: Heure d'ouverture
-        placeholder: Heure d'ouverture
+        placeholder: 00:00
       time_closed:
         label: Heure de fermeture
-        placeholder: Heure de fermeture
+        placeholder: 00:00
   alert:
     confirm_cancellation:
       title: Etes-vous sûr de vouloir annuler cet événement ?
@@ -255,11 +252,13 @@ event:
         not_connected: Si vous possédez déjà un compte, connectez-vous pour remplir les informations automatiquement
       invitation_email:
         title: Envoyer les invitations par email
+      invitation_list:
+        title: Invitations envoyées
       share_url:
         title: Partager le lien de l'événement
       template:
-        title: Lien de duplication à partager
-        paragraphe: "Afficher le lien suivant sur votre site internet et sur les réseaux sociaux. Vos visiteurs pourront facilement organiser leur prochaine sortie dans votre établissement."
+        title: Lien à partager
+        paragraphe: "Affichez le lien suivant sur votre site internet et sur les réseaux sociaux. Vos visiteurs pourront facilement organiser leur prochaine sortie dans votre établissement."
     invitations:
       title: Les invités
       subtitle: Renseignez les adresses e-mail des invités. Ils recevront un message avec le lien de leur invitation personnelle.
@@ -273,9 +272,8 @@ event:
     hello: Bonjour %guestname%
     text: Cet événement a été annnulé par l'organisateur, vous avez dû recevoir un e-mail|Cet événement a été annnulé par les organisateurs, vous avez dû recevoir un e-mail
     email:
-      subject: "Yziplan : \"%event_name%\" est annulé"
+      subject: "%event_name% - Evénement annulé"
       body:
-        hello: Bonjour %guestname%
         text: "Désolé, j'annule l'événement \"%event_name%\".|Désolé, nous annulons l'événement \"%event_name%\"."
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement
@@ -335,9 +333,11 @@ eventInvitation:
       placeholder: Votre e-mail de contact
     personal_link:
       label: Votre lien personnel <strong>à conserver</strong>
+    administration_link:
+      label: Votre lien personnel d'administration <strong>à conserver</strong>
     answer:
-      label: Serez-vous présents ?
-      placeholder: Serez-vous présents ?
+      interested: Etes-vous intéressés ?
+      present: Serez-vous présents ?
   answer:
     card:
       title: Votre réponse
@@ -373,26 +373,51 @@ eventInvitation:
       another_invitation_already_exists_for_user: Vous avez déjà une invitation pour cet événement, vous avez été redirigés vers celle-ci
       invitation_cancelled: Votre invitation est annulée, vous ne pouvez plus participer à l'organisation
     error:
+      unauthorized_modify_answer: Vous n'avez pas les autorisations pour modifier la réponse de cette invitation
       unauthorized_cancel: Vous n'avez pas les autorisations pour annuler cette invitation
       unauthorized_access: Vous n'êtes pas invité à cet événement
   email:
     invitation:
       subject: "Yziplan : Vous avez reçu une invitation"
       body:
-        hello: "Bonjour %username%!"
         paragraph:
           first_part: "Je vous invite à \"%event_name%\"|Nous vous invitons à \"%event_name%\""
           text_link: "Suivez le lien suivant pour y répondre:"
-          warning_secret: "Gardez-le secrètement, ceci votre invitation personnelle"
+          warning_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
     recap:
-      subject: "Yziplan : Lien personnel de votre invitation"
+      subject: "%eventName% : Votre lien personnel d'invitation"
       body:
-        hello: "Bonjour %username%!"
-        paragraph: "Vous participez à l'organisation de l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier votre participation, utilisez le lien ci-dessous :"
+        paragraph: "Vous participez à l'événement \"%event_name%\". Pour revenir sur la page de l'événement et modifier votre participation, utilisez le lien ci-dessous :"
+        warning_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
+
+event_invitation_preferences:
+  notification:
+    page:
+      title: "Préférences de notification par email"
+      subtitle: "Concernant l'événement \"%event_name%\" auquel vous êtes conviés"
+      paragraphe:
+        contact_email: "Votre email de contact : %contact_name% %email%"
+        frequency_management: "Gérez la fréquence des emails vous avertissant des participation sur l'événement"
+        type_management: "Choisissez les notifications que vous souhaitez recevoir :"
+    form:
+      notif_email_frequency:
+        label: "Fréquence des emails"
+        placeholder: "Fréquence des emails"
+      notif_new_comment:
+        label: "Quand un commentaire est posté"
+        placeholder: "Quand un commentaire est posté"
+      notif_new_module:
+        label: "Quand un sondage est créé"
+        placeholder: "Quand un sondage est créé"
+      notif_new_pollProposal:
+        label: "Quand une proposition est ajoutée à un sondage"
+        placeholder: "Quand une proposition est ajoutée à un sondage"
 
 invitations_list:
   display:
-    title: Liste des invités
+    title:
+      event: Liste des invités
+      template: Liste des administrateurs
     all_answers: Voir l'ensemble des invitations
     new_invitations: Inviter
     send_email: Envoyer les invitations
@@ -413,13 +438,15 @@ invitations:
   display:
     title: Invitez des amis
     cancel:
-      link: Annuler l'invitation de %name%
-      link_noname: Annuler l'invitation
+      link: Annuler l'invitation
       swal:
         text: Etes-vous sûr de vouloir annuler l'invitation de %name% ?
         text_noname: Etes-vous sûr de vouloir annuler cette invitation ?
       message:
         success: L'invitation a bien été annulée
+    modify_answer:
+      link: Modifier la réponse
+      message.success: La réponse a bien été modifiée
   form:
     invitations:
       label: En leur envoyant un e-mail
@@ -458,8 +485,8 @@ send_message:
   email:
     subject: "Yziplan : Vous avez reçu un message à propos de l'événement \"%event_name%\""
     body:
-      hello: "Bonjour %username%!"
       paragraph: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
+      warning_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
 
 contactsgmail:
   title: Contacts Gmail
@@ -579,7 +606,24 @@ notifications:
   comment: "%number_new_comments% nouveau commentaire|%number_new_comments% nouveaux commentaires"
   new_module: "%organizers% a ajouté un nouveau sondage|%organizers% ont ajouté un nouveau sondage"
   new_pollproposal: "%organizer% a ajouté une nouvel proposition"
-
+  emails:
+    common:
+      invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
+      preferences_link: "Vous recevez cette notification car vous y êtes abonnés. Suivez-le lien ci-dessous pour vous désinscrire:"
+      preferences: Préférences
+    new_comment:
+      subject: "%event_name% - Vous avez reçu un message"
+      body:
+        paragraph_event: "%triggerer% a écrit sur l'événement"
+        paragraph_module: "%triggerer% a écrit sur le sondage \"%subject_name%\":"
+    new_module:
+      subject: "%event_name% - Nouveau sondage"
+      body:
+        paragraph_event: "%triggerer% a ajouté un sondage \"%subject_name%\""
+    new_poll_proposal:
+      subject: "%event_name% : %subject_name% - Nouvelle proposition"
+      body:
+        paragraph_event: "%triggerer% a ajouté une proposition au sondage \"%subject_name%\""
 
 # Globals
 global:
@@ -692,10 +736,21 @@ day_of_week:
   6_saturday: Samedi
   7_sunday: Dimanche
 
+notification_frequency:
+  never: Jamais
+  each_notification: A chaque notification
+  daily: Une fois par jour
+  weekly: Une fois par semaine
+
 # Emails
 email:
+  hello: "Bonjour %recipient_name%,"
   salutation: Cordialement
-  organisers: Les organisateurs
+  signature:
+    yziplan: Yziplan
+    organizers: Les organisateurs
+  dont_answer_email: Merci de ne pas répondre à cet e-mail automatique, votre réponse ne pourra être traitée.
+  invitation_keep_secret: "Gardez-le secrètement, ceci est votre invitation personnelle"
 
 # Modale suggestion :
 suggestion:
@@ -721,7 +776,7 @@ suggestion:
 index:
   header:
     title: Yziplan
-    subtitle: Organisez-vous entre amis.
+    subtitle: Organisez-vous entre amis
     button: C'est parti!
   about:
     title: Pour s'organiser c'est Yzi!

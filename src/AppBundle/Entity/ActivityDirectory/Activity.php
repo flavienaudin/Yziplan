@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity\ActivityDirectory;
 
+use AppBundle\Entity\Utils\Geo\City;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
@@ -135,6 +136,24 @@ class Activity
     {
         $this->event = $event;
     }
+
+    public function addCity(City $city)
+    {
+        $this->cities[] = $city;
+        //$city->addActivity($this);
+
+        return $this;
+    }
+
+    public function addActivityType(ActivityType $activityType)
+    {
+        $this->activityTypes[] = $activityType;
+        //$activityType->addActivity($this);
+
+        return $this;
+    }
+
+
 
 
 }

@@ -1,14 +1,23 @@
+{% extends ":Email:template_email.html.twig" %}
 
-{% block subject %}
-    {% autoescape false %}
-        {{ 'appuseremail.associate.confirmationAppUserEmail_email.subject'|trans }}
-    {% endautoescape %}
+{# Email de verification d'adresse e-mail lors d'une association d'un email à compte
+Données d'entrée :
+- username (string) Le nom d'utilisateur
+- confirmationURL (string) le lien de confirmation à suivre
+#}
+
+{% block subject_email %}
+{{ 'appuseremail.associate.confirmationAppUserEmail_email.subject'|trans }}
 {% endblock %}
-{% block body_text %}
-    {% autoescape false %}
-    {{ 'appuseremail.associate.confirmationAppUserEmail_email.message'|trans({
-            '%username%': username, '%email%': email, '%confirmationUrl%' : confirmationUrl
-        }) }}
-    {% endautoescape %}
+
+{% block text_hello %}{% endblock %}
+{% block text_body%}
+{{ 'appuseremail.associate.confirmationAppUserEmail_email.message'|trans({'%username%': username, '%email%': email, '%confirmationUrl%' : confirmationUrl}) }}
 {% endblock %}
-{% block body_html %}{% endblock %}
+
+{%  block body_html %}{% endblock %}{#
+{% block html_hello %}{% endblock %}
+{% block html_body %}
+{{ 'appuseremail.associate.confirmationAppUserEmail_email.message'|trans({'%username%': username, '%email%': email, '%confirmationUrl%' : confirmationUrl})|nl2br }}
+{% endblock %}
+#}

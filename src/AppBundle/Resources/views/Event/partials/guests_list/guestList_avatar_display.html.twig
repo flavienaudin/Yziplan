@@ -1,0 +1,33 @@
+{% extends "@App/Avatar/partials/avatar_dropdown_menu.html.twig" %}
+{# Données d'entrée :
+- userEventInvitation (EventInvitation|null) L'invitation de l'utilisateur "connecté"
+- invitation (EventInvitation|ModuleInvitation) L'invitation concernée
+
+Données calculées dans le template parent :
+- eventInvitation (EventInvitation) L'invitation concernée
+- invitationGuestName
+- invitationEmail
+#}
+
+{% block dropdown_menu_item %}
+
+    {% if userEventInvitation.organizer %}
+        <li role="separator" class="divider"></li>
+        <li class="dropdown-header" role="presentation">{{ "invitations.display.modify_answer.link"|trans }}</li>
+        <li role="presentation">
+            <a href="{{ path("modifyGuestEventInvitation", {'eventInvitTokenToModifyAnswer':eventInvitation.token, 'answerValue':constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES')}) }}">
+                <i class="zmdi zmdi-check c-green"></i> {{ "eventInvitation.answer.yes"|trans }}</a></li>
+        <li role="presentation">
+            <a href="{{ path("modifyGuestEventInvitation", {'eventInvitTokenToModifyAnswer':eventInvitation.token, 'answerValue':constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')}) }}">
+                <i class="fa fa-question c-orange"></i> {{ "eventInvitation.answer.dont_know"|trans }}</a></li>
+        <li role="presentation">
+            <a href="{{ path("modifyGuestEventInvitation", {'eventInvitTokenToModifyAnswer':eventInvitation.token, 'answerValue':constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO')}) }}"> <i
+                        class="zmdi zmdi-close c-red"></i> {{ "eventInvitation.answer.no"|trans }}</a></li>
+    {% endif %}
+    <li role="separator" class="divider"></li>
+    {% if is_granted(constant('AppBundle\\Security\\EventInvitationVoter::CANCEL'), [userEventInvitation, eventInvitation]) %}
+        <li role="presentation">
+            <a class="cancelInvitation" href="{{ path("cancelEventInvitation", {'eventInvitationTokenToCancel':eventInvitation.token}) }}"
+               data-guestname="{{ eventInvitation.displayableName(true, false) }}"> <i class="zmdi zmdi-delete c-red"></i> {{ "invitations.display.cancel.link"|trans }}</a></li>
+    {% endif %}
+{% endblock dropdown_menu_item %}

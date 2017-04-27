@@ -1,0 +1,22 @@
+{# Données d'entrée :
+- userEventInvitation (EventInvitation) L'invitation à afficher (inclu l'événement concerné)
+- eventInvitations (array of EventInvitation|null) Les invitations envoyées
+#}
+
+<div class="col-xs-12 col-xs-p-lr-0">
+    <div class="card z-depth-1">
+        {% if userEventInvitation.status is constant('AppBundle\\Utils\\enum\\EventInvitationStatus::AWAITING_VALIDATION') %}
+            <div class="disabling-cover animated"></div>
+        {% endif %}
+        <div class="card-header">
+            <h2>{{ 'event.wizard.recapitulatif.invitation_list.title'|trans }}</h2>
+        </div>
+        <div class="card-body card-padding-sm">
+            {{ include('@App/Event/partials/guests_list/eventInvitations_list.html.twig', {
+                'userEventInvitation' : userEventInvitation,
+                'firstEventInvitation' : userEventInvitation,
+                'eventInvitations' : eventInvitations
+            }) }}
+        </div>
+    </div>
+</div>

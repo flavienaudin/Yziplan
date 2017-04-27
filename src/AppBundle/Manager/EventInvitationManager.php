@@ -13,11 +13,13 @@ use AppBundle\Entity\Event\Event;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Entity\Notifications\EventInvitationPreferences;
 use AppBundle\Entity\User\ApplicationUser;
 use AppBundle\Entity\User\AppUserEmail;
 use AppBundle\Form\Event\EventInvitationAnswerType;
 use AppBundle\Form\Event\EventInvitationType;
-use AppBundle\Mailer\AppTwigSiwftMailer;
+use AppBundle\Form\Notifications\EventInvitationNotificationPreferencesType;
+use AppBundle\Mailer\AppMailer;
 use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
@@ -27,7 +29,6 @@ use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -60,14 +61,14 @@ class EventInvitationManager
     /** @var  ModuleInvitationManager */
     private $moduleInvitationManager;
 
-    /** @var AppTwigSiwftMailer */
-    private $appTwigSiwftMailer;
+    /** @var AppMailer */
+    private $appMailer;
 
     /** @var EventInvitation L'invitation à l'événement en cours de traitement */
     private $eventInvitation;
 
 
-    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, ApplicationUserManager $applicationUserManager, ModuleInvitationManager $moduleInvitationManager, AppTwigSiwftMailer $appTwigSiwftMailer)
+    public function __construct(EntityManager $doctrine, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory, GenerateursToken $generateurToken, SessionInterface $session, ApplicationUserManager $applicationUserManager, ModuleInvitationManager $moduleInvitationManager, AppMailer $appMailer)
     {
         $this->entityManager = $doctrine;
         $this->authorizationChecker = $authorizationChecker;
@@ -76,7 +77,7 @@ class EventInvitationManager
         $this->session = $session;
         $this->applicationUserManager = $applicationUserManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
-        $this->appTwigSiwftMailer = $appTwigSiwftMailer;
+        $this->appMailer = $appMailer;
     }
 
     /**
@@ -171,18 +172,15 @@ class EventInvitationManager
     }
 
     /**
-     * Update the EventInvitation lastVisitAt and persist it
-     * @param EventInvitation|null $eventInvitation
-     * @return bool
+     * Persist the EventInvitation into the database and save into the session the Token
+     * @return bool true if the eventInvitaiton has been persisted false otherwise
      */
-    public function updateLastVisit(EventInvitation $eventInvitation = null)
+    public function persistEventInvitation()
     {
-        if ($eventInvitation != null) {
-            $this->eventInvitation = $eventInvitation;
-        }
         if ($this->eventInvitation != null) {
-            $this->eventInvitation->setLastVisitAt(new \DateTime());
-            return $this->persistEventInvitation();
+            $this->entityManager->persist($this->eventInvitation);
+            $this->entityManager->flush();
+            return true;
         }
         return false;
     }
@@ -220,41 +218,20 @@ class EventInvitationManager
     }
 
     /**
-     * Persist the EventInvitation into the database and save into the session the Token
-     * @return bool true if the eventInvitaiton has been persisted false otherwise
+     * Update the EventInvitation lastVisitAt and persist it
+     * @param EventInvitation|null $eventInvitation
+     * @return bool
      */
-    public function persistEventInvitation()
+    public function updateLastVisit(EventInvitation $eventInvitation = null)
     {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
         if ($this->eventInvitation != null) {
-            $this->entityManager->persist($this->eventInvitation);
-            $this->entityManager->flush();
-            return true;
+            $this->eventInvitation->setLastVisitAt(new \DateTime());
+            return $this->persistEventInvitation();
         }
         return false;
-    }
-
-    /**
-     * Retrieve an EventInvitation by the email of the guest and the concerned event. Initialize a new one if none is found
-     * @param Event $event The event concerned
-     * @param string $email The email of the guest to search the EventInvitation for
-     * @return EventInvitation
-     */
-    public function getGuestEventInvitation(Event $event, $email)
-    {
-        $this->eventInvitation = null;
-        /** @var AppUserEmail $existingAppUserEmail */
-        $existingAppUserEmail = $this->applicationUserManager->findAppUserEmailByEmail($email);
-        if ($existingAppUserEmail != null) {
-            $applicationUser = $existingAppUserEmail->getApplicationUser();
-            $this->eventInvitation = $this->entityManager->getRepository(EventInvitation::class)->findOneBy(array('event' => $event, 'applicationUser' => $applicationUser));
-        } else {
-            $applicationUser = $this->applicationUserManager->createApplicationUserFromEmail($email);
-        }
-        if ($this->eventInvitation == null) {
-            $this->initializeEventInvitation($event, $applicationUser);
-        }
-
-        return $this->eventInvitation;
     }
 
     /**
@@ -287,7 +264,7 @@ class EventInvitationManager
                 }
                 try {
                     if ($this->persistEventInvitation()) {
-                        if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
+                        if ($this->appMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {
                             $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
                             $this->persistEventInvitation();
                             $results['success'][$email] = $this->eventInvitation;
@@ -310,6 +287,30 @@ class EventInvitationManager
     }
 
     /**
+     * Retrieve an EventInvitation by the email of the guest and the concerned event. Initialize a new one if none is found
+     * @param Event $event The event concerned
+     * @param string $email The email of the guest to search the EventInvitation for
+     * @return EventInvitation
+     */
+    public function getGuestEventInvitation(Event $event, $email)
+    {
+        $this->eventInvitation = null;
+        /** @var AppUserEmail $existingAppUserEmail */
+        $existingAppUserEmail = $this->applicationUserManager->findAppUserEmailByEmail($email);
+        if ($existingAppUserEmail != null) {
+            $applicationUser = $existingAppUserEmail->getApplicationUser();
+            $this->eventInvitation = $this->entityManager->getRepository(EventInvitation::class)->findOneBy(array('event' => $event, 'applicationUser' => $applicationUser));
+        } else {
+            $applicationUser = $this->applicationUserManager->createApplicationUserFromEmail($email);
+        }
+        if ($this->eventInvitation == null) {
+            $this->initializeEventInvitation($event, $applicationUser);
+        }
+
+        return $this->eventInvitation;
+    }
+
+    /**
      * @param Collection $eventInvitations
      */
     public function sendInvitations($eventInvitations, &$failedRecipients = array())
@@ -317,7 +318,7 @@ class EventInvitationManager
         /** @var EventInvitation $eventInvitation */
         foreach ($eventInvitations as $eventInvitation) {
             $this->eventInvitation = $eventInvitation;
-            if ($this->appTwigSiwftMailer->sendEventInvitationEmail($this->eventInvitation)) {
+            if ($this->appMailer->sendEventInvitationEmail($this->eventInvitation)) {
                 $this->eventInvitation->setInvitationEmailSentAt(new \DateTime());
             } else {
                 $failedRecipients[] = $this->eventInvitation->getDisplayableEmail();
@@ -334,7 +335,7 @@ class EventInvitationManager
         /** @var EventInvitation $eventInvitation */
         foreach ($eventInvitations as $eventInvitation) {
             $this->eventInvitation = $eventInvitation;
-            if (!$this->appTwigSiwftMailer->sendMessageEmail($this->eventInvitation, $message)) {
+            if (!$this->appMailer->sendMessageEmail($this->eventInvitation, $message)) {
                 $failedRecipients[] = $this->eventInvitation;
             }
         }
@@ -357,6 +358,27 @@ class EventInvitationManager
             $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_VALIDATION);
         }
         return $this->eventInvitation;
+    }
+
+    /**
+     * Set EventInvitation.answer == $answerValue
+     *
+     * @param EventInvitation|null $eventInvitation If null, $this->eventInvitation is used
+     * @param $answerValue string La nouvelle valeure de la réponse
+     * @return bool true if the update is successful
+     */
+    public function modifyAnswerEventInvitation(EventInvitation $eventInvitation = null, $answerValue)
+    {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        if ($this->eventInvitation != null) {
+            //if (EventInvitationAnswer::hasType($answerValue)) {
+                $this->eventInvitation->setAnswer($answerValue);
+                return $this->persistEventInvitation();
+            //}
+        }
+        return false;
     }
 
     /**
@@ -419,10 +441,10 @@ class EventInvitationManager
 
     /**
      * Traite la soumission du formulaire d'EventInvitationType (Réponse à un événement) en créant un ApplicationUser et User si besoin
-     * @param Form $evtInvitForm
+     * @param FormInterface $evtInvitForm
      * @return EventInvitation
      */
-    public function treatEventInvitationFormSubmission(Form $evtInvitForm)
+    public function treatEventInvitationFormSubmission(FormInterface $evtInvitForm)
     {
         $this->eventInvitation = $evtInvitForm->getData();
         if (empty($this->eventInvitation->getDisplayableName(false)) && $this->eventInvitation->getStatus() == EventInvitationStatus::VALID) {
@@ -471,7 +493,7 @@ class EventInvitationManager
                 }
                 // If an AppUserEmail exists, it can't be associated to AccountUser due to EmailNotBelongToAccountUser constraint
                 $applicationUser->addEventInvitation($this->eventInvitation);
-                $this->appTwigSiwftMailer->sendRecapEventInvitationEmail($this->eventInvitation);
+                $this->appMailer->sendRecapEventInvitationEmail($this->eventInvitation);
             }
         }
         $this->persistEventInvitation();
@@ -495,14 +517,40 @@ class EventInvitationManager
 
     /**
      * Traite la soumission du formulaire d'EventInvitationAnswerType (Réponse à un événement)
-     * @param Form $evtInvitAnswerForm
+     * @param FormInterface $evtInvitAnswerForm
      * @return EventInvitation
      */
-    public function treatEventInvitationAnswerFormSubmission(Form $evtInvitAnswerForm)
+    public function treatEventInvitationAnswerFormSubmission(FormInterface $evtInvitAnswerForm)
     {
         $this->eventInvitation = $evtInvitAnswerForm->getData();
         $this->persistEventInvitation();
 
+        return $this->eventInvitation;
+    }
+
+    /**
+     * Génère le formulaire de gestion des préférenes de notification par email d'une invitation
+     * @param EventInvitation $eventInvitation
+     * @return FormInterface
+     */
+    public function createNotificationPreferencesForm()
+    {
+        if ($this->eventInvitation->getEventInvitationPreferences() === null) {
+            $this->eventInvitation->setEventInvitationPreferences(new EventInvitationPreferences());
+        }
+        return $this->formFactory->create(EventInvitationNotificationPreferencesType::class, $this->eventInvitation->getEventInvitationPreferences());
+    }
+
+
+    /**
+     * Traite la soumission du formulaire de gestion des préférenes de notification par email d'une invitation
+     * @param FormInterface $form
+     */
+    public function treatNotificationPreferencesForm(FormInterface $form)
+    {
+        if ($this->eventInvitation != null) {
+            $this->persistEventInvitation();
+        }
         return $this->eventInvitation;
     }
 }

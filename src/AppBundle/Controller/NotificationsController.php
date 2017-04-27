@@ -10,7 +10,10 @@ namespace AppBundle\Controller;
 
 
 use AppBundle\Entity\Event\Event;
+use AppBundle\Entity\Event\EventInvitation;
+use AppBundle\Entity\Notifications\Notification;
 use AppBundle\Manager\EventManager;
+use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -27,7 +30,94 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class NotificationsController extends Controller
 {
+    /**
+     * Action pour gérer les préférenes de notification par email d'une invitation
+     *
+     * @Route("/preferences/{token}", name="setEmailNotificationPreferences" )
+     * @ParamConverter("eventInvitation", class="AppBundle:Event\EventInvitation")
+     */
+    public function setEmailNotificationPreferencesAction(EventInvitation $eventInvitation = null, Request $request)
+    {
+        if ($eventInvitation == null) {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access");
+                $data[AppJsonResponse::REDIRECT] = $this->generateUrl('home');
+                return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
+                return $this->redirectToRoute("home");
+            }
+        }
+        $this->denyAccessUnlessGranted(EventInvitationVoter::EDIT, $eventInvitation);
 
+        $eventInvitationManager = $this->get('at.manager.event_invitation');
+        $eventInvitationManager->setEventInvitation($eventInvitation);
+
+        $notificationPreferencesForm = $eventInvitationManager->createNotificationPreferencesForm();
+        $notificationPreferencesForm->handleRequest($request);
+        if ($notificationPreferencesForm->isSubmitted()) {
+            if ($request->isXmlHttpRequest()) {
+                if ($notificationPreferencesForm->isValid()) {
+                    $eventInvitationManager->treatNotificationPreferencesForm($notificationPreferencesForm);
+                    $notificationPreferencesForm = $eventInvitationManager->createNotificationPreferencesForm();
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans('global.success.data_saved');
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#notificationPreferences_formContainer'] =
+                        $this->renderView('@App/Notifications/partials/notification_preferences_form.html.twig', array(
+                            'eventInvitation' => $eventInvitation,
+                            'notificationPreferencesForm' => $notificationPreferencesForm->createView()
+                        ));
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('global.error.invalid_form');
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#notificationPreferences_formContainer'] =
+                        $this->renderView('@App/Notifications/partials/notification_preferences_form.html.twig', array(
+                            'eventInvitation' => $eventInvitation,
+                            'notificationPreferencesForm' => $notificationPreferencesForm->createView()
+                        ));
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                }
+            } else {
+                if ($notificationPreferencesForm->isValid()) {
+                    $eventInvitationManager->treatNotificationPreferencesForm($notificationPreferencesForm);
+
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans('global.success.data_saved'));
+                    return $this->redirectToRoute('setEmailNotificationPreferences', array('token' => $eventInvitation->getToken()));
+                }
+            }
+        }
+        return $this->render('@App/Notifications/notification_preferences.html.twig', array(
+            'eventInvitation' => $eventInvitation,
+            'notificationPreferencesForm' => $notificationPreferencesForm->createView()
+        ));
+    }
+
+    /**
+     * Action pour mettre a jour la date de dernière visit d'une invitation
+     *
+     * @Route("/visited/{token}", name="updateLastVisitAtEventInvitation" )
+     * @ParamConverter("eventInvitation", class="AppBundle:Event\EventInvitation")
+     */
+    public function updateLastVisitEventInvitationAction(EventInvitation $eventInvitation = null, Request $request)
+    {
+        if ($eventInvitation == null) {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access");
+                $data[AppJsonResponse::REDIRECT] = $this->generateUrl('home');
+                return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
+                return $this->redirectToRoute("home");
+            }
+        }
+        $this->denyAccessUnlessGranted(EventInvitationVoter::EDIT, $eventInvitation);
+        $this->get("at.manager.event_invitation")->updateLastVisit($eventInvitation);
+        if ($request->isXmlHttpRequest()) {
+            $data[AppJsonResponse::DATA]["last_visit_ad"] = $eventInvitation->getLastVisitAt();
+            return new AppJsonResponse($data, Response::HTTP_OK);
+        } else {
+            return $this->redirectToRoute("displayEventInvitation", array('token' => $eventInvitation->getToken()));
+        }
+    }
 
     /**
      * @Route("/mark-all-view/{token}", name="markAll")
@@ -46,19 +136,52 @@ class NotificationsController extends Controller
         $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($currentEvent, false, false, $this->getUser());
         if ($userEventInvitation == null) {
             if ($request->isXmlHttpRequest()) {
-                //TODO use AppJsonResponse::REDIRECT when merged with branch CancelEvent
                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access");
+                $data[AppJsonResponse::REDIRECT] = $this->generateUrl('home');
                 return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
                 return $this->redirectToRoute("home");
             }
         } else {
-            $eventInvitationManager->updateLastVisit($userEventInvitation);
+            $this->get('at.manager.notification')->markAllView($userEventInvitation);
             if ($request->isXmlHttpRequest()) {
                 return new AppJsonResponse(array(), Response::HTTP_OK);
             } else {
+                return $this->redirectToRoute("displayEvent", array('token' => $currentEvent->getToken()));
+            }
+        }
+    }
+
+
+    /**
+     * @Route("/mark-view/{id}", name="markAsView")
+     * @ParamConverter("notification", class="AppBundle:Notifications\Notification")
+     */
+    public function markOneView(Notification $notification, Request $request)
+    {
+        /////////////////////////////////////
+        // User EventInvitation management //
+        /////////////////////////////////////
+        $eventInvitationManager = $this->get("at.manager.event_invitation");
+        $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($notification->getEventInvitation()->getEvent(), false, false, $this->getUser());
+        if ($userEventInvitation == null) {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access");
+                $data[AppJsonResponse::REDIRECT] = $this->generateUrl('home');
+                return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
                 return $this->redirectToRoute("home");
+            }
+        } else {
+            $notifId = $notification->getId();
+            $this->get('at.manager.notification')->markAsView($notification);
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#notification_' . $notifId] = '';
+                return new AppJsonResponse($data, Response::HTTP_OK);
+            } else {
+                return $this->redirectToRoute("displayEvent", array('token' => $userEventInvitation->getEvent()->getToken()));
             }
         }
     }

@@ -50,19 +50,6 @@ $(document).ready(function () {
             customClass: 'ie9-placeholder'
         });
     }
-
-    /* --------------------------------------------------------
-     Decode hidden email
-     ----------------------------------------------------------*/
-    $("a.hidden-email").each(function () {
-        var hrefEmail = $(this).attr("href");
-        if (hrefEmail.indexOf("mailto:") === 0) {
-            hrefEmail = hrefEmail.substr(7);
-        }
-        var decodedEmail = $.rot13(hrefEmail);
-        $(this).attr("href", "mailto:" + decodedEmail);
-        $(this).rot13();
-    });
 });
 
 /**
@@ -201,6 +188,7 @@ function initPopover() {
  *  - Waves Effect
  *  - FgLine/FgFloat text fields
  *  - Popover
+ *  - hidden-email rot13
  */
 function jsPlugginActivation() {
     /** Autosize **/
@@ -283,6 +271,21 @@ function jsPlugginActivation() {
     initTextFieldsFgLineFloat();
     /** Popover */
     initPopover();
+
+    /* --------------------------------------------------------
+     Decode hidden email
+     ----------------------------------------------------------*/
+    $(".hidden-email").each(function () {
+        var hrefEmail = $(this).attr("href");
+        if (hrefEmail) {
+            if (hrefEmail.indexOf("mailto:") === 0) {
+                hrefEmail = hrefEmail.substr(7);
+            }
+            var decodedEmail = $.rot13(hrefEmail);
+            $(this).attr("href", "mailto:" + decodedEmail);
+        }
+        $(this).rot13();
+    });
 }
 
 /**
@@ -397,7 +400,7 @@ function ajaxRequest(target, data, event, doneCallback, failCallback, alwaysCall
 }
 
 function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallback, async) {
-    if (event !== null) {
+    if (typeof event !== 'undefined' && event !== null) {
         event.preventDefault();
     }
     var preloader = $('.at-global-preloader');
@@ -448,7 +451,7 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
         .fail(function (jqXHR, textStatus, errorThrown) {
             if (typeof jqXHR !== 'undefined') {
                 var responseJSON = jqXHR['responseJSON'];
-                if (responseJSON.hasOwnProperty('htmlContents')) {
+                if (typeof responseJSON !== 'undefined' && responseJSON.hasOwnProperty('htmlContents')) {
                     treatHtmlContents(responseJSON['htmlContents']);
                 }
                 if (failCallback) {
@@ -479,7 +482,7 @@ function ajaxFormSubmission(form, event, doneCallback, failCallback, alwaysCallb
             } else {
                 console.error('undefined response');
             }
-            
+
             $(preloader).hide();
             $(form).find('[type=submit]').each(function () {
                 $(this).off('click');

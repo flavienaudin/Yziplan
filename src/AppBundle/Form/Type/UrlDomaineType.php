@@ -34,4 +34,13 @@ class UrlDomaineType extends UrlType
         $resolver->setRequired('url_domain');
         $resolver->setAllowedTypes('url_domain', array('string'));
     }
+
+    /**
+     * Redéfinit pour éviter la validation URL côté client
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'url_with_domain';
+    }
 }

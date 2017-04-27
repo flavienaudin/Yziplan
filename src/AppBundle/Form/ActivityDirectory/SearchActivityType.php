@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 
 class SearchActivityType extends AbstractType
@@ -21,6 +22,7 @@ class SearchActivityType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->setMethod('GET')
             ->add('type', EntityType::class, array(
                 'class' => 'AppBundle:ActivityDirectory\ActivityType',
                 'query_builder' => function (EntityRepository $er) {
@@ -38,5 +40,12 @@ class SearchActivityType extends AbstractType
                 'mapped' => false,
                 'required' => false
             ));
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'csrf_protection' => false,
+        ]);
     }
 }

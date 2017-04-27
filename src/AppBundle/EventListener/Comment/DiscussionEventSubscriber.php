@@ -15,6 +15,7 @@ use AppBundle\Entity\Event\Event;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Manager\EventManager;
 use AppBundle\Manager\ModuleManager;
+use AppBundle\Manager\NotificationManager;
 use ATUserBundle\Entity\AccountUser;
 use ATUserBundle\Mailer\AtTwigSiwftMailer;
 use FOS\CommentBundle\Event\CommentEvent;
@@ -36,16 +37,23 @@ class DiscussionEventSubscriber implements EventSubscriberInterface
     private $moduleManager;
     /** @var EventInvitationManager $eventInvitationManager */
     private $eventInvitationManager;
+    /** @var NotificationManager $notificationManager */
+    private $notificationManager;
     /** @var AtTwigSiwftMailer $mailer */
     private $mailer;
 
     /**
-     * CommentEventSubscriber constructor.
+     * DiscussionEventSubscriber constructor.
+     *
+     * @param TokenStorageInterface $tokenStorage
+     * @param RequestStack $requestStack
      * @param EventManager $eventManager
+     * @param ModuleManager $moduleManager
      * @param EventInvitationManager $eventInvitationManager
      * @param AtTwigSiwftMailer $mailer
+     * @param NotificationManager $notificationManager
      */
-    public function __construct(TokenStorageInterface $tokenStorage, RequestStack $requestStack, EventManager $eventManager, ModuleManager $moduleManager, EventInvitationManager $eventInvitationManager, AtTwigSiwftMailer $mailer)
+    public function __construct(TokenStorageInterface $tokenStorage, RequestStack $requestStack, EventManager $eventManager, ModuleManager $moduleManager, EventInvitationManager $eventInvitationManager, AtTwigSiwftMailer $mailer, NotificationManager $notificationManager)
     {
         $this->tokenStorage = $tokenStorage;
         $this->requestStack = $requestStack;
@@ -53,6 +61,7 @@ class DiscussionEventSubscriber implements EventSubscriberInterface
         $this->moduleManager = $moduleManager;
         $this->eventInvitationManager = $eventInvitationManager;
         $this->mailer = $mailer;
+        $this->notificationManager = $notificationManager;
     }
 
 
@@ -73,9 +82,9 @@ class DiscussionEventSubscriber implements EventSubscriberInterface
         if ($thread instanceof Thread) {
             if (empty($thread->getPermalink())) {
                 $request = $this->requestStack->getCurrentRequest();
-                if($request != null) {
+                if ($request != null) {
                     $thread->setPermalink($request->getUri());
-                }else{
+                } else {
                     $thread->setPermalink("");
                 }
             }
@@ -101,6 +110,7 @@ class DiscussionEventSubscriber implements EventSubscriberInterface
                 $userEventInvitation = $this->eventInvitationManager->retrieveUserEventInvitation($threadEvent, false, false, $user);
                 $comment->setAuthor($userEventInvitation);
                 $userEventInvitation->setLastVisitAt(new \DateTime());
+                $this->notificationManager->createNewCommentNotifications($comment, (isset($threadedModule) ? $threadedModule : $threadEvent), $userEventInvitation);
             }
         }
     }

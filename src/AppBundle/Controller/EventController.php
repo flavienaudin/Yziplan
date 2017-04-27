@@ -19,7 +19,6 @@ use AppBundle\Security\EventVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
-use AppBundle\Utils\Notifications\Notification;
 use AppBundle\Utils\Response\AppJsonResponse;
 use AppBundle\Utils\Response\FileInputJsonResponse;
 use ATUserBundle\Entity\AccountUser;
@@ -117,9 +116,6 @@ class EventController extends Controller
         $eventManager = $this->get('at.manager.event');
         $eventManager->setEvent($currentEvent);
 
-        /** @var $notifications array Tableau de notifications {idx => Notification} */
-        $notifications = array();
-
         /////////////////////////////////////
         // User EventInvitation management //
         /////////////////////////////////////
@@ -136,10 +132,6 @@ class EventController extends Controller
             /* TODO : invitation annulée : désactiver les formulaires */
             if ($userEventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                 $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans('eventInvitation.message.warning.invitation_cancelled'));
-            }
-
-            if ($userEventInvitation->getLastVisitAt() == null) {
-                $eventInvitationManager->updateLastVisit();
             }
 
             $eventInvitationForm = $eventInvitationManager->createEventInvitationForm();
@@ -227,10 +219,6 @@ class EventController extends Controller
             $thread = $discussionManager->createCommentableThread($currentEvent);
         }
         $comments = $discussionManager->getCommentsThread($thread);
-        $eventThreadNotif = $discussionManager->getNotification($userEventInvitation, $comments, $currentEvent);
-        if ($eventThreadNotif != null) {
-            array_push($notifications, $eventThreadNotif);
-        }
 
         ////////////////////////
         // Edition management //
@@ -496,7 +484,7 @@ class EventController extends Controller
         ////////////////////////
         // modules management //
         ////////////////////////
-        $modules = $eventManager->getModulesToDisplay($userEventInvitation, $notifications);
+        $modules = $eventManager->getModulesToDisplay($userEventInvitation);
         $response = $eventManager->treatModulesToDisplay($currentEvent, $modules, $userEventInvitation, $request);
         if ($response instanceof Response) {
             return $response;
@@ -509,7 +497,8 @@ class EventController extends Controller
             $request->getSession()->remove(self::REDIRECTED_AFTER_EVENT_DUPLICATION);
         }
 
-        uasort($notifications, array(Notification::class, 'compare'));
+        /** @var $notifications array Tableau de notifications {idx => Notification} */
+        $notifications = $userEventInvitation->getSortedNotifications('Desc');
 
         return $this->render('AppBundle:Event:event.html.twig', array(
             'event' => $currentEvent,

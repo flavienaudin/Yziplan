@@ -9279,8 +9279,16 @@ a.waves-effect .waves-ripple {
     margin-top: 5px !important;
 }
 
+.m-t-n5 {
+    margin-top: -5px !important;
+}
+
 .m-b-5 {
     margin-bottom: 5px !important;
+}
+
+.m-b-n5 {
+    margin-bottom: -5px !important;
 }
 
 .m-l-5 {
@@ -9299,8 +9307,16 @@ a.waves-effect .waves-ripple {
     margin-top: 10px !important;
 }
 
+.m-t-n10 {
+    margin-top: -10px !important;
+}
+
 .m-b-10 {
     margin-bottom: 10px !important;
+}
+
+.m-b-n10 {
+    margin-bottom: -10px !important;
 }
 
 .m-l-10 {
@@ -10244,6 +10260,19 @@ pre {
     width: 48%;
     text-align: center;
     color: #fff;
+}
+
+.hmp-alert .notif_number {
+    display: inline-block;
+    position: relative;
+    top: -35px;
+    left: 15px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    border-radius: 50%;
+    background: red;
+    font-weight: 900;
 }
 
 .hmp-alert > a {
@@ -15646,10 +15675,11 @@ body.o-hidden {
     margin-bottom: 15px;
 }
 
-.wcl-list{
+.wcl-list {
     max-height: 150px;
     overflow-y: auto;
 }
+
 .wcl-list + .wcl-form {
     margin-top: 25px;
 }

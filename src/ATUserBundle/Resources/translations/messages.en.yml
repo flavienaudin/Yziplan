@@ -29,15 +29,12 @@ register:
       meta_title: Email sent
       title: Email sent
   lossAppUserEmail_email:
-    subject: Yziplan Warning - Registration using an email you own
+    subject: Yziplan - Warning! Registration using an email you own
     message: |
         Hello %username%!
 
         Someone just registered using the email %email% that is attached to your account. This address is going to be transfered to the new acocunt.
         If you are not at this initiative, check immediately the corresponding mailbox and cancel the new registration.
-
-        Regards,
-        the Team.
 
 confirmed:
   page:
@@ -63,6 +60,7 @@ resetting:
       meta_title: Password initialization
       title: Password initialization
   request:
+    invalid_username: Invalid username or email
     page:
       meta_title: Forgot password
       title: Forgot password

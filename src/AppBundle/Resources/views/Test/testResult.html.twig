@@ -1,0 +1,17 @@
+{# Page d'affchage des résultat pour les test (TestController)
+- error (string|undefined) Si définit permet d'afficher les erreurs si mauvais environnement
+#}
+
+<html>
+<head>
+     <title>Test Action - Résultat</title>
+</head>
+<body>
+{% if error  is defined and error is not empty %}
+    {{ error }}
+{% else %}
+    {# Résultat #}
+
+{% endif %}
+</body>
+</html>

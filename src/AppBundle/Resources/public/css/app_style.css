@@ -47,13 +47,22 @@
 }
 
 /*---------------------------------
-   General Layut
+   Modal adaptation
 ----------------------------------*/
 
 @media (max-width: 768px) {
     .modal-dialog {
-        margin: 0px !important;
+        margin: 0 !important;
     }
+}
+
+/** Allow multiple opened modals (requires additional JS : $('body').addClass('modal-open') when closing second modal) */
+.modal.modal-stack-second {
+    z-index: 1052 !important;
+}
+
+.modal-backdrop.in.backdrop-second {
+    z-index: 1051 !important;
 }
 
 /*---------------------------------
@@ -117,6 +126,20 @@
 
 .border-bottom {
     border-bottom: 1px solid lightgrey;
+}
+
+/*---------------------------------
+    Surcouche sur une DIV pour en désactiver le contenu
+----------------------------------*/
+.disabling-cover {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+    background-color: #000000;
+    opacity: 0.5;
+    display: block;
+    pointer-events: none;
 }
 
 /*---------------------------------
@@ -595,14 +618,6 @@ h1.event-title {
     position: relative;
 }
 
-.cancelInvitation {
-    position: absolute;
-    bottom: 0;
-    right: 3px;
-    border-radius: 2px;
-    color: #FFF;
-}
-
 /*----------------------------------
     Add Module
 -----------------------------------*/
@@ -718,6 +733,10 @@ label.required:after {
     content: " *";
 }
 
+label.control-label {
+    margin-right: 5px;
+}
+
 .ismobile .readonly-onmobile {
     background-color: white !important;
 }
@@ -725,6 +744,7 @@ label.required:after {
 .note-editor .note-editable {
     background-color: rgba(245, 245, 245, 0.3);
 }
+
 .note-editor .note-placeholder,
 .note-editor .note-editable {
     padding: 5px;
@@ -961,6 +981,10 @@ label.required:after {
 /*---------------------------------
     User select
 ---------------------------------*/
+
+.bootstrap-select{
+    max-width: 350px;
+}
 
 .bootstrap-select.btn-group .btn .filter-option {
     display: inline-block;

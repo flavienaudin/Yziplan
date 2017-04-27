@@ -10,7 +10,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="zmdi zmdi-close"></i></span></button>
-                <h4 class="modal-title" id="guestsList_modal_title">{{ "invitations_list.display.title"|trans }}</h4>
+                <h4 class="modal-title" id="guestsList_modal_title">{{ event.template?"invitations_list.display.title.template"|trans:"invitations_list.display.title.event"|trans }}</h4>
             </div>
             <div class="modal-body p-0">
                 <div class="list-group text-center">
@@ -18,12 +18,11 @@
                         <small>{{ "invitations_list.display.list.yes"|trans({"%number%":eventInvitation_answer_yes|length}) }}</small>
                         {% if eventInvitation_answer_yes|length>0 %}
                             <ul class="list-inline eventInvitations_list">
-                                {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') %}
-                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
-                                {% endif %}
-                                {% for eventInvitation in eventInvitation_answer_yes if eventInvitation != userEventInvitation %}
-                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
-                                {% endfor %}
+                                {{ include('@App/Event/partials/guests_list/eventInvitations_list.html.twig', {
+                                    'userEventInvitation' : userEventInvitation,
+                                    'firstEventInvitation' : (userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES')?userEventInvitation:null),
+                                    'eventInvitations' : eventInvitation_answer_yes
+                                }) }}
                             </ul>
                         {% endif %}
                     </div>
@@ -31,12 +30,11 @@
                         <small>{{ "invitations_list.display.list.dont_know"|trans({"%number%":eventInvitation_answer_dont_know|length}) }}</small>
                         {% if eventInvitation_answer_dont_know|length>0 %}
                             <ul class="list-inline eventInvitations_list">
-                                {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') %}
-                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
-                                {% endif %}
-                                {% for eventInvitation in eventInvitation_answer_dont_know if eventInvitation != userEventInvitation %}
-                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
-                                {% endfor %}
+                                {{ include('@App/Event/partials/guests_list/eventInvitations_list.html.twig', {
+                                    'userEventInvitation' : userEventInvitation,
+                                    'firstEventInvitation' : (userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')?userEventInvitation:null),
+                                    'eventInvitations' : eventInvitation_answer_dont_know
+                                }) }}
                             </ul>
                         {% endif %}
                     </div>
@@ -44,12 +42,11 @@
                         <small>{{ "invitations_list.display.list.no"|trans ({"%number%":eventInvitation_answer_no|length}) }}</small>
                         {% if eventInvitation_answer_no|length>0 %}
                             <ul class="list-inline eventInvitations_list">
-                                {% if userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') %}
-                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':userEventInvitation}) }}
-                                {% endif %}
-                                {% for eventInvitation in eventInvitation_answer_no if eventInvitation != userEventInvitation %}
-                                    {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
-                                {% endfor %}
+                                {{ include('@App/Event/partials/guests_list/eventInvitations_list.html.twig', {
+                                    'userEventInvitation' : userEventInvitation,
+                                    'firstEventInvitation' : (userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO')?userEventInvitation:null),
+                                    'eventInvitations' : eventInvitation_answer_no
+                                }) }}
                             </ul>
                         {% endif %}
                     </div>

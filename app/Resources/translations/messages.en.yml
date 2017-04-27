@@ -82,14 +82,11 @@ appuseremail:
       not_found: The associated email with given token does not exist.
       wrong_user: The email is not associated with this account.
     confirmationAppUserEmail_email:
-      subject: Yziplan Confirmation - Email association
+      subject: Yziplan - Email association confirmation
       message: |
         Hello %username%!
 
         To finish associating the email "%email%" - please visit %confirmationUrl%
-
-        Regards,
-        The Team.
   edit:
     message:
       error: Impossible to edit this association.
@@ -229,10 +226,10 @@ event:
         placeholder: Day
       time_open:
         label: Opening time
-        placeholder: Opening time
+        placeholder: 00:00
       time_closed:
         label: Closing time
-        placeholder: Closing time
+        placeholder: 00:00
   alert:
     confirm_cancellation:
       title: Are you sure you want to delete this event?
@@ -256,10 +253,12 @@ event:
         not_connected: If you already have an account, login to fill this information automatically
       invitation_email:
         title: Send invitations by email
+      invitation_list:
+        title: Posted invitations
       share_url:
         title: Share the event link
       template:
-        title: Duplication link to share
+        title: Link to share
         paragraphe: "Post the following link on your web site and social networks. Your visitors can organise easily their next activity in your establishment"
     invitations:
       title: The guests
@@ -274,9 +273,8 @@ event:
     hello: Hello %guestname%
     text: This event has been cancelled by the organizer, you should have received an email|This event has been cancelled by organizers, you should have received an email
     email:
-      subject: "Yziplan : \"%event_name%\" is cancelled"
+      subject: "%event_name% - Event cancelled"
       body:
-        hello: Hello %guestname%
         text: "Sorry, I cancel the event \"%event_name%\".|Sorry, We cancel the event \"%event_name%\"."
   error.message:
     creation: An error occured while creating an event
@@ -336,9 +334,11 @@ eventInvitation:
       placeholder: Your contact email
     personal_link:
       label: Your personnal link <strong>to keep</strong>
+    administration_link:
+      label: Your personnal administration link <strong>to keep</strong>
     answer:
-      label: Your answer
-      placeholder: Your answer
+      interested: Are you interested?
+      present: Will you be present?
   answer:
     card:
       title: Your answer
@@ -374,26 +374,51 @@ eventInvitation:
       another_invitation_already_exists_for_user: You already have an invitation to this event, you were redirected
       invitation_cancelled: Your invitation is cancelled, you cannot participate in the organization anymore
     error:
+      unauthorized_modify_answer: You are not allowed to modify the answer of this invitation
       unauthorized_cancel: You are not allowed to cancel this invitation
       unauthorized_access: You are ot invited to this event
   email:
     invitation:
       subject: "Yziplan : You received an invitation"
       body:
-        hello: "Hi %username%!"
         paragraph:
           first_part: "I am inviting you to \"%event_name%\"|We are inviting you to \"%event_name%\""
           text_link: "Follow this link to answer:"
           warning_secret: "Keep it secret, this is your personal invitation"
     recap:
-      subject: "Yziplan : Personal link to your invitation"
+      subject: "%eventName%: Your personal invitation link"
       body:
-        hello: "Hi %username%!"
-        paragraph: "You participate to the organization of event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
+        paragraph: "You participate to the event \"%event_name%\". To come back to the event page and modify your collaboration, follow the link bellow:"
+        warning_secret: "Keep it secret, this is your personal invitation"
+
+event_invitation_preferences:
+  notification:
+    page:
+      title: "Email notification preferences"
+      subtitle: "About the event \"%event_name%\" to which you are invited"
+      paragraphe:
+        contact_email: "Your email contact: %contact_name% %email%"
+        frequency_management: "Manage the frequency of emails warning you about participation on this event"
+        type_management: "Choose the notifications which you wish to receive"
+    form:
+      notif_email_frequency:
+        label: "Frequency of emails"
+        placeholder: "Frequency of emails"
+      notif_new_comment:
+        label: "When a comment is posted"
+        placeholder: "When a comment is posted"
+      notif_new_module:
+        label: "When a poll is created"
+        placeholder: "When a poll is created"
+      notif_new_pollProposal:
+        label: "When a proposal is added to a poll"
+        placeholder: "When a proposal is added to a poll"
 
 invitations_list:
   display:
-    title: Guests list
+    title:
+      event: Guests list
+      template: Administrators list
     all_answers: See all the invitations
     new_invitations: Invite
     send_email: Send invitations
@@ -414,13 +439,15 @@ invitations:
   display:
     title: Invite your friends
     cancel:
-      link: Cancel %name%'s invitation
-      link_noname: Cancel invitation
+      link: Cancel this invitation
       swal:
         text: Are you sure you want to cancel %name%'s invitation?
         text_noname: Are you sure you want to cancel this invitation?
       message:
         success: The invitation has been cancelled
+    modify_answer:
+      link: Modify the answer
+      message.success: The answer has been modfied
   form:
     invitations:
       label: By sending them an email
@@ -459,8 +486,8 @@ send_message:
   email:
     subject: "Yziplan : You have a message about the event \"%event_name%\""
     body:
-      hello: "Hello %username%!"
       paragraph: "Follow the link bellow to go to the event page:"
+      warning_secret: "Keep it secret, this is your personal invitation"
 
 contactsgmail:
   title: Gmail contacts
@@ -580,7 +607,24 @@ notifications:
   comment: "%number_new_comments% new comment|%number_new_comments% new comments"
   new_module: "%organizers% added a new poll|%organizers% added a new poll"
   new_pollproposal: "%organizer% added a new poll proposal"
-
+  emails:
+    common:
+      invitation_link: "Follow the link bellow to go to the event page:"
+      preferences_link: "You receive this notification because you subscribe to it. Follow the link below to unsubscribe:"
+      preferences: Preferences
+    new_comment:
+      subject: "%event_name% - You received a message"
+      body:
+        paragraph_event: "%triggerer% wrote on the event's thread"
+        paragraph_module: "%triggerer% wrote on the poll's thread \"%subject_name%\":"
+    new_module:
+      subject: "%event_name% - New poll"
+      body:
+        paragraph_event: "%triggerer% added a poll \"%subject_name%\""
+    new_poll_proposal:
+      subject: "%event_name% : %subject_name% - New poll proposal"
+      body:
+        paragraph_event: "%triggerer% added a poll proposal to \"%subject_name%\""
 
 # Globals
 global:
@@ -693,10 +737,21 @@ day_of_week:
   6_saturday: Saturday
   7_sunday: sunday
 
+notification_frequency:
+  never: Never
+  each_notification: Each notification
+  daily: Once a day
+  weekly: Once a week
+
 # Emails
 email:
+  hello: "Hello %recipient_name%,"
   salutation: Cordially
-  organisers: The organisers
+  signature:
+    yziplan: Yziplan
+    organizers: The organizers
+  dont_answer_email: Thank you for not answering this automatic email, your answer cannot be treated.
+  invitation_keep_secret: "Keep it secret, this is your personal invitation"
 
 # Modale suggestion :
 suggestion:
@@ -722,7 +777,7 @@ suggestion:
 index:
   header:
     title: Yziplan
-    subtitle: Get organised with your friends.
+    subtitle: Get organised with your friends
     button: Let's go!
   about:
     title: To get organised it's Yzi!

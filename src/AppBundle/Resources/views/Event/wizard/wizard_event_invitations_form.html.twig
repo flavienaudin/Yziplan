@@ -6,38 +6,5 @@
 #}
 
 {% block form_start %}
-    {{ form_start(invitationsForm , {'attr':{'id': 'guestEmails'}, 'action':path('wizardNewEventStep3',{'token':event.token})}) }}
+    {{ form_start(invitationsForm , {'attr':{'id': 'eventInvitations'}, 'action':path('wizardNewEventStep3',{'token':event.token})}) }}
 {% endblock form_start %}
-
-{% block action_buttons %}
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary m-b-10" id="invitations_sendInvitations">{{ "event.wizard.button.send_invitations"|trans }}</button>
-    </div>
-{% endblock action_buttons %}
-
-{% block belowInvitationForm %}{% endblock %}
-
-{#<script>#}
-{% block js_document_ready %}
-    $('#shareEventFB_container').remove();
-
-    $('form#guestEmails').on('submit', function (e) {
-        if ($('#eventInvitations_newEmails').val().length == 0) {
-            e.preventDefault();
-            swal({
-                title: "{{ "invitations_list.swal.no_email_selected.title"|trans }}",
-                html: "{{ "invitations_list.swal.no_email_selected.text"|trans }}",
-                type: "warning",
-                showCancelButton: true,
-                showLoaderOnConfirm: true,
-                cancelButtonText: "{{ "global.button.cancel"|trans }}",
-                confirmButtonText: "{{ "global.button.skip"|trans }}"
-            }).then(function () {
-                window.location = $('#invitations_later').attr('href');
-            });
-        }
-    });
-{% endblock js_document_ready %}
-
-{% block js_function %}{% endblock js_function %}
-{#</script>#}

@@ -1,0 +1,82 @@
+{% extends "@App/Directory/layout_cboxed.html.twig" %}
+
+{# Liste des activités publiques
+
+Données d'entrée :
+- newForm (NewActivityForm) : formulaire de recherche
+#}
+
+{% block title %}{{ parent() }} - {{ 'directory.title'|trans }}{% endblock %}
+
+{% block activities_content %}
+    <div class="row">
+        <div class="col-xs-12 col-xs-p-lr-0">
+            <div class="card z-depth-1">
+                <div class="card-header">
+                    <h2>Ajouter un element a l'annuaire</h2>
+                    <br>
+                    <strong>/!\ A LIRE !</strong>
+                    <p>C'est une page developpée a la rache et avec 2 pieds gauches juste avant de partir en vacance pour dépanner, le système n'est donc pas du tout robuste.</p>
+                    <br>
+                    <p>La liste des evenement ne vous montre que les element qui ont demandé a etre dans l'annuaire et ne le sont pas encore.<br>
+                    Une fois que vous aurez cliqué sur "valider" ils n'apparaitront plus dans la liste et il faudra passé par la BDD pour les modifier.<br></p>
+                    <p><ol>
+                        <li>Choisir un evenement</li>
+                        <li>Selectionner 1 ou plusieurs type d'activité (voir avec un dev de code pour en ajouter en base)</li>
+                        <li>Selectionner une ville <strong>/!\ Saississez les premiers caractères du nom de la ville, une liste va apparaitre (peut mettre 1s), selectionner la ville (+cp) dans la liste, s'il y a plusieurs element identique, prendre le premier</strong></li>
+                    </ol></p>
+                </div>
+                <div class="card-body card-padding-sm">
+                    {{ form_start(newForm, {'action':path('directoryAdminNew')}) }}
+                    <div class="row">
+                        <div class="col-xs-12">
+                            {{ form_row(newForm.event, {
+                                'label_attr': {'class': 'hidden'},
+                                'attr':{'title':'Page', 'class':'selectpicker', 'data-live-search':'true'},
+                                'widget_options':{'fgline':true, 'displayInRow' : true}
+                            }) }}
+                        </div>
+                        <div class="col-xs-12">
+                            {{ form_row(newForm.activityTypes, {
+                                'label_attr': {'class': 'hidden'},
+                                'attr':{'title':'directory.form.type', 'class':'selectpicker', 'data-live-search':'true'},
+                                'widget_options':{'fgline':true, 'displayInRow' : true}
+                            }) }}
+                        </div>
+                        <div class="col-xs-12 col-sm-8">
+                            {{ form_row(newForm.place, {
+                                'label_attr': {'class': 'hidden'},
+                                'attr':{'placeholder':'directory.form.place'},
+                                'widget_options':{'fgline':true, 'displayInRow' : true}
+                            }) }}
+                        </div>
+                        <div class="col-xs-12 col-sm-4">
+                            <div>
+                                <button type="submit" class="btn btn-primary" data-loading-text="{{ "global.button.loading"|trans }}" data-original-text="{{ "global.button.save"|trans }}">
+                                    {{ "global.button.valid"|trans }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {{ form_end(newForm) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        {# La réponse doit être sous la forme : "suggestions": [
+            { "value": "United Arab Emirates", "data": "AE" },
+            { "value": "United Kingdom",       "data": "UK" },
+            { "value": "United States",        "data": "US" }
+        ]
+
+        Documenttation : https://www.devbridge.com/sourcery/components/jquery-autocomplete/#}
+        $(document).ready(function () {
+            $('#{{ newForm.place.vars.id }}').autocomplete({
+                serviceUrl: '{{ path("placeAutocompletion") }}',
+                minChars: 3,
+                deferRequestBy: 1000
+            });
+        })
+    </script>
+{% endblock %}

@@ -15,9 +15,9 @@ use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Module\PollModule\PollProposalActivityType;
+use AppBundle\Form\Module\PollModule\PollProposalType;
 use AppBundle\Form\Module\PollModule\PollProposalWhatType;
 use AppBundle\Form\Module\PollModule\PollProposalWhenCollectionType;
-use AppBundle\Form\Module\PollModule\PollProposalType;
 use AppBundle\Form\Module\PollModule\PollProposalWhenType;
 use AppBundle\Form\Module\PollModule\PollProposalWhereType;
 use AppBundle\Utils\enum\PollModuleType;
@@ -42,15 +42,19 @@ class PollProposalManager
     /** @var EngineInterface */
     private $templating;
 
+    /** @var NotificationManager */
+    private $notificationManager;
+
     /** @var PollProposal */
     private $pollProposal;
 
-    public function __construct(EntityManager $doctrine, FormFactoryInterface $formFactory, EngineInterface $templating, PollProposalElementManager $pollProposalElementManager)
+    public function __construct(EntityManager $doctrine, FormFactoryInterface $formFactory, EngineInterface $templating, PollProposalElementManager $pollProposalElementManager, NotificationManager $notificationManager)
     {
         $this->entityManager = $doctrine;
         $this->pollProposalElementManager = $pollProposalElementManager;
         $this->formFactory = $formFactory;
         $this->templating = $templating;
+        $this->notificationManager = $notificationManager;
     }
 
     /**
@@ -97,7 +101,7 @@ class PollProposalManager
      */
     public function displayPollProposalListRowPartial($pollProposals, EventInvitation $userEventInvitation)
     {
-        if(!empty($pollProposals)) {
+        if (!empty($pollProposals)) {
             $pollModule = $pollProposals[0]->getPollModule();
             $userModuleInvitation = null;
             if ($userEventInvitation != null) {
@@ -183,9 +187,10 @@ class PollProposalManager
         if ($this->pollProposal->getPollModule() == null) {
             $this->pollProposal->setPollModule($module->getPollModule());
         }
-
         $this->entityManager->persist($this->pollProposal);
         $this->entityManager->flush();
+
+        $this->notificationManager->createAddPollProposalNotifications($this->pollProposal, ($moduleInvitation != null ? $moduleInvitation->getEventInvitation() : null));
         return $this->pollProposal;
     }
 

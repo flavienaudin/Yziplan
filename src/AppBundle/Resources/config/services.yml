@@ -20,7 +20,7 @@ services:
 
   at.manager.event:
     class: AppBundle\Manager\EventManager
-    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@session','@security.authorization_checker','@router','@templating','@translator','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation','@at.manager.discussion','@app.mailer.twig_swift']
+    arguments: [ '@doctrine.orm.entity_manager','@security.token_storage','@session','@security.authorization_checker','@router','@templating','@translator','@form.factory','@at.service.gentoken','@at.manager.module','@at.manager.pollproposal','@at.manager.event_invitation','@at.manager.module_invitation','@at.manager.discussion','@app.mailer.common', '@at.manager.notification']
 
   at.manager.discussion:
     class: AppBundle\Manager\DiscussionManager
@@ -32,7 +32,7 @@ services:
 
   at.manager.event_invitation:
     class: AppBundle\Manager\EventInvitationManager
-    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.application_user','@at.manager.module_invitation','@app.mailer.twig_swift']
+    arguments: ['@doctrine.orm.entity_manager','@security.authorization_checker', '@form.factory', '@at.service.gentoken', '@session', '@at.manager.application_user','@at.manager.module_invitation','@app.mailer.common']
 
   at.manager.module_invitation:
     class: AppBundle\Manager\ModuleInvitationManager
@@ -40,7 +40,7 @@ services:
 
   at.manager.pollproposal:
     class: AppBundle\Manager\PollProposalManager
-    arguments: ['@doctrine.orm.entity_manager','@form.factory','@templating','@at.manager.pollproposal_element']
+    arguments: ['@doctrine.orm.entity_manager','@form.factory','@templating','@at.manager.pollproposal_element','@at.manager.notification']
     lazy:  true
 
   at.manager.pollproposal_element:
@@ -51,6 +51,10 @@ services:
   at.manager.pollproposal_response:
     class: AppBundle\Manager\PollProposalResponseManager
     arguments: ['@doctrine.orm.entity_manager','@templating']
+
+  at.manager.notification:
+    class: AppBundle\Manager\NotificationManager
+    arguments: ['@doctrine.orm.entity_manager','@app.mailer.common']
 
   at.manager.application_user:
     class: AppBundle\Manager\ApplicationUserManager
@@ -116,12 +120,6 @@ services:
     tags:
     - { name: form.type }
 
-
-  at.form_type.poll_proposal_element:
-    class: AppBundle\Form\Module\PollProposalElementType
-    tags:
-    - { name: form.type }
-
 # Event Subscribers
   at.event_subscriber.kernel_events.:
     class: AppBundle\EventListener\KernelEventsSubscriber
@@ -131,13 +129,13 @@ services:
 
   at.event_listener.discussion:
     class: AppBundle\EventListener\Comment\DiscussionEventSubscriber
-    arguments: ['@security.token_storage','@request_stack', '@at.manager.event','@at.manager.module','@at.manager.event_invitation','@at.mailer.twig_swift']
+    arguments: ['@security.token_storage','@request_stack', '@at.manager.event','@at.manager.module','@at.manager.event_invitation','@at.mailer.twig_swift','@at.manager.notification']
     tags:
       - { name: kernel.event_subscriber }
 
   at.event_listener.appuseremail_confirmation:
     class: AppBundle\EventListener\AppUserEmailConfirmationSubscriber
-    arguments: ['@at.mailer.twig_swift','@fos_user.util.token_generator','@router']
+    arguments: ['@app.mailer.common','@fos_user.util.token_generator','@router']
     tags:
       - { name: kernel.event_subscriber }
 
@@ -161,26 +159,33 @@ services:
       - { name: validator.constraint_validator }
 
 # Mailer
-  app.mailer.twig_swift:
-    class: AppBundle\Mailer\AppTwigSiwftMailer
-    parent: fos_user.mailer.twig_swift
-    public: true
+  app.mailer.common:
+    class: AppBundle\Mailer\AppMailer
+    arguments:
+      - "@swiftmailer.mailer.default_mailer"
+      - "@swiftmailer.mailer.spool_file_quickly"
+      - "@router"
+      - "@twig"
+      - { 'from_email' : {
+            'confirmation' : '%fos_user.registration.confirmation.from_email%',
+            'yziplan' : {'contact@yziplan.fr' : 'Yziplan'}
+        } }
 
 # Twig Extenstions
   at.twig_extension.country:
-        class: AppBundle\Twig\CountryTwigExtension
-        public: false
-        tags:
-            - { name: twig.extension }
+      class: AppBundle\Twig\CountryTwigExtension
+      public: false
+      tags:
+          - { name: twig.extension }
 
   at.twig_extension.class:
-          class: AppBundle\Twig\ClassTwigExtension
-          public: false
-          tags:
-              - { name: twig.extension }
+      class: AppBundle\Twig\ClassTwigExtension
+      public: false
+      tags:
+          - { name: twig.extension }
 
 # Gestion retour utilisateur
   at.manager.retour_utilisateur:
-          class: AppBundle\Manager\RetourUtilisateurManager
-          arguments: ['@app.mailer.twig_swift', '%trello.token_or_login%', '%trello.pass%']
+      class: AppBundle\Manager\RetourUtilisateurManager
+      arguments: ['@app.mailer.common', '%trello.token_or_login%', '%trello.pass%']
 

@@ -1,0 +1,63 @@
+{# Données d'entrée :
+- notification (Notification) La notification à afficher
+#}
+
+<li class="list-group-item media lgi-notification" id="notification_{{ notification.id }}">
+    {% if notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::POST_COMMENT') %}
+        <div class="media">
+            <div class="pull-left">
+            <span class="zmdi-hc-stack zmdi-hc-lg">
+                <i class="zmdi zmdi-square-o zmdi-hc-stack-2x"></i>
+                <i class="zmdi zmdi-comment-text zmdi-hc-stack-1x"></i>
+            </span>
+            </div>
+            <div class="pull-right">
+                <a href="{{ path('markAsView', {'id':notification.id}) }}" class="notification_delete_link"> <i class="zmdi zmdi-dot-circle-alt zmdi-hc-lg"></i></a>
+            </div>
+            <div class="media-body">
+                <div class="lgi-heading">
+                    <a href="#{{ notification.data.subject.type == "module"?
+                    'module_'~notification.data.subject.token~'_comment_thread_anchor':'event_comment_thread_anchor' }}">{{ notification.data.subject.name }}</a>
+                </div>
+                <small class="lgi-text">
+                    {{ "notifications.comment"|transchoice(notification.data.new_comments_number, {
+                        '%subject_name%':notification.data.subject.name,
+                        '%number_new_comments%':notification.data.new_comments_number
+                    }) }}</small>
+            </div>
+        </div>
+    {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::ADD_MODULE') %}
+        <div class="media">
+            <div class="pull-left">
+            <span class="zmdi-hc-stack zmdi-hc-lg">
+                <i class="zmdi zmdi-vignette zmdi-hc-stack-2x"></i>
+                <i class="zmdi zmdi-help zmdi-hc-stack-1x"></i>
+            </span>
+            </div>
+            <div class="pull-right">
+                <a href="{{ path('markAsView', {'id':notification.id}) }}"> <i class="zmdi zmdi-dot-circle-alt zmdi-hc-lg"></i></a>
+            </div>
+            <div class="media-body">
+                <div class="lgi-heading"><a href="#module-{{ notification.data.subject.token }}_anchor">{{ notification.data.subject.name }}</a></div>
+                <small class="lgi-text">
+                    {{ "notifications.new_module"|transchoice(notification.data.creator_names|split(',')|length, {
+                        '%organizers%':notification.data.creator_names
+                    }) }}</small>
+            </div>
+        </div>
+    {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::ADD_POLL_PROPOSAL') %}
+        <div class="media">
+            <div class="pull-left">
+                <i class="zmdi zmdi-collection-item zmdi-hc-2x"></i>
+            </div>
+            <div class="pull-right">
+                <a href="{{ path('markAsView', {'id':notification.id}) }}"> <i class="zmdi zmdi-dot-circle-alt zmdi-hc-lg"></i></a>
+            </div>
+            <div class="media-body">
+                <div class="lgi-heading"><a href="#module-{{ notification.data.subject.token }}_anchor">{{ notification.data.subject.name }}</a></div>
+                <small class="lgi-text">
+                    {{ "notifications.new_pollproposal"|trans({'%organizer%':notification.data.creator_name}) }}</small>
+            </div>
+        </div>
+    {% endif %}
+</li>

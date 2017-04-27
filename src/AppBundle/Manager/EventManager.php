@@ -13,20 +13,17 @@ use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Entity\Event\EventOpeningHours;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
-use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Event\EventTemplateSettingsType;
 use AppBundle\Form\Event\EventType;
 use AppBundle\Form\Event\InvitationsType;
 use AppBundle\Form\Event\SendMessageType;
-use AppBundle\Mailer\AppTwigSiwftMailer;
+use AppBundle\Mailer\AppMailer;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Utils\enum\ModuleStatus;
-use AppBundle\Utils\enum\NotificationTypeEnum;
-use AppBundle\Utils\Notifications\Notification;
 use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -87,11 +84,14 @@ class EventManager
     /** @var ModuleInvitationManager */
     private $moduleInvitationManager;
 
-    /** @var DiscussionManager $discussionManager */
+    /** @var DiscussionManager */
     private $discussionManager;
 
-    /** @var AppTwigSiwftMailer */
-    private $appTwigSiwftMailer;
+    /** @var AppMailer */
+    private $appMailer;
+
+    /** @var NotificationManager */
+    private $notificationManager;
 
     /** @var Event L'événement en cours de traitement */
     private $event;
@@ -102,7 +102,7 @@ class EventManager
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, Session $session, AuthorizationCheckerInterface $authorizationChecker, RouterInterface $router,
                                 EngineInterface $templating, TranslatorInterface $translator, FormFactory $formFactory, GenerateursToken $generateurToken, ModuleManager $moduleManager,
                                 PollProposalManager $pollProposalManager, EventInvitationManager $eventInvitationManager, ModuleInvitationManager $moduleInvitationManager,
-                                DiscussionManager $discussionManager, AppTwigSiwftMailer $appTwigSiwftMailer)
+                                DiscussionManager $discussionManager, AppMailer $appMailer, NotificationManager $notificationManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -118,7 +118,8 @@ class EventManager
         $this->eventInvitationManager = $eventInvitationManager;
         $this->moduleInvitationManager = $moduleInvitationManager;
         $this->discussionManager = $discussionManager;
-        $this->appTwigSiwftMailer = $appTwigSiwftMailer;
+        $this->appMailer = $appMailer;
+        $this->notificationManager = $notificationManager;
     }
 
     /**
@@ -439,12 +440,12 @@ class EventManager
 
             $guests = $this->event->getGuests();
             foreach ($guests as $guest) {
-                $this->appTwigSiwftMailer->sendCancellationEmail($guest, $message);
+                $this->appMailer->sendCancellationEmail($guest, $message);
             }
             $organizers = $this->event->getOrganizers();
             foreach ($organizers as $organizer) {
                 if ($organizer != $userEventInvitation) {
-                    $this->appTwigSiwftMailer->sendCancellationEmail($organizer, $message);
+                    $this->appMailer->sendCancellationEmail($organizer, $message);
                 }
             }
 
@@ -476,10 +477,12 @@ class EventManager
 
         // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator).
         $this->moduleInvitationManager->initializeModuleInvitationsForEvent($this->event, $module);
+
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
 
-        $this->eventInvitationManager->updateLastVisit($creatorEventInvitation);
+        // Création d'un notification pour chaque invité
+        $this->notificationManager->createAddModuleNotifications($module, $creatorEventInvitation);
 
         // Create the thread after the module affectation to its event because of the thread ID is generate with the event token
         $this->discussionManager->createCommentableThread($module);
@@ -490,7 +493,6 @@ class EventManager
     /**
      * @param EventInvitation $userEventInvitation
      * @param string $requestUri The URI of the request to create thread for modules
-     * @param array|null $notifications par référence
      * @return array Un tableau de modules de l'événement au format :
      *  moduleId => [
      *  'module' => Module : Le module lui-meme
@@ -498,7 +500,7 @@ class EventManager
      *  'pollProposalAddForm' => Form : uniquement pour un PollModule
      * ]
      */
-    public function getModulesToDisplay(EventInvitation $userEventInvitation, &$notifications = null)
+    public function getModulesToDisplay(EventInvitation $userEventInvitation)
     {
         $modules = array();
         if ($this->event != null) {
@@ -526,48 +528,6 @@ class EventManager
                             $moduleDescription['pollModuleOptions']['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule());
                             $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
                         }
-
-                        if (is_array($notifications)) {
-                            // Création d'une notification si le module est nouveau depuis la dernière visite
-                            if ($module->getCreatedAt() > $userEventInvitation->getLastVisitAt()) {
-                                $new_module_notification = new Notification();
-                                $new_module_notification->setDate($module->getCreatedAt());
-                                $new_module_notification->setType(NotificationTypeEnum::MODULE);
-                                $creatorNames = "";
-                                /** @var ModuleInvitation $creator */
-                                foreach ($module->getCreators() as $creator) {
-                                    $creatorNames .= (!empty($creatorNames) ? ' ,' : '') . $creator->getDisplayableName(true, true);
-                                }
-                                $new_module_notification->setDatas(array(
-                                    "subject" => $module,
-                                    "creator_names" => $creatorNames
-                                ));
-                                array_push($notifications, $new_module_notification);
-                            }
-                            if ($module->getPollModule() != null) {
-                                /** @var PollProposal $pollProposal */
-                                foreach ($module->getPollModule()->getValidPollProposal() as $pollProposal) {
-                                    if ($pollProposal->getCreatedAt() > $userEventInvitation->getLastVisitAt()) {
-                                        $new_pollproposal_notification = new Notification();
-                                        $new_pollproposal_notification->setDate($pollProposal->getCreatedAt());
-                                        $new_pollproposal_notification->setType(NotificationTypeEnum::POLL_PROPOSAL);
-                                        $new_pollproposal_notification->setDatas(array(
-                                            "subject" => $module,
-                                            "creator_name" => $pollProposal->getCreator()->getDisplayableName(true, true)
-                                        ));
-                                        array_push($notifications, $new_pollproposal_notification);
-                                    }
-                                }
-                            }
-
-
-                            // Création d'une notification s'il y a de nouveaux commentaires
-                            $eventThreadNotif = $this->discussionManager->getNotification($userEventInvitation, $moduleDescription['comments'], $module);
-                            if ($eventThreadNotif != null) {
-                                array_push($notifications, $eventThreadNotif);
-                            }
-                        }
-
                         $modules[$module->getId()] = $moduleDescription;
                     }
                 }

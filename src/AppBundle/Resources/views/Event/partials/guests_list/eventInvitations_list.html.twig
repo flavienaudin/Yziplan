@@ -1,0 +1,15 @@
+{# Affichage des invitations sous forme de liste de leur avatar
+Données d'entrée :
+ - userEventInvitation (EventInvitation) L'invitation de l'utilisateur courant
+ - firstEventInvitation (EventInvitation|null) L'invitation à afficher en premier (celle de l'utilisateur conencté par exemple)
+ - eventInvitations (arrray of EventInvitation) La liste des invitations restantes à afficher
+#}
+
+<ul class="list-inline eventInvitations_list">
+    {% if firstEventInvitation is not null %}
+        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':firstEventInvitation }) }}
+    {% endif %}
+    {% for eventInvitation in eventInvitations if eventInvitation != firstEventInvitation %}
+        {{ include('@App/Event/partials/eventInvitation_li.html.twig', {'userEventInvitation': userEventInvitation, 'eventInvitation':eventInvitation}) }}
+    {% endfor %}
+</ul>
