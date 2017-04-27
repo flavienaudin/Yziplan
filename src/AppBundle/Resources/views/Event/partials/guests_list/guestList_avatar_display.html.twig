@@ -34,6 +34,6 @@ Données calculées dans le template parent :
         <li role="separator" class="divider"></li>
         <li role="presentation">
             <a class="cancelInvitation" href="{{ path("cancelEventInvitation", {'eventInvitationTokenToCancel':eventInvitation.token}) }}"
-               data-guestname="{{ eventInvitation.displayableName(true, false) }}"> <i class="zmdi zmdi-delete c-red"></i> {{ "invitations.display.cancel.link"|trans }}</a></li>
+               data-guestname="{{ eventInvitation.displayableName(true, false) }}" data-guestid="{{ eventInvitation.id }}"> <i class="zmdi zmdi-delete c-red"></i> {{ "invitations.display.cancel.link"|trans }}</a></li>
     {% endif %}
 {% endblock dropdown_menu_item %}

@@ -86,7 +86,12 @@
                         showLoaderOnConfirm: true
                     }).then(function () {
                         ajaxRequest($link, null, e, function (responseJSON, textStatus, jqXHR) {
-                            $($link).closest('li').remove();
+                            var guestid = $link.data('guestid');
+                            if (typeof guestid !== "undefined" && $link.data('guestid') !== "") {
+                                $('.eventInvitations_list > li.guestid-' + guestid).remove();
+                            } else {
+                                $($link).closest('.eventInvitations_list > li').remove();
+                            }
                         }, null, null);
                     });
                 });

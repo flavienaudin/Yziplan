@@ -5,7 +5,7 @@
 
 
 {% spaceless %}
-    <li>
+    <li class="guestid-{{ eventInvitation.id }}">
         <div class="userInvitation-avatar">
             <div class="avatar-img-container m-b-5">
                 {{ include("@App/Event/partials/guests_list/guestList_avatar_display.html.twig",{invitation : eventInvitation, "userEventInvitation": userEventInvitation}) }}
