@@ -376,6 +376,7 @@ eventInvitation:
     error:
       unauthorized_modify_answer: You are not allowed to modify the answer of this invitation
       unauthorized_cancel: You are not allowed to cancel this invitation
+      unauthorized_designate_administrator: You are not allowed to designate administrator
       unauthorized_access: You are ot invited to this event
   email:
     invitation:
@@ -448,6 +449,9 @@ invitations:
     modify_answer:
       link: Modify the answer
       message.success: The answer has been modfied
+    designate:
+      administrator.link: Designate as administrator
+      guest.link: Revoke administrator's rights
   form:
     invitations:
       label: By sending them an email

@@ -369,7 +369,7 @@ class EventInvitationManager
      * Set EventInvitation.answer == $answerValue
      *
      * @param EventInvitation|null $eventInvitation If null, $this->eventInvitation is used
-     * @param $answerValue string La nouvelle valeure de la réponse
+     * @param $answerValue string La nouvelle valeur de la réponse
      * @return bool true if the update is successful
      */
     public function modifyAnswerEventInvitation(EventInvitation $eventInvitation = null, $answerValue)
@@ -382,6 +382,25 @@ class EventInvitationManager
                 $this->eventInvitation->setAnswer($answerValue);
                 return $this->persistEventInvitation();
             //}
+        }
+        return false;
+    }
+
+    /**
+     * Set EventInvitation.administrator = $value
+     *
+     * @param EventInvitation|null $eventInvitation If null, $this->eventInvitation is used
+     * @param $value boolean Si l'EventInvitation devient ou non un administrateur
+     * @return bool true if the update is successful
+     */
+    public function designateGuestAsAdministrator(EventInvitation $eventInvitation = null, $value)
+    {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        if ($this->eventInvitation != null) {
+            $this->eventInvitation->setAdministrator($value);
+            return $this->persistEventInvitation();
         }
         return false;
     }

@@ -12,6 +12,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Security\EventInvitationVoter;
+use AppBundle\Security\EventVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
@@ -138,7 +139,6 @@ class EventInvitationController extends Controller
         }
     }*/
 
-
     /**
      * @Route("/modify-answer/{eventInvitTokenToModifyAnswer}/{answerValue}", name="modifyGuestEventInvitation" )
      * @ParamConverter("eventInvitTokenToModifyAnswer", class="AppBundle:Event\EventInvitation", options={"mapping": {"eventInvitTokenToModifyAnswer":"token"}})
@@ -186,6 +186,59 @@ class EventInvitationController extends Controller
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_modify_answer"));
             if ($eventInvitTokenToModifyAnswer != null) {
                 return $this->redirectToRoute("displayEvent", array("token" => $eventInvitTokenToModifyAnswer->getEvent()->getToken()));
+            } else {
+                return $this->redirectToRoute("home");
+            }
+        }
+    }
+
+    /**
+     * @Route("/designate-administrator/{eventInvitationToken}/{value}", name="designateGuestAsAdministror" )
+     * @ParamConverter("eventInvitation", class="AppBundle:Event\EventInvitation", options={"mapping": {"eventInvitationToken":"token"}})
+     */
+    public function designateGuestAsAdministratorAction(EventInvitation $eventInvitation, $value, Request $request)
+    {
+        $userEventInvitation = null;
+        $eventInvitationManager = $this->get("at.manager.event_invitation");
+        if ($eventInvitation != null) {
+            // Get the UserInvitation
+            $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($eventInvitation->getEvent(), false, false, $this->getUser());
+        }
+
+        // Only creator/admnsitrators can designate guest as administrator
+        if ($this->isGranted(EventVoter::DESIGNATE_ADMINISTRATOR, $userEventInvitation)) {
+            if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                // Vérification serveur de la validité de l'invitation
+                if ($request->isXmlHttpRequest()) {
+                    $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                } else {
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.valide_guestname_required"));
+                    return $this->redirectToRoute('displayEvent', array('token' => $userEventInvitation->getEvent()->getToken()));
+                }
+            } elseif ($eventInvitationManager->designateGuestAsAdministrator($eventInvitation, $value)) {
+                if ($request->isXmlHttpRequest()) {
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("invitations.display.modify_answer.message.success");
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#guests_list'] =
+                        $this->renderView("@App/Event/partials/guests_list/guestsList_card_body.html.twig", array(
+                            'userEventInvitation' => $userEventInvitation,
+                            'event' => $eventInvitation->getEvent()
+                        ));
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("invitations.display.modify_answer.message.success"));
+                    return $this->redirectToRoute("displayEvent", array("token" => $eventInvitation->getEvent()->getToken()));
+                }
+            }
+        }
+        if ($request->isXmlHttpRequest()) {
+            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.message.error.unauthorized_designate_administrator");
+            return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_designate_administrator"));
+            if ($eventInvitation != null) {
+                return $this->redirectToRoute("displayEvent", array("token" => $eventInvitation->getEvent()->getToken()));
             } else {
                 return $this->redirectToRoute("home");
             }

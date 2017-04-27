@@ -30,10 +30,19 @@ Données calculées dans le template parent :
                         class="zmdi zmdi-close"></i> {{ "eventInvitation.answer.no"|trans }}
             </a></li>
     {% endif %}
+    {% if userEventInvitation != invitation and is_granted(constant('AppBundle\\Security\\EventVoter::DESIGNATE_ADMINISTRATOR'), userEventInvitation) %}
+        <li role="separator" class="divider"></li>
+        <li role="presentation">
+            <a class="designateAsAdministror" href="{{ path("designateGuestAsAdministror", {'eventInvitationToken':eventInvitation.token,'value':eventInvitation.administrator?0:1}) }}"> <i
+                        class="zmdi {{ not eventInvitation.administrator?"zmdi-account-box-mail":"zmdi-account" }}"></i>
+                {{ eventInvitation.administrator?"invitations.display.designate.guest.link"|trans:"invitations.display.designate.administrator.link"|trans }}
+            </a></li>
+    {% endif %}
     {% if is_granted(constant('AppBundle\\Security\\EventInvitationVoter::CANCEL'), [userEventInvitation, eventInvitation]) %}
         <li role="separator" class="divider"></li>
         <li role="presentation">
             <a class="cancelInvitation" href="{{ path("cancelEventInvitation", {'eventInvitationTokenToCancel':eventInvitation.token}) }}"
-               data-guestname="{{ eventInvitation.displayableName(true, false) }}" data-guestid="{{ eventInvitation.id }}"> <i class="zmdi zmdi-delete c-red"></i> {{ "invitations.display.cancel.link"|trans }}</a></li>
+               data-guestname="{{ eventInvitation.displayableName(true, false) }}" data-guestid="{{ eventInvitation.id }}"> <i
+                        class="zmdi zmdi-delete c-red"></i> {{ "invitations.display.cancel.link"|trans }}</a></li>
     {% endif %}
 {% endblock dropdown_menu_item %}

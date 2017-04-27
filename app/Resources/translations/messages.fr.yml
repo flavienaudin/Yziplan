@@ -375,6 +375,7 @@ eventInvitation:
     error:
       unauthorized_modify_answer: Vous n'avez pas les autorisations pour modifier la réponse de cette invitation
       unauthorized_cancel: Vous n'avez pas les autorisations pour annuler cette invitation
+      unauthorized_designate_administrator: Vous n'avez pas les autorisations pour désigner les administrateurs
       unauthorized_access: Vous n'êtes pas invité à cet événement
   email:
     invitation:
@@ -447,6 +448,9 @@ invitations:
     modify_answer:
       link: Modifier la réponse
       message.success: La réponse a bien été modifiée
+    designate:
+      administrator.link: Désigner comme administrateur
+      guest.link: Révoquer les droits d'administrateur
   form:
     invitations:
       label: En leur envoyant un e-mail
