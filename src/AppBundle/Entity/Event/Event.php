@@ -971,9 +971,15 @@ class Event implements CommentableInterface
     {
         $criteria = Criteria::create()->where(Criteria::expr()->in("status", [EventInvitationStatus::AWAITING_ANSWER, EventInvitationStatus::VALID]));
         if ($answer != null) {
-            $criteria->andWhere(Criteria::expr()->in("answer", $answer));
-            if($getAnswerNull){
-                $criteria->orWhere(Criteria::expr()->isNull("answer"));
+            if ($getAnswerNull) {
+                $criteria->andWhere(Criteria::expr()->orX(
+                    Criteria::expr()->in("answer", $answer),
+                    Criteria::expr()->isNull("answer")
+                ));
+            } else {
+                $criteria->andWhere(
+                    Criteria::expr()->in("answer", $answer)
+                );
             }
         }
         return $this->eventInvitations->matching($criteria);
@@ -1023,7 +1029,7 @@ class Event implements CommentableInterface
 
     public function initializeWeekOpeningHours()
     {
-        if($this->openingHours == null){
+        if ($this->openingHours == null) {
             $this->openingHours = new ArrayCollection();
         }
         $mondayOH = new EventOpeningHours();
