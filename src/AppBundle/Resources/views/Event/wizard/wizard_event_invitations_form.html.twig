@@ -8,3 +8,18 @@
 {% block form_start %}
     {{ form_start(invitationsForm , {'attr':{'id': 'eventInvitations'}, 'action':path('wizardNewEventStep3',{'token':event.token})}) }}
 {% endblock form_start %}
+
+
+{% block action_buttons %}
+    {{ parent() }}
+    <div class="m-t-10">
+        <a href="#invitationsMoreOption" data-toggle="collapse" aria-controls="#invitationsMoreOption" aria-expanded="false">{{ "global.button.more_options"|trans }}</a>
+        <div class="collapse" id="invitationsMoreOption">
+            <div class="checkbox m-b-15">
+                <label> <input id="setGuestCanInviteParameter" type="checkbox" value=""> <i class="input-helper"></i>
+                    {{ "event.form.guestsCanInvite.label"|trans }}
+                </label>
+            </div>
+        </div>
+    </div>
+{% endblock action_buttons %}

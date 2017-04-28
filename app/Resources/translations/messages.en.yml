@@ -527,8 +527,8 @@ module:
       text.true: An invitation is required to participate (private event)
       text.false: Everyone can participate (public event)
     guestsCanInvite:
-      label: Allow your friends to invite
-      placeholder: Allow your friends to invite
+      label: Allow participants to invite
+      placeholder: Allow participants to invite
       text.true: Your friends can invite
       text.false: Your friends can not invite
     choice.label:
@@ -666,6 +666,7 @@ global:
     archive: Archive
     unarchive: Unarchive
     continue: Continue
+    more_options: More options
   success:
     data_saved: Information saved
   error:

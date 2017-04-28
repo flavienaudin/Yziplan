@@ -526,8 +526,8 @@ module:
       text.true: Seuls les invités peuvent participer (événement privé)
       text.false: Rend l'événement accessible à toutes les personnes recevant le lien
     guestsCanInvite:
-      label: Permettre à vos amis d'inviter
-      placeholder: Permettre à vos amis d'inviter
+      label: Permette aux participants d'inviter
+      placeholder: Permette aux participants d'inviter
       text.true: Vos amis peuvent inviter
       text.false: Vos amis ne peuvent pas inviter
     choice.label:
@@ -665,6 +665,7 @@ global:
     archive: Archiver
     unarchive: Désarchiver
     continue: Continuer
+    more_options: Plus d'options
   success:
     data_saved: Données sauvegardées
   error:

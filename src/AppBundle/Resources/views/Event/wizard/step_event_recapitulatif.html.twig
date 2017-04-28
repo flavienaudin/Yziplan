@@ -146,6 +146,16 @@
                     });
                 });
             });
+
+            $('#setGuestCanInviteParameter').on('change', function (e) {
+                var link = '{{ path('setGuestCanInvite',{'token':event.token,'value':'__value__'}) }}';
+                if($(this).prop('checked')) {
+                    link = link.replace('__value__', 1);
+                }else{
+                    link = link.replace('__value__', 0);
+                }
+                ajaxRequest(link, null, e, null, null, null);
+            });
         })
     </script>
 {% endblock javascripts %}
