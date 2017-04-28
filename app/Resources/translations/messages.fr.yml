@@ -278,10 +278,12 @@ event:
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement
     deletion: Une erreur est survenue lors de l'annulation de l'événement
+    edition: Une erreur est survenue lors de la modification de l'événement
     unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
     valide_guestname_required: Cette action nécessite que vous validiez votre invitation en renseignant votre nom. Aucune modification n'a été apportée
   success.message:
     creation: Evénement créé avec succès
+    edition: Evénement modifié avec succès
     cancellation: Evénement annulé avec succès. Vous allez être redirigé dans quelques instants
 
 eventInvitations:

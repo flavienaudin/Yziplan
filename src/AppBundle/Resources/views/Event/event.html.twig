@@ -237,6 +237,12 @@
             });
             {% endif %}
 
+            {% if is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'), userEventInvitation) %}
+                $('#setGuestCanInviteParameterLink').on('click', function (e) {
+                    ajaxRequest($(this), null, e, null, null, null);
+                });
+            {% endif %}
+
             {# Mise à jour de la date de dernière visite de l'utilisateur une fois la page générée #}
             ajaxRequest('{{ path('updateLastVisitAtEventInvitation', {'token':userEventInvitation.token}) }}', null, null);
         });

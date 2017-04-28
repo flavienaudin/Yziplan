@@ -421,6 +421,24 @@ class EventManager
     }
 
     /**
+     * Set the event.guestCanInvite parameter
+     * @param $value boolean the new value to set
+     * @param Event|null $event
+     * @return bool
+     */
+    public function setInvitationParameter($value, Event $event = null){
+        if ($event != null) {
+            $this->event = $event;
+        }
+        if ($this->event != null) {
+            $this->event->setGuestsCanInvite($value);
+            $this->persistEvent();
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Annule un événement en modifiant le status et en envoyant un email à tous les invités
      * @param $requestData array Les données de la requête contenant le message
      * @param $userEventInvitation EventInvitation l'invitation de l'utilisateur en cours

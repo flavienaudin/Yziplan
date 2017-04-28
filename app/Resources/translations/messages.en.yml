@@ -277,12 +277,14 @@ event:
       body:
         text: "Sorry, I cancel the event \"%event_name%\".|Sorry, We cancel the event \"%event_name%\"."
   error.message:
-    creation: An error occured while creating an event
-    deletion: An error occured while cancelling an event
+    creation: An error occured while creating the event
+    deletion: An error occured while cancelling the event
+    edition: An error occured while editing the event
     unauthorized_access: You haven't the authorization to access this event
     valide_guestname_required: This action requires that you validate your invitation with your name. No change was made
   success.message:
     creation: Event created successfully
+    edition: Event edited successfully
     cancellation: Event cancelled successfully. You will be redirected in a second
 
 eventInvitations:

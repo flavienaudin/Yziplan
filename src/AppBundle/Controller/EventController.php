@@ -586,6 +586,53 @@ class EventController extends Controller
     }
 
     /**
+     * @Route("/set-guestcaninvite/{token}/{value}", name="setGuestCanInvite")
+     * @ParamConverter("event" , class="AppBundle:Event\Event")
+     * @param Event $event The current event
+     * @param boolean $value
+     * @return AppJsonResponse|FileInputJsonResponse|RedirectResponse
+     */
+    public function setGuestCanInviteAction(Event $event, $value, Request $request)
+    {
+        $eventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
+        if (!$this->isGranted(EventVoter::EDIT, $eventInvitation)) {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("global.error.unauthorized_access");
+                return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("global.error.unauthorized_access"));
+                return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+            }
+        }
+
+        $eventManager = $this->get("at.manager.event");
+        if ($eventManager->setInvitationParameter($value, $event)) {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.success.message.edition');
+                if ($event->isGuestsCanInvite()) {
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestCanInviteParameterLink'] =
+                        '<i class="zmdi zmdi-check c-green"></i> ' . $this->get('translator')->trans("event.form.guestsCanInvite.text.true");
+                } else {
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestCanInviteParameterLink'] =
+                        '<i class="zmdi zmdi-close c-red"></i> ' . $this->get('translator')->trans("event.form.guestsCanInvite.text.false");
+                }
+                return new AppJsonResponse($data, Response::HTTP_OK);
+            } else {
+                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans('event.success.message.edition'));
+                return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+            }
+        } else {
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.edition");
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.edition"));
+                return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+            }
+        }
+    }
+
+    /**
      * @Route("/cancel/{token}", name="cancelEvent")
      * @ParamConverter("event" , class="AppBundle:Event\Event")
      * @param Event $event The current event
