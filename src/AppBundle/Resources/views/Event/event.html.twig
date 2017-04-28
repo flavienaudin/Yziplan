@@ -224,23 +224,48 @@
             $('#notificationsSidePanel').find('.notification_delete_link').on('click', function (e) {
                 ajaxRequest($(this), null, e, function () {
                     numberNotif--;
-                    if(numberNotif === 0){
+                    if (numberNotif === 0) {
                         $('[data-user-alert="sua-notifications"]').find('i').each(function () {
                             $(this).removeClass('zmdi-notifications-active animated infinite pulse');
                             $(this).addClass('zmdi-notifications-none');
                         });
                         $('.notif_number').remove();
-                    }else{
+                    } else {
                         $('.notif_number').html(numberNotif);
                     }
                 });
             });
             {% endif %}
 
+            var $eventInvitUrlClipboard = $('#event_invitation_url_copyClipboard');
             {% if is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'), userEventInvitation) %}
-                $('#setGuestCanInviteParameterLink').on('click', function (e) {
-                    ajaxRequest($(this), null, e, null, null, null);
-                });
+            $('#setGuestCanInviteParameterLink').on('click', function (e) {
+                var data = {
+                    'parameter': 'guestCanInvite',
+                    'value': ($(this).children('i').hasClass('c-red') ? 1 : 0)
+                };
+                ajaxRequest($(this), data, e, null, null, null);
+            });
+            $('#setInvitationOnlyParameter').on('change', function (e) {
+                var $input = $(this);
+                var link = "{{ path('setEventParameter',{'token':event.token}) }}";
+                var data = {
+                    'parameter': 'invitationOnly',
+                    'value': ($input.prop('checked') ? 0 : 1)
+                };
+                ajaxRequest(link, data, e, function () {
+                    if ($input.prop('checked')) {
+                        $eventInvitUrlClipboard.show();
+                    } else {
+                        $eventInvitUrlClipboard.hide();
+                    }
+
+                }, null, null);
+            });
+            {% endif %}
+
+            {% if event.invitationOnly %}
+            $eventInvitUrlClipboard.hide();
             {% endif %}
 
             {# Mise à jour de la date de dernière visite de l'utilisateur une fois la page générée #}

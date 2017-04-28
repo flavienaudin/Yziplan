@@ -586,13 +586,12 @@ class EventController extends Controller
     }
 
     /**
-     * @Route("/set-guestcaninvite/{token}/{value}", name="setGuestCanInvite")
+     * @Route("/set-event-parameter/{token}", name="setEventParameter")
      * @ParamConverter("event" , class="AppBundle:Event\Event")
      * @param Event $event The current event
-     * @param boolean $value
      * @return AppJsonResponse|FileInputJsonResponse|RedirectResponse
      */
-    public function setGuestCanInviteAction(Event $event, $value, Request $request)
+    public function setEventParameterAction(Event $event, Request $request)
     {
         $eventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
         if (!$this->isGranted(EventVoter::EDIT, $eventInvitation)) {
@@ -604,17 +603,19 @@ class EventController extends Controller
                 return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
             }
         }
-
         $eventManager = $this->get("at.manager.event");
-        if ($eventManager->setInvitationParameter($value, $event)) {
+        if ($eventManager->setEventParameter($request->request->all(), $event)) {
+            $parameter = $request->get('parameter');
             if ($request->isXmlHttpRequest()) {
                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.success.message.edition');
-                if ($event->isGuestsCanInvite()) {
-                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestCanInviteParameterLink'] =
-                        '<i class="zmdi zmdi-check c-green"></i> ' . $this->get('translator')->trans("event.form.guestsCanInvite.text.true");
-                } else {
-                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestCanInviteParameterLink'] =
-                        '<i class="zmdi zmdi-close c-red"></i> ' . $this->get('translator')->trans("event.form.guestsCanInvite.text.false");
+                if ($parameter === "guestCanInvite") {
+                    if ($event->isGuestsCanInvite()) {
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestCanInviteParameterLink'] =
+                            '<i class="zmdi zmdi-check c-green"></i> ' . $this->get('translator')->trans("event.form.guestsCanInvite.text.true");
+                    } else {
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestCanInviteParameterLink'] =
+                            '<i class="zmdi zmdi-close c-red"></i> ' . $this->get('translator')->trans("event.form.guestsCanInvite.text.false");
+                    }
                 }
                 return new AppJsonResponse($data, Response::HTTP_OK);
             } else {

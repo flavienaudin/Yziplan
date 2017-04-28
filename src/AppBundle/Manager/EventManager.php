@@ -422,16 +422,27 @@ class EventManager
 
     /**
      * Set the event.guestCanInvite parameter
-     * @param $value boolean the new value to set
+     * @param $requestData array with :
+     *          - parameter string {invitationOnly;guestCanInvite} the parameter to set
+     *          - value boolean the new value to set
      * @param Event|null $event
      * @return bool
      */
-    public function setInvitationParameter($value, Event $event = null){
+    public function setEventParameter($requestData, Event $event = null)
+    {
         if ($event != null) {
             $this->event = $event;
         }
-        if ($this->event != null) {
-            $this->event->setGuestsCanInvite($value);
+        if ($this->event != null && isset($requestData['parameter']) && isset($requestData['value'])) {
+            $parameter = $requestData['parameter'];
+            $value = $requestData['value'];
+            if ($parameter === "invitationOnly") {
+                $this->event->setInvitationOnly($value);
+            } elseif ($parameter === "guestCanInvite") {
+                $this->event->setGuestsCanInvite($value);
+            } else {
+                return false;
+            }
             $this->persistEvent();
             return true;
         }

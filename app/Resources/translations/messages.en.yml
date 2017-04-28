@@ -166,7 +166,8 @@ event:
       text.true: An invitation is required to participate (private event)
       text.false: Makes the event accessible to all persons receiving the link
     public_invitation:
-      label: By giving them the link below
+      title: By giving them the link below
+      label: Activate invitations via the event link
     guestsCanInvite:
       label: Allow your friends to invite
       placeholder: Allow your friends to invite

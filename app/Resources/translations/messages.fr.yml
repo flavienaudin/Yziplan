@@ -166,7 +166,8 @@ event:
       text.true: Seuls les invités peuvent participer (événement privé)
       text.false: Tout le monde peut participer (événement public)
     public_invitation:
-      label: En leur transmettant le lien ci-dessous
+      title: En leur transmettant le lien ci-dessous
+      label: Activer les invitations via le lien de l'événement
     guestsCanInvite:
       label: Permettre à vos amis d'inviter
       placeholder: Permettre à vos amis d'inviter
