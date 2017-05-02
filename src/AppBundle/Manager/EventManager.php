@@ -19,6 +19,7 @@ use AppBundle\Form\Event\InvitationsType;
 use AppBundle\Form\Event\SendMessageType;
 use AppBundle\Mailer\AppMailer;
 use AppBundle\Security\ModuleVoter;
+use AppBundle\Security\PollProposalVoter;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
@@ -495,25 +496,17 @@ class EventManager
      */
     public function addModule($type, $subtype, EventInvitation $creatorEventInvitation)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        if (!$user instanceof AccountUser) {
-            $user = null;
-        }
-
         if ($creatorEventInvitation == null) {
             return null;
         }
 
         $module = $this->moduleManager->createModule($this->event, $type, $subtype, $creatorEventInvitation);
 
-        // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator).
+        // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator)
         $this->moduleInvitationManager->initializeModuleInvitationsForEvent($this->event, $module);
 
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
-
-        // Création d'un notification pour chaque invité
-        $this->notificationManager->createAddModuleNotifications($module, $creatorEventInvitation);
 
         // Create the thread after the module affectation to its event because of the thread ID is generate with the event token
         $this->discussionManager->createCommentableThread($module);
@@ -555,9 +548,10 @@ class EventManager
                             $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
                         }
                         if ($module->getPollModule() != null) {
-                            // TODO Vérifier les autorisations d'ajouter des propositions au module
-                            $moduleDescription['pollModuleOptions']['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule());
-                            $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
+                            if ($this->authorizationChecker->isGranted(PollProposalVoter::ADD, array($module->getPollModule(), $userModuleInvitation))) {
+                                $moduleDescription['pollModuleOptions']['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule());
+                                $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
+                            }
                         }
                         $modules[$module->getId()] = $moduleDescription;
                     }

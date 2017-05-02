@@ -21,11 +21,12 @@ class ModuleVoter extends Voter
 {
     const DISPLAY = 'module.display';
     const EDIT = 'module.edit';
+    const PUBLISH = 'module.publish';
     const DELETE = 'module.delete';
 
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, array(self::DISPLAY, self::EDIT, self::DELETE))) {
+        if (!in_array($attribute, array(self::DISPLAY, self::EDIT, self::PUBLISH, self::DELETE))) {
             return false;
         }
 
@@ -44,7 +45,7 @@ class ModuleVoter extends Voter
         if ($user != null && $user != 'anon.' && !$user instanceof UserInterface) {
             return false;
         }
-        if ($module != $userModuleInvitation->getModule()) {
+        if ($module !== $userModuleInvitation->getModule()) {
             return false;
         }
         switch ($attribute) {
@@ -52,6 +53,7 @@ class ModuleVoter extends Voter
                 // TODO Controler l'access (si evenement privée, invitation nécessaire...)
                 return true;
                 break;
+            case self::PUBLISH:
             case self::EDIT:
             case self::DELETE:
                 return ($userModuleInvitation->getEventInvitation()->getStatus() != EventInvitationStatus::CANCELLED && $userModuleInvitation->getEventInvitation()->isOrganizer())

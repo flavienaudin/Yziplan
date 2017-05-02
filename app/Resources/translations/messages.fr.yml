@@ -509,6 +509,8 @@ contactsgmail:
 module:
   main_information:
     no_description: Ajouter une description à l'élément
+    status:
+      in_creation: Cet élément n'est pas encore publié, les invités ne peuvent pas participer
   modal:
     settings:
       title: Configuration de l'élément
@@ -539,8 +541,12 @@ module:
     confirm_deletion:
       title: Etes-vous sûr de vouloir supprimer ce module ?
       message: Cette action est irréversible
-  error.message:
-    add: Une erreur s'est produite lors de la création du module. Merci de re-essayer l'opération
+  message:
+    error:
+      add: Une erreur s'est produite lors de la création du module. Merci de re-essayer l'opération
+      publish: Une erreur s'est produite lors de la publication du module. Vous n'avez peut-être pas les autorisations nécessaires
+    success:
+      publish: Le module a bien été publié. Les invités peuvent maintenant participer
 
 pollmodule:
   add_link:
@@ -564,6 +570,9 @@ pollmodule:
      allresult: Voir l'ensemble des réponses
      modal:
       title: Réponses
+  form:
+    guestsCanAddProposal:
+      label: Permettre aux invités d'ajouter des propositions
   modal:
     addPollProposal:
       title: Ajouter une proposition
@@ -667,6 +676,7 @@ global:
     unarchive: Désarchiver
     continue: Continuer
     more_options: Plus d'options
+    publish: Publier
   success:
     data_saved: Données sauvegardées
   error:

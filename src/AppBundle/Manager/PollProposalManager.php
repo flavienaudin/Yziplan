@@ -20,6 +20,7 @@ use AppBundle\Form\Module\PollModule\PollProposalWhatType;
 use AppBundle\Form\Module\PollModule\PollProposalWhenCollectionType;
 use AppBundle\Form\Module\PollModule\PollProposalWhenType;
 use AppBundle\Form\Module\PollModule\PollProposalWhereType;
+use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\PollModuleType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormFactory;
@@ -190,7 +191,9 @@ class PollProposalManager
         $this->entityManager->persist($this->pollProposal);
         $this->entityManager->flush();
 
-        $this->notificationManager->createAddPollProposalNotifications($this->pollProposal, ($moduleInvitation != null ? $moduleInvitation->getEventInvitation() : null));
+        if ($module->getStatus() == ModuleStatus::IN_ORGANIZATION) {
+            $this->notificationManager->createAddPollProposalNotifications($this->pollProposal, ($moduleInvitation != null ? $moduleInvitation->getEventInvitation() : null));
+        }
         return $this->pollProposal;
     }
 

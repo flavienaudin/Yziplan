@@ -12,19 +12,14 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
-use AppBundle\Manager\EventManager;
-use AppBundle\Manager\PollProposalManager;
 use AppBundle\Security\PollProposalVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
-use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -118,7 +113,7 @@ class PollModuleController extends Controller
                 if ($request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $moduleInvitation->getEventInvitation()->getEvent()->getToken()),
                         UrlGenerator::ABSOLUTE_URL) &&
                     ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
-                    || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
                 ) {
                     // Vérification serveur de la validité de l'invitation
                     $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;

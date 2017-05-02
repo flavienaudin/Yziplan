@@ -45,6 +45,12 @@ class PollModule
      */
     private $type;
 
+    /**
+     * If "true" then guests can add poll proposal
+     * @var boolean
+     * @ORM\Column(name="guests_can_add_proposal", type="boolean")
+     */
+    private $guestsCanAddProposal = true;
 
     /***********************************************************************
      *                      Jointures
@@ -111,6 +117,24 @@ class PollModule
     public function setVotingType($votingType)
     {
         $this->votingType = $votingType;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isGuestsCanAddProposal()
+    {
+        return $this->guestsCanAddProposal;
+    }
+
+    /**
+     * @param bool $guestsCanAddProposal
+     * @return PollModule
+     */
+    public function setGuestsCanAddProposal($guestsCanAddProposal)
+    {
+        $this->guestsCanAddProposal = $guestsCanAddProposal;
         return $this;
     }
 

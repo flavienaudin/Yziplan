@@ -20,6 +20,11 @@
                 'attr':{'rows':3},
                 'widget_options':{'label_icon':'zmdi zmdi-receipt','fgline':false}
             }) }}
+            {% if moduleForm.pollModule is defined %}
+                <div class="p-t-10 p-l-15 p-r-15">
+                    {{ form_row(moduleForm.pollModule.guestsCanAddProposal, {'label':'pollmodule.form.guestsCanAddProposal.label'}) }}
+                </div>
+            {% endif %}
         </div>
     </div>
     {% block action_buttons %}

@@ -64,14 +64,61 @@ class ModuleController extends Controller
                         $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module));
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
-                    $responseData[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('module.error.message.add');
+                    $responseData[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('module.message.error.add');
                     return new AppJsonResponse($responseData, Response::HTTP_BAD_REQUEST);
                 }
             } else {
                 if ($module == null) {
-                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('module.error.message.add'));
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('module.message.error.add'));
                 }
                 return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+            }
+        }
+    }
+
+    /**
+     * @Route("/publish/{token}",  name="publishEventModule")
+     * @ParamConverter("module", class="AppBundle:Event\Module")
+     */
+    public function publishEventModuleAction(Module $module, Request $request)
+    {
+        $event = $module->getEvent();
+        $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
+        $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
+        $this->denyAccessUnlessGranted(ModuleVoter::PUBLISH, [$module, $userModuleInvitation]);
+        if ($request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
+            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+        ) {
+            // Vérification serveur de la validité de l'invitation
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.valide_guestname_required"));
+                return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+            }
+        } else {
+            $moduleManager = $this->get('at.manager.module');
+            if ($moduleManager->publishModule($userEventInvitation, $module)) {
+                if ($request->isXmlHttpRequest()) {
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-' . $module->getToken()] =
+                        $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module));
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans('module.message.success.publish'));
+                    return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+                }
+            } else {
+                if ($request->isXmlHttpRequest()) {
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans('module.message.error.publish');
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-' . $module->getToken()] =
+                        $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module));
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                } else {
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('module.message.error.publish'));
+                    return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+                }
             }
         }
     }
@@ -85,7 +132,8 @@ class ModuleController extends Controller
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($module->getEvent(), false, false, $this->getUser());
         $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
         if ($request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $module->getEvent()->getToken()), UrlGenerator::ABSOLUTE_URL) &&
-            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)) {
+            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+        ) {
             // Vérification serveur de la validité de l'invitation
             if ($request->isXmlHttpRequest()) {
                 $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;

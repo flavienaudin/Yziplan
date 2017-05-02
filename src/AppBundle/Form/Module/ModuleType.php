@@ -10,6 +10,7 @@ namespace AppBundle\Form\Module;
 
 
 use AppBundle\Entity\Event\Module;
+use AppBundle\Form\Module\PollModule\PollModuleFormType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -17,6 +18,9 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ModuleType extends AbstractType
@@ -55,6 +59,18 @@ class ModuleType extends AbstractType
                     }
                 )
             );
+        $builder
+            ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
+                /** @var Module $data */
+                $data = $formEvent->getData();
+                if ($data->getPollModule() != null) {
+                    /** @var FormInterface $form */
+                    $form = $formEvent->getForm();
+                    $form->add('pollModule', PollModuleFormType::class, array(
+                        'required' => false
+                    ));
+                }
+            });
     }
 
     public function configureOptions(OptionsResolver $resolver)

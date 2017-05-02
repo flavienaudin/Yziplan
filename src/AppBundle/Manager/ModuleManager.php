@@ -17,11 +17,11 @@ use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Module\ModuleType;
 use AppBundle\Security\ModuleVoter;
+use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\ModuleType as EnumModuleType;
 use AppBundle\Utils\enum\PollModuleType;
 use AppBundle\Utils\enum\PollModuleVotingType;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -65,12 +65,15 @@ class ModuleManager
     /** @var TranslatorInterface $translator */
     private $translator;
 
+    /** @var NotificationManager */
+    private $notificationManager;
+
     /** @var Module Le module en cours de traitement */
     private $module;
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory,
                                 GenerateursToken $generateurToken, EngineInterface $templating, ModuleInvitationManager $moduleInvitationManager, PollProposalManager $pollProposalManager,
-                                DiscussionManager $discussionManager, TranslatorInterface $translator)
+                                DiscussionManager $discussionManager, TranslatorInterface $translator, NotificationManager $notificationManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -82,6 +85,7 @@ class ModuleManager
         $this->discussionManager = $discussionManager;
         $this->pollProposalManager = $pollProposalManager;
         $this->translator = $translator;
+        $this->notificationManager = $notificationManager;
     }
 
     /**
@@ -123,7 +127,7 @@ class ModuleManager
         $this->module->setStatus(ModuleStatus::IN_CREATION);
         $this->module->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
 
-        $this->initializePollModule($type, $subtype);
+        $this->initializeSubModule($type, $subtype);
 
         $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
         $moduleInvitationCreator->setCreator(true);
@@ -136,10 +140,10 @@ class ModuleManager
      * Create a module and set required data.
      * @param $type
      * @param $subtype
-     * @param EventInvitation $creatorEventInvitation The user's eventInvitation to set the module creator
+     * @param $module Module (optionel) le module concerné
      * @return Module The module added to the event
      */
-    public function initializePollModule($type, $subtype, $module = null)
+    public function initializeSubModule($type, $subtype, $module = null)
     {
         if ($module != null) {
             $this->module = $module;
@@ -149,36 +153,53 @@ class ModuleManager
             $pollModule = new PollModule();
             $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
 
-            $pollElements = new ArrayCollection();
-
             if ($subtype == PollModuleType::WHEN) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.when"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setType(PollModuleType::WHEN);
             } elseif ($subtype == PollModuleType::WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.what"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setType(PollModuleType::WHAT);
             } elseif ($subtype == PollModuleType::WHERE) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setType(PollModuleType::WHERE);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
                 $pollModule->setType(PollModuleType::WHO_BRINGS_WHAT);
             } elseif ($subtype == PollModuleType::ACTIVITY) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.activity"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setVotingType(PollModuleVotingType::RANKING);
                 $pollModule->setType(PollModuleType::ACTIVITY);
             }
-            $pollModule->addPollElements($pollElements);
-
             $this->module->setPollModule($pollModule);
         }
         return $this->module;
+    }
+
+    /**
+     * @param Module|null $module Le module concerné
+     * @param EventInvitation $modulePublisherEventInvitation Le ModuleInvitation du publieur
+     */
+    public function publishModule(EventInvitation $modulePublisherEventInvitation, Module $module = null )
+    {
+        if ($module != null) {
+            $this->module = $module;
+        }
+
+        if($this->module != null) {
+            $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+
+            // TODO create ModuleInvitation
+
+            $this->entityManager->persist($this->module);
+            $this->entityManager->flush();
+
+            // Création d'un notification pour chaque invité
+            $this->notificationManager->createAddModuleNotifications($module, $modulePublisherEventInvitation);
+
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -279,15 +300,7 @@ class ModuleManager
     public function treatUpdateFormModule(Form $moduleForm)
     {
         $this->module = $moduleForm->getData();
-
-        if ($this->module->getStatus() == ModuleStatus::IN_CREATION && !empty($this->module->getName())) {
-            $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-        } elseif ($this->module->getStatus() == ModuleStatus::IN_ORGANIZATION && empty($this->module->getName())) {
-            $this->module->setStatus(ModuleStatus::IN_CREATION);
-        }
-
-        // TODO faire des vérifications/traitement sur les données
-
+        // TODO faire des vérifications/traitement sur les données (?)
         $this->entityManager->persist($this->module);
         $this->entityManager->flush();
         return $this->module;
