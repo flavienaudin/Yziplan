@@ -163,7 +163,7 @@ swiftmailer:
             password:  "%mailer_password%"
             spool:
                 type: file
-                path: '%kernel.cache_dir%/swiftmailer/spool'
+                path: '%kernel.root_dir%/swiftmailer/spool'
 
 # FOS_User
 fos_user:
