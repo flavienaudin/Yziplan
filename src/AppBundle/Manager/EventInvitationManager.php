@@ -24,7 +24,9 @@ use AppBundle\Security\EventInvitationVoter;
 use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
+use AppBundle\Utils\enum\InvitationRule;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
+use AppBundle\Utils\enum\ModuleStatus;
 use ATUserBundle\Entity\AccountUser;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\DBALException;
@@ -155,6 +157,7 @@ class EventInvitationManager
             } else {
                 if ($initializeIfNotExists && $this->authorizationChecker->isGranted(EventInvitationVoter::CREATE, $event)) {
                     $this->eventInvitation = $this->initializeEventInvitation($event, ($user instanceof AccountUser ? $user->getApplicationUser() : null));
+                    $this->initializeModuleInvitation();
                     $this->persistEventInvitation();
                 } else {
                     $this->eventInvitation = null;
@@ -187,7 +190,7 @@ class EventInvitationManager
 
     /**
      * Initialise une EventInvitation pour un événement et un ApplicationUser (connecté ou non).
-     * L'EventInvitation n'est pas persistée en base de données.
+     * L'EventInvitation n'est pas persistée en base de données
      * @param Event $event
      * @param ApplicationUser|null $applicationUser
      * @return EventInvitation
@@ -210,11 +213,39 @@ class EventInvitationManager
 
         /** @var Module $module */
         foreach ($event->getModules() as $module) {
-            // TODO check module authorization (every guests of the event, on ModuleInvitationOnly,...)
             $this->moduleInvitationManager->initializeModuleInvitation($module, $this->eventInvitation, true);
         }
-
         return $this->eventInvitation;
+    }
+
+    /**
+     * Initialise le statut des ModuleInvitaiton de l'EventInvitation selon la règle d'invitation du module et de l'éventuel précédent statut du ModuleInvitation
+     * @param EventInvitation|null $eventInvitation
+     */
+    public function initializeModuleInvitation(EventInvitation $eventInvitation = null)
+    {
+        if ($eventInvitation != null) {
+            $this->eventInvitation = $eventInvitation;
+        }
+        if ($this->eventInvitation != null) {
+            /** @var ModuleInvitation $moduleInvitation */
+            foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
+                $module = $moduleInvitation->getModule();
+                switch ($module->getInvitationRule()) {
+                    case InvitationRule::EVERYONE:
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+                        break;
+                    case InvitationRule::EVERYONE_EXCEPT:
+                        if ($moduleInvitation->getStatus() == ModuleInvitationStatus::NOT_INVITED) {
+                            $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+                        }// excluded reste excluded
+                        break;
+                    case InvitationRule::NONE_EXCEPT:
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::EXCLUDED);
+                        break;
+                }
+            }
+        }
     }
 
     /**
@@ -253,19 +284,27 @@ class EventInvitationManager
 
             if ($this->eventInvitation != null) {
                 if ($this->eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
-                    if(!empty($this->eventInvitation->getDisplayableName(false))){
+                    // L'invitation avait été précédement annulée
+                    if (!empty($this->eventInvitation->getDisplayableName(false))) {
                         // Envoi d'une invitation avec un nom déjà renseigné => VALID
                         $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
-                    }else {
+                    } else {
                         // Envoi d'une invitation => AWAITNG_ANSWER
                         $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
                     }
-                    /** @var ModuleInvitation $moduleInvitation */
-                    foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
-                        if ($moduleInvitation->getStatus() == ModuleInvitationStatus::CANCELLED) {
-                            $moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
+
+                    // Vérification et création des ModuleInvitation qui n'ont pas été créées pendant que l'invitation était annulée
+                    /** @var Module $module */
+                    foreach ($event->getModules() as $module) {
+                        if($module->getStatus() != ModuleStatus::DELETED) {
+                            $moduleInvitation = $this->eventInvitation->getModuleInvitationForModule($module);
+                            if ($moduleInvitation == null) {
+                                $this->moduleInvitationManager->initializeModuleInvitation($module, $this->eventInvitation, true);
+                            }
                         }
                     }
+                    // Réinitialisation du statut des ModuleInvitations existants
+                    $this->initializeModuleInvitation();
                 }
                 try {
                     if ($this->persistEventInvitation()) {
@@ -292,7 +331,7 @@ class EventInvitationManager
     }
 
     /**
-     * Retrieve an EventInvitation by the email of the guest and the concerned event. Initialize a new one if none is found
+     * Retrieve an EventInvitation by the email of the guest and the concerned event. Initialize a new one if none is found (not persisted)
      * @param Event $event The event concerned
      * @param string $email The email of the guest to search the EventInvitation for
      * @return EventInvitation
@@ -311,7 +350,6 @@ class EventInvitationManager
         if ($this->eventInvitation == null) {
             $this->initializeEventInvitation($event, $applicationUser);
         }
-
         return $this->eventInvitation;
     }
 
@@ -347,7 +385,8 @@ class EventInvitationManager
     }
 
     /**
-     * Create an EventInvitation and set it as creator of the event
+     * Créé l'EventInvitation et la désigne l'invité en tant que créateur de l'événement
+     * NB : L'EventInvitation et les ModuleInvitation ne sont pas persistées
      * @param Event $event
      * @param ApplicationUser|null $applicationUser
      * @return EventInvitation|null If null, the creator is already set
@@ -379,8 +418,8 @@ class EventInvitationManager
         }
         if ($this->eventInvitation != null) {
             //if (EventInvitationAnswer::hasType($answerValue)) {
-                $this->eventInvitation->setAnswer($answerValue);
-                return $this->persistEventInvitation();
+            $this->eventInvitation->setAnswer($answerValue);
+            return $this->persistEventInvitation();
             //}
         }
         return false;
@@ -421,7 +460,10 @@ class EventInvitationManager
 
             /** @var ModuleInvitation $moduleInvitation */
             foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
-                $moduleInvitation->setStatus(ModuleInvitationStatus::CANCELLED);
+                if ($moduleInvitation->getStatus() == ModuleInvitationStatus::INVITED) {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+                }
+                // excluded reste excluded
             }
 
             return $this->persistEventInvitation();
@@ -480,25 +522,11 @@ class EventInvitationManager
                 // Si l'email est renseigné => l'invitation revient en attente de réponse
                 $this->eventInvitation->setStatus(EventInvitationStatus::AWAITING_ANSWER);
             }
-            /** @var ModuleInvitation $moduleInvitation */
-            foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
-                if ($moduleInvitation->getStatus() == ModuleInvitationStatus::VALID) {
-                    $moduleInvitation->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
-                }
-            }
         } elseif (!empty($this->eventInvitation->getDisplayableName(false)) &&
             ($this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $this->eventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
         ) {
             // Si le nom n'est pas vide => l'invitation devient valide
             $this->eventInvitation->setStatus(EventInvitationStatus::VALID);
-
-            /** @var ModuleInvitation $moduleInvitation */
-            foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
-                if ($moduleInvitation->getStatus() != ModuleInvitationStatus::VALID) {
-                    $moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
-                }
-            }
-
             if ($this->eventInvitation->getEvent()->getStatus() == EventStatus::IN_CREATION && $this->eventInvitation->isOrganizer()) {
                 $this->eventInvitation->getEvent()->setStatus(EventStatus::IN_ORGANIZATION);
             }

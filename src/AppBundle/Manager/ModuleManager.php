@@ -17,7 +17,9 @@ use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Module\ModuleType;
 use AppBundle\Security\ModuleVoter;
-use AppBundle\Utils\enum\EventInvitationAnswer;
+use AppBundle\Utils\enum\EventInvitationStatus;
+use AppBundle\Utils\enum\InvitationRule;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\ModuleType as EnumModuleType;
 use AppBundle\Utils\enum\PollModuleType;
@@ -131,6 +133,7 @@ class ModuleManager
 
         $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
         $moduleInvitationCreator->setCreator(true);
+        $moduleInvitationCreator->setStatus(ModuleInvitationStatus::INVITED);
         $event->addModule($this->module);
         return $this->module;
     }
@@ -177,20 +180,35 @@ class ModuleManager
     }
 
     /**
-     * @param Module|null $module Le module concerné
      * @param EventInvitation $modulePublisherEventInvitation Le ModuleInvitation du publieur
+     * @param Module|null $module Le module concerné
+     * @return bool true si l'opération s'est bien déroulé, false sinon
      */
-    public function publishModule(EventInvitation $modulePublisherEventInvitation, Module $module = null )
+    public function publishModule(EventInvitation $modulePublisherEventInvitation, Module $module = null)
     {
         if ($module != null) {
             $this->module = $module;
         }
 
-        if($this->module != null) {
+        if ($this->module != null) {
             $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-
-            // TODO create ModuleInvitation
-
+            if ($this->module->getInvitationRule() == InvitationRule::EVERYONE) {
+                // Seul le cas InvitationRule::EVERYONE est traité car dans les autres cas, c'est lors du paramétrage des ModuleInvitation que le statut est renseigné
+                /** @var ModuleInvitation $moduleInvitation */
+                foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
+                    if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::CANCELLED
+                        && $moduleInvitation->getStatus() != ModuleInvitationStatus::EXCLUDED
+                    ) {
+                        // EventInvitation annulée
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+                        // excluded reste excluded
+                    } else {
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+                    }
+                    // TODO nécessaire ?
+                    // $this->entityManager->persist($moduleInvitation);
+                }
+            }
             $this->entityManager->persist($this->module);
             $this->entityManager->flush();
 
@@ -232,8 +250,8 @@ class ModuleManager
             $duplicatedModule->setOrderIndex($originalModule->getOrderIndex());
             $duplicatedModule->setStatus(ModuleStatus::IN_ORGANIZATION);
             $duplicatedModule->setResponseDeadline($originalModule->getResponseDeadline());
-            $duplicatedModule->setInvitationOnly($originalModule->isInvitationOnly());
             $duplicatedModule->setGuestsCanInvite($originalModule->isGuestsCanInvite());
+            $duplicatedModule->setInvitationRule($originalModule->getInvitationRule());
 
             if ($originalModule->getPaymentModule() != null) {
                 // TODO implementer la duplication du PaymentModule
@@ -243,6 +261,7 @@ class ModuleManager
                 $duplicatedPollModule = new PollModule();
                 $duplicatedPollModule->setVotingType($originalPollModule->getVotingType());
                 $duplicatedPollModule->setType($originalPollModule->getType());
+                $duplicatedPollModule->setGuestsCanAddProposal($originalPollModule->isGuestsCanAddProposal());
 
                 /** @var PollProposal $originalPollProposal */
                 foreach ($originalPollModule->getPollProposals() as $originalPollProposal) {
@@ -250,7 +269,7 @@ class ModuleManager
                         $duplicatedPollProposal = new PollProposal();
                         $duplicatedPollProposal->setDeleted(false);
                         $duplicatedPollProposal->setDescription($originalPollProposal->getDescription());
-                        $duplicatedPollModule->addPollProposal($duplicatedPollProposal);
+
                         $duplicatedPollProposal->setValString($originalPollProposal->getValString());
                         $duplicatedPollProposal->setValText($originalPollProposal->getValText());
                         $duplicatedPollProposal->setValInteger($originalPollProposal->getValInteger());
@@ -260,6 +279,8 @@ class ModuleManager
                         $duplicatedPollProposal->setEndDate($originalPollProposal->hasEndDate());
                         $duplicatedPollProposal->setEndTime($originalPollProposal->hasEndTime());
                         $duplicatedPollProposal->setValGooglePlaceId($originalPollProposal->getValGooglePlaceId());
+
+                        $duplicatedPollModule->addPollProposal($duplicatedPollProposal);
 
                         if ($originalPollProposal->getPictureFile() != null) {
                             $originalFile = $originalPollProposal->getPictureFile();

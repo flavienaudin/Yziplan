@@ -19,6 +19,7 @@ use AppBundle\Security\EventVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Utils\Response\AppJsonResponse;
 use AppBundle\Utils\Response\FileInputJsonResponse;
 use ATUserBundle\Entity\AccountUser;
@@ -50,13 +51,12 @@ class EventController extends Controller
         /** @var EventManager $eventManager */
         $eventManager = $this->get('at.manager.event');
         /** @var Event $currentEvent */
-        $currentEvent = $eventManager->initializeEvent(true);
+        $currentEvent = $eventManager->initializeEvent();
         /** @var EventInvitation $currentEventInvitation Only one EventInvitation added when initialize an Event. */
         $currentEventInvitation = $currentEvent->getEventInvitations()->first();
         if ($currentEventInvitation != null) {
             $request->getSession()->set(EventInvitationManager::TOKEN_SESSION_KEY . '/' . $currentEvent->getToken(), $currentEventInvitation->getToken());
         }
-
         return $this->redirectToRoute('wizardNewEventStep1', array('token' => $currentEvent->getToken()));
     }
 
@@ -87,6 +87,7 @@ class EventController extends Controller
                 /** @var ModuleInvitation $userModuleInvitation */
                 foreach ($userEventInvitation->getModuleInvitations() as $userModuleInvitation) {
                     $userModuleInvitation->setCreator(true);
+                    $userModuleInvitation->setStatus(ModuleInvitationStatus::INVITED);
                     if (($pollModule = $userModuleInvitation->getModule()->getPollModule()) != null) {
                         /** @var PollProposal $pollProposal */
                         foreach ($pollModule->getPollProposals() as $pollProposal) {
@@ -99,6 +100,7 @@ class EventController extends Controller
             // TODO : ce n'est pas l'implémentation idéale mais en attendant de réfléchir à une meilleure solution (get redirection in PROD env ?)
             $request->getSession()->set(self::REDIRECTED_AFTER_EVENT_DUPLICATION, $event->getTokenDuplication());
             $entityManager = $this->get('doctrine.orm.entity_manager');
+
             $entityManager->persist($duplicatedEvent);
             $entityManager->flush();
 
@@ -129,7 +131,7 @@ class EventController extends Controller
                 return $this->render("@App/Event/event_cancelled.html.twig", array("event" => $currentEvent, "userEventInvitation" => $userEventInvitation));
             }
 
-            /* TODO : invitation annulée : désactiver les formulaires */
+            /* TODO : invitation annulée : rediriger vers une page "EventInvitation annulée" */
             if ($userEventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                 $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans('eventInvitation.message.warning.invitation_cancelled'));
             }
@@ -399,7 +401,6 @@ class EventController extends Controller
             }
         }
 
-        // TODO Revoir le système d'invitation
         $eventInvitationsForm = null;
         ////////////////////////////
         // Invitations management //

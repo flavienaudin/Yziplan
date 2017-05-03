@@ -74,17 +74,9 @@ class ModuleInvitationManager
         return $this->moduleInvitation;
     }
 
-    public function retrieveModuleInvitation(EventInvitation $eventInvitation, Module $module)
-    {
-        $this->moduleInvitation = $eventInvitation->getModuleInvitationForModule($module);
-        if ($this->moduleInvitation == null) {
-            $this->moduleInvitation = $this->initializeModuleInvitation($module, $eventInvitation, true);
-        }
-        return $this->moduleInvitation;
-    }
-
     /**
      * Initialize a ModuleInvitation for the current module and the given EventInvitation
+     * NB : La ModuleInvitation n'est pas persistée
      * @param $module Module le module pour lequel l'invitation est créée
      * @param $eventInvitation EventInvitation The EventInvitation owner of the ModuleInvitation
      * @param $createNew boolean If true, a new ModuleInvitation is created
@@ -95,25 +87,35 @@ class ModuleInvitationManager
         if ($this->moduleInvitation == null || $createNew) {
             $this->moduleInvitation = new ModuleInvitation();
         }
-        $this->moduleInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
-        if ($eventInvitation->getStatus() == EventInvitationStatus::VALID) {
-            $this->moduleInvitation->setStatus(ModuleInvitationStatus::VALID);
-        } else {
-            $this->moduleInvitation->setStatus(ModuleInvitationStatus::AWAITING_ANSWER);
+        if (empty($this->moduleInvitation->getToken())) {
+            $this->moduleInvitation->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
         }
+        if ($this->moduleInvitation->getStatus() != ModuleInvitationStatus::EXCLUDED) {
+            $this->moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+            // excluded reste excluded
+        }
+
         $this->moduleInvitation->setCreator(false);
         $module->addModuleInvitation($this->moduleInvitation);
         $eventInvitation->addModuleInvitation($this->moduleInvitation);
         return $this->moduleInvitation;
     }
 
+    /**
+     * Initialise toutes les ModuleInvitations du module donné, pour les invités de l'événement
+     * NB : Les ModuleInvitations ne sont pas persistées
+     * @param Event $event
+     * @param Module $module
+     */
     public function initializeModuleInvitationsForEvent(Event $event, Module $module)
     {
         /** @var EventInvitation $eventInvitation */
         foreach ($event->getEventInvitations() as $eventInvitation) {
-            $this->moduleInvitation = $eventInvitation->getModuleInvitationForModule($module);
-            if ($this->moduleInvitation == null) {
-                $this->initializeModuleInvitation($module, $eventInvitation, true);
+            if ($eventInvitation->getStatus() != EventInvitationStatus::CANCELLED) {
+                $this->moduleInvitation = $eventInvitation->getModuleInvitationForModule($module);
+                if ($this->moduleInvitation == null) {
+                    $this->initializeModuleInvitation($module, $eventInvitation, true);
+                }
             }
         }
     }

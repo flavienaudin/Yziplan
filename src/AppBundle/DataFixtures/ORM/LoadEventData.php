@@ -212,7 +212,7 @@ class LoadEventData implements FixtureInterface, ContainerAwareInterface, Ordere
         $moduleEvent2InvitationGuest1 = new ModuleInvitation();
         $moduleEvent2InvitationGuest1->setModule($moduleEvent2);
         $moduleEvent2InvitationGuest1->setToken($tokenManager->random(GenerateursToken::TOKEN_LONGUEUR));
-        $moduleEvent2InvitationGuest1->setStatus(ModuleInvitationStatus::VALID);
+        $moduleEvent2InvitationGuest1->setStatus(ModuleInvitationStatus::INVITED);
         $moduleEvent2->addModuleInvitation($moduleEvent2InvitationGuest1);
         $event2InvitationGuest1->addModuleInvitation($moduleEvent2InvitationGuest1);
 

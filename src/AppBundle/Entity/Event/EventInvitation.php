@@ -6,7 +6,6 @@ use AppBundle\Entity\Notifications\EventInvitationPreferences;
 use AppBundle\Entity\Notifications\Notification;
 use AppBundle\Entity\Payment\Wallet;
 use AppBundle\Entity\User\ApplicationUser;
-use AppBundle\Utils\enum\EventInvitationAnswer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -463,7 +462,7 @@ class EventInvitation
      */
     public function getEventInvitationPreferences()
     {
-        if($this->eventInvitationPreferences == null){
+        if ($this->eventInvitationPreferences == null) {
             $this->setEventInvitationPreferences(new EventInvitationPreferences());
         }
         return $this->eventInvitationPreferences;
@@ -512,7 +511,7 @@ class EventInvitation
                 $displayableEmail = $this->getApplicationUser()->getAccountUser()->getEmail();
             }
         }
-        if($appliedRot13){
+        if ($appliedRot13) {
             $displayableEmail = str_rot13($displayableEmail);
         }
         return $displayableEmail;

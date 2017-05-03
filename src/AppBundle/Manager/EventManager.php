@@ -24,7 +24,6 @@ use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\EventStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
-use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\Response\AppJsonResponse;
 use ATUserBundle\Entity\AccountUser;
@@ -149,7 +148,7 @@ class EventManager
     public function retrieveEvent($token)
     {
         if (empty($token)) {
-            $this->initializeEvent(true);
+            $this->initializeEvent();
         } else {
             $eventRep = $this->entityManager->getRepository(Event::class);
             $this->event = $eventRep->findOneBy(array('token' => $token));
@@ -158,14 +157,11 @@ class EventManager
     }
 
     /**
-     * @param $create boolean If true then an event is create
      * @return Event l'événement initialisé en cours de création
      */
-    public function initializeEvent($create = false)
+    public function initializeEvent()
     {
-        if ($create) {
-            $this->event = new Event();
-        }
+        $this->event = new Event();
         if ($this->event->getStatus() == null) {
             $this->event->setStatus(EventStatus::IN_CREATION);
         }
@@ -175,8 +171,8 @@ class EventManager
         $user = $this->tokenStorage->getToken()->getUser();
         $this->eventInvitationManager->createCreatorEventInvitation($this->event, ($user instanceof AccountUser ? $user->getApplicationUser() : null));
 
-        if (empty($this->getEvent()->getId())) {
-            $this->entityManager->persist($this->getEvent());
+        if (empty($this->event->getId())) {
+            $this->entityManager->persist($this->event);
             $this->entityManager->flush();
         }
         return $this->event;
@@ -491,20 +487,17 @@ class EventManager
     /**
      * Crée et ajoute un module à l'événement
      * @param $type string Le type du module à créer et à ajouter à l'événement (Cf. ModuleType)
-     * @param $type string Le sous-type du module en fonction du type (Cf. PollModuleType et autre)
+     * @param $subtype string Le sous-type du module en fonction du type (Cf. PollModuleType et autre)
+     * @param $creatorEventInvitation EventInvitation L'invitation à l'événement du créateur du module
      * @return Module le module créé
      */
     public function addModule($type, $subtype, EventInvitation $creatorEventInvitation)
     {
-        if ($creatorEventInvitation == null) {
-            return null;
-        }
-
         $module = $this->moduleManager->createModule($this->event, $type, $subtype, $creatorEventInvitation);
-
-        // TODO Implémenter un controle des moduleInvitaiton créé (liste d'invité, droit, définissable par le module.creator)
+        // Initialisation des invitations au module avec status NOT_INVITED en attendant la publication du module
         $this->moduleInvitationManager->initializeModuleInvitationsForEvent($this->event, $module);
 
+        //$this->entityManager->persist($creatorEventInvitation);
         $this->entityManager->persist($this->event);
         $this->entityManager->flush();
 
@@ -520,6 +513,7 @@ class EventManager
      * @return array Un tableau de modules de l'événement au format :
      *  moduleId => [
      *  'module' => Module : Le module lui-meme
+     *  'userModuleInvitation' => ModuleInvitation : L'invitation au module de l'utilisateur courant
      *  'moduleForm' => Form : le formulaire d'édition de l'événement si editable
      *  'pollProposalAddForm' => Form : uniquement pour un PollModule
      * ]
@@ -531,30 +525,29 @@ class EventManager
             $eventModules = $this->entityManager->getRepository(Module::class)->findOrderedByEventToken($this->event->getToken());
             /** @var Module $module */
             foreach ($eventModules as $module) {
-                if ($module->getStatus() != ModuleStatus::DELETED && $module->getStatus() != ModuleStatus::ARCHIVED) {
+                $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
+                if ($this->authorizationChecker->isGranted(ModuleVoter::DISPLAY, array($module, $userModuleInvitation))) {
                     $moduleDescription = array();
-                    $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
-                    if ($userModuleInvitation != null && $userModuleInvitation->getStatus() != ModuleInvitationStatus::CANCELLED) {
-                        $moduleDescription['module'] = $module;
-                        $thread = $module->getCommentThread();
-                        if (null == $thread) {
-                            $thread = $this->discussionManager->createCommentableThread($module);
-                        }
-                        $comments = $this->discussionManager->getCommentsThread($thread);
-                        $moduleDescription['thread'] = $thread;
-                        $moduleDescription['comments'] = $comments;
-
-                        if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
-                            $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
-                        }
-                        if ($module->getPollModule() != null) {
-                            if ($this->authorizationChecker->isGranted(PollProposalVoter::ADD, array($module->getPollModule(), $userModuleInvitation))) {
-                                $moduleDescription['pollModuleOptions']['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule());
-                                $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
-                            }
-                        }
-                        $modules[$module->getId()] = $moduleDescription;
+                    $moduleDescription['module'] = $module;
+                    $moduleDescription['userModuleInvitation'] = $userModuleInvitation;
+                    $thread = $module->getCommentThread();
+                    if (null == $thread) {
+                        $thread = $this->discussionManager->createCommentableThread($module);
                     }
+                    $comments = $this->discussionManager->getCommentsThread($thread);
+                    $moduleDescription['thread'] = $thread;
+                    $moduleDescription['comments'] = $comments;
+
+                    if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
+                        $moduleDescription['moduleForm'] = $this->moduleManager->createModuleForm($module);
+                    }
+                    if ($module->getPollModule() != null) {
+                        if ($this->authorizationChecker->isGranted(PollProposalVoter::ADD, array($module->getPollModule(), $userModuleInvitation))) {
+                            $moduleDescription['pollModuleOptions']['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule());
+                            $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
+                        }
+                    }
+                    $modules[$module->getId()] = $moduleDescription;
                 }
             }
         }
@@ -574,7 +567,7 @@ class EventManager
             /** @var Module $currentModule */
             $currentModule = $moduleDescription['module'];
             /** @var ModuleInvitation $userModuleEventInvitation Le ModuleInvitation de l'utilisateur connecté pour le module courant */
-            $userModuleEventInvitation = $userEventInvitation->getModuleInvitationForModule($currentModule);
+            $userModuleEventInvitation = $moduleDescription['userModuleInvitation'];
             if (key_exists('moduleForm', $moduleDescription) && $moduleDescription['moduleForm'] instanceof Form) {
                 /** @var Form $moduleForm */
                 $moduleForm = $moduleDescription['moduleForm'];
@@ -678,6 +671,7 @@ class EventManager
                 }
                 $modules[$moduleId]['pollModuleOptions']['pollProposalAddForm'] = $pollProposalAddForm->createView();
             }
+
             if (array_key_exists('pollModuleOptions', $moduleDescription)
                 && array_key_exists('pollProposalListAddForm', $moduleDescription['pollModuleOptions'])
                 && $moduleDescription['pollModuleOptions']['pollProposalListAddForm'] instanceof Form
@@ -723,6 +717,7 @@ class EventManager
                 }
                 $modules[$moduleId]['pollModuleOptions']['pollProposalListAddForm'] = $pollProposalListAddForm->createView();
             }
+            // FIN poll module case //
         }
         // nothing to return continue the action
         return null;

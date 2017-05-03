@@ -6,6 +6,7 @@ use AppBundle\Entity\Module\ExpenseElement;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalResponse;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -34,7 +35,7 @@ class ModuleInvitation
      * @var string
      * @ORM\Column(name="status", type="enum_moduleinvitation_status")
      */
-    private $status;
+    private $status = ModuleInvitationStatus::NOT_INVITED;
 
     /**
      * @var string

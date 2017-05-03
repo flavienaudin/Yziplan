@@ -17,7 +17,7 @@ use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Notifications\Notification;
 use AppBundle\Mailer\AppMailer;
-use AppBundle\Utils\enum\EventInvitationStatus;
+use AppBundle\Utils\enum\EventInvitationAnswer;
 use AppBundle\Utils\enum\NotificationFrequencyEnum;
 use AppBundle\Utils\enum\NotificationTypeEnum;
 use Doctrine\ORM\EntityManager;
@@ -79,21 +79,20 @@ class NotificationManager
 
         // Gestion des notifications
         /** @var ModuleInvitation $moduleInvitation */
-        foreach ($module->getModuleInvitations() as $moduleInvitation) {
+        foreach ($module->getFilteredModuleInvitations(0, [$creatorEventInvitation->getModuleInvitationForModule($module)]) as $moduleInvitation) {
             $eventInvitation = $moduleInvitation->getEventInvitation();
-            if ($eventInvitation !== $creatorEventInvitation && $eventInvitation->getStatus() != EventInvitationStatus::CANCELLED) {
-                $new_module_notification = new Notification();
-                $new_module_notification->setDate($new_notification_date);
-                $new_module_notification->setType($new_notification_type);
-                $new_module_notification->setData($data);
-                $eventInvitation->addNotification($new_module_notification);
-                $this->entityManager->persist($new_module_notification);
+            $new_module_notification = new Notification();
+            $new_module_notification->setDate($new_notification_date);
+            $new_module_notification->setType($new_notification_type);
+            $new_module_notification->setData($data);
+            $eventInvitation->addNotification($new_module_notification);
+            $this->entityManager->persist($new_module_notification);
 
-                if ($eventInvitation->getEventInvitationPreferences()->getNotifEmailFrequency() !== NotificationFrequencyEnum::NEVER
-                    && $eventInvitation->getEventInvitationPreferences()->isNotifNewModule()
-                ) {
-                    $this->appMailer->sendNewNotificationEmail($eventInvitation, $new_module_notification, $creatorEventInvitation);
-                }
+            if ($eventInvitation->getEventInvitationPreferences()->getNotifEmailFrequency() !== NotificationFrequencyEnum::NEVER
+                && $eventInvitation->getEventInvitationPreferences()->isNotifNewModule()
+                && $eventInvitation->getAnswer() != EventInvitationAnswer::NO && $eventInvitation->getAnswer() != EventInvitationAnswer::NOT_INTERESTED
+            ) {
+                $this->appMailer->sendNewNotificationEmail($eventInvitation, $new_module_notification, $creatorEventInvitation);
             }
         }
         $this->entityManager->flush();
@@ -119,22 +118,21 @@ class NotificationManager
 
         // Gestion des notifications
         /** @var ModuleInvitation $moduleInvitation */
-        foreach ($module->getModuleInvitations() as $moduleInvitation) {
+        foreach ($module->getFilteredModuleInvitations(0, [$creatorEventInvitation->getModuleInvitationForModule($module)]) as $moduleInvitation) {
             $eventInvitation = $moduleInvitation->getEventInvitation();
-            if ($eventInvitation !== $creatorEventInvitation && $eventInvitation->getStatus() != EventInvitationStatus::CANCELLED) {
-                $new_pollproposal_notification = new Notification();
-                $new_pollproposal_notification->setDate($new_notification_date);
-                $new_pollproposal_notification->setType($new_notification_type);
-                $new_pollproposal_notification->setData($data);
-                $eventInvitation->addNotification($new_pollproposal_notification);
-                $this->entityManager->persist($new_pollproposal_notification);
+            $new_pollproposal_notification = new Notification();
+            $new_pollproposal_notification->setDate($new_notification_date);
+            $new_pollproposal_notification->setType($new_notification_type);
+            $new_pollproposal_notification->setData($data);
+            $eventInvitation->addNotification($new_pollproposal_notification);
+            $this->entityManager->persist($new_pollproposal_notification);
 
 
-                if ($eventInvitation->getEventInvitationPreferences()->getNotifEmailFrequency() !== NotificationFrequencyEnum::NEVER
-                    && $eventInvitation->getEventInvitationPreferences()->isNotifNewPollpropsal()
-                ) {
-                    $this->appMailer->sendNewNotificationEmail($eventInvitation, $new_pollproposal_notification, $creatorEventInvitation);
-                }
+            if ($eventInvitation->getEventInvitationPreferences()->getNotifEmailFrequency() !== NotificationFrequencyEnum::NEVER
+                && $eventInvitation->getEventInvitationPreferences()->isNotifNewPollpropsal()
+                && $eventInvitation->getAnswer() != EventInvitationAnswer::NO && $eventInvitation->getAnswer() != EventInvitationAnswer::NOT_INTERESTED
+            ) {
+                $this->appMailer->sendNewNotificationEmail($eventInvitation, $new_pollproposal_notification, $creatorEventInvitation);
             }
         }
         $this->entityManager->flush();
@@ -174,6 +172,7 @@ class NotificationManager
 
                 if ($eventInvitation->getEventInvitationPreferences()->getNotifEmailFrequency() !== NotificationFrequencyEnum::NEVER
                     && $eventInvitation->getEventInvitationPreferences()->isNotifNewComment()
+                    && $eventInvitation->getAnswer() != EventInvitationAnswer::NO && $eventInvitation->getAnswer() != EventInvitationAnswer::NOT_INTERESTED
                 ) {
                     $this->appMailer->sendNewNotificationEmail($eventInvitation, $new_comment_notification, $creatorEventInvitation);
                 }

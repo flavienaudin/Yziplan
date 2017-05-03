@@ -48,16 +48,17 @@ class ModuleVoter extends Voter
         if ($module !== $userModuleInvitation->getModule()) {
             return false;
         }
+        if ($userModuleInvitation->getStatus() != ModuleInvitationStatus::INVITED || $userModuleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::CANCELLED) {
+            return false;
+        }
         switch ($attribute) {
             case self::DISPLAY:
-                // TODO Controler l'access (si evenement privée, invitation nécessaire...)
                 return true;
                 break;
             case self::PUBLISH:
             case self::EDIT:
             case self::DELETE:
-                return ($userModuleInvitation->getEventInvitation()->getStatus() != EventInvitationStatus::CANCELLED && $userModuleInvitation->getEventInvitation()->isOrganizer())
-                    || ($userModuleInvitation->getStatus() != ModuleInvitationStatus::CANCELLED && $userModuleInvitation->isOrganizer());
+                return $userModuleInvitation->getEventInvitation()->isOrganizer() || $userModuleInvitation->isOrganizer();
                 break;
         }
         return false;

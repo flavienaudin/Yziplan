@@ -47,7 +47,7 @@ class PollProposalVoter extends Voter
             return false;
         }
 
-        if ($userModuleInvitation->getStatus() == ModuleInvitationStatus::CANCELLED) {
+        if ($userModuleInvitation->getStatus() != ModuleInvitationStatus::INVITED) {
             return false;
         }
 

@@ -103,6 +103,7 @@ class PollProposalManager
     public function displayPollProposalListRowPartial($pollProposals, EventInvitation $userEventInvitation)
     {
         if (!empty($pollProposals)) {
+            /** @var PollModule $pollModule */
             $pollModule = $pollProposals[0]->getPollModule();
             $userModuleInvitation = null;
             if ($userEventInvitation != null) {
