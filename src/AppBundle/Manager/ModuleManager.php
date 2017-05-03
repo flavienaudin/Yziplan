@@ -182,14 +182,14 @@ class ModuleManager
     /**
      * @param EventInvitation $modulePublisherEventInvitation Le ModuleInvitation du publieur
      * @param Module|null $module Le module concerné
+     * @param bool $generateNotifications Si true Alors les notifications sont générées
      * @return bool true si l'opération s'est bien déroulé, false sinon
      */
-    public function publishModule(EventInvitation $modulePublisherEventInvitation, Module $module = null)
+    public function publishModule(EventInvitation $modulePublisherEventInvitation, Module $module = null, $generateNotifications = true)
     {
         if ($module != null) {
             $this->module = $module;
         }
-
         if ($this->module != null) {
             $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
             if ($this->module->getInvitationRule() == InvitationRule::EVERYONE) {
@@ -212,9 +212,10 @@ class ModuleManager
             $this->entityManager->persist($this->module);
             $this->entityManager->flush();
 
-            // Création d'un notification pour chaque invité
-            $this->notificationManager->createAddModuleNotifications($module, $modulePublisherEventInvitation);
-
+            if($generateNotifications) {
+                // Création d'un notification pour chaque invité
+                $this->notificationManager->createAddModuleNotifications($module, $modulePublisherEventInvitation);
+            }
             return true;
         }
         return false;

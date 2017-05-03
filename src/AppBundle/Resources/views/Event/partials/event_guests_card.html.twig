@@ -17,7 +17,7 @@
                             <a href="" data-toggle="dropdown" aria-expanded="false"> <i class="zmdi zmdi-settings"></i> </a>
                             <ul class="dropdown-menu dropdown-menu-right dm-icon">
                                 <li>
-                                    <a id="setGuestCanInviteParameterLink"
+                                    <a id="setGuestsCanInviteParameterLink"
                                        href="{{ path('setEventParameter',{'token':event.token}) }}"> <i
                                                 class="zmdi zmdi-{{ event.guestsCanInvite?"check c-green":"close c-red" }}"></i>
                                         {{ event.guestsCanInvite?"event.form.guestsCanInvite.text.true"|trans:"event.form.guestsCanInvite.text.false"|trans }}

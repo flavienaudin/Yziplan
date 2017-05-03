@@ -45,20 +45,8 @@ class ModuleType extends AbstractType
                     'required' => false
                 )
             )
-            ->add('invitationOnly', ChoiceType::class, array(
-                    "expanded" => true,
-                    "multiple" => false,
-                    'required' => false,
-                    'empty_data' => null,
-                    'placeholder' => 'module.form.choice.label.inherit',
-                    'choices' => array(
-                        'yes' => true,
-                        'no' => false),
-                    'choice_label' => function ($value, $key, $index) {
-                        return 'module.form.choice.label.' . $key;
-                    }
-                )
-            );
+        // TODO add InvitationRule field
+        ;
         $builder
             ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
                 /** @var Module $data */

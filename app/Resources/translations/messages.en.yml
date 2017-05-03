@@ -244,9 +244,6 @@ event:
     main:
       title: Event organization
       subtitle: Describe the event to your guests
-    add_module:
-      title: Consult your guests
-      subtitle: Add survey using links below then click "Next"
     recapitulatif:
       title: Congratulations, it is almost done
       subtitle:
@@ -524,11 +521,6 @@ module:
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline
-    invitationOnly:
-      label: Invitation only
-      placeholder: Invitation only
-      text.true: An invitation is required to participate (private event)
-      text.false: Everyone can participate (public event)
     guestsCanInvite:
       label: Allow participants to invite
       placeholder: Allow participants to invite

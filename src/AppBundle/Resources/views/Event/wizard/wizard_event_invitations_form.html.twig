@@ -16,7 +16,7 @@
         <a href="#invitationsMoreOption" data-toggle="collapse" aria-controls="#invitationsMoreOption" aria-expanded="false">{{ "global.button.more_options"|trans }}</a>
         <div class="collapse" id="invitationsMoreOption">
             <div class="checkbox m-b-15">
-                <label> <input id="setGuestCanInviteParameter" type="checkbox" value=""> <i class="input-helper"></i>
+                <label> <input id="setGuestsCanInviteParameter" type="checkbox" value="" {{ event.guestsCanInvite?'checked="checked"' }}> <i class="input-helper"></i>
                     {{ "event.form.guestsCanInvite.label"|trans }}
                 </label>
             </div>

@@ -222,9 +222,6 @@ class EventManager
         ) {
             $this->event->setStatus(EventStatus::IN_ORGANIZATION);
         }
-        /* TODO : desactivés pour simplifier l'interface */
-        $this->event->setInvitationOnly(false);
-        $this->event->setGuestsCanInvite(true);
         if (empty($this->event->getWhereName())) {
             $this->event->setWhereGooglePlaceId(null);
         }
@@ -418,9 +415,9 @@ class EventManager
     }
 
     /**
-     * Set the event.guestCanInvite parameter
+     * Set the event.guestsCanInvite parameter
      * @param $requestData array with :
-     *          - parameter string {invitationOnly;guestCanInvite} the parameter to set
+     *          - parameter string {invitationOnly;guestsCanInvite} the parameter to set
      *          - value boolean the new value to set
      * @param Event|null $event
      * @return bool
@@ -435,7 +432,7 @@ class EventManager
             $value = $requestData['value'];
             if ($parameter === "invitationOnly") {
                 $this->event->setInvitationOnly($value);
-            } elseif ($parameter === "guestCanInvite") {
+            } elseif ($parameter === "guestsCanInvite") {
                 $this->event->setGuestsCanInvite($value);
             } else {
                 return false;

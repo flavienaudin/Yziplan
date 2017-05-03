@@ -157,7 +157,7 @@ class EventInvitationManager
             } else {
                 if ($initializeIfNotExists && $this->authorizationChecker->isGranted(EventInvitationVoter::CREATE, $event)) {
                     $this->eventInvitation = $this->initializeEventInvitation($event, ($user instanceof AccountUser ? $user->getApplicationUser() : null));
-                    $this->initializeModuleInvitation();
+                    $this->initializeModuleInvitationStatus();
                     $this->persistEventInvitation();
                 } else {
                     $this->eventInvitation = null;
@@ -222,7 +222,7 @@ class EventInvitationManager
      * Initialise le statut des ModuleInvitaiton de l'EventInvitation selon la règle d'invitation du module et de l'éventuel précédent statut du ModuleInvitation
      * @param EventInvitation|null $eventInvitation
      */
-    public function initializeModuleInvitation(EventInvitation $eventInvitation = null)
+    public function initializeModuleInvitationStatus(EventInvitation $eventInvitation = null)
     {
         if ($eventInvitation != null) {
             $this->eventInvitation = $eventInvitation;
@@ -281,7 +281,6 @@ class EventInvitationManager
         );
         foreach ($emailsData as $email) {
             $this->eventInvitation = $this->getGuestEventInvitation($event, $email);
-
             if ($this->eventInvitation != null) {
                 if ($this->eventInvitation->getStatus() == EventInvitationStatus::CANCELLED) {
                     // L'invitation avait été précédement annulée
@@ -303,9 +302,11 @@ class EventInvitationManager
                             }
                         }
                     }
-                    // Réinitialisation du statut des ModuleInvitations existants
-                    $this->initializeModuleInvitation();
                 }
+
+                // Mise à jour du statut des ModuleInvitations selon le Module.invitationRule
+                $this->initializeModuleInvitationStatus();
+
                 try {
                     if ($this->persistEventInvitation()) {
                         if ($this->appMailer->sendEventInvitationEmail($this->eventInvitation, $message)) {

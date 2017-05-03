@@ -609,12 +609,12 @@ class EventController extends Controller
             $parameter = $request->get('parameter');
             if ($request->isXmlHttpRequest()) {
                 $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.success.message.edition');
-                if ($parameter === "guestCanInvite") {
+                if ($parameter === "guestsCanInvite") {
                     if ($event->isGuestsCanInvite()) {
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestCanInviteParameterLink'] =
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestsCanInviteParameterLink'] =
                             '<i class="zmdi zmdi-check c-green"></i> ' . $this->get('translator')->trans("event.form.guestsCanInvite.text.true");
                     } else {
-                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestCanInviteParameterLink'] =
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestsCanInviteParameterLink'] =
                             '<i class="zmdi zmdi-close c-red"></i> ' . $this->get('translator')->trans("event.form.guestsCanInvite.text.false");
                     }
                 }

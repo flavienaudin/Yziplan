@@ -6,10 +6,7 @@
 - modules (array) Tableau des modules de l'événement. Chaque module est décrit un tableau de données (Cf. EventManager:getModulesToDisplay(...) )
 #}
 
-{% block wizard_step_title %}
-    {#{{ "event.wizard.add_module.title"|trans }}#}
-    {#<small>{{ "event.wizard.add_module.subtitle"|trans }}</small>#}
-{% endblock %}
+{% block wizard_step_title %}{% endblock %}
 
 {% block wizard_step_before_card %}
     {# Affiche les modules de l'événement, les modules ajoutés via Ajax sont ajoutés à la fin de la div #eventModulesContainer #}
@@ -46,7 +43,7 @@
 {% endblock wizard_step_before_card %}
 
 {% block wizard_step %}
-    {{ include('@App/Event/module/displayAddModule_card.html.twig', {'event':event}) }}
+    {{ include('@App/Event/module/displayAddModule_card.html.twig', {'event':event,'wizard':1}) }}
 
     <div class="text-center">
         <a href="{{ path('wizardNewEventStep1',{'token':event.token}) }}" class="btn btn-flat m-b-10" role="button">{{ "global.button.previousStep"|trans }}</a> <a

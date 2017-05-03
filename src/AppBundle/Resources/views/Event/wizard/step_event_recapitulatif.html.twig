@@ -152,11 +152,11 @@
                 });
             });
 
-            $('#setGuestCanInviteParameter').on('change', function (e) {
+            $('#setGuestsCanInviteParameter').on('change', function (e) {
                 var link = '{{ path('setEventParameter',{'token':event.token}) }}';
                 var data = {
-                    'parameter': 'invitationOnly',
-                    'value': ($(this).prop('checked') ? 0 : 1)
+                    'parameter': 'guestsCanInvite',
+                    'value': ($(this).prop('checked') ? 1 : 0)
                 };
                 ajaxRequest(link, data, e, null, null, null);
             });

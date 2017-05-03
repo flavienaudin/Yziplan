@@ -243,9 +243,6 @@ event:
     main:
       title: Organiser un événement
       subtitle: Décrivez l'événement à vos invités.
-    add_module:
-      title: Consultez vos invités
-      subtitle: Ajoutez des sondages en cliquant sur les liens ci-dessous puis cliquez sur "Suivant"
     recapitulatif:
       title: Félicitations, c'est presque terminé
       subtitle:
@@ -523,11 +520,6 @@ module:
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse
-    invitationOnly:
-      label: Seulement sur invitation
-      placeholder: Seulement sur invitation
-      text.true: Seuls les invités peuvent participer (événement privé)
-      text.false: Rend l'événement accessible à toutes les personnes recevant le lien
     guestsCanInvite:
       label: Permette aux participants d'inviter
       placeholder: Permette aux participants d'inviter

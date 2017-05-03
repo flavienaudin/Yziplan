@@ -33,15 +33,15 @@ class ModuleController extends Controller
 {
 
     /**
-     * @Route("/add/{token}/{type}/{subtype}",  name="addEventModule")
+     * @Route("/add/{token}/{type}/{subtype}/{wizard}",  name="addEventModule")
      * @ParamConverter("event", class="AppBundle:Event\Event", options={"exclude":{"type","subtype"}})
      */
-    public function addEventModuleAction(Event $event, $type, $subtype = null, Request $request)
+    public function addEventModuleAction(Event $event, $type, $subtype = null, $wizard = false, Request $request)
     {
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
         $this->denyAccessUnlessGranted(EventVoter::ADD_EVENT_MODULE, $userEventInvitation);
-        if ($request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
-            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+        if ( /*$request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL)*/
+            !$wizard && ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
         ) {
             // Vérification serveur de la validité de l'invitation
             if ($request->isXmlHttpRequest()) {
@@ -54,11 +54,14 @@ class ModuleController extends Controller
             }
         } else {
             $eventManager = $this->get("at.manager.event");
+            $moduleManager = $this->get('at.manager.module');
             $eventManager->setEvent($event);
             $module = $eventManager->addModule($type, $subtype, $userEventInvitation);
+            if ($wizard) {
+                $moduleManager->publishModule($userEventInvitation, $module, false);
+            }
             if ($request->isXmlHttpRequest()) {
                 if ($module != null) {
-                    $moduleManager = $this->get('at.manager.module');
                     $data[AppJsonResponse::DATA]['moduleToken'] = $module->getToken();
                     $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_APPEND_TO]['#eventModulesContainer'] =
                         $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module));
@@ -86,9 +89,7 @@ class ModuleController extends Controller
         $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
         $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
         $this->denyAccessUnlessGranted(ModuleVoter::PUBLISH, [$module, $userModuleInvitation]);
-        if ($request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $event->getToken()), UrlGenerator::ABSOLUTE_URL) &&
-            ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
-        ) {
+        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
             // Vérification serveur de la validité de l'invitation
             if ($request->isXmlHttpRequest()) {
                 $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
@@ -100,7 +101,7 @@ class ModuleController extends Controller
             }
         } else {
             $moduleManager = $this->get('at.manager.module');
-            if ($moduleManager->publishModule($userEventInvitation, $module)) {
+            if ($moduleManager->publishModule($userEventInvitation, $module, true)) {
                 if ($request->isXmlHttpRequest()) {
                     $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-' . $module->getToken()] =
                         $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module));
