@@ -35,7 +35,7 @@
             </span>
             </div>
             <div class="pull-right">
-                <a href="{{ path('markAsView', {'id':notification.id}) }}"> <i class="zmdi zmdi-dot-circle-alt zmdi-hc-lg"></i></a>
+                <a href="{{ path('markAsView', {'id':notification.id}) }}" class="notification_delete_link"> <i class="zmdi zmdi-dot-circle-alt zmdi-hc-lg"></i></a>
             </div>
             <div class="media-body">
                 <div class="lgi-heading"><a href="#module-{{ notification.data.subject.token }}_anchor">{{ notification.data.subject.name }}</a></div>
@@ -51,7 +51,7 @@
                 <i class="zmdi zmdi-collection-item zmdi-hc-2x"></i>
             </div>
             <div class="pull-right">
-                <a href="{{ path('markAsView', {'id':notification.id}) }}"> <i class="zmdi zmdi-dot-circle-alt zmdi-hc-lg"></i></a>
+                <a href="{{ path('markAsView', {'id':notification.id}) }}" class="notification_delete_link"> <i class="zmdi zmdi-dot-circle-alt zmdi-hc-lg"></i></a>
             </div>
             <div class="media-body">
                 <div class="lgi-heading"><a href="#module-{{ notification.data.subject.token }}_anchor">{{ notification.data.subject.name }}</a></div>
