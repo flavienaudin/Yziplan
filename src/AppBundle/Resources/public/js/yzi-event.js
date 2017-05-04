@@ -203,3 +203,18 @@ function submitModuleEditionForm(params) {
         }
     });
 }
+
+/** fonction pour soumettre le formulaire de gestion des invitations d'un module */
+function submitModuleInvitationsForm(params) {
+    var form = params[0];
+    var e = params[1];
+    var moduleToken = params[2];
+    ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
+        $("#moduleEdit_modal_" + moduleToken).modal('hide');
+    }, null, function () {
+        $grid = $('.grid');
+        if ($grid[0]) {
+            $grid.masonry('layout');
+        }
+    });
+}

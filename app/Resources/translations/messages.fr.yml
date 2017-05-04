@@ -101,7 +101,7 @@ event:
     meta_title:
       new_event: Nouvel événement
   header:
-    organised_by: "Organisé par %organizer%"
+    organized_by: "Organisé par %organizer%"
   picture:
     update_modal:
       title: Charger une image
@@ -277,7 +277,7 @@ event:
     creation: Une erreur est survenue lors de la création de l'événement
     deletion: Une erreur est survenue lors de l'annulation de l'événement
     edition: Une erreur est survenue lors de la modification de l'événement
-    unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
+    unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement
     valide_guestname_required: Cette action nécessite que vous validiez votre invitation en renseignant votre nom. Aucune modification n'a été apportée
   success.message:
     creation: Evénement créé avec succès
@@ -300,7 +300,7 @@ eventInvitations:
       upcomingEvents: Vous n'avez pas d'événement à venir
       passedArchivedEvents: Vous n'avez pas d'événement passé ou archivé
     event_name: Nom de l'événement
-    organiser: Organisateur
+    organizer: Organisateur
     date: Date
     place: Lieu
     response: Réponse
@@ -348,10 +348,6 @@ eventInvitation:
     dont_know: Peut-être
   profile.card:
     title: Profil
-    badge:
-      guest: Invité
-      creator: Créateur
-      administrator: Administrateur
     text:
       disconnect: Vous n'êtes pas %user% ?
     guestname_required_alert:
@@ -511,6 +507,10 @@ module:
   modal:
     settings:
       title: Configuration de l'élément
+  panel:
+    param.title: Paramètres généraux
+    invitations:
+      title: Gestion des invitations
   form:
     name:
       label: Intitulé du sondage
@@ -525,6 +525,11 @@ module:
       placeholder: Permette aux participants d'inviter
       text.true: Vos amis peuvent inviter
       text.false: Vos amis ne peuvent pas inviter
+    invitationRule:
+      label: Choisissez qui peut participer
+    moduleInvitationSelected:
+      label: Sélectionnez les invités qui participent au module
+      creator: Organisateur
     choice.label:
       yes: Oui
       no: Non
@@ -537,6 +542,7 @@ module:
     error:
       add: Une erreur s'est produite lors de la création du module. Merci de re-essayer l'opération
       publish: Une erreur s'est produite lors de la publication du module. Vous n'avez peut-être pas les autorisations nécessaires
+      unauthorized_access: Vous n'avez pas les autorisations pour accéder à ce module
     success:
       publish: Le module a bien été publié. Les invités peuvent maintenant participer
 
@@ -722,6 +728,10 @@ modulestatus:
   archived: Archivé
   deleted: Annulé
 
+invitationrule:
+  everyone: Tout le monde
+  none_except: Personne sauf autorisation
+
 pollmoduletype:
   when: Quand
   what: Quoi
@@ -795,7 +805,7 @@ index:
     title: Comment ça marche
     create: Créez l'événement
     share: Partagez-le
-    organise: Organisez-vous
+    organize: Organisez-vous
     enjoy: Profitez !
   section_why:
     title: Pourquoi Yziplan ?

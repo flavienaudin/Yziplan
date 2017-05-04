@@ -19,7 +19,7 @@ base:
     pro: Pro
 
 navbar:
-  subtitle: To organise you, it's YZI !
+  subtitle: To organize you, it's YZI !
   new_event: New event
 
 main_menu:
@@ -39,7 +39,7 @@ landing_page:
     ski:
       alt: Week-end
       title: Week-end
-      text: Want to organise a weekend with friends?
+      text: Want to organize a weekend with friends?
     king_cake:
       alt: Epiphany
       title: Epiphany
@@ -101,7 +101,7 @@ event:
     meta_title:
       new_event: New event
   header:
-    organised_by: "Organised by %organizer%"
+    organized_by: "Organized by %organizer%"
   picture:
     update_modal:
       title: Upload a picture
@@ -257,7 +257,7 @@ event:
         title: Share the event link
       template:
         title: Link to share
-        paragraphe: "Post the following link on your web site and social networks. Your visitors can organise easily their next activity in your establishment"
+        paragraphe: "Post the following link on your web site and social networks. Your visitors can organize easily their next activity in your establishment"
     invitations:
       title: The guests
       subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link.
@@ -301,7 +301,7 @@ eventInvitations:
       upcomingEvents: You have no upcoming events
       passedArchivedEvents: You have no passed or achived events
     event_name: Event name
-    organiser: Organiser
+    organizer: Organizer
     date: Date
     place: Place
     response: Response
@@ -349,10 +349,6 @@ eventInvitation:
     dont_know: Don't know yet
   profile.card:
     title: About you
-    badge:
-      guest: Guest
-      creator: Creator
-      administrator: Administrator
     text:
       disconnect: You are not %user%?
     guestname_required_alert:
@@ -512,6 +508,10 @@ module:
   modal:
     settings:
       title: Element settings
+  panel:
+    param.title: General parameters
+    invitations:
+      title: Management of invitations
   form:
     name:
       label: Module name
@@ -526,6 +526,11 @@ module:
       placeholder: Allow participants to invite
       text.true: Your friends can invite
       text.false: Your friends can not invite
+    invitationRule:
+      label: Choose who can participate
+    moduleInvitationSelected:
+      label: Select guests who can participate to this module
+      creator: Organizator
     choice.label:
       yes: Yes
       no: No
@@ -538,6 +543,7 @@ module:
     error:
       add: An error occured during the module creation process. Pleaze, try again the operation
       publish: An error occured during the module publication process. You may not have the required permissions
+      unauthorized_access: You haven't the authorization to access this module
     success:
       publish: The module was successfully published. Guests can now participate
 
@@ -596,7 +602,7 @@ addModule:
 moduleInvitation:
   error.message:
     missing_data: Data are missing to treat the request.
-    unauthorized_access: You are not allowed to edit this answer.
+    unauthorized_access: You are not allowed to edit this answer
 
 duplication:
   notice:
@@ -674,7 +680,7 @@ global:
     data_saved: Information saved
   error:
     not_ajax_request: Your behavior is suspect, big brother is watching you!
-    unauthorized_access: You haven't access to this section.
+    unauthorized_access: You haven't access to this section
     internal_server_error: An internal error occured. Please, check your data and retry the action.
     javascrip_disabled: Javascript is disabled by your web browser. The web site may react badly. Enable it to take full advantage of the features we offer.
     invalid_form: Submitted data are not valid.
@@ -722,6 +728,10 @@ modulestatus:
   validated: Validated
   archived: Archived
   deleted: Deleted
+
+invitationrule:
+  everyone: Everyone
+  none_except: None except authorized
 
 pollmoduletype:
   when: When
@@ -787,16 +797,16 @@ suggestion:
 index:
   header:
     title: Yziplan
-    subtitle: Get organised with your friends
+    subtitle: Get organized with your friends
     button: Let's go!
   about:
-    title: To get organised it's Yzi!
-    subtitle: Easily organised parties, acivities, outings, holidays,... with your friends
+    title: To get organized it's Yzi!
+    subtitle: Easily organized parties, acivities, outings, holidays,... with your friends
   section_use:
     title: How it works
     create: Create the event
     share: Share it
-    organise: Get organised
+    organize: Get organized
     enjoy: Enjoy!
   section_why:
     title: Why Yziplan ?

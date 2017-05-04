@@ -114,11 +114,18 @@ services:
       - { name: security.voter }
 
 # FormTypes
-  at.form_type.invitation:
+  at.form_type.invitations:
     class: AppBundle\Form\Event\InvitationsType
     arguments: ['@security.authorization_checker', '@security.token_storage', '@validator', '@translator']
     tags:
     - { name: form.type }
+
+  at.form_type.moduleInvitations:
+      class: AppBundle\Form\Module\PollModule\ModuleInvitationsType
+      arguments: ['@translator']
+      tags:
+      - { name: form.type }
+
 
 # Event Subscribers
   at.event_subscriber.kernel_events.:

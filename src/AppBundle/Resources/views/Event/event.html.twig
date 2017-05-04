@@ -88,6 +88,7 @@
                         {{ include('@App/Event/module/displayPollModule.html.twig', {
                             'module':moduleDescription.module,
                             'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
+                            'moduleInvitationsForm':(moduleDescription.moduleInvitationsForm is defined?moduleDescription.moduleInvitationsForm:null),
                             'userModuleInvitation':userModuleInvitation,
                             'thread':moduleDescription.thread,'comments':moduleDescription.comments,
                             'pollModuleOptions':(moduleDescription.pollModuleOptions is defined?moduleDescription.pollModuleOptions:null )
@@ -96,6 +97,7 @@
                         {{ include('@App/Event/module/displayExpenseModule.html.twig', {
                             'module':moduleDescription.module,
                             'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
+                            'moduleInvitationsForm':(moduleDescription.moduleInvitationsForm is defined?moduleDescription.moduleInvitationsForm:null),
                             'userModuleInvitation':userModuleInvitation,
                             'thread':moduleDescription.thread,'comments':moduleDescription.comments
                         }) }}
@@ -103,6 +105,7 @@
                         {{ include('@App/Event/module/displayModule.html.twig', {
                             'module':moduleDescription.module,
                             'moduleForm':(moduleDescription.moduleForm is defined?moduleDescription.moduleForm:null),
+                            'moduleInvitationsForm':(moduleDescription.moduleInvitationsForm is defined?moduleDescription.moduleInvitationsForm:null),
                             'userModuleInvitation':userModuleInvitation,
                             'thread':moduleDescription.thread,'comments':moduleDescription.comments
                         }) }}

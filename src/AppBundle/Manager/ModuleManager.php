@@ -16,6 +16,7 @@ use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Module\ModuleType;
+use AppBundle\Form\Module\PollModule\ModuleInvitationsType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\InvitationRule;
@@ -210,7 +211,7 @@ class ModuleManager
             $this->entityManager->persist($this->module);
             $this->entityManager->flush();
 
-            if($generateNotifications) {
+            if ($generateNotifications) {
                 // Création d'un notification pour chaque invité
                 $this->notificationManager->createAddModuleNotifications($module, $modulePublisherEventInvitation);
             }
@@ -327,6 +328,54 @@ class ModuleManager
     }
 
     /**
+     * @param Module $module
+     * @return FormInterface
+     */
+    public function createModuleInvitationsForm(Module $module)
+    {
+        return $this->formFactory->createNamed("moduleInvitations_form_" . $module->getToken(), ModuleInvitationsType::class, $module);
+    }
+
+    /**
+     * @param FormInterface $moduleInvitationsForm
+     * @return Module
+     */
+    public function treatModuleInvitationsForm(FormInterface $moduleInvitationsForm)
+    {
+        $this->module = $moduleInvitationsForm->getData();
+
+        $moduleInvitationsSelection = $moduleInvitationsForm->get('moduleInvitationSelected')->getData();
+        /** @var ModuleInvitation $moduleInvitation */
+        foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
+            if ($moduleInvitation->isCreator()) {
+                $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+            } elseif ($this->module->getInvitationRule() == InvitationRule::EVERYONE) {
+                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::CANCELLED) {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+                } else {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+                }
+            } elseif ($this->module->getInvitationRule() == InvitationRule::NONE_EXCEPT) {
+                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::CANCELLED) {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+                } else {
+                    if (in_array($moduleInvitation, $moduleInvitationsSelection)) {
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+                    } else {
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::EXCLUDED);
+                    }
+                }
+            }
+            $this->entityManager->persist($moduleInvitation);
+        }
+
+        $this->entityManager->persist($this->module);
+        $this->entityManager->flush();
+        return $this->module;
+    }
+
+
+    /**
      * @param Module $module Le module à afficher
      * @param ModuleInvitation|null $userModuleInvitation
      * @return string La vue HTML sous forme de string
@@ -334,9 +383,12 @@ class ModuleManager
     public function displayModulePartial(Module $module, ModuleInvitation $userModuleInvitation = null)
     {
         $moduleForm = null;
+        $moduleInvitationsForm = null;
         if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
             /** @var FormInterface $moduleForm */
             $moduleForm = $this->createModuleForm($module);
+            /** @var FormInterface $moduleInvitationsForm */
+            $moduleInvitationsForm = $this->createModuleInvitationsForm($module);
         }
         $thread = $module->getCommentThread();
         if ($thread != null) {
@@ -354,6 +406,7 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
+                'moduleInvitationsForm' => ($moduleInvitationsForm != null ? $moduleInvitationsForm->createView() : null),
                 'pollModuleOptions' => $pollModuleOptions,
                 'userModuleInvitation' => $userModuleInvitation,
                 'thread' => $thread, 'comments' => $comments
@@ -362,6 +415,7 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayExpenseModule.html.twig", [
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
+                'moduleInvitationsForm' => ($moduleInvitationsForm != null ? $moduleInvitationsForm->createView() : null),
                 'userModuleInvitation' => $userModuleInvitation,
                 'thread' => $thread, 'comments' => $comments
             ]);
@@ -369,6 +423,7 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayModule.html.twig", [
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
+                'moduleInvitationsForm' => ($moduleInvitationsForm != null ? $moduleInvitationsForm->createView() : null),
                 'userModuleInvitation' => $userModuleInvitation,
                 'thread' => $thread, 'comments' => $comments
             ]);

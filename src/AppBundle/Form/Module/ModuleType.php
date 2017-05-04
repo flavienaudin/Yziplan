@@ -13,7 +13,6 @@ use AppBundle\Entity\Event\Module;
 use AppBundle\Form\Module\PollModule\PollModuleFormType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -44,9 +43,7 @@ class ModuleType extends AbstractType
             ->add('guestsCanInvite', CheckboxType::class, array(
                     'required' => false
                 )
-            )
-        // TODO add InvitationRule field
-        ;
+            );
         $builder
             ->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $formEvent) {
                 /** @var Module $data */

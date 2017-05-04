@@ -231,21 +231,17 @@ class EventInvitationManager
             /** @var ModuleInvitation $moduleInvitation */
             foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
                 $module = $moduleInvitation->getModule();
-                if ($module->getStatus() == ModuleStatus::IN_CREATION) {
-                    $moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+                if ($moduleInvitation->isOrganizer()) {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
                 } else {
-                    switch ($module->getInvitationRule()) {
-                        case InvitationRule::EVERYONE:
+                    if ($module->getStatus() == ModuleStatus::IN_CREATION) {
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+                    } else {
+                        if ($module->getInvitationRule() == InvitationRule::EVERYONE) {
                             $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
-                            break;
-                        case InvitationRule::EVERYONE_EXCEPT:
-                            if ($moduleInvitation->getStatus() == ModuleInvitationStatus::NOT_INVITED) {
-                                $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
-                            }// excluded reste excluded
-                            break;
-                        case InvitationRule::NONE_EXCEPT:
+                        } elseif ($module->getInvitationRule() == InvitationRule::NONE_EXCEPT) {
                             $moduleInvitation->setStatus(ModuleInvitationStatus::EXCLUDED);
-                            break;
+                        }
                     }
                 }
             }
@@ -587,7 +583,6 @@ class EventInvitationManager
 
     /**
      * Génère le formulaire de gestion des préférenes de notification par email d'une invitation
-     * @param EventInvitation $eventInvitation
      * @return FormInterface
      */
     public function createNotificationPreferencesForm()
@@ -602,6 +597,7 @@ class EventInvitationManager
     /**
      * Traite la soumission du formulaire de gestion des préférenes de notification par email d'une invitation
      * @param FormInterface $form
+     * @return EventInvitation
      */
     public function treatNotificationPreferencesForm(FormInterface $form)
     {

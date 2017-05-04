@@ -131,7 +131,7 @@ class PollModuleController extends Controller
             }
         } else {
             if ($request->isXmlHttpRequest()) {
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.unauthorized_access");
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("module.message.error.unauthorized_access");
                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.unauthorized_access'));
@@ -157,7 +157,7 @@ class PollModuleController extends Controller
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 }
             }
-            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("event.error.message.unauthorized_access");
+            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("module.message.error.unauthorized_access");
             return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
 
         } else {

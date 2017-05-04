@@ -14,8 +14,7 @@ Données d'entrée :
             </div>
             <div class="pull-right">
                 {% block mhMediaRight %}
-                    {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation])
-                    or is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), [module, userModuleInvitation]) %}
+                    {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) or is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), [module, userModuleInvitation]) %}
                         <ul class="actions a-alt">
                             <li class="dropdown">
                                 <a href="" data-toggle="dropdown" aria-expanded="false"> <i class="zmdi zmdi-settings"></i> </a>
@@ -83,7 +82,7 @@ Données d'entrée :
                            {{ module.name is not empty?module.name }}
                         </span>
                         {% if organizerNames is not empty %}
-                            <small>{{ "event.header.organised_by"|trans({"%organizer%":organizerNames}) }}</small>
+                            <small>{{ "event.header.organized_by"|trans({"%organizer%":organizerNames}) }}</small>
                         {% endif %}
                     </h2>
                 {% endblock mhMediaBody %}
