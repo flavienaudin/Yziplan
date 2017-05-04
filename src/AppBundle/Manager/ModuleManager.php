@@ -205,8 +205,6 @@ class ModuleManager
                     } else {
                         $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
                     }
-                    // TODO nécessaire ?
-                    // $this->entityManager->persist($moduleInvitation);
                 }
             }
             $this->entityManager->persist($this->module);

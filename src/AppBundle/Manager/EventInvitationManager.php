@@ -231,18 +231,22 @@ class EventInvitationManager
             /** @var ModuleInvitation $moduleInvitation */
             foreach ($this->eventInvitation->getModuleInvitations() as $moduleInvitation) {
                 $module = $moduleInvitation->getModule();
-                switch ($module->getInvitationRule()) {
-                    case InvitationRule::EVERYONE:
-                        $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
-                        break;
-                    case InvitationRule::EVERYONE_EXCEPT:
-                        if ($moduleInvitation->getStatus() == ModuleInvitationStatus::NOT_INVITED) {
+                if ($module->getStatus() == ModuleStatus::IN_CREATION) {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+                } else {
+                    switch ($module->getInvitationRule()) {
+                        case InvitationRule::EVERYONE:
                             $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
-                        }// excluded reste excluded
-                        break;
-                    case InvitationRule::NONE_EXCEPT:
-                        $moduleInvitation->setStatus(ModuleInvitationStatus::EXCLUDED);
-                        break;
+                            break;
+                        case InvitationRule::EVERYONE_EXCEPT:
+                            if ($moduleInvitation->getStatus() == ModuleInvitationStatus::NOT_INVITED) {
+                                $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+                            }// excluded reste excluded
+                            break;
+                        case InvitationRule::NONE_EXCEPT:
+                            $moduleInvitation->setStatus(ModuleInvitationStatus::EXCLUDED);
+                            break;
+                    }
                 }
             }
         }
@@ -295,7 +299,7 @@ class EventInvitationManager
                     // Vérification et création des ModuleInvitation qui n'ont pas été créées pendant que l'invitation était annulée
                     /** @var Module $module */
                     foreach ($event->getModules() as $module) {
-                        if($module->getStatus() != ModuleStatus::DELETED) {
+                        if ($module->getStatus() != ModuleStatus::DELETED) {
                             $moduleInvitation = $this->eventInvitation->getModuleInvitationForModule($module);
                             if ($moduleInvitation == null) {
                                 $this->moduleInvitationManager->initializeModuleInvitation($module, $this->eventInvitation, true);
