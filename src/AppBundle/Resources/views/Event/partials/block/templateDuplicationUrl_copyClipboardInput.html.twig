@@ -10,7 +10,8 @@ Données d'entrée :
             <label class="control-label sr-only" for="event_template_duplication_url">{{ "event.form.public_invitation.label"|trans }}</label>
             <div class="input-group input-group-sm">
                 <div class="fg-line">
-                    <input type="text" id="event_template_duplication_url" class="form-control input-sm" readonly="readonly" value="{{ url("duplicateEvent", {'tokenDuplication':event.token}) }}">
+                    <input type="text" id="event_template_duplication_url" class="form-control input-sm" readonly="readonly"
+                           value="{{ url("duplicateEvent", {'tokenDuplication':event.tokenDuplication}) }}">
                 </div>
                 <span class="input-group-btn">
                     <button type="button" id="btn_event_template_duplication_url" class="btn btn-primary btn-icon-text" data-clipboard-target="#event_template_duplication_url">
