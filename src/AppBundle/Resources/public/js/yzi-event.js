@@ -195,7 +195,6 @@ function submitModuleEditionForm(params) {
     var e = params[1];
     var moduleToken = params[2];
     ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
-        $("#moduleEdit_modal_" + moduleToken).modal('hide');
     }, null, function () {
         $grid = $('.grid');
         if ($grid[0]) {
@@ -210,7 +209,6 @@ function submitModuleInvitationsForm(params) {
     var e = params[1];
     var moduleToken = params[2];
     ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
-        $("#moduleEdit_modal_" + moduleToken).modal('hide');
     }, null, function () {
         $grid = $('.grid');
         if ($grid[0]) {
