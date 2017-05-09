@@ -41,7 +41,10 @@ Données d'entrée :
             function submitEventInvitationAnswerForm(params){
                 var form = params[0];
                 var e = params[1];
-                ajaxFormSubmission(form, e, null, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
+                    $('img.grayscale-1[userAvatar]').removeClass('grayscale-1');
+
+                }, function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
                     if (dataOrJqXHR.hasOwnProperty('responseJSON')) {
                         var responseJSON = dataOrJqXHR['responseJSON'];
                         if (responseJSON.hasOwnProperty('data') && responseJSON['data'].hasOwnProperty('eventInvitationValid') && !responseJSON['data']['eventInvitationValid']) {
