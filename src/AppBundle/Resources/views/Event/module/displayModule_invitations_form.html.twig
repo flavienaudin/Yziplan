@@ -8,7 +8,6 @@
         <div class="col-sm-12">
             {{ form_start(moduleInvitationsForm, {'action':path('displayEvent', {'token':module.event.token}), 'attr':{'id':"moduleInvitationsForm-"~module.token} }) }}
 
-
             <div class="m-t-15">
                 {{ form_row(moduleInvitationsForm.invitationRule, {
                     'label':'module.form.invitationRule.label',

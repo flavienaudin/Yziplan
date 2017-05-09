@@ -48,6 +48,18 @@
                     <div>
                         {% if invitationsForm is defined %}
                             {{ include('@App/Event/wizard/wizard_event_invitations_form.html.twig', {"userEventInvitation":userEventInvitation, "invitationsForm":invitationsForm }) }}
+
+                            <div class="p-l-15 p-r-15">
+                                <a href="#invitationsMoreOption" data-toggle="collapse" aria-controls="#invitationsMoreOption" aria-expanded="false">{{ "global.button.more_options"|trans }}</a>
+                                <div class="collapse" id="invitationsMoreOption">
+                                    <div class="checkbox m-b-15">
+                                        <label> <input id="setGuestsCanInviteParameter" type="checkbox" value="" {{ event.guestsCanInvite?'checked="checked"' }}> <i class="input-helper"></i>
+                                            {{ "event.form.guestsCanInvite.label"|trans }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
                             {{ include('@App/Event/partials/invitations/gmail_contacts_modal.html.twig') }}
                         {% endif %}
                     </div>
