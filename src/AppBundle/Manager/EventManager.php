@@ -583,6 +583,8 @@ class EventManager
                             $currentModule = $this->moduleManager->treatUpdateFormModule($moduleForm);
                             $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->translator->trans("global.success.data_saved");
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['.module-' . $currentModule->getToken() . '-description'] = $currentModule->getDescription();
+
+                            $moduleForm = $this->moduleManager->createModuleForm($currentModule);
                             $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-header-' . $currentModule->getToken()] =
                                 $this->templating->render("@App/Event/module/displayModule_header.html.twig", array(
                                     'module' => $currentModule,
@@ -594,9 +596,11 @@ class EventManager
                                     'module' => $currentModule,
                                     'userModuleInvitation' => $userModuleEventInvitation
                                 ));
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#moduleInvitations_form_' . $currentModule->getToken()] =
-                                $this->templating->render('@App/Event/module/displayModule_invitations_form.html.twig', array(
-                                    'module' => $currentModule
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#moduleEdit_form_' . $currentModule->getToken()] =
+                                $this->templating->render('@App/Event/module/displayModule_form.html.twig', array(
+                                    'module' => $currentModule,
+                                    'moduleForm' => $moduleForm->createView(),
+                                    'userModuleInvitation' => $userModuleEventInvitation
                                 ));
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
