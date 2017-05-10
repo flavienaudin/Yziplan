@@ -59,6 +59,7 @@ class ModuleInvitationsType extends AbstractType
                 foreach ($module->getModuleInvitations() as $moduleInvitation) {
                     if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::VALID
                         || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER
+                        || ($moduleInvitation->isOrganizer() && $moduleInvitation->getEventInvitation()->getStatus() != EventInvitationStatus::CANCELLED)
                     ) {
                         $choices[] = $moduleInvitation;
                         if ($moduleInvitation->getStatus() == ModuleInvitationStatus::INVITED) {

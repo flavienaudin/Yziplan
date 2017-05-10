@@ -39,7 +39,6 @@
     <script>
         $(document).ready(function () {
             $('input[name="{{ moduleInvitationsForm.invitationRule.vars.full_name }}"]').on('change', function (e) {
-                console.log(e.target);
                 $('#moduleInvitations_selection_{{ module.token }}').toggle();
             });
 
