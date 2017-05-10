@@ -140,7 +140,7 @@ class EventInvitationController extends Controller
     }*/
 
     /**
-     * @Route("/modify-answer/{eventInvitTokenToModifyAnswer}/{answerValue}", name="modifyGuestEventInvitation" )
+     * @Route("/modify-answer/{eventInvitTokenToModifyAnswer}/{answerValue}", name="modifyGuestEventInvitationAnswer" )
      * @ParamConverter("eventInvitTokenToModifyAnswer", class="AppBundle:Event\EventInvitation", options={"mapping": {"eventInvitTokenToModifyAnswer":"token"}})
      */
     public function modifyGuestEventInvitationAnswerAction(EventInvitation $eventInvitTokenToModifyAnswer, $answerValue, Request $request)
