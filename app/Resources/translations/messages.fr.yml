@@ -445,8 +445,12 @@ invitations:
       link: Modifier la réponse
       message.success: La réponse a bien été modifiée
     designate:
-      administrator.link: Désigner comme administrateur
-      guest.link: Révoquer les droits d'administrateur
+      administrator:
+        link: Désigner comme administrateur
+        message.success: L'invité peut maintenant administrer l'événement
+      guest:
+        link: Révoquer les droits d'administrateur
+        message.success: L'invité ne peut désormais plus administrer l'événement
   form:
     invitations:
       label: En leur envoyant un e-mail

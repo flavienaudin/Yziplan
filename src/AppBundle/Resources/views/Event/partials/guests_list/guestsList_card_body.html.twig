@@ -85,7 +85,8 @@
                         confirmButtonText: '{{ "global.button.delete"|trans }}',
                         showLoaderOnConfirm: true
                     }).then(function () {
-                        ajaxRequest($link, null, e, function (responseJSON, textStatus, jqXHR) {
+                        var data = {'wizardMode': 0};
+                        ajaxRequest($link, data, e, function (responseJSON, textStatus, jqXHR) {
                             var guestid = $link.data('guestid');
                             if (typeof guestid !== "undefined" && $link.data('guestid') !== "") {
                                 $('.eventInvitations_list > li.guestid-' + guestid).remove();
@@ -98,30 +99,9 @@
             });
 
             {# Menu gestion des invitations sur les avatar : Modifier la réponse d'une invitation #}
-            $eventInvitationsList.find('li a.modifyGuestAnswer').each(function () {
-                var $link = $(this);
-                $link.on('click', function (e) {
-                    var $modalParent = $link.parents('.modal');
-                    if ($modalParent[0]) {
-                        $modalParent.modal('hide');
-                    }
-                    ajaxRequest($link, null, e, function (responseJSON, textStatus, jqXHR) {
-                    }, null, null);
-                });
-            });
-
+            initializeModifyGuestAnswerLinks($eventInvitationsList, 0);
             {# Menu gestion des invitations sur les avatar : Désigner ou révoquer les administrateurs #}
-            $eventInvitationsList.find('li a.designateAsAdministror').each(function () {
-                var $link = $(this);
-                $link.on('click', function (e) {
-                    var $modalParent = $link.parents('.modal');
-                    if ($modalParent[0]) {
-                        $modalParent.modal('hide');
-                    }
-                    ajaxRequest($link, null, e, function (responseJSON, textStatus, jqXHR) {
-                    }, null, null);
-                });
-            });
+            initializeDesignateAsAdministrorLinks($eventInvitationsList, 0);
 
             LetterAvatar.transform();
         });

@@ -194,7 +194,7 @@ class EventWizardController extends Controller
                                     'invitationsForm' => $eventInvitationsForm->createView()
                                 ));
 
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#invitations_list_card'] =
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_list_card'] =
                                 $this->renderView('@App/Event/wizard/wizard_eventInvitationList_card.html.twig', array(
                                     'userEventInvitation' => $userEventInvitation,
                                     'eventInvitations' => $currentEvent->getEventInvitationByAnswer()

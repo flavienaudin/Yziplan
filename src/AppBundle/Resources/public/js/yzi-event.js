@@ -139,6 +139,10 @@ function voteRankingAction(params) {
     });
 }
 
+
+/**********************************************************************************************************************
+ *                                   Fonctions liées aux Modules
+ ************************************************************************************************************************/
 function addModuleAction(params) {
     var target = params[0];
     var e = params[1];
@@ -178,17 +182,6 @@ function submitAddPollProposalForm(params) {
     );
 }
 
-function submitMessageForm(params) {
-    var form = params[0];
-    var e = params[1];
-    ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
-            $('#invitations_sendMessage_modal').modal('hide');
-        }, function (jqXHR, textStatus, errorThrown) {
-            $('#invitations_sendMessage_modal').modal('show');
-        }, null
-    );
-}
-
 /** fonction pour soumettre le formulaire d'édition d'un module */
 function submitModuleEditionForm(params) {
     var form = params[0];
@@ -203,6 +196,10 @@ function submitModuleEditionForm(params) {
     });
 }
 
+/**********************************************************************************************************************
+ *                                   Fonction aux Invitations
+ ************************************************************************************************************************/
+
 /** fonction pour soumettre le formulaire de gestion des invitations d'un module */
 function submitModuleInvitationsForm(params) {
     var form = params[0];
@@ -214,5 +211,65 @@ function submitModuleInvitationsForm(params) {
         if ($grid[0]) {
             $grid.masonry('layout');
         }
+    });
+}
+
+function submitMessageForm(params) {
+    var form = params[0];
+    var e = params[1];
+    ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
+            $('#invitations_sendMessage_modal').modal('hide');
+        }, function (jqXHR, textStatus, errorThrown) {
+            $('#invitations_sendMessage_modal').modal('show');
+        }, null
+    );
+}
+
+/**
+ * Menu gestion des invitations sur les avatar : Modifier la réponse d'une invitation #}
+ */
+function initializeModifyGuestAnswerLinks($eventInvitationsList, wizardMode) {
+    if (typeof $eventInvitationsList === "undefined") {
+        $eventInvitationsList = $('.eventInvitations_list');
+    }
+    $eventInvitationsList.find('li a.modifyGuestAnswer').each(function () {
+        var $link = $(this);
+        $link.on('click', function (e) {
+            var $modalParent = $link.parents('.modal');
+            if ($modalParent[0]) {
+                $modalParent.modal('hide');
+            }
+            if (typeof wizardMode === 'undefined') {
+                wizardMode = false
+            }
+            var data = {'wizardMode': wizardMode};
+            ajaxRequest($link, data, e, function (responseJSON, textStatus, jqXHR) {
+            }, null, null);
+        });
+    });
+}
+
+
+/**
+ * Menu gestion des invitations sur les avatar : Désigner ou révoquer les administrateurs
+ */
+function initializeDesignateAsAdministrorLinks($eventInvitationsList, wizardMode) {
+    if (typeof $eventInvitationsList === "undefined") {
+        $eventInvitationsList = $('.eventInvitations_list');
+    }
+    $eventInvitationsList.find('li a.designateAsAdministror').each(function () {
+        var $link = $(this);
+        $link.on('click', function (e) {
+            var $modalParent = $link.parents('.modal');
+            if ($modalParent[0]) {
+                $modalParent.modal('hide');
+            }
+            if (typeof wizardMode === 'undefined') {
+                wizardMode = false
+            }
+            var data = {'wizardMode': wizardMode};
+            ajaxRequest($link, data, e, function (responseJSON, textStatus, jqXHR) {
+            }, null, null);
+        });
     });
 }

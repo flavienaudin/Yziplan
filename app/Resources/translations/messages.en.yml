@@ -446,8 +446,12 @@ invitations:
       link: Modify the answer
       message.success: The answer has been modfied
     designate:
-      administrator.link: Designate as administrator
-      guest.link: Revoke administrator's rights
+      administrator:
+        link: Designate as administrator
+        message.success: The guest can now administrate the event
+      guest:
+        link: Revoke administrator's rights
+        message.success: The guest can no longer administrate the event
   form:
     invitations:
       label: By sending them an email

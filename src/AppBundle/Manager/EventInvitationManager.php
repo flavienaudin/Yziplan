@@ -418,10 +418,8 @@ class EventInvitationManager
             $this->eventInvitation = $eventInvitation;
         }
         if ($this->eventInvitation != null) {
-            //if (EventInvitationAnswer::hasType($answerValue)) {
             $this->eventInvitation->setAnswer($answerValue);
             return $this->persistEventInvitation();
-            //}
         }
         return false;
     }
