@@ -163,8 +163,8 @@ event:
       label: Invitation only
       placeholder: Invitation only
       help: "Only friends who received an invitation can yziplan. If non-checked, you can give the event URL to people you want to invite."
-      text.true: An invitation is required to participate (private event)
-      text.false: Makes the event accessible to all persons receiving the link
+      text.true: Only guests invited by email can participate to the event
+      text.false: Everyone with the event link can participate to the event
     public_invitation:
       title: By giving them the link below
       label: Activate invitations via the event link
@@ -525,11 +525,6 @@ module:
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline
-    guestsCanInvite:
-      label: Allow participants to invite
-      placeholder: Allow participants to invite
-      text.true: Your friends can invite
-      text.false: Your friends can not invite
     invitationRule:
       label: Choose who can participate
     moduleInvitationSelected:

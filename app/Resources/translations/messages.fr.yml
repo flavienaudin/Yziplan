@@ -163,8 +163,8 @@ event:
       label: Seulement sur invitation
       placeholder: Seulement sur invitation
       help: "Seuls les amis ayant reçu une invitation par e-mail pourront colaborer. Si non coché, vous pouvez transmettre le lien de l'évément pour inviter."
-      text.true: Seuls les invités peuvent participer (événement privé)
-      text.false: Tout le monde peut participer (événement public)
+      text.true: Seuls les invités par email peuvent participer
+      text.false: Toutes les personnes en posséssion du lien peuvent participer à l'événement
     public_invitation:
       title: En leur transmettant le lien ci-dessous
       label: Activer les invitations via le lien de l'événement
@@ -524,11 +524,6 @@ module:
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse
-    guestsCanInvite:
-      label: Permette aux participants d'inviter
-      placeholder: Permette aux participants d'inviter
-      text.true: Vos amis peuvent inviter
-      text.false: Vos amis ne peuvent pas inviter
     invitationRule:
       label: Choisissez qui peut participer
     moduleInvitationSelected:

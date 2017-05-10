@@ -608,14 +608,23 @@ class EventController extends Controller
         if ($eventManager->setEventParameter($request->request->all(), $event)) {
             $parameter = $request->get('parameter');
             if ($request->isXmlHttpRequest()) {
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.success.message.edition');
+                $data = array();
                 if ($parameter === "guestsCanInvite") {
                     if ($event->isGuestsCanInvite()) {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.form.guestsCanInvite.text.true');
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestsCanInviteParameterLink'] =
                             '<i class="zmdi zmdi-check c-green"></i> ' . $this->get('translator')->trans("event.form.guestsCanInvite.text.true");
                     } else {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.form.guestsCanInvite.text.false');
                         $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#setGuestsCanInviteParameterLink'] =
                             '<i class="zmdi zmdi-close c-red"></i> ' . $this->get('translator')->trans("event.form.guestsCanInvite.text.false");
+                    }
+                }
+                if ($parameter === "invitationOnly") {
+                    if ($event->isInvitationOnly()) {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.form.invitationOnly.text.true');
+                    } else {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans('event.form.invitationOnly.text.false');
                     }
                 }
                 return new AppJsonResponse($data, Response::HTTP_OK);
