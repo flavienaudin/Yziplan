@@ -21,7 +21,7 @@
         {{ form_row(pollProposalForm.valString, {
             'label':'pollmodule.modal.pollproposal.form.name.label',
             'widget_options':{'label_icon':'zmdi zmdi-flare', 'fgline':true, 'fgfloat':true}
-        }) }}<br>
+        }) }}
     {% endif %}
     {% if pollProposalForm.valGooglePlaceId is defined %}
         {{ form_row(pollProposalForm.valGooglePlaceId) }}
@@ -118,7 +118,7 @@
     {{ form_rest(pollProposalForm) }}
 </div>
 
-<div class="pull-right">
+<div class="pull-right m-t-15">
     <button type="button" class="btn btn-flat" data-dismiss="modal">{{ "global.button.cancel"|trans }}</button>
     <button type="submit" class="btn btn-primary">{{ "global.button.add"|trans }}</button>
 </div>

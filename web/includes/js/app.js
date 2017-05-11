@@ -555,7 +555,7 @@ function initPollProposalWhereElements(selectorFieldsPlaceName, selectorPlaceId)
         var placeNameInput = $(this);
         var autocomplete = new google.maps.places.Autocomplete(placeNameInput[0]);
         google.maps.event.addListener(autocomplete, 'place_changed', function () {
-            var inputHidden = placeNameInput.closest('.form-group').next(selectorPlaceId);
+            var inputHidden = placeNameInput.closest('.form-group, .input-group').next(selectorPlaceId);
             inputHidden.val(autocomplete.getPlace().place_id);
         });
         autocompletes.push(autocomplete);
