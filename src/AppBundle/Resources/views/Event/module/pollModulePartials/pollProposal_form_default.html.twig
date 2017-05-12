@@ -27,6 +27,7 @@
         {{ form_row(pollProposalForm.valGooglePlaceId) }}
     {% endif %}
     {% if pollProposalForm.valText is defined %}
+        <br>
         {{ form_row(pollProposalForm.valText, {
             'label':'pollmodule.modal.pollproposal.form.description.label',
             'label_attr':{'class':'sr-only'},
