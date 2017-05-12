@@ -18,7 +18,7 @@ use Trello\Manager;
 class RetourUtilisateurManager
 {
     /** Nom de la liste de cartes TRELLO où sont enregitrées les cartes  */
-    const CARDS_LIST_NAME = "Suggestions/Bugs";
+    const CARDS_LIST_NAME = "Retours utilisateur";
     const CARDS_BOARD_ID = "MY1WgL9v";
 
     /** @var AppMailer */

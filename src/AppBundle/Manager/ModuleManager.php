@@ -17,11 +17,13 @@ use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Module\ModuleType;
 use AppBundle\Security\ModuleVoter;
+use AppBundle\Utils\enum\EventInvitationStatus;
+use AppBundle\Utils\enum\InvitationRule;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\ModuleType as EnumModuleType;
 use AppBundle\Utils\enum\PollModuleType;
 use AppBundle\Utils\enum\PollModuleVotingType;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -65,12 +67,15 @@ class ModuleManager
     /** @var TranslatorInterface $translator */
     private $translator;
 
+    /** @var NotificationManager */
+    private $notificationManager;
+
     /** @var Module Le module en cours de traitement */
     private $module;
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory,
                                 GenerateursToken $generateurToken, EngineInterface $templating, ModuleInvitationManager $moduleInvitationManager, PollProposalManager $pollProposalManager,
-                                DiscussionManager $discussionManager, TranslatorInterface $translator)
+                                DiscussionManager $discussionManager, TranslatorInterface $translator, NotificationManager $notificationManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -82,6 +87,7 @@ class ModuleManager
         $this->discussionManager = $discussionManager;
         $this->pollProposalManager = $pollProposalManager;
         $this->translator = $translator;
+        $this->notificationManager = $notificationManager;
     }
 
     /**
@@ -123,10 +129,11 @@ class ModuleManager
         $this->module->setStatus(ModuleStatus::IN_CREATION);
         $this->module->setToken($this->generateursToken->random(GenerateursToken::TOKEN_LONGUEUR));
 
-        $this->initializePollModule($type, $subtype);
+        $this->initializeSubModule($type, $subtype);
 
         $moduleInvitationCreator = $this->moduleInvitationManager->initializeModuleInvitation($this->module, $creatorEventInvitation, true);
         $moduleInvitationCreator->setCreator(true);
+        $moduleInvitationCreator->setStatus(ModuleInvitationStatus::INVITED);
         $event->addModule($this->module);
         return $this->module;
     }
@@ -136,10 +143,10 @@ class ModuleManager
      * Create a module and set required data.
      * @param $type
      * @param $subtype
-     * @param EventInvitation $creatorEventInvitation The user's eventInvitation to set the module creator
+     * @param $module Module (optionel) le module concerné
      * @return Module The module added to the event
      */
-    public function initializePollModule($type, $subtype, $module = null)
+    public function initializeSubModule($type, $subtype, $module = null)
     {
         if ($module != null) {
             $this->module = $module;
@@ -149,36 +156,67 @@ class ModuleManager
             $pollModule = new PollModule();
             $pollModule->setVotingType(PollModuleVotingType::YES_NO_MAYBE);
 
-            $pollElements = new ArrayCollection();
-
             if ($subtype == PollModuleType::WHEN) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.when"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setType(PollModuleType::WHEN);
             } elseif ($subtype == PollModuleType::WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.what"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setType(PollModuleType::WHAT);
             } elseif ($subtype == PollModuleType::WHERE) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.where"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setType(PollModuleType::WHERE);
             } elseif ($subtype == PollModuleType::WHO_BRINGS_WHAT) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.whobringswhat"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setVotingType(PollModuleVotingType::AMOUNT);
                 $pollModule->setType(PollModuleType::WHO_BRINGS_WHAT);
             } elseif ($subtype == PollModuleType::ACTIVITY) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.activity"));
-                $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
                 $pollModule->setVotingType(PollModuleVotingType::RANKING);
                 $pollModule->setType(PollModuleType::ACTIVITY);
             }
-            $pollModule->addPollElements($pollElements);
-
             $this->module->setPollModule($pollModule);
         }
         return $this->module;
+    }
+
+    /**
+     * @param EventInvitation $modulePublisherEventInvitation Le ModuleInvitation du publieur
+     * @param Module|null $module Le module concerné
+     * @param bool $generateNotifications Si true Alors les notifications sont générées
+     * @return bool true si l'opération s'est bien déroulé, false sinon
+     */
+    public function publishModule(EventInvitation $modulePublisherEventInvitation, Module $module = null, $generateNotifications = true)
+    {
+        if ($module != null) {
+            $this->module = $module;
+        }
+        if ($this->module != null) {
+            $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
+            if ($this->module->getInvitationRule() == InvitationRule::EVERYONE) {
+                // Seul le cas InvitationRule::EVERYONE est traité car dans les autres cas, c'est lors du paramétrage des ModuleInvitation que le statut est renseigné
+                /** @var ModuleInvitation $moduleInvitation */
+                foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
+                    if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::CANCELLED
+                        && $moduleInvitation->getStatus() != ModuleInvitationStatus::EXCLUDED
+                    ) {
+                        // EventInvitation annulée
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+                        // excluded reste excluded
+                    } else {
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+                    }
+                }
+            }
+            $this->entityManager->persist($this->module);
+            $this->entityManager->flush();
+
+            if ($generateNotifications) {
+                // Création d'un notification pour chaque invité
+                $this->notificationManager->createAddModuleNotifications($module, $modulePublisherEventInvitation);
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -211,8 +249,8 @@ class ModuleManager
             $duplicatedModule->setOrderIndex($originalModule->getOrderIndex());
             $duplicatedModule->setStatus(ModuleStatus::IN_ORGANIZATION);
             $duplicatedModule->setResponseDeadline($originalModule->getResponseDeadline());
-            $duplicatedModule->setInvitationOnly($originalModule->isInvitationOnly());
             $duplicatedModule->setGuestsCanInvite($originalModule->isGuestsCanInvite());
+            $duplicatedModule->setInvitationRule($originalModule->getInvitationRule());
 
             if ($originalModule->getPaymentModule() != null) {
                 // TODO implementer la duplication du PaymentModule
@@ -222,6 +260,7 @@ class ModuleManager
                 $duplicatedPollModule = new PollModule();
                 $duplicatedPollModule->setVotingType($originalPollModule->getVotingType());
                 $duplicatedPollModule->setType($originalPollModule->getType());
+                $duplicatedPollModule->setGuestsCanAddProposal($originalPollModule->isGuestsCanAddProposal());
 
                 /** @var PollProposal $originalPollProposal */
                 foreach ($originalPollModule->getPollProposals() as $originalPollProposal) {
@@ -229,7 +268,7 @@ class ModuleManager
                         $duplicatedPollProposal = new PollProposal();
                         $duplicatedPollProposal->setDeleted(false);
                         $duplicatedPollProposal->setDescription($originalPollProposal->getDescription());
-                        $duplicatedPollModule->addPollProposal($duplicatedPollProposal);
+
                         $duplicatedPollProposal->setValString($originalPollProposal->getValString());
                         $duplicatedPollProposal->setValText($originalPollProposal->getValText());
                         $duplicatedPollProposal->setValInteger($originalPollProposal->getValInteger());
@@ -239,6 +278,8 @@ class ModuleManager
                         $duplicatedPollProposal->setEndDate($originalPollProposal->hasEndDate());
                         $duplicatedPollProposal->setEndTime($originalPollProposal->hasEndTime());
                         $duplicatedPollProposal->setValGooglePlaceId($originalPollProposal->getValGooglePlaceId());
+
+                        $duplicatedPollModule->addPollProposal($duplicatedPollProposal);
 
                         if ($originalPollProposal->getPictureFile() != null) {
                             $originalFile = $originalPollProposal->getPictureFile();
@@ -280,13 +321,30 @@ class ModuleManager
     {
         $this->module = $moduleForm->getData();
 
-        if ($this->module->getStatus() == ModuleStatus::IN_CREATION && !empty($this->module->getName())) {
-            $this->module->setStatus(ModuleStatus::IN_ORGANIZATION);
-        } elseif ($this->module->getStatus() == ModuleStatus::IN_ORGANIZATION && empty($this->module->getName())) {
-            $this->module->setStatus(ModuleStatus::IN_CREATION);
+        $moduleInvitationsSelection = $moduleForm->get('moduleInvitationSelected')->getData();
+        /** @var ModuleInvitation $moduleInvitation */
+        foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
+            if ($moduleInvitation->isCreator()) {
+                $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+            } elseif ($this->module->getInvitationRule() == InvitationRule::EVERYONE) {
+                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::CANCELLED) {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+                } else {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+                }
+            } elseif ($this->module->getInvitationRule() == InvitationRule::NONE_EXCEPT) {
+                if ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::CANCELLED) {
+                    $moduleInvitation->setStatus(ModuleInvitationStatus::NOT_INVITED);
+                } else {
+                    if (in_array($moduleInvitation, $moduleInvitationsSelection)) {
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::INVITED);
+                    } else {
+                        $moduleInvitation->setStatus(ModuleInvitationStatus::EXCLUDED);
+                    }
+                }
+            }
+            $this->entityManager->persist($moduleInvitation);
         }
-
-        // TODO faire des vérifications/traitement sur les données
 
         $this->entityManager->persist($this->module);
         $this->entityManager->flush();

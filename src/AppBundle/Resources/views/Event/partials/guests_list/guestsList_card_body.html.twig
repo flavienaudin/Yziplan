@@ -5,13 +5,13 @@
 
 <div id="guests_list">
     {% set eventInvitation_answer_yes = event.eventInvitationByAnswer([constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES')]) %}
-    {% set eventInvitation_answer_dont_know = event.eventInvitationByAnswer([constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')]) %}
+    {% set eventInvitation_answer_dont_know_and_null = event.eventInvitationByAnswer([constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')], true) %}
     {% set eventInvitation_answer_no = event.eventInvitationByAnswer([constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO')]) %}
 
     {{ include('@App/Event/partials/guests_list/guestsList_modal.html.twig', {
         "userEventInvitation":userEventInvitation,
         "eventInvitation_answer_yes":eventInvitation_answer_yes,
-        "eventInvitation_answer_dont_know":eventInvitation_answer_dont_know,
+        "eventInvitation_answer_dont_know_and_null":eventInvitation_answer_dont_know_and_null,
         "eventInvitation_answer_no": eventInvitation_answer_no
     }) }}
 
@@ -30,13 +30,14 @@
         </div>
         <div class="list-group-item visible-lg">
             <a href="#guestsList_modal" class="btn btn-link c-blue" data-toggle="modal">{{ "invitations_list.display.list.dont_know"|trans
-                ({"%number%":eventInvitation_answer_dont_know|length}) }}</a>
-            {% if eventInvitation_answer_dont_know|length>0 %}
+                ({"%number%":eventInvitation_answer_dont_know_and_null|length}) }}</a>
+            {% if eventInvitation_answer_dont_know_and_null|length>0 %}
                 <ul class="list-inline eventInvitations_list">
                     {{ include('@App/Event/partials/guests_list/eventInvitations_list.html.twig', {
                         'userEventInvitation' : userEventInvitation,
-                        'firstEventInvitation' : (userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')?userEventInvitation:null),
-                        'eventInvitations' : eventInvitation_answer_dont_know
+                        'firstEventInvitation' : (userEventInvitation.answer is null or userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')
+                        ?userEventInvitation:null),
+                        'eventInvitations' : eventInvitation_answer_dont_know_and_null
                     }) }}
                 </ul>
             {% endif %}
@@ -55,14 +56,17 @@
         </div>
         <div class="list-group-item hidden-lg p-b-10">
             <a href="#guestsList_modal" data-toggle="modal" class="btn btn-link c-blue">
-                {{ "invitations_list.display.list.dont_know"|trans({"%number%":eventInvitation_answer_dont_know|length}) }} /
+                {{ "invitations_list.display.list.dont_know"|trans({"%number%":eventInvitation_answer_dont_know_and_null|length}) }} /
                 {{ "invitations_list.display.list.no"|trans({"%number%":eventInvitation_answer_no|length}) }}
             </a>
         </div>
     </div>
     <script>
         $(document).ready(function () {
-            $('.eventInvitations_list').find('li a.cancelInvitation').each(function () {
+            var $eventInvitationsList = $('.eventInvitations_list');
+
+            {# Menu gestion des invitations sur les avatar : Annuler l'invitation #}
+            $eventInvitationsList.find('li a.cancelInvitation').each(function () {
                 var $link = $(this);
                 $link.on('click', function (e) {
                     e.preventDefault();
@@ -81,12 +85,23 @@
                         confirmButtonText: '{{ "global.button.delete"|trans }}',
                         showLoaderOnConfirm: true
                     }).then(function () {
-                        ajaxRequest($link, null, e, function (responseJSON, textStatus, jqXHR) {
-                            $($link).closest('li').remove();
+                        var data = {'wizardMode': 0};
+                        ajaxRequest($link, data, e, function (responseJSON, textStatus, jqXHR) {
+                            var guestid = $link.data('guestid');
+                            if (typeof guestid !== "undefined" && $link.data('guestid') !== "") {
+                                $('.eventInvitations_list > li.guestid-' + guestid).remove();
+                            } else {
+                                $($link).closest('.eventInvitations_list > li').remove();
+                            }
                         }, null, null);
                     });
                 });
             });
+
+            {# Menu gestion des invitations sur les avatar : Modifier la réponse d'une invitation #}
+            initializeModifyGuestAnswerLinks($eventInvitationsList, 0);
+            {# Menu gestion des invitations sur les avatar : Désigner ou révoquer les administrateurs #}
+            initializeDesignateAsAdministrorLinks($eventInvitationsList, 0);
 
             LetterAvatar.transform();
         });

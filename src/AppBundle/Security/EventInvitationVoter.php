@@ -13,7 +13,6 @@ use AppBundle\Entity\Event\EventInvitation;
 use ATUserBundle\Entity\AccountUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 
 class EventInvitationVoter extends Voter
@@ -45,13 +44,13 @@ class EventInvitationVoter extends Voter
         if (($attribute == self::EDIT || $attribute == self::ARCHIVE) && !$subject instanceof EventInvitation) {
             return false;
         }
-        if ( ($attribute == self::CANCEL || $attribute == self::MODIFY_ANSWER) && (!is_array($subject) || count($subject) != 2 || !($subject[0] instanceof EventInvitation) || !($subject[1] instanceof
-                    EventInvitation))) {
+        if (($attribute == self::CANCEL || $attribute == self::MODIFY_ANSWER) && (!is_array($subject) || count($subject) != 2 || !($subject[0] instanceof EventInvitation) || !($subject[1]
+                    instanceof EventInvitation))
+        ) {
             return false;
         }
         return true;
     }
-
 
     /**
      * @inheritdoc
@@ -75,7 +74,7 @@ class EventInvitationVoter extends Voter
                 return $event->isGuestsCanInvite();
             case self::EDIT:
                 /** @var EventInvitation $eventInvitation */
-                $eventInvitation = $subject; // $subject must be a Invitation instance, thanks to the supports method
+                $eventInvitation = $subject; // $subject must be an EventInvitation instance, thanks to the supports method
                 if ($eventInvitation->getApplicationUser() == null) {
                     return true;
                 } else if ($eventInvitation->getApplicationUser()->getAccountUser() == null) {
@@ -91,18 +90,18 @@ class EventInvitationVoter extends Voter
                 $userEventInvitation = $subject[0]; // $subject[0] must be an EventInvitation instance, thanks to the supports method
                 /** @var EventInvitation $userEventInvitationToCancel */
                 $userEventInvitationToCancel = $subject[1]; // $subject[0] must be an EventInvitation instance, thanks to the supports method
-                if($userEventInvitationToCancel->isCreator()){
+                if ($userEventInvitationToCancel->isCreator()) {
                     return false;
                 }
-                if($userEventInvitationToCancel->isAdministrator() && !$userEventInvitation->isCreator()){
+                if ($userEventInvitationToCancel->isAdministrator() && !$userEventInvitation->isCreator()) {
                     return false;
                 }
-                if($userEventInvitation->isCreator() || $userEventInvitation->isAdministrator()){
+                if ($userEventInvitation->isCreator() || $userEventInvitation->isAdministrator()) {
                     return true;
                 }
                 return false;
             case self::ARCHIVE:
-                if($user instanceof AccountUser) {
+                if ($user instanceof AccountUser) {
                     /** @var EventInvitation $eventInvitation */
                     $eventInvitation = $subject; // $subject must be a Invitation instance, thanks to the supports method
                     return $eventInvitation->getApplicationUser() == $user->getApplicationUser();

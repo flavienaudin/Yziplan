@@ -21,6 +21,7 @@ class EventVoter extends Voter
     const VALIDATE = 'event.validate';
     const ARCHIVE = 'event.archive';
     const CANCEL = 'event.cancel';
+    const DESIGNATE_ADMINISTRATOR = 'event.designateAdministrator';
 
     /**
      * @param string $attribute Cf. constants in EventVoter
@@ -29,7 +30,7 @@ class EventVoter extends Voter
      */
     protected function supports($attribute, $subject)
     {
-        if (!in_array($attribute, array(self::EDIT, self::ADD_EVENT_MODULE, self::VALIDATE, self::ARCHIVE, self::CANCEL))) {
+        if (!in_array($attribute, array(self::EDIT, self::ADD_EVENT_MODULE, self::VALIDATE, self::ARCHIVE, self::CANCEL, self::DESIGNATE_ADMINISTRATOR))) {
             return false;
         }
         if (!$subject instanceof EventInvitation) {
@@ -56,6 +57,7 @@ class EventVoter extends Voter
                 }
                 return $eventInvitation->isCreator() || $eventInvitation->isAdministrator();
                 break;
+            case self::DESIGNATE_ADMINISTRATOR:
             case self::CANCEL:
             case self::ARCHIVE:
                 return $eventInvitation->isCreator();

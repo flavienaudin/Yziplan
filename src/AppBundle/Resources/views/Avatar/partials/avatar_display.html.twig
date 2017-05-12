@@ -17,8 +17,10 @@
 
 <span class="d-block w-100 h-100">
     {% if avatar is not null %}
-        <img class="yzi-avatar-img" src="{{ asset('uploads/user/avatar/'~avatar) }}">
+        <img class="yzi-avatar-img{{ eventInvitation.answer is null?" grayscale-1" }}" src="{{ asset('uploads/user/avatar/'~avatar) }}"
+             {% if userEventInvitation ==  eventInvitation %}userAvatar{% endif %}>
     {% else %}
-        <img class="yzi-avatar-img hidden-email" avatar="{{ eventInvitation.displayableName(true, false) }}" {% if userEventInvitation == eventInvitation %}userAvatar{% endif %}>
+        <img class="yzi-avatar-img{{ eventInvitation.answer is null?" grayscale-1" }}" avatar="{{ eventInvitation.displayableName(true,false)|split("@")|first }}"
+             {% if userEventInvitation ==  eventInvitation %}userAvatar{% endif %}>
     {% endif %}
 </span>

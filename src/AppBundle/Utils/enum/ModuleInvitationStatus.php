@@ -11,10 +11,13 @@ namespace AppBundle\Utils\enum;
 
 class ModuleInvitationStatus extends AbstractEnumType
 {
-    const AWAITING_ANSWER="moduleinvitationstatus.awaiting_answer";
-    const VALID = "moduleinvitationstatus.valid";
-    const CANCELLED = "moduleinvitationstatus.cancelled";
+    /** L'invité participe au module */
+    const INVITED = "moduleinvitationstatus.invited";
+    /** L'invité ne participe pas "encore" au module (exemple : valeur par défault avant publication du module */
+    const NOT_INVITED = "moduleinvitationstatus.not_invited";
+    /** L'invité est exclus de participer au module */
+    const EXCLUDED = "moduleinvitationstatus.excluded";
 
     protected $name = 'enum_moduleinvitation_status';
-    protected $values = array(self::AWAITING_ANSWER, self::VALID, self::CANCELLED);
+    protected $values = array(self::INVITED, self::NOT_INVITED, self::EXCLUDED);
 }

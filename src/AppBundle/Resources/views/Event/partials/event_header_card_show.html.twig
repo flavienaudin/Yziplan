@@ -11,7 +11,7 @@
             {% endfor %}
             {% if organizerNames is not empty %}
                 <div class="pull-right"><i>
-                        <small>{{ "event.header.organised_by"|trans({"%organizer%":organizerNames}) }}</small>
+                        <small>{{ "event.header.organized_by"|trans({"%organizer%":organizerNames}) }}</small>
                     </i></div>
             {% endif %}
             <dl>
@@ -141,19 +141,6 @@
                 </ul>
             </div>
         {% endif %}
-
-        {# TODO: decommenter quand la possibilité d'invité sera gérée #}
-        {#{% if userEventInvitation.organizer %}
-            {% if userEventInvitation.event.guestsCanInvite %}
-                <div class="text-success">
-                    <i class="zmdi zmdi-check"></i> {{ "event.form.guestsCanInvite.text.true"|trans }}
-                </div>
-            {% else %}
-                <div class="text-danger">
-                    <i class="zmdi zmdi-close-circle"></i> {{ "event.form.guestsCanInvite.text.false"|trans }}
-                </div>
-            {% endif %}
-        {% endif %}#}
     </div>
     {% if userEventInvitation.event.whereGooglePlaceId is not null %}
         <div class="col-xs-12 col-sm-4">

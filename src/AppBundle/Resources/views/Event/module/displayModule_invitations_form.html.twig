@@ -1,0 +1,58 @@
+{# Données d'entrée :
+- module (Module) Le module à afficher
+- moduleInvitationsForm (Form[null) Le formulaire de gestion des modules invitations : Si Module.invitationRuls == NONE_EXCEPT
+#}
+
+<div id="moduleInvitations_form_{{ module.token }}">
+    <div class="row">
+        <div class="col-sm-12">
+            {{ form_start(moduleInvitationsForm, {'action':path('displayEvent', {'token':module.event.token}), 'attr':{'id':"moduleInvitationsForm-"~module.token} }) }}
+
+            <div class="m-t-15">
+                {{ form_row(moduleInvitationsForm.invitationRule, {
+                    'label':'module.form.invitationRule.label',
+                    'label_attr':{'class':'sr-only radio-inline'},
+                    'widget_options':{'label_icon':'zmdi zmdi-accounts-list'}
+                }) }}
+            </div>
+
+            <div id="moduleInvitations_selection_{{ module.token }}" class="m-t-15" {{ module.invitationRule == constant('AppBundle\\Utils\\enum\\InvitationRule::EVERYONE')?'style="display: none"' }}>
+                {{ form_row(moduleInvitationsForm.moduleInvitationSelected, {
+                    'label':'module.form.moduleInvitationSelected.label',
+                    'widget_options':{}
+                }) }}
+            </div>
+
+            <div class="hidden">
+                {{ form_rest(moduleInvitationsForm) }}
+            </div>
+
+            <div class="pull-right m-r-10 m-t-10">
+                <button type="button" class="btn btn-flat waves-effect" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
+                <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
+            </div>
+
+            {{ form_end(moduleInvitationsForm) }}
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('input[name="{{ moduleInvitationsForm.invitationRule.vars.full_name }}"]').on('change', function (e) {
+                $('#moduleInvitations_selection_{{ module.token }}').toggle();
+            });
+
+            $('form#moduleInvitationsForm-{{ module.token }}').on("submit", function (e) {
+                e.preventDefault();
+                var form = $(this);
+                if (!eventInvitationValid && askGuestName !== undefined) {
+                    $('#moduleEdit_modal_{{ module.token }}').modal('hide');
+                    askGuestName(e, submitModuleInvitationsForm, [form, e, "{{ module.token }}"]);
+                } else {
+                    submitModuleInvitationsForm([form, e, "{{ module.token }}"]);
+                }
+            });
+        });
+    </script>
+</div>
+

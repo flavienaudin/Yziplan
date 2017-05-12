@@ -56,24 +56,6 @@
         'widget_options':{'fgline':true, 'displayInRow' : true}
     }) }}#}
 
-    {# TODO : desactivés pour simplifier l'interface
-    <div class="row">
-        <div class="col-xs-12 col-md-6">
-            {{ form_row(eventForm.invitationOnly, {
-                'label':'event.form.invitationOnly.label',
-                'attr':{'class':'md-toogle-switch'},
-                'help': 'event.form.invitationOnly.help' |trans
-            }) }}
-        </div>
-        <div class="col-xs-12 col-md-6">
-            {{ form_row(eventForm.guestsCanInvite, {
-                'label':'event.form.guestsCanInvite.label',
-                'attr':{'class':'md-toogle-switch'},
-                'help': 'event.form.guestsCanInvite.help' |trans
-            }) }}
-        </div>
-    </div>#}
-
     <div class="p-l-20">
         {{ form_row(eventForm.activityProvider, {
             'label':'event.form.activity_provider.label',
@@ -201,6 +183,8 @@
                 <div class="visible-xs visible-sm m-b-10"></div>
             </div>
         {% endblock action_buttons %}
+    </div>
+    <div class="hidden">
         {{ form_rest(eventForm) }}
     </div>
     {{ form_end(eventForm) }}

@@ -12,19 +12,14 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollProposal;
-use AppBundle\Manager\EventManager;
-use AppBundle\Manager\PollProposalManager;
+use AppBundle\Security\ModuleVoter;
 use AppBundle\Security\PollProposalVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
-use AppBundle\Utils\enum\ModuleInvitationStatus;
-use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\Response\AppJsonResponse;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -118,7 +113,7 @@ class PollModuleController extends Controller
                 if ($request->server->get('HTTP_REFERER') != $this->generateUrl('wizardNewEventStep2', array('token' => $moduleInvitation->getEventInvitation()->getEvent()->getToken()),
                         UrlGenerator::ABSOLUTE_URL) &&
                     ($moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_VALIDATION
-                    || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
+                        || $moduleInvitation->getEventInvitation()->getStatus() == EventInvitationStatus::AWAITING_ANSWER)
                 ) {
                     // Vérification serveur de la validité de l'invitation
                     $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
@@ -136,7 +131,7 @@ class PollModuleController extends Controller
             }
         } else {
             if ($request->isXmlHttpRequest()) {
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.unauthorized_access");
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("module.message.error.unauthorized_access");
                 return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
             } else {
                 $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.unauthorized_access'));
@@ -151,18 +146,20 @@ class PollModuleController extends Controller
      */
     public function displayResultTableAction(Module $module, Request $request)
     {
-        $eventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($module->getEvent(), false, false, $this->getUser());
         if ($request->isXmlHttpRequest()) {
-            $userModuleInvitation = $eventInvitation->getModuleInvitationForModule($module);
-            if ($eventInvitation != null && $userModuleInvitation != null && $userModuleInvitation->getStatus() != ModuleInvitationStatus::CANCELLED) {
-                $moduleManager = $this->get("at.manager.module");
-                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollModuleDisplayAllResult_' . $module->getToken() . '_container'] =
-                    $moduleManager->displayPollModuleResultTable($module);
-                return new AppJsonResponse($data, Response::HTTP_OK);
-            } else {
-                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("event.error.message.unauthorized_access");
-                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+            $eventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($module->getEvent(), false, false, $this->getUser());
+            if ($eventInvitation != null) {
+                $userModuleInvitation = $eventInvitation->getModuleInvitationForModule($module);
+                if ($this->isGranted(ModuleVoter::DISPLAY, [$module, $userModuleInvitation])) {
+                    $moduleManager = $this->get("at.manager.module");
+                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#pollModuleDisplayAllResult_' . $module->getToken() . '_container'] =
+                        $moduleManager->displayPollModuleResultTable($module);
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                }
             }
+            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("module.message.error.unauthorized_access");
+            return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans('global.error.not_ajax_request'));
             return $this->redirectToRoute("home");

@@ -1,7 +1,7 @@
 {# Données d'entrée:
 - userEventInvitation (EventInvitation) L'invitation de l'utilisateur "connecté"
 - eventInvitation_answer_yes (array) Liste des invitations ayant répondu YES
-- eventInvitation_answer_dont_know (array) Liste des invitations ayant répondu DONT_KNOW/MAYBE
+- eventInvitation_answer_dont_know_and_null (array) Liste des invitations ayant répondu DONT_KNOW/MAYBE
 - eventInvitation_answer_no (array) Liste des invitations ayant répondu NO
 #}
 
@@ -27,13 +27,14 @@
                         {% endif %}
                     </div>
                     <div class="list-group-item">
-                        <small>{{ "invitations_list.display.list.dont_know"|trans({"%number%":eventInvitation_answer_dont_know|length}) }}</small>
-                        {% if eventInvitation_answer_dont_know|length>0 %}
+                        <small>{{ "invitations_list.display.list.dont_know"|trans({"%number%":eventInvitation_answer_dont_know_and_null|length}) }}</small>
+                        {% if eventInvitation_answer_dont_know_and_null|length>0 %}
                             <ul class="list-inline eventInvitations_list">
                                 {{ include('@App/Event/partials/guests_list/eventInvitations_list.html.twig', {
                                     'userEventInvitation' : userEventInvitation,
-                                    'firstEventInvitation' : (userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')?userEventInvitation:null),
-                                    'eventInvitations' : eventInvitation_answer_dont_know
+                                    'firstEventInvitation' : (userEventInvitation.answer is null
+                                    or userEventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') ? userEventInvitation:null),
+                                    'eventInvitations' : eventInvitation_answer_dont_know_and_null
                                 }) }}
                             </ul>
                         {% endif %}

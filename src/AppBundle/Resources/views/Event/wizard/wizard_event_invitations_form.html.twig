@@ -8,3 +8,7 @@
 {% block form_start %}
     {{ form_start(invitationsForm , {'attr':{'id': 'eventInvitations'}, 'action':path('wizardNewEventStep3',{'token':event.token})}) }}
 {% endblock form_start %}
+
+{% block action_buttons %}
+    {{ parent() }}
+{% endblock action_buttons %}

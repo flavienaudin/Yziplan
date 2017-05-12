@@ -10,6 +10,7 @@ namespace AppBundle\Security;
 
 
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use ATUserBundle\Entity\AccountUser;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -43,10 +44,12 @@ class ModuleInvitationVoter extends Voter
 
         switch ($attribute) {
             case self::EDIT:
-                if ($moduleInvitation->getEventInvitation()->getApplicationUser() == null || $moduleInvitation->getEventInvitation()->getApplicationUser()->getAccountUser() == null) {
-                    return true;
-                } elseif ($moduleInvitation->getEventInvitation()->getApplicationUser()->getAccountUser() == $user) {
-                    return true;
+                if ($moduleInvitation->getStatus() == ModuleInvitationStatus::INVITED) {
+                    if ($moduleInvitation->getEventInvitation()->getApplicationUser() == null || $moduleInvitation->getEventInvitation()->getApplicationUser()->getAccountUser() == null) {
+                        return true;
+                    } elseif ($moduleInvitation->getEventInvitation()->getApplicationUser()->getAccountUser() === $user) {
+                        return true;
+                    }
                 }
                 return false;
                 break;

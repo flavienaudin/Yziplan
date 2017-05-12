@@ -28,7 +28,7 @@ services:
 
   at.manager.module:
     class: AppBundle\Manager\ModuleManager
-    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation','@at.manager.pollproposal','@at.manager.discussion','@translator']
+    arguments: ['@doctrine.orm.entity_manager','@security.token_storage','@security.authorization_checker','@form.factory','@at.service.gentoken','@templating', '@at.manager.module_invitation','@at.manager.pollproposal','@at.manager.discussion','@translator','@at.manager.notification']
 
   at.manager.event_invitation:
     class: AppBundle\Manager\EventInvitationManager
@@ -114,11 +114,18 @@ services:
       - { name: security.voter }
 
 # FormTypes
-  at.form_type.invitation:
+  at.form_type.invitations:
     class: AppBundle\Form\Event\InvitationsType
     arguments: ['@security.authorization_checker', '@security.token_storage', '@validator', '@translator']
     tags:
     - { name: form.type }
+
+  at.form_type.module:
+      class: AppBundle\Form\Module\ModuleType
+      arguments: ['@translator']
+      tags:
+      - { name: form.type }
+
 
 # Event Subscribers
   at.event_subscriber.kernel_events.:

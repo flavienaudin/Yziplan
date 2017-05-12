@@ -667,7 +667,8 @@ hr.fc-divider {
     display: none;
 }
 
-.bootgrid-header .actions .btn-group .zmdi {
+.bootgrid-header .actions .btn-group .zmdi,
+.bootgrid-header .actions .btn-group .fa {
     line-height: 100%;
     font-size: 18px;
     vertical-align: top;
@@ -678,7 +679,8 @@ hr.fc-divider {
     transition-duration: 250ms;
 }
 
-.bootgrid-header .actions .btn-group.open .zmdi {
+.bootgrid-header .actions .btn-group.open .zmdi,
+.bootgrid-header .actions .btn-group.open .fa {
     -webkit-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
     -o-transform: rotate(90deg);
@@ -734,7 +736,9 @@ hr.fc-divider {
 }
 
 .command-edit .zmdi,
-.command-delete .zmdi {
+.command-edit .fa,
+.command-delete .zmdi,
+.command-delete .fa {
     color: #6D6D6D;
 }
 

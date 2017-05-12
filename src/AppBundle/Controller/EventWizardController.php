@@ -194,10 +194,10 @@ class EventWizardController extends Controller
                                     'invitationsForm' => $eventInvitationsForm->createView()
                                 ));
 
-                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_HTML]['#invitations_list_card'] =
+                            $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_list_card'] =
                                 $this->renderView('@App/Event/wizard/wizard_eventInvitationList_card.html.twig', array(
                                     'userEventInvitation' => $userEventInvitation,
-                                    'eventInvitations' => $currentEvent->getEventInvitationByAnswer(array(EventInvitationAnswer::YES, EventInvitationAnswer::NO, EventInvitationAnswer::DONT_KNOW))
+                                    'eventInvitations' => $currentEvent->getEventInvitationByAnswer()
                                 ));
                             return new AppJsonResponse($data, Response::HTTP_OK);
                         } else {
@@ -206,7 +206,7 @@ class EventWizardController extends Controller
                     }
                 }
                 $templateOptions['invitationsForm'] = $eventInvitationsForm->createView();
-                $templateOptions['eventInvitations'] = $currentEvent->getEventInvitationByAnswer([EventInvitationAnswer::DONT_KNOW, EventInvitationAnswer::YES, EventInvitationAnswer::NO]);
+                $templateOptions['eventInvitations'] = $currentEvent->getEventInvitationByAnswer();
             }
 
             return $this->render("@App/Event/wizard/step_event_recapitulatif.html.twig", $templateOptions);

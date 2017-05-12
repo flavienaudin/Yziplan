@@ -12,6 +12,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Manager\EventInvitationManager;
 use AppBundle\Security\EventInvitationVoter;
+use AppBundle\Security\EventVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\FlashBagTypes;
 use AppBundle\Utils\Response\AppJsonResponse;
@@ -77,81 +78,19 @@ class EventInvitationController extends Controller
     }
 
     /**
-     * TODO Not used yet
-     * @ Route("/send/{token}", name="sendEventInvitations" )
-     * @ ParamConverter("event", class="AppBundle:Event\Event")
-     */
-    /*public function sendEventInvitationAction(Event $event, Request $request)
-    {
-        $eventInvitationManager = $this->get("at.manager.event_invitation");
-        $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($event, false, false, $this->getUser());
-        if ($userEventInvitation == null || !$userEventInvitation->isOrganizer()) {
-            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_access"));
-            return $this->redirectToRoute("home");
-        } else {
-            if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
-                // Vérification serveur de la validité de l'invitation
-                if ($request->isXmlHttpRequest()) {
-                    $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
-                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
-                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
-                } else {
-                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("eventInvitation.profile.card.guestname_required_alert.error_message.unauthorized_action"));
-                    return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
-                }
-            } else {
-                $failedRecipients = array();
-                $eventInvitationManager->sendInvitations($event->getEventInvitationEmailNotSent(), $failedRecipients);
-
-                if (count($failedRecipients) > 0) {
-                    $emails = "";
-                    foreach (array_values($failedRecipients) as $email) {
-                        if (!empty($email)) {
-                            $emails .= ", ";
-                        }
-                        $emails .= $email;
-                    }
-                    if ($request->isXmlHttpRequest()) {
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::WARNING_TYPE][] = $this->get('translator')->trans("invitations.message.error", ["%email_list%" => $emails]);
-                    } else {
-                        $this->addFlash(FlashBagTypes::WARNING_TYPE, $this->get('translator')->trans("invitations.message.error", ["%email_list%" => $emails]));
-                    }
-                } else {
-                    if ($request->isXmlHttpRequest()) {
-                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get('translator')->trans("invitations.message.success");
-                    } else {
-                        $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans("invitations.message.success"));
-                    }
-                }
-
-                if ($request->isXmlHttpRequest()) {
-                    $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#guests_list'] =
-                        $this->renderView("@App/Event/partials/guests_list/guestsList_card_body.html.twig", array(
-                            'userEventInvitation' => $userEventInvitation,
-                            'event' => $event
-                        ));
-                    return new AppJsonResponse($data, Response::HTTP_OK);
-                } else {
-                    return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
-                }
-            }
-        }
-    }*/
-
-
-    /**
-     * @Route("/modify-answer/{eventInvitTokenToModifyAnswer}/{answerValue}", name="modifyGuestEventInvitation" )
+     * @Route("/modify-answer/{eventInvitTokenToModifyAnswer}/{answerValue}", name="modifyGuestEventInvitationAnswer" )
      * @ParamConverter("eventInvitTokenToModifyAnswer", class="AppBundle:Event\EventInvitation", options={"mapping": {"eventInvitTokenToModifyAnswer":"token"}})
      */
     public function modifyGuestEventInvitationAnswerAction(EventInvitation $eventInvitTokenToModifyAnswer, $answerValue, Request $request)
     {
         $userEventInvitation = null;
         $eventInvitationManager = $this->get("at.manager.event_invitation");
+        $event = null;
         if ($eventInvitTokenToModifyAnswer != null) {
+            $event = $eventInvitTokenToModifyAnswer->getEvent();
             // Get the UserInvitation
-            $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($eventInvitTokenToModifyAnswer->getEvent(), false, false, $this->getUser());
+            $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($event, false, false, $this->getUser());
         }
-
         // Only creator/admnsitrators can cancel an EventInvitation
         if ($this->isGranted(EventInvitationVoter::MODIFY_ANSWER, [$userEventInvitation, $eventInvitTokenToModifyAnswer])) {
             if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
@@ -162,15 +101,36 @@ class EventInvitationController extends Controller
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else {
                     $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.valide_guestname_required"));
-                    return $this->redirectToRoute('displayEvent', array('token' => $userEventInvitation->getEvent()->getToken()));
+                    if ($request->get('wizardMode')) {
+                        return $this->redirectToRoute('wizardNewEventStep3', array('token' => $event->getToken()));
+                    }else{
+                        return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+                    }
                 }
             } elseif ($eventInvitationManager->modifyAnswerEventInvitation($eventInvitTokenToModifyAnswer, $answerValue)) {
                 if ($request->isXmlHttpRequest()) {
                     $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("invitations.display.modify_answer.message.success");
+                    if ($request->get('wizardMode')) {
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_list_card'] =
+                            $this->renderView("@App/Event/wizard/wizard_eventInvitationList_card.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'eventInvitations' => $event->getEventInvitationByAnswer()
+                            ));
+                    }else {
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#guests_list'] =
+                            $this->renderView("@App/Event/partials/guests_list/guestsList_card_body.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'event' => $event
+                            ));
+                    }
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("invitations.display.modify_answer.message.success"));
-                    return $this->redirectToRoute("displayEvent", array("token" => $eventInvitTokenToModifyAnswer->getEvent()->getToken()));
+                    if ($request->get('wizardMode')) {
+                        return $this->redirectToRoute('wizardNewEventStep3', array('token' => $event->getToken()));
+                    }else{
+                        return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+                    }
                 }
             }
         }
@@ -180,7 +140,94 @@ class EventInvitationController extends Controller
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_modify_answer"));
             if ($eventInvitTokenToModifyAnswer != null) {
-                return $this->redirectToRoute("displayEvent", array("token" => $eventInvitTokenToModifyAnswer->getEvent()->getToken()));
+                if ($request->get('wizardMode')) {
+                    return $this->redirectToRoute('wizardNewEventStep3', array('token' => $event->getToken()));
+                }else{
+                    return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+                }
+            } else {
+                return $this->redirectToRoute("home");
+            }
+        }
+    }
+
+    /**
+     * @Route("/designate-administrator/{eventInvitationToken}/{value}", name="designateGuestAsAdministror" )
+     * @ParamConverter("eventInvitation", class="AppBundle:Event\EventInvitation", options={"mapping": {"eventInvitationToken":"token"}})
+     */
+    public function designateGuestAsAdministratorAction(EventInvitation $eventInvitation, $value, Request $request)
+    {
+        $userEventInvitation = null;
+        $eventInvitationManager = $this->get("at.manager.event_invitation");
+        $event = null;
+        if ($eventInvitation != null) {
+            $event = $eventInvitation->getEvent();
+            // Get the UserInvitation
+            $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($event, false, false, $this->getUser());
+        }
+
+        // Only creator/admnsitrators can designate guest as administrator
+        if ($this->isGranted(EventVoter::DESIGNATE_ADMINISTRATOR, $userEventInvitation)) {
+            if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+                // Vérification serveur de la validité de l'invitation
+                if ($request->isXmlHttpRequest()) {
+                    $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                    $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                    return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+                } else {
+                    $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.valide_guestname_required"));
+                    if ($request->get('wizardMode')) {
+                        return $this->redirectToRoute('wizardNewEventStep3', array('token' => $event->getToken()));
+                    } else {
+                        return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+                    }
+                }
+            } elseif ($eventInvitationManager->designateGuestAsAdministrator($eventInvitation, $value)) {
+                if ($request->isXmlHttpRequest()) {
+                    if ($eventInvitation->isAdministrator()) {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("invitations.display.designate.administrator.message.success");
+                    } else {
+                        $data[AppJsonResponse::MESSAGES][FlashBagTypes::SUCCESS_TYPE][] = $this->get("translator")->trans("invitations.display.designate.guest.message.success");
+                    }
+                    if ($request->get('wizardMode')) {
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#invitations_list_card'] =
+                            $this->renderView("@App/Event/wizard/wizard_eventInvitationList_card.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'eventInvitations' => $event->getEventInvitationByAnswer()
+                            ));
+                    } else {
+                        $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#guests_list'] =
+                            $this->renderView("@App/Event/partials/guests_list/guestsList_card_body.html.twig", array(
+                                'userEventInvitation' => $userEventInvitation,
+                                'event' => $event
+                            ));
+                    }
+                    return new AppJsonResponse($data, Response::HTTP_OK);
+                } else {
+                    if ($eventInvitation->isAdministrator()) {
+                        $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("invitations.display.designate.administrator.message.success"));
+                    } else {
+                        $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("invitations.display.designate.guest.message.success"));
+                    }
+                    if ($request->get('wizardMode')) {
+                        return $this->redirectToRoute('wizardNewEventStep3', array('token' => $event->getToken()));
+                    } else {
+                        return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+                    }
+                }
+            }
+        }
+        if ($request->isXmlHttpRequest()) {
+            $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get("translator")->trans("eventInvitation.message.error.unauthorized_designate_administrator");
+            return new AppJsonResponse($data, Response::HTTP_UNAUTHORIZED);
+        } else {
+            $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_designate_administrator"));
+            if ($eventInvitation != null) {
+                if ($request->get('wizardMode')) {
+                    return $this->redirectToRoute('wizardNewEventStep3', array('token' => $event->getToken()));
+                } else {
+                    return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+                }
             } else {
                 return $this->redirectToRoute("home");
             }
@@ -195,9 +242,11 @@ class EventInvitationController extends Controller
     {
         $userEventInvitation = null;
         $eventInvitationManager = $this->get("at.manager.event_invitation");
+        $event = null;
         if ($eventInvitationToCancel != null) {
+            $event = $eventInvitationToCancel->getEvent();
             // Get the UserInvitation
-            $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($eventInvitationToCancel->getEvent(), false, false, $this->getUser());
+            $userEventInvitation = $eventInvitationManager->retrieveUserEventInvitation($event, false, false, $this->getUser());
         }
 
         // Only creator/admnsitrators can cancel an EventInvitation
@@ -210,7 +259,7 @@ class EventInvitationController extends Controller
                     return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
                 } else {
                     $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.valide_guestname_required"));
-                    return $this->redirectToRoute('displayEvent', array('token' => $userEventInvitation->getEvent()->getToken()));
+                    return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
                 }
             } elseif ($eventInvitationManager->cancelEventInvitation($eventInvitationToCancel)) {
                 if ($request->isXmlHttpRequest()) {
@@ -218,7 +267,11 @@ class EventInvitationController extends Controller
                     return new AppJsonResponse($data, Response::HTTP_OK);
                 } else {
                     $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get("translator")->trans("invitations.display.cancel.message.success"));
-                    return $this->redirectToRoute("displayEvent", array("token" => $eventInvitationToCancel->getEvent()->getToken()));
+                    if ($request->get('wizardMode')) {
+                        return $this->redirectToRoute('wizardNewEventStep3', array('token' => $event->getToken()));
+                    } else {
+                        return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+                    }
                 }
             }
         }
@@ -228,7 +281,11 @@ class EventInvitationController extends Controller
         } else {
             $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get("translator")->trans("eventInvitation.message.error.unauthorized_cancel"));
             if ($eventInvitationToCancel != null) {
-                return $this->redirectToRoute("displayEvent", array("token" => $eventInvitationToCancel->getEvent()->getToken()));
+                if ($request->get('wizardMode')) {
+                    return $this->redirectToRoute('wizardNewEventStep3', array('token' => $event->getToken()));
+                } else {
+                    return $this->redirectToRoute("displayEvent", array("token" => $event->getToken()));
+                }
             } else {
                 return $this->redirectToRoute("home");
             }

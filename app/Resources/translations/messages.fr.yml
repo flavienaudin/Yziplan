@@ -14,7 +14,7 @@ base:
     text2: Désolé pour le dérangement!
   footer:
     home: Accueil
-    about_us: Qui sommes nous?
+    about_us: Qui sommes nous ?
     directory: Annuaire d'activités
     pro: Pro
 
@@ -101,7 +101,7 @@ event:
     meta_title:
       new_event: Nouvel événement
   header:
-    organised_by: "Organisé par %organizer%"
+    organized_by: "Organisé par %organizer%"
   picture:
     update_modal:
       title: Charger une image
@@ -163,10 +163,11 @@ event:
       label: Seulement sur invitation
       placeholder: Seulement sur invitation
       help: "Seuls les amis ayant reçu une invitation par e-mail pourront colaborer. Si non coché, vous pouvez transmettre le lien de l'évément pour inviter."
-      text.true: Seuls les invités peuvent participer (événement privé)
-      text.false: Tout le monde peut participer (événement public)
+      text.true: Seuls les invités par email peuvent participer
+      text.false: Toutes les personnes en posséssion du lien peuvent participer à l'événement
     public_invitation:
-      label: En leur transmettant le lien ci-dessous
+      title: En leur transmettant le lien ci-dessous
+      label: Activer les invitations via le lien de l'événement
     guestsCanInvite:
       label: Permettre à vos amis d'inviter
       placeholder: Permettre à vos amis d'inviter
@@ -234,7 +235,7 @@ event:
       title: Etes-vous sûr de vouloir annuler cet événement ?
       message: <p><strong>Cette action est irréversible</strong></p><p>Vous ne pourrez plus y accéder, vos invités seront avertis et ne pourront également plus participer</p>
       input:
-        label: Indiquez ci-dessous à vos invités pourquoi vous annulez cet événement :
+        label: Pourquoi annulez-vous cet événement :
         placeholder: Facultatif
   wizard:
     button:
@@ -242,9 +243,6 @@ event:
     main:
       title: Organiser un événement
       subtitle: Décrivez l'événement à vos invités.
-    add_module:
-      title: Consultez vos invités
-      subtitle: Ajoutez des sondages en cliquant sur les liens ci-dessous puis cliquez sur "Suivant"
     recapitulatif:
       title: Félicitations, c'est presque terminé
       subtitle:
@@ -278,10 +276,12 @@ event:
   error.message:
     creation: Une erreur est survenue lors de la création de l'événement
     deletion: Une erreur est survenue lors de l'annulation de l'événement
-    unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement.
+    edition: Une erreur est survenue lors de la modification de l'événement
+    unauthorized_access: Vous n'avez pas les autorisations pour accéder à cet événement
     valide_guestname_required: Cette action nécessite que vous validiez votre invitation en renseignant votre nom. Aucune modification n'a été apportée
   success.message:
     creation: Evénement créé avec succès
+    edition: Evénement modifié avec succès
     cancellation: Evénement annulé avec succès. Vous allez être redirigé dans quelques instants
 
 eventInvitations:
@@ -300,7 +300,7 @@ eventInvitations:
       upcomingEvents: Vous n'avez pas d'événement à venir
       passedArchivedEvents: Vous n'avez pas d'événement passé ou archivé
     event_name: Nom de l'événement
-    organiser: Organisateur
+    organizer: Organisateur
     date: Date
     place: Lieu
     response: Réponse
@@ -336,8 +336,8 @@ eventInvitation:
     administration_link:
       label: Votre lien personnel d'administration <strong>à conserver</strong>
     answer:
-      interested: Etes-vous intéressés ?
-      present: Serez-vous présents ?
+      interested: Etes-vous intéressé ?
+      present: Serez-vous présent ?
   answer:
     card:
       title: Votre réponse
@@ -348,10 +348,6 @@ eventInvitation:
     dont_know: Peut-être
   profile.card:
     title: Profil
-    badge:
-      guest: Invité
-      creator: Créateur
-      administrator: Administrateur
     text:
       disconnect: Vous n'êtes pas %user% ?
     guestname_required_alert:
@@ -370,11 +366,12 @@ eventInvitation:
   message:
     warning:
       email_owned_by_accountuser: Attention! Cet e-mail appartient à un compte utilisateur. Connectez-vous afin de profiter de toutes les fonctionnalités
-      another_invitation_already_exists_for_user: Vous avez déjà une invitation pour cet événement, vous avez été redirigés vers celle-ci
+      another_invitation_already_exists_for_user: Vous avez déjà une invitation pour cet événement, vous avez été redirigé vers celle-ci
       invitation_cancelled: Votre invitation est annulée, vous ne pouvez plus participer à l'organisation
     error:
       unauthorized_modify_answer: Vous n'avez pas les autorisations pour modifier la réponse de cette invitation
       unauthorized_cancel: Vous n'avez pas les autorisations pour annuler cette invitation
+      unauthorized_designate_administrator: Vous n'avez pas les autorisations pour désigner les administrateurs
       unauthorized_access: Vous n'êtes pas invité à cet événement
   email:
     invitation:
@@ -394,7 +391,7 @@ event_invitation_preferences:
   notification:
     page:
       title: "Préférences de notification par email"
-      subtitle: "Concernant l'événement \"%event_name%\" auquel vous êtes conviés"
+      subtitle: "Concernant l'événement \"%event_name%\" auquel vous êtes convié"
       paragraphe:
         contact_email: "Votre email de contact : %contact_name% %email%"
         frequency_management: "Gérez la fréquence des emails vous avertissant des participation sur l'événement"
@@ -447,6 +444,13 @@ invitations:
     modify_answer:
       link: Modifier la réponse
       message.success: La réponse a bien été modifiée
+    designate:
+      administrator:
+        link: Désigner comme administrateur
+        message.success: L'invité peut maintenant administrer l'événement
+      guest:
+        link: Révoquer les droits d'administrateur
+        message.success: L'invité ne peut désormais plus administrer l'événement
   form:
     invitations:
       label: En leur envoyant un e-mail
@@ -502,9 +506,15 @@ contactsgmail:
 module:
   main_information:
     no_description: Ajouter une description à l'élément
+    status:
+      in_creation: Cet élément n'est pas encore publié, les invités ne peuvent pas participer
   modal:
     settings:
       title: Configuration de l'élément
+  panel:
+    param.title: Paramètres généraux
+    invitations:
+      title: Gestion des invitations
   form:
     name:
       label: Intitulé du sondage
@@ -514,16 +524,11 @@ module:
     responseDeadline:
       label: Date limite de réponse
       placeholder: Date limite de réponse
-    invitationOnly:
-      label: Seulement sur invitation
-      placeholder: Seulement sur invitation
-      text.true: Seuls les invités peuvent participer (événement privé)
-      text.false: Rend l'événement accessible à toutes les personnes recevant le lien
-    guestsCanInvite:
-      label: Permettre à vos amis d'inviter
-      placeholder: Permettre à vos amis d'inviter
-      text.true: Vos amis peuvent inviter
-      text.false: Vos amis ne peuvent pas inviter
+    invitationRule:
+      label: Choisissez qui peut participer
+    moduleInvitationSelected:
+      label: Sélectionnez les invités qui participent au module
+      creator: Organisateur
     choice.label:
       yes: Oui
       no: Non
@@ -532,8 +537,13 @@ module:
     confirm_deletion:
       title: Etes-vous sûr de vouloir supprimer ce module ?
       message: Cette action est irréversible
-  error.message:
-    add: Une erreur s'est produite lors de la création du module. Merci de re-essayer l'opération
+  message:
+    error:
+      add: Une erreur s'est produite lors de la création du module. Merci de re-essayer l'opération
+      publish: Une erreur s'est produite lors de la publication du module. Vous n'avez peut-être pas les autorisations nécessaires
+      unauthorized_access: Vous n'avez pas les autorisations pour accéder à ce module
+    success:
+      publish: Le module a bien été publié. Les invités peuvent maintenant participer
 
 pollmodule:
   add_link:
@@ -557,6 +567,9 @@ pollmodule:
      allresult: Voir l'ensemble des réponses
      modal:
       title: Réponses
+  form:
+    guestsCanAddProposal:
+      label: Permettre aux invités d'ajouter des propositions
   modal:
     addPollProposal:
       title: Ajouter une proposition
@@ -587,7 +600,7 @@ addModule:
 moduleInvitation:
   error.message:
     missing_data: Des informations sont manquantes pour traiter la requête.
-    unauthorized_access: Vous n'êtes pas autoriser à modifier cette réponse
+    unauthorized_access: Vous n'êtes pas autorisé à modifier cette réponse
 
 duplication:
   notice:
@@ -609,7 +622,7 @@ notifications:
   emails:
     common:
       invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
-      preferences_link: "Vous recevez cette notification car vous y êtes abonnés. Suivez-le lien ci-dessous pour vous désinscrire:"
+      preferences_link: "Vous recevez cette notification car vous y êtes abonné. Suivez-le lien ci-dessous pour vous désinscrire:"
       preferences: Préférences
     new_comment:
       subject: "%event_name% - Vous avez reçu un message"
@@ -659,6 +672,8 @@ global:
     archive: Archiver
     unarchive: Désarchiver
     continue: Continuer
+    more_options: Plus d'options
+    publish: Publier
   success:
     data_saved: Données sauvegardées
   error:
@@ -711,6 +726,10 @@ modulestatus:
   validated: Validé
   archived: Archivé
   deleted: Annulé
+
+invitationrule:
+  everyone: Tout le monde
+  none_except: Personne sauf autorisation
 
 pollmoduletype:
   when: Quand
@@ -785,7 +804,7 @@ index:
     title: Comment ça marche
     create: Créez l'événement
     share: Partagez-le
-    organise: Organisez-vous
+    organize: Organisez-vous
     enjoy: Profitez !
   section_why:
     title: Pourquoi Yziplan ?

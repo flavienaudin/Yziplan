@@ -7,6 +7,7 @@ use AppBundle\Entity\Comment\Thread;
 use AppBundle\Entity\Module\ExpenseModule;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Payment\PaymentModule;
+use AppBundle\Utils\enum\InvitationRule;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -76,12 +77,11 @@ class Module implements CommentableInterface
     private $responseDeadline;
 
     /**
-     * If "true" then only guest with invitation can answer. No moduleInvitation creation when displaying the module.
-     * If "null" then it inherits the Event.invitationOnly
-     * @var boolean*
-     * @ORM\Column(name="invitation_only", type="boolean", nullable=true)
+     * Règle de gestion des invitations : Tout le monde, Tout le monde sauf, Personne sauf
+     * @var string
+     * @ORM\Column(name="invitation_rule", type="enum_invitation_rule")
      */
-    private $invitationOnly = null;
+    private $invitationRule = InvitationRule::EVERYONE;
 
     /**
      * If "true" then guests can send invitation to others.
@@ -270,19 +270,21 @@ class Module implements CommentableInterface
     }
 
     /**
-     * @return boolean
+     * @return mixed
      */
-    public function isInvitationOnly()
+    public function getInvitationRule()
     {
-        return $this->invitationOnly;
+        return $this->invitationRule;
     }
 
     /**
-     * @param boolean $invitationOnly
+     * @param mixed $invitationRule
+     * @return Module
      */
-    public function setInvitationOnly($invitationOnly)
+    public function setInvitationRule($invitationRule)
     {
-        $this->invitationOnly = $invitationOnly;
+        $this->invitationRule = $invitationRule;
+        return $this;
     }
 
     /**
@@ -477,8 +479,11 @@ class Module implements CommentableInterface
     public function getOrganizers()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("creator", true))
-            ->orWhere(Criteria::expr()->eq("administrator", true));
+            ->where(Criteria::expr()->eq("status", ModuleInvitationStatus::INVITED))
+            ->andWhere(Criteria::expr()->orX(
+                Criteria::expr()->eq("creator", true),
+                Criteria::expr()->eq("administrator", true)
+            ));
         return $this->moduleInvitations->matching($criteria);
     }
 
@@ -489,7 +494,7 @@ class Module implements CommentableInterface
      */
     public function getFilteredModuleInvitations($maxResult = 0, $excludedModuleInvitations = array())
     {
-        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", ModuleInvitationStatus::VALID));
+        $criteria = Criteria::create()->where(Criteria::expr()->eq("status", ModuleInvitationStatus::INVITED));
         if ($excludedModuleInvitations != null) {
             $excludedModuleInvitationsId = array();
             foreach ($excludedModuleInvitations as $moduleInvitation) {

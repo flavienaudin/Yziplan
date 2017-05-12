@@ -19,7 +19,7 @@ base:
     pro: Pro
 
 navbar:
-  subtitle: To organise you, it's YZI !
+  subtitle: To organize you, it's YZI !
   new_event: New event
 
 main_menu:
@@ -39,7 +39,7 @@ landing_page:
     ski:
       alt: Week-end
       title: Week-end
-      text: Want to organise a weekend with friends?
+      text: Want to organize a weekend with friends?
     king_cake:
       alt: Epiphany
       title: Epiphany
@@ -101,7 +101,7 @@ event:
     meta_title:
       new_event: New event
   header:
-    organised_by: "Organised by %organizer%"
+    organized_by: "Organized by %organizer%"
   picture:
     update_modal:
       title: Upload a picture
@@ -163,10 +163,11 @@ event:
       label: Invitation only
       placeholder: Invitation only
       help: "Only friends who received an invitation can yziplan. If non-checked, you can give the event URL to people you want to invite."
-      text.true: An invitation is required to participate (private event)
-      text.false: Makes the event accessible to all persons receiving the link
+      text.true: Only guests invited by email can participate to the event
+      text.false: Everyone with the event link can participate to the event
     public_invitation:
-      label: By giving them the link below
+      title: By giving them the link below
+      label: Activate invitations via the event link
     guestsCanInvite:
       label: Allow your friends to invite
       placeholder: Allow your friends to invite
@@ -243,9 +244,6 @@ event:
     main:
       title: Event organization
       subtitle: Describe the event to your guests
-    add_module:
-      title: Consult your guests
-      subtitle: Add survey using links below then click "Next"
     recapitulatif:
       title: Congratulations, it is almost done
       subtitle:
@@ -259,7 +257,7 @@ event:
         title: Share the event link
       template:
         title: Link to share
-        paragraphe: "Post the following link on your web site and social networks. Your visitors can organise easily their next activity in your establishment"
+        paragraphe: "Post the following link on your web site and social networks. Your visitors can organize easily their next activity in your establishment"
     invitations:
       title: The guests
       subtitle: Fill the email address of your guests. They will receive a message with the personnal invitation link.
@@ -277,12 +275,14 @@ event:
       body:
         text: "Sorry, I cancel the event \"%event_name%\".|Sorry, We cancel the event \"%event_name%\"."
   error.message:
-    creation: An error occured while creating an event
-    deletion: An error occured while cancelling an event
+    creation: An error occured while creating the event
+    deletion: An error occured while cancelling the event
+    edition: An error occured while editing the event
     unauthorized_access: You haven't the authorization to access this event
     valide_guestname_required: This action requires that you validate your invitation with your name. No change was made
   success.message:
     creation: Event created successfully
+    edition: Event edited successfully
     cancellation: Event cancelled successfully. You will be redirected in a second
 
 eventInvitations:
@@ -301,7 +301,7 @@ eventInvitations:
       upcomingEvents: You have no upcoming events
       passedArchivedEvents: You have no passed or achived events
     event_name: Event name
-    organiser: Organiser
+    organizer: Organizer
     date: Date
     place: Place
     response: Response
@@ -349,10 +349,6 @@ eventInvitation:
     dont_know: Don't know yet
   profile.card:
     title: About you
-    badge:
-      guest: Guest
-      creator: Creator
-      administrator: Administrator
     text:
       disconnect: You are not %user%?
     guestname_required_alert:
@@ -376,6 +372,7 @@ eventInvitation:
     error:
       unauthorized_modify_answer: You are not allowed to modify the answer of this invitation
       unauthorized_cancel: You are not allowed to cancel this invitation
+      unauthorized_designate_administrator: You are not allowed to designate administrator
       unauthorized_access: You are ot invited to this event
   email:
     invitation:
@@ -448,6 +445,13 @@ invitations:
     modify_answer:
       link: Modify the answer
       message.success: The answer has been modfied
+    designate:
+      administrator:
+        link: Designate as administrator
+        message.success: The guest can now administrate the event
+      guest:
+        link: Revoke administrator's rights
+        message.success: The guest can no longer administrate the event
   form:
     invitations:
       label: By sending them an email
@@ -503,9 +507,15 @@ contactsgmail:
 module:
   main_information:
     no_description: Add element description
+    status:
+      in_creation: This element is not published yet, guests can not participate
   modal:
     settings:
       title: Element settings
+  panel:
+    param.title: General parameters
+    invitations:
+      title: Management of invitations
   form:
     name:
       label: Module name
@@ -515,16 +525,11 @@ module:
     responseDeadline:
       label: Response deadline
       placeholder: Response deadline
-    invitationOnly:
-      label: Invitation only
-      placeholder: Invitation only
-      text.true: An invitation is required to participate (private event)
-      text.false: Everyone can participate (public event)
-    guestsCanInvite:
-      label: Allow your friends to invite
-      placeholder: Allow your friends to invite
-      text.true: Your friends can invite
-      text.false: Your friends can not invite
+    invitationRule:
+      label: Choose who can participate
+    moduleInvitationSelected:
+      label: Select guests who can participate to this module
+      creator: Organizator
     choice.label:
       yes: Yes
       no: No
@@ -533,8 +538,13 @@ module:
     confirm_deletion:
       title: Are you sure you want to delete this module?
       message: This action is irreversible
-  error.message:
-    add: An error during the module creation process occrured. Pleaze, try again the operation
+  message:
+    error:
+      add: An error occured during the module creation process. Pleaze, try again the operation
+      publish: An error occured during the module publication process. You may not have the required permissions
+      unauthorized_access: You haven't the authorization to access this module
+    success:
+      publish: The module was successfully published. Guests can now participate
 
 pollmodule:
   add_link:
@@ -558,6 +568,9 @@ pollmodule:
       allresult: Show all answers
       modal:
         title: Answers
+  form:
+    guestsCanAddProposal:
+      label: Allow guests to add proposals
   modal:
     addPollProposal:
       title: Add a proposal
@@ -588,7 +601,7 @@ addModule:
 moduleInvitation:
   error.message:
     missing_data: Data are missing to treat the request.
-    unauthorized_access: You are not allowed to edit this answer.
+    unauthorized_access: You are not allowed to edit this answer
 
 duplication:
   notice:
@@ -660,11 +673,13 @@ global:
     archive: Archive
     unarchive: Unarchive
     continue: Continue
+    more_options: More options
+    publish: Publish
   success:
     data_saved: Information saved
   error:
     not_ajax_request: Your behavior is suspect, big brother is watching you!
-    unauthorized_access: You haven't access to this section.
+    unauthorized_access: You haven't access to this section
     internal_server_error: An internal error occured. Please, check your data and retry the action.
     javascrip_disabled: Javascript is disabled by your web browser. The web site may react badly. Enable it to take full advantage of the features we offer.
     invalid_form: Submitted data are not valid.
@@ -712,6 +727,10 @@ modulestatus:
   validated: Validated
   archived: Archived
   deleted: Deleted
+
+invitationrule:
+  everyone: Everyone
+  none_except: None except authorized
 
 pollmoduletype:
   when: When
@@ -777,16 +796,16 @@ suggestion:
 index:
   header:
     title: Yziplan
-    subtitle: Get organised with your friends
+    subtitle: Get organized with your friends
     button: Let's go!
   about:
-    title: To get organised it's Yzi!
-    subtitle: Easily organised parties, acivities, outings, holidays,... with your friends
+    title: To get organized it's Yzi!
+    subtitle: Easily organized parties, acivities, outings, holidays,... with your friends
   section_use:
     title: How it works
     create: Create the event
     share: Share it
-    organise: Get organised
+    organize: Get organized
     enjoy: Enjoy!
   section_why:
     title: Why Yziplan ?

@@ -6,6 +6,21 @@
 <div id="module-information-{{ module.token }}" {% block moduleInformationAttributs %}{% endblock %}
      class="card-body {% block moduleInformationClass %}{{ not is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) and
      (module.description is empty or module.description =='<p><br></p>') ?"hidden" }} card-padding-sm{% endblock %}">
+
+    {% if module.status == constant('AppBundle\\Utils\\enum\\ModuleStatus::IN_CREATION') %}
+        <div class="alert alert-warning media" role="alert">
+            <a href="{{ path('publishEventModule', {'token':module.token}) }}" class="btn btn-primary pull-right" id="publishModule-{{ module.token }}">{{ 'global.button.publish'|trans }}</a>
+            {{ 'module.main_information.status.in_creation'|trans }}
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('#publishModule-{{ module.token }}').on('click', function (e) {
+                    ajaxRequest($(this), null, e, null, null, null);
+                });
+            });
+        </script>
+    {% endif %}
+
     {% block moduleInformation %}
         {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) and (module.description is empty or module.description == "<p><br></p>") %}
             <div><a class="btn btn-flat c-blue" role="button" data-toggle="modal" href="#moduleEdit_modal_{{ module.token }}"> <i

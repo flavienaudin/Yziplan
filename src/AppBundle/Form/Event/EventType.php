@@ -57,13 +57,6 @@ class EventType extends AbstractType
                 'time_widget' => 'single_text',
                 'date_format' => 'dd/MM/yyyy'
             ))*/
-            /* TODO : champs désactivés pour simplifier l'interface
-            ->add("invitationOnly", CheckboxType::class, array(
-                'required' => false
-            ))
-            ->add("guestsCanInvite", CheckboxType::class, array(
-                'required' => false
-            ))*/
             ->add('coordinates', EventCoordinatesType::class, array(
                 'required' => false,
                 'label_attr' => array('class' => 'sr-only')

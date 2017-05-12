@@ -10,24 +10,39 @@ Données calculées dans le template parent :
 #}
 
 {% block dropdown_menu_item %}
-
-    {% if userEventInvitation.organizer %}
+    {% if is_granted(constant('AppBundle\\Security\\EventInvitationVoter::MODIFY_ANSWER'), [userEventInvitation, eventInvitation]) %}
         <li role="separator" class="divider"></li>
         <li class="dropdown-header" role="presentation">{{ "invitations.display.modify_answer.link"|trans }}</li>
-        <li role="presentation">
-            <a href="{{ path("modifyGuestEventInvitation", {'eventInvitTokenToModifyAnswer':eventInvitation.token, 'answerValue':constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES')}) }}">
-                <i class="zmdi zmdi-check c-green"></i> {{ "eventInvitation.answer.yes"|trans }}</a></li>
-        <li role="presentation">
-            <a href="{{ path("modifyGuestEventInvitation", {'eventInvitTokenToModifyAnswer':eventInvitation.token, 'answerValue':constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')}) }}">
-                <i class="fa fa-question c-orange"></i> {{ "eventInvitation.answer.dont_know"|trans }}</a></li>
-        <li role="presentation">
-            <a href="{{ path("modifyGuestEventInvitation", {'eventInvitTokenToModifyAnswer':eventInvitation.token, 'answerValue':constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO')}) }}"> <i
-                        class="zmdi zmdi-close c-red"></i> {{ "eventInvitation.answer.no"|trans }}</a></li>
+        <li class="{{ eventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') ? "palette-Green bg" }}" role="presentation">
+            <a class="modifyGuestAnswer {{ eventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES') ? "c-white" : "c-green" }}"
+               href="{{ path("modifyGuestEventInvitationAnswer", {'eventInvitTokenToModifyAnswer':eventInvitation.token,'answerValue':constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::YES')}) }}"> <i
+                        class="zmdi zmdi-check"></i> {{ "eventInvitation.answer.yes"|trans }}
+            </a>
+        </li>
+        <li class="{{ eventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') ? "palette-Orange bg" }}" role="presentation">
+            <a class="modifyGuestAnswer {{ eventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW') ? "c-white" : "c-orange" }}"
+               href="{{ path("modifyGuestEventInvitationAnswer", {'eventInvitTokenToModifyAnswer':eventInvitation.token, 'answerValue':constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::DONT_KNOW')}) }}">
+                <i class="fa fa-question"></i>
+                {{ "eventInvitation.answer.dont_know"|trans }}</a></li>
+        <li class="{{ eventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') ? "palette-Red bg" }}" role="presentation">
+            <a class="modifyGuestAnswer {{ eventInvitation.answer == constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO') ? "c-white" : "c-red" }}"
+               href="{{ path("modifyGuestEventInvitationAnswer", {'eventInvitTokenToModifyAnswer':eventInvitation.token, 'answerValue':constant('AppBundle\\Utils\\enum\\EventInvitationAnswer::NO')}) }}"> <i
+                        class="zmdi zmdi-close"></i> {{ "eventInvitation.answer.no"|trans }}
+            </a></li>
     {% endif %}
-    <li role="separator" class="divider"></li>
+    {% if userEventInvitation != invitation and is_granted(constant('AppBundle\\Security\\EventVoter::DESIGNATE_ADMINISTRATOR'), userEventInvitation) %}
+        <li role="separator" class="divider"></li>
+        <li role="presentation">
+            <a class="designateAsAdministror" href="{{ path("designateGuestAsAdministror", {'eventInvitationToken':eventInvitation.token,'value':eventInvitation.administrator?0:1}) }}"> <i
+                        class="zmdi {{ not eventInvitation.administrator?"zmdi-account-box-mail":"zmdi-account" }}"></i>
+                {{ eventInvitation.administrator?"invitations.display.designate.guest.link"|trans:"invitations.display.designate.administrator.link"|trans }}
+            </a></li>
+    {% endif %}
     {% if is_granted(constant('AppBundle\\Security\\EventInvitationVoter::CANCEL'), [userEventInvitation, eventInvitation]) %}
+        <li role="separator" class="divider"></li>
         <li role="presentation">
             <a class="cancelInvitation" href="{{ path("cancelEventInvitation", {'eventInvitationTokenToCancel':eventInvitation.token}) }}"
-               data-guestname="{{ eventInvitation.displayableName(true, false) }}"> <i class="zmdi zmdi-delete c-red"></i> {{ "invitations.display.cancel.link"|trans }}</a></li>
+               data-guestname="{{ eventInvitation.displayableName(true, false) }}" data-guestid="{{ eventInvitation.id }}"> <i
+                        class="zmdi zmdi-delete c-red"></i> {{ "invitations.display.cancel.link"|trans }}</a></li>
     {% endif %}
 {% endblock dropdown_menu_item %}

@@ -24,23 +24,33 @@
                             {{ include("@App/Event/partials/invitations/invitations_new_form.html.twig", {'event':userEventInvitation.event,'invitationsForm':invitationsForm}) }}
                         </div>
                     </div>
-                    <div class="panel panel-collapse">
-                        <div class="panel-heading" role="tab" id="eventUrlInvitationsPanel">
-                            <h4 class="panel-title">
-                                <a href="#eventUrlCollpase" data-toggle="collapse" data-parent="#invitationsAccordion" class="collapsed" aria-expanded="false" aria-controls="eventUrlCollpase">
-                                    {{ "event.form.public_invitation.label"|trans }}</a>
-                            </h4>
-                        </div>
-                        <div id="eventUrlCollpase" class="collapse" role="tabpanel" aria-labelledby="eventUrlInvitationsPanel" aria-expanded="false">
-                            {% if userEventInvitation.organizer or not userEventInvitation.event.invitationOnly %}
+                    {% if is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'), userEventInvitation) or not userEventInvitation.event.invitationOnly %}
+                        <div class="panel panel-collapse">
+                            <div class="panel-heading" role="tab" id="eventUrlInvitationsPanel">
+                                <h4 class="panel-title">
+                                    <a href="#eventUrlCollpase" data-toggle="collapse" data-parent="#invitationsAccordion" class="collapsed" aria-expanded="false" aria-controls="eventUrlCollpase">
+                                        {{ "event.form.public_invitation.title"|trans }}</a>
+                                </h4>
+                            </div>
+                            <div id="eventUrlCollpase" class="collapse" role="tabpanel" aria-labelledby="eventUrlInvitationsPanel" aria-expanded="false">
+                                {% if is_granted(constant('AppBundle\\Security\\EventVoter::EDIT'), userEventInvitation) %}
+                                    <div class="p-t-10 p-l-15 p-r-15">
+                                        <div class="checkbox">
+                                            <label> <input id="setInvitationOnlyParameter" type="checkbox" {{ not event.invitationOnly?'checked="checked"' }}> <i class="input-helper"></i>
+                                                {{ "event.form.public_invitation.label"|trans }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
                                 {% use "@App/Event/partials/block/eventUrl_copyClipboardInput.html.twig" %}
                                 {% set eventInvitationUrlCopyClipboardBlock = block('event_invitation_url_copyClipboard_block') %}
                                 <div class="p-15">
                                     {{ eventInvitationUrlCopyClipboardBlock|raw }}
                                 </div>
-                            {% endif %}
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="modal-footer">

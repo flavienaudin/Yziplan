@@ -15,10 +15,10 @@
 {% set invitationEmail = eventInvitation.displayableEmail(true) %}
 
 <div class="dropdown">
-    <a id="dLabel" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+    <a data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
         {{ include('@App/Avatar/partials/avatar_display.html.twig',{"invitation" : eventInvitation, "userEventInvitation": userEventInvitation} ) }}
     </a>
-    <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dLabel">
+    <ul class="dropdown-menu pull-center dm-icon" role="menu">
         <li role="presentation">
             <a>
                 {% if invitationGuestName is not empty %}

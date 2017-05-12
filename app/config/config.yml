@@ -89,6 +89,7 @@ doctrine:
             enum_marital_status: AppBundle\Utils\enum\MaritalStatus
             enum_moduleinvitation_status: AppBundle\Utils\enum\ModuleInvitationStatus
             enum_module_status: AppBundle\Utils\enum\ModuleStatus
+            enum_invitation_rule: AppBundle\Utils\enum\InvitationRule
             enum_pollproposal_elementtype: AppBundle\Utils\enum\PollElementType
             enum_pollproposal_response: AppBundle\Utils\enum\PollProposalResponse
             enum_pollmodule_votingtype: AppBundle\Utils\enum\PollModuleVotingType
@@ -162,7 +163,7 @@ swiftmailer:
             password:  "%mailer_password%"
             spool:
                 type: file
-                path: '%kernel.cache_dir%/swiftmailer/spool'
+                path: '%kernel.root_dir%/swiftmailer/spool'
 
 # FOS_User
 fos_user:
