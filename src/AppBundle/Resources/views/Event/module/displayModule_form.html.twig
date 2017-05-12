@@ -4,40 +4,78 @@
 #}
 
 <div id="moduleEdit_form_{{ module.token }}">
-    {% block form_start %}
-        {{ form_start(moduleForm, {'action':path('displayEvent', {'token':module.event.token}), 'attr':{'id':"moduleForm-"~module.token} }) }}
-    {% endblock form_start %}
-    <div class="row">
-        <div class="col-sm-12">
-            {{ form_row(moduleForm.name, {
-                'label': 'module.form.name.label',
-                'attr':{},
-                'widget_options':{'label_icon':'zmdi zmdi-flare','fgfloat':true, 'fgline':true}
-            }) }}<br/>
-            {{ form_row(moduleForm.description, {
-                'label':'module.form.description.label',
-                'label_attr':{'class':'sr-only'},
-                'attr':{'rows':3},
-                'widget_options':{'label_icon':'zmdi zmdi-receipt','fgline':false}
-            }) }}
-            {% if moduleForm.pollModule is defined %}
-                <div class="p-t-10 p-l-15 p-r-15">
-                    {{ form_row(moduleForm.pollModule.guestsCanAddProposal, {'label':'pollmodule.form.guestsCanAddProposal.label'}) }}
+    {{ form_start(moduleForm, {'action':path('displayEvent', {'token':module.event.token}), 'attr':{'id':"moduleForm-"~module.token} }) }}
+    <div id="moduleEdit_{{ module.token }}_accordion" class="panel-group" role="tablist" aria-multiselectable="false">
+        <div class="panel panel-collapse">
+            <div class="panel-heading" role="tab" id="moduleEdit_{{ module.token }}_paramPanel">
+                <h4 class="panel-title">
+                    <a href="#moduleEdit_{{ module.token }}_paramCollpase" data-toggle="collapse" data-parent="#moduleEdit_{{ module.token }}_accordion" class="collapsed in" aria-expanded="true"
+                       aria-controls="moduleEdit_{{ module.token }}_paramCollpase">
+                        {{ "module.panel.param.title"|trans }}</a>
+                </h4>
+            </div>
+            <div id="moduleEdit_{{ module.token }}_paramCollpase" class=" collapse in" role="tabpanel" aria-labelledby="moduleEdit_{{ module.token }}_paramPanel" aria-expanded="true">
+                <div class="row">
+                    <div class="col-sm-12">
+                        {{ form_row(moduleForm.name, {
+                            'label': 'module.form.name.label',
+                            'attr':{},
+                            'widget_options':{'label_icon':'zmdi zmdi-flare','fgfloat':true, 'fgline':true}
+                        }) }}<br/>
+                        {{ form_row(moduleForm.description, {
+                            'label':'module.form.description.label',
+                            'label_attr':{'class':'sr-only'},
+                            'attr':{'rows':3},
+                            'widget_options':{'label_icon':'zmdi zmdi-receipt','fgline':false}
+                        }) }}
+                        {% if moduleForm.pollModule is defined %}
+                            <div class="p-t-10 p-l-15 p-r-15">
+                                {{ form_row(moduleForm.pollModule.guestsCanAddProposal, {'label':'pollmodule.form.guestsCanAddProposal.label'}) }}
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
-            {% endif %}
+            </div>
         </div>
-    </div>
-    {% block action_buttons %}
+        <div class="panel panel-collapse">
+            <div class="panel-heading" role="tab" id="moduleEdit_{{ module.token }}_invitationsPanel">
+                <h4 class="panel-title">
+                    <a href="#moduleEdit_{{ module.token }}_invitationsCollpase" data-toggle="collapse" data-parent="#moduleEdit_{{ module.token }}_accordion" class="collapsed" aria-expanded="false"
+                       aria-controls="moduleEdit_{{ module.token }}_invitationsCollpase">
+                        {{ "module.panel.invitations.title"|trans }}</a>
+                </h4>
+            </div>
+            <div id="moduleEdit_{{ module.token }}_invitationsCollpase" class="collapse" role="tabpanel" aria-labelledby="moduleEdit_{{ module.token }}_invitationsPanel" aria-expanded="true">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="m-t-15">
+                            {{ form_row(moduleForm.invitationRule, {
+                                'label':'module.form.invitationRule.label',
+                                'label_attr':{'class':'sr-only radio-inline'},
+                                'widget_options':{'label_icon':'zmdi zmdi-accounts-list'}
+                            }) }}
+                        </div>
+                        <div id="moduleInvitations_selection_{{ module.token }}"
+                             class="m-t-15" {{ module.invitationRule == constant('AppBundle\\Utils\\enum\\InvitationRule::EVERYONE')?'style="display: none"' }}>
+                            {{ form_row(moduleForm.moduleInvitationSelected, {
+                                'label':'module.form.moduleInvitationSelected.label',
+                                'widget_options':{}
+                            }) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hidden">
+            {{ form_rest(moduleForm) }}
+        </div>
         <div class="pull-right m-r-10 m-t-10">
             <button type="button" class="btn btn-flat waves-effect" data-dismiss="modal">{{ "global.button.close"|trans }}</button>
             <button type="submit" class="btn btn-primary waves-effect">{{ "global.button.save"|trans }}</button>
         </div>
-    {% endblock action_buttons %}
-    <div class="hidden">
-        {{ form_rest(moduleForm) }}
+        <div class="clearfix"></div>
+        {{ form_end(moduleForm) }}
     </div>
-    {{ form_end(moduleForm) }}
-    <div class="clearfix"></div>
 
     <script>
         $(document).ready(function () {
@@ -59,16 +97,18 @@
             {% endif %}
             $('#{{ moduleForm.description.vars.id }}').summernote(summernoteOptions);
 
-            {% block js_document_ready %}
             // Update the Event name while editing the form field
             $('#module_form_{{ module.token }}_name').on('input', function () {
                 var moduleName = $(this).val();
-                if (moduleName == "") {
+                if (moduleName === "") {
                     moduleName = "{{ "module.form.name.label"|trans }}";
                 }
                 $('#module_{{ module.token }}_name').html(moduleName);
             });
 
+            $('input[name="{{ moduleForm.invitationRule.vars.full_name }}"]').on('change', function (e) {
+                $('#moduleInvitations_selection_{{ module.token }}').toggle();
+            });
 
             $('form#moduleForm-{{ module.token }}').on("submit", function (e) {
                 e.preventDefault();
@@ -80,8 +120,7 @@
                     submitModuleEditionForm([form, e, "{{ module.token }}"]);
                 }
             });
-            {% endblock js_document_ready %}
+
         });
     </script>
 </div>
-

@@ -120,8 +120,8 @@ services:
     tags:
     - { name: form.type }
 
-  at.form_type.moduleInvitations:
-      class: AppBundle\Form\Module\PollModule\ModuleInvitationsType
+  at.form_type.module:
+      class: AppBundle\Form\Module\ModuleType
       arguments: ['@translator']
       tags:
       - { name: form.type }

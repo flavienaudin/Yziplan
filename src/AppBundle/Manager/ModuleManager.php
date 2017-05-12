@@ -16,7 +16,6 @@ use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Form\Module\ModuleType;
-use AppBundle\Form\Module\PollModule\ModuleInvitationsType;
 use AppBundle\Security\ModuleVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\InvitationRule;
@@ -321,30 +320,8 @@ class ModuleManager
     public function treatUpdateFormModule(Form $moduleForm)
     {
         $this->module = $moduleForm->getData();
-        // TODO faire des vérifications/traitement sur les données (?)
-        $this->entityManager->persist($this->module);
-        $this->entityManager->flush();
-        return $this->module;
-    }
 
-    /**
-     * @param Module $module
-     * @return FormInterface
-     */
-    public function createModuleInvitationsForm(Module $module)
-    {
-        return $this->formFactory->createNamed("moduleInvitations_form_" . $module->getToken(), ModuleInvitationsType::class, $module);
-    }
-
-    /**
-     * @param FormInterface $moduleInvitationsForm
-     * @return Module
-     */
-    public function treatModuleInvitationsForm(FormInterface $moduleInvitationsForm)
-    {
-        $this->module = $moduleInvitationsForm->getData();
-
-        $moduleInvitationsSelection = $moduleInvitationsForm->get('moduleInvitationSelected')->getData();
+        $moduleInvitationsSelection = $moduleForm->get('moduleInvitationSelected')->getData();
         /** @var ModuleInvitation $moduleInvitation */
         foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
             if ($moduleInvitation->isCreator()) {
@@ -374,7 +351,6 @@ class ModuleManager
         return $this->module;
     }
 
-
     /**
      * @param Module $module Le module à afficher
      * @param ModuleInvitation|null $userModuleInvitation
@@ -383,12 +359,9 @@ class ModuleManager
     public function displayModulePartial(Module $module, ModuleInvitation $userModuleInvitation = null)
     {
         $moduleForm = null;
-        $moduleInvitationsForm = null;
         if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
             /** @var FormInterface $moduleForm */
             $moduleForm = $this->createModuleForm($module);
-            /** @var FormInterface $moduleInvitationsForm */
-            $moduleInvitationsForm = $this->createModuleInvitationsForm($module);
         }
         $thread = $module->getCommentThread();
         if ($thread != null) {
@@ -406,7 +379,6 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
-                'moduleInvitationsForm' => ($moduleInvitationsForm != null ? $moduleInvitationsForm->createView() : null),
                 'pollModuleOptions' => $pollModuleOptions,
                 'userModuleInvitation' => $userModuleInvitation,
                 'thread' => $thread, 'comments' => $comments
@@ -415,7 +387,6 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayExpenseModule.html.twig", [
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
-                'moduleInvitationsForm' => ($moduleInvitationsForm != null ? $moduleInvitationsForm->createView() : null),
                 'userModuleInvitation' => $userModuleInvitation,
                 'thread' => $thread, 'comments' => $comments
             ]);
@@ -423,7 +394,6 @@ class ModuleManager
             return $this->templating->render("@App/Event/module/displayModule.html.twig", [
                 "module" => $module,
                 'moduleForm' => ($moduleForm != null ? $moduleForm->createView() : null),
-                'moduleInvitationsForm' => ($moduleInvitationsForm != null ? $moduleInvitationsForm->createView() : null),
                 'userModuleInvitation' => $userModuleInvitation,
                 'thread' => $thread, 'comments' => $comments
             ]);

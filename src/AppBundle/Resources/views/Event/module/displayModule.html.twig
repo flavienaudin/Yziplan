@@ -1,7 +1,6 @@
 {# Données d'entrée :
 - module (Module) Le module à afficher
 - moduleForm (Form|null) Le formulaire d'édition du module
-- moduleInvitationsForm (Form[null) Le formulaire de gestion des modules invitations : Si Module.invitationRuls == NONE_EXCEPT
 - userModuleInvitation (ModuleInvitation) L'invitation du module de l'utilisateur connecté
 - thread (Thread) Le fil de discussion du module
 - comments(Comment[]) Les commentaires appartenant au fil de discussion du module
@@ -47,19 +46,10 @@
 
     <div id="modal-container-block-{{ module.token }}">
         {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) %}
-            {{ include('@App/Event/module/displayModule_edition_modal.html.twig', {'module':module, 'moduleForm':moduleForm,'moduleInvitationsForm':moduleInvitationsForm} ) }}
+            {{ include('@App/Event/module/displayModule_edition_modal.html.twig', {'module':module, 'moduleForm':moduleForm} ) }}
         {% endif %}
         {% block module_modal_container %}{% endblock module_modal_container %}
     </div>
 
-    {# TODO : désactiver le temps d'avoir une seule modal pour l'ajout multiple de propositions et édition du nom/description
-    {% if app.request.get('addmodule') %}
-        #}{# Open the module settings modal if module just added #}{#
-        <script>
-            $(document).ready(function () {
-                $('#moduleEdit_modal_{{ app.request.get('addmodule') }}').modal('show');
-            });
-        </script>
-    {% endif %}#}
     {% block JSmodule %}{% endblock %}
 </div>

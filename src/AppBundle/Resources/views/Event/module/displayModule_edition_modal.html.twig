@@ -2,7 +2,6 @@
 Données d'entrée :
 - module (Module) Le module à afficher
 - moduleForm (Form) Le formulaire d'édition du module
-- moduleInvitationsForm (Form[null) Le formulaire de gestion des modules invitations : Si Module.invitationRuls == NONE_EXCEPT
 #}
 
 <div class="modal fade" id="moduleEdit_modal_{{ module.token }}" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="#mhms_title" data-backdrop="static" data-keyboard="false">
@@ -13,34 +12,7 @@ Données d'entrée :
                 <h3 id="mhms_title" class="modal-title">{{ "module.modal.settings.title"|trans }}</h3>
             </div>
             <div class="modal-body">
-                <div id="moduleEdit_{{ module.token }}_accordion" class="panel-group" role="tablist" aria-multiselectable="false">
-                    <div class="panel panel-collapse">
-                        <div class="panel-heading" role="tab" id="moduleEdit_{{ module.token }}_paramPanel">
-                            <h4 class="panel-title">
-                                <a href="#moduleEdit_{{ module.token }}_paramCollpase" data-toggle="collapse" data-parent="#moduleEdit_{{ module.token }}_accordion" class="collapsed in"
-                                   aria-expanded="true" aria-controls="moduleEdit_{{ module.token }}_paramCollpase">
-                                    {{ "module.panel.param.title"|trans }}</a>
-                            </h4>
-                        </div>
-                        <div id="moduleEdit_{{ module.token }}_paramCollpase" class=" collapse in" role="tabpanel" aria-labelledby="moduleEdit_{{ module.token }}_paramPanel" aria-expanded="true">
-                            {{ include('@App/Event/module/displayModule_form.html.twig', {'module':module, 'moduleForm':moduleForm}) }}
-                        </div>
-                    </div>
-                    <div class="panel panel-collapse">
-                        <div class="panel-heading" role="tab" id="moduleEdit_{{ module.token }}_invitationsPanel">
-                            <h4 class="panel-title">
-                                <a href="#moduleEdit_{{ module.token }}_invitationsCollpase" data-toggle="collapse" data-parent="#moduleEdit_{{ module.token }}_accordion" class="collapsed"
-                                   aria-expanded="false" aria-controls="moduleEdit_{{ module.token }}_invitationsCollpase">
-                                    {{ "module.panel.invitations.title"|trans }}</a>
-                            </h4>
-                        </div>
-                        <div id="moduleEdit_{{ module.token }}_invitationsCollpase" class="collapse" role="tabpanel" aria-labelledby="moduleEdit_{{ module.token }}_invitationsPanel"
-                             aria-expanded="true">
-                            {{ include('@App/Event/module/displayModule_invitations_form.html.twig', {'module':module,'moduleInvitationsForm':moduleInvitationsForm}) }}
-                        </div>
-                    </div>
-
-                </div>
+                {{ include('@App/Event/module/displayModule_form.html.twig', {'module':module, 'moduleForm':moduleForm}) }}
             </div>
         </div>
     </div>
