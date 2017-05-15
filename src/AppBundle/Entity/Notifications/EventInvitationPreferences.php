@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Notifications;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Utils\enum\NotificationFrequencyEnum;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * EventInvitationPreferences
@@ -14,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventInvitationPreferences
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *
