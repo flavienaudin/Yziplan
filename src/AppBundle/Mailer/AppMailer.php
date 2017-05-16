@@ -258,7 +258,7 @@ class AppMailer
                     $this->sendMessage("@App/Notifications/emails/notification_new_pollProposal_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo, self::SEND_SPOLL_QUICKLY);
                     break;
                 case NotificationTypeEnum::CHANGE_POLLMODULE_VOTINGTYPE:
-                    // TODO
+                    $this->sendMessage("@App/Notifications/emails/notification_change_pollmodule_votingtype_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo, self::SEND_SPOLL_QUICKLY);
                     break;
             }
             return true;

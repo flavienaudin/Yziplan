@@ -362,7 +362,7 @@ class ModuleManager
             if ($oldVotingType !== $this->module->getPollModule()->getVotingType()) {
                 $moduleInvitationToWarn = $this->changePollModuleVotingType($oldVotingType);
 
-                if(count($moduleInvitationToWarn) > 0) {
+                if (count($moduleInvitationToWarn) > 0) {
                     $this->notificationManager->createChangPollModuleVotingTypeNotifications($this->module, $moduleInvitationToWarn);
                 }
             }
@@ -384,8 +384,7 @@ class ModuleManager
         $newVotingType = $pollModule->getVotingType();
 
         if ($newVotingType == PollModuleVotingType::AMOUNT || $oldVotingType == PollModuleVotingType::AMOUNT) {
-            $this->pollProposalResponseManager->resetPollProposalResponse($pollModule);
-            return $this->module->getFilteredModuleInvitations();
+            return $this->pollProposalResponseManager->resetPollProposalResponse($pollModule);
         }
 
         if ($newVotingType === PollModuleVotingType::RANKING) {
@@ -411,7 +410,7 @@ class ModuleManager
             foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
                 /** @var PollProposalResponse $pollProposalResponse */
                 foreach ($moduleInvitation->getPollProposalResponses() as $pollProposalResponse) {
-                    if ($pollProposalResponse->getAnswer() !== null) {
+                    if ($pollProposalResponse->getAnswer() != null) {
                         if ($pollProposalResponse->getAnswer() > 4) {
                             $pollProposalResponse->setAnswer(\AppBundle\Utils\enum\PollProposalResponse::YES);
                         } elseif ($pollProposalResponse->getAnswer() == 1) {
@@ -424,7 +423,9 @@ class ModuleManager
                                     $pollProposalResponse->setAnswer(\AppBundle\Utils\enum\PollProposalResponse::NO);
                                 } else {
                                     $pollProposalResponse->setAnswer(null);
-                                    $moduleInvitationsToWarn[$moduleInvitation->getId()] = $moduleInvitation;
+                                    if ($moduleInvitation->getStatus() == ModuleInvitationStatus::INVITED && $moduleInvitation->getEventInvitation()->getStatus() != EventInvitationStatus::CANCELLED) {
+                                        $moduleInvitationsToWarn[$moduleInvitation->getId()] = $moduleInvitation;
+                                    }
                                 }
                             }
                         }
@@ -436,9 +437,13 @@ class ModuleManager
             foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
                 /** @var PollProposalResponse $pollProposalResponse */
                 foreach ($moduleInvitation->getPollProposalResponses() as $pollProposalResponse) {
-                    if ($pollProposalResponse->getAnswer() === \AppBundle\Utils\enum\PollProposalResponse::MAYBE) {
-                        $pollProposalResponse->setAnswer(null);
-                        $moduleInvitationsToWarn[$moduleInvitation->getId()] = $moduleInvitation;
+                    if ($pollProposalResponse->getAnswer() != null) {
+                        if ($pollProposalResponse->getAnswer() === \AppBundle\Utils\enum\PollProposalResponse::MAYBE) {
+                            $pollProposalResponse->setAnswer(null);
+                            if ($moduleInvitation->getStatus() == ModuleInvitationStatus::INVITED && $moduleInvitation->getEventInvitation()->getStatus() != EventInvitationStatus::CANCELLED) {
+                                $moduleInvitationsToWarn[$moduleInvitation->getId()] = $moduleInvitation;
+                            }
+                        }
                     }
                 }
             }

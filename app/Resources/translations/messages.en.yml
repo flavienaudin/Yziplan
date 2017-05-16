@@ -624,6 +624,7 @@ notifications:
   comment: "%number_new_comments% new comment|%number_new_comments% new comments"
   new_module: "%organizers% added a new poll|%organizers% added a new poll"
   new_pollproposal: "%organizer% added a new poll proposal"
+  change_pollmodule_voting_type: "The mode of participation in the poll was modified, Thank you for checking your answers"
   emails:
     common:
       invitation_link: "Follow the link bellow to go to the event page:"
@@ -642,6 +643,12 @@ notifications:
       subject: "%event_name% : %subject_name% - New poll proposal"
       body:
         paragraph_event: "%triggerer% added a poll proposal to \"%subject_name%\""
+    change_pollmodule_voting_type:
+      subject: "%event_name% - Modifcation of the participation mode in the poll %subject_name%"
+      body:
+        paragraph_event: |
+          The mode of participation in the poll was modified and your answers have been reset. You have to participate again according to the mode chosen by the organizer. Sorry of the caused
+          embarrassment.
 
 # Globals
 global:
