@@ -515,6 +515,8 @@ module:
     param.title: Paramètres généraux
     invitations:
       title: Gestion des invitations
+    pollmodule:
+      title: Paramètres du sondage
   form:
     name:
       label: Intitulé du sondage
@@ -560,16 +562,18 @@ pollmodule:
   display:
     no_proposal: Pas encore de proposition
     result:
-     vote: vote(s)
-     contribution: contribution(s)
-     total: "Total:"
-     moyenne: "Moyenne:"
-     allresult: Voir l'ensemble des réponses
-     modal:
-      title: Réponses
+      vote: vote(s)
+      contribution: contribution(s)
+      total: "Total:"
+      moyenne: "Moyenne:"
+      allresult: Voir l'ensemble des réponses
+      modal:
+        title: Réponses
   form:
     guestsCanAddProposal:
       label: Permettre aux invités d'ajouter des propositions
+    votingType:
+      label: Type de vote
   modal:
     addPollProposal:
       title: Ajouter une proposition
@@ -727,15 +731,15 @@ modulestatus:
   archived: Archivé
   deleted: Annulé
 
+pollmodule_votingtype:
+  yes_no: Oui/Non
+  yes_no_maybe: Oui/Non/Peut-être
+  ranking: Classement
+  amount: Quantité
+
 invitationrule:
   everyone: Tout le monde
   none_except: Personne sauf autorisation
-
-pollmoduletype:
-  when: Quand
-  what: Quoi
-  where: Où
-  whobringswhat: Qu'est-ce qu'il faut ?
 
 contact_info_type:
   home: Personnelle

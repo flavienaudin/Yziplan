@@ -182,6 +182,47 @@ class NotificationManager
     }
 
     /**
+     * @param Module $module
+     * @param $moduleInvitations
+     */
+    public function createChangPollModuleVotingTypeNotifications(Module $module, $moduleInvitations){
+        $new_notification_date = $module->getCreatedAt();
+        $new_notification_type = NotificationTypeEnum::CHANGE_POLLMODULE_VOTINGTYPE;
+        $creatorNames = "";
+        /** @var ModuleInvitation $creator */
+        foreach ($module->getCreators() as $creator) {
+            $creatorNames .= (!empty($creatorNames) ? ' ,' : '') . $creator->getDisplayableName(true, true);
+        }
+        $data = array(
+            "subject" => array(
+                'token' => $module->getToken(),
+                'name' => $module->getName()
+            ),
+            "creator_names" => $creatorNames
+        );
+
+        // Gestion des notifications
+        /** @var ModuleInvitation $moduleInvitation */
+        foreach ($moduleInvitations as $moduleInvitation) {
+            $eventInvitation = $moduleInvitation->getEventInvitation();
+            $change_pollmodule_votingtype_notification = new Notification();
+            $change_pollmodule_votingtype_notification->setDate($new_notification_date);
+            $change_pollmodule_votingtype_notification->setType($new_notification_type);
+            $change_pollmodule_votingtype_notification->setData($data);
+            $eventInvitation->addNotification($change_pollmodule_votingtype_notification);
+            $this->entityManager->persist($change_pollmodule_votingtype_notification);
+
+            if ($eventInvitation->getEventInvitationPreferences()->getNotifEmailFrequency() !== NotificationFrequencyEnum::NEVER
+                && $eventInvitation->getEventInvitationPreferences()->isNotifNewModule()
+                && $eventInvitation->getAnswer() != EventInvitationAnswer::NO && $eventInvitation->getAnswer() != EventInvitationAnswer::NOT_INTERESTED
+            ) {
+                $this->appMailer->sendNewNotificationEmail($eventInvitation, $change_pollmodule_votingtype_notification, null);
+            }
+        }
+        $this->entityManager->flush();
+    }
+
+    /**
      * Delete all notifications of EventInvitation
      * @param EventInvitation $eventInvitation
      */

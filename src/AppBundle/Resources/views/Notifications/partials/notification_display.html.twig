@@ -59,5 +59,24 @@
                     {{ "notifications.new_pollproposal"|trans({'%organizer%':notification.data.creator_name}) }}</small>
             </div>
         </div>
+    {% elseif notification.type == constant('AppBundle\\Utils\\enum\\NotificationTypeEnum::CHANGE_POLLMODULE_VOTINGTYPE') %}
+        <div class="media">
+            <div class="pull-left">
+            <span class="zmdi-hc-stack zmdi-hc-lg">
+                <i class="zmdi zmdi-vignette zmdi-hc-stack-2x"></i>
+                <i class="zmdi zmdi-help zmdi-hc-stack-1x"></i>
+            </span>
+            </div>
+            <div class="pull-right">
+                <a href="{{ path('markAsView', {'id':notification.id}) }}" class="notification_delete_link"> <i class="zmdi zmdi-dot-circle-alt zmdi-hc-lg"></i></a>
+            </div>
+            <div class="media-body">
+                <div class="lgi-heading"><a href="#module-{{ notification.data.subject.token }}_anchor">{{ notification.data.subject.name }}</a></div>
+                <small class="lgi-text">
+                    {{ "notifications.new_module"|transchoice(notification.data.creator_names|split(',')|length, {
+                        '%organizers%':notification.data.creator_names
+                    }) }}</small>
+            </div>
+        </div>
     {% endif %}
 </li>

@@ -10,6 +10,7 @@ namespace AppBundle\Manager;
 
 
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalResponse;
 use Doctrine\ORM\EntityManager;
@@ -41,6 +42,20 @@ class PollProposalResponseManager
         $moduleInvitation->addPollProposalResponse($this->pollProposalResponse);
     }
 
+    /**
+     * Remet à null toutes les réponses au sondage.
+     * NB : Réponses non persitées
+     * @param PollModule $pollModule Le sondage à mettre à jour
+     */
+    public function resetPollProposalResponse(PollModule $pollModule){
+        /** @var PollProposal $pollProposal */
+        foreach($pollModule->getPollProposals() as $pollProposal){
+            /** @var PollProposalResponse $pollProposalResponse */
+            foreach ($pollProposal->getPollProposalResponses() as $pollProposalResponse){
+                $pollProposalResponse->setAnswer(null);
+            }
+        }
+    }
 
     public function answerPollModuleProposal(ModuleInvitation $moduleInvitation, $pollProposalId, $value)
     {

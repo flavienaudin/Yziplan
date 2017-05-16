@@ -70,6 +70,21 @@ class EventInvitationPreferences
     private $notifNewPollproposalLastEmailAt;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="notif_change_poll_module_voting_type", type="boolean")
+     */
+    private $notifChangePollModuleVotingType = true;
+
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="notif_change_poll_module_voting_type_last_email_at", type="datetime", nullable=true)
+     */
+    private $notifChangePollModuleVotingTypeLastEmailAt;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="notif_email_frequency", type="enum_notification_frequency", length=63)
@@ -204,6 +219,42 @@ class EventInvitationPreferences
     public function setNotifNewPollproposalLastEmailAt($notifNewPollproposalLastEmailAt)
     {
         $this->notifNewPollproposalLastEmailAt = $notifNewPollproposalLastEmailAt;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotifChangePollModuleVotingType()
+    {
+        return $this->notifChangePollModuleVotingType;
+    }
+
+    /**
+     * @param bool $notifChangePollModuleVotingType
+     * @return EventInvitationPreferences
+     */
+    public function setNotifChangePollModuleVotingType($notifChangePollModuleVotingType)
+    {
+        $this->notifChangePollModuleVotingType = $notifChangePollModuleVotingType;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getNotifChangePollModuleVotingTypeLastEmailAt()
+    {
+        return $this->notifChangePollModuleVotingTypeLastEmailAt;
+    }
+
+    /**
+     * @param \DateTime $notifChangePollModuleVotingTypeLastEmailAt
+     * @return EventInvitationPreferences
+     */
+    public function setNotifChangePollModuleVotingTypeLastEmailAt($notifChangePollModuleVotingTypeLastEmailAt)
+    {
+        $this->notifChangePollModuleVotingTypeLastEmailAt = $notifChangePollModuleVotingTypeLastEmailAt;
         return $this;
     }
 

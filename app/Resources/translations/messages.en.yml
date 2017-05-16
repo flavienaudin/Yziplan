@@ -516,6 +516,8 @@ module:
     param.title: General parameters
     invitations:
       title: Management of invitations
+    pollmodule:
+      title: Poll parameters
   form:
     name:
       label: Module name
@@ -571,6 +573,8 @@ pollmodule:
   form:
     guestsCanAddProposal:
       label: Allow guests to add proposals
+      votingType:
+        label: Voting type
   modal:
     addPollProposal:
       title: Add a proposal
@@ -728,15 +732,15 @@ modulestatus:
   archived: Archived
   deleted: Deleted
 
+pollmodule_votingtype:
+  yes_no: Yes/No
+  yes_no_maybe: Yes/No/Maybe
+  ranking: Rating
+  amount: Amount
+
 invitationrule:
   everyone: Everyone
   none_except: None except authorized
-
-pollmoduletype:
-  when: When
-  what: What
-  where: Where
-  whobringswhat: What do you need?
 
 contact_info_type:
   home: Home

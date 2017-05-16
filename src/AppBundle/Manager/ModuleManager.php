@@ -15,8 +15,10 @@ use AppBundle\Entity\Event\Module;
 use AppBundle\Entity\Event\ModuleInvitation;
 use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
+use AppBundle\Entity\Module\PollProposalResponse;
 use AppBundle\Form\Module\ModuleType;
 use AppBundle\Security\ModuleVoter;
+use AppBundle\Security\PollProposalVoter;
 use AppBundle\Utils\enum\EventInvitationStatus;
 use AppBundle\Utils\enum\InvitationRule;
 use AppBundle\Utils\enum\ModuleInvitationStatus;
@@ -24,6 +26,7 @@ use AppBundle\Utils\enum\ModuleStatus;
 use AppBundle\Utils\enum\ModuleType as EnumModuleType;
 use AppBundle\Utils\enum\PollModuleType;
 use AppBundle\Utils\enum\PollModuleVotingType;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactory;
@@ -64,6 +67,9 @@ class ModuleManager
     /** @var PollProposalManager */
     private $pollProposalManager;
 
+    /** @var PollProposalResponseManager */
+    private $pollProposalResponseManager;
+
     /** @var TranslatorInterface $translator */
     private $translator;
 
@@ -75,7 +81,8 @@ class ModuleManager
 
     public function __construct(EntityManager $doctrine, TokenStorageInterface $tokenStorage, AuthorizationCheckerInterface $authorizationChecker, FormFactoryInterface $formFactory,
                                 GenerateursToken $generateurToken, EngineInterface $templating, ModuleInvitationManager $moduleInvitationManager, PollProposalManager $pollProposalManager,
-                                DiscussionManager $discussionManager, TranslatorInterface $translator, NotificationManager $notificationManager)
+                                PollProposalResponseManager $pollProposalResponseManager, DiscussionManager $discussionManager, TranslatorInterface $translator,
+                                NotificationManager $notificationManager)
     {
         $this->entityManager = $doctrine;
         $this->tokenStorage = $tokenStorage;
@@ -86,6 +93,7 @@ class ModuleManager
         $this->moduleInvitationManager = $moduleInvitationManager;
         $this->discussionManager = $discussionManager;
         $this->pollProposalManager = $pollProposalManager;
+        $this->pollProposalResponseManager = $pollProposalResponseManager;
         $this->translator = $translator;
         $this->notificationManager = $notificationManager;
     }
@@ -321,6 +329,7 @@ class ModuleManager
     {
         $this->module = $moduleForm->getData();
 
+        /*--  Gestion des invitations au module  --*/
         $moduleInvitationsSelection = $moduleForm->get('moduleInvitationSelected')->getData();
         /** @var ModuleInvitation $moduleInvitation */
         foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
@@ -346,17 +355,105 @@ class ModuleManager
             $this->entityManager->persist($moduleInvitation);
         }
 
+        /*--  IF PollModule  --*/
+        if ($this->module->getPollModule() != null && (($pollModuleForm = $moduleForm->get('pollModule')) != null)) {
+            /*--  Gestion du VotingType  --*/
+            $oldVotingType = $pollModuleForm->get('oldVotingType')->getData();
+            if ($oldVotingType !== $this->module->getPollModule()->getVotingType()) {
+                $moduleInvitationToWarn = $this->changePollModuleVotingType($oldVotingType);
+
+                if(count($moduleInvitationToWarn) > 0) {
+                    $this->notificationManager->createChangPollModuleVotingTypeNotifications($this->module, $moduleInvitationToWarn);
+                }
+            }
+        }
+
         $this->entityManager->persist($this->module);
         $this->entityManager->flush();
         return $this->module;
     }
 
     /**
+     * @param $oldVotingType string L'ancien type de vote du sondage
+     * @return Collection|array Les ModuleInvitation à prévenir d'un changement de vote
+     */
+    private function changePollModuleVotingType($oldVotingType)
+    {
+        $moduleInvitationsToWarn = array();
+        $pollModule = $this->module->getPollModule();
+        $newVotingType = $pollModule->getVotingType();
+
+        if ($newVotingType == PollModuleVotingType::AMOUNT || $oldVotingType == PollModuleVotingType::AMOUNT) {
+            $this->pollProposalResponseManager->resetPollProposalResponse($pollModule);
+            return $this->module->getFilteredModuleInvitations();
+        }
+
+        if ($newVotingType === PollModuleVotingType::RANKING) {
+            /** @var ModuleInvitation $moduleInvitation */
+            foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
+                /** @var PollProposalResponse $pollProposalResponse */
+                foreach ($moduleInvitation->getPollProposalResponses() as $pollProposalResponse) {
+                    if ($pollProposalResponse->getAnswer() !== null) {
+                        if ($oldVotingType == PollModuleVotingType::YES_NO_MAYBE || $oldVotingType == PollModuleVotingType::YES_NO) {
+                            if ($pollProposalResponse->getAnswer() === \AppBundle\Utils\enum\PollProposalResponse::YES) {
+                                $pollProposalResponse->setAnswer(5);
+                            } elseif ($pollProposalResponse->getAnswer() === \AppBundle\Utils\enum\PollProposalResponse::NO) {
+                                $pollProposalResponse->setAnswer(1);
+                            } else {
+                                $pollProposalResponse->setAnswer(3);
+                            }
+                        }
+                    }
+                }
+            }
+        } elseif ($oldVotingType === PollModuleVotingType::RANKING) {
+            /** @var ModuleInvitation $moduleInvitation */
+            foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
+                /** @var PollProposalResponse $pollProposalResponse */
+                foreach ($moduleInvitation->getPollProposalResponses() as $pollProposalResponse) {
+                    if ($pollProposalResponse->getAnswer() !== null) {
+                        if ($pollProposalResponse->getAnswer() > 4) {
+                            $pollProposalResponse->setAnswer(\AppBundle\Utils\enum\PollProposalResponse::YES);
+                        } elseif ($pollProposalResponse->getAnswer() == 1) {
+                            $pollProposalResponse->setAnswer(\AppBundle\Utils\enum\PollProposalResponse::NO);
+                        } else {
+                            if ($newVotingType == PollModuleVotingType::YES_NO_MAYBE) {
+                                $pollProposalResponse->setAnswer(\AppBundle\Utils\enum\PollProposalResponse::MAYBE);
+                            } else {
+                                if ($pollProposalResponse->getAnswer() == 2) {
+                                    $pollProposalResponse->setAnswer(\AppBundle\Utils\enum\PollProposalResponse::NO);
+                                } else {
+                                    $pollProposalResponse->setAnswer(null);
+                                    $moduleInvitationsToWarn[$moduleInvitation->getId()] = $moduleInvitation;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } elseif ($oldVotingType == PollModuleVotingType::YES_NO_MAYBE && $newVotingType == PollModuleVotingType::YES_NO) {
+            /** @var ModuleInvitation $moduleInvitation */
+            foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
+                /** @var PollProposalResponse $pollProposalResponse */
+                foreach ($moduleInvitation->getPollProposalResponses() as $pollProposalResponse) {
+                    if ($pollProposalResponse->getAnswer() === \AppBundle\Utils\enum\PollProposalResponse::MAYBE) {
+                        $pollProposalResponse->setAnswer(null);
+                        $moduleInvitationsToWarn[$moduleInvitation->getId()] = $moduleInvitation;
+                    }
+                }
+            }
+        }
+        return $moduleInvitationsToWarn;
+    }
+
+
+    /**
      * @param Module $module Le module à afficher
      * @param ModuleInvitation|null $userModuleInvitation
      * @return string La vue HTML sous forme de string
      */
-    public function displayModulePartial(Module $module, ModuleInvitation $userModuleInvitation = null)
+    public
+    function displayModulePartial(Module $module, ModuleInvitation $userModuleInvitation = null)
     {
         $moduleForm = null;
         if ($this->authorizationChecker->isGranted(ModuleVoter::EDIT, array($module, $userModuleInvitation))) {
@@ -370,11 +467,13 @@ class ModuleManager
             $comments = [];
         }
         if ($module->getPollModule() != null) {
-            // TODO Check authorization to "AddPollProposal"
-            $pollModuleOptions['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule())->createView();
-            $listView = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
-            if ($listView != null) {
-                $pollModuleOptions['pollProposalListAddForm'] = $listView->createView();
+            $pollModuleOptions = array();
+            if ($this->authorizationChecker->isGranted(PollProposalVoter::ADD, array($module->getPollModule(), $userModuleInvitation))) {
+                $pollModuleOptions['pollProposalAddForm'] = $this->pollProposalManager->createPollProposalAddForm($module->getPollModule())->createView();
+                $listView = $this->pollProposalManager->createPollProposalListAddForm($module->getPollModule());
+                if ($listView != null) {
+                    $pollModuleOptions['pollProposalListAddForm'] = $listView->createView();
+                }
             }
             return $this->templating->render("@App/Event/module/displayPollModule.html.twig", array(
                 "module" => $module,
@@ -404,7 +503,8 @@ class ModuleManager
      * @param Module $module Le module à afficher
      * @return string La vue HTML sous forme de string
      */
-    public function displayPollModuleResultTable(Module $module)
+    public
+    function displayPollModuleResultTable(Module $module)
     {
         return $this->templating->render("@App/Event/module/pollModulePartials/pollProposalGuestResponseTableDisplay.html.twig", array(
             "module" => $module,
