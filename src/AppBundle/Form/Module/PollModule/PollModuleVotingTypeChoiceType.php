@@ -25,7 +25,7 @@ class PollModuleVotingTypeChoiceType extends AbstractType
             'choices' => array(
                 PollModuleVotingType::YES_NO_MAYBE => PollModuleVotingType::YES_NO_MAYBE,
                 PollModuleVotingType::YES_NO => PollModuleVotingType::YES_NO,
-                PollModuleVotingType::RANKING => PollModuleVotingType::RANKING,
+                PollModuleVotingType::SCORING => PollModuleVotingType::SCORING,
                 PollModuleVotingType::AMOUNT => PollModuleVotingType::AMOUNT
             )
         ));

@@ -742,7 +742,8 @@ modulestatus:
 pollmodule_votingtype:
   yes_no: Yes/No
   yes_no_maybe: Yes/No/Maybe
-  ranking: Rating
+  scoring: Preferences
+  ranking: Ranking
   amount: Amount
 
 invitationrule:

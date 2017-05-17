@@ -116,7 +116,7 @@ function voteAmountAction(params) {
         });
 }
 
-function voteRankingAction(params) {
+function voteScoringAction(params) {
     var urlTarget = params[0];
     var e = params[1];
     var data = params[2];

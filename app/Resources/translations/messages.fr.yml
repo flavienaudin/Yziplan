@@ -741,6 +741,7 @@ modulestatus:
 pollmodule_votingtype:
   yes_no: Oui/Non
   yes_no_maybe: Oui/Non/Peut-être
+  scoring: Préférences
   ranking: Classement
   amount: Quantité
 

@@ -124,8 +124,8 @@
                 "userModuleInvitation":userModuleInvitation,
                 "moduleInvitations":moduleInvitations
             }) }}
-        {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::RANKING') %}
-            {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_vote_ranking.html.twig', {
+        {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::SCORING') %}
+            {{ include('@App/Event/module/pollModulePartials/pollProposalGuestResponseRowDisplay_vote_scoring.html.twig', {
                 "pollProposal":pollProposal,
                 "userModuleInvitation":userModuleInvitation,
                 "moduleInvitations":moduleInvitations

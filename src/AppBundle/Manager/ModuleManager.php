@@ -179,7 +179,7 @@ class ModuleManager
                 $pollModule->setType(PollModuleType::WHO_BRINGS_WHAT);
             } elseif ($subtype == PollModuleType::ACTIVITY) {
                 $this->module->setName($this->translator->trans("pollmodule.add_link.activity"));
-                $pollModule->setVotingType(PollModuleVotingType::RANKING);
+                $pollModule->setVotingType(PollModuleVotingType::SCORING);
                 $pollModule->setType(PollModuleType::ACTIVITY);
             }
             $this->module->setPollModule($pollModule);
@@ -387,7 +387,7 @@ class ModuleManager
             return $this->pollProposalResponseManager->resetPollProposalResponse($pollModule);
         }
 
-        if ($newVotingType === PollModuleVotingType::RANKING) {
+        if ($newVotingType === PollModuleVotingType::SCORING) {
             /** @var ModuleInvitation $moduleInvitation */
             foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
                 /** @var PollProposalResponse $pollProposalResponse */
@@ -405,7 +405,7 @@ class ModuleManager
                     }
                 }
             }
-        } elseif ($oldVotingType === PollModuleVotingType::RANKING) {
+        } elseif ($oldVotingType === PollModuleVotingType::SCORING) {
             /** @var ModuleInvitation $moduleInvitation */
             foreach ($this->module->getModuleInvitations() as $moduleInvitation) {
                 /** @var PollProposalResponse $pollProposalResponse */
