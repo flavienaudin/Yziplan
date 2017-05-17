@@ -46,17 +46,18 @@
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
+                        {% set average = numberOfResponse > 0 ? (totalOfResponse/numberOfResponse) | number_format(1) : 0 %}
                         </tbody>
                     </table>
                 </div>
                 <div class=" w-100">
-                    <h3>{{ "pollmodule.display.result.moyenne"|trans }}&#8239;{{ totalOfResponse }}</h3>
+                    <h3>{{ "pollmodule.display.result.moyenne"|trans }}&#8239;{{ average }}</h3>
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% set average = numberOfResponse > 0 ? (totalOfResponse/numberOfResponse) | number_format(1) : 0 %}
+
 {% if totalOfResponse > 0 %}
     <a data-toggle="modal" href="#modalPollProposal{{ pollProposal.id }}" class="">
         <span>
