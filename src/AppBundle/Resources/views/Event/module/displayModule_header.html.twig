@@ -14,8 +14,9 @@ Données d'entrée :
             </div>
             <div class="pull-right">
                 {% block mhMediaRight %}
-                    {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) or is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), [module, userModuleInvitation]) %}
-                        <ul class="actions a-alt">
+
+                    <ul class="actions a-alt">
+                        {% if is_granted(constant('AppBundle\\Security\\ModuleVoter::EDIT'), [module, userModuleInvitation]) or is_granted(constant('AppBundle\\Security\\ModuleVoter::DELETE'), [module, userModuleInvitation]) %}
                             <li class="dropdown">
                                 <a href="" data-toggle="dropdown" aria-expanded="false"> <i class="zmdi zmdi-settings"></i> </a>
                                 <ul class="dropdown-menu dropdown-menu-right dm-icon">
@@ -65,10 +66,21 @@ Données d'entrée :
                                             }
                                         </script>
                                     {% endif %}
+
                                 </ul>
                             </li>
-                        </ul>
-                    {% endif %}
+                        {% endif %}
+                        <li>
+                            <a href="{{ path('refreshEventModule',{'token':module.token }) }}" id="refresh_module_{{ module.token }}_link" class=""><i class="zmdi zmdi-refresh"></i></a>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#refresh_module_{{ module.token }}_link').on('click', function (e) {
+                                        ajaxRequest($(this), null, e, null, null, null);
+                                    });
+                                })
+                            </script>
+                        </li>
+                    </ul>
                 {% endblock mhMediaRight %}
             </div>
             <div class="media-body">
