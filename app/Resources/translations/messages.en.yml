@@ -855,6 +855,14 @@ index:
       sentense1: We wondered how we could burglar 3 casinos simultaneously.
       sentense2: Yziplan helped us to achieve our goal with serenity!
       author: Daniel "Danny" Ocean - Ocean's Eleven
+  section_newsletter:
+    title: Remain informed of the advanced of the project
+    subtitle: Subscribe to our newsletter via the following form:
+    form:
+      email: Email address
+      firstname: First Name
+      lastname: Last Name
+      submit: Subscribe
   section_social:
     title: Follow us on social networks!
     subtitle: And do not miss anything new to come

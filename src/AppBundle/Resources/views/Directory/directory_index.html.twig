@@ -87,7 +87,7 @@ Données d'entrée :
                         <a href="#modal_information_{{ activity.event.tokenDuplication }}" data-toggle="modal" class="btn btn-flat btn-icon-text m-b-10" aria-expanded="false">
                             <i class="zmdi zmdi-info-outline"></i> {{ "directory.card.details"|trans }}
                         </a>
-                        <a href="{{ path('duplicateEvent', {'tokenDuplication': activity.event.tokenDuplication}) }}" class="btn btn-primary btn-icon-text m-b-10">
+                        <a href="{{ path('duplicateEvent', {'tokenDuplication': activity.event.tokenDuplication}) }}" class="btn btn-primary btn-icon-text m-b-10" rel="nofollow">
                             <i class="zmdi zmdi-plus-circle-o-duplicate"></i>{{ "directory.card.organize"|trans }}
                         </a>
                         <div class="modal fade" id="modal_information_{{ activity.event.tokenDuplication }}" tabindex="-1" role="dialog"

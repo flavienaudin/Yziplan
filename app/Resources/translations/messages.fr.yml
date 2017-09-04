@@ -854,9 +854,17 @@ index:
       sentense1: On se demandait comment on allait pouvoir cambrioler 3 casinos simultanément.
       sentense2: Yziplan nous a permis d'atteindre notre objectif en toute sérénité!
       author: Daniel "Danny" Ocean - Ocean's Eleven
+  section_newsletter:
+    title: Tenez-vous informé de l'avancé du projet
+    subtitle: Inscrivez-vous à notre lettre d'information via le formulaire ci-dessous:
+    form:
+      email: Adresse e-mail
+      firstname: Prénom
+      lastname: Nom
+      submit: Inscrivez-vous
   section_social:
-    title: Retrouve-nous sur les réseaux sociaux!
-    subtitle: Et ne manque rien des nouveautés à venir
+    title: Retrouvez-nous sur les réseaux sociaux!
+    subtitle: Et ne manquez rien des nouveautés à venir
   callout1: Amusez-vous
   callout2: Partage tes activités
   callout3: S'organiser devient un plaisir
