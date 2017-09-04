@@ -232,7 +232,7 @@ class AppMailer
         return false;
     }
 
-    public function sendNewNotificationEmail(EventInvitation $eventInvitation, Notification $notification, EventInvitation $triggerer)
+    public function sendNewNotificationEmail(EventInvitation $eventInvitation, Notification $notification, EventInvitation $triggerer = null)
     {
         if ($eventInvitation->getApplicationUser() != null) {
             if ($eventInvitation->getApplicationUser()->getAccountUser() != null) {
@@ -256,6 +256,9 @@ class AppMailer
                     break;
                 case NotificationTypeEnum::ADD_POLL_PROPOSAL:
                     $this->sendMessage("@App/Notifications/emails/notification_new_pollProposal_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo, self::SEND_SPOLL_QUICKLY);
+                    break;
+                case NotificationTypeEnum::CHANGE_POLLMODULE_VOTINGTYPE:
+                    $this->sendMessage("@App/Notifications/emails/notification_change_pollmodule_votingtype_email.html.twig", $context, $this->parameters['from_email']['yziplan'], $emailTo, self::SEND_SPOLL_QUICKLY);
                     break;
             }
             return true;

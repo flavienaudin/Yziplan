@@ -515,6 +515,8 @@ module:
     param.title: Paramètres généraux
     invitations:
       title: Gestion des invitations
+    pollmodule:
+      title: Paramètres du sondage
   form:
     name:
       label: Intitulé du sondage
@@ -560,16 +562,18 @@ pollmodule:
   display:
     no_proposal: Pas encore de proposition
     result:
-     vote: vote(s)
-     contribution: contribution(s)
-     total: "Total:"
-     moyenne: "Moyenne:"
-     allresult: Voir l'ensemble des réponses
-     modal:
-      title: Réponses
+      vote: vote(s)
+      contribution: contribution(s)
+      total: "Total:"
+      moyenne: "Moyenne:"
+      allresult: Voir l'ensemble des réponses
+      modal:
+        title: Réponses
   form:
     guestsCanAddProposal:
       label: Permettre aux invités d'ajouter des propositions
+    votingType:
+      label: Type de vote
   modal:
     addPollProposal:
       title: Ajouter une proposition
@@ -618,7 +622,8 @@ notifications:
     none: Pas de notitication en attente
   comment: "%number_new_comments% nouveau commentaire|%number_new_comments% nouveaux commentaires"
   new_module: "%organizers% a ajouté un nouveau sondage|%organizers% ont ajouté un nouveau sondage"
-  new_pollproposal: "%organizer% a ajouté une nouvel proposition"
+  new_pollproposal: "%organizer% a ajouté une nouvelle proposition"
+  change_pollmodule_voting_type: "Le mode de participation au sondage a été modifié, Merci de vérifier vos réponses"
   emails:
     common:
       invitation_link: "Suivez le lien ci-dessous pour vous rendre sur la page de l'événement :"
@@ -637,6 +642,12 @@ notifications:
       subject: "%event_name% : %subject_name% - Nouvelle proposition"
       body:
         paragraph_event: "%triggerer% a ajouté une proposition au sondage \"%subject_name%\""
+    change_pollmodule_voting_type:
+      subject: "%event_name% - Modifcation du mode de participation au sondage %subject_name%"
+      body:
+        paragraph_event: |
+          Le mode de participation au sondage "%subject_name%" a été modifié et vos réponses ont dû être réinitialisées. Vous devez à nouveau participer selon le mode choisi par l'organisateur.
+          Désolé de la gêne occasionnée.
 
 # Globals
 global:
@@ -727,15 +738,16 @@ modulestatus:
   archived: Archivé
   deleted: Annulé
 
+pollmodule_votingtype:
+  yes_no: Oui/Non
+  yes_no_maybe: Oui/Non/Peut-être
+  scoring: Préférences
+  ranking: Classement
+  amount: Quantité
+
 invitationrule:
   everyone: Tout le monde
   none_except: Personne sauf autorisation
-
-pollmoduletype:
-  when: Quand
-  what: Quoi
-  where: Où
-  whobringswhat: Qu'est-ce qu'il faut ?
 
 contact_info_type:
   home: Personnelle
@@ -842,9 +854,17 @@ index:
       sentense1: On se demandait comment on allait pouvoir cambrioler 3 casinos simultanément.
       sentense2: Yziplan nous a permis d'atteindre notre objectif en toute sérénité!
       author: Daniel "Danny" Ocean - Ocean's Eleven
+  section_newsletter:
+    title: Tenez-vous informé de l'avancé du projet
+    subtitle: Inscrivez-vous à notre lettre d'information via le formulaire ci-dessous:
+    form:
+      email: Adresse e-mail
+      firstname: Prénom
+      lastname: Nom
+      submit: Inscrivez-vous
   section_social:
-    title: Retrouve-nous sur les réseaux sociaux!
-    subtitle: Et ne manque rien des nouveautés à venir
+    title: Retrouvez-nous sur les réseaux sociaux!
+    subtitle: Et ne manquez rien des nouveautés à venir
   callout1: Amusez-vous
   callout2: Partage tes activités
   callout3: S'organiser devient un plaisir

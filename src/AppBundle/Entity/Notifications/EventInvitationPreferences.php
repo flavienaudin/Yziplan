@@ -5,6 +5,7 @@ namespace AppBundle\Entity\Notifications;
 use AppBundle\Entity\Event\EventInvitation;
 use AppBundle\Utils\enum\NotificationFrequencyEnum;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * EventInvitationPreferences
@@ -14,6 +15,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class EventInvitationPreferences
 {
+    /** Active les timestamps automatiques pour la creation et la mise a jour */
+    use TimestampableEntity;
+
     /**
      * @var int
      *
@@ -64,6 +68,21 @@ class EventInvitationPreferences
      * @ORM\Column(name="notif_new_pollproposal_last_email_at", type="datetime", nullable=true)
      */
     private $notifNewPollproposalLastEmailAt;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="notif_change_poll_module_voting_type", type="boolean")
+     */
+    private $notifChangePollModuleVotingType = true;
+
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="notif_change_poll_module_voting_type_last_email_at", type="datetime", nullable=true)
+     */
+    private $notifChangePollModuleVotingTypeLastEmailAt;
 
     /**
      * @var string
@@ -200,6 +219,42 @@ class EventInvitationPreferences
     public function setNotifNewPollproposalLastEmailAt($notifNewPollproposalLastEmailAt)
     {
         $this->notifNewPollproposalLastEmailAt = $notifNewPollproposalLastEmailAt;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNotifChangePollModuleVotingType()
+    {
+        return $this->notifChangePollModuleVotingType;
+    }
+
+    /**
+     * @param bool $notifChangePollModuleVotingType
+     * @return EventInvitationPreferences
+     */
+    public function setNotifChangePollModuleVotingType($notifChangePollModuleVotingType)
+    {
+        $this->notifChangePollModuleVotingType = $notifChangePollModuleVotingType;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getNotifChangePollModuleVotingTypeLastEmailAt()
+    {
+        return $this->notifChangePollModuleVotingTypeLastEmailAt;
+    }
+
+    /**
+     * @param \DateTime $notifChangePollModuleVotingTypeLastEmailAt
+     * @return EventInvitationPreferences
+     */
+    public function setNotifChangePollModuleVotingTypeLastEmailAt($notifChangePollModuleVotingTypeLastEmailAt)
+    {
+        $this->notifChangePollModuleVotingTypeLastEmailAt = $notifChangePollModuleVotingTypeLastEmailAt;
         return $this;
     }
 

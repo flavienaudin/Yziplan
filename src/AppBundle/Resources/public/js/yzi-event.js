@@ -116,7 +116,7 @@ function voteAmountAction(params) {
         });
 }
 
-function voteRankingAction(params) {
+function voteScoringAction(params) {
     var urlTarget = params[0];
     var e = params[1];
     var data = params[2];
@@ -187,14 +187,17 @@ function submitModuleEditionForm(params) {
     var form = params[0];
     var e = params[1];
     var moduleToken = params[2];
+    $("#moduleEdit_modal_" + moduleToken).modal('hide');
     ajaxFormSubmission(form, e, function (responseJSON, textStatus, jqXHR) {
-        $("#moduleEdit_modal_" + moduleToken).modal('hide');
-    }, null, function () {
-        $grid = $('.grid');
-        if ($grid[0]) {
-            $grid.masonry('layout');
-        }
-    });
+        },
+        function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+            $("#moduleEdit_modal_" + moduleToken).modal('show');
+        }, function () {
+            $grid = $('.grid');
+            if ($grid[0]) {
+                $grid.masonry('layout');
+            }
+        });
 }
 
 /**********************************************************************************************************************

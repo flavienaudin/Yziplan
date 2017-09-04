@@ -1,0 +1,34 @@
+{% extends ':Email:template_email.html.twig' %}
+
+{# Données :
+- recipient_name (string) Le nom du destinaire
+- eventInvitation (EventInvitation) L'invitation de l'invité à qui envoyer l'email
+- notification (Notification) La notification à envoyer
+#}
+
+{% block subject_email %}{{ 'notifications.emails.change_pollmodule_voting_type.subject'|trans({"%event_name%":eventInvitation.event.name, "%subject_name%":notification.data.subject.name})|raw }}{% endblock %}
+
+{% block text_body %}
+    {{ 'notifications.emails.change_pollmodule_voting_type.body.paragraph_event'|trans({"%subject_name%":notification.data.subject.name})|raw }}
+    {{ 'notifications.emails.common.invitation_link'|trans|raw }}
+    {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}
+    {{ "email.invitation_keep_secret"|trans }}
+{% endblock %}
+{% block text_footer %}
+    {{ parent() }}
+    {{ "notifications.emails.common.preferences_link"|trans }}
+    {{ url('setEmailNotificationPreferences', {'token':eventInvitation.token}) }}
+{% endblock text_footer %}
+
+{% block html_body %}
+    <p>{{ 'notifications.emails.change_pollmodule_voting_type.body.paragraph_event'|trans({"%subject_name%":notification.data.subject.name}) }}</p>
+    <p>{{ 'notifications.emails.common.invitation_link'|trans }}
+        <a href="{{ url('displayEventInvitation', {'token':eventInvitation.token}) }}">
+            {{ url('displayEventInvitation', {'token':eventInvitation.token}) }}</a></p>
+    <p style="text-align:center"><i>{{ "email.invitation_keep_secret"|trans }}</i></p>
+{% endblock %}
+{% block html_footer %}
+    {{ parent() }}
+    {{ "notifications.emails.common.preferences_link"|trans }}
+    <a href="{{ url('setEmailNotificationPreferences', {'token':eventInvitation.token}) }}">{{ "notifications.emails.common.preferences"|trans }}</a>
+{% endblock html_footer %}

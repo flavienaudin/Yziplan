@@ -19,7 +19,8 @@ class NotificationTypeEnum extends AbstractEnumType
     const POST_COMMENT = 'notification_type.post_comment';
     const ADD_MODULE = 'notification_type.add_module';
     const ADD_POLL_PROPOSAL = 'notification_type.add_pollproposal';
+    const CHANGE_POLLMODULE_VOTINGTYPE = 'notification_type.change_pollmodule_votingtype';
 
     protected $name = 'enum_notification_type';
-    protected $values = array(self::POST_COMMENT, self::ADD_MODULE, self::ADD_POLL_PROPOSAL);
+    protected $values = array(self::POST_COMMENT, self::ADD_MODULE, self::ADD_POLL_PROPOSAL, self::CHANGE_POLLMODULE_VOTINGTYPE);
 }

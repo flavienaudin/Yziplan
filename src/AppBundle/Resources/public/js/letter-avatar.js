@@ -71,7 +71,6 @@
     }
 
     LetterAvatar.transform = function () {
-
         Array.prototype.forEach.call(d.querySelectorAll('img[avatar]'), function (img, name) {
             name = img.getAttribute('avatar');
             img.src = LetterAvatar(name, img.getAttribute('width'), img.hasAttribute('userAvatar'));
@@ -83,7 +82,7 @@
     };
 
     LetterAvatar.setConnectedUserName = function (userName) {
-        Array.prototype.forEach.call(d.querySelectorAll('img[userAvatar]'), function (img) {
+        Array.prototype.forEach.call(d.querySelectorAll('img[avatar][userAvatar]'), function (img) {
             img.setAttribute('avatar', userName);
         });
     };

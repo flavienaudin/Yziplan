@@ -30,9 +30,7 @@ Données d'entrée :
         <section id="top" class="header" style="background-image: url({{ asset('bundles/app/img/index/organisation.jpeg') }})">
             <div class="text-vertical-center">
                 <h1 class="c-white">{{ "index.header.title"|trans }}</h1>
-                <h3 class="c-white">{{ "index.header.subtitle"|trans }}</h3>
-                <br>
-                <a href="{{ path('createEvent') }}" class="btn btn-action bgm-teal btn-lg">{{ "index.header.button"|trans }}</a>
+                <h3 class="c-white">{{ "index.header.subtitle"|trans }}</h3><br> <a href="{{ path('createEvent') }}" class="btn btn-action bgm-teal btn-lg">{{ "index.header.button"|trans }}</a>
             </div>
         </section>
 
@@ -111,6 +109,7 @@ Données d'entrée :
                 </div>
             </div>
         </section>
+
         <section id="section_why" class="index-section bgm-white">
             <div class="container">
                 <div class="row text-center">
@@ -128,7 +127,7 @@ Données d'entrée :
                                     <img src="{{ asset("bundles/app/img/index/use/vote2.png") }}" class="img-maxw300px p-b-10">
                                 </div>
                                 <div class="col-xs-12">
-                                     <p>{{ "index.section_why.vote"|trans|raw }}</p>
+                                    <p>{{ "index.section_why.vote"|trans|raw }}</p>
                                 </div>
                                 <div class="col-xs-12 visible-xs">
                                     <hr class="small black">
@@ -139,7 +138,7 @@ Données d'entrée :
                                     <img src="{{ asset("bundles/app/img/index/use/result2.png") }}" class="img-maxw400px p-b-10">
                                 </div>
                                 <div class="col-xs-12">
-                                     <p>{{ "index.section_why.result"|trans|raw }}</p>
+                                    <p>{{ "index.section_why.result"|trans|raw }}</p>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +149,7 @@ Données d'entrée :
 
         <aside id="callout1" class="callout parallax-window" data-parallax="scroll" data-image-src="{{ asset("bundles/app/img/index/drinks.jpg") }}">
             <div class="text-vertical-center">
-               <h1 class="c-white">{{ "index.callout1"|trans }}</h1>
+                <h1 class="c-white">{{ "index.callout1"|trans }}</h1>
             </div>
         </aside>
 
@@ -297,7 +296,7 @@ Données d'entrée :
                                         <a href="#modal_information_{{ activity.event.tokenDuplication }}" data-toggle="modal" class="btn btn-flat btn-icon-text m-b-10" aria-expanded="false">
                                             <i class="zmdi zmdi-info-outline"></i> {{ "directory.card.details"|trans }}
                                         </a>
-                                        <a href="{{ path('duplicateEvent', {'tokenDuplication': activity.event.tokenDuplication}) }}" class="btn btn-primary btn-icon-text m-b-10">
+                                        <a href="{{ path('duplicateEvent', {'tokenDuplication': activity.event.tokenDuplication}) }}" class="btn btn-primary btn-icon-text m-b-10" rel="nofollow">
                                             <i class="zmdi zmdi-plus-circle-o-duplicate"></i>{{ "directory.card.organize"|trans }}
                                         </a>
                                         <div class="modal fade" id="modal_information_{{ activity.event.tokenDuplication }}" tabindex="-1" role="dialog" data-backdrop="static"
@@ -376,7 +375,7 @@ Données d'entrée :
                                 {{ form_end(searchForm) }}
                             </div>
                         </div>
-                        {#<a href="{{ path('directoryIndex') }}" class="btn btn-action bgm-teal btn-lg">{{ "index.section_directory.button"|trans }}</a>#}
+                        <a href="{{ path('directoryIndex') }}" class="btn btn-action bgm-teal btn-lg">{{ "index.section_directory.button"|trans }}</a>
                     </div>
                     <!-- /.col-lg-10 -->
                 </div>
@@ -413,21 +412,21 @@ Données d'entrée :
                     <div class="col-lg-10 col-lg-offset-1">
                         <h2>{{ "index.section_quote.title"|trans }}</h2>
                         <hr class="small black">
-                         <blockquote>
+                        <blockquote>
                             <div class="quote-img quote-td pull-left m-r-15" style="background-image: url({{ asset('bundles/app/img/index/quotes/quote-mi.jpg') }})"></div>
                             {{ "index.section_quote.quote1.sentense1"|trans }}<br>{{ "index.section_quote.quote1.sentense2"|trans }}
                             <cite>{{ "index.section_quote.quote1.author"|trans }}</cite>
-                         </blockquote>
-                         <blockquote class="blockquote-reverse">
-                            <div class="quote-img quote-td pull-right m-l-15" style="background-image: url({{  asset('bundles/app/img/index/quotes/quote-hannibal.jpg')  }})"></div>
+                        </blockquote>
+                        <blockquote class="blockquote-reverse">
+                            <div class="quote-img quote-td pull-right m-l-15" style="background-image: url({{ asset('bundles/app/img/index/quotes/quote-hannibal.jpg') }})"></div>
                             {{ "index.section_quote.quote2.sentense"|trans }}
                             <cite>{{ "index.section_quote.quote2.author"|trans }}</cite>
-                         </blockquote>
-                         <blockquote>
+                        </blockquote>
+                        <blockquote>
                             <div class="quote-img quote-td pull-left m-r-15" style="background-image: url({{ asset('bundles/app/img/index/quotes/quote-ocean.jpg') }})"></div>
                             {{ "index.section_quote.quote3.sentense1"|trans }}<br>{{ "index.section_quote.quote3.sentense2"|trans }}
                             <cite>{{ "index.section_quote.quote3.author"|trans }}</cite>
-                         </blockquote>
+                        </blockquote>
                         <!-- /.row (nested) -->
                     </div>
                     <!-- /.col-lg-10 -->
@@ -443,32 +442,91 @@ Données d'entrée :
             </div>
         </aside>
 
-         <section class="index-section  bgm-white">
+        <section id="newsletter-subscription" class="index-section bgm-white">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2 text-center">
+                        <h2><strong>{{ "index.section_newsletter.title"|trans }}</strong></h2>
+                        <hr class="small">
+                        <p>{{ "index.section_newsletter.subtitle"|trans }}</p><br>
+                        <!-- Begin MailChimp Signup Form -->
+                        <div id="mc_embed_signup">
+                            <form action="//ardteam.us16.list-manage.com/subscribe/post?u=624db66e473c84a8d447a261f&amp;id=688c1a4be2" method="post" id="mc-embedded-subscribe-form"
+                                  name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
+                                <div id="mc_embed_signup_scroll">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="mce-EMAIL" class="sr-only">{{ "index.section_newsletter.form.email"|trans }}<span class="asterisk">*</span></label> <input type="email"
+                                                                                                                                                                                       name="EMAIL"
+                                                                                                                                                                                       class="required email form-control"
+                                                                                                                                                                                       id="mce-EMAIL"
+                                                                                                                                                                                       placeholder="{{ "index.section_newsletter.form.email"|trans }} *">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="mce-FNAME" class="sr-only">{{ "index.section_newsletter.form.firstname"|trans }}</label> <input type="text" name="FNAME"
+                                                                                                                                                            class="form-control" id="mce-FNAME"
+                                                                                                                                                            placeholder="{{ "index.section_newsletter.form.firstname"|trans }}">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="mce-LNAME" class="sr-only">{{ "index.section_newsletter.form.lastname"|trans }}</label> <input type="text" name="LNAME" class="form-control"
+                                                                                                                                                           id="mce-LNAME"
+                                                                                                                                                           placeholder="{{ "index.section_newsletter.form.lastname"|trans }}">
+                                            </div>
+                                        </div>
+                                        <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups-->
+                                        <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_624db66e473c84a8d447a261f_688c1a4be2" tabindex="-1" value=""></div>
+                                        <div class="col-md-12">
+                                            <div class="clear">
+                                                <button type="submit" name="subscribe" id="mc-embedded-subscribe" class="btn btn-primary btn-default">{{ "index.section_newsletter.form.submit"|trans }}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="mce-responses" class="clear">
+                                        <div class="response" id="mce-error-response" style="display:none"></div>
+                                        <div class="response" id="mce-success-response" style="display:none"></div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                        <!--End mc_embed_signup-->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="index-section  bgm-white">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-10 col-lg-offset-1 text-center">
-                    <h2><strong>{{ "index.section_social.title"|trans }}</strong></h2>
+                        <h2><strong>{{ "index.section_social.title"|trans }}</strong></h2>
                         <hr class="small">
-                        <p>{{ "index.section_social.subtitle"|trans }}</p>
-                        <br>
+                        <p>{{ "index.section_social.subtitle"|trans }}</p><br>
                         <ul class="list-inline">
                             <li>
-                                <a href="https://www.facebook.com/Yziplan" target="_blank" class="link-facebook m-r-15" title="{{ "text.social_network.facebook"|trans }}">
-                                <i class="zmdi zmdi-facebook-box zmdi-hc-4x"></i></a>
+                                <a href="https://www.facebook.com/Yziplan" target="_blank" class="link-facebook m-r-15" title="{{ "text.social_network.facebook"|trans }}"> <i
+                                            class="zmdi zmdi-facebook-box zmdi-hc-4x"></i></a>
                             </li>
                             <li>
-                                <a href="https://twitter.com/Yziplan" target="_blank" class="link-twitter m-l-15" title="{{ "text.social_network.twitter"|trans }}">
-                                <i class="zmdi zmdi-twitter zmdi-hc-4x"></i></a>
+                                <a href="https://twitter.com/Yziplan" target="_blank" class="link-twitter m-l-15" title="{{ "text.social_network.twitter"|trans }}"> <i
+                                            class="zmdi zmdi-twitter zmdi-hc-4x"></i></a>
                             </li>
                             <li>
-                                <a href="https://www.instagram.com/yziplan" target="_blank" class="link-instagram m-l-15" title="{{ "text.social_network.instagram"|trans }}">
-                                <i class="zmdi zmdi-instagram zmdi-hc-4x"></i></a>
+                                <a href="https://www.instagram.com/yziplan" target="_blank" class="link-instagram m-l-15" title="{{ "text.social_network.instagram"|trans }}"> <i
+                                            class="zmdi zmdi-instagram zmdi-hc-4x"></i></a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-         </section>
+        </section>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
@@ -532,8 +590,8 @@ Données d'entrée :
             {text: "Utile", weight: 3},
         ];
 
-        $('#index-feature').jQCloud(words,{
-            autoResize : true,
+        $('#index-feature').jQCloud(words, {
+            autoResize: true,
             colors: ["#FFFFFF", "#F5F5F5", "#DFF2FF", "#BBD2E1", "#EFEFEF", "#DCDCDC", "#D3D3D3", "#CECECE", "#C0C0C0", "#A9A9A9"],
         });
     </script>

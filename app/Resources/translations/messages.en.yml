@@ -516,6 +516,8 @@ module:
     param.title: General parameters
     invitations:
       title: Management of invitations
+    pollmodule:
+      title: Poll parameters
   form:
     name:
       label: Module name
@@ -571,6 +573,8 @@ pollmodule:
   form:
     guestsCanAddProposal:
       label: Allow guests to add proposals
+      votingType:
+        label: Voting type
   modal:
     addPollProposal:
       title: Add a proposal
@@ -620,6 +624,7 @@ notifications:
   comment: "%number_new_comments% new comment|%number_new_comments% new comments"
   new_module: "%organizers% added a new poll|%organizers% added a new poll"
   new_pollproposal: "%organizer% added a new poll proposal"
+  change_pollmodule_voting_type: "The mode of participation in the poll was modified, Thank you for checking your answers"
   emails:
     common:
       invitation_link: "Follow the link bellow to go to the event page:"
@@ -638,6 +643,12 @@ notifications:
       subject: "%event_name% : %subject_name% - New poll proposal"
       body:
         paragraph_event: "%triggerer% added a poll proposal to \"%subject_name%\""
+    change_pollmodule_voting_type:
+      subject: "%event_name% - Modifcation of the participation mode in the poll %subject_name%"
+      body:
+        paragraph_event: |
+          The mode of participation in the poll was modified and your answers have been reset. You have to participate again according to the mode chosen by the organizer. Sorry of the caused
+          embarrassment.
 
 # Globals
 global:
@@ -728,15 +739,16 @@ modulestatus:
   archived: Archived
   deleted: Deleted
 
+pollmodule_votingtype:
+  yes_no: Yes/No
+  yes_no_maybe: Yes/No/Maybe
+  scoring: Preferences
+  ranking: Ranking
+  amount: Amount
+
 invitationrule:
   everyone: Everyone
   none_except: None except authorized
-
-pollmoduletype:
-  when: When
-  what: What
-  where: Where
-  whobringswhat: What do you need?
 
 contact_info_type:
   home: Home
@@ -843,6 +855,14 @@ index:
       sentense1: We wondered how we could burglar 3 casinos simultaneously.
       sentense2: Yziplan helped us to achieve our goal with serenity!
       author: Daniel "Danny" Ocean - Ocean's Eleven
+  section_newsletter:
+    title: Remain informed of the advanced of the project
+    subtitle: Subscribe to our newsletter via the following form:
+    form:
+      email: Email address
+      firstname: First Name
+      lastname: Last Name
+      submit: Subscribe
   section_social:
     title: Follow us on social networks!
     subtitle: And do not miss anything new to come

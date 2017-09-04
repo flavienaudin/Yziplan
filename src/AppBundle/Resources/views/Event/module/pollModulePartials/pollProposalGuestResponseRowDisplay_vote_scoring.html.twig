@@ -56,11 +56,11 @@
             var urlTarget = "{{ path('answerPollModuleProposal') }}";
             var pollProposalId = '{{ pollProposal.id }}';
             if (!eventInvitationValid && askGuestName !== undefined) {
-                askGuestName(e, voteRankingAction, [urlTarget, e, data, pollProposalId], function () {
+                askGuestName(e, voteScoringAction, [urlTarget, e, data, pollProposalId], function () {
                     $('.pollresponse-preloader').remove();
                 });
             } else {
-                voteRankingAction([urlTarget, e, data, pollProposalId]);
+                voteScoringAction([urlTarget, e, data, pollProposalId]);
             }
         });
     });

@@ -10,8 +10,11 @@ namespace AppBundle\Manager;
 
 
 use AppBundle\Entity\Event\ModuleInvitation;
+use AppBundle\Entity\Module\PollModule;
 use AppBundle\Entity\Module\PollProposal;
 use AppBundle\Entity\Module\PollProposalResponse;
+use AppBundle\Utils\enum\EventInvitationStatus;
+use AppBundle\Utils\enum\ModuleInvitationStatus;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Templating\EngineInterface;
 
@@ -41,6 +44,29 @@ class PollProposalResponseManager
         $moduleInvitation->addPollProposalResponse($this->pollProposalResponse);
     }
 
+    /**
+     * Remet à null toutes les réponses au sondage.
+     * NB : Réponses non persitées
+     * @param PollModule $pollModule Le sondage à mettre à jour
+     */
+    public function resetPollProposalResponse(PollModule $pollModule)
+    {
+        $moduleInvitationsUpdated = array();
+        /** @var PollProposal $pollProposal */
+        foreach ($pollModule->getPollProposals() as $pollProposal) {
+            /** @var PollProposalResponse $pollProposalResponse */
+            foreach ($pollProposal->getPollProposalResponses() as $pollProposalResponse) {
+                if ($pollProposalResponse->getAnswer() != null) {
+                    $pollProposalResponse->setAnswer(null);
+                    $moduleInvitation = $pollProposalResponse->getModuleInvitation();
+                    if ($moduleInvitation->getStatus() == ModuleInvitationStatus::INVITED && $moduleInvitation->getEventInvitation()->getStatus() != EventInvitationStatus::CANCELLED) {
+                        $moduleInvitationsUpdated[$moduleInvitation->getId()] = $moduleInvitation;
+                    }
+                }
+            }
+        }
+        return $moduleInvitationsUpdated;
+    }
 
     public function answerPollModuleProposal(ModuleInvitation $moduleInvitation, $pollProposalId, $value)
     {

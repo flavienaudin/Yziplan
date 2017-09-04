@@ -125,6 +125,39 @@ class ModuleController extends Controller
     }
 
     /**
+     * @Route("/refresh/{token}",  name="refreshEventModule")
+     * @ParamConverter("module", class="AppBundle:Event\Module")
+     */
+    public function refreshEventModuleAction(Module $module, Request $request)
+    {
+        $event = $module->getEvent();
+        $userEventInvitation = $this->get("at.manager.event_invitation")->retrieveUserEventInvitation($event, false, false, $this->getUser());
+        $userModuleInvitation = $userEventInvitation->getModuleInvitationForModule($module);
+        $this->denyAccessUnlessGranted(ModuleVoter::DISPLAY, [$module, $userModuleInvitation]);
+        if ($userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_VALIDATION || $userEventInvitation->getStatus() == EventInvitationStatus::AWAITING_ANSWER) {
+            // Vérification serveur de la validité de l'invitation
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::DATA]['eventInvitationValid'] = false;
+                $data[AppJsonResponse::MESSAGES][FlashBagTypes::ERROR_TYPE][] = $this->get('translator')->trans("event.error.message.valide_guestname_required");
+                return new AppJsonResponse($data, Response::HTTP_BAD_REQUEST);
+            } else {
+                $this->addFlash(FlashBagTypes::ERROR_TYPE, $this->get('translator')->trans("event.error.message.valide_guestname_required"));
+                return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+            }
+        } else {
+            $moduleManager = $this->get('at.manager.module');
+            if ($request->isXmlHttpRequest()) {
+                $data[AppJsonResponse::HTML_CONTENTS][AppJsonResponse::HTML_CONTENT_ACTION_REPLACE]['#module-' . $module->getToken()] =
+                    $moduleManager->displayModulePartial($module, $userEventInvitation->getModuleInvitationForModule($module));
+                return new AppJsonResponse($data, Response::HTTP_OK);
+            } else {
+                $this->addFlash(FlashBagTypes::SUCCESS_TYPE, $this->get('translator')->trans('module.message.success.publish'));
+                return $this->redirectToRoute('displayEvent', array('token' => $event->getToken()));
+            }
+        }
+    }
+
+    /**
      * @Route("/remove/{token}", name="removeEventModule")
      * @ParamConverter("module", class="AppBundle:Event\Module")
      */

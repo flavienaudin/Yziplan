@@ -56,7 +56,7 @@
                                                         {{ responseToDisplay }}
                                                     </td>
                                                 {% endif %}
-                                            {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::RANKING') %}
+                                            {% elseif pollProposal.pollModule.votingType == constant('AppBundle\\Utils\\enum\\PollModuleVotingType::SCORING') %}
                                                 {% set responseToDisplay = pollProposalResponse is null or pollProposalResponse.answer is null ? 0 : pollProposalResponse.answer %}
                                                 {% if responseToDisplay > 0 %}
                                                     <td class="response-column palette-Red-100 bg c-red">

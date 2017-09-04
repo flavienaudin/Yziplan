@@ -28,15 +28,33 @@
                             'attr':{'rows':3},
                             'widget_options':{'label_icon':'zmdi zmdi-receipt','fgline':false}
                         }) }}
-                        {% if moduleForm.pollModule is defined %}
-                            <div class="p-t-10 p-l-15 p-r-15">
-                                {{ form_row(moduleForm.pollModule.guestsCanAddProposal, {'label':'pollmodule.form.guestsCanAddProposal.label'}) }}
-                            </div>
-                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
+        {% if moduleForm.pollModule is defined %}
+            <div class="panel panel-collapse">
+                <div class="panel-heading" role="tab" id="moduleEdit_{{ module.token }}_pollModule">
+                    <h4 class="panel-title">
+                        <a href="#moduleEdit_{{ module.token }}_pollModuleCollpase" data-toggle="collapse" data-parent="#moduleEdit_{{ module.token }}_accordion" class="collapsed"
+                           aria-expanded="false" aria-controls="moduleEdit_{{ module.token }}_invitationsCollpase">
+                            {{ "module.panel.pollmodule.title"|trans }}</a>
+                    </h4>
+                </div>
+                <div id="moduleEdit_{{ module.token }}_pollModuleCollpase" class="collapse" role="tabpanel" aria-labelledby="moduleEdit_{{ module.token }}_pollModulePanel" aria-expanded="false">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="p-t-10 p-l-15 p-r-15">
+                                {{ form_row(moduleForm.pollModule.guestsCanAddProposal, {'label':'pollmodule.form.guestsCanAddProposal.label'}) }}
+
+                                {{ form_row(moduleForm.pollModule.votingType, {'label':'pollmodule.form.votingType.label'}) }}
+                                {{ form_row(moduleForm.pollModule.oldVotingType, {'label':'pollmodule.form.votingType.label'}) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
         <div class="panel panel-collapse">
             <div class="panel-heading" role="tab" id="moduleEdit_{{ module.token }}_invitationsPanel">
                 <h4 class="panel-title">
@@ -45,7 +63,7 @@
                         {{ "module.panel.invitations.title"|trans }}</a>
                 </h4>
             </div>
-            <div id="moduleEdit_{{ module.token }}_invitationsCollpase" class="collapse" role="tabpanel" aria-labelledby="moduleEdit_{{ module.token }}_invitationsPanel" aria-expanded="true">
+            <div id="moduleEdit_{{ module.token }}_invitationsCollpase" class="collapse" role="tabpanel" aria-labelledby="moduleEdit_{{ module.token }}_invitationsPanel" aria-expanded="false">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="m-t-15">
