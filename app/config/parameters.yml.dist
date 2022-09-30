@@ -35,21 +35,21 @@ parameters:
     maps_api.google.id: ~
 
     # Smartsupp Key (contact@yziplan.fr)
-    smartsupp.key: 86c05f8371dc436b026d7ba89410c7ae6c04007a
+    smartsupp.key: ~
 
     # DEV
     dev_delivery_address: ~
 
     # MangoPay Configuration
     mangopay.client.id:        "ardteam"
-    mangopay.client.password:  "TeF1qEdnAuYeBnHQvzgc9fhL7aqZaE7Otp5YhgT2Z3TZAWN5xv"
+    mangopay.client.password:  ~
     mangopay.temporary.folder: "%kernel.root_dir%/var/tmp/"
     # Default is SandBox, for production : https://api.sandbox.mangopay.com
     mangopay.base.url:         ""
 
     # Trello authentification
-    trello.token_or_login: 9963c393f717f1c909f722c29f79435e
-    trello.pass: 4354e0823c4d2cde3b058cf58e3674271ed78cb8a360fad3153d01f632dee052
+    trello.token_or_login: ~
+    trello.pass: ~
 
     # Assetic
     node.path: "/usr/bin/nodejs"
